@@ -37,6 +37,31 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("development") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev" // Appears as io.opencrafts.academia.dev
+            versionNameSuffix = "-dev"   // Appears as 1.0.0-dev
+            // You can add buildConfigField or resValue here for specific configurations
+            // buildConfigField "String", "API_BASE_URL", "\"https://dev.api.example.com\""
+        }
+        create("production") {
+            dimension = "environment"
+            // No suffix needed if this is your primary application ID
+            // buildConfigField "String", "API_BASE_URL", "\"https://prod.api.example.com\""
+        }
+        // You can add more flavors, e.g., a "staging" flavor
+        
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".stg"
+            versionNameSuffix = "-stg"
+            // buildConfigField "String", "API_BASE_URL", "\"https://stg.api.example.com\""
+        } 
+    }
 }
 
 flutter {
