@@ -1,3 +1,6 @@
+import 'package:academia/config/router/router.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
@@ -20,6 +23,8 @@ class _AcademiaState extends State<Academia> {
   /// This can easily be corrected, then performance on phones like Oneplus 8T or
   /// Galaxy S20+ is great.
   Future<void> setOptimalDisplayMode() async {
+    // Platform check since the package only works on android devices
+    if (defaultTargetPlatform != TargetPlatform.android) return;
     final List<DisplayMode> supported = await FlutterDisplayMode.supported;
     final DisplayMode active = await FlutterDisplayMode.active;
 
@@ -46,9 +51,20 @@ class _AcademiaState extends State<Academia> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Academia",
-      home: Scaffold(appBar: AppBar(title: Text("Academia"))),
+    return DynamicColorBuilder(
+      builder: (lightScheme, darkScheme) => MaterialApp.router(
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: lightScheme,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          colorScheme: darkScheme,
+        ),
+        routerConfig: AppRouter.router,
+      ),
     );
   }
 }
