@@ -1,3 +1,4 @@
+import 'package:academia/config/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
@@ -46,9 +47,6 @@ class _AcademiaState extends State<Academia> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Academia",
-      home: Scaffold(appBar: AppBar(title: Text("Academia"))),
-    );
+    return MaterialApp.router(routerConfig: AppRouter.router);
   }
 }
