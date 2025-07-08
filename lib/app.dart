@@ -57,6 +57,7 @@ class _AcademiaState extends State<Academia> {
           useMaterial3: true,
           colorScheme: lightScheme,
           brightness: Brightness.light,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         darkTheme: ThemeData(
           useMaterial3: true,
