@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -45,7 +46,19 @@ class _AuthScreenState extends State<AuthScreen> {
                 SizedBox(height: 16),
                 OutlinedButton.icon(
                   iconAlignment: IconAlignment.start,
-                  onPressed: () {},
+                  onPressed: () async {
+                    final result = await FlutterWebAuth2.authenticate(
+                      url: "http://127.0.0.1:8080/auth/google",
+                      callbackUrlScheme: "academia",
+                      options: FlutterWebAuth2Options(
+                        windowName: "Academia | Authentication",
+                      ),
+                    );
+
+                    // Extract token from resulting url
+                    final token = Uri.parse(result).queryParameters['token'];
+                    print(token);
+                  },
                   label: Text("Continue with Google"),
                   icon: Icon(FontAwesome.google_brand),
                 ),

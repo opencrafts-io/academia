@@ -41,6 +41,8 @@ dependencies:
   logger: ^2.6.0
   dynamic_color: ^1.7.0
   icons_plus: ^5.0.0
+  flutter_web_auth_2: ^4.1.0
+  desktop_webview_window: ^0.2.3
 
 dev_dependencies:
   flutter_test:

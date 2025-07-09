@@ -8,7 +8,7 @@ class AppRouter {
       GlobalKey<NavigatorState>();
 
   static final router = GoRouter(
-    initialLocation: HomeRoute().location,
+    initialLocation: AuthRoute().location,
     routes: $appRoutes,
     observers: [AppNavigationObserver()],
     navigatorKey: globalNavigatorKey,
