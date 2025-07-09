@@ -53,13 +53,16 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (lightScheme, darkScheme) => MaterialApp.router(
+        showPerformanceOverlay: kProfileMode,
         theme: ThemeData(
+          fontFamily: 'Din',
           useMaterial3: true,
           colorScheme: lightScheme,
           brightness: Brightness.light,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         darkTheme: ThemeData(
+          fontFamily: 'Din',
           useMaterial3: true,
           brightness: Brightness.dark,
           colorScheme: darkScheme,
