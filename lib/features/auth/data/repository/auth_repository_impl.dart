@@ -1,0 +1,23 @@
+import 'package:academia/core/error/failures.dart';
+import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/features.dart';
+import 'package:dartz/dartz.dart';
+
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDatasource authRemoteDatasource;
+  final AuthLocalDatasource authLocalDatasource;
+
+  AuthRepositoryImpl({
+    required this.authRemoteDatasource,
+    required this.authLocalDatasource,
+  });
+
+  @override
+  Future<Either<Failure, Token>> signInWithGoogle() async {
+    final result = await authRemoteDatasource.signInWithGoogle();
+    return result.fold(
+      (failure) => left(failure),
+      (token) => right(token.toEntity()),
+    );
+  }
+}

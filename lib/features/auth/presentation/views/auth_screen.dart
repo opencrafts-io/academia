@@ -1,5 +1,7 @@
+import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -14,22 +16,21 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.all(8),
-          child: Image.asset("assets/icons/academia.png"),
-        ),
-      ),
       body: SafeArea(
         minimum: EdgeInsets.all(12),
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 320),
             child: Column(
-              spacing: 4,
+              spacing: 2,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Image.asset("assets/icons/academia.png", width: 60),
+                ),
+
                 Text(
                   "Your school life. Fun.",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -47,17 +48,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 OutlinedButton.icon(
                   iconAlignment: IconAlignment.start,
                   onPressed: () async {
-                    final result = await FlutterWebAuth2.authenticate(
-                      url: "http://127.0.0.1:8080/auth/google",
-                      callbackUrlScheme: "academia",
-                      options: FlutterWebAuth2Options(
-                        windowName: "Academia | Authentication",
-                      ),
-                    );
-
-                    // Extract token from resulting url
-                    final token = Uri.parse(result).queryParameters['token'];
-                    print(token);
+                    BlocProvider.of<AuthBloc>(
+                      context,
+                    ).add(AuthSignInWithGoogleEvent());
                   },
                   label: Text("Continue with Google"),
                   icon: Icon(FontAwesome.google_brand),
