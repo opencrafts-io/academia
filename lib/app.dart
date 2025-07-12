@@ -57,26 +57,33 @@ class _AcademiaState extends State<Academia> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              AuthBloc(signInWithGoogle: sl.get<SignInWithGoogleUsecase>()),
+          create: (context) => AuthBloc(
+            getPreviousAuthState: sl.get<GetPreviousAuthState>(),
+            signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+          ),
         ),
       ],
       child: DynamicColorBuilder(
-        builder: (lightScheme, darkScheme) => MaterialApp.router(
-          showPerformanceOverlay: kProfileMode,
-          theme: ThemeData(
-            fontFamily: 'Din',
-            useMaterial3: true,
-            colorScheme: lightScheme,
-            brightness: Brightness.light,
+        builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            AppRouter.router.refresh();
+          },
+          child: MaterialApp.router(
+            showPerformanceOverlay: kProfileMode,
+            theme: ThemeData(
+              fontFamily: 'Din',
+              useMaterial3: true,
+              colorScheme: lightScheme,
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              fontFamily: 'Din',
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              colorScheme: darkScheme,
+            ),
+            routerConfig: AppRouter.router,
           ),
-          darkTheme: ThemeData(
-            fontFamily: 'Din',
-            useMaterial3: true,
-            brightness: Brightness.dark,
-            colorScheme: darkScheme,
-          ),
-          routerConfig: AppRouter.router,
         ),
       ),
     );

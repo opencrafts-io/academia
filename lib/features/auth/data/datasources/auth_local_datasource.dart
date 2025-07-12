@@ -28,6 +28,22 @@ class AuthLocalDatasource {
     }
   }
 
+  Future<Either<Failure, List<TokenData>>> getAllCachedTokens() async {
+    try {
+      final retrieved = await localDB.select(localDB.token).get();
+      return right(retrieved);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          error: e,
+          message:
+              "An error occurred while accessing your stored authentication token. "
+              "A quick app restart might fix this",
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, TokenData>> getTokenByProvider(String provider) async {
     try {
       final retrieved = await (localDB.select(

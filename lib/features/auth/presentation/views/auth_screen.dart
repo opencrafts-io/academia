@@ -1,7 +1,9 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -23,19 +25,15 @@ class _AuthScreenState extends State<AuthScreen> {
                 content: Text("Oops! ${state.message}"),
                 behavior: SnackBarBehavior.floating,
                 width: MediaQuery.of(context).size.width * 0.75,
+                showCloseIcon: true,
               ),
+              snackBarAnimationStyle: AnimationStyle(curve: Curves.bounceIn),
             );
             return;
           }
 
           if (state is AuthAuthenticated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Welcome!"),
-                behavior: SnackBarBehavior.floating,
-                width: MediaQuery.of(context).size.width * 0.75,
-              ),
-            );
+            context.go(HomeRoute().location);
             return;
           }
         },

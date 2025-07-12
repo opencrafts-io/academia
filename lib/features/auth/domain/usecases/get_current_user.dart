@@ -1,15 +1,15 @@
-import '../repository/auth_repository.dart';
+import 'package:academia/features/auth/auth.dart';
+
 import 'package:academia/core/core.dart';
-import 'package:academia/features/auth/domain/entities/user_profile.dart';
 import 'package:dartz/dartz.dart';
 
-class GetLoggedInUser implements UseCase<UserProfile, NoParams> {
+class GetPreviousAuthState implements UseCase<List<Token>, NoParams> {
   final AuthRepository repository;
 
-  GetLoggedInUser(this.repository);
+  GetPreviousAuthState(this.repository);
 
   @override
-  Future<Either<Failure, UserProfile>> call(NoParams params) async {
-    return await repository.getLoggedInUser();
+  Future<Either<Failure, List<Token>>> call(NoParams params) async {
+    return await repository.getPreviousAuthState();
   }
 }

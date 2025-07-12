@@ -23,4 +23,12 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     });
   }
+
+  @override
+  Future<Either<Failure, List<Token>>> getPreviousAuthState() async {
+    final result = await authLocalDatasource.getAllCachedTokens();
+    return result.fold((failure) => left(failure), (tokens) {
+      return right(tokens.map((token) => token.toEntity()).toList());
+    });
+  }
 }
