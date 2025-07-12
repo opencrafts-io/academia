@@ -4,9 +4,9 @@ import 'package:academia/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 
-void main() async {
+void main(args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (runWebViewTitleBarWidget([])) {
+  if (runWebViewTitleBarWidget(args)) {
     return;
   }
   await di.init(

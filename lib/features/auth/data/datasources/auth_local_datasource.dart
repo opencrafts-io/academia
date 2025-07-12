@@ -1,6 +1,5 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/injection_container.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
 

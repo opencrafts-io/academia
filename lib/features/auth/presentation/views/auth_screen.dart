@@ -2,7 +2,6 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AuthScreen extends StatefulWidget {
