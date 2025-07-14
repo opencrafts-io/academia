@@ -25,6 +25,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, Token>> signInWithSpotify() async {
+    final result = await authRemoteDatasource.signInWithSpotify();
+    return result.fold((failure) => left(failure), (token) async {
+      final cacheRes = await authLocalDatasource.cacheOrUpdateToken(token);
+      return cacheRes.fold(
+        (error) => left(error),
+        (token) => right(token.toEntity()),
+      );
+    });
+  }
+
+  @override
   Future<Either<Failure, List<Token>>> getPreviousAuthState() async {
     final result = await authLocalDatasource.getAllCachedTokens();
     return result.fold((failure) => left(failure), (tokens) {

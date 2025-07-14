@@ -54,4 +54,47 @@ class AuthRemoteDatasource {
       );
     }
   }
+
+  Future<Either<Failure, TokenData>> signInWithSpotify() async {
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: "${flavorConfig.apiBaseUrl}/auth/spotify",
+        callbackUrlScheme: "academia",
+        options: FlutterWebAuth2Options(
+          windowName: "Academia | Authentication",
+          silentAuth: true,
+          timeout: 2000,
+        ),
+      );
+
+      final token = Uri.parse(result).queryParameters['token'];
+      return right(
+        TokenData(
+          id: 1,
+          provider: "verisafe",
+          expiresAt: DateTime.now().add(Duration(days: 1)),
+          createdAt: DateTime.now(),
+          accessToken: token!,
+          refreshToken: "",
+          updatedAt: DateTime.now(),
+        ),
+      );
+    } on PlatformException catch (pe) {
+      _logger.e("Platform exception occurred", error: pe);
+      return left(
+        AuthenticationFailure(
+          message: "You cancelled the authentication flow",
+          error: pe,
+        ),
+      );
+    } catch (e) {
+      _logger.e("Failed to authenticate with google", error: e);
+      return left(
+        AuthenticationFailure(
+          message: "Something went wrong while trying to authenticate you",
+          error: e,
+        ),
+      );
+    }
+  }
 }

@@ -9,18 +9,38 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithGoogleUsecase signInWithGoogle;
+  final SignInWithSpotifyUsecase signInWithSpotifyUsecase;
   final GetPreviousAuthState getPreviousAuthState;
 
-  AuthBloc({required this.signInWithGoogle, required this.getPreviousAuthState})
-    : super(const AuthInitial()) {
+  AuthBloc({
+    required this.signInWithGoogle,
+    required this.signInWithSpotifyUsecase,
+    required this.getPreviousAuthState,
+  }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInWithGoogleEvent>(_onSignInWithGoogle);
+    on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
     on<AuthCheckStatusEvent>(_onAppLaunched);
 
     add(AuthCheckStatusEvent());
   }
 
   // --- Event Handlers ---
+
+  Future<void> _onSignInWithSpotify(
+    AuthSignInWithSpotifyEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading()); // Show loading state
+
+    final result = await signInWithSpotifyUsecase(NoParams());
+
+    result.fold(
+      (failure) =>
+          emit(AuthError(message: (failure as AuthenticationFailure).message)),
+      (token) => emit(AuthAuthenticated(token: token)),
+    );
+  }
 
   Future<void> _onSignInWithGoogle(
     AuthSignInWithGoogleEvent event,

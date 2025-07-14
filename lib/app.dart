@@ -58,6 +58,7 @@ class _AcademiaState extends State<Academia> {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(
+            signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
             getPreviousAuthState: sl.get<GetPreviousAuthState>(),
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           ),
