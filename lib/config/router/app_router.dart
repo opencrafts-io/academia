@@ -10,15 +10,14 @@ class AppRouter {
       GlobalKey<NavigatorState>();
 
   static final router = GoRouter(
-    initialLocation: AuthRoute().location,
     routes: $appRoutes,
     observers: [AppNavigationObserver()],
     navigatorKey: globalNavigatorKey,
-    redirect: (context, state) {
-      // final authState = BlocProvider.of<AuthBloc>(context).state;
-      // if (authState is AuthUnauthenticated) {
-      //   return AuthRoute().location;
-      // }
+    redirect: (context, state) async {
+      final authState = BlocProvider.of<AuthBloc>(context).state; 
+      if (authState is AuthUnauthenticated) {
+        return AuthRoute().location;
+      }
       return null;
     },
   );
