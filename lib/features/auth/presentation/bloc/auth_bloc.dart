@@ -21,8 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInWithGoogleEvent>(_onSignInWithGoogle);
     on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
     on<AuthCheckStatusEvent>(_onAppLaunched);
-
-    add(AuthCheckStatusEvent());
   }
 
   // --- Event Handlers ---

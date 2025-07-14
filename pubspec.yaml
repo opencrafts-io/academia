@@ -51,6 +51,7 @@ dependencies:
   dio: ^5.8.0+1
   pretty_dio_logger: ^1.4.0
   flutter_bloc: ^9.1.1
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:

@@ -61,7 +61,7 @@ class _AcademiaState extends State<Academia> {
             signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
             getPreviousAuthState: sl.get<GetPreviousAuthState>(),
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
-          ),
+          )..add(AuthCheckStatusEvent()),
         ),
       ],
       child: DynamicColorBuilder(
