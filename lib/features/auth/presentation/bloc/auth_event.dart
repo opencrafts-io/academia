@@ -1,6 +1,3 @@
-
-import 'package:equatable/equatable.dart';
-
 part of 'auth_bloc.dart';
 
 
@@ -16,6 +13,13 @@ abstract class AuthEvent extends Equatable {
 class AuthSignInWithGoogleEvent extends AuthEvent {
   const AuthSignInWithGoogleEvent();
 }
+
+/// Event dispatched to trigger a sign-in process, typically with Google.
+class AuthSignInWithSpotifyEvent extends AuthEvent {
+  const AuthSignInWithSpotifyEvent();
+}
+
+
 
 /// Event dispatched to check the current authentication status of the user
 /// (e.g., on app start).

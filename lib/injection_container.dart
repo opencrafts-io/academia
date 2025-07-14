@@ -28,6 +28,11 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
   );
+
+  sl.registerFactory<SignInWithSpotifyUsecase>(
+    () => SignInWithSpotifyUsecase(sl.get<AuthRepositoryImpl>()),
+  );
+
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
   );

@@ -75,23 +75,27 @@ class _AuthScreenState extends State<AuthScreen> {
                     label: Text("Continue with Google"),
                     icon: Icon(FontAwesome.google_brand),
                   ),
+                  // OutlinedButton.icon(
+                  //   onPressed: () {},
+                  //   label: Text("Continue with Apple"),
+                  //   icon: Icon(FontAwesome.apple_brand),
+                  // ),
+                  // OutlinedButton.icon(
+                  //   onPressed: () {},
+                  //   label: Text("Continue with Microsoft"),
+                  //   icon: Icon(FontAwesome.microsoft_brand),
+                  // ),
+                  // OutlinedButton.icon(
+                  //   onPressed: () {},
+                  //   label: Text("Continue with Github"),
+                  //   icon: Icon(FontAwesome.github_brand),
+                  // ),
                   OutlinedButton.icon(
-                    onPressed: () {},
-                    label: Text("Continue with Apple"),
-                    icon: Icon(FontAwesome.apple_brand),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () {},
-                    label: Text("Continue with Microsoft"),
-                    icon: Icon(FontAwesome.microsoft_brand),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () {},
-                    label: Text("Continue with Github"),
-                    icon: Icon(FontAwesome.github_brand),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<AuthBloc>(
+                        context,
+                      ).add(AuthSignInWithSpotifyEvent());
+                    },
                     label: Text("Continue with Spotify"),
                     icon: Icon(FontAwesome.spotify_brand),
                   ),

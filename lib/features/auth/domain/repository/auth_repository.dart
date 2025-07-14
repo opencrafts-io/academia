@@ -4,5 +4,6 @@ import 'package:dartz/dartz.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, Token>> signInWithGoogle();
+  Future<Either<Failure, Token>> signInWithSpotify();
   Future<Either<Failure, List<Token>>> getPreviousAuthState();
 }
