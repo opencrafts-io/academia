@@ -1,7 +1,10 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/features.dart';
+import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 class Academia extends StatefulWidget {
@@ -51,19 +54,37 @@ class _AcademiaState extends State<Academia> {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(
-      builder: (lightScheme, darkScheme) => MaterialApp.router(
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: lightScheme,
-          brightness: Brightness.light,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthBloc(
+            getPreviousAuthState: sl.get<GetPreviousAuthState>(),
+            signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+          ),
         ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          colorScheme: darkScheme,
+      ],
+      child: DynamicColorBuilder(
+        builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            AppRouter.router.refresh();
+          },
+          child: MaterialApp.router(
+            showPerformanceOverlay: kProfileMode,
+            theme: ThemeData(
+              fontFamily: 'Din',
+              useMaterial3: true,
+              colorScheme: lightScheme,
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              fontFamily: 'Din',
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              colorScheme: darkScheme,
+            ),
+            routerConfig: AppRouter.router,
+          ),
         ),
-        routerConfig: AppRouter.router,
       ),
     );
   }
