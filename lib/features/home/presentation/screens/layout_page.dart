@@ -2,6 +2,7 @@ import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({super.key, required this.child});
@@ -76,20 +77,23 @@ class _LayoutPageState extends State<LayoutPage> {
                 selectedIndex: selectedIndex,
                 destinations: [
                   NavigationDestination(
-                    icon: Icon(FontAwesome.house_solid),
+                    icon: Icon(Symbols.house),
+                    selectedIcon: Icon(Symbols.house),
                     label: "Home",
                   ),
                   NavigationDestination(
-                    icon: Icon(FontAwesome.calendar_day_solid),
+                    icon: Icon(Symbols.calendar_today),
+                    selectedIcon: Icon(Symbols.calendar_today),
                     label: "Agenda",
                   ),
                   NavigationDestination(
-                    icon: Icon(FontAwesome.meteor_solid),
-                    label: "Assitant",
+                    icon: Icon(Symbols.ecg_heart),
+                    label: "Well Being",
                   ),
 
                   NavigationDestination(
-                    icon: Icon(FontAwesome.rocket_solid),
+                    icon: Icon(Symbols.grid_view),
+                    selectedIcon: Icon(Symbols.grid_view),
                     label: "Essentials",
                   ),
                 ],
