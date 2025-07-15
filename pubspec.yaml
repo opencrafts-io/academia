@@ -52,6 +52,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   flutter_bloc: ^9.1.1
   flutter_native_splash: ^2.4.6
+  material_symbols_icons: ^4.2815.1
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: ProductSans
+      fonts:
+        - asset: asset/fonts/ProductSans-Regular.ttf
     - family: Din
       fonts:
         - asset: assets/fonts/DINNextW1G-Regular.otf
