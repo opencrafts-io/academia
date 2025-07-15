@@ -99,7 +99,7 @@ flutter:
   fonts:
     - family: ProductSans
       fonts:
-        - asset: asset/fonts/ProductSans-Regular.ttf
+        - asset: assets/fonts/ProductSans-Regular.ttf
     - family: Din
       fonts:
         - asset: assets/fonts/DINNextW1G-Regular.otf
