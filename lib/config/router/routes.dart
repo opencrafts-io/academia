@@ -4,12 +4,68 @@ import 'package:academia/features/features.dart';
 
 part 'routes.g.dart';
 
+final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+
+// Main pages
+@TypedShellRoute<MainLayoutShellRoute>(
+  routes: <TypedRoute<RouteData>>[
+    TypedGoRoute<HomeRoute>(path: '/'),
+    TypedGoRoute<CalendarRoute>(path: '/calendar'),
+    TypedGoRoute<EssentialsRoute>(path: '/essentials'),
+    TypedGoRoute<MeteorRoute>(path: '/meteor'),
+    TypedGoRoute<ProfileRoute>(
+      path: '/profile',
+      routes: [TypedGoRoute<CompleteProfileRoute>(path: "additional-info")],
+    ),
+  ],
+)
+class MainLayoutShellRoute extends ShellRouteData {
+  const MainLayoutShellRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorKey;
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
+    // In the navigator, we get the current tab widget.
+    return LayoutPage(child: navigator);
+  }
+}
+
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(appBar: AppBar(title: Text("Home")));
+    return Scaffold(body: Center(child: Text("Chirp")));
   }
 }
+
+
+class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return Scaffold(body: Center(child: Text("Essentials")));
+  }
+}
+
+
+class CalendarRoute extends GoRouteData with _$CalendarRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return Scaffold(body: Center(child: Text("Your calendar")));
+  }
+}
+
+
+class MeteorRoute extends GoRouteData with _$MeteorRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return Scaffold(body: Center(child: Text("MeteorRoute")));
+  }
+}
+
+
+
+
+
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -31,29 +87,5 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
-  }
-}
-
-final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
-
-@TypedShellRoute<HomeShellRoute>(
-  routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<HomeRoute>(path: '/'),
-    TypedGoRoute<ProfileRoute>(
-      path: '/profile',
-
-      routes: [TypedGoRoute<CompleteProfileRoute>(path: "additional-info")],
-    ),
-  ],
-)
-class HomeShellRoute extends ShellRouteData {
-  const HomeShellRoute();
-
-  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorKey;
-
-  @override
-  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    // In the navigator, we get the current tab widget.
-    return LayoutPage(child: navigator);
   }
 }
