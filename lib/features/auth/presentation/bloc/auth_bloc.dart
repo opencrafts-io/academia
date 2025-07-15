@@ -64,7 +64,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) => emit(AuthAuthenticated(token: token.first)),
+      (tokens) {
+        if (tokens.any(
+          (token) =>
+              token.provider == "verisafe" &&
+              (token.expiresAt?.isAfter(DateTime.now()) ?? false),
+        )) {
+          return emit(AuthAuthenticated(token: tokens.first));
+        }
+        return emit(AuthUnauthenticated());
+      },
     );
   }
 }
