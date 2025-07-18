@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
   $authRoute,
   $profileRoute,
+  $shereheRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -190,3 +191,26 @@ mixin _$AuthRoute on GoRouteData {
 
 RouteBase get $profileRoute =>
     GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState);
+
+RouteBase get $shereheRoute =>
+    GoRouteData.$route(path: '/sherehe', factory: _$ShereheRoute._fromState);
+
+mixin _$ShereheRoute on GoRouteData {
+  static ShereheRoute _fromState(GoRouterState state) => ShereheRoute();
+
+  @override
+  String get location => GoRouteData.$location('/sherehe');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
