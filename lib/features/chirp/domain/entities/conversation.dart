@@ -6,15 +6,15 @@ class Conversation extends Equatable {
   final String id;
   final User user;
   final Message? lastMessage;
-  final DateTime lastMessageAt;
+  final DateTime? lastMessageAt;
   final int unreadCount;
 
   const Conversation({
     required this.id,
     required this.user,
-    required this.lastMessage,
-    required this.lastMessageAt,
-    required this.unreadCount,
+    this.lastMessage,
+    this.lastMessageAt,
+    this.unreadCount = 0,
   });
 
   @override
