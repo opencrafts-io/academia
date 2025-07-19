@@ -1,0 +1,9 @@
+// lib/features/messaging/domain/domain.dart
+export 'entities/conversation.dart';
+export 'entities/message.dart';
+export 'entities/user.dart';
+export 'repository/conversation_repository.dart';
+export 'repository/message_repository.dart';
+export 'usecases/get_conversations.dart';
+export 'usecases/get_messages.dart';
+export 'usecases/send_message.dart';
