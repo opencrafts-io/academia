@@ -1,0 +1,46 @@
+name: DCM Analysis (Open Source)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  dcm-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Install DCM
+        uses: CQLabs/setup-dcm@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+
+      - name: Run DCM Full Suite
+        uses: CQLabs/dcm-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ci-key: oss
+          email: oss
+          analyze: true
+          calculate-metrics: true
+          check-unused-code: true
+          check-code-duplication: true
+          check-parameters: true
+          check-unused-files: true
+          check-unused-l10n: true
+          analyze-assets: true
+          analyze-widgets: true
+          folders: lib
