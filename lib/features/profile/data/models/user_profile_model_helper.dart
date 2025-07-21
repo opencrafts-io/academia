@@ -11,6 +11,12 @@ extension UserProfileModelHelper on UserProfileData {
     termsAccepted: termsAccepted,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    vibePoints: vibePoints,
+    bio: bio,
+    phone: phone,
+    username: username,
+    nationalID: nationalID,
+    avatarUrl: avatarUrl,
   );
 }
 
@@ -23,5 +29,11 @@ extension UserProfileHelper on UserProfile {
     termsAccepted: termsAccepted,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    vibePoints: vibePoints,
+    bio: bio,
+    phone: phone,
+    username: username,
+    nationalID: nationalID,
+    avatarUrl: avatarUrl,
   );
 }

@@ -9,10 +9,13 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Spacer(),
-        Image.asset("assets/illustrations/scene 15.png", width: 300),
+        Image.asset(
+          "assets/illustrations/scene 15.png",
+          width: 300,
+          height: 300,
+        ),
         Text(
           "We'd like to ask you a few questions before you continue to Academia.",
         ),

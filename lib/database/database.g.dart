@@ -51,6 +51,17 @@ class $UserProfileTable extends UserProfile
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -90,15 +101,73 @@ class $UserProfileTable extends UserProfile
     ),
     defaultValue: Constant(false),
   );
+  static const VerificationMeta _nationalIDMeta = const VerificationMeta(
+    'nationalID',
+  );
+  @override
+  late final GeneratedColumn<String> nationalID = GeneratedColumn<String>(
+    'national_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bioMeta = const VerificationMeta('bio');
+  @override
+  late final GeneratedColumn<String> bio = GeneratedColumn<String>(
+    'bio',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _vibePointsMeta = const VerificationMeta(
+    'vibePoints',
+  );
+  @override
+  late final GeneratedColumn<int> vibePoints = GeneratedColumn<int>(
+    'vibe_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
     updatedAt,
     name,
+    username,
     email,
     termsAccepted,
     onboarded,
+    nationalID,
+    avatarUrl,
+    bio,
+    phone,
+    vibePoints,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -137,6 +206,14 @@ class $UserProfileTable extends UserProfile
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
     if (data.containsKey('email')) {
       context.handle(
         _emailMeta,
@@ -158,6 +235,45 @@ class $UserProfileTable extends UserProfile
       context.handle(
         _onboardedMeta,
         onboarded.isAcceptableOrUnknown(data['onboarded']!, _onboardedMeta),
+      );
+    }
+    if (data.containsKey('national_i_d')) {
+      context.handle(
+        _nationalIDMeta,
+        nationalID.isAcceptableOrUnknown(
+          data['national_i_d']!,
+          _nationalIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_nationalIDMeta);
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    }
+    if (data.containsKey('bio')) {
+      context.handle(
+        _bioMeta,
+        bio.isAcceptableOrUnknown(data['bio']!, _bioMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bioMeta);
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
+    }
+    if (data.containsKey('vibe_points')) {
+      context.handle(
+        _vibePointsMeta,
+        vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
       );
     }
     return context;
@@ -185,6 +301,10 @@ class $UserProfileTable extends UserProfile
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -196,6 +316,26 @@ class $UserProfileTable extends UserProfile
       onboarded: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}onboarded'],
+      )!,
+      nationalID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_i_d'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
+      bio: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}bio'],
+      )!,
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      )!,
+      vibePoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibe_points'],
       )!,
     );
   }
@@ -211,17 +351,29 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String name;
+  final String username;
   final String email;
   final bool termsAccepted;
   final bool onboarded;
+  final String nationalID;
+  final String? avatarUrl;
+  final String bio;
+  final String phone;
+  final int vibePoints;
   const UserProfileData({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
     required this.name,
+    required this.username,
     required this.email,
     required this.termsAccepted,
     required this.onboarded,
+    required this.nationalID,
+    this.avatarUrl,
+    required this.bio,
+    required this.phone,
+    required this.vibePoints,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -230,9 +382,17 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['name'] = Variable<String>(name);
+    map['username'] = Variable<String>(username);
     map['email'] = Variable<String>(email);
     map['terms_accepted'] = Variable<bool>(termsAccepted);
     map['onboarded'] = Variable<bool>(onboarded);
+    map['national_i_d'] = Variable<String>(nationalID);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    map['bio'] = Variable<String>(bio);
+    map['phone'] = Variable<String>(phone);
+    map['vibe_points'] = Variable<int>(vibePoints);
     return map;
   }
 
@@ -242,9 +402,17 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       name: Value(name),
+      username: Value(username),
       email: Value(email),
       termsAccepted: Value(termsAccepted),
       onboarded: Value(onboarded),
+      nationalID: Value(nationalID),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+      bio: Value(bio),
+      phone: Value(phone),
+      vibePoints: Value(vibePoints),
     );
   }
 
@@ -258,9 +426,15 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       name: serializer.fromJson<String>(json['name']),
+      username: serializer.fromJson<String>(json['username']),
       email: serializer.fromJson<String>(json['email']),
       termsAccepted: serializer.fromJson<bool>(json['terms_accepted']),
       onboarded: serializer.fromJson<bool>(json['onboarded']),
+      nationalID: serializer.fromJson<String>(json['national_id']),
+      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
+      bio: serializer.fromJson<String>(json['bio']),
+      phone: serializer.fromJson<String>(json['phone']),
+      vibePoints: serializer.fromJson<int>(json['vibe_points']),
     );
   }
   @override
@@ -271,9 +445,15 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'name': serializer.toJson<String>(name),
+      'username': serializer.toJson<String>(username),
       'email': serializer.toJson<String>(email),
       'terms_accepted': serializer.toJson<bool>(termsAccepted),
       'onboarded': serializer.toJson<bool>(onboarded),
+      'national_id': serializer.toJson<String>(nationalID),
+      'avatar_url': serializer.toJson<String?>(avatarUrl),
+      'bio': serializer.toJson<String>(bio),
+      'phone': serializer.toJson<String>(phone),
+      'vibe_points': serializer.toJson<int>(vibePoints),
     };
   }
 
@@ -282,17 +462,29 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? name,
+    String? username,
     String? email,
     bool? termsAccepted,
     bool? onboarded,
+    String? nationalID,
+    Value<String?> avatarUrl = const Value.absent(),
+    String? bio,
+    String? phone,
+    int? vibePoints,
   }) => UserProfileData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     name: name ?? this.name,
+    username: username ?? this.username,
     email: email ?? this.email,
     termsAccepted: termsAccepted ?? this.termsAccepted,
     onboarded: onboarded ?? this.onboarded,
+    nationalID: nationalID ?? this.nationalID,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+    bio: bio ?? this.bio,
+    phone: phone ?? this.phone,
+    vibePoints: vibePoints ?? this.vibePoints,
   );
   UserProfileData copyWithCompanion(UserProfileCompanion data) {
     return UserProfileData(
@@ -300,11 +492,21 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       name: data.name.present ? data.name.value : this.name,
+      username: data.username.present ? data.username.value : this.username,
       email: data.email.present ? data.email.value : this.email,
       termsAccepted: data.termsAccepted.present
           ? data.termsAccepted.value
           : this.termsAccepted,
       onboarded: data.onboarded.present ? data.onboarded.value : this.onboarded,
+      nationalID: data.nationalID.present
+          ? data.nationalID.value
+          : this.nationalID,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      bio: data.bio.present ? data.bio.value : this.bio,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      vibePoints: data.vibePoints.present
+          ? data.vibePoints.value
+          : this.vibePoints,
     );
   }
 
@@ -315,9 +517,15 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('name: $name, ')
+          ..write('username: $username, ')
           ..write('email: $email, ')
           ..write('termsAccepted: $termsAccepted, ')
-          ..write('onboarded: $onboarded')
+          ..write('onboarded: $onboarded, ')
+          ..write('nationalID: $nationalID, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('bio: $bio, ')
+          ..write('phone: $phone, ')
+          ..write('vibePoints: $vibePoints')
           ..write(')'))
         .toString();
   }
@@ -328,9 +536,15 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     createdAt,
     updatedAt,
     name,
+    username,
     email,
     termsAccepted,
     onboarded,
+    nationalID,
+    avatarUrl,
+    bio,
+    phone,
+    vibePoints,
   );
   @override
   bool operator ==(Object other) =>
@@ -340,9 +554,15 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.name == this.name &&
+          other.username == this.username &&
           other.email == this.email &&
           other.termsAccepted == this.termsAccepted &&
-          other.onboarded == this.onboarded);
+          other.onboarded == this.onboarded &&
+          other.nationalID == this.nationalID &&
+          other.avatarUrl == this.avatarUrl &&
+          other.bio == this.bio &&
+          other.phone == this.phone &&
+          other.vibePoints == this.vibePoints);
 }
 
 class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
@@ -350,18 +570,30 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<String> name;
+  final Value<String> username;
   final Value<String> email;
   final Value<bool> termsAccepted;
   final Value<bool> onboarded;
+  final Value<String> nationalID;
+  final Value<String?> avatarUrl;
+  final Value<String> bio;
+  final Value<String> phone;
+  final Value<int> vibePoints;
   final Value<int> rowid;
   const UserProfileCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.name = const Value.absent(),
+    this.username = const Value.absent(),
     this.email = const Value.absent(),
     this.termsAccepted = const Value.absent(),
     this.onboarded = const Value.absent(),
+    this.nationalID = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.bio = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.vibePoints = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserProfileCompanion.insert({
@@ -369,21 +601,37 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     required String name,
+    required String username,
     required String email,
     this.termsAccepted = const Value.absent(),
     this.onboarded = const Value.absent(),
+    required String nationalID,
+    this.avatarUrl = const Value.absent(),
+    required String bio,
+    required String phone,
+    this.vibePoints = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
-       email = Value(email);
+       username = Value(username),
+       email = Value(email),
+       nationalID = Value(nationalID),
+       bio = Value(bio),
+       phone = Value(phone);
   static Insertable<UserProfileData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? name,
+    Expression<String>? username,
     Expression<String>? email,
     Expression<bool>? termsAccepted,
     Expression<bool>? onboarded,
+    Expression<String>? nationalID,
+    Expression<String>? avatarUrl,
+    Expression<String>? bio,
+    Expression<String>? phone,
+    Expression<int>? vibePoints,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -391,9 +639,15 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (name != null) 'name': name,
+      if (username != null) 'username': username,
       if (email != null) 'email': email,
       if (termsAccepted != null) 'terms_accepted': termsAccepted,
       if (onboarded != null) 'onboarded': onboarded,
+      if (nationalID != null) 'national_i_d': nationalID,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (bio != null) 'bio': bio,
+      if (phone != null) 'phone': phone,
+      if (vibePoints != null) 'vibe_points': vibePoints,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -403,9 +657,15 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<String>? name,
+    Value<String>? username,
     Value<String>? email,
     Value<bool>? termsAccepted,
     Value<bool>? onboarded,
+    Value<String>? nationalID,
+    Value<String?>? avatarUrl,
+    Value<String>? bio,
+    Value<String>? phone,
+    Value<int>? vibePoints,
     Value<int>? rowid,
   }) {
     return UserProfileCompanion(
@@ -413,9 +673,15 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       name: name ?? this.name,
+      username: username ?? this.username,
       email: email ?? this.email,
       termsAccepted: termsAccepted ?? this.termsAccepted,
       onboarded: onboarded ?? this.onboarded,
+      nationalID: nationalID ?? this.nationalID,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      bio: bio ?? this.bio,
+      phone: phone ?? this.phone,
+      vibePoints: vibePoints ?? this.vibePoints,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -435,6 +701,9 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
     }
@@ -443,6 +712,21 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     }
     if (onboarded.present) {
       map['onboarded'] = Variable<bool>(onboarded.value);
+    }
+    if (nationalID.present) {
+      map['national_i_d'] = Variable<String>(nationalID.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (bio.present) {
+      map['bio'] = Variable<String>(bio.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (vibePoints.present) {
+      map['vibe_points'] = Variable<int>(vibePoints.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -457,9 +741,15 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('name: $name, ')
+          ..write('username: $username, ')
           ..write('email: $email, ')
           ..write('termsAccepted: $termsAccepted, ')
           ..write('onboarded: $onboarded, ')
+          ..write('nationalID: $nationalID, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('bio: $bio, ')
+          ..write('phone: $phone, ')
+          ..write('vibePoints: $vibePoints, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -945,9 +1235,15 @@ typedef $$UserProfileTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       required String name,
+      required String username,
       required String email,
       Value<bool> termsAccepted,
       Value<bool> onboarded,
+      required String nationalID,
+      Value<String?> avatarUrl,
+      required String bio,
+      required String phone,
+      Value<int> vibePoints,
       Value<int> rowid,
     });
 typedef $$UserProfileTableUpdateCompanionBuilder =
@@ -956,9 +1252,15 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> name,
+      Value<String> username,
       Value<String> email,
       Value<bool> termsAccepted,
       Value<bool> onboarded,
+      Value<String> nationalID,
+      Value<String?> avatarUrl,
+      Value<String> bio,
+      Value<String> phone,
+      Value<int> vibePoints,
       Value<int> rowid,
     });
 
@@ -991,6 +1293,11 @@ class $$UserProfileTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get email => $composableBuilder(
     column: $table.email,
     builder: (column) => ColumnFilters(column),
@@ -1003,6 +1310,31 @@ class $$UserProfileTableFilterComposer
 
   ColumnFilters<bool> get onboarded => $composableBuilder(
     column: $table.onboarded,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bio => $composableBuilder(
+    column: $table.bio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1036,6 +1368,11 @@ class $$UserProfileTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get email => $composableBuilder(
     column: $table.email,
     builder: (column) => ColumnOrderings(column),
@@ -1048,6 +1385,31 @@ class $$UserProfileTableOrderingComposer
 
   ColumnOrderings<bool> get onboarded => $composableBuilder(
     column: $table.onboarded,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bio => $composableBuilder(
+    column: $table.bio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -1073,6 +1435,9 @@ class $$UserProfileTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
   GeneratedColumn<String> get email =>
       $composableBuilder(column: $table.email, builder: (column) => column);
 
@@ -1083,6 +1448,25 @@ class $$UserProfileTableAnnotationComposer
 
   GeneratedColumn<bool> get onboarded =>
       $composableBuilder(column: $table.onboarded, builder: (column) => column);
+
+  GeneratedColumn<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get bio =>
+      $composableBuilder(column: $table.bio, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => column,
+  );
 }
 
 class $$UserProfileTableTableManager
@@ -1120,18 +1504,30 @@ class $$UserProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String> username = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<bool> termsAccepted = const Value.absent(),
                 Value<bool> onboarded = const Value.absent(),
+                Value<String> nationalID = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<String> bio = const Value.absent(),
+                Value<String> phone = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 name: name,
+                username: username,
                 email: email,
                 termsAccepted: termsAccepted,
                 onboarded: onboarded,
+                nationalID: nationalID,
+                avatarUrl: avatarUrl,
+                bio: bio,
+                phone: phone,
+                vibePoints: vibePoints,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -1140,18 +1536,30 @@ class $$UserProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 required String name,
+                required String username,
                 required String email,
                 Value<bool> termsAccepted = const Value.absent(),
                 Value<bool> onboarded = const Value.absent(),
+                required String nationalID,
+                Value<String?> avatarUrl = const Value.absent(),
+                required String bio,
+                required String phone,
+                Value<int> vibePoints = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 name: name,
+                username: username,
                 email: email,
                 termsAccepted: termsAccepted,
                 onboarded: onboarded,
+                nationalID: nationalID,
+                avatarUrl: avatarUrl,
+                bio: bio,
+                phone: phone,
+                vibePoints: vibePoints,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
