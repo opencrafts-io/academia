@@ -3,15 +3,15 @@ import 'package:equatable/equatable.dart';
 class UserProfile extends Equatable {
   final String id;
   final String name;
-  final String username;
+  final String? username;
   final String email;
   final bool termsAccepted;
   final bool onboarded;
   final String nationalID;
   final String? avatarUrl;
-  final String bio;
+  final String? bio;
   final int vibePoints;
-  final String phone;
+  final String? phone;
   final DateTime createdAt;
   final DateTime updatedAt;
 

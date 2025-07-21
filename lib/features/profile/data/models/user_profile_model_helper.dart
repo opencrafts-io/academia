@@ -12,7 +12,7 @@ extension UserProfileModelHelper on UserProfileData {
     createdAt: createdAt,
     updatedAt: updatedAt,
     vibePoints: vibePoints,
-    bio: bio,
+    bio: bio ,
     phone: phone,
     username: username,
     nationalID: nationalID,

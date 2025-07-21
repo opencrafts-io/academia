@@ -11,7 +11,7 @@ class ProfileRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, UserProfileData>> refreshCurrentUserProfile() async {
     try {
-      final response = await dioClient.dio.post("/accounts/me");
+      final response = await dioClient.dio.get("/accounts/me");
       if (response.statusCode == 200) {
         return right(UserProfileData.fromJson(response.data));
       }
@@ -19,6 +19,7 @@ class ProfileRemoteDatasource with DioErrorHandler {
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
+      rethrow;
       return left(
         CacheFailure(
           error: e,

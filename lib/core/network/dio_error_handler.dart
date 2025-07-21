@@ -38,10 +38,14 @@ mixin DioErrorHandler {
 
       default:
         return left(
-          de.response?.data["error"] ??
-              de.response?.data["message"] ??
-              de.response?.statusMessage ??
-              "An unexpected error occurred. Please try again later.",
+          NetworkFailure(
+            message:
+                de.response?.data["error"] ??
+                de.response?.data["message"] ??
+                de.response?.statusMessage ??
+                "An unexpected error occurred. Please try again later.",
+            error: de,
+          ),
         );
     }
   }

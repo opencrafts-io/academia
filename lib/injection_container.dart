@@ -12,12 +12,15 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
-  sl.registerFactory<DioClient>(() => DioClient(flavor));
 
-  sl.registerFactory(() => AuthLocalDatasource(localDB: cacheDB));
+  sl.registerFactory<AuthLocalDatasource>(
+    () => AuthLocalDatasource(localDB: cacheDB),
+  );
   sl.registerFactory(() => AuthRemoteDatasource(flavorConfig: flavor));
-  sl.registerFactory(() => ProfileLocalDatasource(localDB: cacheDB));
 
+  sl.registerFactory<DioClient>(
+    () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
       authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
@@ -48,6 +51,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => ProfileRepositoryImpl(
       profileLocalDatasource: sl.get<ProfileLocalDatasource>(),
       profileRemoteDatasource: sl.get<ProfileRemoteDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<RefreshCurrentUserProfileUsecase>(
+    () => RefreshCurrentUserProfileUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
     ),
   );
 }

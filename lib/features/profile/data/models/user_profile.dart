@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 @DataClassName('UserProfileData')
 class UserProfile extends Table with TableMixin {
   TextColumn get name => text()();
-  TextColumn get username => text()();
+  TextColumn get username => text().nullable()();
   TextColumn get email => text()();
   @JsonKey('terms_accepted')
   BoolColumn get termsAccepted => boolean().withDefault(Constant(false))();
@@ -15,9 +15,9 @@ class UserProfile extends Table with TableMixin {
   @JsonKey("avatar_url")
   TextColumn get avatarUrl => text().nullable()();
   @JsonKey("bio")
-  TextColumn get bio => text()();
+  TextColumn get bio => text().nullable()();
   @JsonKey("phone")
-  TextColumn get phone => text()();
+  TextColumn get phone => text().nullable()();
   @JsonKey("vibe_points")
   IntColumn get vibePoints => integer().withDefault(Constant(0))();
 
