@@ -33,6 +33,18 @@ class _LayoutPageState extends State<LayoutPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => Scaffold(
+        // DO NOT RELY ON THIS IT'LL BE REMOVED SOON
+        // FOR TESTING PURPOSES ONLY
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                CompleteProfileRoute().go(context);
+              },
+              icon: Icon(Icons.person),
+            ),
+          ],
+        ),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

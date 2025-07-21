@@ -14,11 +14,12 @@ class AppRouter {
     observers: [AppNavigationObserver()],
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) async {
-      final authState = BlocProvider.of<AuthBloc>(context).state; 
+      final authState = BlocProvider.of<AuthBloc>(context).state;
       if (authState is AuthUnauthenticated) {
         return AuthRoute().location;
       }
-      return null;
+      return CompleteProfileRoute().location;
+      // return null;
     },
   );
 }
