@@ -1,7 +1,7 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/constants.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class LayoutPage extends StatefulWidget {
@@ -33,15 +33,17 @@ class _LayoutPageState extends State<LayoutPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => Scaffold(
-        // DO NOT RELY ON THIS IT'LL BE REMOVED SOON
-        // FOR TESTING PURPOSES ONLY
         appBar: AppBar(
+          elevation: 2,
+          leadingWidth: 150,
+          centerTitle: false,
+          leading: Image.asset("assets/icons/academia-logo-variant-1.png"),
           actions: [
             IconButton(
               onPressed: () {
-                CompleteProfileRoute().go(context);
+                ProfileRoute().push(context);
               },
-              icon: Icon(Icons.person),
+              icon: UserAvatar(scallopDepth: 2),
             ),
           ],
         ),
@@ -59,20 +61,20 @@ class _LayoutPageState extends State<LayoutPage> {
                 onDestinationSelected: _onNavigationSelected,
                 destinations: [
                   NavigationRailDestination(
-                    icon: Icon(FontAwesome.house_solid),
+                    icon: Icon(Symbols.house),
                     label: Text("Home"),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(FontAwesome.calendar_day_solid),
+                    icon: Icon(Symbols.calendar_today),
                     label: Text("Agenda"),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(FontAwesome.meteor_solid),
-                    label: Text("Assitant"),
+                    icon: Icon(Symbols.digital_wellbeing),
+                    label: Text("Well Being"),
                   ),
 
                   NavigationRailDestination(
-                    icon: Icon(FontAwesome.rocket_solid),
+                    icon: Icon(Symbols.grid_view),
                     label: Text("Essentials"),
                   ),
                 ],
@@ -99,7 +101,7 @@ class _LayoutPageState extends State<LayoutPage> {
                     label: "Agenda",
                   ),
                   NavigationDestination(
-                    icon: Icon(Symbols.ecg_heart),
+                    icon: Icon(Symbols.digital_wellbeing),
                     label: "Well Being",
                   ),
 

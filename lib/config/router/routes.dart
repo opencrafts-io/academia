@@ -13,7 +13,6 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
     TypedGoRoute<CalendarRoute>(path: '/calendar'),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
-    TypedGoRoute<ProfileRoute>(path: '/profile'),
   ],
 )
 class MainLayoutShellRoute extends ShellRouteData {
@@ -68,7 +67,7 @@ class AuthRoute extends GoRouteData with _$AuthRoute {
 class ProfileRoute extends GoRouteData with _$ProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(appBar: AppBar(title: Text("Profile")));
+    return ProfileView();
   }
 }
 

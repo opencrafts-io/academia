@@ -79,6 +79,7 @@ class _AcademiaState extends State<Academia> {
             AppRouter.router.refresh();
           },
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
             theme: ThemeData(
               fontFamily: 'Din',
