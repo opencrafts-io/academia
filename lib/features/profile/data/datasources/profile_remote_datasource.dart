@@ -19,7 +19,6 @@ class ProfileRemoteDatasource with DioErrorHandler {
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
-      rethrow;
       return left(
         CacheFailure(
           error: e,
@@ -47,7 +46,31 @@ class ProfileRemoteDatasource with DioErrorHandler {
       return left(
         CacheFailure(
           error: e,
-          message: "We couldn't fetch your profile please try again later",
+          message: "We couldn't update your phone number at the moment",
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, UserProfileData>> updateUserPhone(
+    UserProfileData updatedProfile,
+  ) async {
+    try {
+      final response = await dioClient.dio.patch(
+        "/accounts/me/phone",
+        data: updatedProfile.toJson(),
+      );
+      if (response.statusCode == 200) {
+        return right(UserProfileData.fromJson(response.data));
+      }
+      return left(NetworkFailure(error: "", message: ""));
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          error: e,
+          message: "We couldn't update your phone number at the moment",
         ),
       );
     }

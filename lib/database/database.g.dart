@@ -108,9 +108,9 @@ class $UserProfileTable extends UserProfile
   late final GeneratedColumn<String> nationalID = GeneratedColumn<String>(
     'national_i_d',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
     'avatarUrl',
@@ -243,8 +243,6 @@ class $UserProfileTable extends UserProfile
           _nationalIDMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_nationalIDMeta);
     }
     if (data.containsKey('avatar_url')) {
       context.handle(
@@ -314,7 +312,7 @@ class $UserProfileTable extends UserProfile
       nationalID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}national_i_d'],
-      )!,
+      ),
       avatarUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}avatar_url'],
@@ -349,7 +347,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
   final String email;
   final bool termsAccepted;
   final bool onboarded;
-  final String nationalID;
+  final String? nationalID;
   final String? avatarUrl;
   final String? bio;
   final String? phone;
@@ -363,7 +361,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     required this.email,
     required this.termsAccepted,
     required this.onboarded,
-    required this.nationalID,
+    this.nationalID,
     this.avatarUrl,
     this.bio,
     this.phone,
@@ -382,7 +380,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     map['email'] = Variable<String>(email);
     map['terms_accepted'] = Variable<bool>(termsAccepted);
     map['onboarded'] = Variable<bool>(onboarded);
-    map['national_i_d'] = Variable<String>(nationalID);
+    if (!nullToAbsent || nationalID != null) {
+      map['national_i_d'] = Variable<String>(nationalID);
+    }
     if (!nullToAbsent || avatarUrl != null) {
       map['avatar_url'] = Variable<String>(avatarUrl);
     }
@@ -408,7 +408,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       email: Value(email),
       termsAccepted: Value(termsAccepted),
       onboarded: Value(onboarded),
-      nationalID: Value(nationalID),
+      nationalID: nationalID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationalID),
       avatarUrl: avatarUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(avatarUrl),
@@ -434,7 +436,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       email: serializer.fromJson<String>(json['email']),
       termsAccepted: serializer.fromJson<bool>(json['terms_accepted']),
       onboarded: serializer.fromJson<bool>(json['onboarded']),
-      nationalID: serializer.fromJson<String>(json['national_id']),
+      nationalID: serializer.fromJson<String?>(json['national_id']),
       avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
       bio: serializer.fromJson<String?>(json['bio']),
       phone: serializer.fromJson<String?>(json['phone']),
@@ -453,7 +455,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       'email': serializer.toJson<String>(email),
       'terms_accepted': serializer.toJson<bool>(termsAccepted),
       'onboarded': serializer.toJson<bool>(onboarded),
-      'national_id': serializer.toJson<String>(nationalID),
+      'national_id': serializer.toJson<String?>(nationalID),
       'avatar_url': serializer.toJson<String?>(avatarUrl),
       'bio': serializer.toJson<String?>(bio),
       'phone': serializer.toJson<String?>(phone),
@@ -470,7 +472,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     String? email,
     bool? termsAccepted,
     bool? onboarded,
-    String? nationalID,
+    Value<String?> nationalID = const Value.absent(),
     Value<String?> avatarUrl = const Value.absent(),
     Value<String?> bio = const Value.absent(),
     Value<String?> phone = const Value.absent(),
@@ -484,7 +486,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     email: email ?? this.email,
     termsAccepted: termsAccepted ?? this.termsAccepted,
     onboarded: onboarded ?? this.onboarded,
-    nationalID: nationalID ?? this.nationalID,
+    nationalID: nationalID.present ? nationalID.value : this.nationalID,
     avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
     bio: bio.present ? bio.value : this.bio,
     phone: phone.present ? phone.value : this.phone,
@@ -578,7 +580,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   final Value<String> email;
   final Value<bool> termsAccepted;
   final Value<bool> onboarded;
-  final Value<String> nationalID;
+  final Value<String?> nationalID;
   final Value<String?> avatarUrl;
   final Value<String?> bio;
   final Value<String?> phone;
@@ -609,7 +611,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     required String email,
     this.termsAccepted = const Value.absent(),
     this.onboarded = const Value.absent(),
-    required String nationalID,
+    this.nationalID = const Value.absent(),
     this.avatarUrl = const Value.absent(),
     this.bio = const Value.absent(),
     this.phone = const Value.absent(),
@@ -617,8 +619,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
-       email = Value(email),
-       nationalID = Value(nationalID);
+       email = Value(email);
   static Insertable<UserProfileData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -662,7 +663,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Value<String>? email,
     Value<bool>? termsAccepted,
     Value<bool>? onboarded,
-    Value<String>? nationalID,
+    Value<String?>? nationalID,
     Value<String?>? avatarUrl,
     Value<String?>? bio,
     Value<String?>? phone,
@@ -1240,7 +1241,7 @@ typedef $$UserProfileTableCreateCompanionBuilder =
       required String email,
       Value<bool> termsAccepted,
       Value<bool> onboarded,
-      required String nationalID,
+      Value<String?> nationalID,
       Value<String?> avatarUrl,
       Value<String?> bio,
       Value<String?> phone,
@@ -1257,7 +1258,7 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<String> email,
       Value<bool> termsAccepted,
       Value<bool> onboarded,
-      Value<String> nationalID,
+      Value<String?> nationalID,
       Value<String?> avatarUrl,
       Value<String?> bio,
       Value<String?> phone,
@@ -1509,7 +1510,7 @@ class $$UserProfileTableTableManager
                 Value<String> email = const Value.absent(),
                 Value<bool> termsAccepted = const Value.absent(),
                 Value<bool> onboarded = const Value.absent(),
-                Value<String> nationalID = const Value.absent(),
+                Value<String?> nationalID = const Value.absent(),
                 Value<String?> avatarUrl = const Value.absent(),
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
@@ -1541,7 +1542,7 @@ class $$UserProfileTableTableManager
                 required String email,
                 Value<bool> termsAccepted = const Value.absent(),
                 Value<bool> onboarded = const Value.absent(),
-                required String nationalID,
+                Value<String?> nationalID = const Value.absent(),
                 Value<String?> avatarUrl = const Value.absent(),
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),

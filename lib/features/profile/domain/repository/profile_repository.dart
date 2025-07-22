@@ -11,4 +11,7 @@ abstract class ProfileRepository {
   Future<Either<Failure, UserProfile>> updateUserProfile(
     UserProfile userprofile,
   );
+  Future<Either<Failure, UserProfile>> updateUserPhone(
+    UserProfile userprofile,
+  );
 }

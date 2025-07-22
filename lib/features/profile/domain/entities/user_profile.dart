@@ -7,7 +7,7 @@ class UserProfile extends Equatable {
   final String email;
   final bool termsAccepted;
   final bool onboarded;
-  final String nationalID;
+  final String? nationalID;
   final String? avatarUrl;
   final String? bio;
   final int vibePoints;
@@ -30,6 +30,38 @@ class UserProfile extends Equatable {
     required this.vibePoints,
     this.avatarUrl,
   });
+
+  UserProfile copyWith({
+    String? id,
+    String? name,
+    String? username,
+    String? email,
+    bool? termsAccepted,
+    bool? onboarded,
+    String? nationalID,
+    String? avatarUrl,
+    String? bio,
+    int? vibePoints,
+    String? phone,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UserProfile(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      termsAccepted: termsAccepted ?? this.termsAccepted,
+      onboarded: onboarded ?? this.onboarded,
+      nationalID: nationalID ?? this.nationalID,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      bio: bio ?? this.bio,
+      vibePoints: vibePoints ?? this.vibePoints,
+      phone: phone ?? this.phone,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   @override
   List<Object?> get props => [

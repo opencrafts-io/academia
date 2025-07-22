@@ -66,4 +66,24 @@ class ProfileRepositoryImpl implements ProfileRepository {
       (userProfileData) => right(userProfileData.toEntity()),
     );
   }
+
+  @override
+  Future<Either<Failure, UserProfile>> updateUserPhone(
+    UserProfile userProfile,
+  ) async {
+    final remoteResponse = await profileRemoteDatasource.updateUserPhone(
+      userProfile.toData(),
+    );
+
+    if (remoteResponse.isLeft()) {
+      return left((remoteResponse as Left).value);
+    }
+
+    final cacheResult = await profileLocalDatasource.createOrUpdateUserProfile(
+      (remoteResponse as Right).value,
+    );
+    return cacheResult.fold((failure) => left(failure), (userProfile) {
+      return right(userProfile.toEntity());
+    });
+  }
 }

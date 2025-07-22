@@ -59,4 +59,18 @@ Future<void> init(FlavorConfig flavor) async {
       profileRepository: sl.get<ProfileRepositoryImpl>(),
     ),
   );
+
+  sl.registerFactory<UpdateUserProfile>(
+    () => UpdateUserProfile(profileRepository: sl.get<ProfileRepositoryImpl>()),
+  );
+
+  sl.registerFactory<UpdateUserPhone>(
+    () => UpdateUserPhone(profileRepository: sl.get<ProfileRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCachedProfileUsecase>(
+    () => GetCachedProfileUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
 }

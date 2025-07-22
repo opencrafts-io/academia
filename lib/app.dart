@@ -65,9 +65,12 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(
           create: (context) => ProfileBloc(
+            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
             refreshCurrentUserProfileUsecase: sl
                 .get<RefreshCurrentUserProfileUsecase>(),
-          )..add(RefreshProfileEvent()),
+            updateUserProfile: sl.get<UpdateUserProfile>(),
+            updateUserPhone: sl.get<UpdateUserPhone>(),
+          )..add(GetCachedProfileEvent()),
         ),
       ],
       child: DynamicColorBuilder(

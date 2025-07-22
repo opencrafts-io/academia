@@ -11,7 +11,7 @@ class UserProfile extends Table with TableMixin {
   @JsonKey('onboarded')
   BoolColumn get onboarded => boolean().withDefault(Constant(false))();
   @JsonKey("national_id")
-  TextColumn get nationalID => text()();
+  TextColumn get nationalID => text().nullable()();
   @JsonKey("avatar_url")
   TextColumn get avatarUrl => text().nullable()();
   @JsonKey("bio")

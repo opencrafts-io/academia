@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import './welcome_page.dart';
 import './name_edit_page.dart';
 import './contact_edit_page.dart';
@@ -51,36 +52,52 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         ),
         title: Text("Setup your profile"),
       ),
-      body: SafeArea(
-        minimum: EdgeInsets.all(12),
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: 600,
-              maxHeight: MediaQuery.of(context).size.height * 0.8,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LinearProgressIndicator(
-                  value: _progress,
-                  valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                Expanded(
-                  child: PageView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: _pageController,
-                    onPageChanged: _updateProgress,
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsetsGeometry.all(12),
-                      child: _buildPage(index),
+      body: BlocListener<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Oops! ${state.message}"),
+                behavior: SnackBarBehavior.floating,
+                width: MediaQuery.of(context).size.width * 0.75,
+                showCloseIcon: true,
+              ),
+              snackBarAnimationStyle: AnimationStyle(curve: Curves.bounceIn),
+            );
+            return;
+          }
+        },
+        child: SafeArea(
+          minimum: EdgeInsets.all(12),
+          child: Center(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 600,
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LinearProgressIndicator(
+                    value: _progress,
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).colorScheme.primary,
                     ),
-                    itemCount: 5,
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: PageView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      controller: _pageController,
+                      onPageChanged: _updateProgress,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsetsGeometry.all(12),
+                        child: _buildPage(index),
+                      ),
+                      itemCount: 5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
