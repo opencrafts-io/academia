@@ -63,6 +63,15 @@ class _AcademiaState extends State<Academia> {
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           )..add(AuthCheckStatusEvent()),
         ),
+        BlocProvider(
+          create: (context) => ProfileBloc(
+            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
+            refreshCurrentUserProfileUsecase: sl
+                .get<RefreshCurrentUserProfileUsecase>(),
+            updateUserProfile: sl.get<UpdateUserProfile>(),
+            updateUserPhone: sl.get<UpdateUserPhone>(),
+          )..add(GetCachedProfileEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(

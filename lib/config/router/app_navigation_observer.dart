@@ -19,7 +19,7 @@ class AppNavigationObserver extends NavigatorObserver {
   /// - [previousRoute]: The route that was active before the new route was pushed.
   @override
   void didPush(Route route, Route? previousRoute) {
-    _logger.t({
+    _logger.i({
       "trace": "did push route",
       "route": route.settings.name,
       "arguments": route.settings.arguments,
@@ -38,7 +38,7 @@ class AppNavigationObserver extends NavigatorObserver {
   /// - [previousRoute]: The route that becomes active after the current route is popped.
   @override
   void didPop(Route route, Route? previousRoute) {
-    _logger.t({
+    _logger.i({
       "trace": "did pop route",
       "route": route.settings.name,
       "arguments": route.settings.arguments,

@@ -1,5 +1,5 @@
 import 'package:academia/features/auth/data/models/token.dart';
-import 'package:academia/features/auth/data/models/user_profile.dart';
+import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/chirp/data/models/conversation_model.dart';
 import 'package:academia/features/chirp/data/models/message_model.dart';
 import 'package:academia/features/chirp/data/models/user_model.dart';

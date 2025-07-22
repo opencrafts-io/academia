@@ -13,10 +13,7 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
     TypedGoRoute<CalendarRoute>(path: '/calendar'),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
-    TypedGoRoute<ProfileRoute>(
-      path: '/profile',
-      routes: [TypedGoRoute<CompleteProfileRoute>(path: "additional-info")],
-    ),
+    TypedGoRoute<ProfileRoute>(path: '/profile'),
   ],
 )
 class MainLayoutShellRoute extends ShellRouteData {
@@ -38,14 +35,12 @@ class HomeRoute extends GoRouteData with _$HomeRoute {
   }
 }
 
-
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return Scaffold(body: Center(child: Text("Essentials")));
   }
 }
-
 
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
@@ -54,18 +49,12 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
   }
 }
 
-
 class MeteorRoute extends GoRouteData with _$MeteorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return Scaffold(body: Center(child: Text("MeteorRoute")));
   }
 }
-
-
-
-
-
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -83,6 +72,7 @@ class ProfileRoute extends GoRouteData with _$ProfileRoute {
   }
 }
 
+@TypedGoRoute<CompleteProfileRoute>(path: "/complete-profile")
 class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
