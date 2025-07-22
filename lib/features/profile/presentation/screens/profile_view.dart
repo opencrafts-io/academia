@@ -1,5 +1,9 @@
+import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:time_since/time_since.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -12,29 +16,155 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(title: Text("Hi, Erick!")),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
+          return Future.delayed(Duration(seconds: 2));
+        },
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+          buildWhen: (stateA, stateB) => stateB is ProfileLoadedState,
+          builder: (context, state) => CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: Text("Profile"),
+                actions: [
+                  IconButton(icon: Icon(Icons.add), onPressed: () {}),
+                  IconButton(
+                    icon: Icon(Symbols.edit_rounded),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
 
-          SliverToBoxAdapter(
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.all(12),
-                constraints: BoxConstraints(maxWidth: 1200),
-                child: Column(
-                  spacing: 12,
-                  children: [
-                    UserAvatar(radius: 60),
-                    Text(
-                      "Erick Muuo",
-                      style: Theme.of(context).textTheme.headlineMedium,
+              SliverToBoxAdapter(
+                child: Center(
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    constraints: BoxConstraints(
+                      maxWidth: ResponsiveBreakPoints.mobile,
                     ),
-                  ],
+                    child: Column(
+                      spacing: 0,
+                      children: [
+                        UserAvatar(radius: 60),
+                        SizedBox(height: 12),
+                        Text(
+                          (state as ProfileLoadedState).profile.name,
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        Text(
+                          "@${state.profile.username?.toLowerCase() ?? 'anonymous'}",
+                        ),
+
+                        SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Your Academia Profile",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.vertical(
+                              top: Radius.circular(12),
+                              bottom: Radius.circular(0),
+                            ),
+                          ),
+                          elevation: 0,
+                          child: ListTile(
+                            leading: Icon(Symbols.person_filled),
+                            title: Text(state.profile.name),
+                            subtitle: Text(
+                              "Your full name",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.all(
+                              Radius.circular(0),
+                            ),
+                          ),
+                          elevation: 0,
+                          child: ListTile(
+                            leading: Icon(Symbols.numbers),
+                            title: Text(
+                              state.profile.nationalID ??
+                                  'Please update your national ID',
+                            ),
+                            subtitle: Text(
+                              "National Identification Number",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.all(
+                              Radius.circular(0),
+                            ),
+                          ),
+                          elevation: 0,
+                          child: ListTile(
+                            leading: Icon(Symbols.phone),
+                            title: Text(
+                              state.profile.phone ??
+                                  'Please update your phone number',
+                            ),
+                            subtitle: Text(
+                              "Your phone number",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.all(
+                              Radius.circular(0),
+                            ),
+                          ),
+                          elevation: 0,
+                          child: ListTile(
+                            leading: Icon(Symbols.email),
+                            title: Text(state.profile.email),
+                            subtitle: Text(
+                              "Your personal email",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.all(2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.vertical(
+                              bottom: Radius.circular(8),
+                            ),
+                          ),
+                          elevation: 0,
+                          child: ListTile(
+                            leading: Icon(Symbols.today),
+                            title: Text(timeSince(state.profile.createdAt)),
+                            subtitle: Text(
+                              "Time since you joined Academia",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -1066,6 +1066,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4"
+  time_since:
+    dependency: "direct main"
+    description:
+      name: time_since
+      sha256: "7ad8aecfcf2aee87de7e95659b450d9e795144048099f1c9e0f4dcc62c2d25b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   timing:
     dependency: transitive
     description:
