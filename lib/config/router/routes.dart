@@ -66,8 +66,29 @@ class AuthRoute extends GoRouteData with _$AuthRoute {
 @TypedGoRoute<ProfileRoute>(path: "/profile")
 class ProfileRoute extends GoRouteData with _$ProfileRoute {
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return ProfileView();
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: const ProfileView(),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }
 
