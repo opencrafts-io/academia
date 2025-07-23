@@ -1,10 +1,10 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/data/models/message_model_helper.dart';
+import 'package:academia/features/chirp/data/models/conversations/message_model_helper.dart';
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/message.dart';
-import '../../domain/repository/message_repository.dart';
-import '../datasources/messaging_remote_datasource.dart';
-import '../datasources/messaging_local_datasource.dart';
+import '../../../domain/entities/conversations/message.dart';
+import '../../../domain/repository/conversations/message_repository.dart';
+import '../../datasources/conversations/messaging_remote_datasource.dart';
+import '../../datasources/conversations/messaging_local_datasource.dart';
 
 class MessageRepositoryImpl implements MessageRepository {
   final MessagingRemoteDatasource remoteDataSource;

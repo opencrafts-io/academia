@@ -1,7 +1,7 @@
 import 'package:academia/database/database.dart';
-import '../../domain/entities/conversation.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/entities/message.dart';
+import '../../../domain/entities/conversations/conversation.dart';
+import '../../../domain/entities/conversations/user.dart';
+import '../../../domain/entities/conversations/message.dart';
 
 extension ConversationModelHelper on ConversationData {
   Conversation toEntity() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/chirp/chirp.dart';
 
 part 'routes.g.dart';
 
@@ -14,6 +15,7 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
     TypedGoRoute<ProfileRoute>(path: '/profile'),
+    TypedGoRoute<ConversationsRoute>(path: '/conversations'),
   ],
 )
 class MainLayoutShellRoute extends ShellRouteData {
@@ -77,5 +79,28 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
+  }
+}
+
+@TypedGoRoute<ConversationsRoute>(path: "/conversations")
+class ConversationsRoute extends GoRouteData with _$ConversationsRoute {
+  const ConversationsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ConversationsPage();
+  }
+}
+
+@TypedGoRoute<ChatRoute>(path: "/chat/:id")
+class ChatRoute extends GoRouteData with _$ChatRoute {
+  const ChatRoute({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final conversation = state.extra as Conversation?;
+    return ChatPage(conversationId: id, conversation: conversation);
   }
 }

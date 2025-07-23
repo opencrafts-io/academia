@@ -25,6 +25,8 @@ class _LayoutPageState extends State<LayoutPage> {
         MeteorRoute().go(context);
       case 3:
         EssentialsRoute().go(context);
+      case 4:
+        ConversationsRoute().go(context);
     }
     selectedIndex = index;
   }
@@ -75,6 +77,10 @@ class _LayoutPageState extends State<LayoutPage> {
                     icon: Icon(FontAwesome.rocket_solid),
                     label: Text("Essentials"),
                   ),
+                  NavigationRailDestination(
+                    icon: Icon(FontAwesome.comments),
+                    label: Text("Chirp"),
+                  ),
                 ],
                 selectedIndex: selectedIndex,
               ),
@@ -107,6 +113,11 @@ class _LayoutPageState extends State<LayoutPage> {
                     icon: Icon(Symbols.grid_view),
                     selectedIcon: Icon(Symbols.grid_view),
                     label: "Essentials",
+                  ),
+                  NavigationDestination(
+                    icon: Icon(FontAwesome.comments),
+                    selectedIcon: Icon(FontAwesome.comments),
+                    label: "Chirp",
                   ),
                 ],
               ),

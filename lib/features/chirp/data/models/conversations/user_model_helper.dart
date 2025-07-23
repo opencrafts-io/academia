@@ -1,5 +1,5 @@
 import 'package:academia/database/database.dart';
-import '../../domain/entities/user.dart';
+import '../../../domain/entities/conversations/user.dart';
 
 extension UserModelHelper on UserData {
   User toEntity() => User(id: id, name: name, email: email, avatar: avatar);

@@ -1,9 +1,8 @@
-// lib/features/messaging/domain/domain.dart
-export 'entities/conversation.dart';
-export 'entities/message.dart';
-export 'entities/user.dart';
-export 'repository/conversation_repository.dart';
-export 'repository/message_repository.dart';
-export 'usecases/get_conversations.dart';
-export 'usecases/get_messages.dart';
-export 'usecases/send_message.dart';
+export 'entities/conversations/conversation.dart';
+export 'entities/conversations/message.dart';
+export 'entities/conversations/user.dart';
+export 'repository/conversations/conversation_repository.dart';
+export 'repository/conversations/message_repository.dart';
+export 'usecases/conversations/get_conversations.dart';
+export 'usecases/conversations/get_messages.dart';
+export 'usecases/conversations/send_message.dart';

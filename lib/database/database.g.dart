@@ -1860,7 +1860,6 @@ class MessageData extends DataClass implements Insertable<MessageData> {
   final String recipientId;
   final DateTime sentAt;
   final bool isRead;
-
   const MessageData({
     required this.id,
     required this.createdAt,

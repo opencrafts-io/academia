@@ -1,8 +1,8 @@
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
-import 'package:academia/features/chirp/data/models/conversation_model.dart';
-import 'package:academia/features/chirp/data/models/message_model.dart';
-import 'package:academia/features/chirp/data/models/user_model.dart';
+import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
+import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
+import 'package:academia/features/chirp/data/models/conversations/user_model.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';

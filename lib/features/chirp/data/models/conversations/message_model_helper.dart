@@ -1,6 +1,6 @@
 import 'package:academia/database/database.dart';
-import '../../domain/entities/message.dart';
-import '../../domain/entities/user.dart';
+import '../../../domain/entities/conversations/message.dart';
+import '../../../domain/entities/conversations/user.dart';
 
 // Convert from database model TO domain entity
 extension MessageModelHelper on MessageData {

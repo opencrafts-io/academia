@@ -1,4 +1,5 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -71,6 +72,13 @@ class _AcademiaState extends State<Academia> {
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
           )..add(GetCachedProfileEvent()),
+        ),
+        BlocProvider(
+          create: (context) => MessagingBloc(
+            getConversations: sl.get<GetConversations>(),
+            getMessages: sl.get<GetMessages>(),
+            sendMessage: sl.get<SendMessage>(),
+          ),
         ),
       ],
       child: DynamicColorBuilder(
