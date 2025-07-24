@@ -111,7 +111,7 @@ class _ShereheDetailsState extends State<ShereheDetails> {
             ),
             actions: [
               IconButton(
-                onPressed: _showFeatureUnavailableDialog, // Placeholder for favourites functionality
+                onPressed: () {},
                 icon: Icon(
                   Icons.bookmark_border,
                   color: Theme.of(context).colorScheme.onPrimary,
