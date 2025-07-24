@@ -4,6 +4,11 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
+import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
+import 'package:academia/features/chirp/data/repositories/chirp_repository_impl.dart';
+import 'package:academia/features/chirp/domain/repositories/chirp_repository.dart';
+import 'package:academia/features/chirp/domain/usecases/get_feed_posts.dart';
+import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -36,4 +41,10 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
   );
+
+  // Chirp
+  sl.registerSingleton<ChirpRemoteDataSource>(ChirpRemoteDataSourceImpl());
+  sl.registerSingleton<ChirpRepository>(ChirpRepositoryImpl(sl()));
+  sl.registerSingleton(GetFeedPosts(sl()));
+  sl.registerFactory(() => FeedBloc(sl()));
 }
