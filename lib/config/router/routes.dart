@@ -1,3 +1,4 @@
+import 'package:academia/features/chirp/presentation/views/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
@@ -34,7 +35,7 @@ class MainLayoutShellRoute extends ShellRouteData {
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Chirp")));
+    return FeedPage();
   }
 }
 
@@ -89,3 +90,4 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
     return CompleteProfileScreen();
   }
 }
+
