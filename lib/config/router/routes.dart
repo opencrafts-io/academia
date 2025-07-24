@@ -34,22 +34,10 @@ class MainLayoutShellRoute extends ShellRouteData {
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Chirp"),
-            FilledButton(
-              onPressed: () => ShereheRoute().push(context),
-              child: Text("Sherehe"),
-            ),
-          ],
-        ),
-      ),
-    );
+    return Scaffold(body: Center(child: Text("Chirp")));
   }
 }
+
 
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
@@ -58,6 +46,7 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   }
 }
 
+
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -65,12 +54,18 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
   }
 }
 
+
 class MeteorRoute extends GoRouteData with _$MeteorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return Scaffold(body: Center(child: Text("MeteorRoute")));
   }
 }
+
+
+
+
+
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -92,20 +87,5 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
-  }
-}
-
-@TypedGoRoute<ShereheRoute>(path: "/sherehe", routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")])
-class ShereheRoute extends GoRouteData with _$ShereheRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return ShereheHome();
-  }
-}
-
-class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return ShereheDetails();
   }
 }
