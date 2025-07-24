@@ -1,4 +1,5 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -64,6 +65,7 @@ class _AcademiaState extends State<Academia> {
           )..add(AuthCheckStatusEvent()),
         ),
         BlocProvider(
+          create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
             refreshCurrentUserProfileUsecase: sl
