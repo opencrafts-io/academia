@@ -1,8 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:carousel_slider/carousel_slider.dart';
-
+import 'package:academia/constants/constants.dart';
 import '../widgets/event_card.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -13,13 +12,16 @@ class ShereheHome extends StatefulWidget {
 }
 
 class _ShereheHomeState extends State<ShereheHome> {
-  final events = [
+  final List<Map<String, dynamic>> events = [
     {
       "imagePath": 'assets/images/gaelle-marcel-vrkSVpOwchk-unsplash.jpg',
       "title": 'Gender Reveal Party',
       "location": 'Kryptons Apartments, Athi River',
       "date": 'Sat, Jul 20',
       "time": '2:00 PM',
+      "attendees": ['Alice Mwende', 'Brian Kimani', 'Cynthia Otieno'],
+      "attendeesCount": 23,
+      "genres": ['Family', 'Celebration', 'Casual'],
     },
     {
       "imagePath": 'assets/images/scott-warman-rrYF1RfotSM-unsplash.jpg',
@@ -27,6 +29,9 @@ class _ShereheHomeState extends State<ShereheHome> {
       "location": 'Pine Breeze Gateway, Athi River',
       "date": 'Thu, Jul 25',
       "time": '7:30 PM',
+      "attendees": ['David Wanjiru', 'Emily Kihara', 'Felix Oloo'],
+      "attendeesCount": 58,
+      "genres": ['Social', 'Networking', 'Drinks'],
     },
     {
       "imagePath": 'assets/images/lee-blanchflower-1dW1vEJLlCQ-unsplash.jpg',
@@ -34,6 +39,9 @@ class _ShereheHomeState extends State<ShereheHome> {
       "location": 'Sabina Joy, Nairobi CBD',
       "date": 'Fri, Jul 26',
       "time": '9:00 PM',
+      "attendees": ['Grace Njeri', 'Hassan Omar', 'Irene Mutiso'],
+      "attendeesCount": 120,
+      "genres": ['Party', 'Dance', 'University'],
     },
     {
       "imagePath": 'assets/images/al-elmes-ULHxWq8reao-unsplash.jpg',
@@ -41,6 +49,9 @@ class _ShereheHomeState extends State<ShereheHome> {
       "location": 'Heri Homes, Athi River',
       "date": 'Sun, Aug 4',
       "time": '12:00 PM',
+      "attendees": ['James Kariuki', 'Kendi Muthoni', 'Leonard Mwangi'],
+      "attendeesCount": 87,
+      "genres": ['Outdoor', 'Festival', 'Music'],
     },
     {
       "imagePath": 'assets/images/lavi-perchik-FCPV_n0lOxc-unsplash.jpg',
@@ -48,6 +59,9 @@ class _ShereheHomeState extends State<ShereheHome> {
       "location": 'Nairobi Street Kitchen, Westlands',
       "date": 'Fri, Aug 9',
       "time": '8:00 PM',
+      "attendees": ['Miriam Wambui', 'Nathan Njenga', 'Olivia Adhiambo'],
+      "attendeesCount": 43,
+      "genres": ['Dating', 'Party', 'Social'],
     },
     {
       "imagePath": 'assets/images/med-mhamdi-mH_E0K581Yk-unsplash.jpg',
@@ -55,27 +69,86 @@ class _ShereheHomeState extends State<ShereheHome> {
       "location": 'Captains Lounge, Mombasa Rd',
       "date": 'Sat, Aug 10',
       "time": '10:00 PM',
+      "attendees": ['Peter Ndungu', 'Queenie Muli', 'Raymond Kipkoech'],
+      "attendeesCount": 76,
+      "genres": ['Music', 'Dance', 'Nightlife'],
     },
   ];
+
+  int _getCrossAxisCount(BuildContext context) {
+    if (ResponsiveBreakPoints.isMobile(context)) {
+      return 1;
+    } else if (ResponsiveBreakPoints.isTablet(context)) {
+      return 2;
+    } else {
+      return 3;
+    }
+  }
+
+  double _getMainAxisExtent(BuildContext context) {
+    if (ResponsiveBreakPoints.isMobile(context)) {
+      return 440;
+    } else if (ResponsiveBreakPoints.isTablet(context)) {
+      return 600;
+    } else if (ResponsiveBreakPoints.isDesktop(context)) {
+      return 700;
+    } else {
+      return 800; // large desktop
+    }
+  }
+
+  double _getAppBarHeight(BuildContext context) {
+    if (ResponsiveBreakPoints.isMobile(context)) {
+      return 200;
+    } else if (ResponsiveBreakPoints.isTablet(context)) {
+      return 300;
+    } else if (ResponsiveBreakPoints.isDesktop(context)) {
+      return 350;
+    } else {
+      return 400; // large desktop
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 200.0,
             pinned: true,
+            expandedHeight: _getAppBarHeight(context),
             leading: IconButton(
               onPressed: () => context.pop(),
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
             ),
+            title: const Text("Sherehe"),
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/images/diversity.jpg',
-                fit: BoxFit.cover,
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'assets/images/diversity.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    color: Colors.black.withValues(
+                      alpha: 0.4,
+                    )
+                  ),
+                  Positioned(
+                    left: 16,
+                    bottom: 16,
+                    child: Text(
+                      'Find Your Vibe',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ],
               ),
-              title: Text("Sherehe"),
             ),
           ),
 
@@ -103,102 +176,44 @@ class _ShereheHomeState extends State<ShereheHome> {
               ),
             ),
           ),
-          // SliverToBoxAdapter(
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Padding(
-          //         padding: const EdgeInsets.symmetric(
-          //           horizontal: 16.0,
-          //           vertical: 8.0,
-          //         ),
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             Text(
-          //               'Trending Events',
-          //               style: theme.textTheme.headlineSmall?.copyWith(
-          //                 fontWeight: FontWeight.bold,
-          //               ),
-          //             ),
-          //             TextButton(
-          //               onPressed: () {},
-          //               child: Text(
-          //                 "View all",
-          //                 style: theme.textTheme.labelLarge,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       CarouselSlider(
-          //         options: CarouselOptions(
-          //           height: 400.0,
-          //           enlargeCenterPage: true,
-          //           enableInfiniteScroll: false,
-          //           viewportFraction: 0.8,
-          //         ),
-          //         items: [
-          //           EventCard(
-          //             imagePath:
-          //                 'assets/images/gaelle-marcel-vrkSVpOwchk-unsplash.jpg',
-          //             title: 'Gender Reveal Party',
-          //             location: 'Kryptons Apartments, Athi River',
-          //             date: 'Sat, Jul 20',
-          //             time: '2:00 PM',
-          //           ),
-          //           EventCard(
-          //             imagePath:
-          //                 'assets/images/scott-warman-rrYF1RfotSM-unsplash.jpg',
-          //             title: 'Cocktail Thursday',
-          //             location: 'Pine Breeze Gateway, Athi River',
-          //             date: 'Thu, Jul 25',
-          //             time: '7:30 PM',
-          //           ),
-          //           EventCard(
-          //             imagePath:
-          //                 'assets/images/lee-blanchflower-1dW1vEJLlCQ-unsplash.jpg',
-          //             title: 'Freshas Night',
-          //             location: 'Sabina Joy, Nairobi CBD',
-          //             date: 'Fri, Jul 26',
-          //             time: '9:00 PM',
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 10.0,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 10.0,
+              ),
+              child: Text(
+                'Upcoming Events',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            sliver: SliverList(
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _getCrossAxisCount(context),
+                mainAxisSpacing: 12.0,
+                crossAxisSpacing: 12.0,
+                childAspectRatio: 0.7,
+                mainAxisExtent: _getMainAxisExtent(context),
+              ),
               delegate: SliverChildBuilderDelegate((context, index) {
-                if (index == 0) {
-                  return Text(
-                    'Upcoming Events',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-
-                final  event = events[index - 1];
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 12.0,
-                  ), // space between cards
-                  child: EventCard(
-                    imagePath: event['imagePath'] ?? "Unknown Image",
-                    title: event['title'] ?? "Unknown title",
-                    location: event['location'] ?? "Unknown Location",
-                    date: event['date'] ?? "Unknown date",
-                    time: event['time'] ?? "Unknown time",
-                    onTap: () => ShereheDetailsRoute().push(context),
-                  ),
+                final event = events[index];
+                return EventCard(
+                  imagePath: event['imagePath'],
+                  title: event['title'],
+                  location: event['location'],
+                  date: event['date'],
+                  time: event['time'],
+                  genres: List<String>.from(event['genres']),
+                  attendees: List<String>.from(event['attendees']),
+                  attendeesCount: event['attendeesCount'],
+                  onTap: () => ShereheDetailsRoute().push(context),
                 );
-              }, childCount: events.length + 1),
+              }, childCount: events.length),
             ),
           ),
         ],
