@@ -53,6 +53,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_native_splash: ^2.4.6
   material_symbols_icons: ^4.2815.1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
