@@ -99,7 +99,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ShereheHome();
+    return ShereheDetails();
   }
 }
 
