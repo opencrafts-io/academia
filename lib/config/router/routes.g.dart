@@ -25,7 +25,6 @@ RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
       factory: _$EssentialsRoute._fromState,
     ),
     GoRouteData.$route(path: '/meteor', factory: _$MeteorRoute._fromState),
-    GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState),
   ],
 );
 
@@ -114,26 +113,6 @@ mixin _$MeteorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$ProfileRoute on GoRouteData {
-  static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
-
-  @override
-  String get location => GoRouteData.$location('/profile');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $authRoute =>
     GoRouteData.$route(path: '/auth', factory: _$AuthRoute._fromState);
 
@@ -159,6 +138,26 @@ mixin _$AuthRoute on GoRouteData {
 
 RouteBase get $profileRoute =>
     GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState);
+
+mixin _$ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $completeProfileRoute => GoRouteData.$route(
   path: '/complete-profile',
