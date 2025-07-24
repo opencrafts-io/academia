@@ -66,6 +66,13 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(
           create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
+          create: (context) => ProfileBloc(
+            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
+            refreshCurrentUserProfileUsecase: sl
+                .get<RefreshCurrentUserProfileUsecase>(),
+            updateUserProfile: sl.get<UpdateUserProfile>(),
+            updateUserPhone: sl.get<UpdateUserPhone>(),
+          )..add(GetCachedProfileEvent()),
         ),
       ],
       child: DynamicColorBuilder(
@@ -74,6 +81,7 @@ class _AcademiaState extends State<Academia> {
             AppRouter.router.refresh();
           },
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
             theme: ThemeData(
               fontFamily: 'Din',

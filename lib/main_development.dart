@@ -13,7 +13,7 @@ void main(args) async {
     FlavorConfig(
       flavor: Flavor.development,
       appName: "Academia - Dev",
-      apiBaseUrl: "https://qaverisafe.opencrafts.io",
+      apiBaseUrl: "http://127.0.0.1:8080",
     ),
   );
 
