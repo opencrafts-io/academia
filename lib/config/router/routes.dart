@@ -95,8 +95,15 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   }
 }
 
-@TypedGoRoute<ShereheRoute>(path: "/sherehe")
+@TypedGoRoute<ShereheRoute>(path: "/sherehe", routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")])
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ShereheHome();
+  }
+}
+
+class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ShereheDetails();

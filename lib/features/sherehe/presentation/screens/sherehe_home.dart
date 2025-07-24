@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:carousel_slider/carousel_slider.dart';
@@ -194,6 +195,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                     location: event['location'] ?? "Unknown Location",
                     date: event['date'] ?? "Unknown date",
                     time: event['time'] ?? "Unknown time",
+                    onTap: () => ShereheDetailsRoute().push(context),
                   ),
                 );
               }, childCount: events.length + 1),
