@@ -1,18 +1,38 @@
 import 'package:academia/database/database.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import '../../../domain/entities/conversations/conversation.dart';
-import '../../../domain/entities/conversations/user.dart';
 import '../../../domain/entities/conversations/message.dart';
+
+extension UserProfileHelper on String {
+  UserProfile toMinimalUserProfile() {
+    return UserProfile(
+      id: this,
+      name: '',
+      email: '',
+      termsAccepted: false,
+      onboarded: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      bio: '',
+      phone: '',
+      username: '',
+      nationalID: '',
+      vibePoints: 0,
+      avatarUrl: null,
+    );
+  }
+}
 
 extension ConversationModelHelper on ConversationData {
   Conversation toEntity() {
     return Conversation(
       id: id,
-      user: User(id: userId, name: '', email: ''),
+      user: userId.toMinimalUserProfile(),
       lastMessage: lastMessageId != null
           ? Message(
               id: lastMessageId!,
-              sender: User(id: '', name: '', email: ''),
-              recipient: User(id: '', name: '', email: ''),
+              sender: ''.toMinimalUserProfile(),
+              recipient: ''.toMinimalUserProfile(),
               content: '',
               sentAt: DateTime.now(),
             ) // TODO: Fetch actual message

@@ -1,7 +1,5 @@
-export 'models/conversations/user_model.dart';
 export 'models/conversations/conversation_model.dart';
 export 'models/conversations/message_model.dart';
-export 'models/conversations/user_model_helper.dart';
 export 'models/conversations/conversation_model_helper.dart';
 export 'models/conversations/message_model_helper.dart';
 

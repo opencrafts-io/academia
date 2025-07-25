@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'user.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 
 class Message extends Equatable {
   final String id;
   final String content;
-  final User sender;
-  final User recipient;
+  final UserProfile sender;
+  final UserProfile recipient;
   final DateTime sentAt;
   final bool isRead;
 

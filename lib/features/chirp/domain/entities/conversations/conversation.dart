@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import 'message.dart';
-import 'user.dart';
 
 class Conversation extends Equatable {
   final String id;
-  final User user;
+  final UserProfile user;
   final Message? lastMessage;
   final DateTime? lastMessageAt;
   final int unreadCount;

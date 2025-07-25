@@ -1219,407 +1219,6 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
-class $UserTableTable extends UserTable
-    with TableInfo<$UserTableTable, UserData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $UserTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
-  @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
-  @override
-  late final GeneratedColumn<String> avatar = GeneratedColumn<String>(
-    'avatar',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    name,
-    email,
-    avatar,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'user_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<UserData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emailMeta);
-    }
-    if (data.containsKey('avatar')) {
-      context.handle(
-        _avatarMeta,
-        avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  UserData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return UserData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      email: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email'],
-      )!,
-      avatar: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}avatar'],
-      ),
-    );
-  }
-
-  @override
-  $UserTableTable createAlias(String alias) {
-    return $UserTableTable(attachedDatabase, alias);
-  }
-}
-
-class UserData extends DataClass implements Insertable<UserData> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String name;
-  final String email;
-  final String? avatar;
-  const UserData({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.name,
-    required this.email,
-    this.avatar,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['email'] = Variable<String>(email);
-    if (!nullToAbsent || avatar != null) {
-      map['avatar'] = Variable<String>(avatar);
-    }
-    return map;
-  }
-
-  UserTableCompanion toCompanion(bool nullToAbsent) {
-    return UserTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      name: Value(name),
-      email: Value(email),
-      avatar: avatar == null && nullToAbsent
-          ? const Value.absent()
-          : Value(avatar),
-    );
-  }
-
-  factory UserData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserData(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      email: serializer.fromJson<String>(json['email']),
-      avatar: serializer.fromJson<String?>(json['avatar']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'email': serializer.toJson<String>(email),
-      'avatar': serializer.toJson<String?>(avatar),
-    };
-  }
-
-  UserData copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? name,
-    String? email,
-    Value<String?> avatar = const Value.absent(),
-  }) => UserData(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    avatar: avatar.present ? avatar.value : this.avatar,
-  );
-  UserData copyWithCompanion(UserTableCompanion data) {
-    return UserData(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      email: data.email.present ? data.email.value : this.email,
-      avatar: data.avatar.present ? data.avatar.value : this.avatar,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('UserData(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('avatar: $avatar')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, name, email, avatar);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is UserData &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.email == this.email &&
-          other.avatar == this.avatar);
-}
-
-class UserTableCompanion extends UpdateCompanion<UserData> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> email;
-  final Value<String?> avatar;
-  final Value<int> rowid;
-  const UserTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.email = const Value.absent(),
-    this.avatar = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  UserTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String name,
-    required String email,
-    this.avatar = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       name = Value(name),
-       email = Value(email);
-  static Insertable<UserData> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? email,
-    Expression<String>? avatar,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (email != null) 'email': email,
-      if (avatar != null) 'avatar': avatar,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  UserTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? email,
-    Value<String?>? avatar,
-    Value<int>? rowid,
-  }) {
-    return UserTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      avatar: avatar ?? this.avatar,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
-    }
-    if (avatar.present) {
-      map['avatar'] = Variable<String>(avatar.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('UserTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('avatar: $avatar, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $MessageTableTable extends MessageTable
     with TableInfo<$MessageTableTable, MessageData> {
   @override
@@ -1681,7 +1280,7 @@ class $MessageTableTable extends MessageTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_table (id)',
+      'REFERENCES user_profile (id)',
     ),
   );
   static const VerificationMeta _recipientIdMeta = const VerificationMeta(
@@ -1695,7 +1294,7 @@ class $MessageTableTable extends MessageTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_table (id)',
+      'REFERENCES user_profile (id)',
     ),
   );
   static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
@@ -2184,7 +1783,7 @@ class $ConversationTableTable extends ConversationTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_table (id)',
+      'REFERENCES user_profile (id)',
     ),
   );
   static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
@@ -2626,7 +2225,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
   late final $TokenTable token = $TokenTable(this);
-  late final $UserTableTable userTable = $UserTableTable(this);
   late final $MessageTableTable messageTable = $MessageTableTable(this);
   late final $ConversationTableTable conversationTable =
       $ConversationTableTable(this);
@@ -2637,7 +2235,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
     token,
-    userTable,
     messageTable,
     conversationTable,
   ];
@@ -2677,6 +2274,35 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<int> vibePoints,
       Value<int> rowid,
     });
+
+final class $$UserProfileTableReferences
+    extends BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData> {
+  $$UserProfileTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
+  _conversationTableRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.conversationTable,
+        aliasName: $_aliasNameGenerator(
+          db.userProfile.id,
+          db.conversationTable.userId,
+        ),
+      );
+
+  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
+    final manager = $$ConversationTableTableTableManager(
+      $_db,
+      $_db.conversationTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _conversationTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$UserProfileTableFilterComposer
     extends Composer<_$AppDataBase, $UserProfileTable> {
@@ -2751,6 +2377,31 @@ class $$UserProfileTableFilterComposer
     column: $table.vibePoints,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> conversationTableRefs(
+    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
+  ) {
+    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.conversationTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConversationTableTableFilterComposer(
+            $db: $db,
+            $table: $db.conversationTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$UserProfileTableOrderingComposer
@@ -2881,6 +2532,32 @@ class $$UserProfileTableAnnotationComposer
     column: $table.vibePoints,
     builder: (column) => column,
   );
+
+  Expression<T> conversationTableRefs<T extends Object>(
+    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
+  ) {
+    final $$ConversationTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.conversationTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ConversationTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.conversationTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$UserProfileTableTableManager
@@ -2894,12 +2571,9 @@ class $$UserProfileTableTableManager
           $$UserProfileTableAnnotationComposer,
           $$UserProfileTableCreateCompanionBuilder,
           $$UserProfileTableUpdateCompanionBuilder,
-          (
-            UserProfileData,
-            BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
-          ),
+          (UserProfileData, $$UserProfileTableReferences),
           UserProfileData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool conversationTableRefs})
         > {
   $$UserProfileTableTableManager(_$AppDataBase db, $UserProfileTable table)
     : super(
@@ -2977,9 +2651,45 @@ class $$UserProfileTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$UserProfileTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({conversationTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (conversationTableRefs) db.conversationTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (conversationTableRefs)
+                    await $_getPrefetchedData<
+                      UserProfileData,
+                      $UserProfileTable,
+                      ConversationData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$UserProfileTableReferences
+                          ._conversationTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$UserProfileTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).conversationTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.userId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -2994,12 +2704,9 @@ typedef $$UserProfileTableProcessedTableManager =
       $$UserProfileTableAnnotationComposer,
       $$UserProfileTableCreateCompanionBuilder,
       $$UserProfileTableUpdateCompanionBuilder,
-      (
-        UserProfileData,
-        BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
-      ),
+      (UserProfileData, $$UserProfileTableReferences),
       UserProfileData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool conversationTableRefs})
     >;
 typedef $$TokenTableCreateCompanionBuilder =
     TokenCompanion Function({
@@ -3230,335 +2937,6 @@ typedef $$TokenTableProcessedTableManager =
       TokenData,
       PrefetchHooks Function()
     >;
-typedef $$UserTableTableCreateCompanionBuilder =
-    UserTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String name,
-      required String email,
-      Value<String?> avatar,
-      Value<int> rowid,
-    });
-typedef $$UserTableTableUpdateCompanionBuilder =
-    UserTableCompanion Function({
-      Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> email,
-      Value<String?> avatar,
-      Value<int> rowid,
-    });
-
-final class $$UserTableTableReferences
-    extends BaseReferences<_$AppDataBase, $UserTableTable, UserData> {
-  $$UserTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
-  _conversationTableRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.conversationTable,
-        aliasName: $_aliasNameGenerator(
-          db.userTable.id,
-          db.conversationTable.userId,
-        ),
-      );
-
-  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
-    final manager = $$ConversationTableTableTableManager(
-      $_db,
-      $_db.conversationTable,
-    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _conversationTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$UserTableTableFilterComposer
-    extends Composer<_$AppDataBase, $UserTableTable> {
-  $$UserTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get avatar => $composableBuilder(
-    column: $table.avatar,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> conversationTableRefs(
-    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
-  ) {
-    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.conversationTable,
-      getReferencedColumn: (t) => t.userId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ConversationTableTableFilterComposer(
-            $db: $db,
-            $table: $db.conversationTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$UserTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $UserTableTable> {
-  $$UserTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get avatar => $composableBuilder(
-    column: $table.avatar,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$UserTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $UserTableTable> {
-  $$UserTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<String> get avatar =>
-      $composableBuilder(column: $table.avatar, builder: (column) => column);
-
-  Expression<T> conversationTableRefs<T extends Object>(
-    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
-  ) {
-    final $$ConversationTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.conversationTable,
-          getReferencedColumn: (t) => t.userId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ConversationTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.conversationTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$UserTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $UserTableTable,
-          UserData,
-          $$UserTableTableFilterComposer,
-          $$UserTableTableOrderingComposer,
-          $$UserTableTableAnnotationComposer,
-          $$UserTableTableCreateCompanionBuilder,
-          $$UserTableTableUpdateCompanionBuilder,
-          (UserData, $$UserTableTableReferences),
-          UserData,
-          PrefetchHooks Function({bool conversationTableRefs})
-        > {
-  $$UserTableTableTableManager(_$AppDataBase db, $UserTableTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$UserTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$UserTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$UserTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> email = const Value.absent(),
-                Value<String?> avatar = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => UserTableCompanion(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                name: name,
-                email: email,
-                avatar: avatar,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String name,
-                required String email,
-                Value<String?> avatar = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => UserTableCompanion.insert(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                name: name,
-                email: email,
-                avatar: avatar,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$UserTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({conversationTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (conversationTableRefs) db.conversationTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (conversationTableRefs)
-                    await $_getPrefetchedData<
-                      UserData,
-                      $UserTableTable,
-                      ConversationData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$UserTableTableReferences
-                          ._conversationTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$UserTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).conversationTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$UserTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $UserTableTable,
-      UserData,
-      $$UserTableTableFilterComposer,
-      $$UserTableTableOrderingComposer,
-      $$UserTableTableAnnotationComposer,
-      $$UserTableTableCreateCompanionBuilder,
-      $$UserTableTableUpdateCompanionBuilder,
-      (UserData, $$UserTableTableReferences),
-      UserData,
-      PrefetchHooks Function({bool conversationTableRefs})
-    >;
 typedef $$MessageTableTableCreateCompanionBuilder =
     MessageTableCompanion Function({
       required String id,
@@ -3588,17 +2966,17 @@ final class $$MessageTableTableReferences
     extends BaseReferences<_$AppDataBase, $MessageTableTable, MessageData> {
   $$MessageTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UserTableTable _senderIdTable(_$AppDataBase db) =>
-      db.userTable.createAlias(
-        $_aliasNameGenerator(db.messageTable.senderId, db.userTable.id),
+  static $UserProfileTable _senderIdTable(_$AppDataBase db) =>
+      db.userProfile.createAlias(
+        $_aliasNameGenerator(db.messageTable.senderId, db.userProfile.id),
       );
 
-  $$UserTableTableProcessedTableManager get senderId {
+  $$UserProfileTableProcessedTableManager get senderId {
     final $_column = $_itemColumn<String>('sender_id')!;
 
-    final manager = $$UserTableTableTableManager(
+    final manager = $$UserProfileTableTableManager(
       $_db,
-      $_db.userTable,
+      $_db.userProfile,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_senderIdTable($_db));
     if (item == null) return manager;
@@ -3607,17 +2985,17 @@ final class $$MessageTableTableReferences
     );
   }
 
-  static $UserTableTable _recipientIdTable(_$AppDataBase db) =>
-      db.userTable.createAlias(
-        $_aliasNameGenerator(db.messageTable.recipientId, db.userTable.id),
+  static $UserProfileTable _recipientIdTable(_$AppDataBase db) =>
+      db.userProfile.createAlias(
+        $_aliasNameGenerator(db.messageTable.recipientId, db.userProfile.id),
       );
 
-  $$UserTableTableProcessedTableManager get recipientId {
+  $$UserProfileTableProcessedTableManager get recipientId {
     final $_column = $_itemColumn<String>('recipient_id')!;
 
-    final manager = $$UserTableTableTableManager(
+    final manager = $$UserProfileTableTableManager(
       $_db,
-      $_db.userTable,
+      $_db.userProfile,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_recipientIdTable($_db));
     if (item == null) return manager;
@@ -3690,20 +3068,20 @@ class $$MessageTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UserTableTableFilterComposer get senderId {
-    final $$UserTableTableFilterComposer composer = $composerBuilder(
+  $$UserProfileTableFilterComposer get senderId {
+    final $$UserProfileTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableFilterComposer(
+          }) => $$UserProfileTableFilterComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3713,20 +3091,20 @@ class $$MessageTableTableFilterComposer
     return composer;
   }
 
-  $$UserTableTableFilterComposer get recipientId {
-    final $$UserTableTableFilterComposer composer = $composerBuilder(
+  $$UserProfileTableFilterComposer get recipientId {
+    final $$UserProfileTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableFilterComposer(
+          }) => $$UserProfileTableFilterComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3801,20 +3179,20 @@ class $$MessageTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UserTableTableOrderingComposer get senderId {
-    final $$UserTableTableOrderingComposer composer = $composerBuilder(
+  $$UserProfileTableOrderingComposer get senderId {
+    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableOrderingComposer(
+          }) => $$UserProfileTableOrderingComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3824,20 +3202,20 @@ class $$MessageTableTableOrderingComposer
     return composer;
   }
 
-  $$UserTableTableOrderingComposer get recipientId {
-    final $$UserTableTableOrderingComposer composer = $composerBuilder(
+  $$UserProfileTableOrderingComposer get recipientId {
+    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableOrderingComposer(
+          }) => $$UserProfileTableOrderingComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3875,20 +3253,20 @@ class $$MessageTableTableAnnotationComposer
   GeneratedColumn<bool> get isRead =>
       $composableBuilder(column: $table.isRead, builder: (column) => column);
 
-  $$UserTableTableAnnotationComposer get senderId {
-    final $$UserTableTableAnnotationComposer composer = $composerBuilder(
+  $$UserProfileTableAnnotationComposer get senderId {
+    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableAnnotationComposer(
+          }) => $$UserProfileTableAnnotationComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3898,20 +3276,20 @@ class $$MessageTableTableAnnotationComposer
     return composer;
   }
 
-  $$UserTableTableAnnotationComposer get recipientId {
-    final $$UserTableTableAnnotationComposer composer = $composerBuilder(
+  $$UserProfileTableAnnotationComposer get recipientId {
+    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableAnnotationComposer(
+          }) => $$UserProfileTableAnnotationComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4175,17 +3553,17 @@ final class $$ConversationTableTableReferences
     super.$_typedResult,
   );
 
-  static $UserTableTable _userIdTable(_$AppDataBase db) =>
-      db.userTable.createAlias(
-        $_aliasNameGenerator(db.conversationTable.userId, db.userTable.id),
+  static $UserProfileTable _userIdTable(_$AppDataBase db) =>
+      db.userProfile.createAlias(
+        $_aliasNameGenerator(db.conversationTable.userId, db.userProfile.id),
       );
 
-  $$UserTableTableProcessedTableManager get userId {
+  $$UserProfileTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UserTableTableTableManager(
+    final manager = $$UserProfileTableTableManager(
       $_db,
-      $_db.userTable,
+      $_db.userProfile,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -4251,20 +3629,20 @@ class $$ConversationTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UserTableTableFilterComposer get userId {
-    final $$UserTableTableFilterComposer composer = $composerBuilder(
+  $$UserProfileTableFilterComposer get userId {
+    final $$UserProfileTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableFilterComposer(
+          }) => $$UserProfileTableFilterComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4332,20 +3710,20 @@ class $$ConversationTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UserTableTableOrderingComposer get userId {
-    final $$UserTableTableOrderingComposer composer = $composerBuilder(
+  $$UserProfileTableOrderingComposer get userId {
+    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableOrderingComposer(
+          }) => $$UserProfileTableOrderingComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4407,20 +3785,20 @@ class $$ConversationTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$UserTableTableAnnotationComposer get userId {
-    final $$UserTableTableAnnotationComposer composer = $composerBuilder(
+  $$UserProfileTableAnnotationComposer get userId {
+    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userTable,
+      referencedTable: $db.userProfile,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserTableTableAnnotationComposer(
+          }) => $$UserProfileTableAnnotationComposer(
             $db: $db,
-            $table: $db.userTable,
+            $table: $db.userProfile,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4617,8 +3995,6 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
-  $$UserTableTableTableManager get userTable =>
-      $$UserTableTableTableManager(_db, _db.userTable);
   $$MessageTableTableTableManager get messageTable =>
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>

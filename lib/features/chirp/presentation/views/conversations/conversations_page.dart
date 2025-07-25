@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
-import 'package:go_router/go_router.dart';
 
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
@@ -38,8 +38,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 final conversation = state.conversations[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: conversation.user.avatar != null
-                        ? NetworkImage(conversation.user.avatar!)
+                    backgroundImage: conversation.user.avatarUrl != null
+                        ? NetworkImage(conversation.user.avatarUrl!)
                         : null,
                   ),
                   title: Text(conversation.user.name),

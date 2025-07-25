@@ -86,7 +86,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
-    () => MessagingLocalDataSourceImpl(),
+    () => MessagingLocalDataSourceImpl(localDB: cacheDB),
   );
 
   sl.registerFactory<ConversationRepositoryImpl>(

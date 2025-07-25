@@ -1,14 +1,14 @@
 import 'package:academia/database/database.dart';
 import '../../../domain/entities/conversations/message.dart';
-import '../../../domain/entities/conversations/user.dart';
+import 'conversation_model_helper.dart';
 
 // Convert from database model TO domain entity
 extension MessageModelHelper on MessageData {
   Message toEntity() {
     return Message(
       id: id,
-      sender: User(id: senderId, name: '', email: ''),
-      recipient: User(id: recipientId, name: '', email: ''),
+      sender: senderId.toMinimalUserProfile(),
+      recipient: recipientId.toMinimalUserProfile(),
       content: content,
       sentAt: sentAt,
       isRead: isRead,
