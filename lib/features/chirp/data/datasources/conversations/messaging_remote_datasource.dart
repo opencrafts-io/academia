@@ -10,7 +10,7 @@ abstract class MessagingRemoteDatasource {
 class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
   final DioClient dioClient;
 
-  MessagingRemoteDatasourceImpl(this.dioClient);
+  MessagingRemoteDatasourceImpl({required this.dioClient});
 
   @override
   Future<List<ConversationData>> getConversations() async {

@@ -83,7 +83,7 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(sl.get<DioClient>()),
+    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
     () => MessagingLocalDataSourceImpl(),
