@@ -6,6 +6,7 @@ abstract class MessagingLocalDataSource {
   Future<List<ConversationData>> getCachedConversations();
   Future<void> cacheMessages(String conversationId, List<MessageData> messages);
   Future<List<MessageData>> getCachedMessages(String conversationId);
+  Future<MessageData?> getMessageById(String messageId);
 }
 
 class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
@@ -55,5 +56,12 @@ class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
           ]),
         ))
         .get();
+  }
+
+  @override
+  Future<MessageData?> getMessageById(String messageId) async {
+    return await (localDB.select(
+      localDB.messageTable,
+    )..where((tbl) => tbl.id.equals(messageId))).getSingleOrNull();
   }
 }

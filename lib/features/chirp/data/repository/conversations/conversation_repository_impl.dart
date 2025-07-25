@@ -5,6 +5,7 @@ import '../../../domain/repository/conversations/conversation_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
 import '../../models/conversations/conversation_model_helper.dart';
+import '../../models/conversations/message_model_helper.dart';
 
 class ConversationRepositoryImpl implements ConversationRepository {
   final MessagingRemoteDatasource remoteDataSource;
@@ -20,14 +21,48 @@ class ConversationRepositoryImpl implements ConversationRepository {
     try {
       final conversations = await remoteDataSource.getConversations();
       await localDataSource.cacheConversations(conversations);
-      return Right(conversations.map((data) => data.toEntity()).toList());
+
+      // fetch actual last messages
+      final conversationEntities = await Future.wait(
+        conversations.map((data) async {
+          final entity = data.toEntity();
+          if (data.lastMessageId != null) {
+            final messageData = await localDataSource.getMessageById(
+              data.lastMessageId!,
+            );
+            if (messageData != null) {
+              final actualMessage = messageData.toEntity();
+              return entity.copyWith(lastMessage: actualMessage);
+            }
+          }
+          return entity;
+        }),
+      );
+
+      return Right(conversationEntities);
     } catch (e) {
       try {
         final cachedConversations = await localDataSource
             .getCachedConversations();
-        return Right(
-          cachedConversations.map((data) => data.toEntity()).toList(),
+
+        // fetch actual last messages from cache
+        final conversationEntities = await Future.wait(
+          cachedConversations.map((data) async {
+            final entity = data.toEntity();
+            if (data.lastMessageId != null) {
+              final messageData = await localDataSource.getMessageById(
+                data.lastMessageId!,
+              );
+              if (messageData != null) {
+                final actualMessage = messageData.toEntity();
+                return entity.copyWith(lastMessage: actualMessage);
+              }
+            }
+            return entity;
+          }),
         );
+
+        return Right(conversationEntities);
       } catch (cacheError) {
         return Left(
           ServerFailure(

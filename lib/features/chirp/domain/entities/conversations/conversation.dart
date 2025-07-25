@@ -17,6 +17,22 @@ class Conversation extends Equatable {
     this.unreadCount = 0,
   });
 
+  Conversation copyWith({
+    String? id,
+    UserProfile? user,
+    Message? lastMessage,
+    DateTime? lastMessageAt,
+    int? unreadCount,
+  }) {
+    return Conversation(
+      id: id ?? this.id,
+      user: user ?? this.user,
+      lastMessage: lastMessage ?? this.lastMessage,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      unreadCount: unreadCount ?? this.unreadCount,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

@@ -1,7 +1,6 @@
 import 'package:academia/database/database.dart';
 import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import '../../../domain/entities/conversations/conversation.dart';
-import '../../../domain/entities/conversations/message.dart';
 
 extension UserProfileHelper on String {
   UserProfile toMinimalUserProfile() {
@@ -28,15 +27,7 @@ extension ConversationModelHelper on ConversationData {
     return Conversation(
       id: id,
       user: userId.toMinimalUserProfile(),
-      lastMessage: lastMessageId != null
-          ? Message(
-              id: lastMessageId!,
-              sender: ''.toMinimalUserProfile(),
-              recipient: ''.toMinimalUserProfile(),
-              content: '',
-              sentAt: DateTime.now(),
-            ) // TODO: Fetch actual message
-          : null,
+      lastMessage: null, // repository will fetch actual message ;)
       lastMessageAt: lastMessageAt,
       unreadCount: unreadCount,
     );
