@@ -37,7 +37,45 @@ class _ChatPageState extends State<ChatPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state is MessagingErrorState) {
-                  return Center(child: Text('Error: ${state.message}'));
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _getErrorMessage(state.message),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _getErrorSubtitle(state.message),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[500],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.read<MessagingBloc>().add(
+                              LoadMessagesEvent(widget.conversationId),
+                            );
+                          },
+                          child: const Text('Try Again'),
+                        ),
+                      ],
+                    ),
+                  );
                 }
                 if (state is MessagesLoaded) {
                   return ListView.builder(
@@ -94,5 +132,49 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  String _getErrorMessage(String message) {
+    if (message.contains('No internet connection')) {
+      return 'No Internet Connection';
+    } else if (message.contains('timed out')) {
+      return 'Connection Timed Out';
+    } else if (message.contains('session has expired')) {
+      return 'Session Expired';
+    } else if (message.contains('permission')) {
+      return 'Access Denied';
+    } else if (message.contains('Server error')) {
+      return 'Server Error';
+    } else if (message.contains('not found')) {
+      return 'Conversation Not Found';
+    } else if (message.contains('unexpected error')) {
+      return 'Something Went Wrong';
+    } else if (message.contains('Invalid message content')) {
+      return 'Invalid Message';
+    } else {
+      return 'Error Loading Messages';
+    }
+  }
+
+  String _getErrorSubtitle(String message) {
+    if (message.contains('No internet connection')) {
+      return 'Please check your network connection and try again.';
+    } else if (message.contains('timed out')) {
+      return 'The request took too long. Please check your connection and try again.';
+    } else if (message.contains('session has expired')) {
+      return 'Please log in again to continue.';
+    } else if (message.contains('permission')) {
+      return 'You don\'t have permission to access this conversation.';
+    } else if (message.contains('Server error')) {
+      return 'Our servers are experiencing issues. Please try again later.';
+    } else if (message.contains('not found')) {
+      return 'The conversation could not be found.';
+    } else if (message.contains('unexpected error')) {
+      return 'An unexpected error occurred. Please try again.';
+    } else if (message.contains('Invalid message content')) {
+      return 'Please check your message content and try again.';
+    } else {
+      return 'Please check your connection and try again.';
+    }
   }
 }
