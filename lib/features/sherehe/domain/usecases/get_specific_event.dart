@@ -8,7 +8,7 @@ class GetSpecificEvent{
   GetSpecificEvent(this.repository);
 
   Future<Either<Failure, Event>> execute() async {
-    return repository.getSpecificEvents(id as String);
+    return repository.getSpecificEvent(id as String);
   }
 
 }

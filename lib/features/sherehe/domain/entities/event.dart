@@ -1,5 +1,3 @@
-import '../domain.dart';
-
 class Event {
   final String id;
   final String name;
@@ -10,10 +8,11 @@ class Event {
   final String date;
   final String organizer;
   final String imageUrl;
+  final int organizerId;
   final int numberOfAttendees;
   final List<String> genre;
   final String createdAt;
-//
+
   const Event({
     required this.id,
     required this.name,
@@ -23,6 +22,7 @@ class Event {
     required this.time,
     required this.organizer,
     required this.imageUrl,
+    required this.organizerId,
     required this.numberOfAttendees,
     required this.genre,
     required this.createdAt,
