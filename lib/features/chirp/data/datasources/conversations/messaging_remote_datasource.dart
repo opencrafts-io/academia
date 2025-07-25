@@ -26,6 +26,18 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
       _logger.i('Fetching conversations from remote API');
       final response = await dioClient.dio.get('/conversations/');
 
+      if (response.statusCode != 200) {
+        _logger.e(
+          'HTTP error: ${response.statusCode} - ${response.statusMessage}',
+        );
+        return Left(
+          ServerFailure(
+            message: 'Server returned error ${response.statusCode}',
+            error: 'HTTP ${response.statusCode}: ${response.statusMessage}',
+          ),
+        );
+      }
+
       final conversations = (response.data as List)
           .map((json) => ConversationData.fromJson(json))
           .toList();
@@ -76,7 +88,8 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
           } else if (statusCode == 404) {
             return Left(
               ServerFailure(
-                message: 'Conversations endpoint not found.',
+                message:
+                    'Conversations endpoint not found. The API may be unavailable.',
                 error: dioError,
               ),
             );
@@ -132,6 +145,18 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
         '/conversations/$conversationId/messages/',
       );
 
+      if (response.statusCode != 200) {
+        _logger.e(
+          'HTTP error: ${response.statusCode} - ${response.statusMessage}',
+        );
+        return Left(
+          ServerFailure(
+            message: 'Server returned error ${response.statusCode}',
+            error: 'HTTP ${response.statusCode}: ${response.statusMessage}',
+          ),
+        );
+      }
+
       final messages = (response.data as List)
           .map((json) => MessageData.fromJson(json))
           .toList();
@@ -185,7 +210,7 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
           } else if (statusCode == 404) {
             return Left(
               ServerFailure(
-                message: 'Conversation not found.',
+                message: 'Conversation not found. The API may be unavailable.',
                 error: dioError,
               ),
             );
@@ -243,6 +268,30 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
         data: {'receiver_id': receiverId, 'content': content},
       );
 
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _logger.e(
+          'HTTP error: ${response.statusCode} - ${response.statusMessage}',
+        );
+        return Left(
+          ServerFailure(
+            message: 'Server returned error ${response.statusCode}',
+            error: 'HTTP ${response.statusCode}: ${response.statusMessage}',
+          ),
+        );
+      }
+
+      if (response.data is! Map<String, dynamic>) {
+        _logger.e(
+          'Invalid response format: expected Map but got ${response.data.runtimeType}',
+        );
+        return Left(
+          ServerFailure(
+            message: 'Invalid response format from server',
+            error: 'Expected Map but got ${response.data.runtimeType}',
+          ),
+        );
+      }
+
       final message = MessageData.fromJson(response.data);
       _logger.i('Successfully sent message with ID: ${message.id}');
       return Right(message);
@@ -289,7 +338,10 @@ class MessagingRemoteDatasourceImpl implements MessagingRemoteDatasource {
             );
           } else if (statusCode == 404) {
             return Left(
-              ServerFailure(message: 'Receiver not found.', error: dioError),
+              ServerFailure(
+                message: 'Receiver not found. The API may be unavailable.',
+                error: dioError,
+              ),
             );
           } else if (statusCode == 400) {
             return Left(
