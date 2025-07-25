@@ -105,8 +105,7 @@ class _ShereheDetailsState extends State<ShereheDetails> {
             leading: IconButton(
               onPressed: () => context.pop(),
               icon: Icon(
-                Icons.arrow_back,
-                color: Theme.of(context).colorScheme.onPrimary,
+                Icons.arrow_back
               ),
             ),
             actions: [
@@ -114,14 +113,13 @@ class _ShereheDetailsState extends State<ShereheDetails> {
                 onPressed: () {},
                 icon: Icon(
                   Icons.bookmark_border,
-                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
               IconButton(
                 onPressed: () {}, //TODO : Add Overlay or smth for the more details page
                 icon: Icon(
                   Icons.more_vert,
-                  color: Theme.of(context).colorScheme.onPrimary,
+
                 ),
               ),
             ],
