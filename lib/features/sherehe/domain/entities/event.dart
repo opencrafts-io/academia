@@ -13,7 +13,7 @@ class Event {
   final int numberOfAttendees;
   final List<String> genre;
   final String createdAt;
-
+//
   const Event({
     required this.id,
     required this.name,

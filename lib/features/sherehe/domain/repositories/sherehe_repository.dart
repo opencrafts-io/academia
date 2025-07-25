@@ -6,5 +6,5 @@ abstract class ShereheRepository {
   Future<Either<Failure, Event>> getSpecificEvents(String id);
   Future<Either<Failure, List<Attendee>>> getAllAttendees();
   Future<Either<Failure, Attendee>> getSpecificAttendee(String id);
-//TODO:Add ticketing on the next iteration
+//TODO:Add ticketing on the next iteration//
 }

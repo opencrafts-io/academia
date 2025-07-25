@@ -1,17 +1,15 @@
-class Attendee {
+class Ticket{
   final String id;
-  final String firstName;
-  final String lastName;
+  final String attendeeId;
   final String eventId;
+  final String paymentCode;
   final String createdAt;
-
 //
-  const Attendee({
+  const Ticket({
     required this.id,
-    required this.firstName,
-    required this.lastName,
+    required this.attendeeId,
     required this.eventId,
+    required this.paymentCode,
     required this.createdAt,
   });
-
 }

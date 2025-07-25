@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../domain.dart';
 import 'package:academia/core/core.dart';
-
+//
 class GetEvent{
   final ShereheRepository repository;
 
