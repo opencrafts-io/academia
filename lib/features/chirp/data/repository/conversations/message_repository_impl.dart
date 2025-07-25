@@ -20,23 +20,35 @@ class MessageRepositoryImpl implements MessageRepository {
     String conversationId,
   ) async {
     try {
-      final messages = await remoteDataSource.getMessages(conversationId);
-      await localDataSource.cacheMessages(conversationId, messages);
-      return Right(messages.map((data) => data.toEntity()).toList());
+      final messagesResult = await remoteDataSource.getMessages(conversationId);
+
+      return await messagesResult.fold(
+        (failure) async {
+          // Remote failed, try cache
+          try {
+            final cachedMessages = await localDataSource.getCachedMessages(
+              conversationId,
+            );
+            return Right(
+              cachedMessages.map((data) => data.toEntity()).toList(),
+            );
+          } catch (cacheError) {
+            return Left(failure); // Return original failure if cache also fails
+          }
+        },
+        (messages) async {
+          // Remote succeeded, cache the data
+          await localDataSource.cacheMessages(conversationId, messages);
+          return Right(messages.map((data) => data.toEntity()).toList());
+        },
+      );
     } catch (e) {
-      try {
-        final cachedMessages = await localDataSource.getCachedMessages(
-          conversationId,
-        );
-        return Right(cachedMessages.map((data) => data.toEntity()).toList());
-      } catch (cacheError) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to fetch messages from cache',
-            error: cacheError,
-          ),
-        );
-      }
+      return Left(
+        ServerFailure(
+          message: 'An unexpected error occurred while fetching messages',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -46,10 +58,22 @@ class MessageRepositoryImpl implements MessageRepository {
     String content,
   ) async {
     try {
-      final message = await remoteDataSource.sendMessage(receiverId, content);
-      return Right(message.toEntity());
+      final messageResult = await remoteDataSource.sendMessage(
+        receiverId,
+        content,
+      );
+
+      return messageResult.fold(
+        (failure) => Left(failure),
+        (message) => Right(message.toEntity()),
+      );
     } catch (e) {
-      return Left(ServerFailure(message: 'Failed to send message', error: e));
+      return Left(
+        ServerFailure(
+          message: 'An unexpected error occurred while sending message',
+          error: e,
+        ),
+      );
     }
   }
 }

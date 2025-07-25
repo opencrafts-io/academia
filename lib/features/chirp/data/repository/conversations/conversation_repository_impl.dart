@@ -19,58 +19,65 @@ class ConversationRepositoryImpl implements ConversationRepository {
   @override
   Future<Either<Failure, List<Conversation>>> getConversations() async {
     try {
-      final conversations = await remoteDataSource.getConversations();
-      await localDataSource.cacheConversations(conversations);
+      final conversationsResult = await remoteDataSource.getConversations();
 
-      // fetch actual last messages
-      final conversationEntities = await Future.wait(
-        conversations.map((data) async {
-          final entity = data.toEntity();
-          if (data.lastMessageId != null) {
-            final messageData = await localDataSource.getMessageById(
-              data.lastMessageId!,
+      return await conversationsResult.fold(
+        (failure) async {
+          // try cache
+          try {
+            final cachedConversations = await localDataSource
+                .getCachedConversations();
+            final conversationEntities = await Future.wait(
+              cachedConversations.map((data) async {
+                final entity = data.toEntity();
+                if (data.lastMessageId != null) {
+                  final messageData = await localDataSource.getMessageById(
+                    data.lastMessageId!,
+                  );
+                  if (messageData != null) {
+                    final actualMessage = messageData.toEntity();
+                    return entity.copyWith(lastMessage: actualMessage);
+                  }
+                }
+                return entity;
+              }),
             );
-            if (messageData != null) {
-              final actualMessage = messageData.toEntity();
-              return entity.copyWith(lastMessage: actualMessage);
-            }
+            return Right(conversationEntities);
+          } catch (cacheError) {
+            return Left(failure);
           }
-          return entity;
-        }),
-      );
+        },
+        (conversations) async {
+          // cache the data
+          await localDataSource.cacheConversations(conversations);
 
-      return Right(conversationEntities);
-    } catch (e) {
-      try {
-        final cachedConversations = await localDataSource
-            .getCachedConversations();
-
-        // fetch actual last messages from cache
-        final conversationEntities = await Future.wait(
-          cachedConversations.map((data) async {
-            final entity = data.toEntity();
-            if (data.lastMessageId != null) {
-              final messageData = await localDataSource.getMessageById(
-                data.lastMessageId!,
-              );
-              if (messageData != null) {
-                final actualMessage = messageData.toEntity();
-                return entity.copyWith(lastMessage: actualMessage);
+          // fetch actual last messages
+          final conversationEntities = await Future.wait(
+            conversations.map((data) async {
+              final entity = data.toEntity();
+              if (data.lastMessageId != null) {
+                final messageData = await localDataSource.getMessageById(
+                  data.lastMessageId!,
+                );
+                if (messageData != null) {
+                  final actualMessage = messageData.toEntity();
+                  return entity.copyWith(lastMessage: actualMessage);
+                }
               }
-            }
-            return entity;
-          }),
-        );
+              return entity;
+            }),
+          );
 
-        return Right(conversationEntities);
-      } catch (cacheError) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to fetch conversations from cache',
-            error: cacheError,
-          ),
-        );
-      }
+          return Right(conversationEntities);
+        },
+      );
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: 'An unexpected error occurred while fetching conversations',
+          error: e,
+        ),
+      );
     }
   }
 }
