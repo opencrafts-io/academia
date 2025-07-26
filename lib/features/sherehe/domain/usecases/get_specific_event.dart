@@ -10,6 +10,5 @@ class GetSpecificEvent {
   Future<Either<Failure, Event>> execute(String eventId) async {
     // Pass the eventId to the repository method
     return repository.getSpecificEvent(eventId);
-
   }
 }
