@@ -9,28 +9,68 @@ class FeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Chirp'), centerTitle: false),
-      body: BlocBuilder<FeedBloc, FeedState>(
-        builder: (context, state) {
-          if (state is FeedLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is FeedLoaded) {
-            return ListView.builder(
-              itemCount: state.posts.length,
-              itemBuilder: (context, index) =>
-                  PostCard(post: state.posts[index]),
-            );
-          } else {
-            return Center(child: Text('Something went wrong'));
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Route to Direct messaging
-        },
-        child: Icon(Symbols.mail),
+    return BlocListener<FeedBloc, FeedState>(
+      listener: (context, state) {
+        if (state is FeedLoaded) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Feed refreshed"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+        if (state is FeedLoading) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Refreshing your feed"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: RefreshIndicator(
+          semanticsLabel: "Loading",
+          onRefresh: () async {
+            return Future.delayed(Duration(seconds: 2));
+          },
+          child: CustomScrollView(
+            slivers: [
+              BlocBuilder<FeedBloc, FeedState>(
+                buildWhen: (previous, current) {
+                  if (current is FeedLoaded) {
+                    return true;
+                  }
+                  return false;
+                },
+                builder: (context, state) {
+                  if (state is FeedLoaded) {
+                    return SliverList.builder(
+                      itemBuilder: (context, index) {
+                        return PostCard(post: (state).posts[index]);
+                      },
+                      itemCount: state.posts.length,
+                    );
+                  }
+                  if (state is FeedLoading) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  }
+                  return SliverFillRemaining(child: Center(child: Text("WTF")));
+                },
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Route to Direct messaging
+          },
+          child: Icon(Symbols.mail),
+        ),
       ),
     );
   }
