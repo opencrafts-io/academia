@@ -95,7 +95,6 @@ class EventCard extends StatelessWidget {
       onTap: onTap,
       child: SizedBox.expand(
         child: Card(
-          elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -104,7 +103,7 @@ class EventCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 3, 
+                flex: 3,
                 child: Image.asset(
                   imagePath,
                   width: double.infinity,
@@ -113,7 +112,7 @@ class EventCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       width: double.infinity,
-                      color: Colors.grey[300],
+                      color: Theme.of(context).colorScheme.errorContainer,
                       child: const Icon(Icons.image_not_supported),
                     );
                   },
@@ -131,7 +130,7 @@ class EventCard extends StatelessWidget {
                       Text(
                         title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontSize: sizing.titleFontSize,
+                          // fontSize: sizing.titleFontSize,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),

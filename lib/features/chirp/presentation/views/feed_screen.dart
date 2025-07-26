@@ -3,6 +3,7 @@ import 'package:academia/features/chirp/presentation/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
@@ -28,49 +29,33 @@ class FeedPage extends StatelessWidget {
           );
         }
       },
-      child: Scaffold(
-        body: RefreshIndicator(
-          semanticsLabel: "Loading",
-          onRefresh: () async {
-            return Future.delayed(Duration(seconds: 2));
-          },
-          child: CustomScrollView(
-            slivers: [
-              BlocBuilder<FeedBloc, FeedState>(
-                buildWhen: (previous, current) {
-                  if (current is FeedLoaded) {
-                    return true;
-                  }
-                  return false;
-                },
-                builder: (context, state) {
-                  if (state is FeedLoaded) {
-                    return SliverList.builder(
-                      itemBuilder: (context, index) {
-                        return PostCard(post: (state).posts[index]);
-                      },
-                      itemCount: state.posts.length,
-                    );
-                  }
-                  if (state is FeedLoading) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    );
-                  }
-                  return SliverFillRemaining(child: Center(child: Text("WTF")));
-                },
-              ),
-            ],
+      child: CustomScrollView(
+        slivers: [
+          BlocBuilder<FeedBloc, FeedState>(
+            buildWhen: (previous, current) {
+              if (current is FeedLoaded) {
+                return true;
+              }
+              return false;
+            },
+            builder: (context, state) {
+              if (state is FeedLoaded) {
+                return SliverList.builder(
+                  itemBuilder: (context, index) {
+                    return PostCard(post: (state).posts[index]);
+                  },
+                  itemCount: state.posts.length,
+                );
+              }
+              if (state is FeedLoading) {
+                return SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator.adaptive()),
+                );
+              }
+              return SliverFillRemaining(child: Center(child: Text("WTF")));
+            },
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Route to Direct messaging
-          },
-          child: Icon(Symbols.mail),
-        ),
+        ],
       ),
     );
   }
