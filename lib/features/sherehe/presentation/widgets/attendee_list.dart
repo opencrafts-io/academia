@@ -4,14 +4,12 @@ import '../presentation.dart';
 
 class AttendeesList extends StatelessWidget {
   final Event event;
-  final List<Attendee> attendees;
-  final int organizerId;
+  final List<Attendee> allAttendees; // List of ALL attendees fetched
 
   const AttendeesList({
     super.key,
     required this.event,
-    required this.attendees,
-    required this.organizerId,
+    required this.allAttendees,
   });
 
   String _getInitials(String? firstName, String? lastName) {
@@ -27,8 +25,10 @@ class AttendeesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final organizerAttendee = attendees.firstWhere(
-          (attendee) => attendee.id == organizerId.toString(),
+    final List<Attendee> eventSpecificAttendees =
+    allAttendees.where((attendee) => attendee.eventId == event.id).toList();
+    final organizerAttendee = eventSpecificAttendees.firstWhere(
+          (attendee) => attendee.id == event.organizerId.toString(),
       orElse: () => Attendee(
         id: '',
         firstName: 'Unknown',
@@ -37,8 +37,9 @@ class AttendeesList extends StatelessWidget {
         createdAt: '',
       ),
     );
-
-    final otherAttendees = attendees.where((attendee) => attendee.id != organizerId.toString()).toList();
+    final otherAttendees = eventSpecificAttendees
+        .where((attendee) => attendee.id != event.organizerId.toString())
+        .toList();
 
     List<Widget> columnChildren = [
       Text(
@@ -53,14 +54,11 @@ class AttendeesList extends StatelessWidget {
 
     if (organizerAttendee.id.isNotEmpty) {
       columnChildren.add(
-        AttendeeCard(
-          attendee: organizerAttendee,
-          isHost: true,
-        ),
+        AttendeeCard(attendee: organizerAttendee, isHost: true),
       );
     }
 
-    final int maxOtherAttendeesToShow = 3;
+    final int maxOtherAttendeesToShow = 4;
     final int otherAttendeesToShowCount = otherAttendees.length > maxOtherAttendeesToShow
         ? maxOtherAttendeesToShow
         : otherAttendees.length;
@@ -69,7 +67,8 @@ class AttendeesList extends StatelessWidget {
       otherAttendees.take(otherAttendeesToShowCount).map((attendee) => AttendeeCard(attendee: attendee)).toList(),
     );
 
-    final int attendeesActuallyShown = (organizerAttendee.id.isNotEmpty ? 1 : 0) + otherAttendeesToShowCount;
+    final int attendeesActuallyShown =
+        (organizerAttendee.id.isNotEmpty ? 1 : 0) + otherAttendeesToShowCount;
     final int remainingCountBasedOnEventTotal = event.numberOfAttendees - attendeesActuallyShown;
 
     if (remainingCountBasedOnEventTotal > 0) {
@@ -94,7 +93,9 @@ class AttendeesList extends StatelessWidget {
                         radius: 18,
                         backgroundColor: Theme.of(context).colorScheme.secondary,
                         child: Text(
-                          _getInitials(otherAttendees.elementAtOrNull(0)?.firstName, otherAttendees.elementAtOrNull(0)?.lastName),
+                          otherAttendees.length > 0
+                              ? _getInitials(otherAttendees[0].firstName, otherAttendees[0].lastName)
+                              : '?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary,
                             fontSize: 12,
@@ -109,7 +110,9 @@ class AttendeesList extends StatelessWidget {
                         radius: 18,
                         backgroundColor: Theme.of(context).colorScheme.tertiary,
                         child: Text(
-                          _getInitials(otherAttendees.elementAtOrNull(1)?.firstName, otherAttendees.elementAtOrNull(1)?.lastName),
+                          otherAttendees.length > 1
+                              ? _getInitials(otherAttendees[1].firstName, otherAttendees[1].lastName)
+                              : '?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onTertiary,
                             fontSize: 12,
@@ -118,6 +121,7 @@ class AttendeesList extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Avatar 3: Show remaining count
                     Positioned(
                       left: 40,
                       child: CircleAvatar(

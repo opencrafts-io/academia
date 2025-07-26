@@ -5,35 +5,44 @@ import '../../../../constants/constants.dart';
 class AttendeeCard extends StatelessWidget {
   final Attendee attendee;
   final bool isHost;
-  final VoidCallback? onTap;
 
   const AttendeeCard({
     super.key,
     required this.attendee,
     this.isHost = false,
-    this.onTap,
   });
+
+  String _getInitials(String? firstName, String? lastName) {
+    String initials = '';
+    if (firstName != null && firstName.isNotEmpty) {
+      initials += firstName[0].toUpperCase();
+    }
+    if (lastName != null && lastName.isNotEmpty) {
+      initials += lastName[0].toUpperCase();
+    }
+    return initials.isEmpty ? '?' : initials;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    Color avatarColor = Theme.of(context).colorScheme.secondary;
-    Color onAvatarColor = Theme.of(context).colorScheme.onSecondary;
+    Color avatarColor = isHost ? colorScheme.primary : colorScheme.secondary;
+    Color onAvatarColor = isHost ? colorScheme.onPrimary : colorScheme.onSecondary;
     Widget? trailingWidget;
 
     if (isHost) {
-      avatarColor = Theme.of(context).colorScheme.primary;
-      onAvatarColor = Theme.of(context).colorScheme.onPrimary;
       trailingWidget = Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           'HOST',
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          style: textTheme.labelSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -41,34 +50,32 @@ class AttendeeCard extends StatelessWidget {
     } else {
       trailingWidget = Icon(
         Icons.check_circle,
+        color: colorScheme.primary,
         size: 20,
       );
     }
 
-    String initials = attendee.firstName.isNotEmpty && attendee.lastName.isNotEmpty
-        ? '${attendee.firstName[0]}${attendee.lastName[0]}'
-        : attendee.firstName.isNotEmpty
-        ? attendee.firstName[0]
-        : '?';
+    final String initials = _getInitials(attendee.firstName, attendee.lastName);
+    final String fullName = '${attendee.firstName ?? ''} ${attendee.lastName ?? ''}'.trim();
+    final String status = isHost ? 'Organizer' : 'Attending';
 
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        color: colorScheme.surfaceContainerHighest,
       ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: ResponsiveBreakPoints.isMobile(context) ? 20 : 24,
+            radius: 24,
             backgroundColor: avatarColor,
             child: Text(
-              initials.toUpperCase(),
+              initials, // Use dynamically calculated initials
               style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+                color: onAvatarColor,
                 fontWeight: FontWeight.bold,
-                fontSize: ResponsiveBreakPoints.isMobile(context) ? 14 : 16,
               ),
             ),
           ),
@@ -78,15 +85,15 @@ class AttendeeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${attendee.firstName} ${attendee.lastName}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fullName.isNotEmpty ? fullName : 'Unknown',
+                  style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
-                  isHost ? 'Organizer' : 'Attending',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  status,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

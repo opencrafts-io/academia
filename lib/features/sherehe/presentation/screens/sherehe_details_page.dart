@@ -12,7 +12,8 @@ class ShereheDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<ShereheDetailsBloc>()
+      create: (context) =>
+      sl<ShereheDetailsBloc>()
         ..add(LoadShereheDetails(eventId: eventId)),
       child: Scaffold(
         body: BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
@@ -21,23 +22,39 @@ class ShereheDetailsPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ShereheDetailsLoaded) {
               final event = state.event;
-              final attendees = state.attendees;
+              final allAttendees = state.attendees;
 
               return CustomScrollView(
                 slivers: [
                   EventDetailsHeader(event: event),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0),
+                      padding: EdgeInsets.all(
+                          ResponsiveBreakPoints.isMobile(context)
+                              ? 16.0
+                              : 32.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           EventAboutSection(event: event),
                           const SizedBox(height: 24),
-                          AttendeesList(attendees: attendees, event: event, organizerId: event.organizerId),
+                          AttendeesList(
+                            event: event,
+                            allAttendees: allAttendees,
+                          ),
                           const SizedBox(height: 32),
-                          RsvpButton(onPressed: () {
-                            // Handle RSVP logic here
-                          }),
+                          SizedBox(
+                            width: double.infinity,
+                            // Make it full width like the custom widget likely was
+                            height: ResponsiveBreakPoints.isMobile(context)
+                                ? 50
+                                : 56,
+                            // Match height logic if needed
+                            child: FilledButton(
+                              onPressed: () {}, //TODO:Impliment logic for when button is pressed ie purchase ticket
+                              child: const Text('I\'m Going'),
+                            ),
+                          ),
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -53,7 +70,9 @@ class ShereheDetailsPage extends StatelessWidget {
                     Text('Error loading event details: ${state.message}'),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<ShereheDetailsBloc>().add(LoadShereheDetails(eventId: eventId));
+                        // Retry loading the event details
+                        context.read<ShereheDetailsBloc>().add(
+                            LoadShereheDetails(eventId: eventId));
                       },
                       child: const Text('Retry'),
                     ),
@@ -61,6 +80,7 @@ class ShereheDetailsPage extends StatelessWidget {
                 ),
               );
             }
+            // Return a default widget for other states (e.g., Initial)
             return const SizedBox.shrink();
           },
         ),
