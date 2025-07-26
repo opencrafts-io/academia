@@ -1,5 +1,5 @@
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/chirp/presentation/widgets/post_card.dart';
+import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
