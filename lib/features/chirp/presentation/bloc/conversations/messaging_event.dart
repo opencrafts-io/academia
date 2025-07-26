@@ -26,3 +26,12 @@ class SendMessageEvent extends MessagingEvent {
   @override
   List<Object?> get props => [receiverId, content];
 }
+
+class MarkConversationAsReadEvent extends MessagingEvent {
+  final String conversationId;
+
+  const MarkConversationAsReadEvent(this.conversationId);
+
+  @override
+  List<Object?> get props => [conversationId];
+}

@@ -21,9 +21,10 @@ class MessagingErrorState extends MessagingState {
 
 class MessagesLoaded extends MessagingState {
   final List<Message> messages;
-  const MessagesLoaded(this.messages);
+  final Conversation conversation;
+  const MessagesLoaded(this.messages, this.conversation);
   @override
-  List<Object?> get props => [messages];
+  List<Object?> get props => [messages, conversation];
 }
 
 class MessageSent extends MessagingState {
