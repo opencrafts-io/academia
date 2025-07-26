@@ -1,3 +1,4 @@
+import 'package:academia/features/chirp/presentation/views/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
@@ -14,8 +15,6 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
     TypedGoRoute<CalendarRoute>(path: '/calendar'),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
-    TypedGoRoute<ProfileRoute>(path: '/profile'),
-    TypedGoRoute<ConversationsRoute>(path: '/conversations'),
   ],
 )
 class MainLayoutShellRoute extends ShellRouteData {
@@ -33,7 +32,7 @@ class MainLayoutShellRoute extends ShellRouteData {
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Chirp")));
+    return HomePage();
   }
 }
 
@@ -69,8 +68,29 @@ class AuthRoute extends GoRouteData with _$AuthRoute {
 @TypedGoRoute<ProfileRoute>(path: "/profile")
 class ProfileRoute extends GoRouteData with _$ProfileRoute {
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(appBar: AppBar(title: Text("Profile")));
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: const ProfileView(),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }
 
@@ -82,25 +102,46 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   }
 }
 
-@TypedGoRoute<ConversationsRoute>(path: "/conversations")
-class ConversationsRoute extends GoRouteData with _$ConversationsRoute {
-  const ConversationsRoute();
-
+@TypedGoRoute<ShereheRoute>(
+  path: "/sherehe",
+  routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")],
+)
+class ShereheRoute extends GoRouteData with _$ShereheRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ConversationsPage();
+    return ShereheHome();
   }
 }
 
-@TypedGoRoute<ChatRoute>(path: "/chat/:id")
-class ChatRoute extends GoRouteData with _$ChatRoute {
-  const ChatRoute({required this.id});
+class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
+  final String eventId;
 
-  final String id;
+  const ShereheDetailsRoute({required this.eventId});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    final conversation = state.extra as Conversation?;
-    return ChatPage(conversationId: id, conversation: conversation);
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: ShereheDetailsPage(eventId: eventId),
+
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }

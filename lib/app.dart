@@ -1,4 +1,5 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -63,6 +64,11 @@ class _AcademiaState extends State<Academia> {
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           )..add(AuthCheckStatusEvent()),
         ),
+        BlocProvider(create: (context) => sl<EventBloc>()),
+        BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
+        BlocProvider(
+          create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
+        ),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
@@ -79,6 +85,7 @@ class _AcademiaState extends State<Academia> {
             AppRouter.router.refresh();
           },
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
             theme: ThemeData(
               fontFamily: 'Din',
