@@ -106,6 +106,3 @@ By using dependency injection, we ensure that:
     Components don't have to worry about the lifecycle of their dependencies, which reduces the likelihood of errors like memory leaks or incorrect configurations.
 
     The overall architecture remains modular and flexible, with each component focusing on its core responsibility.
-
-
-

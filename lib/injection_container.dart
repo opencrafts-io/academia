@@ -4,7 +4,10 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
+import 'package:academia/features/sherehe/data/data.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:get_it/get_it.dart';
+import 'features/sherehe/presentation/presentation.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
@@ -35,5 +38,25 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
+  );
+
+  //sherehe
+  sl.registerSingleton<ShereheRemoteDataSource>(ShereheRemoteDataSource());
+
+  sl.registerSingleton<ShereheRepository>(
+    ShereheRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerSingleton<GetEvent>(GetEvent(sl()));
+  sl.registerLazySingleton(() => GetSpecificEvent(sl()));
+  sl.registerLazySingleton(() => GetAttendee(sl()));
+
+  sl.registerFactory(() => EventBloc(getEvent: sl(), getAttendee: sl()));
+
+  sl.registerFactory(
+    () => ShereheDetailsBloc(
+      getSpecificEventUseCase: sl(),
+      getAttendeesUseCase: sl(),
+    ),
   );
 }
