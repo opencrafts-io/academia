@@ -26,5 +26,5 @@ void main(args) async {
     ),
   );
 
-  runApp(SentryWidget(child:Academia()));
+  runApp(SentryWidget(child: Academia()));
 }
