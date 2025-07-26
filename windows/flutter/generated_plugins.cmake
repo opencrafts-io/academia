@@ -5,12 +5,14 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
+  sentry_flutter
   sqlite3_flutter_libs
   url_launcher_windows
   window_to_front
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  jni
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
