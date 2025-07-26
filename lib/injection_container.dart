@@ -3,7 +3,6 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
-import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
@@ -66,7 +65,8 @@ Future<void> init(FlavorConfig flavor) async {
     () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
-   );
+    ),
+  );
   // Chirp
   sl.registerSingleton<ChirpRemoteDataSource>(ChirpRemoteDataSourceImpl());
   sl.registerSingleton<ChirpRepository>(ChirpRepositoryImpl(sl()));

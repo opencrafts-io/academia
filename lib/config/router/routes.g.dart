@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
+  $shereheRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -185,9 +186,6 @@ mixin _$CompleteProfileRoute on GoRouteData {
   @override
   void replace(BuildContext context) => context.replace(location);
 }
-
-RouteBase get $profileRoute =>
-    GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState);
 
 RouteBase get $shereheRoute => GoRouteData.$route(
   path: '/sherehe',
