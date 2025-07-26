@@ -1,7 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:dartz/dartz.dart';
 import '../../entities/conversations/message.dart';
-import '../../repository/conversations/message_repository.dart';
+import '../../repositories/conversations/message_repository.dart';
 
 class GetMessages implements UseCase<List<Message>, String> {
   final MessageRepository repository;

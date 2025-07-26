@@ -2,7 +2,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/data/models/conversations/message_model_helper.dart';
 import 'package:dartz/dartz.dart';
 import '../../../domain/entities/conversations/message.dart';
-import '../../../domain/repository/conversations/message_repository.dart';
+import '../../../domain/repositories/conversations/message_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
 

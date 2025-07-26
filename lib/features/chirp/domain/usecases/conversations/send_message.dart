@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import '../../repository/conversations/message_repository.dart';
+import '../../repositories/conversations/message_repository.dart';
 import 'package:dartz/dartz.dart';
 import '../../entities/conversations/message.dart';
 

@@ -1,7 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:dartz/dartz.dart';
 import '../../../domain/entities/conversations/conversation.dart';
-import '../../../domain/repository/conversations/conversation_repository.dart';
+import '../../../domain/repositories/conversations/conversation_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
 import '../../models/conversations/conversation_model_helper.dart';

@@ -2,7 +2,7 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 
-extension UserProfileHelper on String {
+extension StringToUserProfileHelper on String {
   UserProfile toMinimalUserProfile() {
     return UserProfile(
       id: this,

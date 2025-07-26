@@ -1,6 +1,7 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/config/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -26,7 +27,7 @@ class _LayoutPageState extends State<LayoutPage> {
       case 3:
         EssentialsRoute().go(context);
       case 4:
-        ConversationsRoute().go(context);
+        FeedRoute().go(context);
     }
     selectedIndex = index;
   }
