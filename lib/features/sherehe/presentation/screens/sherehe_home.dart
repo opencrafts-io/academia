@@ -1,7 +1,9 @@
 import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/constants/constants.dart';
+import '../bloc/event_bloc.dart';
 import '../widgets/event_card.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -12,69 +14,6 @@ class ShereheHome extends StatefulWidget {
 }
 
 class _ShereheHomeState extends State<ShereheHome> {
-  final List<Map<String, dynamic>> events = [
-    {
-      "imagePath": 'assets/images/gaelle-marcel-vrkSVpOwchk-unsplash.jpg',
-      "title": 'Gender Reveal Party',
-      "location": 'Kryptons Apartments, Athi River',
-      "date": 'Sat, Jul 20',
-      "time": '2:00 PM',
-      "attendees": ['Alice Mwende', 'Brian Kimani', 'Cynthia Otieno'],
-      "attendeesCount": 23,
-      "genres": ['Family', 'Celebration', 'Casual'],
-    },
-    {
-      "imagePath": 'assets/images/scott-warman-rrYF1RfotSM-unsplash.jpg',
-      "title": 'Cocktail Thursday',
-      "location": 'Pine Breeze Gateway, Athi River',
-      "date": 'Thu, Jul 25',
-      "time": '7:30 PM',
-      "attendees": ['David Wanjiru', 'Emily Kihara', 'Felix Oloo'],
-      "attendeesCount": 58,
-      "genres": ['Social', 'Networking', 'Drinks'],
-    },
-    {
-      "imagePath": 'assets/images/lee-blanchflower-1dW1vEJLlCQ-unsplash.jpg',
-      "title": 'Freshas Night',
-      "location": 'Sabina Joy, Nairobi CBD',
-      "date": 'Fri, Jul 26',
-      "time": '9:00 PM',
-      "attendees": ['Grace Njeri', 'Hassan Omar', 'Irene Mutiso'],
-      "attendeesCount": 120,
-      "genres": ['Party', 'Dance', 'University'],
-    },
-    {
-      "imagePath": 'assets/images/al-elmes-ULHxWq8reao-unsplash.jpg',
-      "title": 'Beach Festival',
-      "location": 'Heri Homes, Athi River',
-      "date": 'Sun, Aug 4',
-      "time": '12:00 PM',
-      "attendees": ['James Kariuki', 'Kendi Muthoni', 'Leonard Mwangi'],
-      "attendeesCount": 87,
-      "genres": ['Outdoor', 'Festival', 'Music'],
-    },
-    {
-      "imagePath": 'assets/images/lavi-perchik-FCPV_n0lOxc-unsplash.jpg',
-      "title": 'Singles Night',
-      "location": 'Nairobi Street Kitchen, Westlands',
-      "date": 'Fri, Aug 9',
-      "time": '8:00 PM',
-      "attendees": ['Miriam Wambui', 'Nathan Njenga', 'Olivia Adhiambo'],
-      "attendeesCount": 43,
-      "genres": ['Dating', 'Party', 'Social'],
-    },
-    {
-      "imagePath": 'assets/images/med-mhamdi-mH_E0K581Yk-unsplash.jpg',
-      "title": 'AfroBeats Night',
-      "location": 'Captains Lounge, Mombasa Rd',
-      "date": 'Sat, Aug 10',
-      "time": '10:00 PM',
-      "attendees": ['Peter Ndungu', 'Queenie Muli', 'Raymond Kipkoech'],
-      "attendeesCount": 76,
-      "genres": ['Music', 'Dance', 'Nightlife'],
-    },
-  ];
-
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -110,6 +49,12 @@ class _ShereheHomeState extends State<ShereheHome> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<EventBloc>().add(FetchAllEvents());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
@@ -126,15 +71,8 @@ class _ShereheHomeState extends State<ShereheHome> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/images/diversity.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    color: Colors.black.withValues(
-                      alpha: 0.4,
-                    )
-                  ),
+                  Image.asset('assets/images/diversity.jpg', fit: BoxFit.cover),
+                  Container(color: Colors.black.withValues(alpha: 0.4)),
                   Positioned(
                     left: 16,
                     bottom: 16,
@@ -192,28 +130,66 @@ class _ShereheHomeState extends State<ShereheHome> {
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _getCrossAxisCount(context),
-                mainAxisSpacing: 12.0,
-                crossAxisSpacing: 12.0,
-                childAspectRatio: 0.7,
-                mainAxisExtent: _getMainAxisExtent(context),
-              ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final event = events[index];
-                return EventCard(
-                  imagePath: event['imagePath'],
-                  title: event['title'],
-                  location: event['location'],
-                  date: event['date'],
-                  time: event['time'],
-                  genres: List<String>.from(event['genres']),
-                  attendees: List<String>.from(event['attendees']),
-                  attendeesCount: event['attendeesCount'],
-                  onTap: () => ShereheDetailsRoute(eventId: "6").push(context), //TODO ADD logic to route each event
-                );
-              }, childCount: events.length),
+            sliver: BlocBuilder<EventBloc, EventState>(
+              builder: (context, state) {
+                if (state is EventLoading) {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 32.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                } else if (state is EventLoaded) {
+                  final events = state.events;
+                  final attendees = state.attendees;
+
+                  return SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _getCrossAxisCount(context),
+                      mainAxisSpacing: 12.0,
+                      crossAxisSpacing: 12.0,
+                      childAspectRatio: 0.7,
+                      mainAxisExtent: _getMainAxisExtent(context),
+                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final event = events[index];
+                      final eventAttendees = attendees
+                          .map(
+                            (attendee) =>
+                                "${attendee.firstName} ${attendee.lastName}",
+                          )
+                          .toList(); //quick fix for now
+
+                      return EventCard(
+                        imagePath: event.imageUrl,
+                        title: event.name,
+                        location: event.location,
+                        date: event.date,
+                        time: event.time,
+                        genres: event.genre,
+                        attendees: eventAttendees,
+                        attendeesCount: event.numberOfAttendees,
+                        onTap: () => ShereheDetailsRoute(
+                          eventId: event.id,
+                        ).push(context),
+                      );
+                    }, childCount: events.length),
+                  );
+                } else if (state is EventError) {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 32.0),
+                        child: Text("Failed to load events."),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                }
+              },
             ),
           ),
         ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../domain/domain.dart';
-import '../../../../constants/constants.dart';
 
 class AttendeeCard extends StatelessWidget {
   final Attendee attendee;
@@ -56,7 +55,7 @@ class AttendeeCard extends StatelessWidget {
     }
 
     final String initials = _getInitials(attendee.firstName, attendee.lastName);
-    final String fullName = '${attendee.firstName ?? ''} ${attendee.lastName ?? ''}'.trim();
+    final String fullName = '${attendee.firstName} ${attendee.lastName}'.trim();
     final String status = isHost ? 'Organizer' : 'Attending';
 
     return Container(
@@ -99,7 +98,7 @@ class AttendeeCard extends StatelessWidget {
               ],
             ),
           ),
-          if (trailingWidget != null) trailingWidget,
+          trailingWidget,
         ],
       ),
     );

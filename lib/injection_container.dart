@@ -4,11 +4,10 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
-import 'package:get_it/get_it.dart';
-//Sherehe Imports
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:get_it/get_it.dart';
+import 'features/sherehe/presentation/presentation.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
@@ -40,20 +39,24 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
   );
-  //Sherehe-details-config
-  sl.registerLazySingleton<ShereheRemoteDataSource>(
-        () => ShereheRemoteDataSource(),
+
+  //sherehe
+  sl.registerSingleton<ShereheRemoteDataSource>(ShereheRemoteDataSource());
+
+  sl.registerSingleton<ShereheRepository>(
+    ShereheRepositoryImpl(remoteDataSource: sl()),
   );
-  sl.registerLazySingleton<ShereheRepository>(
-        () => ShereheRepositoryImpl(remoteDataSource: sl()),
-  );
+
+  sl.registerSingleton<GetEvent>(GetEvent(sl()));
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
+
+  sl.registerFactory(() => EventBloc(getEvent: sl(), getAttendee: sl()));
+
   sl.registerFactory(
-        () => ShereheDetailsBloc(
+    () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
     ),
   );
-
 }

@@ -8,7 +8,7 @@ part 'sherehe_details_state.dart';
 
 class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> {
   final GetSpecificEvent getSpecificEventUseCase;
-  final GetAttendee getAttendeesUseCase; // Gets all attendees based on data layer
+  final GetAttendee getAttendeesUseCase;
 
   ShereheDetailsBloc({
     required this.getSpecificEventUseCase,
@@ -31,9 +31,9 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
           (eventFailure) {
         String errorMessage;
         if (eventFailure is ServerFailure) {
-          errorMessage = eventFailure.message ?? 'Server error. Please try again later.';
+          errorMessage = eventFailure.message;
         } else if (eventFailure is CacheFailure) {
-          errorMessage = eventFailure.message ?? 'Cache error. Please try again.';
+          errorMessage = eventFailure.message;
         } else {
           errorMessage = 'An unexpected error occurred.';
         }
@@ -44,9 +44,9 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
               (attendeeFailure) {
             String errorMessage;
             if (attendeeFailure is ServerFailure) {
-              errorMessage = attendeeFailure.message ?? 'Failed to load attendee list.';
+              errorMessage = attendeeFailure.message;
             } else if (attendeeFailure is CacheFailure) {
-              errorMessage = attendeeFailure.message ?? 'Cache error for attendee list.';
+              errorMessage = attendeeFailure.message;
             } else {
               errorMessage = 'An unexpected error occurred while loading attendees.';
             }
