@@ -6,6 +6,12 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
+import 'package:academia/features/chirp/data/repositories/chirp_repository_impl.dart';
+import 'package:academia/features/chirp/domain/repositories/chirp_repository.dart';
+import 'package:academia/features/chirp/domain/usecases/get_feed_posts.dart';
+import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
+import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'features/sherehe/presentation/presentation.dart';
 
@@ -15,12 +21,15 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
-  sl.registerFactory<DioClient>(() => DioClient(flavor));
 
-  sl.registerFactory(() => AuthLocalDatasource(localDB: cacheDB));
+  sl.registerFactory<AuthLocalDatasource>(
+    () => AuthLocalDatasource(localDB: cacheDB),
+  );
   sl.registerFactory(() => AuthRemoteDatasource(flavorConfig: flavor));
-  sl.registerFactory(() => ProfileLocalDatasource(localDB: cacheDB));
 
+  sl.registerFactory<DioClient>(
+    () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
       authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
@@ -57,6 +66,43 @@ Future<void> init(FlavorConfig flavor) async {
     () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
+   );
+  // Chirp
+  sl.registerSingleton<ChirpRemoteDataSource>(ChirpRemoteDataSourceImpl());
+  sl.registerSingleton<ChirpRepository>(ChirpRepositoryImpl(sl()));
+  sl.registerSingleton(GetFeedPosts(sl()));
+  sl.registerFactory(() => FeedBloc(sl()));
+  sl.registerFactory<ProfileRemoteDatasource>(
+    () => ProfileRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+  sl.registerFactory<ProfileLocalDatasource>(
+    () => ProfileLocalDatasource(localDB: cacheDB),
+  );
+
+  sl.registerFactory<ProfileRepositoryImpl>(
+    () => ProfileRepositoryImpl(
+      profileLocalDatasource: sl.get<ProfileLocalDatasource>(),
+      profileRemoteDatasource: sl.get<ProfileRemoteDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<RefreshCurrentUserProfileUsecase>(
+    () => RefreshCurrentUserProfileUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<UpdateUserProfile>(
+    () => UpdateUserProfile(profileRepository: sl.get<ProfileRepositoryImpl>()),
+  );
+
+  sl.registerFactory<UpdateUserPhone>(
+    () => UpdateUserPhone(profileRepository: sl.get<ProfileRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCachedProfileUsecase>(
+    () => GetCachedProfileUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
     ),
   );
 }

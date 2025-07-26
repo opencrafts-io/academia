@@ -1,3 +1,4 @@
+import 'package:academia/features/chirp/presentation/views/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
@@ -13,10 +14,6 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
     TypedGoRoute<CalendarRoute>(path: '/calendar'),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
-    TypedGoRoute<ProfileRoute>(
-      path: '/profile',
-      routes: [TypedGoRoute<CompleteProfileRoute>(path: "additional-info")],
-    ),
   ],
 )
 class MainLayoutShellRoute extends ShellRouteData {
@@ -34,10 +31,9 @@ class MainLayoutShellRoute extends ShellRouteData {
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Chirp")));
+    return FeedPage();
   }
 }
-
 
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
@@ -46,7 +42,6 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   }
 }
 
-
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -54,18 +49,12 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
   }
 }
 
-
 class MeteorRoute extends GoRouteData with _$MeteorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return Scaffold(body: Center(child: Text("MeteorRoute")));
   }
 }
-
-
-
-
-
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -78,11 +67,33 @@ class AuthRoute extends GoRouteData with _$AuthRoute {
 @TypedGoRoute<ProfileRoute>(path: "/profile")
 class ProfileRoute extends GoRouteData with _$ProfileRoute {
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(appBar: AppBar(title: Text("Profile")));
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: const ProfileView(),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }
 
+@TypedGoRoute<CompleteProfileRoute>(path: "/complete-profile")
 class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {

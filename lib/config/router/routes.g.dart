@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
   $authRoute,
   $profileRoute,
+  $completeProfileRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -24,18 +25,6 @@ RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
       factory: _$EssentialsRoute._fromState,
     ),
     GoRouteData.$route(path: '/meteor', factory: _$MeteorRoute._fromState),
-    GoRouteData.$route(
-      path: '/profile',
-
-      factory: _$ProfileRoute._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'additional-info',
-
-          factory: _$CompleteProfileRoute._fromState,
-        ),
-      ],
-    ),
   ],
 );
 
@@ -124,6 +113,32 @@ mixin _$MeteorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $authRoute =>
+    GoRouteData.$route(path: '/auth', factory: _$AuthRoute._fromState);
+
+mixin _$AuthRoute on GoRouteData {
+  static AuthRoute _fromState(GoRouterState state) => AuthRoute();
+
+  @override
+  String get location => GoRouteData.$location('/auth');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $profileRoute =>
+    GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState);
+
 mixin _$ProfileRoute on GoRouteData {
   static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
 
@@ -144,35 +159,18 @@ mixin _$ProfileRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $completeProfileRoute => GoRouteData.$route(
+  path: '/complete-profile',
+
+  factory: _$CompleteProfileRoute._fromState,
+);
+
 mixin _$CompleteProfileRoute on GoRouteData {
   static CompleteProfileRoute _fromState(GoRouterState state) =>
       CompleteProfileRoute();
 
   @override
-  String get location => GoRouteData.$location('/profile/additional-info');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $authRoute =>
-    GoRouteData.$route(path: '/auth', factory: _$AuthRoute._fromState);
-
-mixin _$AuthRoute on GoRouteData {
-  static AuthRoute _fromState(GoRouterState state) => AuthRoute();
-
-  @override
-  String get location => GoRouteData.$location('/auth');
+  String get location => GoRouteData.$location('/complete-profile');
 
   @override
   void go(BuildContext context) => context.go(location);
