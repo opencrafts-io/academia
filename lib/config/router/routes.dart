@@ -100,4 +100,21 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
     return CompleteProfileScreen();
   }
 }
+@TypedGoRoute<ShereheRoute>(path: "/sherehe", routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")])
+class ShereheRoute extends GoRouteData with _$ShereheRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ShereheHome();
+  }
+}
 
+class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
+  final String eventId;
+
+  const ShereheDetailsRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ShereheDetailsPage(eventId: eventId);
+  }
+}
