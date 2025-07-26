@@ -5,13 +5,10 @@ import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/auth/data/datasources/profile_local_datasource.dart';
 import 'package:get_it/get_it.dart';
-
-import 'features/sherehe/data/datasources/sherehe_remote_datasource.dart';
-import 'features/sherehe/data/repository/sherehe_repository_impl.dart';
-import 'features/sherehe/domain/repository/sherehe_repository.dart';
-import 'features/sherehe/domain/usecases/get_all_attendees.dart';
-import 'features/sherehe/domain/usecases/get_specific_event.dart';
-import 'features/sherehe/presentation/bloc/sherehe_details_bloc.dart';
+//Sherehe Imports
+import 'package:academia/features/sherehe/data/data.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
@@ -50,12 +47,12 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheRepository>(
         () => ShereheRepositoryImpl(remoteDataSource: sl()),
   );
-  sl.registerLazySingleton(() => GetSpecificEvent(sl())); // sl() resolves to ShereheRepository
+  sl.registerLazySingleton(() => GetSpecificEvent(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerFactory(
         () => ShereheDetailsBloc(
-      getSpecificEventUseCase: sl(), // sl() resolves to GetSpecificEvent
-      getAttendeesUseCase: sl(),    // sl() resolves to GetAttendee
+      getSpecificEventUseCase: sl(),
+      getAttendeesUseCase: sl(),
     ),
   );
 
