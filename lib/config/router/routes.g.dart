@@ -10,7 +10,6 @@ List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
   $authRoute,
   $profileRoute,
-  $shereheRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
