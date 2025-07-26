@@ -30,7 +30,7 @@ class MainLayoutShellRoute extends ShellRouteData {
 class HomeRoute extends GoRouteData with _$HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FeedPage();
+    return HomePage();
   }
 }
 
@@ -97,6 +97,50 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
+  }
+}
+
+@TypedGoRoute<ShereheRoute>(
+  path: "/sherehe",
+  routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")],
+)
+class ShereheRoute extends GoRouteData with _$ShereheRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ShereheHome();
+  }
+}
+
+class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
+  final String eventId;
+
+  const ShereheDetailsRoute({required this.eventId});
+
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: ShereheDetailsPage(eventId: eventId),
+
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }
 

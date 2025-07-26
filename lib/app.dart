@@ -63,7 +63,11 @@ class _AcademiaState extends State<Academia> {
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           )..add(AuthCheckStatusEvent()),
         ),
-        BlocProvider(create: (context) => sl<FeedBloc>()..add(LoadFeedEvent())),
+        BlocProvider(create: (context) => sl<EventBloc>()),
+        BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
+        BlocProvider(
+          create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
+        ),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
