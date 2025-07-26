@@ -65,6 +65,18 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
   }
 }
 
+@TypedGoRoute<ChatRoute>(path: "/chat/:conversationId")
+class ChatRoute extends GoRouteData with _$ChatRoute {
+  final String conversationId;
+
+  const ChatRoute({required this.conversationId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ChatPage(conversationId: conversationId);
+  }
+}
+
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
   @override

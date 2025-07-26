@@ -9,6 +9,7 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
   $feedRoute,
+  $chatRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
@@ -123,6 +124,37 @@ mixin _$FeedRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/feed');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $chatRoute => GoRouteData.$route(
+  path: '/chat/:conversationId',
+
+  factory: _$ChatRoute._fromState,
+);
+
+mixin _$ChatRoute on GoRouteData {
+  static ChatRoute _fromState(GoRouterState state) =>
+      ChatRoute(conversationId: state.pathParameters['conversationId']!);
+
+  ChatRoute get _self => this as ChatRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/chat/${Uri.encodeComponent(_self.conversationId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
