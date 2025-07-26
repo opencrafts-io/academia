@@ -20,8 +20,8 @@ void main(args) async {
   }
   await di.init(
     FlavorConfig(
-      flavor: Flavor.development,
-      appName: "Academia - Dev",
+      flavor: Flavor.staging,
+      appName: "Academia - Staging",
       apiBaseUrl: "https://qaverisafe.opencrafts.io",
     ),
   );
