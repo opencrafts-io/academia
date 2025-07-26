@@ -1,7 +1,7 @@
 import '../../domain/domain.dart';
 
 class EventModel extends Event {
-  const EventModel({
+   EventModel({
     required super.id,
     required super.name,
     required super.description,

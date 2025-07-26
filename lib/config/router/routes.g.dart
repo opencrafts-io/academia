@@ -227,10 +227,15 @@ mixin _$ShereheRoute on GoRouteData {
 
 mixin _$ShereheDetailsRoute on GoRouteData {
   static ShereheDetailsRoute _fromState(GoRouterState state) =>
-      ShereheDetailsRoute();
+      ShereheDetailsRoute(eventId: state.uri.queryParameters['event-id']!);
+
+  ShereheDetailsRoute get _self => this as ShereheDetailsRoute;
 
   @override
-  String get location => GoRouteData.$location('/sherehe/get-event');
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event',
+    queryParams: {'event-id': _self.eventId},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
