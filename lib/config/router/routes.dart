@@ -57,6 +57,14 @@ class MeteorRoute extends GoRouteData with _$MeteorRoute {
   }
 }
 
+@TypedGoRoute<FeedRoute>(path: "/feed")
+class FeedRoute extends GoRouteData with _$FeedRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return FeedPage();
+  }
+}
+
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
   @override
