@@ -7,8 +7,8 @@ class GetSpecificAttendee{
 
   GetSpecificAttendee(this.repository);
 
-  Future<Either<Failure, Attendee>> execute() async {
-    return repository.getSpecificAttendee(id as String);
+  Future<Either<Failure, Attendee>> execute(String attendeeId) async {
+    return repository.getSpecificAttendee(attendeeId);
   }
 
 }

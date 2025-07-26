@@ -104,8 +104,12 @@ class ShereheRoute extends GoRouteData with _$ShereheRoute {
 }
 
 class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
+  final String eventId;
+
+  const ShereheDetailsRoute({required this.eventId});
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ShereheDetails();
+    return ShereheDetailsPage(eventId: eventId);
   }
 }

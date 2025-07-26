@@ -211,7 +211,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                   genres: List<String>.from(event['genres']),
                   attendees: List<String>.from(event['attendees']),
                   attendeesCount: event['attendeesCount'],
-                  onTap: () => ShereheDetailsRoute().push(context),
+                  onTap: () => ShereheDetailsRoute(eventId: "1").push(context), //TODO ADD logic to route each event
                 );
               }, childCount: events.length),
             ),
