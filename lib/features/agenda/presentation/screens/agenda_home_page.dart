@@ -51,63 +51,65 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             ),
             builder: (context) => Container(
               padding: EdgeInsets.all(12),
-              child: Column(
-                spacing: 4,
-                children: [
-                  Text(
-                    "What do you want to do ...",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  SizedBox(height: 22),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 4,
+                  children: [
+                    Text(
+                      "What do you want to do ...",
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    child: ListTile(
-                      onTap: () {},
-                      leading: CircleAvatar(
-                        child: Icon(Symbols.article_shortcut),
+                    SizedBox(height: 22),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: ListTile(
+                        onTap: () {},
+                        leading: CircleAvatar(
+                          child: Icon(Symbols.article_shortcut),
+                        ),
 
-                      title: Text("Import your classes information"),
-                      subtitle: Text(
-                        "May not work for all universities",
-                        style: Theme.of(context).textTheme.bodySmall,
+                        title: Text("Import your classes information"),
+                        subtitle: Text(
+                          "May not work for all universities",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      onTap: () {},
-                      leading: CircleAvatar(child: Icon(Symbols.reminder)),
-                      title: Text("Create an assignment reminder"),
-                      subtitle: Text(
-                        "We'll notify you when they're due or close to due",
-                        style: Theme.of(context).textTheme.bodySmall,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        onTap: () {},
+                        leading: CircleAvatar(child: Icon(Symbols.reminder)),
+                        title: Text("Create an assignment reminder"),
+                        subtitle: Text(
+                          "We'll notify you when they're due or close to due",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      onTap: () {},
-                      leading: CircleAvatar(child: Icon(Symbols.list)),
-                      title: Text("Create a general todo"),
-                      subtitle: Text(
-                        "Keep track of your tasks",
-                        style: Theme.of(context).textTheme.bodySmall,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        onTap: () {},
+                        leading: CircleAvatar(child: Icon(Symbols.list)),
+                        title: Text("Create a general todo"),
+                        subtitle: Text(
+                          "Keep track of your tasks",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
