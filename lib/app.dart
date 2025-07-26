@@ -66,6 +66,8 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(
           create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
+        ),
+        BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
             refreshCurrentUserProfileUsecase: sl
