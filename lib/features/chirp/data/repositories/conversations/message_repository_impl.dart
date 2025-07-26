@@ -24,21 +24,29 @@ class MessageRepositoryImpl implements MessageRepository {
 
       return await messagesResult.fold(
         (failure) async {
-          // Remote failed, try cache
-          try {
-            final cachedMessages = await localDataSource.getCachedMessages(
-              conversationId,
-            );
-            return Right(
-              cachedMessages.map((data) => data.toEntity()).toList(),
-            );
-          } catch (cacheError) {
-            return Left(failure); // Return original failure if cache also fails
-          }
+          // TODO: Uncomment
+          // // Remote failed, try cache
+          // try {
+          //   final cachedMessages = await localDataSource.getCachedMessages(
+          //     conversationId,
+          //   );
+          //   return Right(
+          //     cachedMessages.map((data) => data.toEntity()).toList(),
+          //   );
+          // } catch (cacheError) {
+          //   return Left(failure); // Return original failure if cache also fails
+          // }
+          return Left(failure);
         },
         (messages) async {
-          // Remote succeeded, cache the data
-          await localDataSource.cacheMessages(conversationId, messages);
+          // TODO: Uncomment
+          // // Remote succeeded, cache the data
+          // try {
+          //   await localDataSource.cacheMessages(conversationId, messages);
+          // } catch (cacheError) {
+          //   // Log cache error but continue
+          //   print('Cache error: $cacheError');
+          // }
           return Right(messages.map((data) => data.toEntity()).toList());
         },
       );

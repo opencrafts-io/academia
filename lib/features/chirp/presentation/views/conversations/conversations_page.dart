@@ -44,8 +44,12 @@ class ConversationsPage extends StatelessWidget {
               );
             }
 
-            if (state is ConversationsLoaded) {
-              if (state.conversations.isEmpty) {
+            if (state is ConversationsLoaded || state is MessagesLoaded) {
+              final conversations = state is ConversationsLoaded
+                  ? (state).conversations
+                  : (state as MessagesLoaded).conversations;
+
+              if (conversations.isEmpty) {
                 return SliverFillRemaining(
                   child: Center(
                     child: ConstrainedBox(
@@ -67,7 +71,7 @@ class ConversationsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Search for a friend and get the vibes flowin\'',
+                            "Search for a friend and unleash your vibes into their existence'",
                             style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   color: Theme.of(
@@ -108,9 +112,9 @@ class ConversationsPage extends StatelessWidget {
               }
 
               return SliverList.builder(
-                itemCount: state.conversations.length,
+                itemCount: conversations.length,
                 itemBuilder: (context, index) {
-                  final conversation = state.conversations[index];
+                  final conversation = conversations[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(
                       vertical: 4,
@@ -140,14 +144,6 @@ class ConversationsPage extends StatelessWidget {
                         conversation.user.name,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text(
-                        conversation.lastMessage?.content ?? 'No messages yet',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
                       ),
                       trailing: conversation.unreadCount > 0
                           ? Container(

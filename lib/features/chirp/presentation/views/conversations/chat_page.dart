@@ -176,7 +176,10 @@ class _ChatPageState extends State<ChatPage> {
                                     : null,
                                 child: message.sender.avatarUrl == null
                                     ? Text(
-                                        message.sender.name[0].toUpperCase(),
+                                        message.sender.name.isNotEmpty
+                                            ? message.sender.name[0]
+                                                  .toUpperCase()
+                                            : 'U',
                                         style: const TextStyle(fontSize: 12),
                                       )
                                     : null,
@@ -222,7 +225,10 @@ class _ChatPageState extends State<ChatPage> {
                                     : null,
                                 child: message.sender.avatarUrl == null
                                     ? Text(
-                                        message.sender.name[0].toUpperCase(),
+                                        message.sender.name.isNotEmpty
+                                            ? message.sender.name[0]
+                                                  .toUpperCase()
+                                            : 'U',
                                         style: const TextStyle(fontSize: 12),
                                       )
                                     : null,
