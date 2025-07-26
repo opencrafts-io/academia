@@ -13,8 +13,7 @@ class ShereheDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      sl<ShereheDetailsBloc>()
-        ..add(LoadShereheDetails(eventId: eventId)),
+          sl<ShereheDetailsBloc>()..add(LoadShereheDetails(eventId: eventId)),
       child: Scaffold(
         body: BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
           builder: (context, state) {
@@ -30,9 +29,8 @@ class ShereheDetailsPage extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.all(
-                          ResponsiveBreakPoints.isMobile(context)
-                              ? 16.0
-                              : 32.0),
+                        ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -51,8 +49,9 @@ class ShereheDetailsPage extends StatelessWidget {
                                 : 56,
                             // Match height logic if needed
                             child: FilledButton(
-                              onPressed: () {}, //TODO:Impliment logic for when button is pressed ie purchase ticket
-                              child: const Text('I\'m Going'),
+                              onPressed:
+                                  () {}, //TODO:Impliment logic for when button is pressed ie purchase ticket
+                              child: const Text("I'm Going"),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -72,7 +71,8 @@ class ShereheDetailsPage extends StatelessWidget {
                       onPressed: () {
                         // Retry loading the event details
                         context.read<ShereheDetailsBloc>().add(
-                            LoadShereheDetails(eventId: eventId));
+                          LoadShereheDetails(eventId: eventId),
+                        );
                       },
                       child: const Text('Retry'),
                     ),
@@ -88,3 +88,4 @@ class ShereheDetailsPage extends StatelessWidget {
     );
   }
 }
+

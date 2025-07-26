@@ -25,10 +25,11 @@ class AttendeesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Attendee> eventSpecificAttendees =
-    allAttendees.where((attendee) => attendee.eventId == event.id).toList();
+    final List<Attendee> eventSpecificAttendees = allAttendees
+        .where((attendee) => attendee.eventId == event.id)
+        .toList();
     final organizerAttendee = eventSpecificAttendees.firstWhere(
-          (attendee) => attendee.id == event.organizerId.toString(),
+      (attendee) => attendee.id == event.organizerId.toString(),
       orElse: () => Attendee(
         id: '',
         firstName: 'Unknown',
@@ -43,10 +44,9 @@ class AttendeesList extends StatelessWidget {
 
     List<Widget> columnChildren = [
       Text(
-        'Who\'s Coming',
+        "Who's Coming",
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       const SizedBox(height: 16),
@@ -59,17 +59,22 @@ class AttendeesList extends StatelessWidget {
     }
 
     final int maxOtherAttendeesToShow = 4;
-    final int otherAttendeesToShowCount = otherAttendees.length > maxOtherAttendeesToShow
+    final int otherAttendeesToShowCount =
+        otherAttendees.length > maxOtherAttendeesToShow
         ? maxOtherAttendeesToShow
         : otherAttendees.length;
 
     columnChildren.addAll(
-      otherAttendees.take(otherAttendeesToShowCount).map((attendee) => AttendeeCard(attendee: attendee)).toList(),
+      otherAttendees
+          .take(otherAttendeesToShowCount)
+          .map((attendee) => AttendeeCard(attendee: attendee))
+          .toList(),
     );
 
     final int attendeesActuallyShown =
         (organizerAttendee.id.isNotEmpty ? 1 : 0) + otherAttendeesToShowCount;
-    final int remainingCountBasedOnEventTotal = event.numberOfAttendees - attendeesActuallyShown;
+    final int remainingCountBasedOnEventTotal =
+        event.numberOfAttendees - attendeesActuallyShown;
 
     if (remainingCountBasedOnEventTotal > 0) {
       columnChildren.add(
@@ -91,10 +96,15 @@ class AttendeesList extends StatelessWidget {
                       left: 0,
                       child: CircleAvatar(
                         radius: 18,
-                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondary,
                         child: Text(
                           otherAttendees.length > 0
-                              ? _getInitials(otherAttendees[0].firstName, otherAttendees[0].lastName)
+                              ? _getInitials(
+                                  otherAttendees[0].firstName,
+                                  otherAttendees[0].lastName,
+                                )
                               : '?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary,
@@ -111,7 +121,10 @@ class AttendeesList extends StatelessWidget {
                         backgroundColor: Theme.of(context).colorScheme.tertiary,
                         child: Text(
                           otherAttendees.length > 1
-                              ? _getInitials(otherAttendees[1].firstName, otherAttendees[1].lastName)
+                              ? _getInitials(
+                                  otherAttendees[1].firstName,
+                                  otherAttendees[1].lastName,
+                                )
                               : '?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onTertiary,
@@ -162,3 +175,4 @@ class AttendeesList extends StatelessWidget {
     );
   }
 }
+
