@@ -44,11 +44,7 @@ class HomePage extends StatelessWidget {
                   maxWidth: ResponsiveBreakPoints.tablet,
                 ),
                 child: TabBarView(
-                  children: [
-                    FeedPage(),
-                    Center(child: Text("Chirp chats")),
-                    ShereheHome(),
-                  ],
+                  children: [FeedPage(), ConversationsPage(), ShereheHome()],
                 ),
               ),
             ),
