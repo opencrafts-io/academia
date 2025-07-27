@@ -3,6 +3,7 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -16,60 +17,27 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Oops! ${state.message}"),
-                    behavior: SnackBarBehavior.floating,
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    showCloseIcon: true,
-                  ),
-                  snackBarAnimationStyle: AnimationStyle(
-                    curve: Curves.bounceIn,
-                  ),
-                );
-                return;
-              }
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Oops! ${state.message}"),
+                behavior: SnackBarBehavior.floating,
+                width: MediaQuery.of(context).size.width * 0.75,
+                showCloseIcon: true,
+              ),
+              snackBarAnimationStyle: AnimationStyle(curve: Curves.bounceIn),
+            );
+            return;
+          }
 
-              if (state is AuthAuthenticated) {
-                BlocProvider.of<ProfileBloc>(
-                  context,
-                ).add(RefreshProfileEvent());
-                return;
-              }
-            },
-          ),
-          BlocListener<ProfileBloc, ProfileState>(
-            listener: (context, state) {
-              if (state is ProfileErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Oops! ${state.message}"),
-                    behavior: SnackBarBehavior.floating,
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    showCloseIcon: true,
-                  ),
-                  snackBarAnimationStyle: AnimationStyle(
-                    curve: Curves.bounceIn,
-                  ),
-                );
-                return;
-              }
-
-              if (state is ProfileLoadedState) {
-                if (state.profile.onboarded && state.profile.termsAccepted) {
-                  return HomeRoute().go(context);
-                }
-                return CompleteProfileRoute().go(context);
-              }
-            },
-          ),
-        ],
-        child: SafeArea(
+          if (state is AuthAuthenticated) {
+            context.go(HomeRoute().location);
+            return;
+          }
+        },
+        builder: (context, state) => SafeArea(
           minimum: EdgeInsets.all(12),
           child: Center(
             child: ConstrainedBox(

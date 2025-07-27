@@ -63,20 +63,6 @@ class _AcademiaState extends State<Academia> {
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           )..add(AuthCheckStatusEvent()),
         ),
-        BlocProvider(create: (context) => sl<EventBloc>()),
-        BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(
-          create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
-        ),
-        BlocProvider(
-          create: (context) => ProfileBloc(
-            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
-            refreshCurrentUserProfileUsecase: sl
-                .get<RefreshCurrentUserProfileUsecase>(),
-            updateUserProfile: sl.get<UpdateUserProfile>(),
-            updateUserPhone: sl.get<UpdateUserPhone>(),
-          )..add(GetCachedProfileEvent()),
-        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
@@ -84,7 +70,6 @@ class _AcademiaState extends State<Academia> {
             AppRouter.router.refresh();
           },
           child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
             theme: ThemeData(
               fontFamily: 'Din',

@@ -53,17 +53,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_native_splash: ^2.4.6
   material_symbols_icons: ^4.2815.1
-  sentry_flutter: ^9.5.0
-  lottie: ^3.3.1
-  flutter_svg: ^2.2.0
-  phone_form_field: ^10.0.8
-  cached_network_image: ^3.4.1
-  time_since: ^1.0.1
-  video_player: ^2.10.0
-  sliver_tools: ^0.2.12
 
 dev_dependencies:
-  sentry_dart_plugin: ^3.1.1
   flutter_test:
     sdk: flutter
 
@@ -91,9 +82,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
-    - assets/lotties/
-    - assets/svgs/
-    - assets/illustrations/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -125,9 +113,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
-sentry:
-  upload_debug_symbols: true
-  upload_source_maps: true
-  project: academia
-  org: student-23z
