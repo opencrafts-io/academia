@@ -13,7 +13,7 @@ class ShereheHome extends StatefulWidget {
   State<ShereheHome> createState() => _ShereheHomeState();
 }
 
-class _ShereheHomeState extends State<ShereheHome> {
+class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClientMixin {
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -45,6 +45,9 @@ class _ShereheHomeState extends State<ShereheHome> {
   }
 
   @override
+    bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
     context.read<EventBloc>().add(FetchAllEvents());
@@ -52,6 +55,8 @@ class _ShereheHomeState extends State<ShereheHome> {
 
   @override
   Widget build(BuildContext context) {
+    // Prevent home page from rebuilding this page every time
+    super.build(context);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
