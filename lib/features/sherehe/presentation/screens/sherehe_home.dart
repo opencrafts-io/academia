@@ -27,12 +27,8 @@ class _ShereheHomeState extends State<ShereheHome> {
   double _getMainAxisExtent(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 440;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 600;
-    } else if (ResponsiveBreakPoints.isDesktop(context)) {
-      return 700;
     } else {
-      return 800; // large desktop
+      return 500; // large desktop
     }
   }
 
@@ -71,7 +67,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(22),
-                  borderSide: BorderSide.none
+                  borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
