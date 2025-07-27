@@ -15,36 +15,46 @@ class HomePage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverPinnedHeader(
-              child: Container(
-                color: Theme.of(context).colorScheme.surface,
-                padding: EdgeInsets.all(12),
+              child: Align(
+                alignment: Alignment.center,
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                  width: 420,
+                  color: Theme.of(context).colorScheme.surface,
+                  padding: EdgeInsets.all(12),
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 420),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(22),
+                    ),
 
-                  child: TabBar(
-                    isScrollable: true,
-                    dividerHeight: 0,
-                    tabAlignment: TabAlignment.center,
-                    tabs: [
-                      Tab(child: Text("Chirp Feed")),
-                      Tab(child: Text("Chirp Chats")),
-                      Tab(child: Text("Sherehe & Inshallah")),
-                    ],
+                    child: TabBar(
+                      isScrollable: true,
+                      dividerHeight: 0,
+                      tabAlignment: TabAlignment.center,
+                      tabs: [
+                        Tab(child: Text("Chirp Feed")),
+                        Tab(child: Text("Chirp Chats")),
+                        Tab(child: Text("Sherehe & Inshallah")),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             SliverFillRemaining(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: ResponsiveBreakPoints.tablet,
-                ),
-                child: TabBarView(
-                  children: [FeedPage(), ConversationsPage(), ShereheHome()],
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: ResponsiveBreakPoints.tablet,
+                  ),
+                  child: TabBarView(
+                    children: [
+                      FeedPage(),
+                      ConversationsPage(),
+                      ShereheHome(),
+                    ],
+                  ),
                 ),
               ),
             ),

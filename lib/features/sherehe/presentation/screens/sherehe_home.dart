@@ -13,7 +13,7 @@ class ShereheHome extends StatefulWidget {
   State<ShereheHome> createState() => _ShereheHomeState();
 }
 
-class _ShereheHomeState extends State<ShereheHome> {
+class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClientMixin {
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -27,12 +27,8 @@ class _ShereheHomeState extends State<ShereheHome> {
   double _getMainAxisExtent(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 440;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 600;
-    } else if (ResponsiveBreakPoints.isDesktop(context)) {
-      return 700;
     } else {
-      return 800; // large desktop
+      return 500; // large desktop
     }
   }
 
@@ -49,6 +45,9 @@ class _ShereheHomeState extends State<ShereheHome> {
   }
 
   @override
+    bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
     context.read<EventBloc>().add(FetchAllEvents());
@@ -56,6 +55,8 @@ class _ShereheHomeState extends State<ShereheHome> {
 
   @override
   Widget build(BuildContext context) {
+    // Prevent home page from rebuilding this page every time
+    super.build(context);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -71,7 +72,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(22),
-                  borderSide: BorderSide.none
+                  borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
