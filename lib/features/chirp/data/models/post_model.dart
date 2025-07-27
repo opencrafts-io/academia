@@ -1,25 +1,41 @@
 import 'package:academia/features/chirp/domain/entities/post.dart';
 
+
 class PostModel extends Post {
+
   PostModel({
     required super.id,
-    required super.title,
+    required super.userId,
     required super.content,
-    required super.communityName,
-    required super.upvotes,
-    required super.comments,
-    super.imageUrl,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.likeCount,
+    required super.attachments,
+    required super.replies,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
       id: json['id'],
-      title: json['title'],
+      userId: json['user_id'],
       content: json['content'],
-      communityName: json['communityName'],
-      upvotes: json['upvotes'],
-      comments: json['comments'],
-      imageUrl: json['imageUrl'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      likeCount: json['like_count'],
+      attachments: (json['attachments'] as List<dynamic>)
+          .map((a) => Attachment.fromJson(a))
+          .toList(),
+      replies: (json['replies'] as List<dynamic>)
+          .map((r) => Reply.fromJson(r))
+          .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'user_id': userId,
+    'content': content,
+    'like_count': likeCount,
+    'attachments': attachments.map((a) => a.toJson()).toList(),
+    'replies': replies.map((r) => r.toJson()).toList(),
+  };
 }

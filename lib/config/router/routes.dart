@@ -1,4 +1,3 @@
-import 'package:academia/features/chirp/presentation/views/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';

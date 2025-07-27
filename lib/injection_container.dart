@@ -18,6 +18,7 @@ import 'package:academia/features/chirp/domain/repositories/chirp_repository.dar
 import 'package:academia/features/chirp/domain/usecases/get_feed_posts.dart';
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_bloc.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'features/sherehe/presentation/presentation.dart';

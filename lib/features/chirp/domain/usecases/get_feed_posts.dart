@@ -1,12 +1,15 @@
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/domain/repositories/chirp_repository.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/domain/domain.dart';
+import 'package:dartz/dartz.dart';
 
-class GetFeedPosts {
-  final ChirpRepository repository;
+class GetFeedPosts extends UseCase<List<Post>, NoParams>{
+  final ChirpRepository chirpRepository;
 
-  GetFeedPosts(this.repository);
+  GetFeedPosts(this.chirpRepository);
 
-  Future<List<Post>> call() async {
-    return await repository.getFeedPosts();
+  @override
+  Future<Either<Failure, List<Post>>> call(NoParams params) async {
+    return await chirpRepository.getFeedPosts();
   }
 }
+
