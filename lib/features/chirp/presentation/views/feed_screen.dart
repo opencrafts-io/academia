@@ -1,3 +1,4 @@
+import 'package:academia/constants/constants.dart';
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class FeedPage extends StatelessWidget {
           );
         }
       },
+
       child: CustomScrollView(
         slivers: [
           BlocBuilder<FeedBloc, FeedState>(
