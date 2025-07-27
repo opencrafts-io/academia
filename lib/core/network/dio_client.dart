@@ -1,6 +1,9 @@
+import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:academia/injection_container.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:academia/config/config.dart';
+import 'package:logger/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioClient {
@@ -8,10 +11,11 @@ class DioClient {
   ///
   /// Will be used to send requests to the server
   late Dio dio;
+  AuthLocalDatasource authLocalDatasource;
 
   /// Ensure that before instanciating a DioClient that
   /// you must have injected the flavor
-  DioClient(FlavorConfig flavor) {
+  DioClient(FlavorConfig flavor, {required this.authLocalDatasource}) {
     dio = Dio(
       BaseOptions(
         baseUrl: flavor.apiBaseUrl,
@@ -42,10 +46,28 @@ class DioClient {
   }
 
   void _addAuthInterceptor() {
-    // dio.interceptors.add(AuthInterceptor());
-  }
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          // fetch the token
+          final tokenRes = await authLocalDatasource.getTokenByProvider(
+            "verisafe",
+          );
 
-  void addInterceptor(Interceptor interceptor) {
-    dio.interceptors.add(interceptor);
+          return tokenRes.fold(
+            (failure) {
+              Logger().i(failure.message, error: failure.error);
+              handler.next(options);
+            },
+            (token) {
+              options.headers.addAll({
+                "Authorization": 'Bearer ${token.accessToken}',
+              });
+              handler.next(options);
+            },
+          );
+        },
+      ),
+    );
   }
 }
