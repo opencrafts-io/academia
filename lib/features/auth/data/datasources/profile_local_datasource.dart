@@ -44,7 +44,8 @@ class ProfileLocalDatasource {
         CacheFailure(
           error: e,
           message:
-              "A tiny glitch in the matrix stopped us from deleting your profile locally.",
+              "A tiny glitch in the matrix stopped us from deleting your profile locally."
+              "Perhaps try casting that spell again, or check your device's arcane storage.",
         ),
       );
     }
