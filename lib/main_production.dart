@@ -14,7 +14,7 @@ void main(args) async {
     FlavorConfig(
       flavor: Flavor.production,
       appName: "Academia",
-      apiBaseUrl: "https://verisafe.opencrafts.io",
+      apiBaseUrl: "https://qaverisafe.opencrafts.io",
     ),
   );
 
