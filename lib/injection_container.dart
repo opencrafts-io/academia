@@ -5,11 +5,15 @@ import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/chirp/data/datasources/conversations/messaging_local_datasource.dart';
 import 'package:academia/features/chirp/data/datasources/conversations/messaging_remote_datasource.dart';
+import 'package:academia/features/chirp/data/datasources/user_search_remote_datasource.dart';
 import 'package:academia/features/chirp/data/repositories/conversations/conversation_repository_impl.dart';
 import 'package:academia/features/chirp/data/repositories/conversations/message_repository_impl.dart';
+import 'package:academia/features/chirp/data/repositories/user_search_repository_impl.dart';
+import 'package:academia/features/chirp/domain/repositories/user_search_repository.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/get_conversations.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/get_messages.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/send_message.dart';
+import 'package:academia/features/chirp/domain/usecases/search_users_usecase.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
@@ -145,11 +149,26 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+
+  // User Search dependencies
+  sl.registerFactory<UserSearchRemoteDatasourceImpl>(
+    () => UserSearchRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+  );
+  sl.registerFactory<UserSearchRepository>(
+    () => UserSearchRepositoryImpl(
+      remoteDataSource: sl.get<UserSearchRemoteDatasourceImpl>(),
+    ),
+  );
+  sl.registerFactory<SearchUsersUseCase>(
+    () => SearchUsersUseCase(sl.get<UserSearchRepository>()),
+  );
+
   sl.registerFactory<MessagingBloc>(
     () => MessagingBloc(
       getConversations: sl.get<GetConversations>(),
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
+      searchUsers: sl.get<SearchUsersUseCase>(),
     ),
   );
 }

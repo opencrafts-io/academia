@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 
 abstract class MessagingEvent extends Equatable {
   const MessagingEvent();
@@ -34,4 +35,22 @@ class MarkConversationAsReadEvent extends MessagingEvent {
 
   @override
   List<Object?> get props => [conversationId];
+}
+
+class SearchUsersEvent extends MessagingEvent {
+  final String query;
+
+  const SearchUsersEvent(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}
+
+class StartNewConversationEvent extends MessagingEvent {
+  final UserProfile user;
+
+  const StartNewConversationEvent(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }
