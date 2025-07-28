@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       FeedPage(),
-                      Center(child: Text("Chirp chats")),
+                      ConversationsPage(),
                       ShereheHome(),
                     ],
                   ),
