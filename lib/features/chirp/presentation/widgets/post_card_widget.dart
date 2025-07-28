@@ -58,16 +58,14 @@ class _PostCardState extends State<PostCard> {
 
               Text(
                 widget.post.content,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                
               ),
 
               if (widget.post.attachments.isNotEmpty) ...[
                 SizedBox(height: 8),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.width * .5,
+                    maxHeight: 300,
                   ),
                   child: Stack(
                     alignment: Alignment.bottomCenter,
@@ -83,7 +81,7 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                       ),
-
+                  
                       if (widget.post.attachments.length > 1)
                         Positioned(
                           bottom: 8,

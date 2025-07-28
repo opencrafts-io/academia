@@ -12,9 +12,20 @@ class ChirpRemoteDataSourceImpl implements ChirpRemoteDataSource {
     await Future.delayed(Duration(milliseconds: 500));
     return Right([
       PostModel(
+        id: "127",
+        userId: 'harrystyles',
+        content: "Do you think we have any major belting ballads to look forward to in the future? Harry's House did not have much of that kind of vocals. Do you still think he has it in him, or has that ship sailed away?They are my all time favorites. I love when he stretches his vocals, but ive seen later(2023) concert videos with sign of the times where he didn't even attempt to carry the ending. Even with his songs like Adore You, he would speak sing at concerts \"walk through fire for you, just let me adore you\", instead of belting it like he used to.Do you think it is inability to carry those vocals, or is it him preserving his vocals so he can perform longer?",
+        createdAt: DateTime.parse('2024-11-02T09:20:00Z'),
+        updatedAt: DateTime.parse('2024-11-02T09:20:00Z'),
+        likeCount: 121,
+        attachments: [
+        ],
+        replies: [],
+      ),
+      PostModel(
         id: "123",
         userId: 'alice123',
-        content: "Exploring how Flutter handles custom render objects. It's wild!",
+        content: "There are definitely aspects of Harry’s House with belting vocals. The adlibs in Cinema and Daydreaming are two coming to my head right now, so he definitely still has the ability!",
         createdAt: DateTime.parse('2024-11-01T10:00:00Z'),
         updatedAt: DateTime.parse('2024-11-01T10:00:00Z'),
         likeCount: 88,
