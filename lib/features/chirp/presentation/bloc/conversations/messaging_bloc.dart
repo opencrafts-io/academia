@@ -4,6 +4,7 @@ import '../../../domain/usecases/conversations/get_messages.dart';
 import '../../../domain/usecases/conversations/send_message.dart';
 import '../../../domain/usecases/search_users_usecase.dart';
 import '../../../domain/entities/conversations/conversation.dart';
+import '../../../domain/entities/conversations/message.dart';
 import '../../../../../core/usecase/usecase.dart';
 import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
@@ -58,16 +59,22 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     result.fold((failure) => emit(MessagingErrorState(failure.message)), (
       messages,
     ) {
+      // Sort messages by sentAt time (oldest first)
+      final sortedMessages = List<Message>.from(messages)
+        ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
       // TODO: Uncomment
       // // get conversation details from API
       final conversation = Conversation(
         id: event.conversationId,
         user: _getUserForConversation(event.conversationId),
-        lastMessage: messages.isNotEmpty ? messages.first : null,
-        lastMessageAt: messages.isNotEmpty ? messages.first.sentAt : null,
+        lastMessage: sortedMessages.isNotEmpty ? sortedMessages.last : null,
+        lastMessageAt: sortedMessages.isNotEmpty
+            ? sortedMessages.last.sentAt
+            : null,
         unreadCount: 0,
       );
-      emit(MessagesLoaded(messages, conversation, currentConversations));
+      emit(MessagesLoaded(sortedMessages, conversation, currentConversations));
     });
   }
 
@@ -75,15 +82,55 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     SendMessageEvent event,
     Emitter<MessagingState> emit,
   ) async {
+    final currentState = state;
+    List<Message> currentMessages = [];
+    Conversation? currentConversation;
+    List<Conversation> currentConversations = [];
+
+    if (currentState is MessagesLoaded) {
+      currentMessages = currentState.messages;
+      currentConversation = currentState.conversation;
+      currentConversations = currentState.conversations;
+    }
+
     emit(MessagingLoadingState());
-    final result = await sendMessage({
+
+    // Create message parameters
+    final messageParams = <String, String>{
       'receiverId': event.receiverId,
       'content': event.content,
+    };
+
+    if (event.imagePath != null) {
+      messageParams['imagePath'] = event.imagePath!;
+    }
+
+    final result = await sendMessage(messageParams);
+    result.fold((failure) => emit(MessagingErrorState(failure.message)), (
+      message,
+    ) {
+      final updatedMessages = [...currentMessages, message];
+
+      final updatedConversation =
+          currentConversation?.copyWith(
+            lastMessage: message,
+            lastMessageAt: message.sentAt,
+          ) ??
+          Conversation(
+            id: event.receiverId,
+            user: _getUserForConversation(event.receiverId),
+            lastMessage: message,
+            lastMessageAt: message.sentAt,
+            unreadCount: 0,
+          );
+      emit(
+        MessagesLoaded(
+          updatedMessages,
+          updatedConversation,
+          currentConversations,
+        ),
+      );
     });
-    result.fold(
-      (failure) => emit(MessagingErrorState(failure.message)),
-      (message) => emit(MessageSentState(message)),
-    );
   }
 
   Future<void> _onMarkConversationAsRead(

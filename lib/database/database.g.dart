@@ -1319,6 +1319,17 @@ class $MessageTableTable extends MessageTable
     ),
     defaultValue: Constant(false),
   );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1329,6 +1340,7 @@ class $MessageTableTable extends MessageTable
     recipientId,
     sentAt,
     isRead,
+    imageUrl,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1400,6 +1412,12 @@ class $MessageTableTable extends MessageTable
         isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
       );
     }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
     return context;
   }
 
@@ -1441,6 +1459,10 @@ class $MessageTableTable extends MessageTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_read'],
       )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
     );
   }
 
@@ -1459,6 +1481,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
   final String recipientId;
   final DateTime sentAt;
   final bool isRead;
+  final String? imageUrl;
   const MessageData({
     required this.id,
     required this.createdAt,
@@ -1468,6 +1491,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     required this.recipientId,
     required this.sentAt,
     required this.isRead,
+    this.imageUrl,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1480,6 +1504,9 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     map['recipient_id'] = Variable<String>(recipientId);
     map['sent_at'] = Variable<DateTime>(sentAt);
     map['is_read'] = Variable<bool>(isRead);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
     return map;
   }
 
@@ -1493,6 +1520,9 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       recipientId: Value(recipientId),
       sentAt: Value(sentAt),
       isRead: Value(isRead),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
     );
   }
 
@@ -1510,6 +1540,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       recipientId: serializer.fromJson<String>(json['recipientId']),
       sentAt: serializer.fromJson<DateTime>(json['sentAt']),
       isRead: serializer.fromJson<bool>(json['isRead']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
     );
   }
   @override
@@ -1524,6 +1555,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       'recipientId': serializer.toJson<String>(recipientId),
       'sentAt': serializer.toJson<DateTime>(sentAt),
       'isRead': serializer.toJson<bool>(isRead),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
     };
   }
 
@@ -1536,6 +1568,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     String? recipientId,
     DateTime? sentAt,
     bool? isRead,
+    Value<String?> imageUrl = const Value.absent(),
   }) => MessageData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -1545,6 +1578,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     recipientId: recipientId ?? this.recipientId,
     sentAt: sentAt ?? this.sentAt,
     isRead: isRead ?? this.isRead,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
   );
   MessageData copyWithCompanion(MessageTableCompanion data) {
     return MessageData(
@@ -1558,6 +1592,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           : this.recipientId,
       sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
       isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
     );
   }
 
@@ -1571,7 +1606,8 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           ..write('senderId: $senderId, ')
           ..write('recipientId: $recipientId, ')
           ..write('sentAt: $sentAt, ')
-          ..write('isRead: $isRead')
+          ..write('isRead: $isRead, ')
+          ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
   }
@@ -1586,6 +1622,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     recipientId,
     sentAt,
     isRead,
+    imageUrl,
   );
   @override
   bool operator ==(Object other) =>
@@ -1598,7 +1635,8 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           other.senderId == this.senderId &&
           other.recipientId == this.recipientId &&
           other.sentAt == this.sentAt &&
-          other.isRead == this.isRead);
+          other.isRead == this.isRead &&
+          other.imageUrl == this.imageUrl);
 }
 
 class MessageTableCompanion extends UpdateCompanion<MessageData> {
@@ -1610,6 +1648,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
   final Value<String> recipientId;
   final Value<DateTime> sentAt;
   final Value<bool> isRead;
+  final Value<String?> imageUrl;
   final Value<int> rowid;
   const MessageTableCompanion({
     this.id = const Value.absent(),
@@ -1620,6 +1659,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     this.recipientId = const Value.absent(),
     this.sentAt = const Value.absent(),
     this.isRead = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MessageTableCompanion.insert({
@@ -1631,6 +1671,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     required String recipientId,
     required DateTime sentAt,
     this.isRead = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        content = Value(content),
@@ -1646,6 +1687,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     Expression<String>? recipientId,
     Expression<DateTime>? sentAt,
     Expression<bool>? isRead,
+    Expression<String>? imageUrl,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1657,6 +1699,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
       if (recipientId != null) 'recipient_id': recipientId,
       if (sentAt != null) 'sent_at': sentAt,
       if (isRead != null) 'is_read': isRead,
+      if (imageUrl != null) 'image_url': imageUrl,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1670,6 +1713,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     Value<String>? recipientId,
     Value<DateTime>? sentAt,
     Value<bool>? isRead,
+    Value<String?>? imageUrl,
     Value<int>? rowid,
   }) {
     return MessageTableCompanion(
@@ -1681,6 +1725,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
       recipientId: recipientId ?? this.recipientId,
       sentAt: sentAt ?? this.sentAt,
       isRead: isRead ?? this.isRead,
+      imageUrl: imageUrl ?? this.imageUrl,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1712,6 +1757,9 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     if (isRead.present) {
       map['is_read'] = Variable<bool>(isRead.value);
     }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1729,6 +1777,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
           ..write('recipientId: $recipientId, ')
           ..write('sentAt: $sentAt, ')
           ..write('isRead: $isRead, ')
+          ..write('imageUrl: $imageUrl, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2947,6 +2996,7 @@ typedef $$MessageTableTableCreateCompanionBuilder =
       required String recipientId,
       required DateTime sentAt,
       Value<bool> isRead,
+      Value<String?> imageUrl,
       Value<int> rowid,
     });
 typedef $$MessageTableTableUpdateCompanionBuilder =
@@ -2959,6 +3009,7 @@ typedef $$MessageTableTableUpdateCompanionBuilder =
       Value<String> recipientId,
       Value<DateTime> sentAt,
       Value<bool> isRead,
+      Value<String?> imageUrl,
       Value<int> rowid,
     });
 
@@ -3065,6 +3116,11 @@ class $$MessageTableTableFilterComposer
 
   ColumnFilters<bool> get isRead => $composableBuilder(
     column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3179,6 +3235,11 @@ class $$MessageTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$UserProfileTableOrderingComposer get senderId {
     final $$UserProfileTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3252,6 +3313,9 @@ class $$MessageTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isRead =>
       $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
   $$UserProfileTableAnnotationComposer get senderId {
     final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
@@ -3366,6 +3430,7 @@ class $$MessageTableTableTableManager
                 Value<String> recipientId = const Value.absent(),
                 Value<DateTime> sentAt = const Value.absent(),
                 Value<bool> isRead = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MessageTableCompanion(
                 id: id,
@@ -3376,6 +3441,7 @@ class $$MessageTableTableTableManager
                 recipientId: recipientId,
                 sentAt: sentAt,
                 isRead: isRead,
+                imageUrl: imageUrl,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -3388,6 +3454,7 @@ class $$MessageTableTableTableManager
                 required String recipientId,
                 required DateTime sentAt,
                 Value<bool> isRead = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MessageTableCompanion.insert(
                 id: id,
@@ -3398,6 +3465,7 @@ class $$MessageTableTableTableManager
                 recipientId: recipientId,
                 sentAt: sentAt,
                 isRead: isRead,
+                imageUrl: imageUrl,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

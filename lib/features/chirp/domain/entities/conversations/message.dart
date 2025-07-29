@@ -8,6 +8,7 @@ class Message extends Equatable {
   final UserProfile recipient;
   final DateTime sentAt;
   final bool isRead;
+  final String? imageUrl;
 
   const Message({
     required this.id,
@@ -16,10 +17,11 @@ class Message extends Equatable {
     required this.recipient,
     required this.sentAt,
     this.isRead = false,
+    this.imageUrl,
   });
 
   @override
-  List<Object?> get props => [id, content, recipient, sentAt, isRead];
+  List<Object?> get props => [id, content, recipient, sentAt, isRead, imageUrl];
 
   @override
   bool? get stringify => true;
@@ -28,6 +30,11 @@ class Message extends Equatable {
 class SendMessageParams {
   final String receiverId;
   final String content;
+  final String? imageUrl;
 
-  SendMessageParams({required this.receiverId, required this.content});
+  SendMessageParams({
+    required this.receiverId,
+    required this.content,
+    this.imageUrl,
+  });
 }

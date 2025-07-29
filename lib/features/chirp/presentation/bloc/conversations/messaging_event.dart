@@ -21,11 +21,12 @@ class LoadMessagesEvent extends MessagingEvent {
 class SendMessageEvent extends MessagingEvent {
   final String receiverId;
   final String content;
+  final String? imagePath;
 
-  const SendMessageEvent(this.receiverId, this.content);
+  const SendMessageEvent(this.receiverId, this.content, {this.imagePath});
 
   @override
-  List<Object?> get props => [receiverId, content];
+  List<Object?> get props => [receiverId, content, imagePath];
 }
 
 class MarkConversationAsReadEvent extends MessagingEvent {

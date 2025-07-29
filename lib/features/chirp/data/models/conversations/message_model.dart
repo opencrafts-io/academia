@@ -9,6 +9,7 @@ class MessageTable extends Table with TableMixin {
   TextColumn get recipientId => text().references(UserProfile, #id)();
   DateTimeColumn get sentAt => dateTime()();
   BoolColumn get isRead => boolean().withDefault(Constant(false))();
+  TextColumn get imageUrl => text().nullable()();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};
