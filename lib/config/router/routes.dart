@@ -143,3 +143,18 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
     );
   }
 }
+
+
+
+@TypedGoRoute<TodosRoute>(
+  path: "/todos",
+  // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
+)
+class TodosRoute extends GoRouteData with _$TodosRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TodoHomeScreen();
+  }
+}
+
+

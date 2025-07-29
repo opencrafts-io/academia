@@ -12,6 +12,7 @@ List<RouteBase> get $appRoutes => [
   $profileRoute,
   $completeProfileRoute,
   $shereheRoute,
+  $todosRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -231,6 +232,29 @@ mixin _$ShereheDetailsRoute on GoRouteData {
     '/sherehe/get-event',
     queryParams: {'event-id': _self.eventId},
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $todosRoute =>
+    GoRouteData.$route(path: '/todos', factory: _$TodosRoute._fromState);
+
+mixin _$TodosRoute on GoRouteData {
+  static TodosRoute _fromState(GoRouterState state) => TodosRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos');
 
   @override
   void go(BuildContext context) => context.go(location);

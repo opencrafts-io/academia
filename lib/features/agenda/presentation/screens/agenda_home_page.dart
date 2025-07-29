@@ -1,10 +1,8 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
-import 'package:academia/core/core.dart';
-import 'package:academia/core/widgets/scallop_floating_action_button.dart';
 import 'package:academia/features/agenda/agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class AgendaHomePage extends StatefulWidget {
   const AgendaHomePage({super.key});
@@ -99,7 +97,10 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          TodosRoute().push(context);
+                        },
                         leading: CircleAvatar(child: Icon(Symbols.list)),
                         title: Text("Create a general todo"),
                         subtitle: Text(
