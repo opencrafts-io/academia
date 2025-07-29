@@ -6,14 +6,21 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/chirp/data/datasources/conversations/messaging_local_datasource.dart';
 import 'package:academia/features/chirp/data/datasources/conversations/messaging_remote_datasource.dart';
 import 'package:academia/features/chirp/data/datasources/user_search_remote_datasource.dart';
+import 'package:academia/features/chirp/data/datasources/chirp_user_remote_datasource.dart';
+import 'package:academia/features/chirp/data/datasources/chirp_user_local_datasource.dart';
 import 'package:academia/features/chirp/data/repositories/conversations/conversation_repository_impl.dart';
 import 'package:academia/features/chirp/data/repositories/conversations/message_repository_impl.dart';
 import 'package:academia/features/chirp/data/repositories/user_search_repository_impl.dart';
+import 'package:academia/features/chirp/data/repositories/chirp_user_repository_impl.dart';
 import 'package:academia/features/chirp/domain/repositories/user_search_repository.dart';
+import 'package:academia/features/chirp/domain/repositories/chirp_user_repository.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/get_conversations.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/get_messages.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/send_message.dart';
 import 'package:academia/features/chirp/domain/usecases/search_users_usecase.dart';
+import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_users.dart';
+import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_user_by_id.dart';
+import 'package:academia/features/chirp/domain/usecases/chirp_users/search_chirp_users.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
@@ -150,17 +157,34 @@ Future<void> init(FlavorConfig flavor) async {
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
 
-  // User Search dependencies
-  sl.registerFactory<UserSearchRemoteDatasourceImpl>(
-    () => UserSearchRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+  // Chirp User dependencies
+  sl.registerFactory<ChirpUserRemoteDatasourceImpl>(
+    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
   );
-  sl.registerFactory<UserSearchRepository>(
-    () => UserSearchRepositoryImpl(
-      remoteDataSource: sl.get<UserSearchRemoteDatasourceImpl>(),
+  sl.registerFactory<ChirpUserLocalDataSourceImpl>(
+    () => ChirpUserLocalDataSourceImpl(localDB: cacheDB),
+  );
+
+  sl.registerFactory<ChirpUserRepositoryImpl>(
+    () => ChirpUserRepositoryImpl(
+      remoteDataSource: sl.get<ChirpUserRemoteDatasourceImpl>(),
+      localDataSource: sl.get<ChirpUserLocalDataSourceImpl>(),
     ),
   );
+
+  sl.registerFactory<GetChirpUsers>(
+    () => GetChirpUsers(sl.get<ChirpUserRepositoryImpl>()),
+  );
+  sl.registerFactory<GetChirpUserById>(
+    () => GetChirpUserById(sl.get<ChirpUserRepositoryImpl>()),
+  );
+  sl.registerFactory<SearchChirpUsers>(
+    () => SearchChirpUsers(sl.get<ChirpUserRepositoryImpl>()),
+  );
+
+  // User Search dependencies - Updated to use ChirpUser
   sl.registerFactory<SearchUsersUseCase>(
-    () => SearchUsersUseCase(sl.get<UserSearchRepository>()),
+    () => SearchUsersUseCase(sl.get<ChirpUserRepositoryImpl>()),
   );
 
   sl.registerFactory<MessagingBloc>(

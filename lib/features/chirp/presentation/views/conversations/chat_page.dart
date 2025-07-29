@@ -352,7 +352,7 @@ class _ChatPageState extends State<ChatPage> {
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          conversation.user.bio ?? 'Online',
+                          '${conversation.user.vibepoints} vibepoints',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: Theme.of(

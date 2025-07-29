@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import '../../../domain/entities/chirp_user.dart';
 
 abstract class MessagingEvent extends Equatable {
   const MessagingEvent();
@@ -48,7 +48,7 @@ class SearchUsersEvent extends MessagingEvent {
 }
 
 class StartNewConversationEvent extends MessagingEvent {
-  final UserProfile user;
+  final ChirpUser user;
 
   const StartNewConversationEvent(this.user);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import '../../domain/entities/chirp_user.dart';
 import 'package:academia/config/router/routes.dart';
 import '../bloc/conversations/messaging_bloc.dart';
 import '../bloc/conversations/messaging_event.dart';
@@ -162,7 +162,7 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
     );
   }
 
-  Widget _buildUserTile(UserProfile user) {
+  Widget _buildUserTile(ChirpUser user) {
     final currentState = context.read<MessagingBloc>().state;
     bool hasExistingConversation = false;
 
@@ -232,22 +232,20 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (user.username != null)
-              Text(
-                '@${user.username}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+            Text(
+              user.email,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
               ),
-            if (user.bio != null && user.bio!.isNotEmpty)
-              Text(
-                user.bio!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              '${user.vibepoints} vibepoints',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
         trailing: IconButton(
@@ -264,7 +262,7 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
     );
   }
 
-  void _handleUserTap(UserProfile user) {
+  void _handleUserTap(ChirpUser user) {
     // Check if conversation already exists
     final currentState = context.read<MessagingBloc>().state;
     String? existingConversationId;

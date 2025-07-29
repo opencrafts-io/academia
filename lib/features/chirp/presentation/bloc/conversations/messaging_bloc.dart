@@ -5,8 +5,8 @@ import '../../../domain/usecases/conversations/send_message.dart';
 import '../../../domain/usecases/search_users_usecase.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 import '../../../domain/entities/conversations/message.dart';
+import '../../../domain/entities/chirp_user.dart';
 import '../../../../../core/usecase/usecase.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
 import 'messaging_state.dart';
 import 'messaging_event.dart';
@@ -205,8 +205,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
   }
 
   // TODO: Uncomment
-  UserProfile _getUserForConversation(String conversationId) {
+  ChirpUser _getUserForConversation(String conversationId) {
     final userId = conversationId.replaceAll('conv_', 'user_');
-    return userId.toMinimalUserProfile();
+    return userId.toMinimalChirpUser();
   }
 }

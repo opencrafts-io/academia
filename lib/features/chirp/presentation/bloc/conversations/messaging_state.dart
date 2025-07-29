@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import '../../../domain/entities/chirp_user.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 import '../../../domain/entities/conversations/message.dart';
 
@@ -55,7 +55,7 @@ class MessageSentState extends MessagingState {
 class UsersSearchLoadingState extends MessagingState {}
 
 class UsersSearchLoadedState extends MessagingState {
-  final List<UserProfile> users;
+  final List<ChirpUser> users;
 
   const UsersSearchLoadedState(this.users);
 

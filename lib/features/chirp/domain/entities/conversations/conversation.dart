@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import '../chirp_user.dart';
 import 'message.dart';
 
 class Conversation extends Equatable {
   final String id;
-  final UserProfile user;
+  final ChirpUser user;
   final Message? lastMessage;
   final DateTime? lastMessageAt;
   final int unreadCount;
@@ -19,7 +19,7 @@ class Conversation extends Equatable {
 
   Conversation copyWith({
     String? id,
-    UserProfile? user,
+    ChirpUser? user,
     Message? lastMessage,
     DateTime? lastMessageAt,
     int? unreadCount,

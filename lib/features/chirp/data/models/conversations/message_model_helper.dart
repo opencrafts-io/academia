@@ -7,8 +7,8 @@ extension MessageModelHelper on MessageData {
   Message toEntity() {
     return Message(
       id: id,
-      sender: senderId.toMinimalUserProfile(),
-      recipient: recipientId.toMinimalUserProfile(),
+      sender: senderId.toMinimalChirpUser(),
+      recipient: recipientId.toMinimalChirpUser(),
       content: content,
       sentAt: sentAt,
       isRead: isRead,
