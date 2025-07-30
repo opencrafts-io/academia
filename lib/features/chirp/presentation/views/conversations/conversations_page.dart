@@ -4,80 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/config/router/routes.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
-import '../../bloc/conversations/messaging_event.dart';
-import '../../widgets/user_search_widget.dart';
 
-class ConversationsPage extends StatefulWidget {
+class ConversationsPage extends StatelessWidget {
   const ConversationsPage({super.key});
 
   @override
-  State<ConversationsPage> createState() => _ConversationsPageState();
-}
-
-class _ConversationsPageState extends State<ConversationsPage> {
-  bool _showSearch = false;
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Search Toggle Button
-        if (!_showSearch)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _showSearch = true;
-                  });
-                },
-                icon: const Icon(Icons.search),
-                label: const Text('Search for friends'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-            ),
-          ),
-
-        // Search Widget or Conversations List
-        Expanded(
-          child: _showSearch
-              ? Stack(
-                  children: [
-                    const UserSearchWidget(),
-                    // Close search button
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showSearch = false;
-                          });
-                          context.read<MessagingBloc>().add(
-                            LoadConversationsEvent(),
-                          );
-                        },
-                        icon: const Icon(Icons.close),
-                        style: IconButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : _buildConversationsList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildConversationsList() {
     return CustomScrollView(
       slivers: [
         BlocBuilder<MessagingBloc, MessagingState>(
@@ -151,9 +83,23 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           const SizedBox(height: 32),
                           OutlinedButton.icon(
                             onPressed: () {
-                              setState(() {
-                                _showSearch = true;
-                              });
+                              ScaffoldMessenger.of(
+                                context,
+                              ).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'Search feature coming soon!',
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.75,
+                                  showCloseIcon: true,
+                                ),
+                                snackBarAnimationStyle: AnimationStyle(
+                                  curve: Curves.bounceIn,
+                                ),
+                              );
                             },
                             icon: const Icon(Icons.search),
                             label: const Text('Find Friends'),

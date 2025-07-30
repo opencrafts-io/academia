@@ -1,40 +1,43 @@
 import 'package:academia/database/database.dart';
-import '../../../domain/entities/chirp_user.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 
-extension StringToChirpUserHelper on String {
-  ChirpUser toMinimalChirpUser() {
+extension StringToUserProfileHelper on String {
+  UserProfile toMinimalUserProfile() {
     String name = '';
-    String email = '';
-    int vibepoints = 0;
+    String bio = '';
 
     switch (this) {
       case 'user_1':
         name = 'Scarlett Johansson';
-        email = 'scarlett@example.com';
-        vibepoints = 150;
+        bio = 'Software Engineer | Secretly has a crush on SAM';
         break;
       case 'user_2':
         name = 'Winnie Njuguna';
-        email = 'winnie@example.com';
-        vibepoints = 75;
+        bio = 'Product Designer | Unworthy of SAM';
         break;
       case 'current_user':
         name = 'Ngigi';
-        email = 'ngigi@example.com';
-        vibepoints = 100;
+        bio = 'Online';
         break;
       default:
         name = 'Genos';
-        email = '$this@example.com';
-        vibepoints = 0;
+        bio = '';
     }
 
-    return ChirpUser(
+    return UserProfile(
       id: this,
       name: name,
-      email: email,
-      vibepoints: vibepoints,
+      email: '$this@example.com',
+      termsAccepted: true,
+      onboarded: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      bio: bio,
+      phone: '',
+      username: this,
+      nationalID: null,
+      vibePoints: 0,
       avatarUrl: null,
     );
   }
@@ -44,7 +47,7 @@ extension ConversationModelHelper on ConversationData {
   Conversation toEntity() {
     return Conversation(
       id: id,
-      user: userId.toMinimalChirpUser(),
+      user: userId.toMinimalUserProfile(),
       lastMessage: null, // repository will fetch actual message ;)
       lastMessageAt: lastMessageAt,
       unreadCount: unreadCount,
