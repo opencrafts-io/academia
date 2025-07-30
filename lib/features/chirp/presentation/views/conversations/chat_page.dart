@@ -120,6 +120,55 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  Widget _buildImageWidget(String imageUrl) {
+    // Check if it's a network URL or local file path
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      // Network image
+      return Image.network(
+        imageUrl,
+        width: 200,
+        height: 200,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.broken_image,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          );
+        },
+      );
+    } else {
+      // Local file
+      return Image.file(
+        File(imageUrl),
+        width: 200,
+        height: 200,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.broken_image,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          );
+        },
+      );
+    }
+  }
+
   Widget _buildImagePreview() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,32 +556,8 @@ class _ChatPageState extends State<ChatPage> {
                                                 ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
-                                                  child: Image.file(
-                                                    File(message.imageUrl!),
-                                                    width: 200,
-                                                    height: 200,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return Container(
-                                                        width: 200,
-                                                        height: 200,
-                                                        decoration: BoxDecoration(
-                                                          color: Theme.of(context)
-                                                              .colorScheme
-                                                              .surfaceContainerHighest,
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12,
-                                                              ),
-                                                        ),
-                                                        child: Icon(
-                                                          Icons.broken_image,
-                                                          color: Theme.of(context)
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                        ),
-                                                      );
-                                                    },
+                                                  child: _buildImageWidget(
+                                                    message.imageUrl!,
                                                   ),
                                                 ),
                                                 if (message.content.isNotEmpty)

@@ -55,6 +55,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
       currentConversations = (state as MessagesLoaded).conversations;
     }
 
+    emit(MessagingLoadingState());
+
     final result = await getMessages(event.conversationId);
     result.fold((failure) => emit(MessagingErrorState(failure.message)), (
       messages,
@@ -63,8 +65,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
       final sortedMessages = List<Message>.from(messages)
         ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
 
-      // TODO: Uncomment
-      // // get conversation details from API
       final conversation = Conversation(
         id: event.conversationId,
         user: _getUserForConversation(event.conversationId),
@@ -204,7 +204,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     emit(ConversationsLoaded(currentConversations));
   }
 
-  // TODO: Uncomment
   ChirpUser _getUserForConversation(String conversationId) {
     final userId = conversationId.replaceAll('conv_', 'user_');
     return userId.toMinimalChirpUser();

@@ -18,6 +18,15 @@ class _ConversationsPageState extends State<ConversationsPage> {
   bool _showSearch = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Load conversations
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MessagingBloc>().add(LoadConversationsEvent());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

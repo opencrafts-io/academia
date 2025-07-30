@@ -1,16 +1,20 @@
 import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
+import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_user_remote_datasource.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_user_local_datasource.dart';
+import 'package:academia/features/chirp/data/datasources/user_search_remote_datasource.dart';
 import 'package:academia/features/chirp/data/repositories/chirp_user_repository_impl.dart';
-import 'package:academia/features/chirp/domain/repositories/chirp_user_repository.dart';
 import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_users.dart';
 import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_user_by_id.dart';
 import 'package:academia/features/chirp/domain/usecases/chirp_users/search_chirp_users.dart';
 import 'package:academia/features/chirp/domain/usecases/search_users_usecase.dart';
+
+import 'package:academia/features/chirp/domain/usecases/conversations/mark_message_as_read.dart';
+import 'package:academia/features/chirp/domain/usecases/conversations/delete_message.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/chirp.dart';
@@ -32,6 +36,9 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<DioClient>(
     () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  );
+  sl.registerFactory<ChirpDioClient>(
+    () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -112,16 +119,16 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
     () => MessagingLocalDataSourceImpl(localDB: cacheDB),
   );
-
   sl.registerFactory<ConversationRepositoryImpl>(
     () => ConversationRepositoryImpl(
       remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
       localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
+      chirpUserRemoteDataSource: sl.get<ChirpUserRemoteDatasourceImpl>(),
     ),
   );
   sl.registerFactory<MessageRepositoryImpl>(
@@ -140,10 +147,16 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+  sl.registerFactory<MarkMessageAsRead>(
+    () => MarkMessageAsRead(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<DeleteMessage>(
+    () => DeleteMessage(sl.get<MessageRepositoryImpl>()),
+  );
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasourceImpl>(
-    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
   );
   sl.registerFactory<ChirpUserLocalDataSourceImpl>(
     () => ChirpUserLocalDataSourceImpl(localDB: cacheDB),
@@ -167,6 +180,10 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // User Search dependencies - Updated to use ChirpUser
+  // User Search dependencies
+  sl.registerFactory<UserSearchRemoteDatasourceImpl>(
+    () => UserSearchRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
+  );
   sl.registerFactory<SearchUsersUseCase>(
     () => SearchUsersUseCase(sl.get<ChirpUserRepositoryImpl>()),
   );

@@ -63,12 +63,14 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Future<Either<Failure, Message>> sendMessage(
     String receiverId,
-    String content,
-  ) async {
+    String content, {
+    String? imagePath,
+  }) async {
     try {
       final messageResult = await remoteDataSource.sendMessage(
         receiverId,
         content,
+        imagePath: imagePath,
       );
 
       return messageResult.fold(
@@ -79,6 +81,34 @@ class MessageRepositoryImpl implements MessageRepository {
       return Left(
         ServerFailure(
           message: 'An unexpected error occurred while sending message',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> markMessageAsRead(String messageId) async {
+    try {
+      return await remoteDataSource.markMessageAsRead(messageId);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: 'An unexpected error occurred while marking message as read',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteMessage(String messageId) async {
+    try {
+      return await remoteDataSource.deleteMessage(messageId);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: 'An unexpected error occurred while deleting message',
           error: e,
         ),
       );

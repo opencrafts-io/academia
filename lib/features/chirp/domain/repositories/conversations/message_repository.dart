@@ -6,6 +6,9 @@ abstract class MessageRepository {
   Future<Either<Failure, List<Message>>> getMessages(String conversationId);
   Future<Either<Failure, Message>> sendMessage(
     String receiverId,
-    String content,
-  );
+    String content, {
+    String? imagePath,
+  });
+  Future<Either<Failure, void>> markMessageAsRead(String messageId);
+  Future<Either<Failure, void>> deleteMessage(String messageId);
 }

@@ -12,6 +12,7 @@ class SendMessage implements UseCase<Message, Map<String, String>> {
   Future<Either<Failure, Message>> call(Map<String, String> params) async {
     final receiverId = params['receiverId'];
     final content = params['content'];
+    final imagePath = params['imagePath'];
 
     if (receiverId == null || content == null) {
       return Left(
@@ -22,6 +23,10 @@ class SendMessage implements UseCase<Message, Map<String, String>> {
       );
     }
 
-    return await repository.sendMessage(receiverId, content);
+    return await repository.sendMessage(
+      receiverId,
+      content,
+      imagePath: imagePath,
+    );
   }
 }

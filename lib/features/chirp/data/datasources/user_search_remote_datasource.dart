@@ -1,4 +1,4 @@
-import 'package:academia/core/network/dio_client.dart';
+import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/profile/domain/entities/user_profile.dart';
@@ -12,7 +12,7 @@ abstract class UserSearchRemoteDatasource {
 class UserSearchRemoteDatasourceImpl
     with DioErrorHandler
     implements UserSearchRemoteDatasource {
-  final DioClient dioClient;
+  final ChirpDioClient dioClient;
 
   UserSearchRemoteDatasourceImpl({required this.dioClient});
 
