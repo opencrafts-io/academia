@@ -9,8 +9,11 @@ class ShereheRepositoryImpl implements ShereheRepository {
   ShereheRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Event>>> getAllEvents() async {
-    final result = await remoteDataSource.getAllEvents();
+  Future<Either<Failure, List<Event>>> getAllEvents({
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getAllEvents(page: page, limit: limit);
     return result.fold(
       (failure) => Left(failure),
       (models) => Right(models.map((e) => e.toEntity()).toList()),
@@ -27,8 +30,12 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, List<Attendee>>> getAllAttendees() async {
-    final result = await remoteDataSource.getAllAttendees();
+  Future<Either<Failure, List<Attendee>>> getAttendeesByEventId({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getAttendeesByEventId(eventId: eventId, page: page, limit: limit);
     return result.fold(
       (failure) => Left(failure),
       (models) => Right(models.map((a) => a.toEntity()).toList()),

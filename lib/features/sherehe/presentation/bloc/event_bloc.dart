@@ -20,16 +20,37 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   ) async {
     emit(EventLoading());
 
-    final eventsResult = await getEvent.execute();
-    final attendeesResult = await getAttendee.execute();
+    final eventsResult = await getEvent.execute(
+      page: event.page,
+      limit: event.limit,
+    );
 
-    eventsResult.fold((failure) => emit(EventError("Error fetching events")), (
-      events,
-    ) {
-      attendeesResult.fold(
-        (failure) => emit(EventError("Error fetching attendees")),
-        (attendees) => emit(EventLoaded(events, attendees)),
-      );
-    });
+    await eventsResult.fold(
+      (failure) async => emit(EventError("Error fetching events")),
+      (events) async {
+        // Map<eventId, List<Attendee>>
+        final Map<String, List<Attendee>> attendeesMap = {};
+
+        for (final ev in events) {
+          final result = await getAttendee.execute(
+            eventId: ev.id,
+            page: 1,
+            limit: 4, // just a mini list
+          );
+
+          result.fold(
+            (failure) {
+              attendeesMap[ev.id] =
+                  []; // default to empty if it fails
+            },
+            (attendees) {
+              attendeesMap[ev.id.toString()] = attendees;
+            },
+          );
+        }
+
+        emit(EventLoaded(events, attendeesMap));
+      },
+    );
   }
 }

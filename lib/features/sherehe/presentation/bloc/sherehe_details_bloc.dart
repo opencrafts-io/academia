@@ -25,7 +25,7 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
 
     // Execute use cases concurrently
     final eventResult = await getSpecificEventUseCase.execute(event.eventId);
-    final attendeesResult = await getAttendeesUseCase.execute();
+    final attendeesResult = await getAttendeesUseCase.execute(eventId: event.eventId, page: 1, limit: 4);
 
     eventResult.fold(
           (eventFailure) {

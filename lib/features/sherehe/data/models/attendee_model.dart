@@ -12,11 +12,11 @@ class AttendeeModel extends Attendee  {
 
   factory AttendeeModel.fromJson(Map<String, dynamic> json) {
     return AttendeeModel(
-      id: json['id'],
+      id: json['id'].toString(),
       firstName: json['first_name'],
       middleName: json['middle_name'],
       lastName: json['last_name'],
-      eventId: json['event_id'],
+      eventId: json['event_id'].toString(),
       createdAt: json['created_at'],
     );
   }

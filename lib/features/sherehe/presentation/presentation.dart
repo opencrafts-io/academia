@@ -6,5 +6,4 @@ export 'widgets/event_about_section.dart';
 export 'widgets/event_details_header.dart';
 export 'widgets/attendee_list.dart';
 export 'bloc/event_bloc.dart';
-export 'screens/sherehe_home.dart';
 

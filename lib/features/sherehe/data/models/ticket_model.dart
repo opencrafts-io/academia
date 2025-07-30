@@ -11,21 +11,21 @@ class TicketModel extends Ticket {
 
   factory TicketModel.fromJson(Map<String, dynamic> json) {
     return TicketModel(
-      id: json['id'],
-      attendeeId: json['attendeeid'],
-      eventId: json['eventid'],
-      paymentCode: json['paymentcode'],
-      createdAt: json['createdat'],
+      id: json['id'].toString(),
+      attendeeId: json['attendee_id'].toString(),
+      eventId: json['event_id'].toString(),
+      paymentCode: json['payment_code'],
+      createdAt: json['created_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'attendeeid': attendeeId,
-      'eventid': eventId,
-      'paymentcode': paymentCode,
-      'createdat': createdAt,
+      'attendee_id': attendeeId,
+      'event_id': eventId,
+      'payment_code': paymentCode,
+      'created_at': createdAt,
     };
   }
 }

@@ -1,7 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:academia/constants/constants.dart';
 import '../bloc/event_bloc.dart';
 import '../widgets/event_card.dart';
@@ -13,7 +12,8 @@ class ShereheHome extends StatefulWidget {
   State<ShereheHome> createState() => _ShereheHomeState();
 }
 
-class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClientMixin {
+class _ShereheHomeState extends State<ShereheHome>
+    with AutomaticKeepAliveClientMixin {
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -32,20 +32,20 @@ class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClient
     }
   }
 
-  double _getAppBarHeight(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return 200;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 300;
-    } else if (ResponsiveBreakPoints.isDesktop(context)) {
-      return 350;
-    } else {
-      return 400; // large desktop
-    }
-  }
+  // double _getAppBarHeight(BuildContext context) {
+  //   if (ResponsiveBreakPoints.isMobile(context)) {
+  //     return 200;
+  //   } else if (ResponsiveBreakPoints.isTablet(context)) {
+  //     return 300;
+  //   } else if (ResponsiveBreakPoints.isDesktop(context)) {
+  //     return 350;
+  //   } else {
+  //     return 400; // large desktop
+  //   }
+  // }
 
   @override
-    bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClient
                 );
               } else if (state is EventLoaded) {
                 final events = state.events;
-                final attendees = state.attendees;
+                final attendeesMap = state.attendeesMap;
 
                 return SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -127,12 +127,10 @@ class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClient
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final event = events[index];
-                    final eventAttendees = attendees
-                        .map(
-                          (attendee) =>
-                              "${attendee.firstName} ${attendee.lastName}",
-                        )
-                        .toList(); //quick fix for now
+                    final eventAttendees = attendeesMap[event.id] ?? [];
+                    final attendeeNames = eventAttendees
+                        .map((a) => "${a.firstName} ${a.lastName}")
+                        .toList();
 
                     return EventCard(
                       imagePath: event.imageUrl,
@@ -141,7 +139,7 @@ class _ShereheHomeState extends State<ShereheHome> with AutomaticKeepAliveClient
                       date: event.date,
                       time: event.time,
                       genres: event.genre,
-                      attendees: eventAttendees,
+                      attendees: attendeeNames,
                       attendeesCount: event.numberOfAttendees,
                       onTap: () =>
                           ShereheDetailsRoute(eventId: event.id).push(context),

@@ -86,6 +86,15 @@ class EventCard extends StatelessWidget {
     return names.first[0].toUpperCase() + names.last[0].toUpperCase();
   }
 
+  double _calculateAvatarRowWidth({
+    required int avatarCount,
+    required double avatarRadius,
+    required double spacing,
+  }) {
+    if (avatarCount <= 1) return avatarRadius * 2;
+    return (avatarRadius * 2) + (spacing * (avatarCount - 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     final sizing = getCardSizing(context);
@@ -249,13 +258,25 @@ class EventCard extends StatelessWidget {
                         Row(
                           children: [
                             SizedBox(
-                              width: maxAvatars * 20.0,
+                              width: _calculateAvatarRowWidth(
+                                avatarCount: attendees.length >= maxAvatars
+                                    ? maxAvatars
+                                    : attendees.length,
+                                avatarRadius: sizing.avatarRadius,
+                                spacing: 16.0,
+                              ),
                               height: sizing.avatarRowHeight,
                               child: Stack(
-                                children: List.generate(maxAvatars, (index) {
-                                  // Show initials for first (maxAvatars - 1)
-                                  if (index < maxAvatars - 1 &&
-                                      index < attendees.length) {
+                                children: List.generate(
+                                  attendees.length >= maxAvatars
+                                      ? maxAvatars
+                                      : attendees.length,
+                                  (index) {
+                                    final isOverflow =
+                                        index == maxAvatars - 1 &&
+                                        attendees.length == maxAvatars &&
+                                        attendeesCount > maxAvatars;
+
                                     return Positioned(
                                       left: index * 16.0,
                                       child: CircleAvatar(
@@ -264,7 +285,9 @@ class EventCard extends StatelessWidget {
                                           context,
                                         ).colorScheme.primary,
                                         child: Text(
-                                          _getInitials(attendees[index]),
+                                          isOverflow
+                                              ? '+${attendeesCount - (maxAvatars - 1)}'
+                                              : _getInitials(attendees[index]),
                                           style: TextStyle(
                                             color: Theme.of(
                                               context,
@@ -274,65 +297,41 @@ class EventCard extends StatelessWidget {
                                         ),
                                       ),
                                     );
-                                  }
-
-                                  // Last avatar is for overflow (+X)
-                                  if (index == maxAvatars - 1 &&
-                                      attendeesCount > maxAvatars) {
-                                    return Positioned(
-                                      left: index * 16.0,
-                                      child: CircleAvatar(
-                                        radius: sizing.avatarRadius,
-                                        backgroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                        child: Text(
-                                          '+${attendeesCount - (maxAvatars - 1)}',
-                                          style: TextStyle(
-                                            fontSize: sizing.avatarTextSize,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimary,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  // Fallback: show more initials if not overflowing
-                                  final realIndex = index;
-                                  if (realIndex < attendees.length) {
-                                    return Positioned(
-                                      left: index * 16.0,
-                                      child: CircleAvatar(
-                                        radius: sizing.avatarRadius,
-                                        backgroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                        child: Text(
-                                          _getInitials(attendees[realIndex]),
-                                          style: TextStyle(
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimary,
-                                            fontSize: sizing.avatarTextSize,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  return const SizedBox.shrink();
-                                }),
+                                  },
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              child: Text(
-                                " and ${attendeesCount - (maxAvatars - 1)} others are attending",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              child: Builder(
+                                builder: (context) {
+                                  if (attendeesCount == 1) {
+                                    return Text(
+                                      "is attending",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    );
+                                  } else if (attendeesCount <= maxAvatars - 1) {
+                                    return Text(
+                                      "are attending",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    );
+                                  } else {
+                                    final extra =
+                                        attendeesCount - (maxAvatars - 1);
+                                    return Text(
+                                      "and $extra other${extra > 1 ? 's' : ''} are attending",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  }
+                                },
                               ),
                             ),
                           ],

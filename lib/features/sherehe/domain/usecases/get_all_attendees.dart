@@ -7,8 +7,11 @@ class GetAttendee{
 
   GetAttendee(this.repository);
 
-  Future<Either<Failure, List<Attendee>>> execute() async {
-    return repository.getAllAttendees();
+  Future<Either<Failure, List<Attendee>>> execute({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    return repository.getAttendeesByEventId(eventId: eventId, page: page, limit: limit);
   }
-
 }
