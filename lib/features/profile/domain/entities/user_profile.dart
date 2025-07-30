@@ -31,24 +31,6 @@ class UserProfile extends Equatable {
     this.avatarUrl,
   });
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      username: json['username'] as String?,
-      email: json['email'] as String,
-      termsAccepted: json['terms_accepted'] as bool? ?? false,
-      onboarded: json['onboarded'] as bool? ?? false,
-      nationalID: json['national_id'] as String?,
-      avatarUrl: json['avatar_url'] as String?,
-      bio: json['bio'] as String?,
-      vibePoints: json['vibe_points'] as int? ?? 0,
-      phone: json['phone'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
-    );
-  }
-
   UserProfile copyWith({
     String? id,
     String? name,

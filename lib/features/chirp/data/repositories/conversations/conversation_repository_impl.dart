@@ -1,11 +1,11 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
 import 'package:dartz/dartz.dart';
 import '../../../domain/entities/conversations/conversation.dart';
-import '../../../domain/entities/chirp_user.dart';
 import '../../../domain/repositories/conversations/conversation_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
+import '../../models/conversations/conversation_model_helper.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 
 class ConversationRepositoryImpl implements ConversationRepository {
   final MessagingRemoteDatasource remoteDataSource;
@@ -62,7 +62,7 @@ class ConversationRepositoryImpl implements ConversationRepository {
           final conversationEntities = await Future.wait(
             conversations.map((data) async {
               final entity = data.toEntity();
-              final chirpUser = _getDummyChirpUser(data.userId);
+              final userProfile = _getDummyUserProfile(data.userId);
 
               // TODO: Uncomment
               // if (data.lastMessageId != null) {
@@ -73,7 +73,7 @@ class ConversationRepositoryImpl implements ConversationRepository {
               //     if (messageData != null) {
               //       final actualMessage = messageData.toEntity();
               //       return entity.copyWith(
-              //         user: chirpUser,
+              //         user: userProfile,
               //         lastMessage: actualMessage,
               //       );
               //     }
@@ -82,7 +82,7 @@ class ConversationRepositoryImpl implements ConversationRepository {
               //     print('Message fetch error: $messageError');
               //   }
               // }
-              return entity.copyWith(user: chirpUser);
+              return entity.copyWith(user: userProfile);
             }),
           );
 
@@ -100,30 +100,54 @@ class ConversationRepositoryImpl implements ConversationRepository {
   }
 
   // TODO: Remove
-  ChirpUser _getDummyChirpUser(String userId) {
+  UserProfile _getDummyUserProfile(String userId) {
     switch (userId) {
       case 'user_1':
-        return ChirpUser(
+        return UserProfile(
           id: 'user_1',
           name: 'Sarah Johnson',
           email: 'sarah.johnson@example.com',
-          vibepoints: 150,
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: 'Software Engineer | Coffee Enthusiast ☕',
+          phone: '+1234567890',
+          username: 'sarah_dev',
+          nationalID: null,
+          vibePoints: 150,
           avatarUrl: null,
         );
       case 'user_2':
-        return ChirpUser(
+        return UserProfile(
           id: 'user_2',
           name: 'Alex Chen',
           email: 'alex.chen@example.com',
-          vibepoints: 89,
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: 'Product Designer | Creative Thinker 🎨',
+          phone: '+1987654321',
+          username: 'alex_design',
+          nationalID: null,
+          vibePoints: 89,
           avatarUrl: null,
         );
       default:
-        return ChirpUser(
+        return UserProfile(
           id: 'unknown',
           name: 'Unknown User',
           email: 'unknown@example.com',
-          vibepoints: 0,
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: '',
+          phone: '',
+          username: '',
+          nationalID: null,
+          vibePoints: 0,
           avatarUrl: null,
         );
     }

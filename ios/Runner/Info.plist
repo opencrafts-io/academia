@@ -54,11 +54,5 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs access to photo library to select images for sharing in conversations.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app needs access to camera to take photos for sharing in conversations.</string>
-    <key>NSDocumentsFolderUsageDescription</key>
-    <string>This app needs access to documents folder to select files for sharing in conversations.</string>
   </dict>
 </plist>

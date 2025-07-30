@@ -7,12 +7,11 @@ extension MessageModelHelper on MessageData {
   Message toEntity() {
     return Message(
       id: id,
-      sender: senderId.toMinimalChirpUser(),
-      recipient: recipientId.toMinimalChirpUser(),
+      sender: senderId.toMinimalUserProfile(),
+      recipient: recipientId.toMinimalUserProfile(),
       content: content,
       sentAt: sentAt,
       isRead: isRead,
-      imageUrl: imageUrl,
     );
   }
 }
@@ -26,7 +25,6 @@ extension MessageEntityHelper on Message {
     content: content,
     sentAt: sentAt,
     isRead: isRead,
-    imageUrl: imageUrl,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
