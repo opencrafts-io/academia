@@ -2,9 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/usecases/conversations/get_conversations.dart';
 import '../../../domain/usecases/conversations/get_messages.dart';
 import '../../../domain/usecases/conversations/send_message.dart';
+import '../../../domain/usecases/search_users_usecase.dart';
 import '../../../domain/entities/conversations/conversation.dart';
+import '../../../domain/entities/conversations/message.dart';
+import '../../../domain/entities/chirp_user.dart';
 import '../../../../../core/usecase/usecase.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
 import 'messaging_state.dart';
 import 'messaging_event.dart';
@@ -13,16 +15,20 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
   final GetConversations getConversations;
   final GetMessages getMessages;
   final SendMessage sendMessage;
+  final SearchUsersUseCase searchUsers;
 
   MessagingBloc({
     required this.getConversations,
     required this.getMessages,
     required this.sendMessage,
+    required this.searchUsers,
   }) : super(MessagingInitialState()) {
     on<LoadConversationsEvent>(_onLoadConversations);
     on<LoadMessagesEvent>(_onLoadMessages);
     on<SendMessageEvent>(_onSendMessage);
     on<MarkConversationAsReadEvent>(_onMarkConversationAsRead);
+    on<SearchUsersEvent>(_onSearchUsers);
+    on<StartNewConversationEvent>(_onStartNewConversation);
   }
 
   Future<void> _onLoadConversations(
@@ -41,7 +47,7 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     LoadMessagesEvent event,
     Emitter<MessagingState> emit,
   ) async {
-    // Get current conversations if available
+    // Preserve current conversations
     List<Conversation> currentConversations = [];
     if (state is ConversationsLoaded) {
       currentConversations = (state as ConversationsLoaded).conversations;
@@ -53,16 +59,22 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     result.fold((failure) => emit(MessagingErrorState(failure.message)), (
       messages,
     ) {
+      // Sort messages by sentAt time (oldest first)
+      final sortedMessages = List<Message>.from(messages)
+        ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
       // TODO: Uncomment
       // // get conversation details from API
       final conversation = Conversation(
         id: event.conversationId,
         user: _getUserForConversation(event.conversationId),
-        lastMessage: messages.isNotEmpty ? messages.first : null,
-        lastMessageAt: messages.isNotEmpty ? messages.first.sentAt : null,
+        lastMessage: sortedMessages.isNotEmpty ? sortedMessages.last : null,
+        lastMessageAt: sortedMessages.isNotEmpty
+            ? sortedMessages.last.sentAt
+            : null,
         unreadCount: 0,
       );
-      emit(MessagesLoaded(messages, conversation, currentConversations));
+      emit(MessagesLoaded(sortedMessages, conversation, currentConversations));
     });
   }
 
@@ -70,15 +82,55 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     SendMessageEvent event,
     Emitter<MessagingState> emit,
   ) async {
+    final currentState = state;
+    List<Message> currentMessages = [];
+    Conversation? currentConversation;
+    List<Conversation> currentConversations = [];
+
+    if (currentState is MessagesLoaded) {
+      currentMessages = currentState.messages;
+      currentConversation = currentState.conversation;
+      currentConversations = currentState.conversations;
+    }
+
     emit(MessagingLoadingState());
-    final result = await sendMessage({
+
+    // Create message parameters
+    final messageParams = <String, String>{
       'receiverId': event.receiverId,
       'content': event.content,
+    };
+
+    if (event.imagePath != null) {
+      messageParams['imagePath'] = event.imagePath!;
+    }
+
+    final result = await sendMessage(messageParams);
+    result.fold((failure) => emit(MessagingErrorState(failure.message)), (
+      message,
+    ) {
+      final updatedMessages = [...currentMessages, message];
+
+      final updatedConversation =
+          currentConversation?.copyWith(
+            lastMessage: message,
+            lastMessageAt: message.sentAt,
+          ) ??
+          Conversation(
+            id: event.receiverId,
+            user: _getUserForConversation(event.receiverId),
+            lastMessage: message,
+            lastMessageAt: message.sentAt,
+            unreadCount: 0,
+          );
+      emit(
+        MessagesLoaded(
+          updatedMessages,
+          updatedConversation,
+          currentConversations,
+        ),
+      );
     });
-    result.fold(
-      (failure) => emit(MessagingErrorState(failure.message)),
-      (message) => emit(MessageSent(message)),
-    );
   }
 
   Future<void> _onMarkConversationAsRead(
@@ -107,9 +159,54 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     }
   }
 
+  Future<void> _onSearchUsers(
+    SearchUsersEvent event,
+    Emitter<MessagingState> emit,
+  ) async {
+    if (event.query.trim().isEmpty) {
+      emit(const UsersSearchLoadedState([]));
+      return;
+    }
+
+    emit(UsersSearchLoadingState());
+    final result = await searchUsers(event.query);
+    result.fold(
+      (failure) => emit(UsersSearchErrorState(failure.message)),
+      (users) => emit(UsersSearchLoadedState(users)),
+    );
+  }
+
+  Future<void> _onStartNewConversation(
+    StartNewConversationEvent event,
+    Emitter<MessagingState> emit,
+  ) async {
+    // Preserve current conversations
+    List<Conversation> currentConversations = [];
+    if (state is ConversationsLoaded) {
+      currentConversations = (state as ConversationsLoaded).conversations;
+    } else if (state is MessagesLoaded) {
+      currentConversations = (state as MessagesLoaded).conversations;
+    }
+
+    final conversation = Conversation(
+      id: 'conv_${event.user.id}',
+      user: event.user,
+      lastMessage: null,
+      lastMessageAt: null,
+      unreadCount: 0,
+    );
+
+    // Add the new conversation
+    if (!currentConversations.any((conv) => conv.user.id == event.user.id)) {
+      currentConversations = [...currentConversations, conversation];
+    }
+
+    emit(ConversationsLoaded(currentConversations));
+  }
+
   // TODO: Uncomment
-  UserProfile _getUserForConversation(String conversationId) {
+  ChirpUser _getUserForConversation(String conversationId) {
     final userId = conversationId.replaceAll('conv_', 'user_');
-    return userId.toMinimalUserProfile();
+    return userId.toMinimalChirpUser();
   }
 }
