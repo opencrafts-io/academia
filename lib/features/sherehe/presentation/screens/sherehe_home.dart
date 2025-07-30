@@ -1,9 +1,8 @@
-import 'package:academia/config/config.dart';
+import 'package:academia/features/sherehe/presentation/widgets/event_card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/constants/constants.dart';
 import '../bloc/event_bloc.dart';
-import '../widgets/event_card.dart';
 
 class ShereheHome extends StatefulWidget {
   const ShereheHome({super.key});
@@ -115,7 +114,6 @@ class _ShereheHomeState extends State<ShereheHome>
                 );
               } else if (state is EventLoaded) {
                 final events = state.events;
-                final attendeesMap = state.attendeesMap;
 
                 return SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -127,23 +125,7 @@ class _ShereheHomeState extends State<ShereheHome>
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final event = events[index];
-                    final eventAttendees = attendeesMap[event.id] ?? [];
-                    final attendeeNames = eventAttendees
-                        .map((a) => "${a.firstName} ${a.lastName}")
-                        .toList();
-
-                    return EventCard(
-                      imagePath: event.imageUrl,
-                      title: event.name,
-                      location: event.location,
-                      date: event.date,
-                      time: event.time,
-                      genres: event.genre,
-                      attendees: attendeeNames,
-                      attendeesCount: event.numberOfAttendees,
-                      onTap: () =>
-                          ShereheDetailsRoute(eventId: event.id).push(context),
-                    );
+                    return EventCardWrapper(event: event);
                   }, childCount: events.length),
                 );
               } else if (state is EventError) {

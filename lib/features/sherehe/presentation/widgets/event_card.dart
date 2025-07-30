@@ -66,6 +66,7 @@ class EventCard extends StatelessWidget {
   final List<String> attendees;
   final int attendeesCount;
   final VoidCallback? onTap;
+  final bool isAttendeesLoading;
 
   const EventCard({
     super.key,
@@ -78,6 +79,7 @@ class EventCard extends StatelessWidget {
     this.attendees = const [],
     this.attendeesCount = 0,
     this.onTap,
+    this.isAttendeesLoading = false,
   });
 
   String _getInitials(String name) {
@@ -254,7 +256,49 @@ class EventCard extends StatelessWidget {
 
                       const Spacer(),
                       // Attendees section - always at the bottom
-                      if (attendees.isNotEmpty)
+                      if (isAttendeesLoading)
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: _calculateAvatarRowWidth(
+                                avatarCount: maxAvatars,
+                                avatarRadius: sizing.avatarRadius,
+                                spacing: 16.0,
+                              ),
+                              height: sizing.avatarRowHeight,
+                              child: Stack(
+                                children: List.generate(maxAvatars, (index) {
+                                  return Positioned(
+                                    left: index * 16.0,
+                                    child: CircleAvatar(
+                                      radius: sizing.avatarRadius,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainer,
+                                      child: SizedBox(
+                                        width: sizing.avatarRadius * 2,
+                                        height: sizing.avatarRadius * 2,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1.5,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Theme.of(context).colorScheme.outline,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "Loading attendees...",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        )
+                      else if (attendees.isNotEmpty)
                         Row(
                           children: [
                             SizedBox(

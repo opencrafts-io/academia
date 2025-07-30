@@ -18,7 +18,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     try {
       // Giving full url for now since flavour's basurl at the moment is verisafe's url
       final response = await dioClient.dio.get(
-        "http://127.0.0.1:3000/events/getAllEvents",
+        "https://qasherehe.opencrafts.io/events/getAllEvents",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -54,7 +54,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://127.0.0.1:3000/attendees/event/$eventId",
+        "https://qasherehe.opencrafts.io/attendees/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -94,7 +94,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, EventModel>> getSpecificEvent(String id) async {
     try {
-      final response = await dioClient.dio.get('http://127.0.0.1:3000/events/getEventById/$id');
+      final response = await dioClient.dio.get('https://qasherehe.opencrafts.io/events/getEventById/$id');
 
       if (response.statusCode == 200) {
         return right(EventModel.fromJson(response.data['result']));
@@ -122,7 +122,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, AttendeeModel>> getSpecificAttendee(String id) async {
     try {
-      final response = await dioClient.dio.get('http://127.0.0.1:3000/attendees/$id');
+      final response = await dioClient.dio.get('https://qasherehe.opencrafts.io/attendees/$id');
 
       if (response.statusCode == 200) {
         return right(AttendeeModel.fromJson(response.data['result']));
