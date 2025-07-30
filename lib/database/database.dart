@@ -3,12 +3,14 @@ import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(tables: [UserProfile, Token, Todo])
 class AppDataBase extends _$AppDataBase {
+  final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
@@ -16,6 +18,27 @@ class AppDataBase extends _$AppDataBase {
 
   @override
   int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        _logger.i("Migrating from version $from to version $to");
+        if (to > from) {
+          m.createAll();
+          _logger.i("Migrated from version $from to version $to");
+        }
+      },
+      beforeOpen: (details) async {
+        _logger.i(
+          "Openning cache db version ${details.versionNow} initial version ${details.versionBefore}",
+        );
+      },
+    );
+  }
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
