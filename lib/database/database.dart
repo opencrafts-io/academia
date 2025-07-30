@@ -1,12 +1,13 @@
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
+import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [UserProfile, Token])
+@DriftDatabase(tables: [UserProfile, Token, Todo])
 class AppDataBase extends _$AppDataBase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -14,7 +15,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(

@@ -66,9 +66,7 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<EventBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(
-          create: (context) => sl<FeedBloc>()..add(LoadFeedEvent()),
-        ),
+        BlocProvider(create: (context) => sl<FeedBloc>()..add(LoadFeedEvent())),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
@@ -77,6 +75,15 @@ class _AcademiaState extends State<Academia> {
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
           )..add(GetCachedProfileEvent()),
+        ),
+        BlocProvider(
+          create: (context) => TodoBloc(
+            getCachedTodosUsecase: sl.get<GetCachedTodosUsecase>(),
+            refreshTodosUsecase: sl<RefreshTodosUsecase>(),
+            createTodoUsecase: sl<CreateTodoUsecase>(),
+            updateTodoUsecase: sl<UpdateTodoUsecase>(),
+            deleteTodoUsecase: sl<DeleteTodoUsecase>(),
+          )..add(FetchCachedTodosEvent()),
         ),
       ],
       child: DynamicColorBuilder(

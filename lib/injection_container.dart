@@ -3,6 +3,7 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/features.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_remote_data_source.dart';
@@ -104,5 +105,37 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetCachedProfileUsecase(
       profileRepository: sl.get<ProfileRepositoryImpl>(),
     ),
+  );
+
+  // Todos
+  sl.registerFactory<TodoLocalDatasource>(
+    () => TodoLocalDatasource(localDB: cacheDB),
+  );
+  sl.registerFactory<TodoRemoteDatasource>(
+    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<TodoRepository>(
+    () => TodoRepositoryImpl(
+      todoRemoteDatasource: sl.get<TodoRemoteDatasource>(),
+      todoLocalDatasource: sl.get<TodoLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<GetCachedTodosUsecase>(
+    () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+
+  sl.registerFactory<RefreshTodosUsecase>(
+    () => RefreshTodosUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<CreateTodoUsecase>(
+    () => CreateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<UpdateTodoUsecase>(
+    () => UpdateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<DeleteTodoUsecase>(
+    () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );
 }
