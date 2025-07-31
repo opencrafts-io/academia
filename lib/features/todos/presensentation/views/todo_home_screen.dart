@@ -2,8 +2,6 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class TodoHomeScreen extends StatefulWidget {
   const TodoHomeScreen({super.key});
@@ -16,123 +14,129 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //
-      // drawer: Drawer(
-      //   elevation: 0,
-      //   child: Padding(
-      //     padding: EdgeInsets.all(12),
-      //     child: Column(
-      //       spacing: 2,
-      //       children: [
-      //         SizedBox(height: 22),
-      //         Image.asset(
-      //           "assets/icons/academia-logo-variant-1.png",
-      //           height: 62,
-      //         ),
-      //         Container(
-      //           decoration: BoxDecoration(
-      //             borderRadius: BorderRadius.circular(22),
-      //             color: Theme.of(context).colorScheme.primaryContainer,
-      //           ),
-      //           child: ListTile(
-      //             leading: Icon(Symbols.lightbulb),
-      //             title: Text("Todos"),
-      //           ),
-      //         ),
-      //         Container(
-      //           decoration: BoxDecoration(
-      //             borderRadius: BorderRadius.circular(22),
-      //             color: Theme.of(context).colorScheme.primaryContainer,
-      //           ),
-      //           child: ListTile(
-      //             leading: Icon(Symbols.notifications),
-      //             title: Text("Reminders"),
-      //           ),
-      //         ),
-      //
-      //         SizedBox(height: 12),
-      //         Divider(),
-      //
-      //         SizedBox(height: 12),
-      //         Divider(),
-      //         ListTile(leading: Icon(Symbols.archive), title: Text('Archive')),
-      //         ListTile(leading: Icon(Symbols.delete), title: Text('Deleted')),
-      //         ListTile(
-      //           leading: Icon(Symbols.settings),
-      //           title: Text('Settings'),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      body: BlocListener<TodoBloc, TodoState>(
-        listener: (context, state) {},
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              automaticallyImplyLeading: true,
-              centerTitle: true,
-              pinned: true,
-              floating: true,
-              snap: true,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            automaticallyImplyLeading: true,
+            centerTitle: true,
+            pinned: true,
+            floating: true,
+            snap: true,
 
-              title: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.primaryContainer,
-                  hintText: 'Search for something',
+            title: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(22),
+                  borderSide: BorderSide.none,
                 ),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.primaryContainer,
+                hintText: 'Search for something',
               ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    ProfileRoute().push(context);
-                  },
-                  icon: UserAvatar(scallopDepth: 2),
-                ),
-              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: ExpandableFab(
-        openButtonBuilder: RotateFloatingActionButtonBuilder(
-          child: const Icon(Icons.add),
-          fabSize: ExpandableFabSize.regular,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ProfileRoute().push(context);
+                },
+                icon: UserAvatar(scallopDepth: 2),
+              ),
+            ],
           ),
-        ),
-        closeButtonBuilder: DefaultFloatingActionButtonBuilder(
-          child: const Icon(Icons.close),
-          fabSize: ExpandableFabSize.regular,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        children: [
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'fab_upload',
-            child: Icon(Symbols.upload),
-          ),
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'fab_reminders',
-            child: Icon(Symbols.notifications),
-          ),
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'fab_ideas',
-
-            child: Icon(Symbols.lightbulb),
+          SliverToBoxAdapter(
+            child: BlocConsumer<TodoBloc, TodoState>(
+              builder: (context, state) {
+                if (state is TodoLoadedState) {
+                  return StreamBuilder(
+                    stream:
+                        (BlocProvider.of<TodoBloc>(context).state
+                                as TodoLoadedState)
+                            .todosStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data!.length.toString());
+                      }
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      return Text("WTF");
+                    },
+                  );
+                }
+                return Center(child: Text("TF"));
+              },
+              listener: (context, state) {
+                if (state is TodoErrorState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.error),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+
+            builder: (context) => Container(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                spacing: 12,
+                children: [
+                  SizedBox(height: 22),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "New task",
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                    ),
+                  ),
+                  // SizedBox(
+                  //   height: 200,
+                  //   child: TextFormField(
+                  //     expands: true,
+                  //     maxLines: null,
+                  //     minLines: null,
+                  //     decoration: InputDecoration(
+                  //       label: Text("Description"),
+                  //       floatingLabelBehavior: FloatingLabelBehavior.never,
+                  //       floatingLabelAlignment: FloatingLabelAlignment.center,
+                  //       hintText: "Don't forget to submit math assignment",
+                  //       filled: true,
+                  //       border: OutlineInputBorder(
+                  //         borderSide: BorderSide.none,
+                  //         borderRadius: BorderRadius.circular(22),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Card(
+                  //   child: IconButton(
+                  //     onPressed: () {},
+                  //     icon: Icon(Icons.lock_clock, size: 80),
+                  //   ),
+                  // ),
+                  FilledButton(onPressed: () {}, child: Text("Create Todo")),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
