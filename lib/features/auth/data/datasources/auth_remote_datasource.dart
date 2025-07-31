@@ -9,13 +9,17 @@ import 'package:logger/logger.dart';
 class AuthRemoteDatasource {
   final FlavorConfig flavorConfig;
   final Logger _logger = Logger();
+  final String servicePrefix;
 
-  AuthRemoteDatasource({required this.flavorConfig});
+  AuthRemoteDatasource({
+    required this.flavorConfig,
+    this.servicePrefix = "qa-verisafe",
+  });
 
   Future<Either<Failure, TokenData>> signInWithGoogle() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "${flavorConfig.apiBaseUrl}/auth/google",
+        url: "${flavorConfig.apiBaseUrl}/$servicePrefix/auth/google",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
@@ -58,7 +62,7 @@ class AuthRemoteDatasource {
   Future<Either<Failure, TokenData>> signInWithSpotify() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "${flavorConfig.apiBaseUrl}/auth/spotify",
+        url: "${flavorConfig.apiBaseUrl}/$servicePrefix/auth/spotify",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",

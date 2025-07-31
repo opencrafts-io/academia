@@ -8,7 +8,7 @@ class TodoRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
   final String servicePath;
 
-  TodoRemoteDatasource({required this.dioClient, this.servicePath = "keep-up"});
+  TodoRemoteDatasource({required this.dioClient, this.servicePath = "qa-keepup"});
 
   Future<Either<Failure, PaginatedResult<TodoData>>> refreshTodos({
     int page = 0,
