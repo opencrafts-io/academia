@@ -19,7 +19,7 @@ class AuthRemoteDatasource {
   Future<Either<Failure, TokenData>> signInWithGoogle() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "${flavorConfig.apiBaseUrl}/$servicePrefix/auth/google",
+        url: "https://qaverisafe.opencrafts.io/auth/google",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
@@ -62,7 +62,7 @@ class AuthRemoteDatasource {
   Future<Either<Failure, TokenData>> signInWithSpotify() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "${flavorConfig.apiBaseUrl}/$servicePrefix/auth/spotify",
+        url: "https://qaverisafe.opencrafts.io/auth/google",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",

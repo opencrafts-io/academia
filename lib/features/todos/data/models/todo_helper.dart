@@ -14,6 +14,11 @@ extension TodoHelper on TodoData {
     status: status,
     title: title,
     webViewLink: webViewLink,
+    notes: notes,
+    completed: completed,
+    due: due,
+    parent: parent,
+    updated: updated,
   );
 }
 
@@ -30,5 +35,10 @@ extension TodoEntityHelper on Todo {
     status: status,
     title: title,
     webViewLink: webViewLink,
+    notes: notes,
+    completed: completed,
+    due: due,
+    parent: parent,
+    updated: updated,
   );
 }

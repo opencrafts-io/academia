@@ -41,6 +41,9 @@ class AppDataBase extends _$AppDataBase {
   }
 
   static QueryExecutor _openConnection() {
+    driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
+      serializeDateTimeValuesAsString: true,
+    );
     return driftDatabase(
       name: 'academia.db',
       native: const DriftNativeOptions(

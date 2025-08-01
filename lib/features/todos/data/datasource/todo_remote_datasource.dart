@@ -15,7 +15,7 @@ class TodoRemoteDatasource with DioErrorHandler {
     int pageSize = 100,
   }) async {
     try {
-      final response = await dioClient.dio.get("$servicePath/todos");
+      final response = await dioClient.dio.get("/$servicePath/todos");
       if (response.statusCode == 200) {
         return Right(
           PaginatedResult(
@@ -41,7 +41,7 @@ class TodoRemoteDatasource with DioErrorHandler {
   Future<Either<Failure, TodoData>> createTodo(TodoData todo) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePath/todos/add",
+        "/$servicePath/todos/add",
         data: todo.toJson(),
       );
       if (response.statusCode == 201) {
@@ -63,7 +63,7 @@ class TodoRemoteDatasource with DioErrorHandler {
   Future<Either<Failure, TodoData>> updateTodo(TodoData todo) async {
     try {
       final response = await dioClient.dio.put(
-        "$servicePath/todos/update/${todo.id}",
+        "/$servicePath/todos/update/${todo.id}",
         data: todo.toJson(),
       );
       if (response.statusCode == 200) {
@@ -88,7 +88,7 @@ class TodoRemoteDatasource with DioErrorHandler {
   Future<Either<Failure, TodoData>> completeTodo(TodoData todo) async {
     try {
       final response = await dioClient.dio.put(
-        "$servicePath/todos/complete/${todo.id}",
+        "/$servicePath/todos/complete/${todo.id}",
         data: todo.toJson(),
       );
       if (response.statusCode == 200) {
@@ -110,7 +110,7 @@ class TodoRemoteDatasource with DioErrorHandler {
   Future<Either<Failure, TodoData>> deleteTodo(TodoData todo) async {
     try {
       final response = await dioClient.dio.delete(
-        "$servicePath/todos/delete/${todo.id}",
+        "/$servicePath/todos/delete/${todo.id}",
         data: todo.toJson(),
       );
       if (response.statusCode == 204) {

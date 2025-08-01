@@ -1,7 +1,9 @@
+import 'package:academia/core/data/date_time_converter.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('TokenData')
 class Token extends Table {
+  @DateTimeConverter()
   IntColumn get id => integer().autoIncrement()();
 
   @JsonKey("access_token")

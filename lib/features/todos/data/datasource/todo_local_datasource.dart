@@ -9,7 +9,11 @@ class TodoLocalDatasource {
   TodoLocalDatasource({required this.localDB});
 
   Stream<List<TodoData>> getTodosStream() {
-    return localDB.select(localDB.todo).watch();
+    return (localDB.select(localDB.todo)..orderBy([
+          (todo) => OrderingTerm(expression: todo.due, mode: OrderingMode.desc),
+          (todo) => OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
+        ]))
+        .watch();
   }
 
   Future<Either<Failure, TodoData>> createOrUpdateTodo(TodoData todo) async {
@@ -19,6 +23,7 @@ class TodoLocalDatasource {
           .insertReturning(todo, onConflict: DoUpdate((t) => todo));
       return right(created);
     } catch (e) {
+      rethrow;
       return left(
         CacheFailure(
           error: e,

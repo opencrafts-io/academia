@@ -33,7 +33,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (stream) {
-          // pass silently since the stream will be updated
+          add(FetchCachedTodosEvent());
         },
       );
     });
@@ -45,7 +45,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) {
-          // pass silently since the stream will be updated
+          add(FetchCachedTodosEvent());
         },
       );
     });
@@ -57,7 +57,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) {
-          // pass silently since the stream will be updated
+          add(FetchCachedTodosEvent());
         },
       );
     });
@@ -69,7 +69,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) {
-          // pass silently since the stream will be updated
+          add(FetchCachedTodosEvent());
         },
       );
     });

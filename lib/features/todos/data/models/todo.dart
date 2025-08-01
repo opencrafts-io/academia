@@ -1,7 +1,9 @@
+import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('TodoData')
 class Todo extends Table {
+  @DateTimeConverter()
   DateTimeColumn get completed => dateTime().nullable()();
   BoolColumn get deleted => boolean().withDefault(Constant(false))();
   DateTimeColumn get due => dateTime().nullable()();
@@ -21,4 +23,7 @@ class Todo extends Table {
   DateTimeColumn get updated => dateTime().nullable()();
   @JsonKey("web_view_link")
   TextColumn get webViewLink => text()();
+
+  @override
+  Set<Column<Object>>? get primaryKey => {id};
 }
