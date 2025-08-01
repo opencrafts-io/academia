@@ -1,6 +1,7 @@
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:time_since/time_since.dart';
 
 class TodoCard extends StatefulWidget {
@@ -60,7 +61,7 @@ class _TodoCardState extends State<TodoCard> {
         borderRadius: widget.borderRadius,
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
-          elevation: 0,
+          elevation: 2,
           margin: EdgeInsets.zero,
           child: CheckboxListTile.adaptive(
             checkboxShape: CircleBorder(side: BorderSide()),
@@ -82,6 +83,17 @@ class _TodoCardState extends State<TodoCard> {
                   textAlign: TextAlign.justify,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
+                Chip(
+                  avatar: Icon(Icons.alarm),
+                  label: Text(
+                    widget.todo.due == null
+                        ? "Indeterminate"
+                        : DateFormat(
+                            'EEE, dd MMM yyyy',
+                          ).format(widget.todo.due!),
+                  ),
+                ),
+
                 // widget.todo.due!.isAfter(DateTime.now())
                 //     ? Text(timeSince(widget.todo.due))
                 //     : Text(timeSince(widget.todo.due)),
