@@ -10,7 +10,8 @@ class TodoLocalDatasource {
 
   Stream<List<TodoData>> getTodosStream() {
     return (localDB.select(localDB.todo)..orderBy([
-          (todo) => OrderingTerm(expression: todo.position, mode: OrderingMode.asc),
+          (todo) =>
+              OrderingTerm(expression: todo.position, mode: OrderingMode.asc),
           // (todo) => OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
         ]))
         .watch();
@@ -23,7 +24,7 @@ class TodoLocalDatasource {
           .insertReturning(todo, onConflict: DoUpdate((t) => todo));
       return right(created);
     } catch (e) {
-      rethrow;
+      // rethrow;
       return left(
         CacheFailure(
           error: e,
