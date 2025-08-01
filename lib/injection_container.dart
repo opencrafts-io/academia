@@ -1,7 +1,6 @@
 import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/sherehe/data/data.dart';
@@ -11,9 +10,7 @@ import 'package:academia/features/chirp/data/repositories/chirp_repository_impl.
 import 'package:academia/features/chirp/domain/repositories/chirp_repository.dart';
 import 'package:academia/features/chirp/domain/usecases/get_feed_posts.dart';
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
-import 'features/sherehe/presentation/presentation.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
@@ -135,6 +132,10 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<UpdateTodoUsecase>(
     () => UpdateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );
+  sl.registerFactory<CompleteTodoUsecase>(
+    () => CompleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+
   sl.registerFactory<DeleteTodoUsecase>(
     () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );

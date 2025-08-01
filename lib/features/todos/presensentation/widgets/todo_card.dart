@@ -21,7 +21,7 @@ class _TodoCardState extends State<TodoCard> {
 
   @override
   void initState() {
-    isComplete = widget.todo.status != "needsAction" ? true : false;
+    isComplete = widget.todo.status != "needsAction";
     super.initState();
   }
 
@@ -46,11 +46,9 @@ class _TodoCardState extends State<TodoCard> {
       ),
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
-          // Swipe right to complete
-          // widget.onComplete?.call();
-          // BlocProvider.of<TodoBloc>(
-          //   context,
-          // ).add(C(todo: widget.todo));
+          BlocProvider.of<TodoBloc>(
+            context,
+          ).add(CompleteTodoEvent(todo: widget.todo));
         } else if (direction == DismissDirection.endToStart) {
           BlocProvider.of<TodoBloc>(
             context,
@@ -64,13 +62,16 @@ class _TodoCardState extends State<TodoCard> {
           shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
           elevation: 0,
           margin: EdgeInsets.zero,
-          child: RadioListTile.adaptive(
+          child: CheckboxListTile.adaptive(
+            checkboxShape: CircleBorder(side: BorderSide()),
             value: isComplete,
-            groupValue: false,
             onChanged: (val) {
               setState(() {
                 isComplete = !isComplete;
               });
+              BlocProvider.of<TodoBloc>(
+                context,
+              ).add(CompleteTodoEvent(todo: widget.todo));
             },
             title: Text(widget.todo.title),
             subtitle: Column(
@@ -78,11 +79,12 @@ class _TodoCardState extends State<TodoCard> {
               children: [
                 Text(
                   widget.todo.notes ?? '',
+                  textAlign: TextAlign.justify,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                widget.todo.due!.isAfter(DateTime.now())
-                    ? Text(timeSince(widget.todo.due))
-                    : Text(timeSince(widget.todo.due)),
+                // widget.todo.due!.isAfter(DateTime.now())
+                //     ? Text(timeSince(widget.todo.due))
+                //     : Text(timeSince(widget.todo.due)),
               ],
             ),
             contentPadding: EdgeInsets.zero,

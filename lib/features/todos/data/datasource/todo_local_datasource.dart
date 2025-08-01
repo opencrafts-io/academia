@@ -10,8 +10,8 @@ class TodoLocalDatasource {
 
   Stream<List<TodoData>> getTodosStream() {
     return (localDB.select(localDB.todo)..orderBy([
-          (todo) => OrderingTerm(expression: todo.due, mode: OrderingMode.desc),
-          (todo) => OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
+          (todo) => OrderingTerm(expression: todo.position, mode: OrderingMode.asc),
+          // (todo) => OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
         ]))
         .watch();
   }

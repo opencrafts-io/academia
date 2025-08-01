@@ -82,6 +82,7 @@ class _AcademiaState extends State<Academia> {
             refreshTodosUsecase: sl<RefreshTodosUsecase>(),
             createTodoUsecase: sl<CreateTodoUsecase>(),
             updateTodoUsecase: sl<UpdateTodoUsecase>(),
+            completeTodoUsecase: sl.get<CompleteTodoUsecase>(),
             deleteTodoUsecase: sl<DeleteTodoUsecase>(),
           )..add(FetchCachedTodosEvent()),
         ),

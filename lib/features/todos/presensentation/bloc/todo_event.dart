@@ -45,6 +45,17 @@ class UpdateTodoEvent extends TodoEvent {
   bool? get stringify => true;
 }
 
+class CompleteTodoEvent extends TodoEvent {
+  final Todo todo;
+  CompleteTodoEvent({required this.todo});
+
+  @override
+  List<Object?> get props => [todo];
+
+  @override
+  bool? get stringify => true;
+}
+
 class DeleteTodoEvent extends TodoEvent {
   final Todo todo;
   DeleteTodoEvent({required this.todo});

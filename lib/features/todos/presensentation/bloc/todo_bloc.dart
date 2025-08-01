@@ -12,12 +12,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final CreateTodoUsecase createTodoUsecase;
   final UpdateTodoUsecase updateTodoUsecase;
   final DeleteTodoUsecase deleteTodoUsecase;
+  final CompleteTodoUsecase completeTodoUsecase;
   TodoBloc({
     required this.getCachedTodosUsecase,
     required this.refreshTodosUsecase,
     required this.createTodoUsecase,
     required this.updateTodoUsecase,
     required this.deleteTodoUsecase,
+    required this.completeTodoUsecase,
   }) : super(TodoInitialState()) {
     on<FetchCachedTodosEvent>((event, emit) {
       final todosStream = getCachedTodosUsecase(NoParams());
@@ -52,6 +54,18 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
     on<UpdateTodoEvent>((event, emit) async {
       final result = await updateTodoUsecase(event.todo);
+      return result.fold(
+        (failure) {
+          return emit(TodoErrorState(error: failure.message));
+        },
+        (todo) {
+          add(FetchCachedTodosEvent());
+        },
+      );
+    });
+
+    on<CompleteTodoEvent>((event, emit) async {
+      final result = await completeTodoUsecase(event.todo);
       return result.fold(
         (failure) {
           return emit(TodoErrorState(error: failure.message));
