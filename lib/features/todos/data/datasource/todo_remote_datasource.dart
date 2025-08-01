@@ -8,14 +8,20 @@ class TodoRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
   final String servicePath;
 
-  TodoRemoteDatasource({required this.dioClient, this.servicePath = "qa-keepup"});
+  TodoRemoteDatasource({
+    required this.dioClient,
+    this.servicePath = "qa-keepup",
+  });
 
   Future<Either<Failure, PaginatedResult<TodoData>>> refreshTodos({
     int page = 0,
     int pageSize = 100,
   }) async {
     try {
-      final response = await dioClient.dio.get("/$servicePath/todos");
+      final response = await dioClient.dio.get(
+        "/$servicePath/todos/",
+        queryParameters: {"page": page, "pageSize": pageSize},
+      );
       if (response.statusCode == 200) {
         return Right(
           PaginatedResult(

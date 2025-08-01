@@ -15,7 +15,7 @@ class TodoHomeScreen extends StatefulWidget {
 
 class _TodoHomeScreenState extends State<TodoHomeScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  List<Todo> _todos = [];
+  final List<Todo> _todos = [];
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -55,6 +55,9 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
     return Scaffold(
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
+          BlocProvider.of<TodoBloc>(
+            context,
+          ).add(FetchTodoEvent(page: 1, pageSize: 100));
           await Future.delayed(Duration(seconds: 2));
         },
         child: CustomScrollView(
