@@ -16,6 +16,24 @@ class TodoHomeScreen extends StatefulWidget {
 class _TodoHomeScreenState extends State<TodoHomeScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   List<Todo> _todos = [];
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   // This function is the animation for removing an item
   Widget _removedItemBuilder(
@@ -43,23 +61,22 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
           slivers: [
             SliverAppBar(
               automaticallyImplyLeading: true,
-              centerTitle: false,
+              centerTitle: true,
               pinned: true,
               floating: true,
               snap: true,
-
-              // title: TextField(
-              //   decoration: InputDecoration(
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(22),
-              //       borderSide: BorderSide.none,
-              //     ),
-              //     filled: true,
-              //     fillColor: Theme.of(context).colorScheme.primaryContainer,
-              //     hintText: 'Search for something',
-              //   ),
-              // ),
-              title: Text("Your todos"),
+              title: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.primaryContainer,
+                  hintText: 'Search for something',
+                ),
+              ),
               actions: [
                 IconButton(
                   onPressed: () {
@@ -102,42 +119,64 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                             );
                           }
 
-                          // Check if the snapshot has data
-                          final newTodos = snapshot.data ?? [];
+                          final allTodos = snapshot.data ?? [];
 
-                          // Animate changes only if the data has been loaded
-                          if (_todos.isEmpty && newTodos.isNotEmpty) {
-                            _todos = List.of(newTodos);
-                          } else {
-                            // Find and remove old items
-                            final oldTodos = List.of(_todos);
-                            for (final todo in oldTodos) {
-                              if (!newTodos.contains(todo)) {
-                                final index = _todos.indexOf(todo);
-                                if (index != -1) {
-                                  _listKey.currentState?.removeItem(
-                                    index,
-                                    (context, animation) => _removedItemBuilder(
-                                      todo,
-                                      context,
-                                      animation,
-                                    ),
-                                  );
-                                  _todos.removeAt(index);
-                                }
-                              }
-                            }
+                          // Filter the todos based on the search query
+                          final filteredTodos = allTodos.where((todo) {
+                            final lowerCaseQuery = _searchQuery.toLowerCase();
+                            return todo.title.toLowerCase().contains(
+                                  lowerCaseQuery,
+                                ) ||
+                                (todo.notes?.toLowerCase().contains(
+                                      lowerCaseQuery,
+                                    ) ??
+                                    false);
+                          }).toList();
 
-                            // Find and add new items
-                            for (final todo in newTodos) {
-                              if (!_todos.contains(todo)) {
-                                final index = newTodos.indexOf(todo);
-                                _todos.insert(index, todo);
-                                _listKey.currentState?.insertItem(index);
+                          // Logic to handle AnimatedList animations
+                          // Removed items
+                          final oldTodos = List.of(_todos);
+                          for (final todo in oldTodos) {
+                            if (!filteredTodos.contains(todo)) {
+                              final index = _todos.indexOf(todo);
+                              if (index != -1) {
+                                _listKey.currentState?.removeItem(
+                                  index,
+                                  (context, animation) => _removedItemBuilder(
+                                    todo,
+                                    context,
+                                    animation,
+                                  ),
+                                );
+                                _todos.removeAt(index);
                               }
                             }
                           }
 
+                          // Added items
+                          for (final todo in filteredTodos) {
+                            if (!_todos.contains(todo)) {
+                              final index = filteredTodos.indexOf(todo);
+                              _todos.insert(index, todo);
+                              _listKey.currentState?.insertItem(index);
+                            }
+                          }
+
+                          // If there are no todos after filtering, show a message
+                          if (filteredTodos.isEmpty &&
+                              _searchQuery.isNotEmpty) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('We couldn\'t find that todo!'),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            });
+                          }
                           // Now that the list is synchronized, build the animated list
                           return Align(
                             alignment: Alignment.topCenter,
