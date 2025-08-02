@@ -1,10 +1,19 @@
-import 'package:academia/features/chirp/domain/entities/post.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/data/models/post_model.dart';
+import 'package:drift/drift.dart';
 
-class AttachmentModel extends  Attachment {
+@DataClassName('AttachmentEntity')
+class AttachmentTable extends Table with TableMixin {
+  @JsonKey('post_id')
+  TextColumn get postId =>
+      text().references(PostTable, #id, onDelete: KeyAction.cascade)();
+  @JsonKey('attachment_type')
+  TextColumn get attachmentType => text().withLength(max: 10)();
+  TextColumn get file => text()();
+  @override
+  @JsonKey('created_at')
+  DateTimeColumn get createdAt => dateTime()();
 
-  AttachmentModel({
-    required super.attachmentType,
-    required super.file,
-    required super.createdAt,
-  });
+  @override
+  Set<Column> get primaryKey => {id};
 }

@@ -58,16 +58,14 @@ class _PostCardState extends State<PostCard> {
 
               Text(
                 widget.post.content,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                
               ),
 
               if (widget.post.attachments.isNotEmpty) ...[
                 SizedBox(height: 8),
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.width * .5,
+                    maxHeight: 300,
                   ),
                   child: Stack(
                     alignment: Alignment.bottomCenter,
@@ -83,13 +81,13 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                       ),
-
+                  
                       if (widget.post.attachments.length > 1)
                         Positioned(
-                          bottom: 8,
+                          bottom: 0,
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 8,
+                              horizontal: 6,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
@@ -104,8 +102,8 @@ class _PostCardState extends State<PostCard> {
                                   return AnimatedContainer(
                                     duration: Duration(milliseconds: 200),
                                     margin: EdgeInsets.symmetric(horizontal: 4),
-                                    width: currentPage == index ? 10 : 6,
-                                    height: currentPage == index ? 10 : 6,
+                                    width: currentPage == index ? 6 : 4,
+                                    height: currentPage == index ? 6 : 4,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: currentPage == index

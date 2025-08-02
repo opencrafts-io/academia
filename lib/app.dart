@@ -1,6 +1,4 @@
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_bloc.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
@@ -68,7 +66,12 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<EventBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(create: (context) => sl<FeedBloc>()..add(LoadFeedEvent())),
+        BlocProvider(
+          create: (context) => FeedBloc(
+            getFeedPosts: sl.get<GetFeedPosts>(),
+            cachePosts: sl.get<CachePostsUsecase>(),
+          )..add(LoadFeedEvent()),
+        ),
         BlocProvider(
           create: (context) =>
               sl<MessagingBloc>()..add(LoadConversationsEvent()),

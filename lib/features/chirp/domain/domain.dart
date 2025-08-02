@@ -8,4 +8,8 @@ export 'usecases/conversations/send_message.dart';
 export 'entities/post.dart';
 export 'repositories/chirp_repository.dart';
 export 'usecases/get_feed_posts.dart';
+export 'usecases/cache_posts.dart';
+export 'entities/attachments.dart';
+export 'entities/post_replies.dart';
+
 
