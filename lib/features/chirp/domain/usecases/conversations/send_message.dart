@@ -2,18 +2,16 @@ import 'package:academia/core/core.dart';
 import '../../repositories/conversations/message_repository.dart';
 import 'package:dartz/dartz.dart';
 import '../../entities/conversations/message.dart';
-import 'dart:io';
 
-class SendMessage implements UseCase<Message, Map<String, dynamic>> {
+class SendMessage implements UseCase<Message, Map<String, String>> {
   final MessageRepository repository;
 
   SendMessage(this.repository);
 
   @override
-  Future<Either<Failure, Message>> call(Map<String, dynamic> params) async {
-    final receiverId = params['receiverId'] as String?;
-    final content = params['content'] as String?;
-    final file = params['file'] as File?;
+  Future<Either<Failure, Message>> call(Map<String, String> params) async {
+    final receiverId = params['receiverId'];
+    final content = params['content'];
 
     if (receiverId == null || content == null) {
       return Left(
@@ -24,6 +22,6 @@ class SendMessage implements UseCase<Message, Map<String, dynamic>> {
       );
     }
 
-    return await repository.sendMessage(receiverId, content, file: file);
+    return await repository.sendMessage(receiverId, content);
   }
 }

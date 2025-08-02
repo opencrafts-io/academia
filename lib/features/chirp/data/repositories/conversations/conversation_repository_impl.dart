@@ -1,22 +1,19 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/data/models/conversations/message_model_helper.dart';
 import 'package:dartz/dartz.dart';
 import '../../../domain/entities/conversations/conversation.dart';
-import '../../../domain/entities/chirp_user.dart';
 import '../../../domain/repositories/conversations/conversation_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
-import '../../datasources/chirp_user_remote_datasource.dart';
+import '../../models/conversations/conversation_model_helper.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 
 class ConversationRepositoryImpl implements ConversationRepository {
   final MessagingRemoteDatasource remoteDataSource;
   final MessagingLocalDataSource localDataSource;
-  final ChirpUserRemoteDatasource chirpUserRemoteDataSource;
 
   ConversationRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
-    required this.chirpUserRemoteDataSource,
   });
 
   @override
@@ -26,99 +23,66 @@ class ConversationRepositoryImpl implements ConversationRepository {
 
       return await conversationsResult.fold(
         (failure) async {
-          try {
-            final cachedConversations = await localDataSource
-                .getCachedConversations();
-            final conversationEntities = await Future.wait(
-              cachedConversations.map((data) async {
-                // For cached conversations, use fallback user data
-                final chirpUser = ChirpUser(
-                  id: data.userId,
-                  name: 'Unknown User',
-                  email: 'unknown@example.com',
-                  vibepoints: 0,
-                  avatarUrl: null,
-                );
-
-                final entity = Conversation(
-                  id: data.id,
-                  user: chirpUser,
-                  lastMessage: null,
-                  lastMessageAt: data.lastMessageAt,
-                  unreadCount: data.unreadCount,
-                );
-
-                if (data.lastMessageId != null) {
-                  final messageData = await localDataSource.getMessageById(
-                    data.lastMessageId!,
-                  );
-                  if (messageData != null) {
-                    final actualMessage = messageData.toEntity();
-                    return entity.copyWith(lastMessage: actualMessage);
-                  }
-                }
-                return entity;
-              }),
-            );
-            return Right(conversationEntities);
-          } catch (cacheError) {
-            return Left(failure);
-          }
+          // TODO: Uncomment
+          // // try cache
+          // try {
+          //   final cachedConversations = await localDataSource
+          //       .getCachedConversations();
+          //   final conversationEntities = await Future.wait(
+          //     cachedConversations.map((data) async {
+          //       final entity = data.toEntity();
+          //       if (data.lastMessageId != null) {
+          //         final messageData = await localDataSource.getMessageById(
+          //           data.lastMessageId!,
+          //         );
+          //         if (messageData != null) {
+          //           final actualMessage = messageData.toEntity();
+          //           return entity.copyWith(lastMessage: actualMessage);
+          //         }
+          //       }
+          //       return entity;
+          //     }),
+          //   );
+          //   return Right(conversationEntities);
+          // } catch (cacheError) {
+          //   return Left(failure);
+          // }
+          return Left(failure);
         },
         (conversations) async {
-          try {
-            await localDataSource.cacheConversations(conversations);
-          } catch (cacheError) {
-            // Log cache error but continue
-            print('Cache error: $cacheError');
-          }
+          // TODO: Uncomment
+          // // cache the data
+          // try {
+          //   await localDataSource.cacheConversations(conversations);
+          // } catch (cacheError) {
+          //   // Log cache error but continue
+          //   print('Cache error: $cacheError');
+          // }
 
           final conversationEntities = await Future.wait(
             conversations.map((data) async {
-              // Get real user data from backend, with fallback
-              final chirpUserResult = await chirpUserRemoteDataSource
-                  .getChirpUserById(data.userId);
-              final chirpUser = chirpUserResult.fold(
-                (failure) => ChirpUser(
-                  id: data.userId,
-                  name: 'Unknown User',
-                  email: 'unknown@example.com',
-                  vibepoints: 0,
-                  avatarUrl: null,
-                ),
-                (userData) => ChirpUser(
-                  id: userData.id,
-                  name: userData.name,
-                  email: userData.email,
-                  vibepoints: userData.vibepoints,
-                  avatarUrl: userData.avatarUrl,
-                ),
-              );
+              final entity = data.toEntity();
+              final userProfile = _getDummyUserProfile(data.userId);
 
-              // Create conversation entity with real user data
-              final entity = Conversation(
-                id: data.id,
-                user: chirpUser,
-                lastMessage: null,
-                lastMessageAt: data.lastMessageAt,
-                unreadCount: data.unreadCount,
-              );
-
-              if (data.lastMessageId != null) {
-                try {
-                  final messageData = await localDataSource.getMessageById(
-                    data.lastMessageId!,
-                  );
-                  if (messageData != null) {
-                    final actualMessage = messageData.toEntity();
-                    return entity.copyWith(lastMessage: actualMessage);
-                  }
-                } catch (messageError) {
-                  // Log message fetch error but continue
-                  print('Message fetch error: $messageError');
-                }
-              }
-              return entity;
+              // TODO: Uncomment
+              // if (data.lastMessageId != null) {
+              //   try {
+              //     final messageData = await localDataSource.getMessageById(
+              //       data.lastMessageId!,
+              //     );
+              //     if (messageData != null) {
+              //       final actualMessage = messageData.toEntity();
+              //       return entity.copyWith(
+              //         user: userProfile,
+              //         lastMessage: actualMessage,
+              //       );
+              //     }
+              //   } catch (messageError) {
+              //     // Log message fetch error but continue
+              //     print('Message fetch error: $messageError');
+              //   }
+              // }
+              return entity.copyWith(user: userProfile);
             }),
           );
 
@@ -132,6 +96,60 @@ class ConversationRepositoryImpl implements ConversationRepository {
           error: e,
         ),
       );
+    }
+  }
+
+  // TODO: Remove
+  UserProfile _getDummyUserProfile(String userId) {
+    switch (userId) {
+      case 'user_1':
+        return UserProfile(
+          id: 'user_1',
+          name: 'Sarah Johnson',
+          email: 'sarah.johnson@example.com',
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: 'Software Engineer | Coffee Enthusiast ☕',
+          phone: '+1234567890',
+          username: 'sarah_dev',
+          nationalID: null,
+          vibePoints: 150,
+          avatarUrl: null,
+        );
+      case 'user_2':
+        return UserProfile(
+          id: 'user_2',
+          name: 'Alex Chen',
+          email: 'alex.chen@example.com',
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: 'Product Designer | Creative Thinker 🎨',
+          phone: '+1987654321',
+          username: 'alex_design',
+          nationalID: null,
+          vibePoints: 89,
+          avatarUrl: null,
+        );
+      default:
+        return UserProfile(
+          id: 'unknown',
+          name: 'Unknown User',
+          email: 'unknown@example.com',
+          termsAccepted: true,
+          onboarded: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          bio: '',
+          phone: '',
+          username: '',
+          nationalID: null,
+          vibePoints: 0,
+          avatarUrl: null,
+        );
     }
   }
 }
