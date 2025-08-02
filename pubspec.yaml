@@ -61,6 +61,7 @@ dependencies:
   time_since: ^1.0.1
   video_player: ^2.10.0
   sliver_tools: ^0.2.12
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
