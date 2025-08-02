@@ -29,9 +29,9 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
-          await m.createTable(chirpUserTable);
-          await m.createTable(conversationTable);
-          await m.createTable(messageTable);
+          m.createTable(ChirpUserTable as TableInfo<Table, dynamic>);
+          m.createTable(MessageTable as TableInfo<Table, dynamic>);
+          m.createTable(ConversationTable as TableInfo<Table, dynamic>);
         }
       },
     );

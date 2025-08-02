@@ -96,13 +96,13 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     emit(MessagingLoadingState());
 
     // Create message parameters
-    final messageParams = <String, String>{
+    final messageParams = <String, dynamic>{
       'receiverId': event.receiverId,
       'content': event.content,
     };
 
-    if (event.imagePath != null) {
-      messageParams['imagePath'] = event.imagePath!;
+    if (event.file != null) {
+      messageParams['file'] = event.file!;
     }
 
     final result = await sendMessage(messageParams);

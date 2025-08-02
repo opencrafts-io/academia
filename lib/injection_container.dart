@@ -5,16 +5,12 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/chirp/data/datasources/chirp_user_remote_datasource.dart';
-import 'package:academia/features/chirp/data/datasources/chirp_user_local_datasource.dart';
 import 'package:academia/features/chirp/data/datasources/user_search_remote_datasource.dart';
-import 'package:academia/features/chirp/data/repositories/chirp_user_repository_impl.dart';
-import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_users.dart';
-import 'package:academia/features/chirp/domain/usecases/chirp_users/get_chirp_user_by_id.dart';
-import 'package:academia/features/chirp/domain/usecases/chirp_users/search_chirp_users.dart';
-import 'package:academia/features/chirp/domain/usecases/search_users_usecase.dart';
 
 import 'package:academia/features/chirp/domain/usecases/conversations/mark_message_as_read.dart';
 import 'package:academia/features/chirp/domain/usecases/conversations/delete_message.dart';
+import 'package:academia/features/chirp/domain/usecases/search_users_usecase.dart';
+import 'package:academia/features/chirp/data/repositories/chirp_user_repository_impl.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/chirp.dart';
@@ -158,28 +154,13 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<ChirpUserRemoteDatasourceImpl>(
     () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
   );
-  sl.registerFactory<ChirpUserLocalDataSourceImpl>(
-    () => ChirpUserLocalDataSourceImpl(localDB: cacheDB),
-  );
 
   sl.registerFactory<ChirpUserRepositoryImpl>(
     () => ChirpUserRepositoryImpl(
       remoteDataSource: sl.get<ChirpUserRemoteDatasourceImpl>(),
-      localDataSource: sl.get<ChirpUserLocalDataSourceImpl>(),
     ),
   );
 
-  sl.registerFactory<GetChirpUsers>(
-    () => GetChirpUsers(sl.get<ChirpUserRepositoryImpl>()),
-  );
-  sl.registerFactory<GetChirpUserById>(
-    () => GetChirpUserById(sl.get<ChirpUserRepositoryImpl>()),
-  );
-  sl.registerFactory<SearchChirpUsers>(
-    () => SearchChirpUsers(sl.get<ChirpUserRepositoryImpl>()),
-  );
-
-  // User Search dependencies - Updated to use ChirpUser
   // User Search dependencies
   sl.registerFactory<UserSearchRemoteDatasourceImpl>(
     () => UserSearchRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),

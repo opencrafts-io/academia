@@ -1,7 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
-import '../../domain/entities/chirp_user.dart';
 import '../../../../database/database.dart';
+import '../../domain/entities/chirp_user.dart';
 
 @DataClassName('ChirpUserData')
 class ChirpUserTable extends Table with TableMixin {
@@ -10,15 +10,12 @@ class ChirpUserTable extends Table with TableMixin {
   TextColumn get email => text()();
   IntColumn get vibepoints => integer().withDefault(Constant(0))();
   TextColumn get avatarUrl => text().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
 
-// Convert from database model TO domain entity
-extension ChirpUserModelHelper on ChirpUserData {
+extension ChirpUserDataHelper on ChirpUserData {
   ChirpUser toEntity() {
     return ChirpUser(
       id: id,
@@ -30,15 +27,16 @@ extension ChirpUserModelHelper on ChirpUserData {
   }
 }
 
-// Convert from domain entity TO database model
 extension ChirpUserEntityHelper on ChirpUser {
-  ChirpUserData toData() => ChirpUserData(
-    id: id,
-    name: name,
-    email: email,
-    vibepoints: vibepoints,
-    avatarUrl: avatarUrl,
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  );
+  ChirpUserData toData() {
+    return ChirpUserData(
+      id: id,
+      name: name,
+      email: email,
+      vibepoints: vibepoints,
+      avatarUrl: avatarUrl,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
 }

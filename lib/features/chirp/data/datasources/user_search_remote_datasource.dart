@@ -1,12 +1,12 @@
 import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 abstract class UserSearchRemoteDatasource {
-  Future<Either<Failure, List<UserProfile>>> searchUsers(String query);
+  Future<Either<Failure, List<ChirpUserData>>> searchUsers(String query);
 }
 
 class UserSearchRemoteDatasourceImpl
@@ -17,7 +17,7 @@ class UserSearchRemoteDatasourceImpl
   UserSearchRemoteDatasourceImpl({required this.dioClient});
 
   @override
-  Future<Either<Failure, List<UserProfile>>> searchUsers(String query) async {
+  Future<Either<Failure, List<ChirpUserData>>> searchUsers(String query) async {
     try {
       final response = await dioClient.dio.get(
         '/users/search/',
@@ -34,7 +34,7 @@ class UserSearchRemoteDatasourceImpl
       }
 
       final users = (response.data as List)
-          .map((json) => UserProfile.fromJson(json))
+          .map((json) => ChirpUserData.fromJson(json))
           .toList();
 
       return Right(users);

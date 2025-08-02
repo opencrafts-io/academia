@@ -4,6 +4,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'dart:io';
 
 abstract class MessagingRemoteDatasource {
   Future<Either<Failure, List<ConversationData>>> getConversations();
@@ -11,7 +12,7 @@ abstract class MessagingRemoteDatasource {
   Future<Either<Failure, MessageData>> sendMessage(
     String receiverId,
     String content, {
-    String? imagePath,
+    File? file,
   });
   Future<Either<Failure, void>> markMessageAsRead(String messageId);
   Future<Either<Failure, void>> deleteMessage(String messageId);
@@ -94,7 +95,7 @@ class MessagingRemoteDatasourceImpl
   Future<Either<Failure, MessageData>> sendMessage(
     String receiverId,
     String content, {
-    String? imagePath,
+    File? file,
   }) async {
     try {
       // Check if receiverId is a conversation ID (starts with 'conv_')
@@ -107,11 +108,11 @@ class MessagingRemoteDatasourceImpl
         // Send message to conversation
         endpoint = '/conversations/$receiverId/messages/';
 
-        if (imagePath != null) {
+        if (file != null) {
           // Upload image with multipart form data
           final formData = FormData.fromMap({
             'content': content,
-            'attachments': await MultipartFile.fromFile(imagePath),
+            'attachments': await MultipartFile.fromFile(file.path),
           });
           requestData = formData;
         } else {
@@ -122,12 +123,12 @@ class MessagingRemoteDatasourceImpl
         // Send message to user
         endpoint = '/messages/';
 
-        if (imagePath != null) {
+        if (file != null) {
           // Upload image with multipart form data
           final formData = FormData.fromMap({
             'receiver_id': receiverId,
             'content': content,
-            'attachments': await MultipartFile.fromFile(imagePath),
+            'attachments': await MultipartFile.fromFile(file.path),
           });
           requestData = formData;
         } else {

@@ -1,5 +1,4 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
 import 'package:academia/features/chirp/data/models/conversations/message_model_helper.dart';
 import 'package:dartz/dartz.dart';
 import '../../../domain/entities/conversations/conversation.dart';

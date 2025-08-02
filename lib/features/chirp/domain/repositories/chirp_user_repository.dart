@@ -1,5 +1,5 @@
-import 'package:academia/core/core.dart';
 import 'package:dartz/dartz.dart';
+import '../../../../core/core.dart';
 import '../entities/chirp_user.dart';
 
 abstract class ChirpUserRepository {

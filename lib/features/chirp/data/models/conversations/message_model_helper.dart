@@ -12,7 +12,6 @@ extension MessageModelHelper on MessageData {
       content: content,
       sentAt: sentAt,
       isRead: isRead,
-      imageUrl: imageUrl,
     );
   }
 }
@@ -26,7 +25,6 @@ extension MessageEntityHelper on Message {
     content: content,
     sentAt: sentAt,
     isRead: isRead,
-    imageUrl: imageUrl,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

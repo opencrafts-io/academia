@@ -5,6 +5,7 @@ import '../../../domain/entities/conversations/message.dart';
 import '../../../domain/repositories/conversations/message_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
+import 'dart:io';
 
 class MessageRepositoryImpl implements MessageRepository {
   final MessagingRemoteDatasource remoteDataSource;
@@ -64,13 +65,13 @@ class MessageRepositoryImpl implements MessageRepository {
   Future<Either<Failure, Message>> sendMessage(
     String receiverId,
     String content, {
-    String? imagePath,
+    File? file,
   }) async {
     try {
       final messageResult = await remoteDataSource.sendMessage(
         receiverId,
         content,
-        imagePath: imagePath,
+        file: file,
       );
 
       return messageResult.fold(

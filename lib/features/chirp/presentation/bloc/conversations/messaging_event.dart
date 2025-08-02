@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'dart:io';
 import '../../../domain/entities/chirp_user.dart';
 
 abstract class MessagingEvent extends Equatable {
@@ -21,12 +22,12 @@ class LoadMessagesEvent extends MessagingEvent {
 class SendMessageEvent extends MessagingEvent {
   final String receiverId;
   final String content;
-  final String? imagePath;
+  final File? file;
 
-  const SendMessageEvent(this.receiverId, this.content, {this.imagePath});
+  const SendMessageEvent(this.receiverId, this.content, {this.file});
 
   @override
-  List<Object?> get props => [receiverId, content, imagePath];
+  List<Object?> get props => [receiverId, content, file];
 }
 
 class MarkConversationAsReadEvent extends MessagingEvent {
