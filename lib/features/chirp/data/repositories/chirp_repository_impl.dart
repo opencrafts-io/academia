@@ -13,4 +13,3 @@ class ChirpRepositoryImpl implements ChirpRepository {
     return await remoteDataSource.getFeedPosts();
   }
 }
-
