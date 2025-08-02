@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
-import '../chirp_user.dart';
+import 'package:academia/features/profile/domain/entities/user_profile.dart';
 
 class Message extends Equatable {
   final String id;
   final String content;
-  final ChirpUser sender;
-  final ChirpUser recipient;
+  final UserProfile sender;
+  final UserProfile recipient;
   final DateTime sentAt;
   final bool isRead;
 
