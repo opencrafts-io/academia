@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
   $feedRoute,
   $chatRoute,
+  $postRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
@@ -155,6 +156,33 @@ mixin _$ChatRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/chat/${Uri.encodeComponent(_self.conversationId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $postRoute =>
+    GoRouteData.$route(path: '/post/:postId', factory: _$PostRoute._fromState);
+
+mixin _$PostRoute on GoRouteData {
+  static PostRoute _fromState(GoRouterState state) =>
+      PostRoute(postId: state.pathParameters['postId']!);
+
+  PostRoute get _self => this as PostRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
 
   @override
   void go(BuildContext context) => context.go(location);

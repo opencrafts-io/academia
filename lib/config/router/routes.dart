@@ -1,7 +1,7 @@
+import 'package:academia/features/chirp/presentation/views/post_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/chirp/chirp.dart';
 
 part 'routes.g.dart';
 
@@ -73,6 +73,20 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ChatPage(conversationId: conversationId);
+  }
+}
+
+@TypedGoRoute<PostRoute>(
+  path: '/post/:postId',
+)
+class PostRoute extends GoRouteData with _$PostRoute {
+  final String postId;
+
+  const PostRoute({required this.postId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PostDetailPage(postId: postId);
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/chirp/domain/entities/post.dart';
 import 'package:academia/features/chirp/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +150,9 @@ class _PostCardState extends State<PostCard> {
 
                   OutlinedButton.icon(
                     icon: Icon(Symbols.chat),
-                    onPressed: () {},
+                    onPressed: () {
+                      PostRoute(postId: widget.post.id).push(context);
+                    },
                     label: Text('${widget.post.replies.length} comments'),
                   ),
                 ],

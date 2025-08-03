@@ -4,5 +4,6 @@ import 'package:dartz/dartz.dart';
 
 abstract class ChirpRepository {
   Future<Either<Failure,List<Post>>> getFeedPosts();
+  Future<Either<Failure, Post>> getPostById(String postId);
 }
 

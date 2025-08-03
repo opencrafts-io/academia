@@ -22,3 +22,4 @@ class FeedErrorState extends FeedState {
   @override
   List<Object> get props => [message];
 }
+

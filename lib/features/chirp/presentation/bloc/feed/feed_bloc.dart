@@ -2,6 +2,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 part 'feed_event.dart';
 part 'feed_state.dart';

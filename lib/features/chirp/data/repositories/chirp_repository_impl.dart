@@ -12,5 +12,10 @@ class ChirpRepositoryImpl implements ChirpRepository {
   Future<Either<Failure, List<Post>>> getFeedPosts() async {
     return await remoteDataSource.getFeedPosts();
   }
+
+  @override
+  Future<Either<Failure, Post>> getPostById(String postId) async {
+    return await remoteDataSource.getPostById(postId);
+  }
 }
 

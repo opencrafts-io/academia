@@ -100,7 +100,7 @@ class AttendeesList extends StatelessWidget {
                           context,
                         ).colorScheme.secondary,
                         child: Text(
-                          otherAttendees.length > 0
+                          otherAttendees.isNotEmpty
                               ? _getInitials(
                                   otherAttendees[0].firstName,
                                   otherAttendees[0].lastName,
@@ -141,7 +141,7 @@ class AttendeesList extends StatelessWidget {
                         radius: 18,
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         child: Text(
-                          '+${remainingCountBasedOnEventTotal}',
+                          '+$remainingCountBasedOnEventTotal',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 12,
