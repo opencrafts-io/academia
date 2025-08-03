@@ -5,7 +5,6 @@ import '../../../domain/entities/conversations/message.dart';
 import '../../../domain/repositories/conversations/message_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
-import 'dart:io';
 
 class MessageRepositoryImpl implements MessageRepository {
   final MessagingRemoteDatasource remoteDataSource;
@@ -64,14 +63,12 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Future<Either<Failure, Message>> sendMessage(
     String receiverId,
-    String content, {
-    File? file,
-  }) async {
+    String content,
+  ) async {
     try {
       final messageResult = await remoteDataSource.sendMessage(
         receiverId,
         content,
-        file: file,
       );
 
       return messageResult.fold(
@@ -82,34 +79,6 @@ class MessageRepositoryImpl implements MessageRepository {
       return Left(
         ServerFailure(
           message: 'An unexpected error occurred while sending message',
-          error: e,
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> markMessageAsRead(String messageId) async {
-    try {
-      return await remoteDataSource.markMessageAsRead(messageId);
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while marking message as read',
-          error: e,
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteMessage(String messageId) async {
-    try {
-      return await remoteDataSource.deleteMessage(messageId);
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while deleting message',
           error: e,
         ),
       );

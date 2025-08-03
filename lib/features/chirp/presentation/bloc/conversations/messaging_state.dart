@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 import '../../../domain/entities/conversations/message.dart';
-import '../../../domain/entities/chirp_user.dart';
 
 abstract class MessagingState extends Equatable {
   const MessagingState();
@@ -41,21 +40,4 @@ class ConversationsLoaded extends MessagingState {
   const ConversationsLoaded(this.conversations);
   @override
   List<Object?> get props => [conversations];
-}
-
-// User Search States
-class UsersSearchLoadingState extends MessagingState {}
-
-class UsersSearchLoadedState extends MessagingState {
-  final List<ChirpUser> users;
-  const UsersSearchLoadedState(this.users);
-  @override
-  List<Object?> get props => [users];
-}
-
-class UsersSearchErrorState extends MessagingState {
-  final String message;
-  const UsersSearchErrorState(this.message);
-  @override
-  List<Object?> get props => [message];
 }

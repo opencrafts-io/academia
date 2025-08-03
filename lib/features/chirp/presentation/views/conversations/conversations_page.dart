@@ -1,7 +1,6 @@
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:academia/config/router/routes.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
@@ -112,17 +111,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
             Expanded(
               child: BlocBuilder<MessagingBloc, MessagingState>(
                 builder: (context, state) {
-                  if (!_showSearch &&
-                      (state is UsersSearchLoadingState ||
-                          state is UsersSearchLoadedState ||
-                          state is UsersSearchErrorState)) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      context.read<MessagingBloc>().add(
-                        LoadConversationsEvent(),
-                      );
-                    });
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                  // Note: Search states are handled in UserSearchWidget
+                  // No need to check for search states here
 
                   if (state is MessagingLoadingState) {
                     return const Center(child: CircularProgressIndicator());
@@ -252,7 +242,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    '${conversation.user.vibepoints} vibepoints',
+                                    '${conversation.user.vibePoints} vibepoints',
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: Theme.of(
@@ -300,11 +290,9 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                 )
                               : null,
                           onTap: () {
-                            context.push(
-                              ChatRoute(
-                                conversationId: conversation.id,
-                              ).location,
-                            );
+                            ChatRoute(
+                              conversationId: conversation.id,
+                            ).push(context);
                           },
                         );
                       },

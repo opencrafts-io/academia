@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/conversations/messaging_bloc.dart';
-import '../bloc/conversations/messaging_event.dart';
-import '../bloc/conversations/messaging_state.dart';
 import '../../domain/entities/chirp_user.dart';
 
 class UserSearchWidget extends StatefulWidget {
@@ -15,11 +11,12 @@ class UserSearchWidget extends StatefulWidget {
 class _UserSearchWidgetState extends State<UserSearchWidget> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
-    _searchFocusNode.requestFocus();
+    _searchController.addListener(_onSearchChanged);
   }
 
   @override
@@ -29,19 +26,29 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
     super.dispose();
   }
 
-  void _onSearchChanged(String query) {
-    if (query.trim().isNotEmpty) {
-      context.read<MessagingBloc>().add(SearchUsersEvent(query));
-    } else {
-      context.read<MessagingBloc>().add(const SearchUsersEvent(''));
-    }
+  void _onSearchChanged() {
+    final query = _searchController.text.trim();
+    setState(() {
+      _isSearching = query.isNotEmpty;
+    });
   }
 
   void _startConversation(ChirpUser user) {
-    context.read<MessagingBloc>().add(StartNewConversationEvent(user));
+    // TODO: Implement conversation start functionality
+    // For now, just clear the search
     setState(() {
       _searchController.clear();
+      _isSearching = false;
     });
+
+    // Show a placeholder message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Starting conversation with ${user.name}...'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -65,205 +72,114 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
               vertical: 12,
             ),
           ),
-          onChanged: _onSearchChanged,
+          onChanged: (_) => _onSearchChanged(),
         ),
         const SizedBox(height: 16),
         // Content that adapts to available space
         Expanded(
-          child: BlocBuilder<MessagingBloc, MessagingState>(
-            builder: (context, state) {
-              if (state is UsersSearchLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              }
+          child: _isSearching ? _buildSearchResults() : _buildEmptyState(),
+        ),
+      ],
+    );
+  }
 
-              if (state is UsersSearchErrorState) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 48,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Search temporarily unavailable',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'We\'re working on improving our search feature. Try again in a few moments.',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          if (_searchController.text.trim().isNotEmpty) {
-                            context.read<MessagingBloc>().add(
-                              SearchUsersEvent(_searchController.text.trim()),
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Try Again'),
-                      ),
-                    ],
-                  ),
-                );
-              }
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.person_search,
+            size: 64,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Search for friends',
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Type a name to find and connect with friends',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
 
-              if (state is UsersSearchLoadedState) {
-                if (state.users.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person_search,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No users found',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'We couldn\'t find any users matching "${_searchController.text}".\nTry searching with a different name or check the spelling.',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          '💡 Tip: Try searching with just the first name',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontStyle: FontStyle.italic,
-                              ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: state.users.length,
-                  itemBuilder: (context, index) {
-                    final user = state.users[index];
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: user.avatarUrl != null
-                            ? NetworkImage(user.avatarUrl!)
-                            : null,
-                        child: user.avatarUrl == null
-                            ? Text(
-                                user.name.isNotEmpty
-                                    ? user.name[0].toUpperCase()
-                                    : 'U',
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                              )
-                            : null,
-                      ),
-                      title: Text(
-                        user.name,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text(
-                        '${user.vibepoints} vibepoints',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      trailing: OutlinedButton(
-                        onPressed: () => _startConversation(user),
-                        child: const Text('Message'),
-                      ),
-                    );
-                  },
-                );
-              }
-
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Search for friends',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Type a name to find your friends and start chatting',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.lightbulb_outline,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Search by first name for better results',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+  Widget _buildSearchResults() {
+    // TODO: Implement actual search functionality
+    // For now, show a placeholder with mock data
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Text(
+                'Search results for "${_searchController.text}"',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+              Text(
+                'Coming soon',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontStyle: FontStyle.italic,
                 ),
-              );
-            },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.search_off,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Search feature coming soon!',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'We\'re working on implementing the search functionality. Stay tuned!',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _searchController.clear();
+                      _isSearching = false;
+                    });
+                  },
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Clear Search'),
+                ),
+              ],
+            ),
           ),
         ),
       ],

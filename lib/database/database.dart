@@ -2,10 +2,10 @@ import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
 import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
-import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 
 part 'database.g.dart';
 
@@ -19,23 +19,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
-
-  @override
-  MigrationStrategy get migration {
-    return MigrationStrategy(
-      onCreate: (Migrator m) async {
-        await m.createAll();
-      },
-      onUpgrade: (Migrator m, int from, int to) async {
-        if (from < 2) {
-          m.createTable(ChirpUserTable as TableInfo<Table, dynamic>);
-          m.createTable(MessageTable as TableInfo<Table, dynamic>);
-          m.createTable(ConversationTable as TableInfo<Table, dynamic>);
-        }
-      },
-    );
-  }
+  int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
