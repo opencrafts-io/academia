@@ -2220,6 +2220,456 @@ class ConversationTableCompanion extends UpdateCompanion<ConversationData> {
   }
 }
 
+class $ChirpUserTableTable extends ChirpUserTable
+    with TableInfo<$ChirpUserTableTable, ChirpUserData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChirpUserTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _vibepointsMeta = const VerificationMeta(
+    'vibepoints',
+  );
+  @override
+  late final GeneratedColumn<int> vibepoints = GeneratedColumn<int>(
+    'vibepoints',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    email,
+    vibepoints,
+    avatarUrl,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'chirp_user_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ChirpUserData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('vibepoints')) {
+      context.handle(
+        _vibepointsMeta,
+        vibepoints.isAcceptableOrUnknown(data['vibepoints']!, _vibepointsMeta),
+      );
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChirpUserData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      vibepoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibepoints'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
+    );
+  }
+
+  @override
+  $ChirpUserTableTable createAlias(String alias) {
+    return $ChirpUserTableTable(attachedDatabase, alias);
+  }
+}
+
+class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String name;
+  final String email;
+  final int vibepoints;
+  final String? avatarUrl;
+  const ChirpUserData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+    required this.email,
+    required this.vibepoints,
+    this.avatarUrl,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['name'] = Variable<String>(name);
+    map['email'] = Variable<String>(email);
+    map['vibepoints'] = Variable<int>(vibepoints);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    return map;
+  }
+
+  ChirpUserTableCompanion toCompanion(bool nullToAbsent) {
+    return ChirpUserTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      name: Value(name),
+      email: Value(email),
+      vibepoints: Value(vibepoints),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+    );
+  }
+
+  factory ChirpUserData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChirpUserData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      name: serializer.fromJson<String>(json['name']),
+      email: serializer.fromJson<String>(json['email']),
+      vibepoints: serializer.fromJson<int>(json['vibepoints']),
+      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String>(name),
+      'email': serializer.toJson<String>(email),
+      'vibepoints': serializer.toJson<int>(vibepoints),
+      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+    };
+  }
+
+  ChirpUserData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+    String? email,
+    int? vibepoints,
+    Value<String?> avatarUrl = const Value.absent(),
+  }) => ChirpUserData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    name: name ?? this.name,
+    email: email ?? this.email,
+    vibepoints: vibepoints ?? this.vibepoints,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+  );
+  ChirpUserData copyWithCompanion(ChirpUserTableCompanion data) {
+    return ChirpUserData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      name: data.name.present ? data.name.value : this.name,
+      email: data.email.present ? data.email.value : this.email,
+      vibepoints: data.vibepoints.present
+          ? data.vibepoints.value
+          : this.vibepoints,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpUserData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('vibepoints: $vibepoints, ')
+          ..write('avatarUrl: $avatarUrl')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, name, email, vibepoints, avatarUrl);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChirpUserData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.name == this.name &&
+          other.email == this.email &&
+          other.vibepoints == this.vibepoints &&
+          other.avatarUrl == this.avatarUrl);
+}
+
+class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> name;
+  final Value<String> email;
+  final Value<int> vibepoints;
+  final Value<String?> avatarUrl;
+  final Value<int> rowid;
+  const ChirpUserTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.name = const Value.absent(),
+    this.email = const Value.absent(),
+    this.vibepoints = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ChirpUserTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String name,
+    required String email,
+    this.vibepoints = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       email = Value(email);
+  static Insertable<ChirpUserData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? name,
+    Expression<String>? email,
+    Expression<int>? vibepoints,
+    Expression<String>? avatarUrl,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (vibepoints != null) 'vibepoints': vibepoints,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ChirpUserTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? name,
+    Value<String>? email,
+    Value<int>? vibepoints,
+    Value<String?>? avatarUrl,
+    Value<int>? rowid,
+  }) {
+    return ChirpUserTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      vibepoints: vibepoints ?? this.vibepoints,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (vibepoints.present) {
+      map['vibepoints'] = Variable<int>(vibepoints.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpUserTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('vibepoints: $vibepoints, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -2228,6 +2678,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $MessageTableTable messageTable = $MessageTableTable(this);
   late final $ConversationTableTable conversationTable =
       $ConversationTableTable(this);
+  late final $ChirpUserTableTable chirpUserTable = $ChirpUserTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2237,6 +2688,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     token,
     messageTable,
     conversationTable,
+    chirpUserTable,
   ];
 }
 
@@ -3987,6 +4439,248 @@ typedef $$ConversationTableTableProcessedTableManager =
       ConversationData,
       PrefetchHooks Function({bool userId, bool lastMessageId})
     >;
+typedef $$ChirpUserTableTableCreateCompanionBuilder =
+    ChirpUserTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String name,
+      required String email,
+      Value<int> vibepoints,
+      Value<String?> avatarUrl,
+      Value<int> rowid,
+    });
+typedef $$ChirpUserTableTableUpdateCompanionBuilder =
+    ChirpUserTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> name,
+      Value<String> email,
+      Value<int> vibepoints,
+      Value<String?> avatarUrl,
+      Value<int> rowid,
+    });
+
+class $$ChirpUserTableTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ChirpUserTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ChirpUserTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+}
+
+class $$ChirpUserTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ChirpUserTableTable,
+          ChirpUserData,
+          $$ChirpUserTableTableFilterComposer,
+          $$ChirpUserTableTableOrderingComposer,
+          $$ChirpUserTableTableAnnotationComposer,
+          $$ChirpUserTableTableCreateCompanionBuilder,
+          $$ChirpUserTableTableUpdateCompanionBuilder,
+          (
+            ChirpUserData,
+            BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
+          ),
+          ChirpUserData,
+          PrefetchHooks Function()
+        > {
+  $$ChirpUserTableTableTableManager(
+    _$AppDataBase db,
+    $ChirpUserTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ChirpUserTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ChirpUserTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ChirpUserTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<int> vibepoints = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ChirpUserTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                email: email,
+                vibepoints: vibepoints,
+                avatarUrl: avatarUrl,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String name,
+                required String email,
+                Value<int> vibepoints = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ChirpUserTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                email: email,
+                vibepoints: vibepoints,
+                avatarUrl: avatarUrl,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ChirpUserTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ChirpUserTableTable,
+      ChirpUserData,
+      $$ChirpUserTableTableFilterComposer,
+      $$ChirpUserTableTableOrderingComposer,
+      $$ChirpUserTableTableAnnotationComposer,
+      $$ChirpUserTableTableCreateCompanionBuilder,
+      $$ChirpUserTableTableUpdateCompanionBuilder,
+      (
+        ChirpUserData,
+        BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
+      ),
+      ChirpUserData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -3999,4 +4693,6 @@ class $AppDataBaseManager {
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>
       $$ConversationTableTableTableManager(_db, _db.conversationTable);
+  $$ChirpUserTableTableTableManager get chirpUserTable =>
+      $$ChirpUserTableTableTableManager(_db, _db.chirpUserTable);
 }
