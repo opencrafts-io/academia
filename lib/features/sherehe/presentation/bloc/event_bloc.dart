@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import '../../domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,6 +9,7 @@ part 'event_state.dart';
 class EventBloc extends Bloc<EventEvent, EventState> {
   final GetEvent getEvent;
   final GetAttendee getAttendee;
+  final Logger _logger = Logger();
 
   EventBloc({required this.getEvent, required this.getAttendee})
     : super(EventInitial()) {
@@ -26,7 +28,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     );
 
     await eventsResult.fold(
-      (failure) async => emit(EventError("Error fetching events")),
+      (failure) async {
+        _logger.e("Error fetching events: ${failure.message}, ${failure.error}");
+        emit(EventError("Error fetching events"));
+      } ,
       (events) async {
         // First emit events without attendees for immediate display
         emit(EventLoaded(events, {}));

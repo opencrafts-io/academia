@@ -63,7 +63,8 @@ class AttendeesList extends StatelessWidget {
         firstName: 'Unknown',
         lastName: 'Organizer',
         eventId: event.id,
-        createdAt: '',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now()
       ),
     );
 

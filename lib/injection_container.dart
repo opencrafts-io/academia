@@ -62,8 +62,15 @@ Future<void> init(FlavorConfig flavor) async {
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
   );
 
+  sl.registerLazySingleton<ShereheLocalDataSource>(
+    () => ShereheLocalDataSource(localDB: cacheDB),
+  );
+
   sl.registerSingleton<ShereheRepository>(
-    ShereheRepositoryImpl(remoteDataSource: sl()),
+    ShereheRepositoryImpl(
+      remoteDataSource: sl.get<ShereheRemoteDataSource>(),
+      localDataSource: sl.get<ShereheLocalDataSource>(),
+    ),
   );
 
   sl.registerSingleton<GetEvent>(GetEvent(sl()));

@@ -2220,6 +2220,1692 @@ class ConversationTableCompanion extends UpdateCompanion<ConversationData> {
   }
 }
 
+class $EventTableTable extends EventTable
+    with TableInfo<$EventTableTable, EventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EventTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _timeMeta = const VerificationMeta('time');
+  @override
+  late final GeneratedColumn<String> time = GeneratedColumn<String>(
+    'time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _organizerMeta = const VerificationMeta(
+    'organizer',
+  );
+  @override
+  late final GeneratedColumn<String> organizer = GeneratedColumn<String>(
+    'organizer',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _numberOfAttendeesMeta = const VerificationMeta(
+    'numberOfAttendees',
+  );
+  @override
+  late final GeneratedColumn<int> numberOfAttendees = GeneratedColumn<int>(
+    'number_of_attendees',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _organizerIdMeta = const VerificationMeta(
+    'organizerId',
+  );
+  @override
+  late final GeneratedColumn<String> organizerId = GeneratedColumn<String>(
+    'organizer_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _genreMeta = const VerificationMeta('genre');
+  @override
+  late final GeneratedColumn<String> genre = GeneratedColumn<String>(
+    'genre',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    description,
+    url,
+    location,
+    time,
+    date,
+    organizer,
+    imageUrl,
+    numberOfAttendees,
+    organizerId,
+    genre,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'event_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EventData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_locationMeta);
+    }
+    if (data.containsKey('time')) {
+      context.handle(
+        _timeMeta,
+        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('organizer')) {
+      context.handle(
+        _organizerMeta,
+        organizer.isAcceptableOrUnknown(data['organizer']!, _organizerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_organizerMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_imageUrlMeta);
+    }
+    if (data.containsKey('number_of_attendees')) {
+      context.handle(
+        _numberOfAttendeesMeta,
+        numberOfAttendees.isAcceptableOrUnknown(
+          data['number_of_attendees']!,
+          _numberOfAttendeesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_numberOfAttendeesMeta);
+    }
+    if (data.containsKey('organizer_id')) {
+      context.handle(
+        _organizerIdMeta,
+        organizerId.isAcceptableOrUnknown(
+          data['organizer_id']!,
+          _organizerIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_organizerIdMeta);
+    }
+    if (data.containsKey('genre')) {
+      context.handle(
+        _genreMeta,
+        genre.isAcceptableOrUnknown(data['genre']!, _genreMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_genreMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EventData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      )!,
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      )!,
+      time: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}time'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      organizer: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}organizer'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      )!,
+      numberOfAttendees: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}number_of_attendees'],
+      )!,
+      organizerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}organizer_id'],
+      )!,
+      genre: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}genre'],
+      )!,
+    );
+  }
+
+  @override
+  $EventTableTable createAlias(String alias) {
+    return $EventTableTable(attachedDatabase, alias);
+  }
+}
+
+class EventData extends DataClass implements Insertable<EventData> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String name;
+  final String description;
+  final String url;
+  final String location;
+  final String time;
+  final String date;
+  final String organizer;
+  final String imageUrl;
+  final int numberOfAttendees;
+  final String organizerId;
+  final String genre;
+  const EventData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+    required this.description,
+    required this.url,
+    required this.location,
+    required this.time,
+    required this.date,
+    required this.organizer,
+    required this.imageUrl,
+    required this.numberOfAttendees,
+    required this.organizerId,
+    required this.genre,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    map['url'] = Variable<String>(url);
+    map['location'] = Variable<String>(location);
+    map['time'] = Variable<String>(time);
+    map['date'] = Variable<String>(date);
+    map['organizer'] = Variable<String>(organizer);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['number_of_attendees'] = Variable<int>(numberOfAttendees);
+    map['organizer_id'] = Variable<String>(organizerId);
+    map['genre'] = Variable<String>(genre);
+    return map;
+  }
+
+  EventTableCompanion toCompanion(bool nullToAbsent) {
+    return EventTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      name: Value(name),
+      description: Value(description),
+      url: Value(url),
+      location: Value(location),
+      time: Value(time),
+      date: Value(date),
+      organizer: Value(organizer),
+      imageUrl: Value(imageUrl),
+      numberOfAttendees: Value(numberOfAttendees),
+      organizerId: Value(organizerId),
+      genre: Value(genre),
+    );
+  }
+
+  factory EventData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EventData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+      url: serializer.fromJson<String>(json['url']),
+      location: serializer.fromJson<String>(json['location']),
+      time: serializer.fromJson<String>(json['time']),
+      date: serializer.fromJson<String>(json['date']),
+      organizer: serializer.fromJson<String>(json['organizer']),
+      imageUrl: serializer.fromJson<String>(json['image_url']),
+      numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
+      organizerId: serializer.fromJson<String>(json['organizer_id']),
+      genre: serializer.fromJson<String>(json['genre']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+      'url': serializer.toJson<String>(url),
+      'location': serializer.toJson<String>(location),
+      'time': serializer.toJson<String>(time),
+      'date': serializer.toJson<String>(date),
+      'organizer': serializer.toJson<String>(organizer),
+      'image_url': serializer.toJson<String>(imageUrl),
+      'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
+      'organizer_id': serializer.toJson<String>(organizerId),
+      'genre': serializer.toJson<String>(genre),
+    };
+  }
+
+  EventData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+    String? description,
+    String? url,
+    String? location,
+    String? time,
+    String? date,
+    String? organizer,
+    String? imageUrl,
+    int? numberOfAttendees,
+    String? organizerId,
+    String? genre,
+  }) => EventData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    url: url ?? this.url,
+    location: location ?? this.location,
+    time: time ?? this.time,
+    date: date ?? this.date,
+    organizer: organizer ?? this.organizer,
+    imageUrl: imageUrl ?? this.imageUrl,
+    numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
+    organizerId: organizerId ?? this.organizerId,
+    genre: genre ?? this.genre,
+  );
+  EventData copyWithCompanion(EventTableCompanion data) {
+    return EventData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      url: data.url.present ? data.url.value : this.url,
+      location: data.location.present ? data.location.value : this.location,
+      time: data.time.present ? data.time.value : this.time,
+      date: data.date.present ? data.date.value : this.date,
+      organizer: data.organizer.present ? data.organizer.value : this.organizer,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      numberOfAttendees: data.numberOfAttendees.present
+          ? data.numberOfAttendees.value
+          : this.numberOfAttendees,
+      organizerId: data.organizerId.present
+          ? data.organizerId.value
+          : this.organizerId,
+      genre: data.genre.present ? data.genre.value : this.genre,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('url: $url, ')
+          ..write('location: $location, ')
+          ..write('time: $time, ')
+          ..write('date: $date, ')
+          ..write('organizer: $organizer, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('numberOfAttendees: $numberOfAttendees, ')
+          ..write('organizerId: $organizerId, ')
+          ..write('genre: $genre')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    description,
+    url,
+    location,
+    time,
+    date,
+    organizer,
+    imageUrl,
+    numberOfAttendees,
+    organizerId,
+    genre,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EventData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.url == this.url &&
+          other.location == this.location &&
+          other.time == this.time &&
+          other.date == this.date &&
+          other.organizer == this.organizer &&
+          other.imageUrl == this.imageUrl &&
+          other.numberOfAttendees == this.numberOfAttendees &&
+          other.organizerId == this.organizerId &&
+          other.genre == this.genre);
+}
+
+class EventTableCompanion extends UpdateCompanion<EventData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> name;
+  final Value<String> description;
+  final Value<String> url;
+  final Value<String> location;
+  final Value<String> time;
+  final Value<String> date;
+  final Value<String> organizer;
+  final Value<String> imageUrl;
+  final Value<int> numberOfAttendees;
+  final Value<String> organizerId;
+  final Value<String> genre;
+  final Value<int> rowid;
+  const EventTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.url = const Value.absent(),
+    this.location = const Value.absent(),
+    this.time = const Value.absent(),
+    this.date = const Value.absent(),
+    this.organizer = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.numberOfAttendees = const Value.absent(),
+    this.organizerId = const Value.absent(),
+    this.genre = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  EventTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String name,
+    required String description,
+    required String url,
+    required String location,
+    required String time,
+    required String date,
+    required String organizer,
+    required String imageUrl,
+    required int numberOfAttendees,
+    required String organizerId,
+    required String genre,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       description = Value(description),
+       url = Value(url),
+       location = Value(location),
+       time = Value(time),
+       date = Value(date),
+       organizer = Value(organizer),
+       imageUrl = Value(imageUrl),
+       numberOfAttendees = Value(numberOfAttendees),
+       organizerId = Value(organizerId),
+       genre = Value(genre);
+  static Insertable<EventData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? url,
+    Expression<String>? location,
+    Expression<String>? time,
+    Expression<String>? date,
+    Expression<String>? organizer,
+    Expression<String>? imageUrl,
+    Expression<int>? numberOfAttendees,
+    Expression<String>? organizerId,
+    Expression<String>? genre,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (url != null) 'url': url,
+      if (location != null) 'location': location,
+      if (time != null) 'time': time,
+      if (date != null) 'date': date,
+      if (organizer != null) 'organizer': organizer,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (numberOfAttendees != null) 'number_of_attendees': numberOfAttendees,
+      if (organizerId != null) 'organizer_id': organizerId,
+      if (genre != null) 'genre': genre,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  EventTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? name,
+    Value<String>? description,
+    Value<String>? url,
+    Value<String>? location,
+    Value<String>? time,
+    Value<String>? date,
+    Value<String>? organizer,
+    Value<String>? imageUrl,
+    Value<int>? numberOfAttendees,
+    Value<String>? organizerId,
+    Value<String>? genre,
+    Value<int>? rowid,
+  }) {
+    return EventTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      url: url ?? this.url,
+      location: location ?? this.location,
+      time: time ?? this.time,
+      date: date ?? this.date,
+      organizer: organizer ?? this.organizer,
+      imageUrl: imageUrl ?? this.imageUrl,
+      numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
+      organizerId: organizerId ?? this.organizerId,
+      genre: genre ?? this.genre,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (time.present) {
+      map['time'] = Variable<String>(time.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (organizer.present) {
+      map['organizer'] = Variable<String>(organizer.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (numberOfAttendees.present) {
+      map['number_of_attendees'] = Variable<int>(numberOfAttendees.value);
+    }
+    if (organizerId.present) {
+      map['organizer_id'] = Variable<String>(organizerId.value);
+    }
+    if (genre.present) {
+      map['genre'] = Variable<String>(genre.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('url: $url, ')
+          ..write('location: $location, ')
+          ..write('time: $time, ')
+          ..write('date: $date, ')
+          ..write('organizer: $organizer, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('numberOfAttendees: $numberOfAttendees, ')
+          ..write('organizerId: $organizerId, ')
+          ..write('genre: $genre, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttendeeTableTable extends AttendeeTable
+    with TableInfo<$AttendeeTableTable, AttendeeData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttendeeTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _firstNameMeta = const VerificationMeta(
+    'firstName',
+  );
+  @override
+  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
+    'first_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _middleNameMeta = const VerificationMeta(
+    'middleName',
+  );
+  @override
+  late final GeneratedColumn<String> middleName = GeneratedColumn<String>(
+    'middle_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastNameMeta = const VerificationMeta(
+    'lastName',
+  );
+  @override
+  late final GeneratedColumn<String> lastName = GeneratedColumn<String>(
+    'last_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES event_table (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    firstName,
+    middleName,
+    lastName,
+    eventId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'attendee_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AttendeeData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('first_name')) {
+      context.handle(
+        _firstNameMeta,
+        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_firstNameMeta);
+    }
+    if (data.containsKey('middle_name')) {
+      context.handle(
+        _middleNameMeta,
+        middleName.isAcceptableOrUnknown(data['middle_name']!, _middleNameMeta),
+      );
+    }
+    if (data.containsKey('last_name')) {
+      context.handle(
+        _lastNameMeta,
+        lastName.isAcceptableOrUnknown(data['last_name']!, _lastNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lastNameMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AttendeeData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttendeeData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      firstName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name'],
+      )!,
+      middleName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}middle_name'],
+      ),
+      lastName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_name'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+    );
+  }
+
+  @override
+  $AttendeeTableTable createAlias(String alias) {
+    return $AttendeeTableTable(attachedDatabase, alias);
+  }
+}
+
+class AttendeeData extends DataClass implements Insertable<AttendeeData> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String firstName;
+  final String? middleName;
+  final String lastName;
+  final String eventId;
+  const AttendeeData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.firstName,
+    this.middleName,
+    required this.lastName,
+    required this.eventId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['first_name'] = Variable<String>(firstName);
+    if (!nullToAbsent || middleName != null) {
+      map['middle_name'] = Variable<String>(middleName);
+    }
+    map['last_name'] = Variable<String>(lastName);
+    map['event_id'] = Variable<String>(eventId);
+    return map;
+  }
+
+  AttendeeTableCompanion toCompanion(bool nullToAbsent) {
+    return AttendeeTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      firstName: Value(firstName),
+      middleName: middleName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(middleName),
+      lastName: Value(lastName),
+      eventId: Value(eventId),
+    );
+  }
+
+  factory AttendeeData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttendeeData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      firstName: serializer.fromJson<String>(json['first_name']),
+      middleName: serializer.fromJson<String?>(json['middle_name']),
+      lastName: serializer.fromJson<String>(json['last_name']),
+      eventId: serializer.fromJson<String>(json['event_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'first_name': serializer.toJson<String>(firstName),
+      'middle_name': serializer.toJson<String?>(middleName),
+      'last_name': serializer.toJson<String>(lastName),
+      'event_id': serializer.toJson<String>(eventId),
+    };
+  }
+
+  AttendeeData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? firstName,
+    Value<String?> middleName = const Value.absent(),
+    String? lastName,
+    String? eventId,
+  }) => AttendeeData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    firstName: firstName ?? this.firstName,
+    middleName: middleName.present ? middleName.value : this.middleName,
+    lastName: lastName ?? this.lastName,
+    eventId: eventId ?? this.eventId,
+  );
+  AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
+    return AttendeeData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      firstName: data.firstName.present ? data.firstName.value : this.firstName,
+      middleName: data.middleName.present
+          ? data.middleName.value
+          : this.middleName,
+      lastName: data.lastName.present ? data.lastName.value : this.lastName,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttendeeData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('firstName: $firstName, ')
+          ..write('middleName: $middleName, ')
+          ..write('lastName: $lastName, ')
+          ..write('eventId: $eventId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    firstName,
+    middleName,
+    lastName,
+    eventId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttendeeData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.firstName == this.firstName &&
+          other.middleName == this.middleName &&
+          other.lastName == this.lastName &&
+          other.eventId == this.eventId);
+}
+
+class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> firstName;
+  final Value<String?> middleName;
+  final Value<String> lastName;
+  final Value<String> eventId;
+  final Value<int> rowid;
+  const AttendeeTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.middleName = const Value.absent(),
+    this.lastName = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AttendeeTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String firstName,
+    this.middleName = const Value.absent(),
+    required String lastName,
+    required String eventId,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       firstName = Value(firstName),
+       lastName = Value(lastName),
+       eventId = Value(eventId);
+  static Insertable<AttendeeData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? firstName,
+    Expression<String>? middleName,
+    Expression<String>? lastName,
+    Expression<String>? eventId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (firstName != null) 'first_name': firstName,
+      if (middleName != null) 'middle_name': middleName,
+      if (lastName != null) 'last_name': lastName,
+      if (eventId != null) 'event_id': eventId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AttendeeTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? firstName,
+    Value<String?>? middleName,
+    Value<String>? lastName,
+    Value<String>? eventId,
+    Value<int>? rowid,
+  }) {
+    return AttendeeTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      firstName: firstName ?? this.firstName,
+      middleName: middleName ?? this.middleName,
+      lastName: lastName ?? this.lastName,
+      eventId: eventId ?? this.eventId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (firstName.present) {
+      map['first_name'] = Variable<String>(firstName.value);
+    }
+    if (middleName.present) {
+      map['middle_name'] = Variable<String>(middleName.value);
+    }
+    if (lastName.present) {
+      map['last_name'] = Variable<String>(lastName.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttendeeTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('firstName: $firstName, ')
+          ..write('middleName: $middleName, ')
+          ..write('lastName: $lastName, ')
+          ..write('eventId: $eventId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TicketTableTable extends TicketTable
+    with TableInfo<$TicketTableTable, TicketData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TicketTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _attendeeIdMeta = const VerificationMeta(
+    'attendeeId',
+  );
+  @override
+  late final GeneratedColumn<String> attendeeId = GeneratedColumn<String>(
+    'attendee_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES attendee_table (id)',
+    ),
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES event_table (id)',
+    ),
+  );
+  static const VerificationMeta _paymentCodeMeta = const VerificationMeta(
+    'paymentCode',
+  );
+  @override
+  late final GeneratedColumn<String> paymentCode = GeneratedColumn<String>(
+    'payment_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    attendeeId,
+    eventId,
+    paymentCode,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'ticket_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TicketData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('attendee_id')) {
+      context.handle(
+        _attendeeIdMeta,
+        attendeeId.isAcceptableOrUnknown(data['attendee_id']!, _attendeeIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_attendeeIdMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('payment_code')) {
+      context.handle(
+        _paymentCodeMeta,
+        paymentCode.isAcceptableOrUnknown(
+          data['payment_code']!,
+          _paymentCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentCodeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TicketData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TicketData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      attendeeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attendee_id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      paymentCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_code'],
+      )!,
+    );
+  }
+
+  @override
+  $TicketTableTable createAlias(String alias) {
+    return $TicketTableTable(attachedDatabase, alias);
+  }
+}
+
+class TicketData extends DataClass implements Insertable<TicketData> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String attendeeId;
+  final String eventId;
+  final String paymentCode;
+  const TicketData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.attendeeId,
+    required this.eventId,
+    required this.paymentCode,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['attendee_id'] = Variable<String>(attendeeId);
+    map['event_id'] = Variable<String>(eventId);
+    map['payment_code'] = Variable<String>(paymentCode);
+    return map;
+  }
+
+  TicketTableCompanion toCompanion(bool nullToAbsent) {
+    return TicketTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      attendeeId: Value(attendeeId),
+      eventId: Value(eventId),
+      paymentCode: Value(paymentCode),
+    );
+  }
+
+  factory TicketData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TicketData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      attendeeId: serializer.fromJson<String>(json['attendee_id']),
+      eventId: serializer.fromJson<String>(json['event_id']),
+      paymentCode: serializer.fromJson<String>(json['payment_code']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'attendee_id': serializer.toJson<String>(attendeeId),
+      'event_id': serializer.toJson<String>(eventId),
+      'payment_code': serializer.toJson<String>(paymentCode),
+    };
+  }
+
+  TicketData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? attendeeId,
+    String? eventId,
+    String? paymentCode,
+  }) => TicketData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    attendeeId: attendeeId ?? this.attendeeId,
+    eventId: eventId ?? this.eventId,
+    paymentCode: paymentCode ?? this.paymentCode,
+  );
+  TicketData copyWithCompanion(TicketTableCompanion data) {
+    return TicketData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      attendeeId: data.attendeeId.present
+          ? data.attendeeId.value
+          : this.attendeeId,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      paymentCode: data.paymentCode.present
+          ? data.paymentCode.value
+          : this.paymentCode,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TicketData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('attendeeId: $attendeeId, ')
+          ..write('eventId: $eventId, ')
+          ..write('paymentCode: $paymentCode')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, attendeeId, eventId, paymentCode);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TicketData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.attendeeId == this.attendeeId &&
+          other.eventId == this.eventId &&
+          other.paymentCode == this.paymentCode);
+}
+
+class TicketTableCompanion extends UpdateCompanion<TicketData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> attendeeId;
+  final Value<String> eventId;
+  final Value<String> paymentCode;
+  final Value<int> rowid;
+  const TicketTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.attendeeId = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.paymentCode = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TicketTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String attendeeId,
+    required String eventId,
+    required String paymentCode,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       attendeeId = Value(attendeeId),
+       eventId = Value(eventId),
+       paymentCode = Value(paymentCode);
+  static Insertable<TicketData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? attendeeId,
+    Expression<String>? eventId,
+    Expression<String>? paymentCode,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (attendeeId != null) 'attendee_id': attendeeId,
+      if (eventId != null) 'event_id': eventId,
+      if (paymentCode != null) 'payment_code': paymentCode,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TicketTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? attendeeId,
+    Value<String>? eventId,
+    Value<String>? paymentCode,
+    Value<int>? rowid,
+  }) {
+    return TicketTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      attendeeId: attendeeId ?? this.attendeeId,
+      eventId: eventId ?? this.eventId,
+      paymentCode: paymentCode ?? this.paymentCode,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (attendeeId.present) {
+      map['attendee_id'] = Variable<String>(attendeeId.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (paymentCode.present) {
+      map['payment_code'] = Variable<String>(paymentCode.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TicketTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('attendeeId: $attendeeId, ')
+          ..write('eventId: $eventId, ')
+          ..write('paymentCode: $paymentCode, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -2228,6 +3914,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $MessageTableTable messageTable = $MessageTableTable(this);
   late final $ConversationTableTable conversationTable =
       $ConversationTableTable(this);
+  late final $EventTableTable eventTable = $EventTableTable(this);
+  late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
+  late final $TicketTableTable ticketTable = $TicketTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2237,6 +3926,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     token,
     messageTable,
     conversationTable,
+    eventTable,
+    attendeeTable,
+    ticketTable,
   ];
 }
 
@@ -3987,6 +5679,1461 @@ typedef $$ConversationTableTableProcessedTableManager =
       ConversationData,
       PrefetchHooks Function({bool userId, bool lastMessageId})
     >;
+typedef $$EventTableTableCreateCompanionBuilder =
+    EventTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String name,
+      required String description,
+      required String url,
+      required String location,
+      required String time,
+      required String date,
+      required String organizer,
+      required String imageUrl,
+      required int numberOfAttendees,
+      required String organizerId,
+      required String genre,
+      Value<int> rowid,
+    });
+typedef $$EventTableTableUpdateCompanionBuilder =
+    EventTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> name,
+      Value<String> description,
+      Value<String> url,
+      Value<String> location,
+      Value<String> time,
+      Value<String> date,
+      Value<String> organizer,
+      Value<String> imageUrl,
+      Value<int> numberOfAttendees,
+      Value<String> organizerId,
+      Value<String> genre,
+      Value<int> rowid,
+    });
+
+final class $$EventTableTableReferences
+    extends BaseReferences<_$AppDataBase, $EventTableTable, EventData> {
+  $$EventTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$AttendeeTableTable, List<AttendeeData>>
+  _attendeeTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.attendeeTable,
+    aliasName: $_aliasNameGenerator(db.eventTable.id, db.attendeeTable.eventId),
+  );
+
+  $$AttendeeTableTableProcessedTableManager get attendeeTableRefs {
+    final manager = $$AttendeeTableTableTableManager(
+      $_db,
+      $_db.attendeeTable,
+    ).filter((f) => f.eventId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_attendeeTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TicketTableTable, List<TicketData>>
+  _ticketTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.ticketTable,
+    aliasName: $_aliasNameGenerator(db.eventTable.id, db.ticketTable.eventId),
+  );
+
+  $$TicketTableTableProcessedTableManager get ticketTableRefs {
+    final manager = $$TicketTableTableTableManager(
+      $_db,
+      $_db.ticketTable,
+    ).filter((f) => f.eventId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ticketTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$EventTableTableFilterComposer
+    extends Composer<_$AppDataBase, $EventTableTable> {
+  $$EventTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get organizer => $composableBuilder(
+    column: $table.organizer,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get numberOfAttendees => $composableBuilder(
+    column: $table.numberOfAttendees,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get organizerId => $composableBuilder(
+    column: $table.organizerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get genre => $composableBuilder(
+    column: $table.genre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> attendeeTableRefs(
+    Expression<bool> Function($$AttendeeTableTableFilterComposer f) f,
+  ) {
+    final $$AttendeeTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attendeeTable,
+      getReferencedColumn: (t) => t.eventId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendeeTableTableFilterComposer(
+            $db: $db,
+            $table: $db.attendeeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> ticketTableRefs(
+    Expression<bool> Function($$TicketTableTableFilterComposer f) f,
+  ) {
+    final $$TicketTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ticketTable,
+      getReferencedColumn: (t) => t.eventId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TicketTableTableFilterComposer(
+            $db: $db,
+            $table: $db.ticketTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$EventTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $EventTableTable> {
+  $$EventTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get organizer => $composableBuilder(
+    column: $table.organizer,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get numberOfAttendees => $composableBuilder(
+    column: $table.numberOfAttendees,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get organizerId => $composableBuilder(
+    column: $table.organizerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get genre => $composableBuilder(
+    column: $table.genre,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EventTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $EventTableTable> {
+  $$EventTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get time =>
+      $composableBuilder(column: $table.time, builder: (column) => column);
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get organizer =>
+      $composableBuilder(column: $table.organizer, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<int> get numberOfAttendees => $composableBuilder(
+    column: $table.numberOfAttendees,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get organizerId => $composableBuilder(
+    column: $table.organizerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get genre =>
+      $composableBuilder(column: $table.genre, builder: (column) => column);
+
+  Expression<T> attendeeTableRefs<T extends Object>(
+    Expression<T> Function($$AttendeeTableTableAnnotationComposer a) f,
+  ) {
+    final $$AttendeeTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attendeeTable,
+      getReferencedColumn: (t) => t.eventId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendeeTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attendeeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> ticketTableRefs<T extends Object>(
+    Expression<T> Function($$TicketTableTableAnnotationComposer a) f,
+  ) {
+    final $$TicketTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ticketTable,
+      getReferencedColumn: (t) => t.eventId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TicketTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.ticketTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$EventTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $EventTableTable,
+          EventData,
+          $$EventTableTableFilterComposer,
+          $$EventTableTableOrderingComposer,
+          $$EventTableTableAnnotationComposer,
+          $$EventTableTableCreateCompanionBuilder,
+          $$EventTableTableUpdateCompanionBuilder,
+          (EventData, $$EventTableTableReferences),
+          EventData,
+          PrefetchHooks Function({bool attendeeTableRefs, bool ticketTableRefs})
+        > {
+  $$EventTableTableTableManager(_$AppDataBase db, $EventTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EventTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EventTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EventTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<String> location = const Value.absent(),
+                Value<String> time = const Value.absent(),
+                Value<String> date = const Value.absent(),
+                Value<String> organizer = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<int> numberOfAttendees = const Value.absent(),
+                Value<String> organizerId = const Value.absent(),
+                Value<String> genre = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => EventTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                description: description,
+                url: url,
+                location: location,
+                time: time,
+                date: date,
+                organizer: organizer,
+                imageUrl: imageUrl,
+                numberOfAttendees: numberOfAttendees,
+                organizerId: organizerId,
+                genre: genre,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String name,
+                required String description,
+                required String url,
+                required String location,
+                required String time,
+                required String date,
+                required String organizer,
+                required String imageUrl,
+                required int numberOfAttendees,
+                required String organizerId,
+                required String genre,
+                Value<int> rowid = const Value.absent(),
+              }) => EventTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                description: description,
+                url: url,
+                location: location,
+                time: time,
+                date: date,
+                organizer: organizer,
+                imageUrl: imageUrl,
+                numberOfAttendees: numberOfAttendees,
+                organizerId: organizerId,
+                genre: genre,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$EventTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({attendeeTableRefs = false, ticketTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (attendeeTableRefs) db.attendeeTable,
+                    if (ticketTableRefs) db.ticketTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (attendeeTableRefs)
+                        await $_getPrefetchedData<
+                          EventData,
+                          $EventTableTable,
+                          AttendeeData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$EventTableTableReferences
+                              ._attendeeTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$EventTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attendeeTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.eventId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (ticketTableRefs)
+                        await $_getPrefetchedData<
+                          EventData,
+                          $EventTableTable,
+                          TicketData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$EventTableTableReferences
+                              ._ticketTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$EventTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).ticketTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.eventId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$EventTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $EventTableTable,
+      EventData,
+      $$EventTableTableFilterComposer,
+      $$EventTableTableOrderingComposer,
+      $$EventTableTableAnnotationComposer,
+      $$EventTableTableCreateCompanionBuilder,
+      $$EventTableTableUpdateCompanionBuilder,
+      (EventData, $$EventTableTableReferences),
+      EventData,
+      PrefetchHooks Function({bool attendeeTableRefs, bool ticketTableRefs})
+    >;
+typedef $$AttendeeTableTableCreateCompanionBuilder =
+    AttendeeTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String firstName,
+      Value<String?> middleName,
+      required String lastName,
+      required String eventId,
+      Value<int> rowid,
+    });
+typedef $$AttendeeTableTableUpdateCompanionBuilder =
+    AttendeeTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> firstName,
+      Value<String?> middleName,
+      Value<String> lastName,
+      Value<String> eventId,
+      Value<int> rowid,
+    });
+
+final class $$AttendeeTableTableReferences
+    extends BaseReferences<_$AppDataBase, $AttendeeTableTable, AttendeeData> {
+  $$AttendeeTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $EventTableTable _eventIdTable(_$AppDataBase db) =>
+      db.eventTable.createAlias(
+        $_aliasNameGenerator(db.attendeeTable.eventId, db.eventTable.id),
+      );
+
+  $$EventTableTableProcessedTableManager get eventId {
+    final $_column = $_itemColumn<String>('event_id')!;
+
+    final manager = $$EventTableTableTableManager(
+      $_db,
+      $_db.eventTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_eventIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TicketTableTable, List<TicketData>>
+  _ticketTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.ticketTable,
+    aliasName: $_aliasNameGenerator(
+      db.attendeeTable.id,
+      db.ticketTable.attendeeId,
+    ),
+  );
+
+  $$TicketTableTableProcessedTableManager get ticketTableRefs {
+    final manager = $$TicketTableTableTableManager(
+      $_db,
+      $_db.ticketTable,
+    ).filter((f) => f.attendeeId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ticketTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$AttendeeTableTableFilterComposer
+    extends Composer<_$AppDataBase, $AttendeeTableTable> {
+  $$AttendeeTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get middleName => $composableBuilder(
+    column: $table.middleName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastName => $composableBuilder(
+    column: $table.lastName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$EventTableTableFilterComposer get eventId {
+    final $$EventTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableFilterComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> ticketTableRefs(
+    Expression<bool> Function($$TicketTableTableFilterComposer f) f,
+  ) {
+    final $$TicketTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ticketTable,
+      getReferencedColumn: (t) => t.attendeeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TicketTableTableFilterComposer(
+            $db: $db,
+            $table: $db.ticketTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$AttendeeTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttendeeTableTable> {
+  $$AttendeeTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get middleName => $composableBuilder(
+    column: $table.middleName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastName => $composableBuilder(
+    column: $table.lastName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$EventTableTableOrderingComposer get eventId {
+    final $$EventTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttendeeTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttendeeTableTable> {
+  $$AttendeeTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get firstName =>
+      $composableBuilder(column: $table.firstName, builder: (column) => column);
+
+  GeneratedColumn<String> get middleName => $composableBuilder(
+    column: $table.middleName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastName =>
+      $composableBuilder(column: $table.lastName, builder: (column) => column);
+
+  $$EventTableTableAnnotationComposer get eventId {
+    final $$EventTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> ticketTableRefs<T extends Object>(
+    Expression<T> Function($$TicketTableTableAnnotationComposer a) f,
+  ) {
+    final $$TicketTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ticketTable,
+      getReferencedColumn: (t) => t.attendeeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TicketTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.ticketTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$AttendeeTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AttendeeTableTable,
+          AttendeeData,
+          $$AttendeeTableTableFilterComposer,
+          $$AttendeeTableTableOrderingComposer,
+          $$AttendeeTableTableAnnotationComposer,
+          $$AttendeeTableTableCreateCompanionBuilder,
+          $$AttendeeTableTableUpdateCompanionBuilder,
+          (AttendeeData, $$AttendeeTableTableReferences),
+          AttendeeData,
+          PrefetchHooks Function({bool eventId, bool ticketTableRefs})
+        > {
+  $$AttendeeTableTableTableManager(_$AppDataBase db, $AttendeeTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AttendeeTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AttendeeTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AttendeeTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> firstName = const Value.absent(),
+                Value<String?> middleName = const Value.absent(),
+                Value<String> lastName = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AttendeeTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName,
+                eventId: eventId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String firstName,
+                Value<String?> middleName = const Value.absent(),
+                required String lastName,
+                required String eventId,
+                Value<int> rowid = const Value.absent(),
+              }) => AttendeeTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName,
+                eventId: eventId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AttendeeTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({eventId = false, ticketTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (ticketTableRefs) db.ticketTable],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (eventId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.eventId,
+                                referencedTable: $$AttendeeTableTableReferences
+                                    ._eventIdTable(db),
+                                referencedColumn: $$AttendeeTableTableReferences
+                                    ._eventIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (ticketTableRefs)
+                    await $_getPrefetchedData<
+                      AttendeeData,
+                      $AttendeeTableTable,
+                      TicketData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$AttendeeTableTableReferences
+                          ._ticketTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$AttendeeTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).ticketTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.attendeeId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AttendeeTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AttendeeTableTable,
+      AttendeeData,
+      $$AttendeeTableTableFilterComposer,
+      $$AttendeeTableTableOrderingComposer,
+      $$AttendeeTableTableAnnotationComposer,
+      $$AttendeeTableTableCreateCompanionBuilder,
+      $$AttendeeTableTableUpdateCompanionBuilder,
+      (AttendeeData, $$AttendeeTableTableReferences),
+      AttendeeData,
+      PrefetchHooks Function({bool eventId, bool ticketTableRefs})
+    >;
+typedef $$TicketTableTableCreateCompanionBuilder =
+    TicketTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String attendeeId,
+      required String eventId,
+      required String paymentCode,
+      Value<int> rowid,
+    });
+typedef $$TicketTableTableUpdateCompanionBuilder =
+    TicketTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> attendeeId,
+      Value<String> eventId,
+      Value<String> paymentCode,
+      Value<int> rowid,
+    });
+
+final class $$TicketTableTableReferences
+    extends BaseReferences<_$AppDataBase, $TicketTableTable, TicketData> {
+  $$TicketTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $AttendeeTableTable _attendeeIdTable(_$AppDataBase db) =>
+      db.attendeeTable.createAlias(
+        $_aliasNameGenerator(db.ticketTable.attendeeId, db.attendeeTable.id),
+      );
+
+  $$AttendeeTableTableProcessedTableManager get attendeeId {
+    final $_column = $_itemColumn<String>('attendee_id')!;
+
+    final manager = $$AttendeeTableTableTableManager(
+      $_db,
+      $_db.attendeeTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_attendeeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $EventTableTable _eventIdTable(_$AppDataBase db) =>
+      db.eventTable.createAlias(
+        $_aliasNameGenerator(db.ticketTable.eventId, db.eventTable.id),
+      );
+
+  $$EventTableTableProcessedTableManager get eventId {
+    final $_column = $_itemColumn<String>('event_id')!;
+
+    final manager = $$EventTableTableTableManager(
+      $_db,
+      $_db.eventTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_eventIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TicketTableTableFilterComposer
+    extends Composer<_$AppDataBase, $TicketTableTable> {
+  $$TicketTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentCode => $composableBuilder(
+    column: $table.paymentCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$AttendeeTableTableFilterComposer get attendeeId {
+    final $$AttendeeTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attendeeId,
+      referencedTable: $db.attendeeTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendeeTableTableFilterComposer(
+            $db: $db,
+            $table: $db.attendeeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventTableTableFilterComposer get eventId {
+    final $$EventTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableFilterComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TicketTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $TicketTableTable> {
+  $$TicketTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentCode => $composableBuilder(
+    column: $table.paymentCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$AttendeeTableTableOrderingComposer get attendeeId {
+    final $$AttendeeTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attendeeId,
+      referencedTable: $db.attendeeTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendeeTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.attendeeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventTableTableOrderingComposer get eventId {
+    final $$EventTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TicketTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TicketTableTable> {
+  $$TicketTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentCode => $composableBuilder(
+    column: $table.paymentCode,
+    builder: (column) => column,
+  );
+
+  $$AttendeeTableTableAnnotationComposer get attendeeId {
+    final $$AttendeeTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attendeeId,
+      referencedTable: $db.attendeeTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendeeTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attendeeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$EventTableTableAnnotationComposer get eventId {
+    final $$EventTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.eventId,
+      referencedTable: $db.eventTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EventTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.eventTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TicketTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TicketTableTable,
+          TicketData,
+          $$TicketTableTableFilterComposer,
+          $$TicketTableTableOrderingComposer,
+          $$TicketTableTableAnnotationComposer,
+          $$TicketTableTableCreateCompanionBuilder,
+          $$TicketTableTableUpdateCompanionBuilder,
+          (TicketData, $$TicketTableTableReferences),
+          TicketData,
+          PrefetchHooks Function({bool attendeeId, bool eventId})
+        > {
+  $$TicketTableTableTableManager(_$AppDataBase db, $TicketTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TicketTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TicketTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TicketTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> attendeeId = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<String> paymentCode = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TicketTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                attendeeId: attendeeId,
+                eventId: eventId,
+                paymentCode: paymentCode,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String attendeeId,
+                required String eventId,
+                required String paymentCode,
+                Value<int> rowid = const Value.absent(),
+              }) => TicketTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                attendeeId: attendeeId,
+                eventId: eventId,
+                paymentCode: paymentCode,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TicketTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({attendeeId = false, eventId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (attendeeId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.attendeeId,
+                                referencedTable: $$TicketTableTableReferences
+                                    ._attendeeIdTable(db),
+                                referencedColumn: $$TicketTableTableReferences
+                                    ._attendeeIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (eventId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.eventId,
+                                referencedTable: $$TicketTableTableReferences
+                                    ._eventIdTable(db),
+                                referencedColumn: $$TicketTableTableReferences
+                                    ._eventIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TicketTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TicketTableTable,
+      TicketData,
+      $$TicketTableTableFilterComposer,
+      $$TicketTableTableOrderingComposer,
+      $$TicketTableTableAnnotationComposer,
+      $$TicketTableTableCreateCompanionBuilder,
+      $$TicketTableTableUpdateCompanionBuilder,
+      (TicketData, $$TicketTableTableReferences),
+      TicketData,
+      PrefetchHooks Function({bool attendeeId, bool eventId})
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -3999,4 +7146,10 @@ class $AppDataBaseManager {
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>
       $$ConversationTableTableTableManager(_db, _db.conversationTable);
+  $$EventTableTableTableManager get eventTable =>
+      $$EventTableTableTableManager(_db, _db.eventTable);
+  $$AttendeeTableTableTableManager get attendeeTable =>
+      $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
+  $$TicketTableTableTableManager get ticketTable =>
+      $$TicketTableTableTableManager(_db, _db.ticketTable);
 }

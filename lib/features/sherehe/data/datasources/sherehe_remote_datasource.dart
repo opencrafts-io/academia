@@ -1,9 +1,9 @@
+import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import '../../../../core/core.dart';
 import 'package:academia/core/network/network.dart';
-import '../data.dart';
+import '../../../../core/core.dart';
 
 class ShereheRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
@@ -11,20 +11,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   ShereheRemoteDataSource({required this.dioClient});
 
-  Future<Either<Failure, List<EventModel>>> getAllEvents({
+  Future<Either<Failure, List<EventData>>> getAllEvents({
     required int page,
     required int limit,
   }) async {
     try {
       // Giving full url for now since flavour's basurl at the moment is verisafe's url
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/events/getAllEvents",
+        // "https://qasherehe.opencrafts.io/events/getAllEvents",
+        "http://127.0.0.1:3000/events/getAllEvents",
         queryParameters: {"page": page, "limit": limit},
       );
 
       if (response.statusCode == 200) {
-        final List<EventModel> events = (response.data['data'] as List)
-            .map((e) => EventModel.fromJson(e))
+        final List<EventData> events = (response.data['data'] as List)
+            .map((e) => EventData.fromJson(e))
             .toList();
 
         return right(events);
@@ -47,20 +48,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<AttendeeModel>>> getAttendeesByEventId({
+  Future<Either<Failure, List<AttendeeData>>> getAttendeesByEventId({
     required String eventId,
     required int page,
     required int limit,
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/attendees/event/$eventId",
+        // "https://qasherehe.opencrafts.io/attendees/event/$eventId",
+        "http://127.0.0.1:3000/attendees/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
       if (response.statusCode == 200) {
-        final List<AttendeeModel> attendees = (response.data['data'] as List)
-            .map((e) => AttendeeModel.fromJson(e))
+        final List<AttendeeData> attendees = (response.data['data'] as List)
+            .map((e) => AttendeeData.fromJson(e))
             .toList();
 
         return right(attendees);
@@ -92,12 +94,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, EventModel>> getSpecificEvent(String id) async {
+  Future<Either<Failure, EventData>> getSpecificEvent(String id) async {
     try {
-      final response = await dioClient.dio.get('https://qasherehe.opencrafts.io/events/getEventById/$id');
+      final response = await dioClient.dio.get('http://127.0.0.1:3000/events/getEventById/$id');
 
       if (response.statusCode == 200) {
-        return right(EventModel.fromJson(response.data['result']));
+        return right(EventData.fromJson(response.data['result']));
       } else {
         return left(
           ServerFailure(
@@ -120,12 +122,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, AttendeeModel>> getSpecificAttendee(String id) async {
+  Future<Either<Failure, AttendeeData>> getSpecificAttendee(String id) async {
     try {
-      final response = await dioClient.dio.get('https://qasherehe.opencrafts.io/attendees/$id');
+      final response = await dioClient.dio.get('http://127.0.0.1:3000/attendees/$id');
 
       if (response.statusCode == 200) {
-        return right(AttendeeModel.fromJson(response.data['result']));
+        return right(AttendeeData.fromJson(response.data['result']));
       } else {
         return left(
           ServerFailure(
