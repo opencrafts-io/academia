@@ -1,7 +1,7 @@
-import '../../domain/entities/ticket.dart';
-import 'ticket_model.dart';
+import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/domain/entities/ticket.dart';
 
-extension TicketModelHelper on TicketModel {
+extension TicketModelHelper on TicketData {
   Ticket toEntity() => Ticket(
     id: id,
     attendeeId: attendeeId,
@@ -12,11 +12,12 @@ extension TicketModelHelper on TicketModel {
 }
 
 extension TicketEntityHelper on Ticket {
-  TicketModel toModel() => TicketModel(
+  TicketData toModel() => TicketData(
     id: id,
     attendeeId: attendeeId,
     eventId: eventId,
     paymentCode: paymentCode,
     createdAt: createdAt,
+    updatedAt: DateTime.now()
   );
 }

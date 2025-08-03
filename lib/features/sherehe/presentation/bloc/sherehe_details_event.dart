@@ -8,9 +8,11 @@ abstract class ShereheDetailsEvent extends Equatable {
 }
 
 class LoadShereheDetails extends ShereheDetailsEvent {
+  final int page;
+  final int limit;
   final String eventId;
 
-  const LoadShereheDetails({required this.eventId});
+  const LoadShereheDetails({required this.eventId, this.page=1, this.limit=10});
 
   @override
   List<Object?> get props => [eventId];

@@ -1,10 +1,8 @@
-import 'package:academia/config/config.dart';
+import 'package:academia/features/sherehe/presentation/widgets/event_card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:academia/constants/constants.dart';
 import '../bloc/event_bloc.dart';
-import '../widgets/event_card.dart';
 
 class ShereheHome extends StatefulWidget {
   const ShereheHome({super.key});
@@ -13,7 +11,8 @@ class ShereheHome extends StatefulWidget {
   State<ShereheHome> createState() => _ShereheHomeState();
 }
 
-class _ShereheHomeState extends State<ShereheHome> {
+class _ShereheHomeState extends State<ShereheHome>
+    with AutomaticKeepAliveClientMixin {
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -27,26 +26,25 @@ class _ShereheHomeState extends State<ShereheHome> {
   double _getMainAxisExtent(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 440;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 600;
-    } else if (ResponsiveBreakPoints.isDesktop(context)) {
-      return 700;
     } else {
-      return 800; // large desktop
+      return 500; // large desktop
     }
   }
 
-  double _getAppBarHeight(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return 200;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 300;
-    } else if (ResponsiveBreakPoints.isDesktop(context)) {
-      return 350;
-    } else {
-      return 400; // large desktop
-    }
-  }
+  // double _getAppBarHeight(BuildContext context) {
+  //   if (ResponsiveBreakPoints.isMobile(context)) {
+  //     return 200;
+  //   } else if (ResponsiveBreakPoints.isTablet(context)) {
+  //     return 300;
+  //   } else if (ResponsiveBreakPoints.isDesktop(context)) {
+  //     return 350;
+  //   } else {
+  //     return 400; // large desktop
+  //   }
+  // }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -56,6 +54,8 @@ class _ShereheHomeState extends State<ShereheHome> {
 
   @override
   Widget build(BuildContext context) {
+    // Prevent home page from rebuilding this page every time
+    super.build(context);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -71,7 +71,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(22),
-                  borderSide: BorderSide.none
+                  borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.primaryContainer,
@@ -114,7 +114,6 @@ class _ShereheHomeState extends State<ShereheHome> {
                 );
               } else if (state is EventLoaded) {
                 final events = state.events;
-                final attendees = state.attendees;
 
                 return SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -126,25 +125,7 @@ class _ShereheHomeState extends State<ShereheHome> {
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final event = events[index];
-                    final eventAttendees = attendees
-                        .map(
-                          (attendee) =>
-                              "${attendee.firstName} ${attendee.lastName}",
-                        )
-                        .toList(); //quick fix for now
-
-                    return EventCard(
-                      imagePath: event.imageUrl,
-                      title: event.name,
-                      location: event.location,
-                      date: event.date,
-                      time: event.time,
-                      genres: event.genre,
-                      attendees: eventAttendees,
-                      attendeesCount: event.numberOfAttendees,
-                      onTap: () =>
-                          ShereheDetailsRoute(eventId: event.id).push(context),
-                    );
+                    return EventCardWrapper(event: event);
                   }, childCount: events.length),
                 );
               } else if (state is EventError) {

@@ -1,12 +1,25 @@
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
+import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
+import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
+import 'package:academia/features/sherehe/data/data.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [UserProfile, Token])
+@DriftDatabase(
+  tables: [
+    UserProfile,
+    Token,
+    ConversationTable,
+    MessageTable,
+    EventTable,
+    AttendeeTable,
+    TicketTable,
+  ],
+)
 class AppDataBase extends _$AppDataBase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -14,7 +27,27 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 4;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) async {
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        // apply what version 2 did
+      }
+      if (from < 3) {
+        // apply what version 3 did
+      }
+      if (from < 4) {
+        await m.createTable(eventTable);
+        await m.createTable(attendeeTable);
+        await m.createTable(ticketTable);
+      }
+    },
+  );
 
   static QueryExecutor _openConnection() {
     return driftDatabase(

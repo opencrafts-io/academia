@@ -1,55 +1,31 @@
-import '../../domain/domain.dart';
+import 'package:drift/drift.dart';
+import 'package:academia/core/core.dart'; 
 
-class EventModel extends Event {
-   EventModel({
-    required super.id,
-    required super.name,
-    required super.description,
-    required super.url,
-    required super.location,
-    required super.time,
-    required super.date,
-    required super.organizer,
-    required super.imageUrl,
-    required super.numberOfAttendees,
-    required super.organizerId,
-    required super.genre,
-    required super.createdAt,
-  });
+@DataClassName('EventData')
+class EventTable extends Table with TableMixin {
+  @JsonKey('name')
+  TextColumn get name => text()();
+  @JsonKey('description')
+  TextColumn get description => text()();
+  @JsonKey('url')
+  TextColumn get url => text()();
+  @JsonKey('location')
+  TextColumn get location => text()();
+  @JsonKey('time')
+  TextColumn get time => text()(); 
+  @JsonKey('date')
+  TextColumn get date => text()();
+  @JsonKey('organizer')
+  TextColumn get organizer => text()(); 
+  @JsonKey('image_url')
+  TextColumn get imageUrl => text()();
+  @JsonKey('number_of_attendees')
+  IntColumn get numberOfAttendees => integer()();
+  @JsonKey('organizer_id')
+  TextColumn get organizerId => text()();
+  @JsonKey('genre')
+  TextColumn get genre => text()();
 
-  factory EventModel.fromJson(Map<String, dynamic> json) {
-    return EventModel(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      url: json['url'],
-      location: json['location'],
-      time: json['time'], 
-      date: json['date'], 
-      organizer: json['organizer'],
-      imageUrl: json['image_url'],
-      numberOfAttendees: json['number_of_attendees'],
-      organizerId: json['organizer_id'],
-      genre: List<String>.from(json['genre'] ?? []),
-      createdAt: json['created_at'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'url': url,
-      'location': location,
-      'time': time,
-      'date': date,
-      'organizer': organizer,
-      'image_url': imageUrl,
-      'number_of_attendees': numberOfAttendees,
-      'organizer_id': organizerId,
-      'genre': genre,
-      'created_at': createdAt,
-    };
-  }
+  @override
+  Set<Column> get primaryKey => {id};
 }
