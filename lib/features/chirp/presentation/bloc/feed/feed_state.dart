@@ -14,3 +14,11 @@ class FeedLoaded extends FeedState {
   @override
   List<Object> get props => [posts];
 }
+
+class FeedErrorState extends FeedState {
+  final String message;
+  FeedErrorState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

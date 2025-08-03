@@ -1,5 +1,5 @@
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/domain/usecases/get_feed_posts.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +12,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedBloc(this.getFeedPosts) : super(FeedLoading()) {
     on<LoadFeedEvent>((event, emit) async {
       emit(FeedLoading());
-      final posts = await getFeedPosts();
-      emit(FeedLoaded(posts));
+      final result = await getFeedPosts(NoParams());
+      result.fold(
+        (failure) => emit(FeedErrorState(message: failure.message)),
+        (posts) => emit(FeedLoaded(posts)),
+      );
     });
   }
 }

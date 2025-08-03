@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/chirp/chirp.dart';
 
 part 'routes.g.dart';
 
@@ -52,6 +53,26 @@ class MeteorRoute extends GoRouteData with _$MeteorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return Scaffold(body: Center(child: Text("MeteorRoute")));
+  }
+}
+
+@TypedGoRoute<FeedRoute>(path: "/feed")
+class FeedRoute extends GoRouteData with _$FeedRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return FeedPage();
+  }
+}
+
+@TypedGoRoute<ChatRoute>(path: "/chat/:conversationId")
+class ChatRoute extends GoRouteData with _$ChatRoute {
+  final String conversationId;
+
+  const ChatRoute({required this.conversationId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ChatPage(conversationId: conversationId);
   }
 }
 
@@ -156,5 +177,3 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     return TodoHomeScreen();
   }
 }
-
-
