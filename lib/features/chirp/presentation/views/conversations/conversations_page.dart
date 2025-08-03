@@ -4,182 +4,323 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/config/router/routes.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
+import '../../bloc/conversations/messaging_event.dart';
+import '../../widgets/user_search_widget.dart';
 
-class ConversationsPage extends StatelessWidget {
+class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        BlocBuilder<MessagingBloc, MessagingState>(
-          builder: (context, state) {
-            if (state is MessagingLoadingState) {
-              return const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
+  State<ConversationsPage> createState() => _ConversationsPageState();
+}
 
-            if (state is MessagingErrorState) {
-              return SliverFillRemaining(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 32.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.connect_without_contact,
-                          size: 80,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        Text(
-                          "Don't hold back unleash your vibes",
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                      ],
+class _ConversationsPageState extends State<ConversationsPage> {
+  bool _showSearch = false;
+  double _keyboardHeight = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MessagingBloc>().add(LoadConversationsEvent());
+    });
+  }
+
+  void _closeSearch() {
+    setState(() {
+      _showSearch = false;
+    });
+    context.read<MessagingBloc>().add(LoadConversationsEvent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final availableHeight = screenHeight - keyboardHeight;
+
+    if (_keyboardHeight != keyboardHeight) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _keyboardHeight = keyboardHeight;
+        });
+      });
+    }
+
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: availableHeight),
+        child: Column(
+          children: [
+            if (!_showSearch)
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _showSearch = true;
+                      });
+                    },
+                    icon: const Icon(Icons.search),
+                    label: const Text('Search for friends'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
-              );
-            }
-
-            if (state is ConversationsLoaded || state is MessagesLoaded) {
-              final conversations = state is ConversationsLoaded
-                  ? (state).conversations
-                  : (state as MessagesLoaded).conversations;
-
-              if (conversations.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80,
-                            color: Theme.of(context).colorScheme.outline,
+              ),
+            if (_showSearch)
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: _closeSearch,
+                          icon: const Icon(Icons.close),
+                          style: IconButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
                           ),
-                          const SizedBox(height: 24),
-                          Text(
-                            'No messages yet',
-                            style: Theme.of(context).textTheme.headlineSmall
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Find Friends',
+                            style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            "Search for a friend and unleash your vibes into their existence'",
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 32),
-                          OutlinedButton.icon(
-                            onPressed: () {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Search feature coming soon!',
-                                  ),
-                                  behavior: SnackBarBehavior.floating,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.75,
-                                  showCloseIcon: true,
-                                ),
-                                snackBarAnimationStyle: AnimationStyle(
-                                  curve: Curves.bounceIn,
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.search),
-                            label: const Text('Find Friends'),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                );
-              }
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: isKeyboardVisible
+                          ? 120.0
+                          : availableHeight * 0.50,
+                      child: const UserSearchWidget(),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: BlocBuilder<MessagingBloc, MessagingState>(
+                builder: (context, state) {
+                  // Note: Search states are handled in UserSearchWidget
+                  // No need to check for search states here
 
-              return SliverList.builder(
-                itemCount: conversations.length,
-                itemBuilder: (context, index) {
-                  final conversation = conversations[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 8,
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: conversation.user.avatarUrl != null
-                            ? NetworkImage(conversation.user.avatarUrl!)
-                            : null,
-                        child: conversation.user.avatarUrl == null
-                            ? Text(
-                                conversation.user.name
-                                    .split(' ')
-                                    .map((n) => n[0])
-                                    .join(''),
-                                style: Theme.of(context).textTheme.titleMedium
+                  if (state is MessagingLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is MessagingErrorState) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.connect_without_contact,
+                              size: 80,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            Text(
+                              "Don't hold back unleash your vibes",
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (state is ConversationsLoaded || state is MessagesLoaded) {
+                    final conversations = state is ConversationsLoaded
+                        ? (state).conversations
+                        : (state as MessagesLoaded).conversations;
+
+                    if (conversations.isEmpty) {
+                      return Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 400),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.chat_bubble_outline,
+                                size: 80,
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                              const SizedBox(height: 24),
+                              Text(
+                                'No messages yet',
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Search for a friend and unleash your vibes into their existence',
+                                style: Theme.of(context).textTheme.bodyLarge
                                     ?.copyWith(
                                       color: Theme.of(
                                         context,
-                                      ).colorScheme.onPrimary,
+                                      ).colorScheme.onSurfaceVariant,
                                     ),
-                              )
-                            : null,
-                      ),
-                      title: Text(
-                        conversation.user.name,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      trailing: conversation.unreadCount > 0
-                          ? Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(12),
+                                textAlign: TextAlign.center,
                               ),
-                              child: Text(
-                                conversation.unreadCount.toString(),
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onPrimary,
-                                      fontWeight: FontWeight.bold,
+                              const SizedBox(height: 24),
+                              OutlinedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _showSearch = true;
+                                  });
+                                },
+                                icon: const Icon(Icons.search),
+                                label: const Text('Find Friends'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: conversations.length,
+                      itemBuilder: (context, index) {
+                        final conversation = conversations[index];
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: conversation.user.avatarUrl != null
+                                ? NetworkImage(conversation.user.avatarUrl!)
+                                : null,
+                            child: conversation.user.avatarUrl == null
+                                ? Text(
+                                    conversation.user.name.isNotEmpty
+                                        ? conversation.user.name
+                                              .split(' ')
+                                              .map((n) => n[0])
+                                              .join('')
+                                        : 'U',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                        ),
+                                  )
+                                : null,
+                          ),
+                          title: Text(
+                            conversation.user.name,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (conversation.lastMessage != null)
+                                Text(
+                                  conversation.lastMessage!.content,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${conversation.user.vibePoints} vibepoints',
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                        ),
+                                  ),
+                                  if (conversation.lastMessageAt != null) ...[
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '• ${_formatTime(conversation.lastMessageAt!)}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
                                     ),
+                                  ],
+                                ],
                               ),
-                            )
-                          : null,
-                      onTap: () {
-                        ChatRoute(
-                          conversationId: conversation.id,
-                        ).push(context);
+                            ],
+                          ),
+                          trailing: conversation.unreadCount > 0
+                              ? Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    conversation.unreadCount.toString(),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                )
+                              : null,
+                          onTap: () {
+                            ChatRoute(
+                              conversationId: conversation.id,
+                            ).push(context);
+                          },
+                        );
                       },
-                    ),
-                  );
+                    );
+                  }
+
+                  return const Center(child: Text('Something went wrong'));
                 },
-              );
-            }
-            return const SliverFillRemaining(
-              child: Center(child: Text('Something went wrong')),
-            );
-          },
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
+  }
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays}d';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m';
+    } else {
+      return 'now';
+    }
   }
 }
