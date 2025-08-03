@@ -13,9 +13,18 @@ import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [UserProfile, Token, ConversationTable, MessageTable, ChirpUserTable, Todo, EventTable, AttendeeTable,TicketTable,],
+  tables: [
+    UserProfile,
+    Token,
+    ConversationTable,
+    MessageTable,
+    ChirpUserTable,
+    Todo,
+    EventTable,
+    AttendeeTable,
+    TicketTable,
+  ],
 )
-
 class AppDataBase extends _$AppDataBase {
   final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter
