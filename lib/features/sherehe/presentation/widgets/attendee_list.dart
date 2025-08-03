@@ -4,8 +4,7 @@ import '../presentation.dart';
 
 class AttendeesList extends StatelessWidget {
   final Event event;
-  final List<Attendee> allAttendees; // List of ALL attendees fetched
-
+  final List<Attendee> allAttendees;
   const AttendeesList({
     super.key,
     required this.event,
@@ -25,11 +24,40 @@ class AttendeesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Filter attendees specific to this event
     final List<Attendee> eventSpecificAttendees = allAttendees
         .where((attendee) => attendee.eventId == event.id)
         .toList();
+
+    if (eventSpecificAttendees.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Who's Coming",
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "You're the first one here!",
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     final organizerAttendee = eventSpecificAttendees.firstWhere(
-      (attendee) => attendee.id == event.organizerId.toString(),
+          (attendee) => attendee.id == event.organizerId.toString(),
       orElse: () => Attendee(
         id: '',
         firstName: 'Unknown',
@@ -38,6 +66,7 @@ class AttendeesList extends StatelessWidget {
         createdAt: '',
       ),
     );
+
     final otherAttendees = eventSpecificAttendees
         .where((attendee) => attendee.id != event.organizerId.toString())
         .toList();
@@ -59,8 +88,8 @@ class AttendeesList extends StatelessWidget {
     }
 
     final int maxOtherAttendeesToShow = 4;
-    final int otherAttendeesToShowCount =
-        otherAttendees.length > maxOtherAttendeesToShow
+    final int otherAttendeesToShowCount = otherAttendees.length >
+        maxOtherAttendeesToShow
         ? maxOtherAttendeesToShow
         : otherAttendees.length;
 
@@ -96,15 +125,12 @@ class AttendeesList extends StatelessWidget {
                       left: 0,
                       child: CircleAvatar(
                         radius: 18,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondary,
+                        backgroundColor:
+                        Theme.of(context).colorScheme.secondary,
                         child: Text(
-                          otherAttendees.length > 0
-                              ? _getInitials(
-                                  otherAttendees[0].firstName,
-                                  otherAttendees[0].lastName,
-                                )
+                          otherAttendees.isNotEmpty
+                              ? _getInitials(otherAttendees[0].firstName,
+                              otherAttendees[0].lastName)
                               : '?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary,
@@ -114,29 +140,27 @@ class AttendeesList extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: 20,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                        child: Text(
-                          otherAttendees.length > 1
-                              ? _getInitials(
-                                  otherAttendees[1].firstName,
-                                  otherAttendees[1].lastName,
-                                )
-                              : '?',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onTertiary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                    if (otherAttendees.length > 1) // Only show if > 1
+                      Positioned(
+                        left: 20,
+                        child: CircleAvatar(
+                          radius: 18,
+                          backgroundColor:
+                          Theme.of(context).colorScheme.tertiary,
+                          child: Text(
+                            _getInitials(otherAttendees[1].firstName,
+                                otherAttendees[1].lastName),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onTertiary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     // Avatar 3: Show remaining count
                     Positioned(
-                      left: 40,
+                      left: otherAttendees.length > 1 ? 40 : 20, // Adjust position
                       child: CircleAvatar(
                         radius: 18,
                         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -175,4 +199,3 @@ class AttendeesList extends StatelessWidget {
     );
   }
 }
-
