@@ -45,7 +45,7 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Your calendar")));
+    return AgendaHomePage();
   }
 }
 
@@ -162,5 +162,18 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
             return SlideTransition(position: offsetAnimation, child: child);
           },
     );
+  }
+}
+
+
+
+@TypedGoRoute<TodosRoute>(
+  path: "/todos",
+  // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
+)
+class TodosRoute extends GoRouteData with _$TodosRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TodoHomeScreen();
   }
 }

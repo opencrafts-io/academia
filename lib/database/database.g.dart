@@ -1219,6 +1219,899 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
+class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _completedMeta = const VerificationMeta(
+    'completed',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completed = GeneratedColumn<DateTime>(
+    'completed',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deletedMeta = const VerificationMeta(
+    'deleted',
+  );
+  @override
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+    'deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("deleted" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _dueMeta = const VerificationMeta('due');
+  @override
+  late final GeneratedColumn<DateTime> due = GeneratedColumn<DateTime>(
+    'due',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
+  @override
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+    'etag',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
+  @override
+  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
+    'hidden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hidden" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _parentMeta = const VerificationMeta('parent');
+  @override
+  late final GeneratedColumn<String> parent = GeneratedColumn<String>(
+    'parent',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<String> position = GeneratedColumn<String>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _selfLinkMeta = const VerificationMeta(
+    'selfLink',
+  );
+  @override
+  late final GeneratedColumn<String> selfLink = GeneratedColumn<String>(
+    'self_link',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _webViewLinkMeta = const VerificationMeta(
+    'webViewLink',
+  );
+  @override
+  late final GeneratedColumn<String> webViewLink = GeneratedColumn<String>(
+    'web_view_link',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    completed,
+    deleted,
+    due,
+    etag,
+    hidden,
+    id,
+    kind,
+    notes,
+    owner,
+    parent,
+    position,
+    selfLink,
+    status,
+    title,
+    updated,
+    webViewLink,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('completed')) {
+      context.handle(
+        _completedMeta,
+        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
+      );
+    }
+    if (data.containsKey('deleted')) {
+      context.handle(
+        _deletedMeta,
+        deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta),
+      );
+    }
+    if (data.containsKey('due')) {
+      context.handle(
+        _dueMeta,
+        due.isAcceptableOrUnknown(data['due']!, _dueMeta),
+      );
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+        _etagMeta,
+        etag.isAcceptableOrUnknown(data['etag']!, _etagMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_etagMeta);
+    }
+    if (data.containsKey('hidden')) {
+      context.handle(
+        _hiddenMeta,
+        hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('parent')) {
+      context.handle(
+        _parentMeta,
+        parent.isAcceptableOrUnknown(data['parent']!, _parentMeta),
+      );
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMeta);
+    }
+    if (data.containsKey('self_link')) {
+      context.handle(
+        _selfLinkMeta,
+        selfLink.isAcceptableOrUnknown(data['self_link']!, _selfLinkMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_selfLinkMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
+    if (data.containsKey('web_view_link')) {
+      context.handle(
+        _webViewLinkMeta,
+        webViewLink.isAcceptableOrUnknown(
+          data['web_view_link']!,
+          _webViewLinkMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_webViewLinkMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TodoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoData(
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed'],
+      ),
+      deleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}deleted'],
+      )!,
+      due: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due'],
+      ),
+      etag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}etag'],
+      )!,
+      hidden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hidden'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      )!,
+      parent: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent'],
+      ),
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}position'],
+      )!,
+      selfLink: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}self_link'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
+      webViewLink: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}web_view_link'],
+      )!,
+    );
+  }
+
+  @override
+  $TodoTable createAlias(String alias) {
+    return $TodoTable(attachedDatabase, alias);
+  }
+}
+
+class TodoData extends DataClass implements Insertable<TodoData> {
+  final DateTime? completed;
+  final bool deleted;
+  final DateTime? due;
+  final String etag;
+  final bool hidden;
+  final String id;
+  final String kind;
+  final String? notes;
+  final String owner;
+  final String? parent;
+  final String position;
+  final String selfLink;
+  final String status;
+  final String title;
+  final DateTime? updated;
+  final String webViewLink;
+  const TodoData({
+    this.completed,
+    required this.deleted,
+    this.due,
+    required this.etag,
+    required this.hidden,
+    required this.id,
+    required this.kind,
+    this.notes,
+    required this.owner,
+    this.parent,
+    required this.position,
+    required this.selfLink,
+    required this.status,
+    required this.title,
+    this.updated,
+    required this.webViewLink,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || completed != null) {
+      map['completed'] = Variable<DateTime>(completed);
+    }
+    map['deleted'] = Variable<bool>(deleted);
+    if (!nullToAbsent || due != null) {
+      map['due'] = Variable<DateTime>(due);
+    }
+    map['etag'] = Variable<String>(etag);
+    map['hidden'] = Variable<bool>(hidden);
+    map['id'] = Variable<String>(id);
+    map['kind'] = Variable<String>(kind);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['owner'] = Variable<String>(owner);
+    if (!nullToAbsent || parent != null) {
+      map['parent'] = Variable<String>(parent);
+    }
+    map['position'] = Variable<String>(position);
+    map['self_link'] = Variable<String>(selfLink);
+    map['status'] = Variable<String>(status);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
+    }
+    map['web_view_link'] = Variable<String>(webViewLink);
+    return map;
+  }
+
+  TodoCompanion toCompanion(bool nullToAbsent) {
+    return TodoCompanion(
+      completed: completed == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completed),
+      deleted: Value(deleted),
+      due: due == null && nullToAbsent ? const Value.absent() : Value(due),
+      etag: Value(etag),
+      hidden: Value(hidden),
+      id: Value(id),
+      kind: Value(kind),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      owner: Value(owner),
+      parent: parent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parent),
+      position: Value(position),
+      selfLink: Value(selfLink),
+      status: Value(status),
+      title: Value(title),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
+      webViewLink: Value(webViewLink),
+    );
+  }
+
+  factory TodoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoData(
+      completed: serializer.fromJson<DateTime?>(json['completed']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      due: serializer.fromJson<DateTime?>(json['due']),
+      etag: serializer.fromJson<String>(json['etag']),
+      hidden: serializer.fromJson<bool>(json['hidden']),
+      id: serializer.fromJson<String>(json['id']),
+      kind: serializer.fromJson<String>(json['kind']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      owner: serializer.fromJson<String>(json['owner_id']),
+      parent: serializer.fromJson<String?>(json['parent']),
+      position: serializer.fromJson<String>(json['position']),
+      selfLink: serializer.fromJson<String>(json['self_link']),
+      status: serializer.fromJson<String>(json['status']),
+      title: serializer.fromJson<String>(json['title']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
+      webViewLink: serializer.fromJson<String>(json['web_view_link']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'completed': serializer.toJson<DateTime?>(completed),
+      'deleted': serializer.toJson<bool>(deleted),
+      'due': serializer.toJson<DateTime?>(due),
+      'etag': serializer.toJson<String>(etag),
+      'hidden': serializer.toJson<bool>(hidden),
+      'id': serializer.toJson<String>(id),
+      'kind': serializer.toJson<String>(kind),
+      'notes': serializer.toJson<String?>(notes),
+      'owner_id': serializer.toJson<String>(owner),
+      'parent': serializer.toJson<String?>(parent),
+      'position': serializer.toJson<String>(position),
+      'self_link': serializer.toJson<String>(selfLink),
+      'status': serializer.toJson<String>(status),
+      'title': serializer.toJson<String>(title),
+      'updated': serializer.toJson<DateTime?>(updated),
+      'web_view_link': serializer.toJson<String>(webViewLink),
+    };
+  }
+
+  TodoData copyWith({
+    Value<DateTime?> completed = const Value.absent(),
+    bool? deleted,
+    Value<DateTime?> due = const Value.absent(),
+    String? etag,
+    bool? hidden,
+    String? id,
+    String? kind,
+    Value<String?> notes = const Value.absent(),
+    String? owner,
+    Value<String?> parent = const Value.absent(),
+    String? position,
+    String? selfLink,
+    String? status,
+    String? title,
+    Value<DateTime?> updated = const Value.absent(),
+    String? webViewLink,
+  }) => TodoData(
+    completed: completed.present ? completed.value : this.completed,
+    deleted: deleted ?? this.deleted,
+    due: due.present ? due.value : this.due,
+    etag: etag ?? this.etag,
+    hidden: hidden ?? this.hidden,
+    id: id ?? this.id,
+    kind: kind ?? this.kind,
+    notes: notes.present ? notes.value : this.notes,
+    owner: owner ?? this.owner,
+    parent: parent.present ? parent.value : this.parent,
+    position: position ?? this.position,
+    selfLink: selfLink ?? this.selfLink,
+    status: status ?? this.status,
+    title: title ?? this.title,
+    updated: updated.present ? updated.value : this.updated,
+    webViewLink: webViewLink ?? this.webViewLink,
+  );
+  TodoData copyWithCompanion(TodoCompanion data) {
+    return TodoData(
+      completed: data.completed.present ? data.completed.value : this.completed,
+      deleted: data.deleted.present ? data.deleted.value : this.deleted,
+      due: data.due.present ? data.due.value : this.due,
+      etag: data.etag.present ? data.etag.value : this.etag,
+      hidden: data.hidden.present ? data.hidden.value : this.hidden,
+      id: data.id.present ? data.id.value : this.id,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      owner: data.owner.present ? data.owner.value : this.owner,
+      parent: data.parent.present ? data.parent.value : this.parent,
+      position: data.position.present ? data.position.value : this.position,
+      selfLink: data.selfLink.present ? data.selfLink.value : this.selfLink,
+      status: data.status.present ? data.status.value : this.status,
+      title: data.title.present ? data.title.value : this.title,
+      updated: data.updated.present ? data.updated.value : this.updated,
+      webViewLink: data.webViewLink.present
+          ? data.webViewLink.value
+          : this.webViewLink,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoData(')
+          ..write('completed: $completed, ')
+          ..write('deleted: $deleted, ')
+          ..write('due: $due, ')
+          ..write('etag: $etag, ')
+          ..write('hidden: $hidden, ')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('notes: $notes, ')
+          ..write('owner: $owner, ')
+          ..write('parent: $parent, ')
+          ..write('position: $position, ')
+          ..write('selfLink: $selfLink, ')
+          ..write('status: $status, ')
+          ..write('title: $title, ')
+          ..write('updated: $updated, ')
+          ..write('webViewLink: $webViewLink')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    completed,
+    deleted,
+    due,
+    etag,
+    hidden,
+    id,
+    kind,
+    notes,
+    owner,
+    parent,
+    position,
+    selfLink,
+    status,
+    title,
+    updated,
+    webViewLink,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoData &&
+          other.completed == this.completed &&
+          other.deleted == this.deleted &&
+          other.due == this.due &&
+          other.etag == this.etag &&
+          other.hidden == this.hidden &&
+          other.id == this.id &&
+          other.kind == this.kind &&
+          other.notes == this.notes &&
+          other.owner == this.owner &&
+          other.parent == this.parent &&
+          other.position == this.position &&
+          other.selfLink == this.selfLink &&
+          other.status == this.status &&
+          other.title == this.title &&
+          other.updated == this.updated &&
+          other.webViewLink == this.webViewLink);
+}
+
+class TodoCompanion extends UpdateCompanion<TodoData> {
+  final Value<DateTime?> completed;
+  final Value<bool> deleted;
+  final Value<DateTime?> due;
+  final Value<String> etag;
+  final Value<bool> hidden;
+  final Value<String> id;
+  final Value<String> kind;
+  final Value<String?> notes;
+  final Value<String> owner;
+  final Value<String?> parent;
+  final Value<String> position;
+  final Value<String> selfLink;
+  final Value<String> status;
+  final Value<String> title;
+  final Value<DateTime?> updated;
+  final Value<String> webViewLink;
+  final Value<int> rowid;
+  const TodoCompanion({
+    this.completed = const Value.absent(),
+    this.deleted = const Value.absent(),
+    this.due = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.id = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.parent = const Value.absent(),
+    this.position = const Value.absent(),
+    this.selfLink = const Value.absent(),
+    this.status = const Value.absent(),
+    this.title = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.webViewLink = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TodoCompanion.insert({
+    this.completed = const Value.absent(),
+    this.deleted = const Value.absent(),
+    this.due = const Value.absent(),
+    required String etag,
+    this.hidden = const Value.absent(),
+    required String id,
+    required String kind,
+    this.notes = const Value.absent(),
+    required String owner,
+    this.parent = const Value.absent(),
+    required String position,
+    required String selfLink,
+    required String status,
+    required String title,
+    this.updated = const Value.absent(),
+    required String webViewLink,
+    this.rowid = const Value.absent(),
+  }) : etag = Value(etag),
+       id = Value(id),
+       kind = Value(kind),
+       owner = Value(owner),
+       position = Value(position),
+       selfLink = Value(selfLink),
+       status = Value(status),
+       title = Value(title),
+       webViewLink = Value(webViewLink);
+  static Insertable<TodoData> custom({
+    Expression<DateTime>? completed,
+    Expression<bool>? deleted,
+    Expression<DateTime>? due,
+    Expression<String>? etag,
+    Expression<bool>? hidden,
+    Expression<String>? id,
+    Expression<String>? kind,
+    Expression<String>? notes,
+    Expression<String>? owner,
+    Expression<String>? parent,
+    Expression<String>? position,
+    Expression<String>? selfLink,
+    Expression<String>? status,
+    Expression<String>? title,
+    Expression<DateTime>? updated,
+    Expression<String>? webViewLink,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (completed != null) 'completed': completed,
+      if (deleted != null) 'deleted': deleted,
+      if (due != null) 'due': due,
+      if (etag != null) 'etag': etag,
+      if (hidden != null) 'hidden': hidden,
+      if (id != null) 'id': id,
+      if (kind != null) 'kind': kind,
+      if (notes != null) 'notes': notes,
+      if (owner != null) 'owner': owner,
+      if (parent != null) 'parent': parent,
+      if (position != null) 'position': position,
+      if (selfLink != null) 'self_link': selfLink,
+      if (status != null) 'status': status,
+      if (title != null) 'title': title,
+      if (updated != null) 'updated': updated,
+      if (webViewLink != null) 'web_view_link': webViewLink,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TodoCompanion copyWith({
+    Value<DateTime?>? completed,
+    Value<bool>? deleted,
+    Value<DateTime?>? due,
+    Value<String>? etag,
+    Value<bool>? hidden,
+    Value<String>? id,
+    Value<String>? kind,
+    Value<String?>? notes,
+    Value<String>? owner,
+    Value<String?>? parent,
+    Value<String>? position,
+    Value<String>? selfLink,
+    Value<String>? status,
+    Value<String>? title,
+    Value<DateTime?>? updated,
+    Value<String>? webViewLink,
+    Value<int>? rowid,
+  }) {
+    return TodoCompanion(
+      completed: completed ?? this.completed,
+      deleted: deleted ?? this.deleted,
+      due: due ?? this.due,
+      etag: etag ?? this.etag,
+      hidden: hidden ?? this.hidden,
+      id: id ?? this.id,
+      kind: kind ?? this.kind,
+      notes: notes ?? this.notes,
+      owner: owner ?? this.owner,
+      parent: parent ?? this.parent,
+      position: position ?? this.position,
+      selfLink: selfLink ?? this.selfLink,
+      status: status ?? this.status,
+      title: title ?? this.title,
+      updated: updated ?? this.updated,
+      webViewLink: webViewLink ?? this.webViewLink,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (completed.present) {
+      map['completed'] = Variable<DateTime>(completed.value);
+    }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
+    if (due.present) {
+      map['due'] = Variable<DateTime>(due.value);
+    }
+    if (etag.present) {
+      map['etag'] = Variable<String>(etag.value);
+    }
+    if (hidden.present) {
+      map['hidden'] = Variable<bool>(hidden.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (parent.present) {
+      map['parent'] = Variable<String>(parent.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<String>(position.value);
+    }
+    if (selfLink.present) {
+      map['self_link'] = Variable<String>(selfLink.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (webViewLink.present) {
+      map['web_view_link'] = Variable<String>(webViewLink.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoCompanion(')
+          ..write('completed: $completed, ')
+          ..write('deleted: $deleted, ')
+          ..write('due: $due, ')
+          ..write('etag: $etag, ')
+          ..write('hidden: $hidden, ')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('notes: $notes, ')
+          ..write('owner: $owner, ')
+          ..write('parent: $parent, ')
+          ..write('position: $position, ')
+          ..write('selfLink: $selfLink, ')
+          ..write('status: $status, ')
+          ..write('title: $title, ')
+          ..write('updated: $updated, ')
+          ..write('webViewLink: $webViewLink, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$AppDataBase extends GeneratedDatabase {
+  _$AppDataBase(QueryExecutor e) : super(e);
+  $AppDataBaseManager get managers => $AppDataBaseManager(this);
+  late final $UserProfileTable userProfile = $UserProfileTable(this);
+  late final $TokenTable token = $TokenTable(this);
+  late final $TodoTable todo = $TodoTable(this);
 class $MessageTableTable extends MessageTable
     with TableInfo<$MessageTableTable, MessageData> {
   @override
@@ -1588,6 +2481,11 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     isRead,
   );
   @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    userProfile,
+    token,
+    todo,
+  ];
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MessageData &&
@@ -4681,6 +5579,409 @@ typedef $$ChirpUserTableTableProcessedTableManager =
       ChirpUserData,
       PrefetchHooks Function()
     >;
+typedef $$TodoTableCreateCompanionBuilder =
+    TodoCompanion Function({
+      Value<DateTime?> completed,
+      Value<bool> deleted,
+      Value<DateTime?> due,
+      required String etag,
+      Value<bool> hidden,
+      required String id,
+      required String kind,
+      Value<String?> notes,
+      required String owner,
+      Value<String?> parent,
+      required String position,
+      required String selfLink,
+      required String status,
+      required String title,
+      Value<DateTime?> updated,
+      required String webViewLink,
+      Value<int> rowid,
+    });
+typedef $$TodoTableUpdateCompanionBuilder =
+    TodoCompanion Function({
+      Value<DateTime?> completed,
+      Value<bool> deleted,
+      Value<DateTime?> due,
+      Value<String> etag,
+      Value<bool> hidden,
+      Value<String> id,
+      Value<String> kind,
+      Value<String?> notes,
+      Value<String> owner,
+      Value<String?> parent,
+      Value<String> position,
+      Value<String> selfLink,
+      Value<String> status,
+      Value<String> title,
+      Value<DateTime?> updated,
+      Value<String> webViewLink,
+      Value<int> rowid,
+    });
+
+class $$TodoTableFilterComposer extends Composer<_$AppDataBase, $TodoTable> {
+  $$TodoTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<DateTime> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get due => $composableBuilder(
+    column: $table.due,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parent => $composableBuilder(
+    column: $table.parent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get selfLink => $composableBuilder(
+    column: $table.selfLink,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get webViewLink => $composableBuilder(
+    column: $table.webViewLink,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TodoTableOrderingComposer extends Composer<_$AppDataBase, $TodoTable> {
+  $$TodoTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<DateTime> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get due => $composableBuilder(
+    column: $table.due,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parent => $composableBuilder(
+    column: $table.parent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get selfLink => $composableBuilder(
+    column: $table.selfLink,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get webViewLink => $composableBuilder(
+    column: $table.webViewLink,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TodoTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoTable> {
+  $$TodoTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<DateTime> get completed =>
+      $composableBuilder(column: $table.completed, builder: (column) => column);
+
+  GeneratedColumn<bool> get deleted =>
+      $composableBuilder(column: $table.deleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get due =>
+      $composableBuilder(column: $table.due, builder: (column) => column);
+
+  GeneratedColumn<String> get etag =>
+      $composableBuilder(column: $table.etag, builder: (column) => column);
+
+  GeneratedColumn<bool> get hidden =>
+      $composableBuilder(column: $table.hidden, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
+
+  GeneratedColumn<String> get parent =>
+      $composableBuilder(column: $table.parent, builder: (column) => column);
+
+  GeneratedColumn<String> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<String> get selfLink =>
+      $composableBuilder(column: $table.selfLink, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
+
+  GeneratedColumn<String> get webViewLink => $composableBuilder(
+    column: $table.webViewLink,
+    builder: (column) => column,
+  );
+}
+
+class $$TodoTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoTable,
+          TodoData,
+          $$TodoTableFilterComposer,
+          $$TodoTableOrderingComposer,
+          $$TodoTableAnnotationComposer,
+          $$TodoTableCreateCompanionBuilder,
+          $$TodoTableUpdateCompanionBuilder,
+          (TodoData, BaseReferences<_$AppDataBase, $TodoTable, TodoData>),
+          TodoData,
+          PrefetchHooks Function()
+        > {
+  $$TodoTableTableManager(_$AppDataBase db, $TodoTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<DateTime?> completed = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
+                Value<DateTime?> due = const Value.absent(),
+                Value<String> etag = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String> owner = const Value.absent(),
+                Value<String?> parent = const Value.absent(),
+                Value<String> position = const Value.absent(),
+                Value<String> selfLink = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
+                Value<String> webViewLink = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TodoCompanion(
+                completed: completed,
+                deleted: deleted,
+                due: due,
+                etag: etag,
+                hidden: hidden,
+                id: id,
+                kind: kind,
+                notes: notes,
+                owner: owner,
+                parent: parent,
+                position: position,
+                selfLink: selfLink,
+                status: status,
+                title: title,
+                updated: updated,
+                webViewLink: webViewLink,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<DateTime?> completed = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
+                Value<DateTime?> due = const Value.absent(),
+                required String etag,
+                Value<bool> hidden = const Value.absent(),
+                required String id,
+                required String kind,
+                Value<String?> notes = const Value.absent(),
+                required String owner,
+                Value<String?> parent = const Value.absent(),
+                required String position,
+                required String selfLink,
+                required String status,
+                required String title,
+                Value<DateTime?> updated = const Value.absent(),
+                required String webViewLink,
+                Value<int> rowid = const Value.absent(),
+              }) => TodoCompanion.insert(
+                completed: completed,
+                deleted: deleted,
+                due: due,
+                etag: etag,
+                hidden: hidden,
+                id: id,
+                kind: kind,
+                notes: notes,
+                owner: owner,
+                parent: parent,
+                position: position,
+                selfLink: selfLink,
+                status: status,
+                title: title,
+                updated: updated,
+                webViewLink: webViewLink,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TodoTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoTable,
+      TodoData,
+      $$TodoTableFilterComposer,
+      $$TodoTableOrderingComposer,
+      $$TodoTableAnnotationComposer,
+      $$TodoTableCreateCompanionBuilder,
+      $$TodoTableUpdateCompanionBuilder,
+      (TodoData, BaseReferences<_$AppDataBase, $TodoTable, TodoData>),
+      TodoData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -4689,6 +5990,7 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
+  $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
   $$MessageTableTableTableManager get messageTable =>
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>
