@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import '../../domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,6 +9,7 @@ part 'event_state.dart';
 class EventBloc extends Bloc<EventEvent, EventState> {
   final GetEvent getEvent;
   final GetAttendee getAttendee;
+  final Logger _logger = Logger();
 
   EventBloc({required this.getEvent, required this.getAttendee})
     : super(EventInitial()) {
@@ -20,16 +22,39 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   ) async {
     emit(EventLoading());
 
-    final eventsResult = await getEvent.execute();
-    final attendeesResult = await getAttendee.execute();
+    final eventsResult = await getEvent.execute(
+      page: event.page,
+      limit: event.limit,
+    );
 
-    eventsResult.fold((failure) => emit(EventError("Error fetching events")), (
-      events,
-    ) {
-      attendeesResult.fold(
-        (failure) => emit(EventError("Error fetching attendees")),
-        (attendees) => emit(EventLoaded(events, attendees)),
-      );
-    });
+    await eventsResult.fold(
+      (failure) async {
+        _logger.e("Error fetching events: ${failure.message}, ${failure.error}");
+        emit(EventError("Error fetching events"));
+      } ,
+      (events) async {
+        // First emit events without attendees for immediate display
+        emit(EventLoaded(events, {}));
+
+        // Then load attendees progressively
+        final Map<String, List<Attendee>> attendeesMap = {};
+
+        for (final ev in events) {
+          final result = await getAttendee.execute(
+            eventId: ev.id,
+            page: 1,
+            limit: 4,
+          );
+
+          result.fold(
+            (failure) => attendeesMap[ev.id] = [],
+            (attendees) => attendeesMap[ev.id] = attendees,
+          );
+
+          // Emit updated state with new attendees
+          emit(EventLoaded(events, Map.from(attendeesMap)));
+        }
+      },
+    );
   }
 }

@@ -7,4 +7,10 @@ abstract class EventEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchAllEvents extends EventEvent {}
+class FetchAllEvents extends EventEvent {
+  final int page;
+  final int limit;
+  final String? eventId;
+
+  const FetchAllEvents({this.eventId, this.page = 1, this.limit = 10});
+}

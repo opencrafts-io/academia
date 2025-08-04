@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 
 @DataClassName('UserProfileData')
 class UserProfile extends Table with TableMixin {
+  @DateTimeConverter()
   TextColumn get name => text()();
   TextColumn get username => text().nullable()();
   TextColumn get email => text()();

@@ -1,31 +1,21 @@
-import '../../domain/domain.dart';
 
-class TicketModel extends Ticket {
-  const TicketModel({
-    required super.id,
-    required super.attendeeId,
-    required super.eventId,
-    required super.paymentCode,
-    required super.createdAt,
-  });
 
-  factory TicketModel.fromJson(Map<String, dynamic> json) {
-    return TicketModel(
-      id: json['id'],
-      attendeeId: json['attendeeid'],
-      eventId: json['eventid'],
-      paymentCode: json['paymentcode'],
-      createdAt: json['createdat'],
-    );
-  }
+import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/data/models/attendee_model.dart';
+import 'package:academia/features/sherehe/data/models/event_model.dart';
+import 'package:drift/drift.dart';
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'attendeeid': attendeeId,
-      'eventid': eventId,
-      'paymentcode': paymentCode,
-      'createdat': createdAt,
-    };
-  }
+@DataClassName('TicketData')
+class TicketTable extends Table with TableMixin{
+  @JsonKey('attendee_id')
+  TextColumn get attendeeId => text().references(AttendeeTable, #id)();
+
+  @JsonKey('event_id')
+  TextColumn get eventId => text().references(EventTable, #id)();
+
+  @JsonKey('payment_code')
+  TextColumn get paymentCode => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
