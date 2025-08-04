@@ -13,13 +13,13 @@ class EventLoading extends EventState {}
 
 class EventLoaded extends EventState {
   final List<Event> events;
-  final List<Attendee> attendees;
+  final Map<String, List<Attendee>> attendeesMap;
   
 
-  const EventLoaded(this.events, this.attendees);
+  const EventLoaded(this.events, this.attendeesMap);
 
   @override
-  List<Object> get props => [events];
+  List<Object> get props => [events, attendeesMap];
 }
 
 class EventError extends EventState {

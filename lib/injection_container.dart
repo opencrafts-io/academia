@@ -2,14 +2,11 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/features.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
-import 'features/sherehe/presentation/presentation.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
@@ -49,10 +46,19 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   //sherehe
-  sl.registerSingleton<ShereheRemoteDataSource>(ShereheRemoteDataSource());
+  sl.registerLazySingleton<ShereheRemoteDataSource>(
+    () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerLazySingleton<ShereheLocalDataSource>(
+    () => ShereheLocalDataSource(localDB: cacheDB),
+  );
 
   sl.registerSingleton<ShereheRepository>(
-    ShereheRepositoryImpl(remoteDataSource: sl()),
+    ShereheRepositoryImpl(
+      remoteDataSource: sl.get<ShereheRemoteDataSource>(),
+      localDataSource: sl.get<ShereheLocalDataSource>(),
+    ),
   );
 
   sl.registerSingleton<GetEvent>(GetEvent(sl()));
@@ -110,6 +116,41 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  // Todos
+  sl.registerFactory<TodoLocalDatasource>(
+    () => TodoLocalDatasource(localDB: cacheDB),
+  );
+  sl.registerFactory<TodoRemoteDatasource>(
+    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<TodoRepository>(
+    () => TodoRepositoryImpl(
+      todoRemoteDatasource: sl.get<TodoRemoteDatasource>(),
+      todoLocalDatasource: sl.get<TodoLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<GetCachedTodosUsecase>(
+    () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+
+  sl.registerFactory<RefreshTodosUsecase>(
+    () => RefreshTodosUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<CreateTodoUsecase>(
+    () => CreateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<UpdateTodoUsecase>(
+    () => UpdateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+  sl.registerFactory<CompleteTodoUsecase>(
+    () => CompleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
+
+  sl.registerFactory<DeleteTodoUsecase>(
+    () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
+  );
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
     () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),

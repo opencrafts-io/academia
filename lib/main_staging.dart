@@ -21,7 +21,7 @@ void main(args) async {
     FlavorConfig(
       flavor: Flavor.staging,
       appName: "Academia - Staging",
-      apiBaseUrl: "https://qaverisafe.opencrafts.io",
+      apiBaseUrl: "https://api.opencrafts.io",
     ),
   );
 
