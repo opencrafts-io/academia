@@ -242,7 +242,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    '${conversation.user.vibePoints} vibepoints',
+                                    '${conversation.user.vibepoints} vibepoints',
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: Theme.of(

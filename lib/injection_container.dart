@@ -22,6 +22,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<DioClient>(
     () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
   );
+  sl.registerFactory<ChirpDioClient>(
+    () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
       authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
@@ -145,7 +148,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
     () => MessagingLocalDataSourceImpl(localDB: cacheDB),
@@ -155,6 +158,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => ConversationRepositoryImpl(
       remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
       localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
+      chirpUserRemoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
     ),
   );
   sl.registerFactory<MessageRepositoryImpl>(
@@ -173,11 +177,26 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+
+  // Chirp User dependencies
+  sl.registerFactory<ChirpUserRemoteDatasource>(
+    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
+  );
+  sl.registerFactory<ChirpUserRepository>(
+    () => ChirpUserRepositoryImpl(
+      remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
+    ),
+  );
+  sl.registerFactory<SearchUsersUseCase>(
+    () => SearchUsersUseCase(sl.get<ChirpUserRepository>()),
+  );
+
   sl.registerFactory<MessagingBloc>(
     () => MessagingBloc(
       getConversations: sl.get<GetConversations>(),
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
+      searchUsers: sl.get<SearchUsersUseCase>(),
     ),
   );
 }
