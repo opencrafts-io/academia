@@ -1,5 +1,4 @@
 import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:academia/injection_container.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:academia/config/config.dart';

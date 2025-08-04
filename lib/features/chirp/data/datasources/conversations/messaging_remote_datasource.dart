@@ -1,4 +1,4 @@
-import 'package:academia/core/network/chirp_dio_client.dart';
+import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
@@ -21,14 +21,18 @@ abstract class MessagingRemoteDatasource {
 class MessagingRemoteDatasourceImpl
     with DioErrorHandler
     implements MessagingRemoteDatasource {
-  final ChirpDioClient dioClient;
+  final DioClient dioClient;
+  final String servicePath;
 
-  MessagingRemoteDatasourceImpl({required this.dioClient});
+  MessagingRemoteDatasourceImpl({
+    required this.dioClient,
+    this.servicePath = "qa-chirp",
+  });
 
   @override
   Future<Either<Failure, List<ConversationData>>> getConversations() async {
     try {
-      final response = await dioClient.dio.get('/conversations/');
+      final response = await dioClient.dio.get('/$servicePath/conversations/');
 
       if (response.statusCode != 200) {
         return Left(
@@ -62,7 +66,7 @@ class MessagingRemoteDatasourceImpl
   ) async {
     try {
       final response = await dioClient.dio.get(
-        '/conversations/$conversationId/messages/',
+        '/$servicePath/conversations/$conversationId/messages/',
       );
 
       if (response.statusCode != 200) {
@@ -106,7 +110,7 @@ class MessagingRemoteDatasourceImpl
 
       if (isConversationId) {
         // Send message to conversation
-        endpoint = '/conversations/$receiverId/messages/';
+        endpoint = '/$servicePath/conversations/$receiverId/messages/';
 
         if (file != null) {
           // Upload image with multipart form data
@@ -121,7 +125,7 @@ class MessagingRemoteDatasourceImpl
         }
       } else {
         // Send message to user
-        endpoint = '/messages/';
+        endpoint = '/$servicePath/messages/';
 
         if (file != null) {
           // Upload image with multipart form data
@@ -174,7 +178,9 @@ class MessagingRemoteDatasourceImpl
   @override
   Future<Either<Failure, void>> markMessageAsRead(String messageId) async {
     try {
-      final response = await dioClient.dio.put('/messages/$messageId/read/');
+      final response = await dioClient.dio.put(
+        '/$servicePath/messages/$messageId/read/',
+      );
 
       if (response.statusCode != 200) {
         return Left(
@@ -201,7 +207,9 @@ class MessagingRemoteDatasourceImpl
   @override
   Future<Either<Failure, void>> deleteMessage(String messageId) async {
     try {
-      final response = await dioClient.dio.delete('/messages/$messageId/');
+      final response = await dioClient.dio.delete(
+        '/$servicePath/messages/$messageId/',
+      );
 
       if (response.statusCode != 200 && response.statusCode != 204) {
         return Left(

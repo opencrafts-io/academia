@@ -22,9 +22,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<DioClient>(
     () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
   );
-  sl.registerFactory<ChirpDioClient>(
-    () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
-  );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
       authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
@@ -148,7 +145,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
+    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
     () => MessagingLocalDataSourceImpl(localDB: cacheDB),
@@ -180,7 +177,7 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
-    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<ChirpDioClient>()),
+    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
   );
   sl.registerFactory<ChirpUserRepository>(
     () => ChirpUserRepositoryImpl(
