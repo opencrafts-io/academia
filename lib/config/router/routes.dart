@@ -165,8 +165,6 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
   }
 }
 
-
-
 @TypedGoRoute<TodosRoute>(
   path: "/todos",
   // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],

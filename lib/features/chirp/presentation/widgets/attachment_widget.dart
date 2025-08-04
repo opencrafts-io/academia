@@ -20,7 +20,7 @@ class AttachmentWidget extends StatelessWidget {
         );
       case 'video':
         return _VideoPlayerWidget(videoUrl: attachment.file);
-      
+
       default:
         return SizedBox.shrink();
     }

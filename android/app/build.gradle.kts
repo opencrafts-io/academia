@@ -81,13 +81,13 @@ android {
             // buildConfigField "String", "API_BASE_URL", "\"https://prod.api.example.com\""
         }
         // You can add more flavors, e.g., a "staging" flavor
-        
+
         create("staging") {
             dimension = "environment"
             applicationIdSuffix = ".stg"
             versionNameSuffix = "-stg"
             // buildConfigField "String", "API_BASE_URL", "\"https://stg.api.example.com\""
-        } 
+        }
     }
 }
 
