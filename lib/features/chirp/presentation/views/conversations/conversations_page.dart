@@ -5,7 +5,7 @@ import 'package:academia/config/router/routes.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
 import '../../bloc/conversations/messaging_event.dart';
-import '../../widgets/user_search_widget.dart';
+import '../../widgets/conversations/user_search_widget.dart';
 
 class ConversationsPage extends StatefulWidget {
   const ConversationsPage({super.key});

@@ -83,17 +83,15 @@ class ChatMessageWidget extends StatelessWidget {
 
                   // Attachments
                   if (message.attachments.isNotEmpty)
-                    ...message.attachments
-                        .map(
-                          (attachment) => Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                            child: GestureDetector(
-                              onTap: onTap,
-                              child: AttachmentWidget(attachment: attachment),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    ...message.attachments.map(
+                      (attachment) => Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                        child: GestureDetector(
+                          onTap: onTap,
+                          child: AttachmentWidget(attachment: attachment),
+                        ),
+                      ),
+                    ),
 
                   // Timestamp
                   Padding(
@@ -219,17 +217,15 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
 
                   // Attachments
                   if (attachments.isNotEmpty)
-                    ...attachments
-                        .map(
-                          (attachment) => Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                            child: GestureDetector(
-                              onTap: onTap,
-                              child: AttachmentWidget(attachment: attachment),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    ...attachments.map(
+                      (attachment) => Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                        child: GestureDetector(
+                          onTap: onTap,
+                          child: AttachmentWidget(attachment: attachment),
+                        ),
+                      ),
+                    ),
 
                   // Timestamp
                   Padding(

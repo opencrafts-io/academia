@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:academia/features/chirp/domain/entities/post.dart';
@@ -11,26 +10,11 @@ class FilePickerService {
       'jpeg',
       'png',
       'gif',
-      'bmp',
-      'webp',
       'mp4',
-      'mov',
-      'avi',
-      'mkv',
-      'wmv',
-      'flv',
-      'webm',
-      'mp3',
-      'wav',
-      'aac',
-      'm4a',
-      'ogg',
       'pdf',
       'doc',
       'docx',
       'txt',
-      'rtf',
-      'xls',
       'xlsx',
       'ppt',
       'pptx',
@@ -125,24 +109,9 @@ class FilePickerService {
     String attachmentType = 'document'; // default
 
     // Determine attachment type based on file extension
-    if ([
-      '.jpg',
-      '.jpeg',
-      '.png',
-      '.gif',
-      '.bmp',
-      '.webp',
-    ].contains(extension)) {
+    if (['.jpg', '.jpeg', '.png', '.gif'].contains(extension)) {
       attachmentType = 'image';
-    } else if ([
-      '.mp4',
-      '.mov',
-      '.avi',
-      '.mkv',
-      '.wmv',
-      '.flv',
-      '.webm',
-    ].contains(extension)) {
+    } else if (['.mp4'].contains(extension)) {
       attachmentType = 'video';
     } else if (['.pdf'].contains(extension)) {
       attachmentType = 'pdf';
@@ -150,8 +119,6 @@ class FilePickerService {
       '.doc',
       '.docx',
       '.txt',
-      '.rtf',
-      '.xls',
       '.xlsx',
       '.ppt',
       '.pptx',
