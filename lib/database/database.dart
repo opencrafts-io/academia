@@ -1,11 +1,14 @@
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
+import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
 import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 
 part 'database.g.dart';
 
@@ -21,6 +24,7 @@ part 'database.g.dart';
   ],
 )
 class AppDataBase extends _$AppDataBase {
+  final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
@@ -50,6 +54,9 @@ class AppDataBase extends _$AppDataBase {
   );
 
   static QueryExecutor _openConnection() {
+    driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
+      serializeDateTimeValuesAsString: true,
+    );
     return driftDatabase(
       name: 'academia.db',
       native: const DriftNativeOptions(
