@@ -18,6 +18,8 @@ part 'database.g.dart';
     Token,
     ConversationTable,
     MessageTable,
+    ChirpUserTable,
+    Todo,
     EventTable,
     AttendeeTable,
     TicketTable,
@@ -34,24 +36,25 @@ class AppDataBase extends _$AppDataBase {
   int get schemaVersion => 4;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (Migrator m) async {
-      await m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from < 2) {
-        // apply what version 2 did
-      }
-      if (from < 3) {
-        // apply what version 3 did
-      }
-      if (from < 4) {
-        await m.createTable(eventTable);
-        await m.createTable(attendeeTable);
-        await m.createTable(ticketTable);
-      }
-    },
-  );
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        _logger.i("Migrating from version $from to version $to");
+        if (to > from) {
+          m.createAll();
+          _logger.i("Migrated from version $from to version $to");
+        }
+      },
+      beforeOpen: (details) async {
+        _logger.i(
+          "Openning cache db version ${details.versionNow} initial version ${details.versionBefore}",
+        );
+      },
+    );
+  }
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
