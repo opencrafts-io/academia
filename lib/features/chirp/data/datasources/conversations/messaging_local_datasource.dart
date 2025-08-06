@@ -2,6 +2,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class MessagingLocalDataSource {
   Future<Either<Failure, void>> cacheConversations(
@@ -75,12 +76,12 @@ class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
       await localDB.batch((batch) {
         batch.deleteWhere(
           localDB.messageTable,
-          (tbl) => Expression.or([
-            tbl.senderId.equals(conversationId),
-            tbl.recipientId.equals(conversationId),
-          ]),
+          (_) => const Constant<bool>(true),
         );
-        batch.insertAll(localDB.messageTable, messages);
+
+        if (messages.isNotEmpty) {
+          batch.insertAll(localDB.messageTable, messages);
+        }
       });
       return const Right(null);
     } catch (e) {
@@ -99,14 +100,7 @@ class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
     String conversationId,
   ) async {
     try {
-      final messages =
-          await (localDB.select(localDB.messageTable)..where(
-                (tbl) => Expression.or([
-                  tbl.senderId.equals(conversationId),
-                  tbl.recipientId.equals(conversationId),
-                ]),
-              ))
-              .get();
+      final messages = await localDB.select(localDB.messageTable).get();
       return Right(messages);
     } catch (e) {
       return Left(

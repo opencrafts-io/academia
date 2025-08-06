@@ -52,7 +52,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     LoadMessagesEvent event,
     Emitter<MessagingState> emit,
   ) async {
-    // Preserve current conversations
     List<Conversation> currentConversations = [];
     if (state is ConversationsLoaded) {
       currentConversations = (state as ConversationsLoaded).conversations;
@@ -71,7 +70,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
         ),
       ),
       (messages) {
-        // Sort messages by sentAt time (oldest first)
         final sortedMessages = List<Message>.from(messages)
           ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
 
@@ -120,12 +118,23 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
 
     final result = await sendMessage(messageParams);
     result.fold(
-      (failure) => emit(
-        MessageSendErrorState(
-          failure.message,
-          retryAction: "Tap to retry sending message",
-        ),
-      ),
+      (failure) {
+        if (currentState is MessagesLoaded) {
+          emit(
+            MessageSendErrorState(
+              failure.message,
+              retryAction: "Tap to retry sending message",
+            ),
+          );
+        } else {
+          emit(
+            MessageSendErrorState(
+              failure.message,
+              retryAction: "Tap to retry sending message",
+            ),
+          );
+        }
+      },
       (message) {
         final updatedMessages = [...currentMessages, message];
 
@@ -156,8 +165,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     MarkConversationAsReadEvent event,
     Emitter<MessagingState> emit,
   ) async {
-    // For now, just emit the current state to trigger a rebuild :}
-    // this will update the conversation's unread count
     final currentState = state;
     if (currentState is ConversationsLoaded) {
       final updatedConversations = currentState.conversations.map((conv) {
@@ -204,7 +211,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     StartNewConversationEvent event,
     Emitter<MessagingState> emit,
   ) async {
-    // Preserve current conversations
     List<Conversation> currentConversations = [];
     if (state is ConversationsLoaded) {
       currentConversations = (state as ConversationsLoaded).conversations;
@@ -220,7 +226,6 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
       unreadCount: 0,
     );
 
-    // Add the new conversation
     if (!currentConversations.any((conv) => conv.user.id == event.user.id)) {
       currentConversations = [...currentConversations, conversation];
     }

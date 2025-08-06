@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
@@ -9,7 +8,6 @@ import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
 import '../../widgets/conversations/chat_message_list_widget.dart';
 import '../../widgets/conversations/profile_preview_modal.dart';
-import '../../widgets/error_handling_widget.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -53,10 +51,14 @@ class _ChatPageState extends State<ChatPage> {
 
   void _sendMessage() {
     if (_messageController.text.trim().isNotEmpty) {
+      debugPrint('Sending message: ${_messageController.text.trim()}');
       context.read<MessagingBloc>().add(
         SendMessageEvent(widget.conversationId, _messageController.text.trim()),
       );
       _messageController.clear();
+      setState(() {}); // Trigger rebuild after clearing
+    } else {
+      debugPrint('Cannot send empty message');
     }
   }
 
@@ -102,13 +104,22 @@ class _ChatPageState extends State<ChatPage> {
 
   void _sendImageMessage() {
     if (_selectedImagePath != null) {
+      final imagePath = _selectedImagePath!;
+      final caption = _imageCaptionController.text.trim();
+
+      debugPrint('=== FILE UPLOAD DEBUG ===');
+      debugPrint('Image path: $imagePath');
+      debugPrint('Caption: "$caption"');
+      debugPrint('File exists: ${File(imagePath).existsSync()}');
+      debugPrint('File size: ${File(imagePath).lengthSync()} bytes');
+      debugPrint('File extension: ${imagePath.split('.').last}');
+      debugPrint('========================');
+
       context.read<MessagingBloc>().add(
-        SendMessageEvent(
-          widget.conversationId,
-          _imageCaptionController.text.trim(),
-          file: File(_selectedImagePath!),
-        ),
+        SendMessageEvent(widget.conversationId, caption, file: File(imagePath)),
       );
+
+      // Clear the UI immediately
       setState(() {
         _selectedImagePath = null;
         _imageCaptionController.clear();
@@ -295,21 +306,38 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             onSubmitted: (_) => _sendMessage(),
+            onChanged: (_) =>
+                setState(() {}), // Trigger rebuild when text changes
           ),
         ),
         const SizedBox(width: 8),
-        IconButton(
-          onPressed: _messageController.text.trim().isNotEmpty
-              ? _sendMessage
-              : null,
-          icon: Icon(
-            Icons.send,
-            color: _messageController.text.trim().isNotEmpty
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
+        BlocBuilder<MessagingBloc, MessagingState>(
+          builder: (context, state) {
+            final isSending = state is MessageSendingState;
+            final hasText = _messageController.text.trim().isNotEmpty;
+
+            return IconButton(
+              onPressed: hasText && !isSending ? _sendMessage : null,
+              icon: isSending
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    )
+                  : Icon(
+                      Icons.send,
+                      color: hasText
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant
+                                .withValues(alpha: 0.5),
+                    ),
+            );
+          },
         ),
       ],
     );
@@ -387,92 +415,111 @@ class _ChatPageState extends State<ChatPage> {
         ),
         elevation: 2,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: BlocBuilder<MessagingBloc, MessagingState>(
-              builder: (context, state) {
-                if (state is MessagesLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (state is MessagesErrorState) {
-                  return LoadingErrorWidget(
-                    message: state.message,
-                    onRetry: () {
+      body: BlocListener<MessagingBloc, MessagingState>(
+        listener: (context, state) {
+          if (state is MessageSendErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                action: SnackBarAction(
+                  label: 'Retry',
+                  textColor: Theme.of(context).colorScheme.onError,
+                  onPressed: () {
+                    // Retry sending the last message
+                    if (_messageController.text.trim().isNotEmpty) {
                       context.read<MessagingBloc>().add(
-                        LoadMessagesEvent(widget.conversationId),
+                        SendMessageEvent(
+                          widget.conversationId,
+                          _messageController.text.trim(),
+                        ),
                       );
-                    },
-                    retryText: state.retryAction,
-                  );
-                }
+                    }
+                  },
+                ),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
 
-                if (state is MessageSendingState) {
+          if (state is MessagesErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                action: SnackBarAction(
+                  label: 'Retry',
+                  textColor: Theme.of(context).colorScheme.onError,
+                  onPressed: () {
+                    context.read<MessagingBloc>().add(
+                      LoadMessagesEvent(widget.conversationId),
+                    );
+                  },
+                ),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: BlocBuilder<MessagingBloc, MessagingState>(
+                builder: (context, state) {
+                  if (state is MessagesLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is MessagesLoaded) {
+                    final messages = state.messages;
+
+                    return ChatMessageListWidget(
+                      messages: messages,
+                      scrollController: _scrollController,
+                      currentUserId:
+                          'current_user', // TODO: Get from auth service
+                    );
+                  }
+
+                  // Show empty state for other states (errors are handled via snackbars)
                   return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(),
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
                         SizedBox(height: 16),
-                        Text('Sending message...'),
+                        Text(
+                          'No messages to display',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
-                }
-
-                if (state is MessageSendErrorState) {
-                  return Center(
-                    child: ErrorHandlingWidget(
-                      message: state.message,
-                      retryAction: state.retryAction,
-                      onRetry: () {
-                        // Retry sending the last message
-                        if (_messageController.text.trim().isNotEmpty) {
-                          context.read<MessagingBloc>().add(
-                            SendMessageEvent(
-                              widget.conversationId,
-                              _messageController.text.trim(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                }
-
-                if (state is MessagesLoaded) {
-                  final messages = state.messages;
-
-                  return ChatMessageListWidget(
-                    messages: messages,
-                    scrollController: _scrollController,
-                    currentUserId:
-                        'current_user', // TODO: Get from auth service
-                  );
-                }
-
-                return const Center(child: Text('No messages to display'));
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outline.withValues(alpha: 0.2),
-                ),
+                },
               ),
             ),
-            child: _selectedImagePath != null
-                ? _buildImagePreview()
-                : _buildMessageInput(),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  top: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withValues(alpha: 0.2),
+                  ),
+                ),
+              ),
+              child: _selectedImagePath != null
+                  ? _buildImagePreview()
+                  : _buildMessageInput(),
+            ),
+          ],
+        ),
       ),
     );
   }

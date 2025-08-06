@@ -5,6 +5,7 @@ import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 abstract class MessagingRemoteDatasource {
   Future<Either<Failure, List<ConversationData>>> getConversations();
@@ -106,32 +107,72 @@ class MessagingRemoteDatasourceImpl
     File? file,
   }) async {
     try {
-      final Map<String, dynamic> data = {
-        'receiver_id': receiverId,
-        'content': content,
-      };
-
       if (file != null) {
-        // Handle file upload logic here
-        // For now, we'll just send the message without file
+        debugPrint('Sending file message: ${file.path}');
+        debugPrint('File exists: ${file.existsSync()}');
+        debugPrint('File size: ${file.lengthSync()} bytes');
+        debugPrint('File name: ${file.path.split('/').last}');
+        debugPrint('Content type: ${file.path.split('.').last}');
+
+        // Handle file upload with FormData
+        final formData = FormData.fromMap({
+          'content': content.isNotEmpty
+              ? content
+              : ' ', // Send space if empty to avoid backend validation error
+          'attachments': await MultipartFile.fromFile(
+            // Note: 'attachments' not 'file'
+            file.path,
+            filename: file.path.split('/').last,
+          ),
+        });
+
+        final response = await dioClient.dio.post(
+          '/$servicePath/conversations/$receiverId/messages/',
+          data: formData,
+        );
+
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final message = _parseSentMessageFromBackend(response.data);
+          return Right(message);
+        }
+
+        return Left(
+          NetworkFailure(
+            message: "We couldn't send your image. Please try again.",
+            error: "Status code: ${response.statusCode}",
+          ),
+        );
+      } else {
+        // Text-only message
+        if (content.trim().isEmpty) {
+          return Left(
+            NetworkFailure(
+              message: "Message cannot be empty.",
+              error: "Empty content",
+            ),
+          );
+        }
+
+        final Map<String, dynamic> data = {'content': content};
+
+        // Send to /conversations/{conversationId}/messages/ instead of /messages/
+        final response = await dioClient.dio.post(
+          '/$servicePath/conversations/$receiverId/messages/',
+          data: data,
+        );
+
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final message = _parseSentMessageFromBackend(response.data);
+          return Right(message);
+        }
+
+        return Left(
+          NetworkFailure(
+            message: "We couldn't send your message. Please try again.",
+            error: "Status code: ${response.statusCode}",
+          ),
+        );
       }
-
-      final response = await dioClient.dio.post(
-        '/$servicePath/messages/',
-        data: data,
-      );
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        final message = _parseMessageFromBackend(response.data);
-        return Right(message);
-      }
-
-      return Left(
-        NetworkFailure(
-          message: "We couldn't send your message. Please try again.",
-          error: "Status code: ${response.statusCode}",
-        ),
-      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
@@ -256,7 +297,7 @@ class MessagingRemoteDatasourceImpl
         json['updated_at'] ?? DateTime.now().toIso8601String(),
       ),
       userId: otherParticipant,
-      lastMessageId: null, // Backend doesn't provide this
+      lastMessageId: null,
       lastMessageAt: json['last_message_at'] != null
           ? DateTime.parse(json['last_message_at'])
           : null,
@@ -265,8 +306,6 @@ class MessagingRemoteDatasourceImpl
   }
 
   MessageData _parseMessageFromBackend(Map<String, dynamic> json) {
-    // For messages in conversation context, we need to derive recipient_id
-    // Since the backend doesn't provide it, we'll use a placeholder
     final currentUserId = 'default_user_123'; // This should come from auth
     final senderId = json['sender_id'] ?? '';
     final recipientId = senderId == currentUserId
@@ -293,9 +332,6 @@ class MessagingRemoteDatasourceImpl
   }
 
   MessageData _parseSentMessageFromBackend(Map<String, dynamic> json) {
-    // Backend response for sent message has different structure:
-    // id, sender_id, recipient_id, content, created_at, updated_at, is_read, is_deleted, attachments, conversation
-
     return MessageData(
       id: json['id']?.toString() ?? '',
       senderId: json['sender_id'] ?? '',
@@ -319,19 +355,23 @@ class MessagingRemoteDatasourceImpl
     if (attachments == null) return null;
 
     if (attachments is List) {
-      // Look for the first image attachment
       for (final attachment in attachments) {
         if (attachment is Map<String, dynamic>) {
-          final fileType = attachment['file_type']?.toString().toLowerCase();
+          final attachmentType = attachment['attachment_type']
+              ?.toString()
+              .toLowerCase();
           final fileUrl = attachment['file_url']?.toString();
 
-          if (fileType != null &&
-              (fileType.contains('image') ||
-                  fileType.contains('jpg') ||
-                  fileType.contains('jpeg') ||
-                  fileType.contains('png') ||
-                  fileType.contains('gif'))) {
-            return fileUrl;
+          if (attachmentType == 'file' && fileUrl != null) {
+            final fileName =
+                attachment['original_filename']?.toString().toLowerCase() ?? '';
+            if (fileName.contains('.jpg') ||
+                fileName.contains('.jpeg') ||
+                fileName.contains('.png') ||
+                fileName.contains('.gif') ||
+                fileName.contains('.webp')) {
+              return fileUrl;
+            }
           }
         }
       }

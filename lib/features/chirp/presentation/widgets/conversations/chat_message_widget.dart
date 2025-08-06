@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:academia/features/chirp/domain/entities/conversations/message.dart';
 import 'package:time_since/time_since.dart';
 import 'message_status_widget.dart';
+import 'image_message_widget.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   final Message message;
@@ -25,6 +26,26 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // If message has an image, use ImageMessageWidget
+    if (message.imageUrl != null && message.imageUrl!.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: isFirstInGroup ? 4 : 2,
+          bottom: isLastInGroup ? 4 : 2,
+        ),
+        child: ImageMessageWidget(
+          message: message,
+          isOwnMessage: isOwnMessage,
+          showAvatar: showAvatar,
+          isFirstInGroup: isFirstInGroup,
+          isLastInGroup: isLastInGroup,
+        ),
+      );
+    }
+
+    // Otherwise, show regular text message
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
