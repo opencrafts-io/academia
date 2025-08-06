@@ -8,6 +8,7 @@ import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
 import '../../widgets/conversations/chat_message_list_widget.dart';
+import '../../widgets/conversations/profile_preview_modal.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -56,6 +57,17 @@ class _ChatPageState extends State<ChatPage> {
       );
       _messageController.clear();
     }
+  }
+
+  void _showProfilePreview(BuildContext context, ChirpUser user) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => ProfilePreviewModal(
+        user: user,
+        onClose: () => Navigator.of(context).pop(),
+      ),
+    );
   }
 
   Future<void> _pickImage() async {
@@ -320,50 +332,53 @@ class _ChatPageState extends State<ChatPage> {
           builder: (context, state) {
             if (state is MessagesLoaded) {
               final conversation = state.conversation;
-              return Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: conversation.user.avatarUrl != null
-                        ? NetworkImage(conversation.user.avatarUrl!)
-                        : null,
-                    child: conversation.user.avatarUrl == null
-                        ? Text(
-                            conversation.user.name
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join(''),
+              return GestureDetector(
+                onTap: () => _showProfilePreview(context, conversation.user),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: conversation.user.avatarUrl != null
+                          ? NetworkImage(conversation.user.avatarUrl!)
+                          : null,
+                      child: conversation.user.avatarUrl == null
+                          ? Text(
+                              conversation.user.name
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join(''),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            conversation.user.name,
                             style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '${conversation.user.vibepoints} vibepoints',
+                            style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: Theme.of(
                                     context,
-                                  ).colorScheme.onPrimary,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
-                          )
-                        : null,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          conversation.user.name,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          '${conversation.user.vibepoints} vibepoints',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }
             return const Text('Chat');
