@@ -1,7 +1,7 @@
-import '../../domain/entities/attendee.dart';
-import 'attendee_model.dart';
+import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/domain/entities/attendee.dart';
 
-extension AttendeeModelHelper on AttendeeModel {
+extension AttendeeModelHelper on AttendeeData {
   Attendee toEntity() => Attendee(
     id: id,
     firstName: firstName,
@@ -9,16 +9,18 @@ extension AttendeeModelHelper on AttendeeModel {
     lastName: lastName,
     eventId: eventId,
     createdAt: createdAt,
+    updatedAt: updatedAt,
   );
 }
 
 extension AttendeeEntityHelper on Attendee {
-  AttendeeModel toModel() => AttendeeModel(
+  AttendeeData toModel() => AttendeeData(
     id: id,
     firstName: firstName,
     middleName: middleName,
     lastName: lastName,
     eventId: eventId,
     createdAt: createdAt,
+    updatedAt: DateTime.now()
   );
 }

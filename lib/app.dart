@@ -85,6 +85,16 @@ class _AcademiaState extends State<Academia> {
             updateUserPhone: sl.get<UpdateUserPhone>(),
           )..add(GetCachedProfileEvent()),
         ),
+        BlocProvider(
+          create: (context) => TodoBloc(
+            getCachedTodosUsecase: sl.get<GetCachedTodosUsecase>(),
+            refreshTodosUsecase: sl<RefreshTodosUsecase>(),
+            createTodoUsecase: sl<CreateTodoUsecase>(),
+            updateTodoUsecase: sl<UpdateTodoUsecase>(),
+            completeTodoUsecase: sl.get<CompleteTodoUsecase>(),
+            deleteTodoUsecase: sl<DeleteTodoUsecase>(),
+          )..add(FetchCachedTodosEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(

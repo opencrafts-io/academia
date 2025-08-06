@@ -6,12 +6,16 @@ import 'package:dio/dio.dart';
 
 class ProfileRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
+  final String servicePrefix;
 
-  ProfileRemoteDatasource({required this.dioClient});
+  ProfileRemoteDatasource({
+    required this.dioClient,
+    this.servicePrefix = "qa-verisafe",
+  });
 
   Future<Either<Failure, UserProfileData>> refreshCurrentUserProfile() async {
     try {
-      final response = await dioClient.dio.get("/accounts/me");
+      final response = await dioClient.dio.get("/$servicePrefix/accounts/me");
       if (response.statusCode == 200) {
         return right(UserProfileData.fromJson(response.data));
       }
@@ -33,7 +37,7 @@ class ProfileRemoteDatasource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.patch(
-        "/accounts/me",
+        "/$servicePrefix/accounts/me",
         data: updatedProfile.toJson(),
       );
       if (response.statusCode == 200) {
@@ -57,7 +61,7 @@ class ProfileRemoteDatasource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.patch(
-        "/accounts/me/phone",
+        "/$servicePrefix/accounts/me/phone",
         data: updatedProfile.toJson(),
       );
       if (response.statusCode == 200) {

@@ -27,34 +27,37 @@ class FeedPage extends StatelessWidget {
           );
         }
       },
-
-      child: CustomScrollView(
-        slivers: [
-          BlocBuilder<FeedBloc, FeedState>(
-            buildWhen: (previous, current) {
-              if (current is FeedLoaded) {
-                return true;
-              }
-              return false;
-            },
-            builder: (context, state) {
-              if (state is FeedLoaded) {
-                return SliverList.builder(
-                  itemBuilder: (context, index) {
-                    return PostCard(post: (state).posts[index]);
-                  },
-                  itemCount: state.posts.length,
-                );
-              }
-              if (state is FeedLoading) {
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<FeedBloc>().add(CacheFeedEvent());
+        },
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            BlocBuilder<FeedBloc, FeedState>(
+              buildWhen: (previous, current) =>
+                  current is FeedLoaded || current is FeedLoading,
+              builder: (context, state) {
+                if (state is FeedLoaded) {
+                  return SliverList.builder(
+                    itemBuilder: (context, index) {
+                      return PostCard(post: state.posts[index]);
+                    },
+                    itemCount: state.posts.length,
+                  );
+                }
+                if (state is FeedLoading) {
+                  return SliverFillRemaining(
+                    child: Center(child: CircularProgressIndicator.adaptive()),
+                  );
+                }
                 return SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator.adaptive()),
+                  child: Center(child: Text("Pull to refresh...")),
                 );
-              }
-              return SliverFillRemaining(child: Center(child: Text("WTF")));
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
