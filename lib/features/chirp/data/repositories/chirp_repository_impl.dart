@@ -33,7 +33,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
     return result.fold(
       (failure) => left(failure),
-      (postData) => right(postData.map((e) => e.toEntity()).toList()),
+      (postData) => right(postData),
     );
   }
 }
