@@ -7,3 +7,5 @@ abstract class FeedEvent extends Equatable {
 }
 
 class LoadFeedEvent extends FeedEvent {}
+
+class CacheFeedEvent extends FeedEvent {}

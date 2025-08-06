@@ -5,6 +5,8 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/chirp/chirp.dart';
+import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -70,10 +72,28 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
   // Chirp
-  sl.registerSingleton<ChirpRemoteDataSource>(ChirpRemoteDataSourceImpl());
-  sl.registerSingleton<ChirpRepository>(ChirpRepositoryImpl(sl()));
-  sl.registerSingleton(GetFeedPosts(sl()));
-  sl.registerFactory(() => FeedBloc(sl()));
+  sl.registerFactory<ChirpRemoteDataSource>(
+    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>()),
+  );
+  sl.registerFactory<ChirpLocalDataSource>(
+    () => ChirpLocalDataSource(db: cacheDB),
+  );
+  sl.registerFactory<ChirpRepository>(
+    () => ChirpRepositoryImpl(
+      remoteDataSource: sl.get<ChirpRemoteDataSource>(),
+      localDataSource: sl.get<ChirpLocalDataSource>(),
+    ),
+  );
+  sl.registerFactory(() => GetFeedPosts(sl()));
+  sl.registerFactory(
+    () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => FeedBloc(
+      getFeedPosts: sl.get<GetFeedPosts>(),
+      cachePosts: sl.get<CachePostsUsecase>(),
+    ),
+  );
   sl.registerFactory<ProfileRemoteDatasource>(
     () => ProfileRemoteDatasource(dioClient: sl.get<DioClient>()),
   );
