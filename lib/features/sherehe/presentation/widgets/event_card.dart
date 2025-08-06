@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants/constants.dart';
 
@@ -115,12 +116,23 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Image.asset(
-                  imagePath,
+                // child: Image.asset(
+                //   imagePath,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                //   //to look at
+                //   errorBuilder: (context, error, stackTrace) {
+                //     return Container(
+                //       width: double.infinity,
+                //       color: Theme.of(context).colorScheme.errorContainer,
+                //       child: const Icon(Icons.image_not_supported),
+                //     );
+                //   },
+                // ),
+                child: CachedNetworkImage(
+                  imageUrl: imagePath,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  //to look at
-                  errorBuilder: (context, error, stackTrace) {
+                  errorWidget: (context, child, error) {
                     return Container(
                       width: double.infinity,
                       color: Theme.of(context).colorScheme.errorContainer,
@@ -128,14 +140,6 @@ class EventCard extends StatelessWidget {
                     );
                   },
                 ),
-                // child: CachedNetworkImage(
-                //   imageUrl: imagePath,
-                //   width: double.infinity,
-                //   // placeholder: (context, url) => CircularProgressIndicator(),
-                //   errorWidget: (context, url, error) =>
-                //       Icon(Icons.broken_image),
-                //       color: Theme.of(context).colorScheme.errorContainer,
-                // ),
               ),
 
               // Details section - takes remaining space
