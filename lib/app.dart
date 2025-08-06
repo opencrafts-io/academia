@@ -1,6 +1,4 @@
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_bloc.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';

@@ -6,3 +6,4 @@ export 'usecases/get_all_events.dart';
 export 'usecases/get_all_attendees.dart';
 export 'usecases/get_specific_event.dart';
 export 'usecases/get_specific_attendee.dart';
+export 'usecases/create_event_use_case.dart';
