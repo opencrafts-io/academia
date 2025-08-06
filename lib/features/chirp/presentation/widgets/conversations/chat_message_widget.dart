@@ -1,66 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/presentation/widgets/attachment_widget.dart';
+import 'package:academia/features/chirp/domain/entities/conversations/message.dart';
 import 'package:time_since/time_since.dart';
+import 'message_status_widget.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  final Post message;
+  final Message message;
   final bool isOwnMessage;
   final VoidCallback? onTap;
+  final bool showAvatar;
+  final bool isFirstInGroup;
+  final bool isLastInGroup;
+  final MessageStatus? messageStatus;
 
   const ChatMessageWidget({
     super.key,
     required this.message,
     required this.isOwnMessage,
     this.onTap,
+    this.showAvatar = true,
+    this.isFirstInGroup = true,
+    this.isLastInGroup = true,
+    this.messageStatus,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: isFirstInGroup ? 4 : 2,
+        bottom: isLastInGroup ? 4 : 2,
+      ),
       child: Row(
         mainAxisAlignment: isOwnMessage
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!isOwnMessage) ...[
+          // Avatar for other person's messages (left side)
+          if (!isOwnMessage && showAvatar) ...[
             CircleAvatar(
               radius: 16,
-              backgroundColor: Colors.grey[300],
-              child: Text(
-                message.userId.isNotEmpty
-                    ? message.userId[0].toUpperCase()
-                    : '?',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              backgroundImage: message.sender.avatarUrl != null
+                  ? NetworkImage(message.sender.avatarUrl!)
+                  : null,
+              child: message.sender.avatarUrl == null
+                  ? Text(
+                      message.sender.name.isNotEmpty
+                          ? message.sender.name[0].toUpperCase()
+                          : 'U',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 8),
           ],
 
+          // Message bubble
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
               decoration: BoxDecoration(
                 color: isOwnMessage
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).cardColor,
+                    ? Theme.of(context).colorScheme.primary
+                    : _getMessageBubbleColor(context),
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(isOwnMessage ? 16 : 4),
-                  bottomRight: Radius.circular(isOwnMessage ? 4 : 16),
+                  topLeft: Radius.circular(isFirstInGroup ? 18 : 4),
+                  topRight: Radius.circular(isFirstInGroup ? 18 : 4),
+                  bottomLeft: Radius.circular(
+                    isLastInGroup ? (isOwnMessage ? 18 : 4) : 4,
+                  ),
+                  bottomRight: Radius.circular(
+                    isLastInGroup ? (isOwnMessage ? 4 : 18) : 4,
+                  ),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -71,49 +96,48 @@ class ChatMessageWidget extends StatelessWidget {
                   // Message content
                   if (message.content.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                       child: Text(
                         message.content,
-                        style: TextStyle(
-                          color: isOwnMessage ? Colors.white : null,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: isOwnMessage
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
+                          height: 1.4,
                         ),
                       ),
                     ),
 
-                  // Attachments
-                  if (message.attachments.isNotEmpty)
-                    ...message.attachments.map(
-                      (attachment) => Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                        child: GestureDetector(
-                          onTap: onTap,
-                          child: AttachmentWidget(attachment: attachment),
-                        ),
-                      ),
-                    ),
-
-                  // Timestamp
+                  // Timestamp and read status
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          timeSince(message.createdAt),
+                          _formatTime(message.sentAt),
                           style: TextStyle(
                             color: isOwnMessage
-                                ? Colors.white.withValues(alpha: 0.7)
-                                : Colors.grey[600],
+                                ? Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary.withValues(alpha: 0.7)
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                             fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         if (isOwnMessage) ...[
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.done_all,
-                            size: 16,
-                            color: Colors.white.withValues(alpha: 0.7),
+                          const SizedBox(width: 6),
+                          MessageStatusWidget(
+                            status:
+                                messageStatus ??
+                                (message.isRead
+                                    ? MessageStatus.read
+                                    : MessageStatus.sent),
+                            isOwnMessage: isOwnMessage,
                           ),
                         ],
                       ],
@@ -124,28 +148,77 @@ class ChatMessageWidget extends StatelessWidget {
             ),
           ),
 
-          if (isOwnMessage) const SizedBox(width: 24),
+          // Avatar for own messages (right side)
+          if (isOwnMessage && showAvatar) ...[
+            const SizedBox(width: 8),
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              backgroundImage: message.sender.avatarUrl != null
+                  ? NetworkImage(message.sender.avatarUrl!)
+                  : null,
+              child: message.sender.avatarUrl == null
+                  ? Text(
+                      message.sender.name.isNotEmpty
+                          ? message.sender.name[0].toUpperCase()
+                          : 'U',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    )
+                  : null,
+            ),
+          ],
         ],
       ),
     );
   }
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(time.year, time.month, time.day);
+
+    if (messageDate == today) {
+      // Today - show time only
+      return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    } else if (messageDate == today.subtract(const Duration(days: 1))) {
+      // Yesterday
+      return 'Yesterday ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    } else {
+      // Other days - show date and time
+      return '${time.day}/${time.month} ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    }
+  }
+
+  Color _getMessageBubbleColor(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    if (brightness == Brightness.dark) {
+      // Use a lighter color for better contrast in dark mode
+      return const Color(0xFF2A2A2A).withValues(alpha: 0.9);
+    } else {
+      // Use the default theme color for light mode
+      return Theme.of(context).colorScheme.surfaceContainerHigh;
+    }
+  }
 }
 
-class ChatMessageWithAttachmentsWidget extends StatelessWidget {
+// Legacy widget for backward compatibility with Post entity
+class ChatMessageWithPostWidget extends StatelessWidget {
   final String messageId;
   final String userId;
   final String content;
-  final List<Attachment> attachments;
   final DateTime timestamp;
   final bool isOwnMessage;
   final VoidCallback? onTap;
 
-  const ChatMessageWithAttachmentsWidget({
+  const ChatMessageWithPostWidget({
     super.key,
     required this.messageId,
     required this.userId,
     required this.content,
-    required this.attachments,
     required this.timestamp,
     required this.isOwnMessage,
     this.onTap,
@@ -164,12 +237,13 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
           if (!isOwnMessage) ...[
             CircleAvatar(
               radius: 16,
-              backgroundColor: Colors.grey[300],
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               child: Text(
-                userId.isNotEmpty ? userId[0].toUpperCase() : '?',
-                style: const TextStyle(
+                userId.isNotEmpty ? userId[0].toUpperCase() : 'U',
+                style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -179,22 +253,22 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
               decoration: BoxDecoration(
                 color: isOwnMessage
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).cardColor,
+                    ? Theme.of(context).colorScheme.primary
+                    : _getMessageBubbleColor(context),
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(isOwnMessage ? 16 : 4),
-                  bottomRight: Radius.circular(isOwnMessage ? 4 : 16),
+                  topLeft: const Radius.circular(18),
+                  topRight: const Radius.circular(18),
+                  bottomLeft: Radius.circular(isOwnMessage ? 18 : 4),
+                  bottomRight: Radius.circular(isOwnMessage ? 4 : 18),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -202,34 +276,23 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Message content
                   if (content.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                       child: Text(
                         content,
-                        style: TextStyle(
-                          color: isOwnMessage ? Colors.white : null,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: isOwnMessage
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
+                          height: 1.4,
                         ),
                       ),
                     ),
 
-                  // Attachments
-                  if (attachments.isNotEmpty)
-                    ...attachments.map(
-                      (attachment) => Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                        child: GestureDetector(
-                          onTap: onTap,
-                          child: AttachmentWidget(attachment: attachment),
-                        ),
-                      ),
-                    ),
-
-                  // Timestamp
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -237,17 +300,24 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
                           timeSince(timestamp),
                           style: TextStyle(
                             color: isOwnMessage
-                                ? Colors.white.withValues(alpha: 0.7)
-                                : Colors.grey[600],
+                                ? Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary.withValues(alpha: 0.7)
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                             fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         if (isOwnMessage) ...[
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 6),
                           Icon(
                             Icons.done_all,
                             size: 16,
-                            color: Colors.white.withValues(alpha: 0.7),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary.withValues(alpha: 0.7),
                           ),
                         ],
                       ],
@@ -258,9 +328,34 @@ class ChatMessageWithAttachmentsWidget extends StatelessWidget {
             ),
           ),
 
-          if (isOwnMessage) const SizedBox(width: 24),
+          if (isOwnMessage) ...[
+            const SizedBox(width: 8),
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              child: Text(
+                userId.isNotEmpty ? userId[0].toUpperCase() : 'U',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  Color _getMessageBubbleColor(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    if (brightness == Brightness.dark) {
+      // Use a lighter color for better contrast in dark mode
+      return const Color(0xFF2A2A2A).withValues(alpha: 0.9);
+    } else {
+      // Use the default theme color for light mode
+      return Theme.of(context).colorScheme.surfaceContainerHigh;
+    }
   }
 }

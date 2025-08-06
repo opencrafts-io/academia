@@ -7,6 +7,7 @@ import 'dart:io';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
+import '../../widgets/conversations/chat_message_list_widget.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -41,11 +42,12 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    }
-  }
+  // TODO: Implement scroll to bottom when needed
+  // void _scrollToBottom() {
+  //   if (_scrollController.hasClients) {
+  //     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  //   }
+  // }
 
   void _sendMessage() {
     if (_messageController.text.trim().isNotEmpty) {
@@ -293,7 +295,7 @@ class _ChatPageState extends State<ChatPage> {
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(
                     context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
         ),
       ],
@@ -381,122 +383,11 @@ class _ChatPageState extends State<ChatPage> {
                 if (state is MessagesLoaded) {
                   final messages = state.messages;
 
-                  if (messages.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80,
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No messages yet',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Start the conversation!',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.all(16),
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      final isMe = message.sender.id == 'current_user';
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          mainAxisAlignment: isMe
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            if (!isMe) ...[
-                              CircleAvatar(
-                                radius: 16,
-                                backgroundImage:
-                                    message.sender.avatarUrl != null
-                                    ? NetworkImage(message.sender.avatarUrl!)
-                                    : null,
-                                child: message.sender.avatarUrl == null
-                                    ? Text(
-                                        message.sender.name.isNotEmpty
-                                            ? message.sender.name[0]
-                                                  .toUpperCase()
-                                            : 'U',
-                                        style: const TextStyle(fontSize: 12),
-                                      )
-                                    : null,
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            Flexible(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isMe
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainerHighest,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  message.content,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(
-                                        color: isMe
-                                            ? Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary
-                                            : Theme.of(
-                                                context,
-                                              ).colorScheme.onSurfaceVariant,
-                                      ),
-                                ),
-                              ),
-                            ),
-                            if (isMe) ...[
-                              const SizedBox(width: 8),
-                              CircleAvatar(
-                                radius: 16,
-                                backgroundImage:
-                                    message.sender.avatarUrl != null
-                                    ? NetworkImage(message.sender.avatarUrl!)
-                                    : null,
-                                child: message.sender.avatarUrl == null
-                                    ? Text(
-                                        message.sender.name.isNotEmpty
-                                            ? message.sender.name[0]
-                                                  .toUpperCase()
-                                            : 'U',
-                                        style: const TextStyle(fontSize: 12),
-                                      )
-                                    : null,
-                              ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
+                  return ChatMessageListWidget(
+                    messages: messages,
+                    scrollController: _scrollController,
+                    currentUserId:
+                        'current_user', // TODO: Get from auth service
                   );
                 }
 
