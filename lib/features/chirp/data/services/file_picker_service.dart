@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:academia/features/chirp/domain/entities/post.dart';
+import 'package:academia/features/chirp/domain/entities/attachments.dart';
 
 class FilePickerService {
-  static Future<List<Attachment>> pickFiles({
+  static Future<List<Attachments>> pickFiles({
     bool allowMultiple = true,
     List<String> allowedExtensions = const [
       'jpg',
@@ -40,7 +40,7 @@ class FilePickerService {
     return [];
   }
 
-  static Future<List<Attachment>> pickImages({
+  static Future<List<Attachments>> pickImages({
     bool allowMultiple = true,
   }) async {
     try {
@@ -61,7 +61,7 @@ class FilePickerService {
     return [];
   }
 
-  static Future<List<Attachment>> pickVideos({
+  static Future<List<Attachments>> pickVideos({
     bool allowMultiple = true,
   }) async {
     try {
@@ -82,7 +82,7 @@ class FilePickerService {
     return [];
   }
 
-  static Future<List<Attachment>> pickDocuments({
+  static Future<List<Attachments>> pickDocuments({
     bool allowMultiple = true,
   }) async {
     try {
@@ -104,7 +104,7 @@ class FilePickerService {
     return [];
   }
 
-  static Attachment _createAttachmentFromFile(PlatformFile file) {
+  static Attachments _createAttachmentFromFile(PlatformFile file) {
     final extension = path.extension(file.path ?? '').toLowerCase();
     String attachmentType = 'document'; // default
 
@@ -128,7 +128,9 @@ class FilePickerService {
       attachmentType = 'audio';
     }
 
-    return Attachment(
+    return Attachments(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      postId: '', // This will be set when the attachment is associated with a post
       attachmentType: attachmentType,
       file: file.path ?? '', // For local files, this will be the file path
       createdAt: DateTime.now(),

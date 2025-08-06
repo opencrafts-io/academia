@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:academia/features/chirp/data/services/file_picker_service.dart';
-import 'package:academia/features/chirp/domain/entities/post.dart';
+import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:academia/features/chirp/presentation/widgets/attachment_widget.dart';
 
 class ChatInputWidget extends StatefulWidget {
-  final Function(String message, List<Attachment> attachments) onSendMessage;
+  final Function(String message, List<Attachments> attachments) onSendMessage;
   final bool isLoading;
 
   const ChatInputWidget({
@@ -19,7 +19,7 @@ class ChatInputWidget extends StatefulWidget {
 
 class _ChatInputWidgetState extends State<ChatInputWidget> {
   final TextEditingController _messageController = TextEditingController();
-  final List<Attachment> _selectedAttachments = [];
+  final List<Attachments> _selectedAttachments = [];
   bool _isComposing = false;
 
   @override
@@ -101,7 +101,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
   void _sendMessage() {
     if (_isComposing && !widget.isLoading) {
       final message = _messageController.text.trim();
-      final attachments = List<Attachment>.from(_selectedAttachments);
+      final attachments = List<Attachments>.from(_selectedAttachments);
 
       widget.onSendMessage(message, attachments);
 
