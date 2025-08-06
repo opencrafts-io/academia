@@ -133,7 +133,7 @@ class ProfilePreviewModal extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '${user.vibepoints ?? 0} vibepoints',
+                          '${user.vibepoints} vibepoints',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.w600,

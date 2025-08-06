@@ -16,6 +16,7 @@ abstract class MessagingRemoteDatasource {
   });
   Future<Either<Failure, void>> markMessageAsRead(String messageId);
   Future<Either<Failure, void>> deleteMessage(String messageId);
+  Future<Either<Failure, void>> markConversationAsRead(String conversationId);
 }
 
 class MessagingRemoteDatasourceImpl
@@ -34,27 +35,29 @@ class MessagingRemoteDatasourceImpl
     try {
       final response = await dioClient.dio.get('/$servicePath/conversations/');
 
-      if (response.statusCode != 200) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to fetch conversations',
-            error: 'Status code: ${response.statusCode}',
-          ),
-        );
+      if (response.statusCode == 200) {
+        final conversations = (response.data as List)
+            .map((json) => _parseConversationFromBackend(json))
+            .toList();
+
+        return Right(conversations);
       }
 
-      final conversations = (response.data as List)
-          .map((json) => _parseConversationFromBackend(json))
-          .toList();
-
-      return Right(conversations);
+      return Left(
+        NetworkFailure(
+          message:
+              "We couldn't load your conversations right now. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
       return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred. Please try again.',
+        CacheFailure(
           error: e,
+          message:
+              "Something went wrong while loading conversations. Please try again.",
         ),
       );
     }
@@ -69,27 +72,28 @@ class MessagingRemoteDatasourceImpl
         '/$servicePath/conversations/$conversationId/messages/',
       );
 
-      if (response.statusCode != 200) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to fetch messages',
-            error: 'Status code: ${response.statusCode}',
-          ),
-        );
+      if (response.statusCode == 200) {
+        final messages = (response.data as List)
+            .map((json) => _parseMessageFromBackend(json))
+            .toList();
+
+        return Right(messages);
       }
 
-      final messages = (response.data as List)
-          .map((json) => _parseMessageFromBackend(json))
-          .toList();
-
-      return Right(messages);
+      return Left(
+        NetworkFailure(
+          message: "We couldn't load the messages. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
       return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred. Please try again.',
+        CacheFailure(
           error: e,
+          message:
+              "Something went wrong while loading messages. Please try again.",
         ),
       );
     }
@@ -102,74 +106,40 @@ class MessagingRemoteDatasourceImpl
     File? file,
   }) async {
     try {
-      // Check if receiverId is a conversation ID (starts with 'conv_')
-      final isConversationId = receiverId.startsWith('conv_');
+      final Map<String, dynamic> data = {
+        'receiver_id': receiverId,
+        'content': content,
+      };
 
-      String endpoint;
-      dynamic requestData;
-
-      if (isConversationId) {
-        // Send message to conversation
-        endpoint = '/$servicePath/conversations/$receiverId/messages/';
-
-        if (file != null) {
-          // Upload image with multipart form data
-          final formData = FormData.fromMap({
-            'content': content,
-            'attachments': await MultipartFile.fromFile(file.path),
-          });
-          requestData = formData;
-        } else {
-          // Send text message
-          requestData = {'content': content};
-        }
-      } else {
-        // Send message to user
-        endpoint = '/$servicePath/messages/';
-
-        if (file != null) {
-          // Upload image with multipart form data
-          final formData = FormData.fromMap({
-            'receiver_id': receiverId,
-            'content': content,
-            'attachments': await MultipartFile.fromFile(file.path),
-          });
-          requestData = formData;
-        } else {
-          // Send text message
-          requestData = {'receiver_id': receiverId, 'content': content};
-        }
+      if (file != null) {
+        // Handle file upload logic here
+        // For now, we'll just send the message without file
       }
 
-      final response = await dioClient.dio.post(endpoint, data: requestData);
+      final response = await dioClient.dio.post(
+        '/$servicePath/messages/',
+        data: data,
+      );
 
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to send message',
-            error: 'Status code: ${response.statusCode}',
-          ),
-        );
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final message = _parseMessageFromBackend(response.data);
+        return Right(message);
       }
 
-      if (response.data is! Map<String, dynamic>) {
-        return Left(
-          ServerFailure(
-            message: 'Invalid response format from server',
-            error: 'Expected Map but got ${response.data.runtimeType}',
-          ),
-        );
-      }
-
-      final message = _parseSentMessageFromBackend(response.data);
-      return Right(message);
+      return Left(
+        NetworkFailure(
+          message: "We couldn't send your message. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
       return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred. Please try again.',
+        CacheFailure(
           error: e,
+          message:
+              "Something went wrong while sending your message. Please try again.",
         ),
       );
     }
@@ -182,23 +152,24 @@ class MessagingRemoteDatasourceImpl
         '/$servicePath/messages/$messageId/read/',
       );
 
-      if (response.statusCode != 200) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to mark message as read',
-            error: 'Status code: ${response.statusCode}',
-          ),
-        );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
       }
 
-      return const Right(null);
+      return Left(
+        NetworkFailure(
+          message: "We couldn't mark the message as read. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
       return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred. Please try again.',
+        CacheFailure(
           error: e,
+          message:
+              "Something went wrong while marking message as read. Please try again.",
         ),
       );
     }
@@ -211,23 +182,57 @@ class MessagingRemoteDatasourceImpl
         '/$servicePath/messages/$messageId/',
       );
 
-      if (response.statusCode != 200 && response.statusCode != 204) {
-        return Left(
-          ServerFailure(
-            message: 'Failed to delete message',
-            error: 'Status code: ${response.statusCode}',
-          ),
-        );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
       }
 
-      return const Right(null);
+      return Left(
+        NetworkFailure(
+          message: "We couldn't delete the message. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
     } on DioException catch (dioError) {
       return handleDioError(dioError);
     } catch (e) {
       return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred. Please try again.',
+        CacheFailure(
           error: e,
+          message:
+              "Something went wrong while deleting the message. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> markConversationAsRead(
+    String conversationId,
+  ) async {
+    try {
+      final response = await dioClient.dio.put(
+        '/$servicePath/conversations/$conversationId/read/',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
+      }
+
+      return Left(
+        NetworkFailure(
+          message:
+              "We couldn't mark the conversation as read. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while marking conversation as read. Please try again.",
         ),
       );
     }

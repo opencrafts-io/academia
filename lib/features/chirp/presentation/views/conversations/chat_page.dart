@@ -1,14 +1,15 @@
-import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
 import '../../widgets/conversations/chat_message_list_widget.dart';
 import '../../widgets/conversations/profile_preview_modal.dart';
+import '../../widgets/error_handling_widget.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -391,8 +392,53 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: BlocBuilder<MessagingBloc, MessagingState>(
               builder: (context, state) {
-                if (state is MessagingLoadingState) {
+                if (state is MessagesLoadingState) {
                   return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state is MessagesErrorState) {
+                  return LoadingErrorWidget(
+                    message: state.message,
+                    onRetry: () {
+                      context.read<MessagingBloc>().add(
+                        LoadMessagesEvent(widget.conversationId),
+                      );
+                    },
+                    retryText: state.retryAction,
+                  );
+                }
+
+                if (state is MessageSendingState) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('Sending message...'),
+                      ],
+                    ),
+                  );
+                }
+
+                if (state is MessageSendErrorState) {
+                  return Center(
+                    child: ErrorHandlingWidget(
+                      message: state.message,
+                      retryAction: state.retryAction,
+                      onRetry: () {
+                        // Retry sending the last message
+                        if (_messageController.text.trim().isNotEmpty) {
+                          context.read<MessagingBloc>().add(
+                            SendMessageEvent(
+                              widget.conversationId,
+                              _messageController.text.trim(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  );
                 }
 
                 if (state is MessagesLoaded) {
@@ -406,7 +452,7 @@ class _ChatPageState extends State<ChatPage> {
                   );
                 }
 
-                return const Center(child: Text('Something went wrong'));
+                return const Center(child: Text('No messages to display'));
               },
             ),
           ),

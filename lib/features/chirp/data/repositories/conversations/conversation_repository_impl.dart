@@ -23,14 +23,16 @@ class ConversationRepositoryImpl implements ConversationRepository {
 
   @override
   Future<Either<Failure, List<Conversation>>> getConversations() async {
-    try {
-      final conversationsResult = await remoteDataSource.getConversations();
+    final conversationsResult = await remoteDataSource.getConversations();
 
-      return await conversationsResult.fold(
-        (failure) async {
-          try {
-            final cachedConversations = await localDataSource
-                .getCachedConversations();
+    return await conversationsResult.fold(
+      (failure) async {
+        // Remote failed, try cache
+        final cachedResult = await localDataSource.getCachedConversations();
+        return cachedResult.fold(
+          (cacheFailure) =>
+              Left(failure), // Return original failure if cache also fails
+          (cachedConversations) async {
             final conversationEntities = await Future.wait(
               cachedConversations.map((data) async {
                 // For cached conversations, use fallback user data
@@ -51,89 +53,90 @@ class ConversationRepositoryImpl implements ConversationRepository {
                 );
 
                 if (data.lastMessageId != null) {
-                  final messageData = await localDataSource.getMessageById(
+                  final messageResult = await localDataSource.getMessageById(
                     data.lastMessageId!,
                   );
-                  if (messageData != null) {
-                    final actualMessage = messageData.toEntity();
-                    return entity.copyWith(lastMessage: actualMessage);
-                  }
+                  return messageResult.fold(
+                    (messageFailure) => entity,
+                    (messageData) => messageData != null
+                        ? entity.copyWith(lastMessage: messageData.toEntity())
+                        : entity,
+                  );
                 }
                 return entity;
               }),
             );
             return Right(conversationEntities);
-          } catch (cacheError) {
-            return Left(failure);
-          }
-        },
-        (conversations) async {
-          try {
-            await localDataSource.cacheConversations(conversations);
-          } catch (cacheError) {
-            // Log cache error but continue
-            _logger.w('Cache error: $cacheError');
-          }
+          },
+        );
+      },
+      (conversations) async {
+        // Remote succeeded, cache the data
+        final cacheResult = await localDataSource.cacheConversations(
+          conversations,
+        );
+        cacheResult.fold(
+          (cacheFailure) {
+            // Log cache error but continue - don't fail the operation
+            _logger.w('Cache error: ${cacheFailure.message}');
+          },
+          (_) {
+            // Cache successful
+          },
+        );
 
-          final conversationEntities = await Future.wait(
-            conversations.map((data) async {
-              // Get real user data from backend, with fallback
-              final chirpUserResult = await chirpUserRemoteDataSource
-                  .getChirpUserById(data.userId);
-              final chirpUser = chirpUserResult.fold(
-                (failure) => ChirpUser(
-                  id: data.userId,
-                  name: 'Unknown User',
-                  email: 'unknown@example.com',
-                  vibepoints: 0,
-                  avatarUrl: null,
-                ),
-                (userData) => ChirpUser(
-                  id: userData.id,
-                  name: userData.name,
-                  email: userData.email,
-                  vibepoints: userData.vibepoints,
-                  avatarUrl: userData.avatarUrl,
-                ),
+        final conversationEntities = await Future.wait(
+          conversations.map((data) async {
+            // Get real user data from backend, with fallback
+            final chirpUserResult = await chirpUserRemoteDataSource
+                .getChirpUserById(data.userId);
+            final chirpUser = chirpUserResult.fold(
+              (failure) => ChirpUser(
+                id: data.userId,
+                name: 'Unknown User',
+                email: 'unknown@example.com',
+                vibepoints: 0,
+                avatarUrl: null,
+              ),
+              (userData) => ChirpUser(
+                id: userData.id,
+                name: userData.name,
+                email: userData.email,
+                vibepoints: userData.vibepoints,
+                avatarUrl: userData.avatarUrl,
+              ),
+            );
+
+            // Create conversation entity with real user data
+            final entity = Conversation(
+              id: data.id,
+              user: chirpUser,
+              lastMessage: null,
+              lastMessageAt: data.lastMessageAt,
+              unreadCount: data.unreadCount,
+            );
+
+            if (data.lastMessageId != null) {
+              final messageResult = await localDataSource.getMessageById(
+                data.lastMessageId!,
               );
-
-              // Create conversation entity with real user data
-              final entity = Conversation(
-                id: data.id,
-                user: chirpUser,
-                lastMessage: null,
-                lastMessageAt: data.lastMessageAt,
-                unreadCount: data.unreadCount,
-              );
-
-              if (data.lastMessageId != null) {
-                try {
-                  final messageData = await localDataSource.getMessageById(
-                    data.lastMessageId!,
-                  );
-                  if (messageData != null) {
-                    final actualMessage = messageData.toEntity();
-                    return entity.copyWith(lastMessage: actualMessage);
-                  }
-                } catch (messageError) {
+              return messageResult.fold(
+                (messageFailure) {
                   // Log message fetch error but continue
-                  _logger.w('Message fetch error: $messageError');
-                }
-              }
-              return entity;
-            }),
-          );
+                  _logger.w('Message fetch error: ${messageFailure.message}');
+                  return entity;
+                },
+                (messageData) => messageData != null
+                    ? entity.copyWith(lastMessage: messageData.toEntity())
+                    : entity,
+              );
+            }
+            return entity;
+          }),
+        );
 
-          return Right(conversationEntities);
-        },
-      );
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while fetching conversations',
-          error: e,
-        ),
-      );
-    }
+        return Right(conversationEntities);
+      },
+    );
   }
 }

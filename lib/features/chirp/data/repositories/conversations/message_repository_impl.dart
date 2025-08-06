@@ -6,6 +6,7 @@ import '../../../domain/repositories/conversations/message_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
 import '../../datasources/conversations/messaging_local_datasource.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 class MessageRepositoryImpl implements MessageRepository {
   final MessagingRemoteDatasource remoteDataSource;
@@ -20,45 +21,39 @@ class MessageRepositoryImpl implements MessageRepository {
   Future<Either<Failure, List<Message>>> getMessages(
     String conversationId,
   ) async {
-    try {
-      final messagesResult = await remoteDataSource.getMessages(conversationId);
+    final messagesResult = await remoteDataSource.getMessages(conversationId);
 
-      return await messagesResult.fold(
-        (failure) async {
-          // TODO: Uncomment
-          // // Remote failed, try cache
-          // try {
-          //   final cachedMessages = await localDataSource.getCachedMessages(
-          //     conversationId,
-          //   );
-          //   return Right(
-          //     cachedMessages.map((data) => data.toEntity()).toList(),
-          //   );
-          // } catch (cacheError) {
-          //   return Left(failure); // Return original failure if cache also fails
-          // }
-          return Left(failure);
-        },
-        (messages) async {
-          // TODO: Uncomment
-          // // Remote succeeded, cache the data
-          // try {
-          //   await localDataSource.cacheMessages(conversationId, messages);
-          // } catch (cacheError) {
-          //   // Log cache error but continue
-          //   print('Cache error: $cacheError');
-          // }
-          return Right(messages.map((data) => data.toEntity()).toList());
-        },
-      );
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while fetching messages',
-          error: e,
-        ),
-      );
-    }
+    return await messagesResult.fold(
+      (failure) async {
+        // Remote failed, try cache
+        final cachedResult = await localDataSource.getCachedMessages(
+          conversationId,
+        );
+        return cachedResult.fold(
+          (cacheFailure) =>
+              Left(failure), // Return original failure if cache also fails
+          (cachedMessages) =>
+              Right(cachedMessages.map((data) => data.toEntity()).toList()),
+        );
+      },
+      (messages) async {
+        // Remote succeeded, cache the data
+        final cacheResult = await localDataSource.cacheMessages(
+          conversationId,
+          messages,
+        );
+        cacheResult.fold(
+          (cacheFailure) {
+            // Log cache error but continue - don't fail the operation
+            debugPrint('Cache error: ${cacheFailure.message}');
+          },
+          (_) {
+            // Cache successful
+          },
+        );
+        return Right(messages.map((data) => data.toEntity()).toList());
+      },
+    );
   }
 
   @override
@@ -67,52 +62,32 @@ class MessageRepositoryImpl implements MessageRepository {
     String content, {
     File? file,
   }) async {
-    try {
-      final messageResult = await remoteDataSource.sendMessage(
-        receiverId,
-        content,
-        file: file,
-      );
+    final messageResult = await remoteDataSource.sendMessage(
+      receiverId,
+      content,
+      file: file,
+    );
 
-      return messageResult.fold(
-        (failure) => Left(failure),
-        (message) => Right(message.toEntity()),
-      );
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while sending message',
-          error: e,
-        ),
-      );
-    }
+    return messageResult.fold(
+      (failure) => Left(failure),
+      (message) => Right(message.toEntity()),
+    );
   }
 
   @override
   Future<Either<Failure, void>> markMessageAsRead(String messageId) async {
-    try {
-      return await remoteDataSource.markMessageAsRead(messageId);
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while marking message as read',
-          error: e,
-        ),
-      );
-    }
+    return await remoteDataSource.markMessageAsRead(messageId);
   }
 
   @override
   Future<Either<Failure, void>> deleteMessage(String messageId) async {
-    try {
-      return await remoteDataSource.deleteMessage(messageId);
-    } catch (e) {
-      return Left(
-        ServerFailure(
-          message: 'An unexpected error occurred while deleting message',
-          error: e,
-        ),
-      );
-    }
+    return await remoteDataSource.deleteMessage(messageId);
+  }
+
+  @override
+  Future<Either<Failure, void>> markConversationAsRead(
+    String conversationId,
+  ) async {
+    return await remoteDataSource.markConversationAsRead(conversationId);
   }
 }

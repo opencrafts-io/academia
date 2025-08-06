@@ -35,10 +35,15 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     LoadConversationsEvent event,
     Emitter<MessagingState> emit,
   ) async {
-    emit(MessagingLoadingState());
+    emit(ConversationsLoadingState());
     final result = await getConversations(NoParams());
     result.fold(
-      (failure) => emit(MessagingErrorState(failure.message)),
+      (failure) => emit(
+        ConversationsErrorState(
+          failure.message,
+          retryAction: "Tap to retry loading conversations",
+        ),
+      ),
       (conversations) => emit(ConversationsLoaded(conversations)),
     );
   }
@@ -55,27 +60,35 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
       currentConversations = (state as MessagesLoaded).conversations;
     }
 
-    emit(MessagingLoadingState());
+    emit(MessagesLoadingState());
 
     final result = await getMessages(event.conversationId);
-    result.fold((failure) => emit(MessagingErrorState(failure.message)), (
-      messages,
-    ) {
-      // Sort messages by sentAt time (oldest first)
-      final sortedMessages = List<Message>.from(messages)
-        ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+    result.fold(
+      (failure) => emit(
+        MessagesErrorState(
+          failure.message,
+          retryAction: "Tap to retry loading messages",
+        ),
+      ),
+      (messages) {
+        // Sort messages by sentAt time (oldest first)
+        final sortedMessages = List<Message>.from(messages)
+          ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
 
-      final conversation = Conversation(
-        id: event.conversationId,
-        user: _getUserForConversation(event.conversationId),
-        lastMessage: sortedMessages.isNotEmpty ? sortedMessages.last : null,
-        lastMessageAt: sortedMessages.isNotEmpty
-            ? sortedMessages.last.sentAt
-            : null,
-        unreadCount: 0,
-      );
-      emit(MessagesLoaded(sortedMessages, conversation, currentConversations));
-    });
+        final conversation = Conversation(
+          id: event.conversationId,
+          user: _getUserForConversation(event.conversationId),
+          lastMessage: sortedMessages.isNotEmpty ? sortedMessages.last : null,
+          lastMessageAt: sortedMessages.isNotEmpty
+              ? sortedMessages.last.sentAt
+              : null,
+          unreadCount: 0,
+        );
+        emit(
+          MessagesLoaded(sortedMessages, conversation, currentConversations),
+        );
+      },
+    );
   }
 
   Future<void> _onSendMessage(
@@ -93,7 +106,7 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
       currentConversations = currentState.conversations;
     }
 
-    emit(MessagingLoadingState());
+    emit(MessageSendingState());
 
     // Create message parameters
     final messageParams = <String, dynamic>{
@@ -106,31 +119,37 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     }
 
     final result = await sendMessage(messageParams);
-    result.fold((failure) => emit(MessagingErrorState(failure.message)), (
-      message,
-    ) {
-      final updatedMessages = [...currentMessages, message];
-
-      final updatedConversation =
-          currentConversation?.copyWith(
-            lastMessage: message,
-            lastMessageAt: message.sentAt,
-          ) ??
-          Conversation(
-            id: event.receiverId,
-            user: _getUserForConversation(event.receiverId),
-            lastMessage: message,
-            lastMessageAt: message.sentAt,
-            unreadCount: 0,
-          );
-      emit(
-        MessagesLoaded(
-          updatedMessages,
-          updatedConversation,
-          currentConversations,
+    result.fold(
+      (failure) => emit(
+        MessageSendErrorState(
+          failure.message,
+          retryAction: "Tap to retry sending message",
         ),
-      );
-    });
+      ),
+      (message) {
+        final updatedMessages = [...currentMessages, message];
+
+        final updatedConversation =
+            currentConversation?.copyWith(
+              lastMessage: message,
+              lastMessageAt: message.sentAt,
+            ) ??
+            Conversation(
+              id: event.receiverId,
+              user: _getUserForConversation(event.receiverId),
+              lastMessage: message,
+              lastMessageAt: message.sentAt,
+              unreadCount: 0,
+            );
+        emit(
+          MessagesLoaded(
+            updatedMessages,
+            updatedConversation,
+            currentConversations,
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _onMarkConversationAsRead(
@@ -171,7 +190,12 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     emit(UsersSearchLoadingState());
     final result = await searchUsers(event.query);
     result.fold(
-      (failure) => emit(UsersSearchErrorState(failure.message)),
+      (failure) => emit(
+        UsersSearchErrorState(
+          failure.message,
+          retryAction: "Tap to retry search",
+        ),
+      ),
       (users) => emit(UsersSearchLoadedState(users)),
     );
   }
