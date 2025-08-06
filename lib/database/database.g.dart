@@ -2220,6 +2220,1229 @@ class ConversationTableCompanion extends UpdateCompanion<ConversationData> {
   }
 }
 
+class $PostTableTable extends PostTable
+    with TableInfo<$PostTableTable, PostEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PostTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _likeCountMeta = const VerificationMeta(
+    'likeCount',
+  );
+  @override
+  late final GeneratedColumn<int> likeCount = GeneratedColumn<int>(
+    'like_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    userId,
+    content,
+    likeCount,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'post_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PostEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('like_count')) {
+      context.handle(
+        _likeCountMeta,
+        likeCount.isAcceptableOrUnknown(data['like_count']!, _likeCountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_likeCountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PostEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PostEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      likeCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}like_count'],
+      )!,
+    );
+  }
+
+  @override
+  $PostTableTable createAlias(String alias) {
+    return $PostTableTable(attachedDatabase, alias);
+  }
+}
+
+class PostEntity extends DataClass implements Insertable<PostEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String userId;
+  final String content;
+  final int likeCount;
+  const PostEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.userId,
+    required this.content,
+    required this.likeCount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['user_id'] = Variable<String>(userId);
+    map['content'] = Variable<String>(content);
+    map['like_count'] = Variable<int>(likeCount);
+    return map;
+  }
+
+  PostTableCompanion toCompanion(bool nullToAbsent) {
+    return PostTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      userId: Value(userId),
+      content: Value(content),
+      likeCount: Value(likeCount),
+    );
+  }
+
+  factory PostEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PostEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      content: serializer.fromJson<String>(json['content']),
+      likeCount: serializer.fromJson<int>(json['like_count']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'user_id': serializer.toJson<String>(userId),
+      'content': serializer.toJson<String>(content),
+      'like_count': serializer.toJson<int>(likeCount),
+    };
+  }
+
+  PostEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? userId,
+    String? content,
+    int? likeCount,
+  }) => PostEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    userId: userId ?? this.userId,
+    content: content ?? this.content,
+    likeCount: likeCount ?? this.likeCount,
+  );
+  PostEntity copyWithCompanion(PostTableCompanion data) {
+    return PostEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      content: data.content.present ? data.content.value : this.content,
+      likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
+          ..write('likeCount: $likeCount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, userId, content, likeCount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PostEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.userId == this.userId &&
+          other.content == this.content &&
+          other.likeCount == this.likeCount);
+}
+
+class PostTableCompanion extends UpdateCompanion<PostEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> userId;
+  final Value<String> content;
+  final Value<int> likeCount;
+  final Value<int> rowid;
+  const PostTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.likeCount = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PostTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String userId,
+    required String content,
+    required int likeCount,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       content = Value(content),
+       likeCount = Value(likeCount);
+  static Insertable<PostEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? userId,
+    Expression<String>? content,
+    Expression<int>? likeCount,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (userId != null) 'user_id': userId,
+      if (content != null) 'content': content,
+      if (likeCount != null) 'like_count': likeCount,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PostTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? userId,
+    Value<String>? content,
+    Value<int>? likeCount,
+    Value<int>? rowid,
+  }) {
+    return PostTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      likeCount: likeCount ?? this.likeCount,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (likeCount.present) {
+      map['like_count'] = Variable<int>(likeCount.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
+          ..write('likeCount: $likeCount, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttachmentTableTable extends AttachmentTable
+    with TableInfo<$AttachmentTableTable, AttachmentEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
+  @override
+  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
+    'post_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES post_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
+    'attachmentType',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
+    'attachment_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 10),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
+  @override
+  late final GeneratedColumn<String> file = GeneratedColumn<String>(
+    'file',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    attachmentType,
+    file,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'attachment_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AttachmentEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('post_id')) {
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_postIdMeta);
+    }
+    if (data.containsKey('attachment_type')) {
+      context.handle(
+        _attachmentTypeMeta,
+        attachmentType.isAcceptableOrUnknown(
+          data['attachment_type']!,
+          _attachmentTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attachmentTypeMeta);
+    }
+    if (data.containsKey('file')) {
+      context.handle(
+        _fileMeta,
+        file.isAcceptableOrUnknown(data['file']!, _fileMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fileMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AttachmentEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttachmentEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post_id'],
+      )!,
+      attachmentType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_type'],
+      )!,
+      file: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file'],
+      )!,
+    );
+  }
+
+  @override
+  $AttachmentTableTable createAlias(String alias) {
+    return $AttachmentTableTable(attachedDatabase, alias);
+  }
+}
+
+class AttachmentEntity extends DataClass
+    implements Insertable<AttachmentEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String postId;
+  final String attachmentType;
+  final String file;
+  const AttachmentEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.postId,
+    required this.attachmentType,
+    required this.file,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['post_id'] = Variable<String>(postId);
+    map['attachment_type'] = Variable<String>(attachmentType);
+    map['file'] = Variable<String>(file);
+    return map;
+  }
+
+  AttachmentTableCompanion toCompanion(bool nullToAbsent) {
+    return AttachmentTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      postId: Value(postId),
+      attachmentType: Value(attachmentType),
+      file: Value(file),
+    );
+  }
+
+  factory AttachmentEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttachmentEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      postId: serializer.fromJson<String>(json['post_id']),
+      attachmentType: serializer.fromJson<String>(json['attachment_type']),
+      file: serializer.fromJson<String>(json['file']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'post_id': serializer.toJson<String>(postId),
+      'attachment_type': serializer.toJson<String>(attachmentType),
+      'file': serializer.toJson<String>(file),
+    };
+  }
+
+  AttachmentEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? postId,
+    String? attachmentType,
+    String? file,
+  }) => AttachmentEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    postId: postId ?? this.postId,
+    attachmentType: attachmentType ?? this.attachmentType,
+    file: file ?? this.file,
+  );
+  AttachmentEntity copyWithCompanion(AttachmentTableCompanion data) {
+    return AttachmentEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      postId: data.postId.present ? data.postId.value : this.postId,
+      attachmentType: data.attachmentType.present
+          ? data.attachmentType.value
+          : this.attachmentType,
+      file: data.file.present ? data.file.value : this.file,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttachmentEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('file: $file')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, postId, attachmentType, file);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttachmentEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.postId == this.postId &&
+          other.attachmentType == this.attachmentType &&
+          other.file == this.file);
+}
+
+class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> postId;
+  final Value<String> attachmentType;
+  final Value<String> file;
+  final Value<int> rowid;
+  const AttachmentTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.postId = const Value.absent(),
+    this.attachmentType = const Value.absent(),
+    this.file = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AttachmentTableCompanion.insert({
+    required String id,
+    required DateTime createdAt,
+    this.updatedAt = const Value.absent(),
+    required String postId,
+    required String attachmentType,
+    required String file,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       createdAt = Value(createdAt),
+       postId = Value(postId),
+       attachmentType = Value(attachmentType),
+       file = Value(file);
+  static Insertable<AttachmentEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? postId,
+    Expression<String>? attachmentType,
+    Expression<String>? file,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (postId != null) 'post_id': postId,
+      if (attachmentType != null) 'attachment_type': attachmentType,
+      if (file != null) 'file': file,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AttachmentTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? postId,
+    Value<String>? attachmentType,
+    Value<String>? file,
+    Value<int>? rowid,
+  }) {
+    return AttachmentTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      postId: postId ?? this.postId,
+      attachmentType: attachmentType ?? this.attachmentType,
+      file: file ?? this.file,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (postId.present) {
+      map['post_id'] = Variable<String>(postId.value);
+    }
+    if (attachmentType.present) {
+      map['attachment_type'] = Variable<String>(attachmentType.value);
+    }
+    if (file.present) {
+      map['file'] = Variable<String>(file.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttachmentTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('file: $file, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PostReplyTableTable extends PostReplyTable
+    with TableInfo<$PostReplyTableTable, PostReplyEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PostReplyTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
+  @override
+  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
+    'post_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES post_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    userId,
+    content,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'post_reply_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PostReplyEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('post_id')) {
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_postIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PostReplyEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PostReplyEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+    );
+  }
+
+  @override
+  $PostReplyTableTable createAlias(String alias) {
+    return $PostReplyTableTable(attachedDatabase, alias);
+  }
+}
+
+class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String postId;
+  final String userId;
+  final String content;
+  const PostReplyEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.postId,
+    required this.userId,
+    required this.content,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['post_id'] = Variable<String>(postId);
+    map['user_id'] = Variable<String>(userId);
+    map['content'] = Variable<String>(content);
+    return map;
+  }
+
+  PostReplyTableCompanion toCompanion(bool nullToAbsent) {
+    return PostReplyTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      postId: Value(postId),
+      userId: Value(userId),
+      content: Value(content),
+    );
+  }
+
+  factory PostReplyEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PostReplyEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      postId: serializer.fromJson<String>(json['post_id']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      content: serializer.fromJson<String>(json['content']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'post_id': serializer.toJson<String>(postId),
+      'user_id': serializer.toJson<String>(userId),
+      'content': serializer.toJson<String>(content),
+    };
+  }
+
+  PostReplyEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? postId,
+    String? userId,
+    String? content,
+  }) => PostReplyEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    postId: postId ?? this.postId,
+    userId: userId ?? this.userId,
+    content: content ?? this.content,
+  );
+  PostReplyEntity copyWithCompanion(PostReplyTableCompanion data) {
+    return PostReplyEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      postId: data.postId.present ? data.postId.value : this.postId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      content: data.content.present ? data.content.value : this.content,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostReplyEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, postId, userId, content);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PostReplyEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.postId == this.postId &&
+          other.userId == this.userId &&
+          other.content == this.content);
+}
+
+class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> postId;
+  final Value<String> userId;
+  final Value<String> content;
+  final Value<int> rowid;
+  const PostReplyTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.postId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PostReplyTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String postId,
+    required String userId,
+    required String content,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       postId = Value(postId),
+       userId = Value(userId),
+       content = Value(content);
+  static Insertable<PostReplyEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? postId,
+    Expression<String>? userId,
+    Expression<String>? content,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (postId != null) 'post_id': postId,
+      if (userId != null) 'user_id': userId,
+      if (content != null) 'content': content,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PostReplyTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? postId,
+    Value<String>? userId,
+    Value<String>? content,
+    Value<int>? rowid,
+  }) {
+    return PostReplyTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      postId: postId ?? this.postId,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (postId.present) {
+      map['post_id'] = Variable<String>(postId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostReplyTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ChirpUserTableTable extends ChirpUserTable
     with TableInfo<$ChirpUserTableTable, ChirpUserData> {
   @override
@@ -5251,6 +6474,11 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $MessageTableTable messageTable = $MessageTableTable(this);
   late final $ConversationTableTable conversationTable =
       $ConversationTableTable(this);
+  late final $PostTableTable postTable = $PostTableTable(this);
+  late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
+    this,
+  );
+  late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
   late final $ChirpUserTableTable chirpUserTable = $ChirpUserTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
@@ -5265,12 +6493,32 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     token,
     messageTable,
     conversationTable,
+    postTable,
+    attachmentTable,
+    postReplyTable,
     chirpUserTable,
     todo,
     eventTable,
     attendeeTable,
     ticketTable,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'post_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('attachment_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'post_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('post_reply_table', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$UserProfileTableCreateCompanionBuilder =
@@ -7019,6 +8267,1124 @@ typedef $$ConversationTableTableProcessedTableManager =
       (ConversationData, $$ConversationTableTableReferences),
       ConversationData,
       PrefetchHooks Function({bool userId, bool lastMessageId})
+    >;
+typedef $$PostTableTableCreateCompanionBuilder =
+    PostTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String userId,
+      required String content,
+      required int likeCount,
+      Value<int> rowid,
+    });
+typedef $$PostTableTableUpdateCompanionBuilder =
+    PostTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> userId,
+      Value<String> content,
+      Value<int> likeCount,
+      Value<int> rowid,
+    });
+
+final class $$PostTableTableReferences
+    extends BaseReferences<_$AppDataBase, $PostTableTable, PostEntity> {
+  $$PostTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$AttachmentTableTable, List<AttachmentEntity>>
+  _attachmentTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.attachmentTable,
+    aliasName: $_aliasNameGenerator(db.postTable.id, db.attachmentTable.postId),
+  );
+
+  $$AttachmentTableTableProcessedTableManager get attachmentTableRefs {
+    final manager = $$AttachmentTableTableTableManager(
+      $_db,
+      $_db.attachmentTable,
+    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _attachmentTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PostReplyTableTable, List<PostReplyEntity>>
+  _postReplyTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.postReplyTable,
+    aliasName: $_aliasNameGenerator(db.postTable.id, db.postReplyTable.postId),
+  );
+
+  $$PostReplyTableTableProcessedTableManager get postReplyTableRefs {
+    final manager = $$PostReplyTableTableTableManager(
+      $_db,
+      $_db.postReplyTable,
+    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_postReplyTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$PostTableTableFilterComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get likeCount => $composableBuilder(
+    column: $table.likeCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> attachmentTableRefs(
+    Expression<bool> Function($$AttachmentTableTableFilterComposer f) f,
+  ) {
+    final $$AttachmentTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachmentTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentTableTableFilterComposer(
+            $db: $db,
+            $table: $db.attachmentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> postReplyTableRefs(
+    Expression<bool> Function($$PostReplyTableTableFilterComposer f) f,
+  ) {
+    final $$PostReplyTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PostTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get likeCount => $composableBuilder(
+    column: $table.likeCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PostTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<int> get likeCount =>
+      $composableBuilder(column: $table.likeCount, builder: (column) => column);
+
+  Expression<T> attachmentTableRefs<T extends Object>(
+    Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
+  ) {
+    final $$AttachmentTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachmentTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attachmentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> postReplyTableRefs<T extends Object>(
+    Expression<T> Function($$PostReplyTableTableAnnotationComposer a) f,
+  ) {
+    final $$PostReplyTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PostTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $PostTableTable,
+          PostEntity,
+          $$PostTableTableFilterComposer,
+          $$PostTableTableOrderingComposer,
+          $$PostTableTableAnnotationComposer,
+          $$PostTableTableCreateCompanionBuilder,
+          $$PostTableTableUpdateCompanionBuilder,
+          (PostEntity, $$PostTableTableReferences),
+          PostEntity,
+          PrefetchHooks Function({
+            bool attachmentTableRefs,
+            bool postReplyTableRefs,
+          })
+        > {
+  $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PostTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PostTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PostTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<int> likeCount = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PostTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                userId: userId,
+                content: content,
+                likeCount: likeCount,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String userId,
+                required String content,
+                required int likeCount,
+                Value<int> rowid = const Value.absent(),
+              }) => PostTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                userId: userId,
+                content: content,
+                likeCount: likeCount,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PostTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({attachmentTableRefs = false, postReplyTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (attachmentTableRefs) db.attachmentTable,
+                    if (postReplyTableRefs) db.postReplyTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (attachmentTableRefs)
+                        await $_getPrefetchedData<
+                          PostEntity,
+                          $PostTableTable,
+                          AttachmentEntity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PostTableTableReferences
+                              ._attachmentTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PostTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attachmentTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.postId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (postReplyTableRefs)
+                        await $_getPrefetchedData<
+                          PostEntity,
+                          $PostTableTable,
+                          PostReplyEntity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PostTableTableReferences
+                              ._postReplyTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PostTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).postReplyTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.postId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$PostTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $PostTableTable,
+      PostEntity,
+      $$PostTableTableFilterComposer,
+      $$PostTableTableOrderingComposer,
+      $$PostTableTableAnnotationComposer,
+      $$PostTableTableCreateCompanionBuilder,
+      $$PostTableTableUpdateCompanionBuilder,
+      (PostEntity, $$PostTableTableReferences),
+      PostEntity,
+      PrefetchHooks Function({
+        bool attachmentTableRefs,
+        bool postReplyTableRefs,
+      })
+    >;
+typedef $$AttachmentTableTableCreateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      required String id,
+      required DateTime createdAt,
+      Value<DateTime> updatedAt,
+      required String postId,
+      required String attachmentType,
+      required String file,
+      Value<int> rowid,
+    });
+typedef $$AttachmentTableTableUpdateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> postId,
+      Value<String> attachmentType,
+      Value<String> file,
+      Value<int> rowid,
+    });
+
+final class $$AttachmentTableTableReferences
+    extends
+        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentEntity> {
+  $$AttachmentTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $PostTableTable _postIdTable(_$AppDataBase db) =>
+      db.postTable.createAlias(
+        $_aliasNameGenerator(db.attachmentTable.postId, db.postTable.id),
+      );
+
+  $$PostTableTableProcessedTableManager get postId {
+    final $_column = $_itemColumn<String>('post_id')!;
+
+    final manager = $$PostTableTableTableManager(
+      $_db,
+      $_db.postTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AttachmentTableTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PostTableTableFilterComposer get postId {
+    final $$PostTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PostTableTableOrderingComposer get postId {
+    final $$PostTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get file =>
+      $composableBuilder(column: $table.file, builder: (column) => column);
+
+  $$PostTableTableAnnotationComposer get postId {
+    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AttachmentTableTable,
+          AttachmentEntity,
+          $$AttachmentTableTableFilterComposer,
+          $$AttachmentTableTableOrderingComposer,
+          $$AttachmentTableTableAnnotationComposer,
+          $$AttachmentTableTableCreateCompanionBuilder,
+          $$AttachmentTableTableUpdateCompanionBuilder,
+          (AttachmentEntity, $$AttachmentTableTableReferences),
+          AttachmentEntity,
+          PrefetchHooks Function({bool postId})
+        > {
+  $$AttachmentTableTableTableManager(
+    _$AppDataBase db,
+    $AttachmentTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> postId = const Value.absent(),
+                Value<String> attachmentType = const Value.absent(),
+                Value<String> file = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AttachmentTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                attachmentType: attachmentType,
+                file: file,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime createdAt,
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String postId,
+                required String attachmentType,
+                required String file,
+                Value<int> rowid = const Value.absent(),
+              }) => AttachmentTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                attachmentType: attachmentType,
+                file: file,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AttachmentTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({postId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (postId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.postId,
+                                referencedTable:
+                                    $$AttachmentTableTableReferences
+                                        ._postIdTable(db),
+                                referencedColumn:
+                                    $$AttachmentTableTableReferences
+                                        ._postIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AttachmentTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AttachmentTableTable,
+      AttachmentEntity,
+      $$AttachmentTableTableFilterComposer,
+      $$AttachmentTableTableOrderingComposer,
+      $$AttachmentTableTableAnnotationComposer,
+      $$AttachmentTableTableCreateCompanionBuilder,
+      $$AttachmentTableTableUpdateCompanionBuilder,
+      (AttachmentEntity, $$AttachmentTableTableReferences),
+      AttachmentEntity,
+      PrefetchHooks Function({bool postId})
+    >;
+typedef $$PostReplyTableTableCreateCompanionBuilder =
+    PostReplyTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String postId,
+      required String userId,
+      required String content,
+      Value<int> rowid,
+    });
+typedef $$PostReplyTableTableUpdateCompanionBuilder =
+    PostReplyTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> postId,
+      Value<String> userId,
+      Value<String> content,
+      Value<int> rowid,
+    });
+
+final class $$PostReplyTableTableReferences
+    extends
+        BaseReferences<_$AppDataBase, $PostReplyTableTable, PostReplyEntity> {
+  $$PostReplyTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $PostTableTable _postIdTable(_$AppDataBase db) =>
+      db.postTable.createAlias(
+        $_aliasNameGenerator(db.postReplyTable.postId, db.postTable.id),
+      );
+
+  $$PostTableTableProcessedTableManager get postId {
+    final $_column = $_itemColumn<String>('post_id')!;
+
+    final manager = $$PostTableTableTableManager(
+      $_db,
+      $_db.postTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PostReplyTableTableFilterComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PostTableTableFilterComposer get postId {
+    final $$PostTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PostTableTableOrderingComposer get postId {
+    final $$PostTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  $$PostTableTableAnnotationComposer get postId {
+    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $PostReplyTableTable,
+          PostReplyEntity,
+          $$PostReplyTableTableFilterComposer,
+          $$PostReplyTableTableOrderingComposer,
+          $$PostReplyTableTableAnnotationComposer,
+          $$PostReplyTableTableCreateCompanionBuilder,
+          $$PostReplyTableTableUpdateCompanionBuilder,
+          (PostReplyEntity, $$PostReplyTableTableReferences),
+          PostReplyEntity,
+          PrefetchHooks Function({bool postId})
+        > {
+  $$PostReplyTableTableTableManager(
+    _$AppDataBase db,
+    $PostReplyTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PostReplyTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PostReplyTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PostReplyTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> postId = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PostReplyTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                userId: userId,
+                content: content,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String postId,
+                required String userId,
+                required String content,
+                Value<int> rowid = const Value.absent(),
+              }) => PostReplyTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                userId: userId,
+                content: content,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PostReplyTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({postId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (postId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.postId,
+                                referencedTable: $$PostReplyTableTableReferences
+                                    ._postIdTable(db),
+                                referencedColumn:
+                                    $$PostReplyTableTableReferences
+                                        ._postIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PostReplyTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $PostReplyTableTable,
+      PostReplyEntity,
+      $$PostReplyTableTableFilterComposer,
+      $$PostReplyTableTableOrderingComposer,
+      $$PostReplyTableTableAnnotationComposer,
+      $$PostReplyTableTableCreateCompanionBuilder,
+      $$PostReplyTableTableUpdateCompanionBuilder,
+      (PostReplyEntity, $$PostReplyTableTableReferences),
+      PostReplyEntity,
+      PrefetchHooks Function({bool postId})
     >;
 typedef $$ChirpUserTableTableCreateCompanionBuilder =
     ChirpUserTableCompanion Function({
@@ -9132,6 +11498,12 @@ class $AppDataBaseManager {
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>
       $$ConversationTableTableTableManager(_db, _db.conversationTable);
+  $$PostTableTableTableManager get postTable =>
+      $$PostTableTableTableManager(_db, _db.postTable);
+  $$AttachmentTableTableTableManager get attachmentTable =>
+      $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
+  $$PostReplyTableTableTableManager get postReplyTable =>
+      $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
   $$ChirpUserTableTableTableManager get chirpUserTable =>
       $$ChirpUserTableTableTableManager(_db, _db.chirpUserTable);
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
