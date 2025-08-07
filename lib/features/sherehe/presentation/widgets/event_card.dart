@@ -116,20 +116,8 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                // child: Image.asset(
-                //   imagePath,
-                //   width: double.infinity,
-                //   fit: BoxFit.cover,
-                //   //to look at
-                //   errorBuilder: (context, error, stackTrace) {
-                //     return Container(
-                //       width: double.infinity,
-                //       color: Theme.of(context).colorScheme.errorContainer,
-                //       child: const Icon(Icons.image_not_supported),
-                //     );
-                //   },
-                // ),
                 child: CachedNetworkImage(
+                  fit: BoxFit.fill,
                   imageUrl: imagePath,
                   width: double.infinity,
                   errorWidget: (context, child, error) {
