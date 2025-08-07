@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/chirp_user.dart';
+import '../../../domain/entities/chirp_user.dart';
 
 class UserSearchWidget extends StatefulWidget {
   const UserSearchWidget({super.key});

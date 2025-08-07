@@ -10,34 +10,22 @@ class ChirpLocalDataSource {
 
   ChirpLocalDataSource({required this.db});
 
-  Future<Either<Failure, List<Post>>> cachePosts(List<Post> posts) async {
+  Future<Either<Failure, List<PostEntity>>> cachePosts(
+    List<Post> posts,
+  ) async {
     try {
       for (final post in posts) {
         await db.into(db.postTable).insertOnConflictUpdate(post.toData());
-        // clear old attachments and replies before inserting
-        await (db.delete(
-          db.attachmentTable,
-        )..where((tbl) => tbl.postId.equals(post.id))).go();
-        await (db.delete(
-          db.postReplyTable,
-        )..where((tbl) => tbl.postId.equals(post.id))).go();
-
         for (final att in post.attachments) {
-          await db
-              .into(db.attachmentTable)
-              .insertOnConflictUpdate(att.toData(postId: post.id));
+          await db.into(db.attachmentTable).insert(att.toData(postId: post.id));
         }
         for (final reply in post.replies) {
           await db
               .into(db.postReplyTable)
-              .insertOnConflictUpdate(reply.toData(parentPostId: post.id));
+              .insert(reply.toData(parentPostId: post.id));
         }
       }
-      final cachedData = await getCachedPosts();
-      return cachedData.fold(
-        (failure) => left(failure),
-        (posts) => right(posts),
-      );
+      return right(posts.map((post) => post.toData()).toList());
     } catch (e) {
       return left(
         CacheFailure(error: e, message: "Failed to cache posts locally"),
@@ -45,10 +33,8 @@ class ChirpLocalDataSource {
     }
   }
 
-
   Future<Either<Failure, List<Post>>> getCachedPosts() async {
     try {
-
       final postRows = await db.select(db.postTable).get();
       final List<Post> results = [];
 
@@ -66,11 +52,10 @@ class ChirpLocalDataSource {
 
       return right(results);
     } catch (e) {
-      print('got hereeeeeeeeeeeee!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! $e');
-
       return left(
         CacheFailure(error: e, message: "Could not load cached posts"),
       );
     }
   }
+
 }

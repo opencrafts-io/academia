@@ -5,6 +5,7 @@ import '../../domain/entities/chirp_user.dart';
 
 @DataClassName('ChirpUserData')
 class ChirpUserTable extends Table with TableMixin {
+  @override
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get email => text()();

@@ -1,12 +1,22 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
+import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class MessagingLocalDataSource {
-  Future<void> cacheConversations(List<ConversationData> conversations);
-  Future<List<ConversationData>> getCachedConversations();
-  Future<void> cacheMessages(String conversationId, List<MessageData> messages);
-  Future<List<MessageData>> getCachedMessages(String conversationId);
-  Future<MessageData?> getMessageById(String messageId);
+  Future<Either<Failure, void>> cacheConversations(
+    List<ConversationData> conversations,
+  );
+  Future<Either<Failure, List<ConversationData>>> getCachedConversations();
+  Future<Either<Failure, void>> cacheMessages(
+    String conversationId,
+    List<MessageData> messages,
+  );
+  Future<Either<Failure, List<MessageData>>> getCachedMessages(
+    String conversationId,
+  );
+  Future<Either<Failure, MessageData?>> getMessageById(String messageId);
 }
 
 class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
@@ -15,53 +25,109 @@ class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
   MessagingLocalDataSourceImpl({required this.localDB});
 
   @override
-  Future<void> cacheConversations(List<ConversationData> conversations) async {
-    await localDB.batch((batch) {
-      batch.deleteWhere(
-        localDB.conversationTable,
-        (_) => const Constant<bool>(true),
+  Future<Either<Failure, void>> cacheConversations(
+    List<ConversationData> conversations,
+  ) async {
+    try {
+      await localDB.batch((batch) {
+        batch.deleteWhere(
+          localDB.conversationTable,
+          (_) => const Constant<bool>(true),
+        );
+        batch.insertAll(localDB.conversationTable, conversations);
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't save conversations to your device. Please try again.",
+        ),
       );
-      batch.insertAll(localDB.conversationTable, conversations);
-    });
+    }
   }
 
   @override
-  Future<List<ConversationData>> getCachedConversations() async {
-    return await localDB.select(localDB.conversationTable).get();
+  Future<Either<Failure, List<ConversationData>>>
+  getCachedConversations() async {
+    try {
+      final conversations = await localDB
+          .select(localDB.conversationTable)
+          .get();
+      return Right(conversations);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't load conversations from your device. Please try again.",
+        ),
+      );
+    }
   }
 
   @override
-  Future<void> cacheMessages(
+  Future<Either<Failure, void>> cacheMessages(
     String conversationId,
     List<MessageData> messages,
   ) async {
-    await localDB.batch((batch) {
-      batch.deleteWhere(
-        localDB.messageTable,
-        (tbl) => Expression.or([
-          tbl.senderId.equals(conversationId),
-          tbl.recipientId.equals(conversationId),
-        ]),
+    try {
+      await localDB.batch((batch) {
+        batch.deleteWhere(
+          localDB.messageTable,
+          (_) => const Constant<bool>(true),
+        );
+
+        if (messages.isNotEmpty) {
+          batch.insertAll(localDB.messageTable, messages);
+        }
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't save messages to your device. Please try again.",
+        ),
       );
-      batch.insertAll(localDB.messageTable, messages);
-    });
+    }
   }
 
   @override
-  Future<List<MessageData>> getCachedMessages(String conversationId) async {
-    return await (localDB.select(localDB.messageTable)..where(
-          (tbl) => Expression.or([
-            tbl.senderId.equals(conversationId),
-            tbl.recipientId.equals(conversationId),
-          ]),
-        ))
-        .get();
+  Future<Either<Failure, List<MessageData>>> getCachedMessages(
+    String conversationId,
+  ) async {
+    try {
+      final messages = await localDB.select(localDB.messageTable).get();
+      return Right(messages);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't load messages from your device. Please try again.",
+        ),
+      );
+    }
   }
 
   @override
-  Future<MessageData?> getMessageById(String messageId) async {
-    return await (localDB.select(
-      localDB.messageTable,
-    )..where((tbl) => tbl.id.equals(messageId))).getSingleOrNull();
+  Future<Either<Failure, MessageData?>> getMessageById(String messageId) async {
+    try {
+      final message = await (localDB.select(
+        localDB.messageTable,
+      )..where((tbl) => tbl.id.equals(messageId))).getSingleOrNull();
+      return Right(message);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't find the message on your device. Please try again.",
+        ),
+      );
+    }
   }
 }

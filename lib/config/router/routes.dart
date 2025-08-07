@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
-import 'package:academia/features/chirp/chirp.dart';
 
 import 'package:academia/injection_container.dart';
 
@@ -81,6 +80,20 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
     return ChatPage(conversationId: conversationId);
   }
 }
+
+@TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
+class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
+  final String postId;
+
+  const PostDetailRoute({required this.postId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final post = state.extra as Post;
+    return PostDetailPage(post: post);
+  }
+}
+
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -186,8 +199,6 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
   }
 }
 
-
-
 @TypedGoRoute<TodosRoute>(
   path: "/todos",
   // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
@@ -198,3 +209,4 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     return TodoHomeScreen();
   }
 }
+
