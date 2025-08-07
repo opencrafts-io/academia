@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:academia/core/network/network.dart';
 import '../../../../core/core.dart';
+import '../../domain/entities/event.dart';
 
 class ShereheRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
@@ -155,6 +157,97 @@ class ShereheRemoteDataSource with DioErrorHandler {
         ServerFailure(
           message: "An unexpected error occurred while fetching the attendee",
           error: e,
+        ),
+      );
+    }
+  }
+  Future<Either<Failure, Unit>> createEvent(Event event, {File? eventImage}) async {
+    try {
+      if (eventImage == null) {
+        _logger.w("createEvent called without a required image file.");
+        return left(ServerFailure(
+            message: "No image provided for event creation.",
+            error: "Image file is required"));
+      }
+
+      Map<String, dynamic> eventDataMap = {
+        'name': event.name,
+        'description': event.description,
+        'date': event.date,
+        'time': event.time,
+        'genre': event.genre.join(','),
+        'location': event.location,
+        'url': event.url,
+        'organizer': event.organizer,
+        'organizer_id': event.organizerId,
+      };
+
+      final FormData formData = FormData.fromMap(eventDataMap);
+
+      String fileName;
+      try {
+        fileName = eventImage.path.split('/').last;
+        if (fileName.isEmpty) {
+          throw FormatException("Extracted filename is empty");
+        }
+      } catch (e) {
+        _logger.w("Could not extract filename from path '${eventImage.path}'. Error: $e. Generating default filename.");
+        String extension = '.jpg';
+        try {
+          final pathParts = eventImage.path.split('.');
+          if (pathParts.length > 1) {
+            extension = '.${pathParts.last}';
+          }
+        } catch (extError) {
+          _logger.d("Could not determine file extension, using default .jpg. Error: $extError");
+        }
+        fileName = 'event_image_${DateTime.now().millisecondsSinceEpoch}$extension';
+      }
+
+      _logger.d("Using filename for upload: $fileName");
+
+      formData.files.add(MapEntry(
+        'image',
+        await MultipartFile.fromFile(eventImage.path, filename: fileName),
+      ));
+
+      final String endpointUrl = "https://qasherehe.opencrafts.io/events/createEvent";
+
+      _logger.i("Sending event creation request to: $endpointUrl");
+      _logger.d("Event data (non-file): $eventDataMap");
+
+      final response = await dioClient.dio.post(
+        endpointUrl,
+        data: formData,
+      );
+
+      _logger.i("Event creation response status: ${response.statusCode}");
+      _logger.d("Event creation response data: ${response.data}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String message = response.data['message'] ?? 'Event created';
+        _logger.i("Event created successfully: $message");
+        return right(unit);
+      } else {
+        _logger.e("Server error creating event. Status: ${response.statusCode}, Response: ${response.data}");
+        String errorMessage = response.data['message'] ?? 'Unknown server error';
+        _logger.e("Server error message: $errorMessage");
+        return left(
+          ServerFailure(
+            message: "Server error: $errorMessage (Status: ${response.statusCode})",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when creating event", error: de, stackTrace: de.stackTrace);
+      return handleDioError(de);
+    } catch (e, stackTrace) {
+      _logger.e("Unexpected error while creating event", error: e, stackTrace: stackTrace);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating the event: ${e.toString()}",
+          error: e.toString(),
         ),
       );
     }

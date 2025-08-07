@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
+  file_selector_windows
   sentry_flutter
   sqlite3_flutter_libs
   url_launcher_windows

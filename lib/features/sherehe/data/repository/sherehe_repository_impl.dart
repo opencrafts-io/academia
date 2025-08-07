@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 import '../../domain/domain.dart';
 import '../data.dart';
+import 'dart:io';
 
 class ShereheRepositoryImpl implements ShereheRepository {
   final ShereheRemoteDataSource remoteDataSource;
@@ -37,8 +38,8 @@ class ShereheRepositoryImpl implements ShereheRepository {
       limit: limit,
     );
     return result.fold(
-      (failure) => Left(failure),
-      (models) => Right(models.map((e) => e.toEntity()).toList()),
+          (failure) => Left(failure),
+          (models) => Right(models.map((e) => e.toEntity()).toList()),
     );
   }
 
@@ -60,8 +61,8 @@ class ShereheRepositoryImpl implements ShereheRepository {
 
     final result = await remoteDataSource.getSpecificEvent(id);
     return result.fold(
-      (failure) => Left(failure),
-      (model) => Right(model.toEntity()),
+          (failure) => Left(failure),
+          (model) => Right(model.toEntity()),
     );
   }
 
@@ -117,5 +118,10 @@ class ShereheRepositoryImpl implements ShereheRepository {
     //   (failure) => Left(failure),
     //   (model) => Right(model.toEntity()),
     // );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> createEvent(Event event, File imageFile) async {
+    return await remoteDataSource.createEvent(event, eventImage: imageFile);
   }
 }
