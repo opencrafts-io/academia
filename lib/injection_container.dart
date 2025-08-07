@@ -1,5 +1,5 @@
 import 'package:academia/config/flavor.dart';
-import 'package:academia/core/network/chirp_dio_client.dart';
+// import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -31,9 +31,9 @@ Future<void> init(FlavorConfig flavor) async {
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
     ),
   );
-  sl.registerFactory<ChirpDioClient>(
-    () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
-  );
+  // sl.registerFactory<ChirpDioClient>(
+  //   () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  // );
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
