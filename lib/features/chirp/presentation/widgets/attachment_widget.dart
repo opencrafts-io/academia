@@ -295,10 +295,7 @@ class _VideoControlsState extends State<_VideoControls> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Theme.of(context).colorScheme.scrim.withValues(alpha: 0.3),
-              ],
+              colors: [Colors.transparent,  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5)],
             ),
           ),
           child: Stack(
@@ -307,9 +304,7 @@ class _VideoControlsState extends State<_VideoControls> {
               Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.scrim.withValues(alpha: 0.5),
+                    color:  Theme.of(context).colorScheme.onInverseSurface.withValues(alpha: 0.7),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -318,7 +313,7 @@ class _VideoControlsState extends State<_VideoControls> {
                       widget.controller.value.isPlaying
                           ? Icons.pause
                           : Icons.play_arrow,
-                      // color: Theme.of(context).colorScheme.onPrimary,
+                      // color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                     onPressed: () {
                       setState(() {
@@ -352,13 +347,12 @@ class _VideoControlsState extends State<_VideoControls> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.scrim.withValues(alpha: 0.5),
+                    color:  Theme.of(context).colorScheme.onInverseSurface.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '${_formatDuration(widget.controller.value.position)} / ${_formatDuration(widget.controller.value.duration)}',
+                    
                   ),
                 ),
               ),

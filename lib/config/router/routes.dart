@@ -75,6 +75,20 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
   }
 }
 
+@TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
+class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
+  final String postId;
+
+  const PostDetailRoute({required this.postId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final post = state.extra as Post;
+    return PostDetailPage(post: post);
+  }
+}
+
+
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
   @override
@@ -174,3 +188,4 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     return TodoHomeScreen();
   }
 }
+
