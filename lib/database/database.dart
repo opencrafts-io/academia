@@ -17,8 +17,10 @@ part 'database.g.dart';
     UserProfile,
     Token,
     ConversationTable,
-    MessageTable, AttachmentTable, PostTable, PostReplyTable
-  ,
+    MessageTable,
+    AttachmentTable,
+    PostTable,
+    PostReplyTable,
     ChirpUserTable,
     Todo,
     EventTable,
