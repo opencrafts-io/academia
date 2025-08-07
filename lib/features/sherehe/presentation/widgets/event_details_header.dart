@@ -49,6 +49,7 @@ class EventDetailsHeader extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl: event.imageUrl,
+              fit: BoxFit.cover,
               errorWidget: (context, child, error) {
                 return Container(
                   width: double.infinity,

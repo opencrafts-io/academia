@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
+
+import 'package:academia/injection_container.dart';
+
+import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
+
 
 part 'routes.g.dart';
 
@@ -136,12 +142,27 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
 
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
-  routes: [TypedGoRoute<ShereheDetailsRoute>(path: "get-event")],
+  routes: [
+    TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
+    TypedGoRoute<CreateEventRoute>(path: "create"), 
+  ],
 )
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ShereheHome();
+  }
+}
+
+class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider<CreateEventBloc>(
+      create: (context) => CreateEventBloc(
+        createEventUseCase: sl<CreateEventUseCase>(),
+      ),
+      child: const CreateEventScreen(),
+    );
   }
 }
 

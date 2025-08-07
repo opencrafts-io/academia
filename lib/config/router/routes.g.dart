@@ -285,6 +285,7 @@ RouteBase get $shereheRoute => GoRouteData.$route(
 
       factory: _$ShereheDetailsRoute._fromState,
     ),
+    GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
   ],
 );
 
@@ -319,6 +320,26 @@ mixin _$ShereheDetailsRoute on GoRouteData {
     '/sherehe/get-event',
     queryParams: {'event-id': _self.eventId},
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$CreateEventRoute on GoRouteData {
+  static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
+
+  @override
+  String get location => GoRouteData.$location('/sherehe/create');
 
   @override
   void go(BuildContext context) => context.go(location);
