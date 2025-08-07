@@ -47,6 +47,20 @@ class ChirpRemoteDataSource with DioErrorHandler {
             "created_at": "2025-07-29T10:10:00Z",
             "updated_at": "2025-07-29T10:10:00Z",
           },
+          {
+            "id": 216,
+            "user_id": "taylor_13",
+            "content": "Dear John, I see it all now that you're gone",
+            "created_at": "2025-07-29T10:10:00Z",
+            "updated_at": "2025-07-29T10:10:00Z",
+          },
+          {
+            "id": 207,
+            "user_id": "swift_13",
+            "content": "Don't you think I was too young to be messed with?",
+            "created_at": "2025-07-29T10:10:00Z",
+            "updated_at": "2025-07-29T10:10:00Z",
+          },
         ],
       },
       {
@@ -73,11 +87,26 @@ class ChirpRemoteDataSource with DioErrorHandler {
             "updated_at": "2025-07-29T11:40:00Z",
           },
           {
-            "id": 203,
+            "id": 213,
             "user_id": "johndoe_123",
             "content": "Wish I was there!",
             "created_at": "2025-07-29T11:45:00Z",
             "updated_at": "2025-07-29T11:45:00Z",
+          },
+          
+          {
+            "id": 206,
+            "user_id": "taylor_13",
+            "content": "Take me to the place where all the poets went to die",
+            "created_at": "2025-07-31T10:10:00Z",
+            "updated_at": "2025-07-31T10:10:00Z",
+          },
+          {
+            "id": 204,
+            "user_id": "janedoe_123",
+            "content": "It was rare, I was there!",
+            "created_at": "2025-08-02T11:45:00Z",
+            "updated_at": "2025-08-02T11:45:00Z",
           },
         ],
       },
@@ -91,7 +120,22 @@ class ChirpRemoteDataSource with DioErrorHandler {
         "attachments": [
           
         ],
-        "replies": [],
+        "replies": [
+          {
+            "id": 201,
+            "user_id": "charlie_789",
+            "content": "Pardon me, are you Aaron Burr sir?",
+            "created_at": "2025-07-30T11:40:00Z",
+            "updated_at": "2025-07-30T11:40:00Z",
+          },
+          {
+            "id": 203,
+            "user_id": "johndoe_123",
+            "content": "That depends, who's asking",
+            "created_at": "2025-07-31T11:45:00Z",
+            "updated_at": "2025-07-31T11:45:00Z",
+          },
+        ],
       },
     ];
 
