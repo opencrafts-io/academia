@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants/constants.dart';
 
@@ -115,12 +116,11 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Image.asset(
-                  imagePath,
+                child: CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  imageUrl: imagePath,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  //to look at
-                  errorBuilder: (context, error, stackTrace) {
+                  errorWidget: (context, child, error) {
                     return Container(
                       width: double.infinity,
                       color: Theme.of(context).colorScheme.errorContainer,
@@ -282,7 +282,9 @@ class EventCard extends StatelessWidget {
                                           strokeWidth: 1.5,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                                Theme.of(context).colorScheme.outline,
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.outline,
                                               ),
                                         ),
                                       ),
