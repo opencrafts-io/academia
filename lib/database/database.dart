@@ -6,8 +6,6 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
-
 import '../features/chirp/data/data.dart';
 
 part 'database.g.dart';
