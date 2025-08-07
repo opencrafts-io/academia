@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 import '../../../domain/entities/conversations/message.dart';
+import '../../../domain/entities/chirp_user.dart';
 
 abstract class MessagingState extends Equatable {
   const MessagingState();
@@ -14,9 +15,40 @@ class MessagingLoadingState extends MessagingState {}
 
 class MessagingErrorState extends MessagingState {
   final String message;
-  const MessagingErrorState(this.message);
+  final String? retryAction;
+  const MessagingErrorState(this.message, {this.retryAction});
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, retryAction];
+}
+
+class ConversationsLoadingState extends MessagingState {}
+
+class ConversationsErrorState extends MessagingState {
+  final String message;
+  final String? retryAction;
+  const ConversationsErrorState(this.message, {this.retryAction});
+  @override
+  List<Object?> get props => [message, retryAction];
+}
+
+class MessagesLoadingState extends MessagingState {}
+
+class MessagesErrorState extends MessagingState {
+  final String message;
+  final String? retryAction;
+  const MessagesErrorState(this.message, {this.retryAction});
+  @override
+  List<Object?> get props => [message, retryAction];
+}
+
+class MessageSendingState extends MessagingState {}
+
+class MessageSendErrorState extends MessagingState {
+  final String message;
+  final String? retryAction;
+  const MessageSendErrorState(this.message, {this.retryAction});
+  @override
+  List<Object?> get props => [message, retryAction];
 }
 
 class MessagesLoaded extends MessagingState {
@@ -40,4 +72,22 @@ class ConversationsLoaded extends MessagingState {
   const ConversationsLoaded(this.conversations);
   @override
   List<Object?> get props => [conversations];
+}
+
+// User Search States
+class UsersSearchLoadingState extends MessagingState {}
+
+class UsersSearchLoadedState extends MessagingState {
+  final List<ChirpUser> users;
+  const UsersSearchLoadedState(this.users);
+  @override
+  List<Object?> get props => [users];
+}
+
+class UsersSearchErrorState extends MessagingState {
+  final String message;
+  final String? retryAction;
+  const UsersSearchErrorState(this.message, {this.retryAction});
+  @override
+  List<Object?> get props => [message, retryAction];
 }

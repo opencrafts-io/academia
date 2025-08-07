@@ -1,16 +1,15 @@
-import 'package:academia/core/network/chirp_dio_client.dart';
+import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/features/chirp/data/data.dart';
-import 'package:academia/features/chirp/domain/domain.dart';
 import 'package:academia/features/chirp/domain/entities/post.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:dio/dio.dart';
 
 class ChirpRemoteDataSource with DioErrorHandler {
-  final ChirpDioClient chirpDio;
+  final DioClient dioClient;
 
-  ChirpRemoteDataSource({required this.chirpDio});
+  ChirpRemoteDataSource({required this.dioClient});
 
   Future<Either<Failure, List<Post>>> getPosts() async {
     //   // --- Dummy Data for Testing ---
@@ -198,25 +197,24 @@ class ChirpRemoteDataSource with DioErrorHandler {
       );
     }
   }
+  Future<Either<Failure, List<Post>>> getPosts() async {
+    try {
+      final res = await dioClient.dio.get("/statuses/");
 
-  // Future<Either<Failure, List<Post>>> getPosts() async {
-  //   try {
-  //     final res = await chirpDio.dio.get("/statuses/");
-
-  //     if (res.statusCode == 200 && res.data is List) {
-  //       final List<Post> posts = (res.data as List)
-  //           .map((json) => PostHelper.fromJson(json))
-  //           .toList();
-  //       return Right(posts);
-  //     } else {
-  //       return Left(
-  //         NetworkFailure(message: "Unexpected response", error: res.data),
-  //       );
-  //     }
-  //   } on DioException catch (e) {
-  //     return handleDioError(e);
-  //   } catch (e) {
-  //     return Left(CacheFailure(message: e.toString(), error: e));
-  //   }
-  // }
+      if (res.statusCode == 200 && res.data is List) {
+        final List<Post> posts = (res.data as List)
+            .map((json) => PostHelper.fromJson(json))
+            .toList();
+        return Right(posts);
+      } else {
+        return Left(
+          NetworkFailure(message: "Unexpected response", error: res.data),
+        );
+      }
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(CacheFailure(message: e.toString(), error: e));
+    }
+  }
 }
