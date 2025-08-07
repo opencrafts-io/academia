@@ -52,4 +52,3 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     });
   }
 }
-
