@@ -51,7 +51,7 @@ in almost all scenarios
 To counter that we have setup flavor configuration using the target entry point and will propagate the configuration
 to the application. 
 
-Running the above commands on unsupported platforms will raise a warnig that its unsupported but will just build correctly
+ Running the above commands on unsupported platforms will raise a warnig that its unsupported but will just build correctly
 
 
 
