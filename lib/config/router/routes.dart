@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/chirp/chirp.dart';
 
 part 'routes.g.dart';
 
@@ -164,8 +163,6 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
     );
   }
 }
-
-
 
 @TypedGoRoute<TodosRoute>(
   path: "/todos",

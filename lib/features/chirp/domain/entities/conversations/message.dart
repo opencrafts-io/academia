@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:academia/features/profile/domain/entities/user_profile.dart';
+import '../chirp_user.dart';
 
 class Message extends Equatable {
   final String id;
   final String content;
-  final UserProfile sender;
-  final UserProfile recipient;
+  final ChirpUser sender;
+  final ChirpUser recipient;
   final DateTime sentAt;
   final bool isRead;
+  final String? imageUrl;
 
   const Message({
     required this.id,
@@ -16,10 +17,11 @@ class Message extends Equatable {
     required this.recipient,
     required this.sentAt,
     this.isRead = false,
+    this.imageUrl,
   });
 
   @override
-  List<Object?> get props => [id, content, recipient, sentAt, isRead];
+  List<Object?> get props => [id, content, recipient, sentAt, isRead, imageUrl];
 
   @override
   bool? get stringify => true;

@@ -1,4 +1,4 @@
-import 'package:academia/core/network/chirp_dio_client.dart';
+import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
@@ -17,14 +17,18 @@ abstract class ChirpUserRemoteDatasource {
 class ChirpUserRemoteDatasourceImpl
     with DioErrorHandler
     implements ChirpUserRemoteDatasource {
-  final ChirpDioClient dioClient;
+  final DioClient dioClient;
+  final String servicePath;
 
-  ChirpUserRemoteDatasourceImpl({required this.dioClient});
+  ChirpUserRemoteDatasourceImpl({
+    required this.dioClient,
+    this.servicePath = "qa-chirp",
+  });
 
   @override
   Future<Either<Failure, List<ChirpUserData>>> getChirpUsers() async {
     try {
-      final response = await dioClient.dio.get('/chirp/users/');
+      final response = await dioClient.dio.get('/$servicePath/users/');
 
       if (response.statusCode != 200) {
         return Left(
@@ -55,7 +59,7 @@ class ChirpUserRemoteDatasourceImpl
   @override
   Future<Either<Failure, ChirpUserData>> getChirpUserById(String userId) async {
     try {
-      final response = await dioClient.dio.get('/chirp/users/$userId');
+      final response = await dioClient.dio.get('/$servicePath/users/$userId');
 
       if (response.statusCode != 200) {
         return Left(
@@ -86,7 +90,7 @@ class ChirpUserRemoteDatasourceImpl
   ) async {
     try {
       final response = await dioClient.dio.post(
-        '/chirp/users/',
+        '/$servicePath/users/',
         data: user.toJson(),
       );
 
@@ -119,7 +123,7 @@ class ChirpUserRemoteDatasourceImpl
   ) async {
     try {
       final response = await dioClient.dio.put(
-        '/chirp/users/${user.id}',
+        '/$servicePath/users/${user.id}',
         data: user.toJson(),
       );
 
@@ -149,7 +153,9 @@ class ChirpUserRemoteDatasourceImpl
   @override
   Future<Either<Failure, void>> deleteChirpUser(String userId) async {
     try {
-      final response = await dioClient.dio.delete('/chirp/users/$userId');
+      final response = await dioClient.dio.delete(
+        '/$servicePath/users/$userId',
+      );
 
       if (response.statusCode != 200 && response.statusCode != 204) {
         return Left(
@@ -179,7 +185,7 @@ class ChirpUserRemoteDatasourceImpl
   ) async {
     try {
       final response = await dioClient.dio.get(
-        '/chirp/users/search/',
+        '/$servicePath/users/search/',
         queryParameters: {'q': query},
       );
 
