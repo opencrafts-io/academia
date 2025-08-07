@@ -1,4 +1,5 @@
 import 'package:academia/config/flavor.dart';
+import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -27,6 +28,9 @@ Future<void> init(FlavorConfig flavor) async {
       authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
     ),
+  );
+  sl.registerFactory<ChirpDioClient>(
+    () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
   );
 
   sl.registerFactory<SignInWithGoogleUsecase>(
@@ -70,10 +74,14 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
   // Chirp
-  sl.registerSingleton<ChirpRemoteDataSource>(ChirpRemoteDataSourceImpl());
-  sl.registerSingleton<ChirpRepository>(ChirpRepositoryImpl(sl()));
-  sl.registerSingleton(GetFeedPosts(sl()));
-  sl.registerFactory(() => FeedBloc(sl()));
+  sl.registerFactory<ChirpRemoteDataSource>(() => ChirpRemoteDataSource(chirpDio: sl.get<ChirpDioClient>()));
+  sl.registerFactory<ChirpLocalDataSource>(
+    () => ChirpLocalDataSource(db: cacheDB),
+  );
+  sl.registerFactory<ChirpRepository>(() => ChirpRepositoryImpl(remoteDataSource: sl.get<ChirpRemoteDataSource>(), localDataSource: sl.get<ChirpLocalDataSource>()));
+  sl.registerFactory(() => GetFeedPosts(sl()));
+  sl.registerFactory(() => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()));
+  sl.registerFactory(() => FeedBloc(getFeedPosts: sl.get<GetFeedPosts>(), cachePosts: sl.get<CachePostsUsecase>()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () => ProfileRemoteDatasource(dioClient: sl.get<DioClient>()),
   );

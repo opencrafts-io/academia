@@ -66,7 +66,12 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<EventBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(create: (context) => sl<FeedBloc>()..add(LoadFeedEvent())),
+        BlocProvider(
+          create: (context) => FeedBloc(
+            getFeedPosts: sl.get<GetFeedPosts>(),
+            cachePosts: sl.get<CachePostsUsecase>(),
+          )..add(LoadFeedEvent()),
+        ),
         BlocProvider(
           create: (context) =>
               sl<MessagingBloc>()..add(LoadConversationsEvent()),

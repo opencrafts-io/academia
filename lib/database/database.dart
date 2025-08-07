@@ -1,14 +1,14 @@
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
-import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
-import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
+
+import '../features/chirp/data/data.dart';
 
 part 'database.g.dart';
 
@@ -17,7 +17,8 @@ part 'database.g.dart';
     UserProfile,
     Token,
     ConversationTable,
-    MessageTable,
+    MessageTable, AttachmentTable, PostTable, PostReplyTable
+  ,
     ChirpUserTable,
     Todo,
     EventTable,
@@ -33,7 +34,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
