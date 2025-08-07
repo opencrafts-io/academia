@@ -55,7 +55,7 @@ Running the above commands on unsupported platforms will raise a warnig that its
 
 
 
-# A Word About Code Structure
+#  A Word About Code Structure
 
 This project follows the principles of **Clean Architecture**, which is designed to separate concerns and make the codebase more maintainable, testable, and scalable. Clean Architecture divides the system into layers that each handle a distinct responsibility, ensuring that changes in one layer don't negatively impact the others. Below, we will explore how the project is structured and some key concepts such as **error handling** and **dependency injection** that are central to maintaining clean and understandable code.
 
