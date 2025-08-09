@@ -61,6 +61,7 @@ class _AuthScreenState extends State<AuthScreen> {
               }
 
               if (state is ProfileLoadedState) {
+                print("Here");
                 if (state.profile.onboarded && state.profile.termsAccepted) {
                   return HomeRoute().go(context);
                 }
