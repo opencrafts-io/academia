@@ -10,22 +10,23 @@ class ChirpLocalDataSource {
 
   ChirpLocalDataSource({required this.db});
 
-  Future<Either<Failure, List<PostEntity>>> cachePosts(
+  Future<Either<Failure, List<Post>>> cachePosts(
     List<Post> posts,
   ) async {
     try {
       for (final post in posts) {
         await db.into(db.postTable).insertOnConflictUpdate(post.toData());
         for (final att in post.attachments) {
-          await db.into(db.attachmentTable).insert(att.toData(postId: post.id));
+          await db.into(db.attachmentTable)
+              .insertOnConflictUpdate(att.toData(postId: post.id));
         }
         for (final reply in post.replies) {
           await db
               .into(db.postReplyTable)
-              .insert(reply.toData(parentPostId: post.id));
+              .insertOnConflictUpdate(reply.toData(parentPostId: post.id));
         }
       }
-      return right(posts.map((post) => post.toData()).toList());
+      return right(posts);
     } catch (e) {
       return left(
         CacheFailure(error: e, message: "Failed to cache posts locally"),
