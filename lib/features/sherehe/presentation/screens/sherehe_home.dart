@@ -5,7 +5,6 @@ import 'package:academia/constants/constants.dart';
 import '../../../../config/router/routes.dart';
 import '../bloc/event_bloc.dart';
 
-
 class ShereheHome extends StatefulWidget {
   const ShereheHome({super.key});
 
@@ -15,6 +14,8 @@ class ShereheHome extends StatefulWidget {
 
 class _ShereheHomeState extends State<ShereheHome>
     with AutomaticKeepAliveClientMixin {
+  final ScrollController _scrollController = ScrollController();
+
   int _getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
       return 1;
@@ -33,25 +34,31 @@ class _ShereheHomeState extends State<ShereheHome>
     }
   }
 
-  // double _getAppBarHeight(BuildContext context) {
-  //   if (ResponsiveBreakPoints.isMobile(context)) {
-  //     return 200;
-  //   } else if (ResponsiveBreakPoints.isTablet(context)) {
-  //     return 300;
-  //   } else if (ResponsiveBreakPoints.isDesktop(context)) {
-  //     return 350;
-  //   } else {
-  //     return 400; // large desktop
-  //   }
-  // }
-
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    context.read<EventBloc>().add(FetchAllEvents());
+    context.read<EventBloc>().add(FetchAllEvents(limit: 2));
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        final state = context.read<EventBloc>().state;
+        if (state is EventLoaded && !state.hasReachedEnd) {
+          context.read<EventBloc>().add(
+            FetchAllEvents(isLoadMore: true, limit: 2),
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,6 +67,7 @@ class _ShereheHomeState extends State<ShereheHome>
     super.build(context);
     return Scaffold(
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
@@ -96,9 +104,9 @@ class _ShereheHomeState extends State<ShereheHome>
               ),
               child: Text(
                 'Upcoming Events',
-                style: Theme.of(
-                  context,
-                ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -106,7 +114,7 @@ class _ShereheHomeState extends State<ShereheHome>
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             sliver: BlocBuilder<EventBloc, EventState>(
               builder: (context, state) {
-                if (state is EventLoading) {
+                if (state is EventLoading && state is! EventLoaded) {
                   return const SliverToBoxAdapter(
                     child: Center(
                       child: Padding(
@@ -145,6 +153,19 @@ class _ShereheHomeState extends State<ShereheHome>
                 }
               },
             ),
+          ),
+          BlocBuilder<EventBloc, EventState>(
+            builder: (context, state) {
+              if (state is EventLoaded && !state.hasReachedEnd) {
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                );
+              }
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
+            },
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/domain/entities/paginated_events.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 import '../../domain/domain.dart';
@@ -8,61 +9,37 @@ class ShereheRepositoryImpl implements ShereheRepository {
   final ShereheRemoteDataSource remoteDataSource;
   final ShereheLocalDataSource localDataSource;
 
+
   ShereheRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
   });
 
   @override
-  Future<Either<Failure, List<Event>>> getAllEvents({
+  Future<Either<Failure, PaginatedEvents>> getAllEvents({
     required int page,
     required int limit,
   }) async {
-    // final remoteResult = await remoteDataSource.getAllEvents(
-    //   page: page,
-    //   limit: limit,
-    // );
-
-    // if (remoteResult.isLeft()) return left((remoteResult as Left).value);
-
-    // final remoteEvents = (remoteResult as Right).value;
-
-    // final cacheResult = await localDataSource.cacheEvents(remoteEvents);
-    // return cacheResult.fold(
-    //   (failure) => left(failure),
-    //   (models) => right(models.map((e) => e.toEntity()).toList()),
-    // );
-
     final result = await remoteDataSource.getAllEvents(
       page: page,
       limit: limit,
     );
-    return result.fold(
-          (failure) => Left(failure),
-          (models) => Right(models.map((e) => e.toEntity()).toList()),
-    );
+    return result.fold((failure) => Left(failure), (paginatedData) {
+      return Right(
+        PaginatedEvents(
+          events: paginatedData.events.map((e) => e.toEntity()).toList(),
+          nextPage: paginatedData.nextPage,
+        ),
+      );
+    });
   }
 
   @override
   Future<Either<Failure, Event>> getSpecificEvent(String id) async {
-    // final remoteResult = await remoteDataSource.getSpecificEvent(id);
-
-    // if (remoteResult.isLeft()) return left((remoteResult as Left).value);
-
-    // final eventModel = (remoteResult as Right).value;
-
-    // // Cache the event locally
-    // final cacheResult = await localDataSource.cacheEvents([eventModel]);
-
-    // return cacheResult.fold(
-    //   (failure) => left(failure),
-    //   (_) => right(eventModel.toEntity()),
-    // );
-
     final result = await remoteDataSource.getSpecificEvent(id);
     return result.fold(
-          (failure) => Left(failure),
-          (model) => Right(model.toEntity()),
+      (failure) => Left(failure),
+      (model) => Right(model.toEntity()),
     );
   }
 
@@ -87,16 +64,6 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (failure) => left(failure),
       (models) => right(models.map((a) => a.toEntity()).toList()),
     );
-
-    // final result = await remoteDataSource.getAttendeesByEventId(
-    //   eventId: eventId,
-    //   page: page,
-    //   limit: limit,
-    // );
-    // return result.fold(
-    //   (failure) => Left(failure),
-    //   (models) => Right(models.map((a) => a.toEntity()).toList()),
-    // );
   }
 
   @override
@@ -112,12 +79,6 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (failure) => left(failure),
       (_) => right(attendeeModel.toEntity()),
     );
-
-    // final result = await remoteDataSource.getSpecificAttendee(id);
-    // return result.fold(
-    //   (failure) => Left(failure),
-    //   (model) => Right(model.toEntity()),
-    // );
   }
 
   @override

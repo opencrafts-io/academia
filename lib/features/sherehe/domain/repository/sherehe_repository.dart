@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:academia/features/sherehe/domain/entities/paginated_events.dart';
+
 import '../domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 
 abstract class ShereheRepository {
-  Future<Either<Failure, List<Event>>> getAllEvents({
+  Future<Either<Failure, PaginatedEvents>> getAllEvents({
     required int page,
     required int limit,
   });

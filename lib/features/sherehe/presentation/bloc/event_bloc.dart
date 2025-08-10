@@ -20,40 +20,67 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     FetchAllEvents event,
     Emitter<EventState> emit,
   ) async {
-    emit(EventLoading());
+    final currentState = state;
+
+    // Decide the next page number
+    final int nextPage = (currentState is EventLoaded && event.isLoadMore)
+        ? currentState.currentPage + 1
+        : 1;
+
+    // Stop if we’ve reached the end
+    if (currentState is EventLoaded &&
+        event.isLoadMore &&
+        currentState.hasReachedEnd) {
+      return;
+    }
+
+    // Reset state when starting fresh load
+    if (!event.isLoadMore) emit(EventLoading());
 
     final eventsResult = await getEvent.execute(
-      page: event.page,
+      page: nextPage,
       limit: event.limit,
     );
 
     await eventsResult.fold(
-      (failure) async {
-        _logger.e("Error fetching events: ${failure.message}, ${failure.error}");
+      (failure) {
+        _logger.e(
+          "Error fetching events: ${failure.message}, ${failure.error}",
+        );
         emit(EventError("Error fetching events"));
-      } ,
-      (events) async {
-        // First emit events without attendees for immediate display
-        emit(EventLoaded(events, {}));
+      },
+      (paginatedEvents) async {
+        final List<Event> updatedEvents =
+            (currentState is EventLoaded && event.isLoadMore)
+            ? [...currentState.events, ...paginatedEvents.events]
+            : paginatedEvents.events;
 
-        // Then load attendees progressively
-        final Map<String, List<Attendee>> attendeesMap = {};
+        final attendeesMap = (currentState is EventLoaded && event.isLoadMore)
+            ? Map<String, List<Attendee>>.from(currentState.attendeesMap)
+            : <String, List<Attendee>>{};
 
-        for (final ev in events) {
-          final result = await getAttendee.execute(
+        // Fetch attendees for each event
+        for (final ev in paginatedEvents.events) {
+          final attendeeResult = await getAttendee.execute(
             eventId: ev.id,
             page: 1,
             limit: 4,
           );
 
-          result.fold(
-            (failure) => attendeesMap[ev.id] = [],
+          attendeeResult.fold(
+            (_) => attendeesMap[ev.id] = [],
             (attendees) => attendeesMap[ev.id] = attendees,
           );
-
-          // Emit updated state with new attendees
-          emit(EventLoaded(events, Map.from(attendeesMap)));
         }
+
+        emit(
+          EventLoaded(
+            events: updatedEvents,
+            attendeesMap: attendeesMap,
+            hasReachedEnd: paginatedEvents.nextPage == null,
+            currentPage: nextPage,
+          ),
+        );
       },
     );
   }

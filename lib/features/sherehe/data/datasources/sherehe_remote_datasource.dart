@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/models/paginated_events_data_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -17,7 +18,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     this.servicePrefix = "qa-sherehe",
   });
 
-  Future<Either<Failure, List<EventData>>> getAllEvents({
+  Future<Either<Failure, PaginatedEventsData>> getAllEvents({
     required int page,
     required int limit,
   }) async {
@@ -33,7 +34,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
             .map((e) => EventData.fromJson(e))
             .toList();
 
-        return right(events);
+      final int? nextPage = response.data['nextPage'];      
+
+        return right(PaginatedEventsData(events: events, nextPage: nextPage));
       } else {
         return left(
           ServerFailure(message: "Unexpected server response", error: response),

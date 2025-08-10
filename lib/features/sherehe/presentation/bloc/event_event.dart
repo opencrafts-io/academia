@@ -8,9 +8,9 @@ abstract class EventEvent extends Equatable {
 }
 
 class FetchAllEvents extends EventEvent {
-  final int page;
   final int limit;
   final String? eventId;
+  final bool isLoadMore;
 
-  const FetchAllEvents({this.eventId, this.page = 1, this.limit = 10});
+  const FetchAllEvents({this.eventId, this.limit = 10, this.isLoadMore = false,});
 }
