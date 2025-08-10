@@ -3,7 +3,6 @@ import 'package:academia/features/chirp/data/models/attachment_model_helper.dart
 import 'package:academia/features/chirp/data/models/reply_model_helper.dart';
 import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
 
 extension PostEntityHelper on PostEntity {
   Post toEntity({
@@ -39,7 +38,7 @@ extension PostHelper on Post {
     return Post(
       id: json["id"].toString(),
       userId: json["user_id"],
-      content: json["content"] ?? 'mama',
+      content: json["content"],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       likeCount: json['like_count'],
@@ -50,7 +49,7 @@ extension PostHelper on Post {
                     id: a["id"]?.toString() ?? '',
                     postId: json["id"]?.toString() ?? '',
                     attachmentType: a["attachment_type"] ?? '',
-                    file: a["file"] ?? '',
+                    file: a["file_url"] ?? '',
                     createdAt: DateTime.parse(a['created_at']),
                     updatedAt: a['updated_at'] != null
                         ? DateTime.parse(a['updated_at'])
@@ -60,23 +59,7 @@ extension PostHelper on Post {
                 .toList()
                 .cast<Attachments>()
           : [],
-      replies: (json['replies'] != null && (json["replies"] as List).isNotEmpty)
-          ? (json["replies"])
-                .map(
-                  (r) => PostReply(
-                    id: r["id"]?.toString() ?? '',
-                    postId: json["id"]?.toString() ?? '',
-                    userId: r["user_id"] ?? '',
-                    content: r["content"] ?? '',
-                    createdAt: DateTime.parse(r['created_at']),
-                    updatedAt: r['updated_at'] != null
-                        ? DateTime.parse(r['updated_at'])
-                        : null,
-                  ),
-                )
-                .toList()
-                .cast<PostReply>()
-          : [],
+      
     );
   }
 }
