@@ -15,6 +15,9 @@ class AppRouter {
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) async {
       final authState = BlocProvider.of<AuthBloc>(context).state;
+      if (authState is AuthLoading) {
+        return null;
+      }
       if (authState is AuthUnauthenticated) {
         return AuthRoute().location;
       }

@@ -32,6 +32,18 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="academia"/>
       </intent-filter>
+
+      <!-- Deep linking: For a detailed guide checkout:
+        https://codewithandrea.com/articles/flutter-deep-links/ -->
+      <intent-filter android:autoVerify="true">
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+              <data android:scheme="https"
+                  android:host="academia.opencrafts.io"
+                  android:pathPrefix="/sherehe/create"/>
+      </intent-filter>
+
     </activity>
 		<!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
