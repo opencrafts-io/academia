@@ -183,15 +183,18 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                           // Now that the list is synchronized, build the animated list
                           return Align(
                             alignment: Alignment.topCenter,
-
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxWidth: ResponsiveBreakPoints.tablet,
                               ),
-                              child: AnimatedList(
+                              child: AnimatedList.separated(
                                 key: _listKey,
                                 shrinkWrap: true,
                                 initialItemCount: _todos.length,
+                                removedSeparatorBuilder:
+                                    (context, index, animation) => SizedBox(),
+                                separatorBuilder: (context, index, animation) =>
+                                    Divider(height: 0.2),
                                 itemBuilder: (context, index, animation) {
                                   final todo = _todos[index];
                                   BorderRadius borderRadius;
