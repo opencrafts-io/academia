@@ -9,6 +9,7 @@ class Post extends Equatable {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final int likeCount;
+  final bool isLiked;
   final List<Attachments> attachments;
   final List<PostReply> replies;
 
@@ -21,6 +22,7 @@ class Post extends Equatable {
     this.likeCount = 0,
     this.attachments = const [],
     this.replies = const [],
+    this.isLiked = false,
   });
 
   Post copyWith({
@@ -30,6 +32,7 @@ class Post extends Equatable {
   DateTime? createdAt,
   DateTime? updatedAt,
   int? likeCount,
+  bool? isLiked,
   List<Attachments>? attachments,
   List<PostReply>? replies,
   }) {
@@ -38,6 +41,7 @@ class Post extends Equatable {
       userId: userId ?? this.userId,
       content: content ?? this.content,
       likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
       attachments: attachments ?? this.attachments,
       replies: replies ?? this.replies,
       createdAt: createdAt ?? this.createdAt,
@@ -53,6 +57,7 @@ class Post extends Equatable {
     createdAt,
     updatedAt,
     likeCount,
+    isLiked,
     attachments,
     replies,
   ];

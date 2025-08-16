@@ -11,6 +11,9 @@ class PostTable extends Table with TableMixin {
   @JsonKey('like_count')
   IntColumn get likeCount => integer()();
 
+  @JsonKey('is_liked')
+  BoolColumn get isLiked => boolean()();
+
   @override
   Set<Column<Object>>? get primaryKey => {id};
 

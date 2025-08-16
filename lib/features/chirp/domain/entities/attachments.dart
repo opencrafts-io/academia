@@ -5,6 +5,8 @@ class Attachments extends Equatable {
   final String postId;
   final String attachmentType;
   final String file;
+  final String name;
+  final double size;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
@@ -12,6 +14,8 @@ class Attachments extends Equatable {
     required this.id,
     required this.attachmentType,
     required this.file,
+    required this.name,
+    required this.size,
     required this.postId,
     required this.createdAt,
     this.updatedAt,
@@ -22,6 +26,8 @@ class Attachments extends Equatable {
     String? postId,
     String? attachmentType,
     String? file,
+    String? name,
+    double? size,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -30,11 +36,13 @@ class Attachments extends Equatable {
       postId: postId ?? this.postId,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
+      name: name ?? this.name,
+      size: size ?? this.size,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
-  List<Object?> get props => [id, postId, attachmentType, file, createdAt, updatedAt];
+  List<Object?> get props => [id, postId, attachmentType, file, name, size, createdAt, updatedAt];
 }

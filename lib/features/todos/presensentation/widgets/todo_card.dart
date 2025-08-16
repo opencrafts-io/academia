@@ -2,7 +2,7 @@ import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:time_since/time_since.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class TodoCard extends StatefulWidget {
   const TodoCard({
@@ -20,6 +20,11 @@ class TodoCard extends StatefulWidget {
 class _TodoCardState extends State<TodoCard> {
   bool isComplete = false;
 
+  String truncateWithEllipsis(String text, {int maxLength = 120}) {
+    if (text.length <= maxLength) return text;
+    return "${text.substring(0, maxLength - 3)}...";
+  }
+
   @override
   void initState() {
     isComplete = widget.todo.status != "needsAction";
@@ -32,18 +37,26 @@ class _TodoCardState extends State<TodoCard> {
       key: ValueKey(widget.todo.id),
       background: Container(
         alignment: Alignment.centerRight,
-        color: Theme.of(context).colorScheme.tertiary,
+        color: Theme.of(context).colorScheme.tertiaryContainer,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [const Icon(Icons.check)],
+          children: [
+            Icon(
+              Icons.check,
+              color: Theme.of(context).colorScheme.onTertiaryContainer,
+            ),
+          ],
         ),
       ),
       secondaryBackground: Container(
         alignment: Alignment.centerRight,
         color: Theme.of(context).colorScheme.error, // A color for deletion
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: const Icon(Icons.delete_forever),
+        child: Icon(
+          Icons.delete_forever,
+          color: Theme.of(context).colorScheme.onError,
+        ),
       ),
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
@@ -63,23 +76,30 @@ class _TodoCardState extends State<TodoCard> {
           shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
           elevation: 2,
           margin: EdgeInsets.zero,
-          child: CheckboxListTile.adaptive(
-            checkboxShape: CircleBorder(side: BorderSide()),
-            value: isComplete,
-            onChanged: (val) {
-              setState(() {
-                isComplete = !isComplete;
-              });
-              BlocProvider.of<TodoBloc>(
-                context,
-              ).add(CompleteTodoEvent(todo: widget.todo));
-            },
-            title: Text(widget.todo.title),
+          child: ListTile(
+            tileColor: widget.todo.status == "needsAction"
+                ? Colors.green.withValues(alpha: 0.4)
+                : Colors.red.withValues(alpha: 0.4),
+
+            leading: Icon(Symbols.pending_actions),
+            subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+            trailing: Checkbox.adaptive(
+              value: isComplete,
+              onChanged: (val) {
+                setState(() {
+                  isComplete = !isComplete;
+                });
+                BlocProvider.of<TodoBloc>(
+                  context,
+                ).add(CompleteTodoEvent(todo: widget.todo));
+              },
+            ),
+            title: Text(truncateWithEllipsis(widget.todo.title,maxLength:60)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.todo.notes ?? '',
+                  truncateWithEllipsis(widget.todo.notes ?? ''),
                   textAlign: TextAlign.justify,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -99,7 +119,7 @@ class _TodoCardState extends State<TodoCard> {
                 //     : Text(timeSince(widget.todo.due)),
               ],
             ),
-            contentPadding: EdgeInsets.zero,
+            // contentPadding: EdgeInsets.zero,
             isThreeLine: true,
           ),
         ),

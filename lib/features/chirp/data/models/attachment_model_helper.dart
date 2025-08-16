@@ -9,6 +9,8 @@ extension AttachmentEntityHelper on AttachmentEntity {
       postId: postId,
       attachmentType: attachmentType,
       file: file,
+      name: name,
+      size: size,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -21,6 +23,8 @@ extension AttachmentHelper on Attachments {
       id: id,
       postId: postId,
       attachmentType: attachmentType,
+      name: name,
+      size: size,
       file: file,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
