@@ -16,6 +16,7 @@ extension PostEntityHelper on PostEntity {
       createdAt: createdAt,
       updatedAt: updatedAt,
       likeCount: likeCount,
+      isLiked: isLiked,
       attachments: attachments.map((e) => e.toEntity()).toList(),
       replies: replies.map((e) => e.toEntity()).toList(),
     );
@@ -31,6 +32,7 @@ extension PostHelper on Post {
       createdAt: createdAt,
       updatedAt: updatedAt!,
       likeCount: likeCount,
+      isLiked: isLiked,
     );
   }
 
@@ -42,6 +44,7 @@ extension PostHelper on Post {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       likeCount: json['like_count'],
+      isLiked: json['is_liked'],
       attachments: (json["attachments"] as List).isNotEmpty
           ? (json["attachments"])
                 .map(
@@ -50,6 +53,8 @@ extension PostHelper on Post {
                     postId: json["id"]?.toString() ?? '',
                     attachmentType: a["attachment_type"] ?? '',
                     file: a["file_url"] ?? '',
+                    name: a["original_filename"] ?? '',
+                    size: a["file_size_mb"] ?? 0,
                     createdAt: DateTime.parse(a['created_at']),
                     updatedAt: a['updated_at'] != null
                         ? DateTime.parse(a['updated_at'])

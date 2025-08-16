@@ -9,7 +9,12 @@ class AttachmentTable extends Table with TableMixin {
       text().references(PostTable, #id, onDelete: KeyAction.cascade)();
   @JsonKey('attachment_type')
   TextColumn get attachmentType => text().withLength(max: 10)();
+  @JsonKey('file_url')
   TextColumn get file => text()();
+  @JsonKey('original_filename')
+  TextColumn get name => text()();
+  @JsonKey('file_size_mb')
+  RealColumn get size => real()();
   @override
   @JsonKey('created_at')
   DateTimeColumn get createdAt => dateTime()();
