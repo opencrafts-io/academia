@@ -229,7 +229,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Event created successfully!")),
             );
-            final eventBloc = context.read<EventBloc>();
+            final eventBloc = context.read<ShereheHomeBloc>();
             eventBloc.add(FetchAllEvents());
 
             if (context.canPop()) {

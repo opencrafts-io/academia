@@ -1,13 +1,13 @@
-part of 'event_bloc.dart';
+part of 'sherehe_home_bloc.dart';
 
-abstract class EventEvent extends Equatable {
-  const EventEvent();
+abstract class ShereheHomeEvent extends Equatable {
+  const ShereheHomeEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class FetchAllEvents extends EventEvent {
+class FetchAllEvents extends ShereheHomeEvent {
   final int limit;
   final String? eventId;
   final bool isLoadMore;

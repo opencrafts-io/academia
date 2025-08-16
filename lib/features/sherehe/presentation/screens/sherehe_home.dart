@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/constants/constants.dart';
 import '../../../../config/router/routes.dart';
-import '../bloc/event_bloc.dart';
+import '../bloc/sherehe_home_bloc.dart';
 
 class ShereheHome extends StatefulWidget {
   const ShereheHome({super.key});
@@ -40,14 +40,14 @@ class _ShereheHomeState extends State<ShereheHome>
   @override
   void initState() {
     super.initState();
-    context.read<EventBloc>().add(FetchAllEvents(limit: 5));
+    context.read<ShereheHomeBloc>().add(FetchAllEvents(limit: 5));
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        final state = context.read<EventBloc>().state;
+        final state = context.read<ShereheHomeBloc>().state;
         if (state is EventLoaded && !state.hasReachedEnd) {
-          context.read<EventBloc>().add(
+          context.read<ShereheHomeBloc>().add(
             FetchAllEvents(isLoadMore: true, limit: 5),
           );
         }
@@ -112,7 +112,7 @@ class _ShereheHomeState extends State<ShereheHome>
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: BlocConsumer<EventBloc, EventState>(
+            sliver: BlocConsumer<ShereheHomeBloc, ShereheHomeState>(
               listener: (context, state) {
                 if (state is EventError) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -208,7 +208,7 @@ class _ShereheHomeState extends State<ShereheHome>
               },
             ),
           ),
-          BlocBuilder<EventBloc, EventState>(
+          BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
             builder: (context, state) {
               if (state is EventLoaded && !state.hasReachedEnd) {
                 return const SliverToBoxAdapter(

@@ -1,17 +1,17 @@
-part of 'event_bloc.dart';
+part of 'sherehe_home_bloc.dart';
 
-abstract class EventState extends Equatable {
-  const EventState();
+abstract class ShereheHomeState extends Equatable {
+  const ShereheHomeState();
 
   @override
   List<Object> get props => [];
 }
 
-class EventInitial extends EventState {}
+class EventInitial extends ShereheHomeState {}
 
-class EventLoading extends EventState {}
+class EventLoading extends ShereheHomeState {}
 
-class EventLoaded extends EventState {
+class EventLoaded extends ShereheHomeState {
   final List<Event> events;
   final Map<String, List<Attendee>> attendeesMap;
   final bool hasReachedEnd;
@@ -28,7 +28,7 @@ class EventLoaded extends EventState {
   List<Object> get props => [events, attendeesMap, hasReachedEnd, currentPage];
 }
 
-class EventError extends EventState {
+class EventError extends ShereheHomeState {
   final String message;
 
   const EventError(this.message);

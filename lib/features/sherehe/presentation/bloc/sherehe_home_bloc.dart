@@ -3,17 +3,17 @@ import 'package:logger/logger.dart';
 import '../../domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
-part 'event_event.dart';
-part 'event_state.dart';
+part 'sherehe_home_event.dart';
+part 'sherehe_home_state.dart';
 
-class EventBloc extends Bloc<EventEvent, EventState> {
+class ShereheHomeBloc extends Bloc<ShereheHomeEvent, ShereheHomeState> {
   final GetEvent getEvent;
   final GetAttendee getAttendee;
   final CacheEventsUseCase cacheEventsUseCase;
 
   final Logger _logger = Logger();
 
-  EventBloc({
+  ShereheHomeBloc({
     required this.getEvent,
     required this.getAttendee,
     required this.cacheEventsUseCase,
@@ -23,7 +23,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   Future<void> _onFetchAllEvents(
     FetchAllEvents event,
-    Emitter<EventState> emit,
+    Emitter<ShereheHomeState> emit,
   ) async {
     final currentState = state;
 
