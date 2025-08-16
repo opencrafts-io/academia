@@ -1,0 +1,5 @@
+server {
+    # ... other configurations
+    add_header Cross-Origin-Opener-Policy "same-origin";
+    add_header Cross-Origin-Embedder-Policy "require-corp";
+}

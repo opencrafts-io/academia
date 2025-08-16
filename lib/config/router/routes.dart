@@ -7,7 +7,6 @@ import 'package:academia/injection_container.dart';
 
 import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
 
-
 part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -144,7 +143,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   path: "/sherehe",
   routes: [
     TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
-    TypedGoRoute<CreateEventRoute>(path: "create"), 
+    TypedGoRoute<CreateEventRoute>(path: "create"),
   ],
 )
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
@@ -158,9 +157,8 @@ class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<CreateEventBloc>(
-      create: (context) => CreateEventBloc(
-        createEventUseCase: sl<CreateEventUseCase>(),
-      ),
+      create: (context) =>
+          CreateEventBloc(createEventUseCase: sl<CreateEventUseCase>()),
       child: const CreateEventScreen(),
     );
   }
@@ -209,4 +207,3 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     return TodoHomeScreen();
   }
 }
-
