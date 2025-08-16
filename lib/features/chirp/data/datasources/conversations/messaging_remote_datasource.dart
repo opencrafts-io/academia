@@ -4,407 +4,379 @@ import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 abstract class MessagingRemoteDatasource {
   Future<Either<Failure, List<ConversationData>>> getConversations();
   Future<Either<Failure, List<MessageData>>> getMessages(String conversationId);
   Future<Either<Failure, MessageData>> sendMessage(
     String receiverId,
-    String content,
-  );
+    String content, {
+    File? file,
+  });
+  Future<Either<Failure, void>> markMessageAsRead(String messageId);
+  Future<Either<Failure, void>> deleteMessage(String messageId);
+  Future<Either<Failure, void>> markConversationAsRead(String conversationId);
 }
 
 class MessagingRemoteDatasourceImpl
     with DioErrorHandler
     implements MessagingRemoteDatasource {
   final DioClient dioClient;
+  final String servicePath;
 
-  MessagingRemoteDatasourceImpl({required this.dioClient});
+  MessagingRemoteDatasourceImpl({
+    required this.dioClient,
+    this.servicePath = "qa-chirp",
+  });
 
   @override
   Future<Either<Failure, List<ConversationData>>> getConversations() async {
-    // TODO: Uncomment
-    // try {
-    //   final response = await dioClient.dio.get('/conversations/');
-    //
-    //   if (response.statusCode != 200) {
-    //     return Left(
-    //       ServerFailure(
-    //         message: 'Failed to fetch conversations',
-    //         error: 'Status code: ${response.statusCode}',
-    //       ),
-    //     );
-    //   }
-    //
-    //   final conversations = (response.data as List)
-    //       .map((json) => ConversationData.fromJson(json))
-    //       .toList();
-    //
-    //   return Right(conversations);
-    // } on DioException catch (dioError) {
-    //   return Left(handleDioError(dioError));
-    // } catch (e) {
-    //   return Left(
-    //     ServerFailure(
-    //       message: 'An unexpected error occurred. Please try again.',
-    //       error: e,
-    //     ),
-    //   );
-    // }
+    try {
+      final response = await dioClient.dio.get('/$servicePath/conversations/');
 
-    // DUMMY DATA
-    return _getDummyConversations();
-  }
+      if (response.statusCode == 200) {
+        final conversations = (response.data as List)
+            .map((json) => _parseConversationFromBackend(json))
+            .toList();
 
-  // TODO: Remove
-  Either<Failure, List<ConversationData>> _getDummyConversations() {
-    final dummyConversations = [
-      ConversationData(
-        id: 'conv_1',
-        userId: 'user_1',
-        lastMessageId: 'msg_1',
-        lastMessageAt: DateTime.now().subtract(const Duration(minutes: 5)),
-        unreadCount: 2,
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
-        updatedAt: DateTime.now().subtract(const Duration(minutes: 5)),
-      ),
-      ConversationData(
-        id: 'conv_2',
-        userId: 'user_2',
-        lastMessageId: null,
-        lastMessageAt: null,
-        unreadCount: 0,
-        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
-      ),
-    ];
+        return Right(conversations);
+      }
 
-    return Right(dummyConversations);
+      return Left(
+        NetworkFailure(
+          message:
+              "We couldn't load your conversations right now. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while loading conversations. Please try again.",
+        ),
+      );
+    }
   }
 
   @override
   Future<Either<Failure, List<MessageData>>> getMessages(
     String conversationId,
   ) async {
-    // TODO: Uncomment
-    // try {
-    //   final response = await dioClient.dio.get(
-    //     '/conversations/$conversationId/messages/',
-    //   );
-    //
-    //   if (response.statusCode != 200) {
-    //     return Left(
-    //       ServerFailure(
-    //         message: 'Failed to fetch messages',
-    //         error: 'Status code: ${response.statusCode}',
-    //       ),
-    //     );
-    //   }
-    //
-    //   final messages = (response.data as List)
-    //       .map((json) => MessageData.fromJson(json))
-    //       .toList();
-    //
-    //   return Right(messages);
-    // } on DioException catch (dioError) {
-    //   return Left(handleDioError(dioError));
-    // } catch (e) {
-    //   return Left(
-    //     ServerFailure(
-    //       message: 'An unexpected error occurred. Please try again.',
-    //       error: e,
-    //     ),
-    //   );
-    // }
+    try {
+      final response = await dioClient.dio.get(
+        '/$servicePath/conversations/$conversationId/messages/',
+      );
 
-    // DUMMY DATA
-    return _getDummyMessages(conversationId);
-  }
+      if (response.statusCode == 200) {
+        final messages = (response.data as List)
+            .map((json) => _parseMessageFromBackend(json))
+            .toList();
 
-  // TODO: Remove
-  Either<Failure, List<MessageData>> _getDummyMessages(String conversationId) {
-    if (conversationId == 'conv_1') {
-      final dummyMessages = [
-        MessageData(
-          id: 'msg_1',
-          content: 'Rada rada ni gani',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 5)),
-          isRead: false,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 5)),
+        return Right(messages);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "We couldn't load the messages. Please try again.",
+          error: "Status code: ${response.statusCode}",
         ),
-        MessageData(
-          id: 'msg_2',
-          content: 'Tuingie ndanee',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 10)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 10)),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while loading messages. Please try again.",
         ),
-        MessageData(
-          id: 'msg_3',
-          content: 'Juu mi si bane',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 15)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 15)),
-        ),
-        MessageData(
-          id: 'msg_4',
-          content: 'Mi najua uko _____',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 20)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 20)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 20)),
-        ),
-        MessageData(
-          id: 'msg_5',
-          content: 'Janta ni janta joh',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 25)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 25)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 25)),
-        ),
-        MessageData(
-          id: 'msg_6',
-          content: 'Doh ndo ina matter',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 30)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-        ),
-        MessageData(
-          id: 'msg_7',
-          content: 'Ganja farmer ni ya wale wanjanja',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 35)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 35)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 35)),
-        ),
-        MessageData(
-          id: 'msg_8',
-          content: 'wana? wanachora namba saba',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 40)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 40)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 40)),
-        ),
-        MessageData(
-          id: 'msg_9',
-          content: 'Shughlibagli shughli body',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 45)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 45)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 45)),
-        ),
-        MessageData(
-          id: 'msg_10',
-          content: 'nden nden nden nden',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 50)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 50)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 50)),
-        ),
-        MessageData(
-          id: 'msg_11',
-          content: 'Katika',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(minutes: 55)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 55)),
-          updatedAt: DateTime.now().subtract(const Duration(minutes: 55)),
-        ),
-        MessageData(
-          id: 'msg_12',
-          content: 'Katika',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(const Duration(hours: 1)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-          updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
-        ),
-        MessageData(
-          id: 'msg_13',
-          content:
-              'Should we schedule a team meeting to discuss the next sprint?',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(const Duration(hours: 1, minutes: 5)),
-          isRead: true,
-          createdAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 5),
-          ),
-          updatedAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 5),
-          ),
-        ),
-        MessageData(
-          id: 'msg_14',
-          content: 'Good idea! How about tomorrow at 2 PM?',
-          senderId: 'current_user',
-          recipientId: 'user_1',
-          sentAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 10),
-          ),
-          isRead: true,
-          createdAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 10),
-          ),
-          updatedAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 10),
-          ),
-        ),
-        MessageData(
-          id: 'msg_15',
-          content: 'Perfect! WANTAM!',
-          senderId: 'user_1',
-          recipientId: 'current_user',
-          sentAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 15),
-          ),
-          isRead: true,
-          createdAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 15),
-          ),
-          updatedAt: DateTime.now().subtract(
-            const Duration(hours: 1, minutes: 15),
-          ),
-        ),
-      ];
-      return Right(dummyMessages);
-    } else {
-      return Right([]); // Empty conversation
+      );
     }
   }
 
   @override
   Future<Either<Failure, MessageData>> sendMessage(
     String receiverId,
-    String content,
-  ) async {
-    // TODO: Uncomment
-    // try {
-    //   final response = await dioClient.dio.post(
-    //     '/messages/',
-    //     data: {'receiver_id': receiverId, 'content': content},
-    //   );
-    //
-    //   if (response.statusCode != 200 && response.statusCode != 201) {
-    //     return Left(
-    //       ServerFailure(
-    //         message: 'Failed to send message',
-    //         error: 'Status code: ${response.statusCode}',
-    //       ),
-    //     );
-    //   }
-    //
-    //   if (response.data is! Map<String, dynamic>) {
-    //     return Left(
-    //       ServerFailure(
-    //         message: 'Invalid response format from server',
-    //         error: 'Expected Map but got ${response.data.runtimeType}',
-    //       ),
-    //     );
-    //   }
-    //
-    //   final message = MessageData.fromJson(response.data);
-    //   return Right(message);
-    // } on DioException catch (dioError) {
-    //   return Left(handleDioError(dioError));
-    // } catch (e) {
-    //   return Left(
-    //     ServerFailure(
-    //       message: 'An unexpected error occurred. Please try again.',
-    //       error: e,
-    //     ),
-    //   );
-    // }
+    String content, {
+    File? file,
+  }) async {
+    try {
+      if (file != null) {
+        debugPrint('Sending file message: ${file.path}');
+        debugPrint('File exists: ${file.existsSync()}');
+        debugPrint('File size: ${file.lengthSync()} bytes');
+        debugPrint('File name: ${file.path.split('/').last}');
+        debugPrint('Content type: ${file.path.split('.').last}');
 
-    // DUMMY DATA
-    return _getDummySentMessage(receiverId, content);
-  }
+        // Handle file upload with FormData
+        final formData = FormData.fromMap({
+          'content': content.isNotEmpty
+              ? content
+              : ' ', // Send space if empty to avoid backend validation error
+          'attachments': await MultipartFile.fromFile(
+            // Note: 'attachments' not 'file'
+            file.path,
+            filename: file.path.split('/').last,
+          ),
+        });
 
-  // TODO: Remove
-  Either<Failure, MessageData> _getDummySentMessage(
-    String receiverId,
-    String content,
-  ) {
-    final dummyMessage = MessageData(
-      id: 'msg_${DateTime.now().millisecondsSinceEpoch}',
-      content: content,
-      senderId: 'current_user',
-      recipientId: receiverId,
-      sentAt: DateTime.now(),
-      isRead: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-    return Right(dummyMessage);
-  }
+        final response = await dioClient.dio.post(
+          '/$servicePath/conversations/$receiverId/messages/',
+          data: formData,
+        );
 
-  Either<Failure, T> _handleDioErrorWithAuthCheck<T>(DioException dioError) {
-    if (dioError.type == DioExceptionType.badResponse) {
-      final statusCode = dioError.response?.statusCode;
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final message = _parseSentMessageFromBackend(response.data);
+          return Right(message);
+        }
 
-      if (statusCode == 401) {
         return Left(
-          AuthenticationFailure(
-            message: 'Your session has expired. Please log in again.',
-            error: dioError,
+          NetworkFailure(
+            message: "We couldn't send your image. Please try again.",
+            error: "Status code: ${response.statusCode}",
           ),
         );
-      } else if (statusCode == 403) {
-        return Left(
-          AuthenticationFailure(
-            message: 'You don\'t have permission to perform this action.',
-            error: dioError,
-          ),
+      } else {
+        // Text-only message
+        if (content.trim().isEmpty) {
+          return Left(
+            NetworkFailure(
+              message: "Message cannot be empty.",
+              error: "Empty content",
+            ),
+          );
+        }
+
+        final Map<String, dynamic> data = {'content': content};
+
+        // Send to /conversations/{conversationId}/messages/ instead of /messages/
+        final response = await dioClient.dio.post(
+          '/$servicePath/conversations/$receiverId/messages/',
+          data: data,
         );
-      } else if (statusCode == 404) {
+
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final message = _parseSentMessageFromBackend(response.data);
+          return Right(message);
+        }
+
         return Left(
-          ServerFailure(
-            message: 'Resource not found. The API may be unavailable.',
-            error: dioError,
-          ),
-        );
-      } else if (statusCode == 400) {
-        return Left(
-          ServerFailure(
-            message: 'Invalid request. Please check your input and try again.',
-            error: dioError,
-          ),
-        );
-      } else if (statusCode! >= 500) {
-        return Left(
-          ServerFailure(
-            message: 'Server error occurred. Please try again later.',
-            error: dioError,
+          NetworkFailure(
+            message: "We couldn't send your message. Please try again.",
+            error: "Status code: ${response.statusCode}",
           ),
         );
       }
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while sending your message. Please try again.",
+        ),
+      );
     }
-    return handleDioError<T>(dioError);
+  }
+
+  @override
+  Future<Either<Failure, void>> markMessageAsRead(String messageId) async {
+    try {
+      final response = await dioClient.dio.put(
+        '/$servicePath/messages/$messageId/read/',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "We couldn't mark the message as read. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while marking message as read. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteMessage(String messageId) async {
+    try {
+      final response = await dioClient.dio.delete(
+        '/$servicePath/messages/$messageId/',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "We couldn't delete the message. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while deleting the message. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> markConversationAsRead(
+    String conversationId,
+  ) async {
+    try {
+      final response = await dioClient.dio.put(
+        '/$servicePath/conversations/$conversationId/read/',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return const Right(null);
+      }
+
+      return Left(
+        NetworkFailure(
+          message:
+              "We couldn't mark the conversation as read. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while marking conversation as read. Please try again.",
+        ),
+      );
+    }
+  }
+
+  ConversationData _parseConversationFromBackend(Map<String, dynamic> json) {
+    final participants = List<String>.from(json['participants'] ?? []);
+    final currentUserId = 'default_user_123'; // This should come from auth
+    final otherParticipant = participants.firstWhere(
+      (participant) => participant != currentUserId,
+      orElse: () =>
+          participants.isNotEmpty ? participants.first : 'unknown_user',
+    );
+
+    return ConversationData(
+      id: json['conversation_id'] ?? '',
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        json['updated_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      userId: otherParticipant,
+      lastMessageId: null,
+      lastMessageAt: json['last_message_at'] != null
+          ? DateTime.parse(json['last_message_at'])
+          : null,
+      unreadCount: json['unread_count'] ?? 0,
+    );
+  }
+
+  MessageData _parseMessageFromBackend(Map<String, dynamic> json) {
+    final currentUserId = 'default_user_123'; // This should come from auth
+    final senderId = json['sender_id'] ?? '';
+    final recipientId = senderId == currentUserId
+        ? 'other_user'
+        : currentUserId;
+
+    return MessageData(
+      id: json['id']?.toString() ?? '',
+      senderId: senderId,
+      recipientId: recipientId,
+      content: json['content'] ?? '',
+      sentAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      isRead: json['is_read'] ?? false,
+      imageUrl: _extractImageUrlFromAttachments(json['attachments']),
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+    );
+  }
+
+  MessageData _parseSentMessageFromBackend(Map<String, dynamic> json) {
+    return MessageData(
+      id: json['id']?.toString() ?? '',
+      senderId: json['sender_id'] ?? '',
+      recipientId: json['recipient_id'] ?? '',
+      content: json['content'] ?? '',
+      sentAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      isRead: json['is_read'] ?? false,
+      imageUrl: _extractImageUrlFromAttachments(json['attachments']),
+      createdAt: DateTime.parse(
+        json['created_at'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        json['updated_at'] ?? DateTime.now().toIso8601String(),
+      ),
+    );
+  }
+
+  String? _extractImageUrlFromAttachments(dynamic attachments) {
+    if (attachments == null) return null;
+
+    if (attachments is List) {
+      for (final attachment in attachments) {
+        if (attachment is Map<String, dynamic>) {
+          final attachmentType = attachment['attachment_type']
+              ?.toString()
+              .toLowerCase();
+          final fileUrl = attachment['file_url']?.toString();
+
+          if (attachmentType == 'file' && fileUrl != null) {
+            final fileName =
+                attachment['original_filename']?.toString().toLowerCase() ?? '';
+            if (fileName.contains('.jpg') ||
+                fileName.contains('.jpeg') ||
+                fileName.contains('.png') ||
+                fileName.contains('.gif') ||
+                fileName.contains('.webp')) {
+              return fileUrl;
+            }
+          }
+        }
+      }
+    }
+
+    return null;
   }
 }

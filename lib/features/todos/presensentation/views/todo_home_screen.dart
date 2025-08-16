@@ -3,6 +3,7 @@ import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import '../widgets/create_todo_bottom_sheet.dart';
 import '../widgets/todo_card.dart';
 
@@ -111,14 +112,41 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator.adaptive(),
+                            return Column(
+                              spacing: 12,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset(
+                                  "assets/lotties/google-calendar.json",
+                                  width: 250,
+                                ),
+                                Text(
+                                  "Your todos are just a sec away...",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                              ],
                             );
                           }
 
                           if (snapshot.hasError) {
-                            return Center(
-                              child: Text("Error: ${snapshot.error}"),
+                            return Column(
+                              spacing: 12,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset(
+                                  "assets/lotties/google-calendar.json",
+                                  width: 250,
+                                  repeat: false,
+                                ),
+                                Text(
+                                  "Ooops, ${snapshot.error}",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
+                                ),
+                              ],
                             );
                           }
 
@@ -183,15 +211,18 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                           // Now that the list is synchronized, build the animated list
                           return Align(
                             alignment: Alignment.topCenter,
-
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxWidth: ResponsiveBreakPoints.tablet,
                               ),
-                              child: AnimatedList(
+                              child: AnimatedList.separated(
                                 key: _listKey,
                                 shrinkWrap: true,
                                 initialItemCount: _todos.length,
+                                removedSeparatorBuilder:
+                                    (context, index, animation) => SizedBox(),
+                                separatorBuilder: (context, index, animation) =>
+                                    Divider(height: 0.2),
                                 itemBuilder: (context, index, animation) {
                                   final todo = _todos[index];
                                   BorderRadius borderRadius;
@@ -228,7 +259,20 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                         },
                       );
                     }
-                    return const Center(child: Text("No todos available"));
+                    return Column(
+                      spacing: 12,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          "assets/lotties/google-calendar.json",
+                          width: 250,
+                        ),
+                        Text(
+                          "Your todos are just a sec away...",
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
+                    );
                   },
                 ),
               ),

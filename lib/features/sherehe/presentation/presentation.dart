@@ -5,7 +5,7 @@ export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/event_about_section.dart';
 export 'widgets/event_details_header.dart';
 export 'widgets/attendee_list.dart';
-export 'bloc/event_bloc.dart';
+export 'bloc/sherehe_home_bloc.dart';
 export 'screens/create_event_screen.dart';
 export 'bloc/create_event/create_event_bloc.dart';
 export 'widgets/modern_input_decoration.dart';

@@ -1,4 +1,4 @@
-import 'package:academia/core/network/chirp_dio_client.dart';
+import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
@@ -12,15 +12,19 @@ abstract class UserSearchRemoteDatasource {
 class UserSearchRemoteDatasourceImpl
     with DioErrorHandler
     implements UserSearchRemoteDatasource {
-  final ChirpDioClient dioClient;
+  final DioClient dioClient;
+  final String servicePath;
 
-  UserSearchRemoteDatasourceImpl({required this.dioClient});
+  UserSearchRemoteDatasourceImpl({
+    required this.dioClient,
+    this.servicePath = "qa-chirp",
+  });
 
   @override
   Future<Either<Failure, List<ChirpUserData>>> searchUsers(String query) async {
     try {
       final response = await dioClient.dio.get(
-        '/users/search/',
+        '/$servicePath/users/search/',
         queryParameters: {'q': query},
       );
 

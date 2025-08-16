@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../constants/constants.dart';
 
 class CardSizing {
@@ -87,6 +88,15 @@ class EventCard extends StatelessWidget {
     List<String> names = name.trim().split(' ');
     if (names.length == 1) return names.first[0].toUpperCase();
     return names.first[0].toUpperCase() + names.last[0].toUpperCase();
+  }
+
+  String _formatDate(String isoString, {String pattern = 'dd MMM yyyy'}) {
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat(pattern).format(dateTime);
+    } catch (e) {
+      return isoString; // fallback in case parsing fails
+    }
   }
 
   double _calculateAvatarRowWidth({
@@ -186,7 +196,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            date,
+                            _formatDate(date),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,

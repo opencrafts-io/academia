@@ -12,6 +12,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
   });
   @override
   Future<Either<Failure, List<Post>>> getFeedPosts() async {
+    print("Got here: loading");
     final cacheResult = await localDataSource.getCachedPosts();
 
     return await cacheResult.fold(
@@ -22,6 +23,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
   @override
   Future<Either<Failure, List<Post>>> addFeedPosts() async {
+    print("Got here: caching posts");
     final remoteResult = await remoteDataSource.getPosts();
     if (remoteResult.isLeft()) {
       return left((remoteResult as Left).value);

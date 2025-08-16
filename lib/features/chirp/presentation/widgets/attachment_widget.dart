@@ -1,6 +1,7 @@
 import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:ui';
 
@@ -15,7 +16,41 @@ class AttachmentWidget extends StatelessWidget {
       case 'image':
         return _ImageWidget(imageUrl: attachment.file);
       case 'video':
-        return _VideoPlayerWidget(videoUrl: attachment.file);
+        // Check if video player is supported on current platform
+        if (kIsWeb ||
+            defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS) {
+          return _VideoPlayerWidget(videoUrl: attachment.file);
+        } else {
+          // Fallback for unsupported platforms (like Linux)
+          return Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2A2A2A).withValues(alpha: 0.9)
+                  : Theme.of(context).colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.videocam,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Video not supported on this platform',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
       default:
         return const SizedBox.shrink();
@@ -182,7 +217,7 @@ class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
       height: 300,
       width: double.infinity,
       decoration: BoxDecoration(
-        color:  Theme.of(context).colorScheme.scrim,
+        color: Theme.of(context).colorScheme.scrim,
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.hardEdge,
@@ -193,7 +228,9 @@ class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
           Transform.scale(scale: 1.1, child: VideoPlayer(_controller)),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color:  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.3)),
+            child: Container(
+              color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.3),
+            ),
           ),
 
           // Centered video with proper aspect ratio
@@ -258,7 +295,7 @@ class _VideoControlsState extends State<_VideoControls> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.transparent,  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.3)],
+              colors: [Colors.transparent,  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5)],
             ),
           ),
           child: Stack(
@@ -267,7 +304,7 @@ class _VideoControlsState extends State<_VideoControls> {
               Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    color:  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5),
+                    color:  Theme.of(context).colorScheme.onInverseSurface.withValues(alpha: 0.7),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -276,7 +313,7 @@ class _VideoControlsState extends State<_VideoControls> {
                       widget.controller.value.isPlaying
                           ? Icons.pause
                           : Icons.play_arrow,
-                      // color: Theme.of(context).colorScheme.onPrimary,
+                      // color: Theme.of(context).colorScheme.onInverseSurface,
                     ),
                     onPressed: () {
                       setState(() {
@@ -310,11 +347,12 @@ class _VideoControlsState extends State<_VideoControls> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color:  Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5),
+                    color:  Theme.of(context).colorScheme.onInverseSurface.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '${_formatDuration(widget.controller.value.position)} / ${_formatDuration(widget.controller.value.duration)}',
+                    
                   ),
                 ),
               ),

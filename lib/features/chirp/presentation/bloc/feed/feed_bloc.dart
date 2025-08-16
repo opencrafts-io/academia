@@ -18,7 +18,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       final result = await getFeedPosts(NoParams());
 
       await result.fold(
-        // Failure from cache ->fallback to remote
+        // Failure from cache → fallback to remote
         (failure) async {
           final remote = await cachePosts(NoParams());
           remote.fold(
@@ -28,7 +28,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         },
         (posts) async {
           if (posts.isEmpty) {
-            // Empty cache -> fallback to remote
+            // Empty cache → fallback to remote
             final remote = await cachePosts(NoParams());
             remote.fold(
               (fail) => emit(FeedError(message: fail.message)),
@@ -52,4 +52,3 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     });
   }
 }
-
