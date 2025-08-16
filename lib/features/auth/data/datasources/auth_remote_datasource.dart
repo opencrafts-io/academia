@@ -29,6 +29,7 @@ class AuthRemoteDatasource {
       );
 
       final token = Uri.parse(result).queryParameters['token'];
+      final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
       return right(
         TokenData(
           id: 1,
@@ -36,7 +37,7 @@ class AuthRemoteDatasource {
           expiresAt: DateTime.now().add(Duration(days: 1)),
           createdAt: DateTime.now(),
           accessToken: token!,
-          refreshToken: "",
+          refreshToken: refreshToken!,
           updatedAt: DateTime.now(),
         ),
       );

@@ -137,7 +137,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                     icon: Icon(Icons.schedule),
                   ),
                   Spacer(),
-                  TextButton(
+                  FilledButton(
                     onPressed: () {
                       final state = BlocProvider.of<ProfileBloc>(context).state;
                       if (state is! ProfileLoadedState) {
