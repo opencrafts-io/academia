@@ -6,6 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 
 abstract class ShereheRepository {
+  Future<Either<Failure, List<Event>>> getCachedEvents();
   Future<Either<Failure, PaginatedEvents>> getAllEvents({
     required int page,
     required int limit,

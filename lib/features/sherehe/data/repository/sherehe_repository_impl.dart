@@ -9,11 +9,19 @@ class ShereheRepositoryImpl implements ShereheRepository {
   final ShereheRemoteDataSource remoteDataSource;
   final ShereheLocalDataSource localDataSource;
 
-
   ShereheRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
   });
+
+  @override
+  Future<Either<Failure, List<Event>>> getCachedEvents() async {
+    final cachedResult = await localDataSource.getCachedEvents();
+    return cachedResult.fold(
+      (failure) => left(failure),
+      (cachedEvents) => right(cachedEvents.map((e) => e.toEntity()).toList()),
+    );
+  }
 
   @override
   Future<Either<Failure, PaginatedEvents>> getAllEvents({
@@ -24,7 +32,9 @@ class ShereheRepositoryImpl implements ShereheRepository {
       page: page,
       limit: limit,
     );
-    return result.fold((failure) => Left(failure), (paginatedData) {
+    return result.fold((failure) => Left(failure), (paginatedData) async{
+      await localDataSource.cacheEvents(paginatedData.events);
+
       return Right(
         PaginatedEvents(
           events: paginatedData.events.map((e) => e.toEntity()).toList(),

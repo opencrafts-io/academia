@@ -9,10 +9,15 @@ part 'event_state.dart';
 class EventBloc extends Bloc<EventEvent, EventState> {
   final GetEvent getEvent;
   final GetAttendee getAttendee;
+  final CacheEventsUseCase cacheEventsUseCase;
+
   final Logger _logger = Logger();
 
-  EventBloc({required this.getEvent, required this.getAttendee})
-    : super(EventInitial()) {
+  EventBloc({
+    required this.getEvent,
+    required this.getAttendee,
+    required this.cacheEventsUseCase,
+  }) : super(EventInitial()) {
     on<FetchAllEvents>(_onFetchAllEvents);
   }
 
@@ -27,27 +32,56 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         ? currentState.currentPage + 1
         : 1;
 
-    // Stop if we’ve reached the end
+    // Stop if we’ve reached the end (pagination)
     if (currentState is EventLoaded &&
         event.isLoadMore &&
         currentState.hasReachedEnd) {
       return;
     }
 
-    // Reset state when starting fresh load
-    if (!event.isLoadMore) emit(EventLoading());
+    // Step 1 — Always try cached events first on first load
+    if (!event.isLoadMore) {
+      final cacheResult = await getEvent.execute();
+      cacheResult.fold(
+        (failure) {
+          _logger.e(
+            "Error fetching cached events: ${failure.message}, ${failure.error}",
+          );
+          // Only emit loading if there is no cached data
+          emit(EventLoading());
+        },
+        (cachedEvents) {
+          if (cachedEvents.isNotEmpty) {
+            emit(
+              EventLoaded(
+                events: cachedEvents,
+                attendeesMap: {}, // We'll fill after refresh
+                hasReachedEnd: false,
+                currentPage: 1,
+              ),
+            );
+          } else {
+            emit(EventLoading());
+          }
+        },
+      );
+    }
 
-    final eventsResult = await getEvent.execute(
+    // Step 2 — Fetch from server + update cache
+    final freshResult = await cacheEventsUseCase(
       page: nextPage,
       limit: event.limit,
     );
 
-    await eventsResult.fold(
+    await freshResult.fold(
       (failure) {
         _logger.e(
           "Error fetching events: ${failure.message}, ${failure.error}",
         );
-        emit(EventError("Error fetching events"));
+        // If no current events, show error state
+        if (currentState is! EventLoaded || currentState.events.isEmpty) {
+          emit(EventError("Error fetching events"));
+        }
       },
       (paginatedEvents) async {
         final List<Event> updatedEvents =
@@ -66,7 +100,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
             page: 1,
             limit: 4,
           );
-
           attendeeResult.fold(
             (_) => attendeesMap[ev.id] = [],
             (attendees) => attendeesMap[ev.id] = attendees,

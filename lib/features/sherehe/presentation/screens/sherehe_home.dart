@@ -40,7 +40,7 @@ class _ShereheHomeState extends State<ShereheHome>
   @override
   void initState() {
     super.initState();
-    context.read<EventBloc>().add(FetchAllEvents(limit: 2));
+    context.read<EventBloc>().add(FetchAllEvents(limit: 5));
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -48,7 +48,7 @@ class _ShereheHomeState extends State<ShereheHome>
         final state = context.read<EventBloc>().state;
         if (state is EventLoaded && !state.hasReachedEnd) {
           context.read<EventBloc>().add(
-            FetchAllEvents(isLoadMore: true, limit: 2),
+            FetchAllEvents(isLoadMore: true, limit: 5),
           );
         }
       }
@@ -112,7 +112,19 @@ class _ShereheHomeState extends State<ShereheHome>
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: BlocBuilder<EventBloc, EventState>(
+            sliver: BlocConsumer<EventBloc, EventState>(
+              listener: (context, state) {
+                if (state is EventError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is EventLoading && state is! EventLoaded) {
                   return const SliverToBoxAdapter(
@@ -140,11 +152,53 @@ class _ShereheHomeState extends State<ShereheHome>
                     }, childCount: events.length),
                   );
                 } else if (state is EventError) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32.0),
-                        child: Text("Failed to load events."),
+                  final colorScheme = Theme.of(context).colorScheme;
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 48.0,
+                        horizontal: 16.0,
+                      ),
+                      child: Center(
+                        child: Card(
+                          elevation: 2,
+                          color: colorScheme.errorContainer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  size: 48,
+                                  color: colorScheme.onErrorContainer,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  state.message,
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(
+                                        color: colorScheme.onErrorContainer,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Something went wrong while fetching your events.\nPlease try again later.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: colorScheme.onErrorContainer
+                                            .withValues(alpha: 0.9),
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   );
