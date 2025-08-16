@@ -70,7 +70,15 @@ class AppDataBase extends _$AppDataBase {
       ),
       web: DriftWebOptions(
         sqlite3Wasm: Uri.parse('sqlite3.wasm'),
-        driftWorker: Uri.parse('drift_worker_dart.js'),
+        driftWorker: Uri.parse('drift_worker.js'),
+        onResult: (result) {
+          if (result.missingFeatures.isNotEmpty) {
+            Logger().d(
+              'Using ${result.chosenImplementation} due to unsupported '
+              'browser features: ${result.missingFeatures}',
+            );
+          }
+        },
       ),
       // If you need web support, see https://drift.simonbinder.eu/platforms/web/
     );
