@@ -1,7 +1,9 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
-import 'package:academia/features/agenda/agenda.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class AgendaHomePage extends StatefulWidget {
@@ -23,7 +25,16 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             snap: true,
             floating: true,
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(Symbols.add)),
+              IconButton(
+                onPressed: () {
+                  final token =
+                      (BlocProvider.of<AuthBloc>(context).state
+                              as AuthAuthenticated)
+                          .token;
+                  Clipboard.setData(ClipboardData(text: token.accessToken));
+                },
+                icon: Icon(Symbols.content_paste),
+              ),
               IconButton(onPressed: () {}, icon: Icon(Icons.refresh)),
             ],
           ),
