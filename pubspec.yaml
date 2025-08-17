@@ -68,6 +68,8 @@ dependencies:
   image: ^4.1.7
   path: ^1.9.0
   image_picker: ^1.1.2
+  vibration: ^3.1.3
+  flutter_slidable: ^4.0.0
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
@@ -119,9 +121,9 @@ flutter:
     - family: ProductSans
       fonts:
         - asset: assets/fonts/ProductSans-Regular.ttf
-    - family: Din
-      fonts:
-        - asset: assets/fonts/DINNextW1G-Regular.otf
+    # - family: Din
+    #   fonts:
+    #     - asset: assets/fonts/DINRegular.ttf
         # - asset: fonts/Schyler-Italic.ttf
         #   style: italic
   #   - family: Trajan Pro

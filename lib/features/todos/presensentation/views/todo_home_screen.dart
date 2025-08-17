@@ -164,32 +164,28 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                                     false);
                           }).toList();
 
-                          // Logic to handle AnimatedList animations
-                          // Removed items
-                          final oldTodos = List.of(_todos);
-                          for (final todo in oldTodos) {
-                            if (!filteredTodos.contains(todo)) {
-                              final index = _todos.indexOf(todo);
-                              if (index != -1) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            for (int i = _todos.length - 1; i >= 0; i--) {
+                              final todo = _todos[i];
+                              if (!filteredTodos.contains(todo)) {
                                 _listKey.currentState?.removeItem(
-                                  index,
+                                  i,
                                   (context, animation) => _removedItemBuilder(
                                     todo,
                                     context,
                                     animation,
                                   ),
                                 );
-                                _todos.removeAt(index);
+                                _todos.removeAt(i);
                               }
                             }
-                          }
+                          });
 
-                          // Added items
-                          for (final todo in filteredTodos) {
+                          for (int i = 0; i < filteredTodos.length; i++) {
+                            final todo = filteredTodos[i];
                             if (!_todos.contains(todo)) {
-                              final index = filteredTodos.indexOf(todo);
-                              _todos.insert(index, todo);
-                              _listKey.currentState?.insertItem(index);
+                              _todos.insert(i, todo);
+                              _listKey.currentState?.insertItem(i);
                             }
                           }
 
