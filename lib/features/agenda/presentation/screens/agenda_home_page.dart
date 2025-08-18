@@ -82,7 +82,6 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
               padding: EdgeInsets.all(12),
               child: SingleChildScrollView(
                 child: Column(
-                  spacing: 4,
                   children: [
                     Text(
                       "What do you want to do ...",
@@ -92,7 +91,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                     Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(28),
+                        ),
                       ),
                       child: ListTile(
                         onTap: () {},
@@ -107,10 +108,11 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         ),
                       ),
                     ),
+                    Divider(height: 0.5),
                     Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(12),
+                        // borderRadius: BorderRadius.circular(28),
                       ),
                       child: ListTile(
                         onTap: () {
@@ -125,10 +127,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         ),
                       ),
                     ),
+                    Divider(height: 0.5),
                     Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(28),
+                        ),
                       ),
                       child: ListTile(
                         onTap: () {
