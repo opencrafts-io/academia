@@ -1,8 +1,8 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/features/features.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -21,44 +21,49 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
         onRefresh: () async {
           // Fetch events from remote when pulled down
           context.read<AgendaEventBloc>().add(FetchAgendaEventsEvent());
-          
+
           // Wait a bit to show the refresh indicator
           await Future.delayed(const Duration(milliseconds: 500));
         },
         child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text("Your Calendar"),
-            pinned: true,
-            snap: true,
-            floating: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  final token =
-                      (BlocProvider.of<AuthBloc>(context).state
-                              as AuthAuthenticated)
-                          .token;
-                  Clipboard.setData(ClipboardData(text: token.accessToken));
-                },
-                icon: Icon(Symbols.content_paste),
-              ),
-              IconButton(
-                onPressed: () {
-                  // Fetch events from remote when refresh button is tapped
-                  context.read<AgendaEventBloc>().add(FetchAgendaEventsEvent());
-                },
-                icon: Icon(Icons.refresh),
-              ),
-            ],
-          ),
-          SliverPadding(
-            padding: EdgeInsets.all(12),
-            sliver: SliverToBoxAdapter(
-              child: Wrap(children: [CalendarHomeWidget()]),
+          slivers: [
+            SliverAppBar.large(
+              title: Text("Your Calendar"),
+              pinned: true,
+              snap: true,
+              floating: true,
+              actions: [
+                // IconButton(
+                //   onPressed: () {
+                //     final token =
+                //         (BlocProvider.of<AuthBloc>(context).state
+                //                 as AuthAuthenticated)
+                //             .token;
+                //     Clipboard.setData(ClipboardData(text: token.accessToken));
+                //   },
+                //   icon: Icon(Symbols.content_paste),
+                // ),
+                Visibility(
+                  visible: kIsWeb,
+                  child: IconButton(
+                    onPressed: () {
+                      // Fetch events from remote when refresh button is tapped
+                      context.read<AgendaEventBloc>().add(
+                        FetchAgendaEventsEvent(),
+                      );
+                    },
+                    icon: Icon(Icons.refresh),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            SliverPadding(
+              padding: EdgeInsets.all(12),
+              sliver: SliverToBoxAdapter(
+                child: Wrap(children: [CalendarHomeWidget()]),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

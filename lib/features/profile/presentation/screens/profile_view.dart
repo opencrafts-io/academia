@@ -1,6 +1,8 @@
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
@@ -28,7 +30,29 @@ class _ProfileViewState extends State<ProfileView> {
               SliverAppBar(
                 title: Text("Profile"),
                 actions: [
-                  IconButton(icon: Icon(Icons.add), onPressed: () {}),
+                  Visibility(
+                    visible: kDebugMode,
+                    child: IconButton(
+                      icon: Icon(Icons.token),
+                      onPressed: () {
+                        final token =
+                            (BlocProvider.of<AuthBloc>(context).state
+                                    as AuthAuthenticated)
+                                .token;
+                        Clipboard.setData(
+                          ClipboardData(text: token.accessToken),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Debug token copied to system clipboard",
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(Symbols.edit_rounded),
                     onPressed: () {},
