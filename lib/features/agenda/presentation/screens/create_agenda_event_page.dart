@@ -132,9 +132,9 @@ class _AgendaFormState extends State<_AgendaForm>
   DateTime _endDate = DateTime.now().add(const Duration(hours: 1));
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now().replacing(
-    hour: TimeOfDay.now().hour + 1,
+    hour: (TimeOfDay.now().hour + 1 >= 24) ? 0 : TimeOfDay.now().hour,
   );
-  String _selectedEventType = 'Event';
+  final String _selectedEventType = 'Event';
   String _repeatSetting = 'Does not repeat';
   String _notification = '30 minutes before';
   List<Map<String, String>> _attendees = [];
@@ -150,7 +150,6 @@ class _AgendaFormState extends State<_AgendaForm>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
 
-  final List<String> _eventTypes = ['Event', 'Task', 'Birthday'];
   final List<String> _repeatOptions = [
     'Does not repeat',
     'Daily',
