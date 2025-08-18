@@ -127,7 +127,7 @@ class EventCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: CachedNetworkImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   imageUrl: imagePath,
                   width: double.infinity,
                   errorWidget: (context, child, error) {

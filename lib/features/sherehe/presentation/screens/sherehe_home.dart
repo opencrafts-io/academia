@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/constants/constants.dart';
 import '../../../../config/router/routes.dart';
 import '../bloc/sherehe_home_bloc.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class ShereheHome extends StatefulWidget {
   const ShereheHome({super.key});
@@ -69,35 +70,9 @@ class _ShereheHomeState extends State<ShereheHome>
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 12.0,
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search events, places...',
-                  prefixIcon: Icon(Icons.search),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.primaryContainer,
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      // Clear search logic to be implemented later
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
+          SliverPinnedHeader(
+            child: Container(
+              color: Theme.of(context).colorScheme.surface,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 10.0,
@@ -105,7 +80,7 @@ class _ShereheHomeState extends State<ShereheHome>
               child: Text(
                 'Upcoming Events',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                 ),
               ),
             ),
