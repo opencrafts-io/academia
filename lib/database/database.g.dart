@@ -6694,29 +6694,23 @@ class $AgendaEventTable extends AgendaEvent
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
-  attendees =
-      GeneratedColumn<String>(
-        'attendees',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<Map<String, dynamic>?>(
-        $AgendaEventTable.$converterattendeesn,
-      );
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  attendees = GeneratedColumn<String>(
+    'attendees',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterattendeesn);
   @override
-  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
-  recurrence =
-      GeneratedColumn<String>(
-        'recurrence',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<Map<String, dynamic>?>(
-        $AgendaEventTable.$converterrecurrencen,
-      );
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  recurrence = GeneratedColumn<String>(
+    'recurrence',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterrecurrencen);
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
   reminders =
@@ -6963,13 +6957,13 @@ class $AgendaEventTable extends AgendaEvent
     return $AgendaEventTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<Map<String, dynamic>, String> $converterattendees =
-      const JsonConverter();
-  static TypeConverter<Map<String, dynamic>?, String?> $converterattendeesn =
+  static TypeConverter<List<dynamic>, String> $converterattendees =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterattendeesn =
       NullAwareTypeConverter.wrap($converterattendees);
-  static TypeConverter<Map<String, dynamic>, String> $converterrecurrence =
-      const JsonConverter();
-  static TypeConverter<Map<String, dynamic>?, String?> $converterrecurrencen =
+  static TypeConverter<List<dynamic>, String> $converterrecurrence =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterrecurrencen =
       NullAwareTypeConverter.wrap($converterrecurrence);
   static TypeConverter<Map<String, dynamic>, String> $converterreminders =
       const JsonConverter();
@@ -6994,8 +6988,8 @@ class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
   final DateTime? updated;
   final DateTime? startTime;
   final DateTime? endTime;
-  final Map<String, dynamic>? attendees;
-  final Map<String, dynamic>? recurrence;
+  final List<dynamic>? attendees;
+  final List<dynamic>? recurrence;
   final Map<String, dynamic>? reminders;
   const AgendaEventData({
     required this.id,
@@ -7161,10 +7155,8 @@ class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
       updated: serializer.fromJson<DateTime?>(json['updated']),
       startTime: serializer.fromJson<DateTime?>(json['start_time']),
       endTime: serializer.fromJson<DateTime?>(json['end_time']),
-      attendees: serializer.fromJson<Map<String, dynamic>?>(json['attendees']),
-      recurrence: serializer.fromJson<Map<String, dynamic>?>(
-        json['recurrence'],
-      ),
+      attendees: serializer.fromJson<List<dynamic>?>(json['attendees']),
+      recurrence: serializer.fromJson<List<dynamic>?>(json['recurrence']),
       reminders: serializer.fromJson<Map<String, dynamic>?>(json['reminders']),
     );
   }
@@ -7188,8 +7180,8 @@ class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
       'updated': serializer.toJson<DateTime?>(updated),
       'start_time': serializer.toJson<DateTime?>(startTime),
       'end_time': serializer.toJson<DateTime?>(endTime),
-      'attendees': serializer.toJson<Map<String, dynamic>?>(attendees),
-      'recurrence': serializer.toJson<Map<String, dynamic>?>(recurrence),
+      'attendees': serializer.toJson<List<dynamic>?>(attendees),
+      'recurrence': serializer.toJson<List<dynamic>?>(recurrence),
       'reminders': serializer.toJson<Map<String, dynamic>?>(reminders),
     };
   }
@@ -7211,8 +7203,8 @@ class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
     Value<DateTime?> updated = const Value.absent(),
     Value<DateTime?> startTime = const Value.absent(),
     Value<DateTime?> endTime = const Value.absent(),
-    Value<Map<String, dynamic>?> attendees = const Value.absent(),
-    Value<Map<String, dynamic>?> recurrence = const Value.absent(),
+    Value<List<dynamic>?> attendees = const Value.absent(),
+    Value<List<dynamic>?> recurrence = const Value.absent(),
     Value<Map<String, dynamic>?> reminders = const Value.absent(),
   }) => AgendaEventData(
     id: id ?? this.id,
@@ -7357,8 +7349,8 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
   final Value<DateTime?> updated;
   final Value<DateTime?> startTime;
   final Value<DateTime?> endTime;
-  final Value<Map<String, dynamic>?> attendees;
-  final Value<Map<String, dynamic>?> recurrence;
+  final Value<List<dynamic>?> attendees;
+  final Value<List<dynamic>?> recurrence;
   final Value<Map<String, dynamic>?> reminders;
   final Value<int> rowid;
   const AgendaEventCompanion({
@@ -7468,8 +7460,8 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
     Value<DateTime?>? updated,
     Value<DateTime?>? startTime,
     Value<DateTime?>? endTime,
-    Value<Map<String, dynamic>?>? attendees,
-    Value<Map<String, dynamic>?>? recurrence,
+    Value<List<dynamic>?>? attendees,
+    Value<List<dynamic>?>? recurrence,
     Value<Map<String, dynamic>?>? reminders,
     Value<int>? rowid,
   }) {
@@ -12656,8 +12648,8 @@ typedef $$AgendaEventTableCreateCompanionBuilder =
       Value<DateTime?> updated,
       Value<DateTime?> startTime,
       Value<DateTime?> endTime,
-      Value<Map<String, dynamic>?> attendees,
-      Value<Map<String, dynamic>?> recurrence,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
       Value<Map<String, dynamic>?> reminders,
       Value<int> rowid,
     });
@@ -12679,8 +12671,8 @@ typedef $$AgendaEventTableUpdateCompanionBuilder =
       Value<DateTime?> updated,
       Value<DateTime?> startTime,
       Value<DateTime?> endTime,
-      Value<Map<String, dynamic>?> attendees,
-      Value<Map<String, dynamic>?> recurrence,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
       Value<Map<String, dynamic>?> reminders,
       Value<int> rowid,
     });
@@ -12774,21 +12766,13 @@ class $$AgendaEventTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<
-    Map<String, dynamic>?,
-    Map<String, dynamic>,
-    String
-  >
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
   get attendees => $composableBuilder(
     column: $table.attendees,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<
-    Map<String, dynamic>?,
-    Map<String, dynamic>,
-    String
-  >
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
   get recurrence => $composableBuilder(
     column: $table.recurrence,
     builder: (column) => ColumnWithTypeConverterFilters(column),
@@ -12973,15 +12957,14 @@ class $$AgendaEventTableAnnotationComposer
   GeneratedColumn<DateTime> get endTime =>
       $composableBuilder(column: $table.endTime, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
-  get attendees =>
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get attendees =>
       $composableBuilder(column: $table.attendees, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
-  get recurrence => $composableBuilder(
-    column: $table.recurrence,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get recurrence =>
+      $composableBuilder(
+        column: $table.recurrence,
+        builder: (column) => column,
+      );
 
   GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
   get reminders =>
@@ -13035,8 +13018,8 @@ class $$AgendaEventTableTableManager
                 Value<DateTime?> updated = const Value.absent(),
                 Value<DateTime?> startTime = const Value.absent(),
                 Value<DateTime?> endTime = const Value.absent(),
-                Value<Map<String, dynamic>?> attendees = const Value.absent(),
-                Value<Map<String, dynamic>?> recurrence = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
                 Value<Map<String, dynamic>?> reminders = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AgendaEventCompanion(
@@ -13079,8 +13062,8 @@ class $$AgendaEventTableTableManager
                 Value<DateTime?> updated = const Value.absent(),
                 Value<DateTime?> startTime = const Value.absent(),
                 Value<DateTime?> endTime = const Value.absent(),
-                Value<Map<String, dynamic>?> attendees = const Value.absent(),
-                Value<Map<String, dynamic>?> recurrence = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
                 Value<Map<String, dynamic>?> reminders = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AgendaEventCompanion.insert(

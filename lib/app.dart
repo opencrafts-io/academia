@@ -95,6 +95,9 @@ class _AcademiaState extends State<Academia> {
             deleteTodoUsecase: sl<DeleteTodoUsecase>(),
           )..add(FetchCachedTodosEvent()),
         ),
+        BlocProvider(
+          create: (context) => sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(

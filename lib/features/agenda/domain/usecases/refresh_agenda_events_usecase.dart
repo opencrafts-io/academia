@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 
 /// Use case for refreshing agenda events from remote source
 /// Fetches fresh data from the server and updates local cache
-class RefreshAgendaEventsUsecase implements UseCase<RefreshAgendaEventsParams, Stream<List<AgendaEvent>>> {
+class RefreshAgendaEventsUsecase implements UseCase<Stream<List<AgendaEvent>>, RefreshAgendaEventsParams> {
   final AgendaEventRepository agendaEventRepository;
   
   RefreshAgendaEventsUsecase({required this.agendaEventRepository});

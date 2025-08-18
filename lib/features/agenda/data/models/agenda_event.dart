@@ -36,8 +36,10 @@ class AgendaEvent extends Table {
   DateTimeColumn get endTime => dateTime().nullable()();
 
   // JSON blobs for flexibility
-  TextColumn get attendees => text().map(const JsonConverter()).nullable()();
-  TextColumn get recurrence => text().map(const JsonConverter()).nullable()();
+  TextColumn get attendees =>
+      text().map(const JsonListConverter()).nullable()();
+  TextColumn get recurrence =>
+      text().map(const JsonListConverter()).nullable()();
   TextColumn get reminders => text().map(const JsonConverter()).nullable()();
 
   @override

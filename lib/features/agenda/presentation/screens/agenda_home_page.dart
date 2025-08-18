@@ -120,6 +120,24 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         ),
                       ),
                     ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.pop(context);
+                          CreateAgendaEventRoute().push(context);
+                        },
+                        leading: CircleAvatar(child: Icon(Icons.event)),
+                        title: Text("Create an agenda event"),
+                        subtitle: Text(
+                          "Schedule meetings, appointments, and events",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -1,6 +1,5 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/agenda/agenda.dart';
-import 'package:dartz/dartz.dart';
 
 /// Use case for getting cached agenda events from local storage
 /// Returns a stream of agenda events that are stored locally

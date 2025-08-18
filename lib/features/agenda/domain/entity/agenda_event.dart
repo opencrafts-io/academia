@@ -17,8 +17,8 @@ class AgendaEvent {
   final DateTime? startTime;
   final DateTime? endTime;
 
-  final Map<String, dynamic> attendees;
-  final Map<String, dynamic> recurrence;
+  final List<dynamic> attendees;
+  final List<dynamic> recurrence;
   final Map<String, dynamic> reminders;
 
   AgendaEvent({
@@ -38,11 +38,11 @@ class AgendaEvent {
     required this.updated,
     required this.startTime,
     required this.endTime,
-    Map<String, dynamic>? attendees,
-    Map<String, dynamic>? recurrence,
+    List<dynamic>? attendees,
+    List<dynamic>? recurrence,
     Map<String, dynamic>? reminders,
-  }) : attendees = attendees ?? {},
-       recurrence = recurrence ?? {},
+  }) : attendees = attendees ?? [],
+       recurrence = recurrence ?? [],
        reminders = reminders ?? {};
 
   AgendaEvent copyWith({
@@ -62,8 +62,8 @@ class AgendaEvent {
     DateTime? updated,
     DateTime? startTime,
     DateTime? endTime,
-    Map<String, dynamic>? attendees,
-    Map<String, dynamic>? recurrence,
+    List<dynamic>? attendees,
+    List<dynamic>? recurrence,
     Map<String, dynamic>? reminders,
   }) {
     return AgendaEvent(
@@ -83,9 +83,9 @@ class AgendaEvent {
       updated: updated ?? this.updated,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      attendees: attendees ?? Map<String, dynamic>.from(this.attendees),
-      recurrence: recurrence ?? Map<String, dynamic>.from(this.recurrence),
-      reminders: reminders ?? Map<String, dynamic>.from(this.reminders),
+      attendees: attendees ?? this.attendees,
+      recurrence: recurrence ?? List<dynamic>.from(this.recurrence),
+      reminders: reminders ?? this.reminders,
     );
   }
 }
