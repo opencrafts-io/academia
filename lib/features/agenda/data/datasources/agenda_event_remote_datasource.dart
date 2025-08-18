@@ -18,7 +18,7 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
   refreshAgendaEvents({int page = 0, int pageSize = 100}) async {
     try {
       final response = await dioClient.dio.get(
-        "/$servicePath/agenda/&sync=true",
+        "/$servicePath/agenda/?sync=true",
         queryParameters: {"page": page, "pageSize": pageSize},
       );
       if (response.statusCode == 200) {

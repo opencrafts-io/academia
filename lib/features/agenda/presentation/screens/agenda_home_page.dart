@@ -17,7 +17,15 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Fetch events from remote when pulled down
+          context.read<AgendaEventBloc>().add(FetchAgendaEventsEvent());
+          
+          // Wait a bit to show the refresh indicator
+          await Future.delayed(const Duration(milliseconds: 500));
+        },
+        child: CustomScrollView(
         slivers: [
           SliverAppBar(
             title: Text("Your Calendar"),
@@ -35,7 +43,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 },
                 icon: Icon(Symbols.content_paste),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.refresh)),
+              IconButton(
+                onPressed: () {
+                  // Fetch events from remote when refresh button is tapped
+                  context.read<AgendaEventBloc>().add(FetchAgendaEventsEvent());
+                },
+                icon: Icon(Icons.refresh),
+              ),
             ],
           ),
           SliverPadding(
@@ -45,6 +59,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             ),
           ),
         ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -83,21 +98,6 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         title: Text("Import your classes information"),
                         subtitle: Text(
                           "May not work for all universities",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        onTap: () {},
-                        leading: CircleAvatar(child: Icon(Symbols.reminder)),
-                        title: Text("Create an assignment reminder"),
-                        subtitle: Text(
-                          "We'll notify you when they're due or close to due",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
