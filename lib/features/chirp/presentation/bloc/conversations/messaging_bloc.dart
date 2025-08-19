@@ -2,6 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/usecases/conversations/get_conversations.dart';
 import '../../../domain/usecases/conversations/get_messages.dart';
 import '../../../domain/usecases/conversations/send_message.dart';
+import '../../../domain/usecases/conversations/get_cached_conversations.dart';
+import '../../../domain/usecases/conversations/get_cached_messages.dart';
+import '../../../domain/usecases/conversations/refresh_conversations.dart';
+import '../../../domain/usecases/conversations/refresh_messages.dart';
 import '../../../domain/usecases/search_users_usecase.dart';
 import '../../../domain/entities/conversations/conversation.dart';
 import '../../../domain/entities/conversations/message.dart';
@@ -10,18 +14,30 @@ import '../../../../../core/usecase/usecase.dart';
 import 'package:academia/features/chirp/data/models/conversations/conversation_model_helper.dart';
 import 'messaging_state.dart';
 import 'messaging_event.dart';
+import 'dart:async';
 
 class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
   final GetConversations getConversations;
   final GetMessages getMessages;
   final SendMessage sendMessage;
   final SearchUsersUseCase searchUsers;
+  final GetCachedConversations getCachedConversations;
+  final GetCachedMessages getCachedMessages;
+  final RefreshConversations refreshConversations;
+  final RefreshMessages refreshMessages;
+
+  StreamSubscription<List<Conversation>>? _conversationsSubscription;
+  StreamSubscription<List<Message>>? _messagesSubscription;
 
   MessagingBloc({
     required this.getConversations,
     required this.getMessages,
     required this.sendMessage,
     required this.searchUsers,
+    required this.getCachedConversations,
+    required this.getCachedMessages,
+    required this.refreshConversations,
+    required this.refreshMessages,
   }) : super(MessagingInitialState()) {
     on<LoadConversationsEvent>(_onLoadConversations);
     on<LoadMessagesEvent>(_onLoadMessages);
@@ -29,6 +45,15 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     on<MarkConversationAsReadEvent>(_onMarkConversationAsRead);
     on<SearchUsersEvent>(_onSearchUsers);
     on<StartNewConversationEvent>(_onStartNewConversation);
+    on<RefreshConversationsEvent>(_onRefreshConversations);
+    on<RefreshMessagesEvent>(_onRefreshMessages);
+  }
+
+  @override
+  Future<void> close() {
+    _conversationsSubscription?.cancel();
+    _messagesSubscription?.cancel();
+    return super.close();
   }
 
   Future<void> _onLoadConversations(
@@ -36,15 +61,39 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     Emitter<MessagingState> emit,
   ) async {
     emit(ConversationsLoadingState());
+
+    // First, listen to cached conversations
+    _conversationsSubscription?.cancel();
+    _conversationsSubscription = getCachedConversations(NoParams()).listen((
+      conversations,
+    ) {
+      if (conversations.isNotEmpty) {
+        emit(ConversationsLoaded(conversations));
+      }
+    });
+
+    // Then try to get fresh data in background
     final result = await getConversations(NoParams());
     result.fold(
-      (failure) => emit(
-        ConversationsErrorState(
-          failure.message,
-          retryAction: "Tap to retry loading conversations",
-        ),
-      ),
-      (conversations) => emit(ConversationsLoaded(conversations)),
+      (failure) {
+        // If we have cached data, don't show error
+        if (state is ConversationsLoaded) {
+          // Background refresh failed, but we have cached data
+          return;
+        }
+        emit(
+          ConversationsErrorState(
+            failure.message,
+            retryAction: "Tap to retry loading conversations",
+          ),
+        );
+      },
+      (conversations) {
+        // Fresh data loaded, cache will be updated automatically
+        if (state is! ConversationsLoaded) {
+          emit(ConversationsLoaded(conversations));
+        }
+      },
     );
   }
 
@@ -61,15 +110,12 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
 
     emit(MessagesLoadingState());
 
-    final result = await getMessages(event.conversationId);
-    result.fold(
-      (failure) => emit(
-        MessagesErrorState(
-          failure.message,
-          retryAction: "Tap to retry loading messages",
-        ),
-      ),
-      (messages) {
+    // First, listen to cached messages
+    _messagesSubscription?.cancel();
+    _messagesSubscription = getCachedMessages(event.conversationId).listen((
+      messages,
+    ) {
+      if (messages.isNotEmpty) {
         final sortedMessages = List<Message>.from(messages)
           ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
 
@@ -85,6 +131,44 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
         emit(
           MessagesLoaded(sortedMessages, conversation, currentConversations),
         );
+      }
+    });
+
+    // Then try to get fresh data in background
+    final result = await getMessages(event.conversationId);
+    result.fold(
+      (failure) {
+        // If we have cached data, don't show error
+        if (state is MessagesLoaded) {
+          // Background refresh failed, but we have cached data
+          return;
+        }
+        emit(
+          MessagesErrorState(
+            failure.message,
+            retryAction: "Tap to retry loading messages",
+          ),
+        );
+      },
+      (messages) {
+        // Fresh data loaded, cache will be updated automatically
+        if (state is! MessagesLoaded) {
+          final sortedMessages = List<Message>.from(messages)
+            ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
+          final conversation = Conversation(
+            id: event.conversationId,
+            user: _getUserForConversation(event.conversationId),
+            lastMessage: sortedMessages.isNotEmpty ? sortedMessages.last : null,
+            lastMessageAt: sortedMessages.isNotEmpty
+                ? sortedMessages.last.sentAt
+                : null,
+            unreadCount: 0,
+          );
+          emit(
+            MessagesLoaded(sortedMessages, conversation, currentConversations),
+          );
+        }
       },
     );
   }
@@ -231,6 +315,42 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     }
 
     emit(ConversationsLoaded(currentConversations));
+  }
+
+  Future<void> _onRefreshConversations(
+    RefreshConversationsEvent event,
+    Emitter<MessagingState> emit,
+  ) async {
+    final result = await refreshConversations(NoParams());
+    result.fold(
+      (failure) => emit(
+        ConversationsErrorState(
+          failure.message,
+          retryAction: "Tap to retry refreshing conversations",
+        ),
+      ),
+      (conversationsStream) {
+        // The stream will automatically update the UI through the existing subscription
+      },
+    );
+  }
+
+  Future<void> _onRefreshMessages(
+    RefreshMessagesEvent event,
+    Emitter<MessagingState> emit,
+  ) async {
+    final result = await refreshMessages(event.conversationId);
+    result.fold(
+      (failure) => emit(
+        MessagesErrorState(
+          failure.message,
+          retryAction: "Tap to retry refreshing messages",
+        ),
+      ),
+      (messagesStream) {
+        // The stream will automatically update the UI through the existing subscription
+      },
+    );
   }
 
   ChirpUser _getUserForConversation(String conversationId) {

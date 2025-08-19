@@ -22,12 +22,97 @@ class ConversationRepositoryImpl implements ConversationRepository {
   });
 
   @override
+  Stream<List<Conversation>> getCachedConversations() {
+    return localDataSource
+        .getConversationsStream()
+        .map(
+          (rawConversations) => rawConversations.map((rawConversation) async {
+            // Use fallback user data for now
+            final chirpUser = ChirpUser(
+              id: rawConversation.userId,
+              name: 'Unknown User',
+              email: 'unknown@example.com',
+              vibepoints: 0,
+              avatarUrl: null,
+            );
+
+            final entity = Conversation(
+              id: rawConversation.id,
+              user: chirpUser,
+              lastMessage: null,
+              lastMessageAt: rawConversation.lastMessageAt,
+              unreadCount: rawConversation.unreadCount,
+            );
+
+            if (rawConversation.lastMessageId != null) {
+              final messageResult = await localDataSource.getMessageById(
+                rawConversation.lastMessageId!,
+              );
+              return messageResult.fold(
+                (messageFailure) => entity,
+                (messageData) => messageData != null
+                    ? entity.copyWith(lastMessage: messageData.toEntity())
+                    : entity,
+              );
+            }
+            return entity;
+          }).toList(),
+        )
+        .asyncMap((futures) => Future.wait(futures));
+  }
+
+  @override
   Future<Either<Failure, List<Conversation>>> getConversations() async {
+    // First try to get from cache
+    final cachedResult = await localDataSource.getCachedConversations();
+
+    if (cachedResult.isRight()) {
+      final cachedConversations = (cachedResult as Right).value;
+      if (cachedConversations.isNotEmpty) {
+        // Return cached data immediately
+        final conversationEntities = await Future.wait(
+          cachedConversations.map((data) async {
+            // Use fallback user data for now
+            final chirpUser = ChirpUser(
+              id: data.userId,
+              name: 'Unknown User',
+              email: 'unknown@example.com',
+              vibepoints: 0,
+              avatarUrl: null,
+            );
+
+            final entity = Conversation(
+              id: data.id,
+              user: chirpUser,
+              lastMessage: null,
+              lastMessageAt: data.lastMessageAt,
+              unreadCount: data.unreadCount,
+            );
+
+            if (data.lastMessageId != null) {
+              final messageResult = await localDataSource.getMessageById(
+                data.lastMessageId!,
+              );
+              return messageResult.fold(
+                (messageFailure) => entity,
+                (messageData) => messageData != null
+                    ? entity.copyWith(lastMessage: messageData.toEntity())
+                    : entity,
+              );
+            }
+            return entity;
+          }),
+        );
+        return Right(conversationEntities.cast<Conversation>());
+      }
+    }
+
+    // If no cache or cache is empty, try remote
     final conversationsResult = await remoteDataSource.getConversations();
 
     return await conversationsResult.fold(
       (failure) async {
-        // Remote failed, try cache
+        // Remote failed, try cache again
         final cachedResult = await localDataSource.getCachedConversations();
         return cachedResult.fold(
           (cacheFailure) =>
@@ -35,7 +120,7 @@ class ConversationRepositoryImpl implements ConversationRepository {
           (cachedConversations) async {
             final conversationEntities = await Future.wait(
               cachedConversations.map((data) async {
-                // For cached conversations, use fallback user data
+                // Use fallback user data for now
                 final chirpUser = ChirpUser(
                   id: data.userId,
                   name: 'Unknown User',
@@ -138,5 +223,66 @@ class ConversationRepositoryImpl implements ConversationRepository {
         return Right(conversationEntities);
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, Stream<List<Conversation>>>>
+  refreshConversations() async {
+    final conversationsResult = await remoteDataSource.getConversations();
+
+    return await conversationsResult.fold((failure) => Left(failure), (
+      conversations,
+    ) async {
+      // Cache the fresh data
+      final cacheResult = await localDataSource.cacheConversations(
+        conversations,
+      );
+
+      if (cacheResult.isLeft()) {
+        return Left((cacheResult as Left).value);
+      }
+
+      // Return the stream from cache
+      return Right(
+        localDataSource
+            .getConversationsStream()
+            .map(
+              (rawConversations) => rawConversations.map((
+                rawConversation,
+              ) async {
+                // Use fallback user data for now
+                final chirpUser = ChirpUser(
+                  id: rawConversation.userId,
+                  name: 'Unknown User',
+                  email: 'unknown@example.com',
+                  vibepoints: 0,
+                  avatarUrl: null,
+                );
+
+                final entity = Conversation(
+                  id: rawConversation.id,
+                  user: chirpUser,
+                  lastMessage: null,
+                  lastMessageAt: rawConversation.lastMessageAt,
+                  unreadCount: rawConversation.unreadCount,
+                );
+
+                if (rawConversation.lastMessageId != null) {
+                  final messageResult = await localDataSource.getMessageById(
+                    rawConversation.lastMessageId!,
+                  );
+                  return messageResult.fold(
+                    (messageFailure) => entity,
+                    (messageData) => messageData != null
+                        ? entity.copyWith(lastMessage: messageData.toEntity())
+                        : entity,
+                  );
+                }
+                return entity;
+              }).toList(),
+            )
+            .asyncMap((futures) => Future.wait(futures)),
+      );
+    });
   }
 }

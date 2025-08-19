@@ -246,6 +246,18 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+  sl.registerFactory<GetCachedConversations>(
+    () => GetCachedConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<GetCachedMessages>(
+    () => GetCachedMessages(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshConversations>(
+    () => RefreshConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshMessages>(
+    () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
+  );
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
@@ -266,6 +278,10 @@ Future<void> init(FlavorConfig flavor) async {
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
       searchUsers: sl.get<SearchUsersUseCase>(),
+      getCachedConversations: sl.get<GetCachedConversations>(),
+      getCachedMessages: sl.get<GetCachedMessages>(),
+      refreshConversations: sl.get<RefreshConversations>(),
+      refreshMessages: sl.get<RefreshMessages>(),
     ),
   );
 }
