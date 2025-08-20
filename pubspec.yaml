@@ -72,6 +72,7 @@ dependencies:
   flutter_slidable: ^4.0.0
   onesignal_flutter: ^5.3.4
   firebase_core: ^4.0.0
+  quick_actions: ^1.1.0
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
