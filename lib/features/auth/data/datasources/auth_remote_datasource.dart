@@ -68,7 +68,7 @@ class AuthRemoteDatasource {
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
           silentAuth: false,
-          timeout: 2000,
+          timeout: 30000, // Increased to 30 seconds for better user experience
           useWebview: false,
         ),
       );
@@ -113,7 +113,7 @@ class AuthRemoteDatasource {
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
           silentAuth: false,
-          timeout: 2000,
+          timeout: 30000, // Increased to 30 seconds for better user experience
           useWebview: false,
         ),
       );
