@@ -96,14 +96,41 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
         BlocProvider(
-          create: (context) => sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+          create: (context) =>
+              sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+        ),
+        BlocProvider(
+          create: (context) => sl<NotificationBloc>()
+            ..add(
+              InitializeOneSignalEvent(
+                appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
+              ),
+            )
+            ..add(SetNotificationPermissionEvent(enabled: true)),
         ),
       ],
       child: DynamicColorBuilder(
-        builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            AppRouter.router.refresh();
-          },
+        builder: (lightScheme, darkScheme) => MultiBlocListener(
+          listeners: [
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                AppRouter.router.refresh();
+              },
+            ),
+            BlocListener<NotificationBloc, NotificationState>(
+              listener: (context, state) {
+                if (state is NotificationInitializedState) {
+                  debugPrint('✅ OneSignal initialized successfully!');
+                } else if (state is NotificationErrorState) {
+                  debugPrint(
+                    '❌ OneSignal initialization failed: ${state.message}',
+                  );
+                } else if (state is NotificationLoadingState) {
+                  debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
