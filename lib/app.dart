@@ -64,7 +64,7 @@ class _AcademiaState extends State<Academia> {
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
           )..add(AuthCheckStatusEvent()),
         ),
-        BlocProvider(create: (context) => sl<EventBloc>()),
+        BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
         BlocProvider(
           create: (context) => FeedBloc(
@@ -98,6 +98,9 @@ class _AcademiaState extends State<Academia> {
             deleteTodoUsecase: sl<DeleteTodoUsecase>(),
           )..add(FetchCachedTodosEvent()),
         ),
+        BlocProvider(
+          create: (context) => sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
@@ -108,13 +111,13 @@ class _AcademiaState extends State<Academia> {
             debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,
             theme: ThemeData(
-              fontFamily: 'Din',
+              fontFamily: 'ProductSans',
               useMaterial3: true,
               colorScheme: lightScheme,
               brightness: Brightness.light,
             ),
             darkTheme: ThemeData(
-              fontFamily: 'Din',
+              fontFamily: 'ProductSans',
               useMaterial3: true,
               brightness: Brightness.dark,
               colorScheme: darkScheme,

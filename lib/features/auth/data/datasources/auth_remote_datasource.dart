@@ -2,6 +2,7 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
@@ -16,15 +17,59 @@ class AuthRemoteDatasource {
     this.servicePrefix = "qa-verisafe",
   });
 
+  // Helper to get the current host URL
+  String? getHostBaseUrl() {
+    if (kIsWeb) {
+      final uri = Uri.base;
+      return uri.origin;
+    }
+    return null;
+  }
+
   Future<Either<Failure, TokenData>> signInWithGoogle() async {
     try {
+      String callback;
+      String platform;
+      String authUrl;
+
+      switch (flavorConfig.flavor) {
+        case Flavor.staging:
+          authUrl = "https://qaverisafe.opencrafts.io/auth/google";
+          break;
+        case Flavor.production:
+          authUrl = "https://verisafe.opencrafts.io/auth/google";
+          break;
+        default:
+          authUrl = "http://127.0.0.1:8080/auth/google";
+      }
+
+      if (kIsWeb) {
+        // Redirect back to your frontend’s domain
+        callback = "${getHostBaseUrl()}/auth.html";
+        platform = "web";
+      } else {
+        // Custom scheme for mobile apps
+        callback = "academia://callback";
+        platform = "mobile";
+      }
+
+      _logger.d(
+        "Authenticating with "
+        "$authUrl"
+        "?platform=$platform&redirect_uri=$callback",
+      );
+
       final result = await FlutterWebAuth2.authenticate(
-        url: "https://qaverisafe.opencrafts.io/auth/google",
+        url:
+            // "https://qaverisafe.opencrafts.io/auth/google?platform=$platform&redirect=$callback",
+            "$authUrl"
+            "?platform=$platform&redirect_uri=$callback",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
-          silentAuth: true,
-          timeout: 2000,
+          silentAuth: false,
+          timeout: 30000, // Increased to 30 seconds for better user experience
+          useWebview: false,
         ),
       );
 
@@ -67,8 +112,9 @@ class AuthRemoteDatasource {
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
-          silentAuth: true,
-          timeout: 2000,
+          silentAuth: false,
+          timeout: 30000, // Increased to 30 seconds for better user experience
+          useWebview: false,
         ),
       );
 
