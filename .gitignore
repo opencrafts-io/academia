@@ -14,6 +14,7 @@ migrate_working_dir/
 
 *.lock
 devtools_*.yaml
+C*md
 
 # IntelliJ related
 *.iml

@@ -10,20 +10,11 @@ InputDecoration buildModernInputDecoration({
     labelText: labelText,
     hintText: hintText,
     suffixIcon: suffixIcon,
-    filled: true,
-    fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.05),
+    // filled: true,
+    // fillColor: Theme.of(context).colorScheme.primaryContainer,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide.none,
+      borderRadius: BorderRadius.circular(4),
+      borderSide: BorderSide(width: 2),
     ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide.none,
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
-    ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
   );
 }

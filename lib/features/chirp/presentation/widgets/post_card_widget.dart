@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class PostCard extends StatefulWidget {
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, this.onTap,});
   final Post post;
+  final VoidCallback? onTap;
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -26,7 +27,7 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: widget.onTap,
       child: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -56,19 +57,12 @@ class _PostCardState extends State<PostCard> {
 
               SizedBox(height: 8),
 
-              Text(
-                widget.post.content,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              Text(widget.post.content),
 
               if (widget.post.attachments.isNotEmpty) ...[
                 SizedBox(height: 8),
                 ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.width * .5,
-                  ),
+                  constraints: BoxConstraints(maxHeight: 300),
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [
@@ -86,10 +80,10 @@ class _PostCardState extends State<PostCard> {
 
                       if (widget.post.attachments.length > 1)
                         Positioned(
-                          bottom: 8,
+                          bottom: 0,
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 8,
+                              horizontal: 6,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
@@ -104,8 +98,8 @@ class _PostCardState extends State<PostCard> {
                                   return AnimatedContainer(
                                     duration: Duration(milliseconds: 200),
                                     margin: EdgeInsets.symmetric(horizontal: 4),
-                                    width: currentPage == index ? 10 : 6,
-                                    height: currentPage == index ? 10 : 6,
+                                    width: currentPage == index ? 6 : 4,
+                                    height: currentPage == index ? 6 : 4,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: currentPage == index

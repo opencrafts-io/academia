@@ -1,14 +1,14 @@
+import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
+import 'package:academia/core/data/json_converter.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
-import 'package:academia/features/chirp/data/models/conversations/conversation_model.dart';
-import 'package:academia/features/chirp/data/models/conversations/message_model.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
+import '../features/chirp/data/data.dart';
 
 part 'database.g.dart';
 
@@ -18,11 +18,17 @@ part 'database.g.dart';
     Token,
     ConversationTable,
     MessageTable,
+    AttachmentTable,
+    PostTable,
+    PostReplyTable,
     ChirpUserTable,
     Todo,
     EventTable,
     AttendeeTable,
     TicketTable,
+
+    // Agenda
+    AgendaEvent,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -33,7 +39,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -69,7 +75,15 @@ class AppDataBase extends _$AppDataBase {
       ),
       web: DriftWebOptions(
         sqlite3Wasm: Uri.parse('sqlite3.wasm'),
-        driftWorker: Uri.parse('drift_worker_dart.js'),
+        driftWorker: Uri.parse('drift_worker.js'),
+        onResult: (result) {
+          if (result.missingFeatures.isNotEmpty) {
+            Logger().d(
+              'Using ${result.chosenImplementation} due to unsupported '
+              'browser features: ${result.missingFeatures}',
+            );
+          }
+        },
       ),
       // If you need web support, see https://drift.simonbinder.eu/platforms/web/
     );

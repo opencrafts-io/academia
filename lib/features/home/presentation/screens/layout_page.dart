@@ -36,20 +36,6 @@ class _LayoutPageState extends State<LayoutPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          leadingWidth: 150,
-          centerTitle: false,
-          leading: Image.asset("assets/icons/academia-logo-variant-1.png"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                ProfileRoute().push(context);
-              },
-              icon: UserAvatar(scallopDepth: 2),
-            ),
-          ],
-        ),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

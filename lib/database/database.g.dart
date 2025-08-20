@@ -1219,6 +1219,456 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
+class $ChirpUserTableTable extends ChirpUserTable
+    with TableInfo<$ChirpUserTableTable, ChirpUserData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChirpUserTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _vibepointsMeta = const VerificationMeta(
+    'vibepoints',
+  );
+  @override
+  late final GeneratedColumn<int> vibepoints = GeneratedColumn<int>(
+    'vibepoints',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    email,
+    vibepoints,
+    avatarUrl,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'chirp_user_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ChirpUserData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('vibepoints')) {
+      context.handle(
+        _vibepointsMeta,
+        vibepoints.isAcceptableOrUnknown(data['vibepoints']!, _vibepointsMeta),
+      );
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChirpUserData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      vibepoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibepoints'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
+    );
+  }
+
+  @override
+  $ChirpUserTableTable createAlias(String alias) {
+    return $ChirpUserTableTable(attachedDatabase, alias);
+  }
+}
+
+class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String name;
+  final String email;
+  final int vibepoints;
+  final String? avatarUrl;
+  const ChirpUserData({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+    required this.email,
+    required this.vibepoints,
+    this.avatarUrl,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['name'] = Variable<String>(name);
+    map['email'] = Variable<String>(email);
+    map['vibepoints'] = Variable<int>(vibepoints);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    return map;
+  }
+
+  ChirpUserTableCompanion toCompanion(bool nullToAbsent) {
+    return ChirpUserTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      name: Value(name),
+      email: Value(email),
+      vibepoints: Value(vibepoints),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+    );
+  }
+
+  factory ChirpUserData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChirpUserData(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      name: serializer.fromJson<String>(json['name']),
+      email: serializer.fromJson<String>(json['email']),
+      vibepoints: serializer.fromJson<int>(json['vibepoints']),
+      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String>(name),
+      'email': serializer.toJson<String>(email),
+      'vibepoints': serializer.toJson<int>(vibepoints),
+      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+    };
+  }
+
+  ChirpUserData copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+    String? email,
+    int? vibepoints,
+    Value<String?> avatarUrl = const Value.absent(),
+  }) => ChirpUserData(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    name: name ?? this.name,
+    email: email ?? this.email,
+    vibepoints: vibepoints ?? this.vibepoints,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+  );
+  ChirpUserData copyWithCompanion(ChirpUserTableCompanion data) {
+    return ChirpUserData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      name: data.name.present ? data.name.value : this.name,
+      email: data.email.present ? data.email.value : this.email,
+      vibepoints: data.vibepoints.present
+          ? data.vibepoints.value
+          : this.vibepoints,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpUserData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('vibepoints: $vibepoints, ')
+          ..write('avatarUrl: $avatarUrl')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, name, email, vibepoints, avatarUrl);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChirpUserData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.name == this.name &&
+          other.email == this.email &&
+          other.vibepoints == this.vibepoints &&
+          other.avatarUrl == this.avatarUrl);
+}
+
+class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> name;
+  final Value<String> email;
+  final Value<int> vibepoints;
+  final Value<String?> avatarUrl;
+  final Value<int> rowid;
+  const ChirpUserTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.name = const Value.absent(),
+    this.email = const Value.absent(),
+    this.vibepoints = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ChirpUserTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String name,
+    required String email,
+    this.vibepoints = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       email = Value(email);
+  static Insertable<ChirpUserData> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? name,
+    Expression<String>? email,
+    Expression<int>? vibepoints,
+    Expression<String>? avatarUrl,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (vibepoints != null) 'vibepoints': vibepoints,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ChirpUserTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? name,
+    Value<String>? email,
+    Value<int>? vibepoints,
+    Value<String?>? avatarUrl,
+    Value<int>? rowid,
+  }) {
+    return ChirpUserTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      vibepoints: vibepoints ?? this.vibepoints,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (vibepoints.present) {
+      map['vibepoints'] = Variable<int>(vibepoints.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpUserTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('vibepoints: $vibepoints, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $MessageTableTable extends MessageTable
     with TableInfo<$MessageTableTable, MessageData> {
   @override
@@ -1280,7 +1730,7 @@ class $MessageTableTable extends MessageTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_profile (id)',
+      'REFERENCES chirp_user_table (id)',
     ),
   );
   static const VerificationMeta _recipientIdMeta = const VerificationMeta(
@@ -1294,7 +1744,7 @@ class $MessageTableTable extends MessageTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_profile (id)',
+      'REFERENCES chirp_user_table (id)',
     ),
   );
   static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
@@ -1319,6 +1769,17 @@ class $MessageTableTable extends MessageTable
     ),
     defaultValue: Constant(false),
   );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1329,6 +1790,7 @@ class $MessageTableTable extends MessageTable
     recipientId,
     sentAt,
     isRead,
+    imageUrl,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1400,6 +1862,12 @@ class $MessageTableTable extends MessageTable
         isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
       );
     }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
     return context;
   }
 
@@ -1441,6 +1909,10 @@ class $MessageTableTable extends MessageTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_read'],
       )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
     );
   }
 
@@ -1459,6 +1931,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
   final String recipientId;
   final DateTime sentAt;
   final bool isRead;
+  final String? imageUrl;
   const MessageData({
     required this.id,
     required this.createdAt,
@@ -1468,6 +1941,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     required this.recipientId,
     required this.sentAt,
     required this.isRead,
+    this.imageUrl,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1480,6 +1954,9 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     map['recipient_id'] = Variable<String>(recipientId);
     map['sent_at'] = Variable<DateTime>(sentAt);
     map['is_read'] = Variable<bool>(isRead);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
     return map;
   }
 
@@ -1493,6 +1970,9 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       recipientId: Value(recipientId),
       sentAt: Value(sentAt),
       isRead: Value(isRead),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
     );
   }
 
@@ -1510,6 +1990,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       recipientId: serializer.fromJson<String>(json['recipientId']),
       sentAt: serializer.fromJson<DateTime>(json['sentAt']),
       isRead: serializer.fromJson<bool>(json['isRead']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
     );
   }
   @override
@@ -1524,6 +2005,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
       'recipientId': serializer.toJson<String>(recipientId),
       'sentAt': serializer.toJson<DateTime>(sentAt),
       'isRead': serializer.toJson<bool>(isRead),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
     };
   }
 
@@ -1536,6 +2018,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     String? recipientId,
     DateTime? sentAt,
     bool? isRead,
+    Value<String?> imageUrl = const Value.absent(),
   }) => MessageData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -1545,6 +2028,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     recipientId: recipientId ?? this.recipientId,
     sentAt: sentAt ?? this.sentAt,
     isRead: isRead ?? this.isRead,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
   );
   MessageData copyWithCompanion(MessageTableCompanion data) {
     return MessageData(
@@ -1558,6 +2042,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           : this.recipientId,
       sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
       isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
     );
   }
 
@@ -1571,7 +2056,8 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           ..write('senderId: $senderId, ')
           ..write('recipientId: $recipientId, ')
           ..write('sentAt: $sentAt, ')
-          ..write('isRead: $isRead')
+          ..write('isRead: $isRead, ')
+          ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
   }
@@ -1586,6 +2072,7 @@ class MessageData extends DataClass implements Insertable<MessageData> {
     recipientId,
     sentAt,
     isRead,
+    imageUrl,
   );
   @override
   bool operator ==(Object other) =>
@@ -1598,7 +2085,8 @@ class MessageData extends DataClass implements Insertable<MessageData> {
           other.senderId == this.senderId &&
           other.recipientId == this.recipientId &&
           other.sentAt == this.sentAt &&
-          other.isRead == this.isRead);
+          other.isRead == this.isRead &&
+          other.imageUrl == this.imageUrl);
 }
 
 class MessageTableCompanion extends UpdateCompanion<MessageData> {
@@ -1610,6 +2098,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
   final Value<String> recipientId;
   final Value<DateTime> sentAt;
   final Value<bool> isRead;
+  final Value<String?> imageUrl;
   final Value<int> rowid;
   const MessageTableCompanion({
     this.id = const Value.absent(),
@@ -1620,6 +2109,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     this.recipientId = const Value.absent(),
     this.sentAt = const Value.absent(),
     this.isRead = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MessageTableCompanion.insert({
@@ -1631,6 +2121,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     required String recipientId,
     required DateTime sentAt,
     this.isRead = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        content = Value(content),
@@ -1646,6 +2137,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     Expression<String>? recipientId,
     Expression<DateTime>? sentAt,
     Expression<bool>? isRead,
+    Expression<String>? imageUrl,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1657,6 +2149,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
       if (recipientId != null) 'recipient_id': recipientId,
       if (sentAt != null) 'sent_at': sentAt,
       if (isRead != null) 'is_read': isRead,
+      if (imageUrl != null) 'image_url': imageUrl,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1670,6 +2163,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     Value<String>? recipientId,
     Value<DateTime>? sentAt,
     Value<bool>? isRead,
+    Value<String?>? imageUrl,
     Value<int>? rowid,
   }) {
     return MessageTableCompanion(
@@ -1681,6 +2175,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
       recipientId: recipientId ?? this.recipientId,
       sentAt: sentAt ?? this.sentAt,
       isRead: isRead ?? this.isRead,
+      imageUrl: imageUrl ?? this.imageUrl,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1712,6 +2207,9 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
     if (isRead.present) {
       map['is_read'] = Variable<bool>(isRead.value);
     }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1729,6 +2227,7 @@ class MessageTableCompanion extends UpdateCompanion<MessageData> {
           ..write('recipientId: $recipientId, ')
           ..write('sentAt: $sentAt, ')
           ..write('isRead: $isRead, ')
+          ..write('imageUrl: $imageUrl, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2220,12 +2719,12 @@ class ConversationTableCompanion extends UpdateCompanion<ConversationData> {
   }
 }
 
-class $ChirpUserTableTable extends ChirpUserTable
-    with TableInfo<$ChirpUserTableTable, ChirpUserData> {
+class $PostTableTable extends PostTable
+    with TableInfo<$PostTableTable, PostEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpUserTableTable(this.attachedDatabase, [this._alias]);
+  $PostTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -2259,65 +2758,54 @@ class $ChirpUserTableTable extends ChirpUserTable
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
   @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _vibepointsMeta = const VerificationMeta(
-    'vibepoints',
+  static const VerificationMeta _likeCountMeta = const VerificationMeta(
+    'likeCount',
   );
   @override
-  late final GeneratedColumn<int> vibepoints = GeneratedColumn<int>(
-    'vibepoints',
+  late final GeneratedColumn<int> likeCount = GeneratedColumn<int>(
+    'like_count',
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: Constant(0),
-  );
-  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
-    'avatarUrl',
-  );
-  @override
-  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
-    'avatar_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
     updatedAt,
-    name,
-    email,
-    vibepoints,
-    avatarUrl,
+    userId,
+    content,
+    likeCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'chirp_user_table';
+  static const String $name = 'post_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpUserData> instance, {
+    Insertable<PostEntity> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2339,33 +2827,29 @@ class $ChirpUserTableTable extends ChirpUserTable
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
-    if (data.containsKey('name')) {
+    if (data.containsKey('user_id')) {
       context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_nameMeta);
+      context.missing(_userIdMeta);
     }
-    if (data.containsKey('email')) {
+    if (data.containsKey('content')) {
       context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
       );
     } else if (isInserting) {
-      context.missing(_emailMeta);
+      context.missing(_contentMeta);
     }
-    if (data.containsKey('vibepoints')) {
+    if (data.containsKey('like_count')) {
       context.handle(
-        _vibepointsMeta,
-        vibepoints.isAcceptableOrUnknown(data['vibepoints']!, _vibepointsMeta),
+        _likeCountMeta,
+        likeCount.isAcceptableOrUnknown(data['like_count']!, _likeCountMeta),
       );
-    }
-    if (data.containsKey('avatar_url')) {
-      context.handle(
-        _avatarUrlMeta,
-        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
-      );
+    } else if (isInserting) {
+      context.missing(_likeCountMeta);
     }
     return context;
   }
@@ -2373,9 +2857,9 @@ class $ChirpUserTableTable extends ChirpUserTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  PostEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpUserData(
+    return PostEntity(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -2388,47 +2872,41 @@ class $ChirpUserTableTable extends ChirpUserTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
-      name: attachedDatabase.typeMapping.read(
+      userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}name'],
+        data['${effectivePrefix}user_id'],
       )!,
-      email: attachedDatabase.typeMapping.read(
+      content: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}email'],
+        data['${effectivePrefix}content'],
       )!,
-      vibepoints: attachedDatabase.typeMapping.read(
+      likeCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}vibepoints'],
+        data['${effectivePrefix}like_count'],
       )!,
-      avatarUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}avatar_url'],
-      ),
     );
   }
 
   @override
-  $ChirpUserTableTable createAlias(String alias) {
-    return $ChirpUserTableTable(attachedDatabase, alias);
+  $PostTableTable createAlias(String alias) {
+    return $PostTableTable(attachedDatabase, alias);
   }
 }
 
-class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+class PostEntity extends DataClass implements Insertable<PostEntity> {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String name;
-  final String email;
-  final int vibepoints;
-  final String? avatarUrl;
-  const ChirpUserData({
+  final String userId;
+  final String content;
+  final int likeCount;
+  const PostEntity({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
-    required this.name,
-    required this.email,
-    required this.vibepoints,
-    this.avatarUrl,
+    required this.userId,
+    required this.content,
+    required this.likeCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2436,42 +2914,35 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['email'] = Variable<String>(email);
-    map['vibepoints'] = Variable<int>(vibepoints);
-    if (!nullToAbsent || avatarUrl != null) {
-      map['avatar_url'] = Variable<String>(avatarUrl);
-    }
+    map['user_id'] = Variable<String>(userId);
+    map['content'] = Variable<String>(content);
+    map['like_count'] = Variable<int>(likeCount);
     return map;
   }
 
-  ChirpUserTableCompanion toCompanion(bool nullToAbsent) {
-    return ChirpUserTableCompanion(
+  PostTableCompanion toCompanion(bool nullToAbsent) {
+    return PostTableCompanion(
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      name: Value(name),
-      email: Value(email),
-      vibepoints: Value(vibepoints),
-      avatarUrl: avatarUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(avatarUrl),
+      userId: Value(userId),
+      content: Value(content),
+      likeCount: Value(likeCount),
     );
   }
 
-  factory ChirpUserData.fromJson(
+  factory PostEntity.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpUserData(
+    return PostEntity(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      email: serializer.fromJson<String>(json['email']),
-      vibepoints: serializer.fromJson<int>(json['vibepoints']),
-      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      content: serializer.fromJson<String>(json['content']),
+      likeCount: serializer.fromJson<int>(json['like_count']),
     );
   }
   @override
@@ -2481,145 +2952,131 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       'id': serializer.toJson<String>(id),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'email': serializer.toJson<String>(email),
-      'vibepoints': serializer.toJson<int>(vibepoints),
-      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+      'user_id': serializer.toJson<String>(userId),
+      'content': serializer.toJson<String>(content),
+      'like_count': serializer.toJson<int>(likeCount),
     };
   }
 
-  ChirpUserData copyWith({
+  PostEntity copyWith({
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? name,
-    String? email,
-    int? vibepoints,
-    Value<String?> avatarUrl = const Value.absent(),
-  }) => ChirpUserData(
+    String? userId,
+    String? content,
+    int? likeCount,
+  }) => PostEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    vibepoints: vibepoints ?? this.vibepoints,
-    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+    userId: userId ?? this.userId,
+    content: content ?? this.content,
+    likeCount: likeCount ?? this.likeCount,
   );
-  ChirpUserData copyWithCompanion(ChirpUserTableCompanion data) {
-    return ChirpUserData(
+  PostEntity copyWithCompanion(PostTableCompanion data) {
+    return PostEntity(
       id: data.id.present ? data.id.value : this.id,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      email: data.email.present ? data.email.value : this.email,
-      vibepoints: data.vibepoints.present
-          ? data.vibepoints.value
-          : this.vibepoints,
-      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      content: data.content.present ? data.content.value : this.content,
+      likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserData(')
+    return (StringBuffer('PostEntity(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('vibepoints: $vibepoints, ')
-          ..write('avatarUrl: $avatarUrl')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
+          ..write('likeCount: $likeCount')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, name, email, vibepoints, avatarUrl);
+      Object.hash(id, createdAt, updatedAt, userId, content, likeCount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpUserData &&
+      (other is PostEntity &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.email == this.email &&
-          other.vibepoints == this.vibepoints &&
-          other.avatarUrl == this.avatarUrl);
+          other.userId == this.userId &&
+          other.content == this.content &&
+          other.likeCount == this.likeCount);
 }
 
-class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
+class PostTableCompanion extends UpdateCompanion<PostEntity> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> email;
-  final Value<int> vibepoints;
-  final Value<String?> avatarUrl;
+  final Value<String> userId;
+  final Value<String> content;
+  final Value<int> likeCount;
   final Value<int> rowid;
-  const ChirpUserTableCompanion({
+  const PostTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.email = const Value.absent(),
-    this.vibepoints = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.likeCount = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChirpUserTableCompanion.insert({
+  PostTableCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    required String name,
-    required String email,
-    this.vibepoints = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
+    required String userId,
+    required String content,
+    required int likeCount,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       name = Value(name),
-       email = Value(email);
-  static Insertable<ChirpUserData> custom({
+       userId = Value(userId),
+       content = Value(content),
+       likeCount = Value(likeCount);
+  static Insertable<PostEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? email,
-    Expression<int>? vibepoints,
-    Expression<String>? avatarUrl,
+    Expression<String>? userId,
+    Expression<String>? content,
+    Expression<int>? likeCount,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (email != null) 'email': email,
-      if (vibepoints != null) 'vibepoints': vibepoints,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (userId != null) 'user_id': userId,
+      if (content != null) 'content': content,
+      if (likeCount != null) 'like_count': likeCount,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ChirpUserTableCompanion copyWith({
+  PostTableCompanion copyWith({
     Value<String>? id,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? email,
-    Value<int>? vibepoints,
-    Value<String?>? avatarUrl,
+    Value<String>? userId,
+    Value<String>? content,
+    Value<int>? likeCount,
     Value<int>? rowid,
   }) {
-    return ChirpUserTableCompanion(
+    return PostTableCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      vibepoints: vibepoints ?? this.vibepoints,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      likeCount: likeCount ?? this.likeCount,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2636,17 +3093,14 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
     }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
     }
-    if (vibepoints.present) {
-      map['vibepoints'] = Variable<int>(vibepoints.value);
-    }
-    if (avatarUrl.present) {
-      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    if (likeCount.present) {
+      map['like_count'] = Variable<int>(likeCount.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -2656,14 +3110,832 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserTableCompanion(')
+    return (StringBuffer('PostTableCompanion(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('vibepoints: $vibepoints, ')
-          ..write('avatarUrl: $avatarUrl, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
+          ..write('likeCount: $likeCount, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttachmentTableTable extends AttachmentTable
+    with TableInfo<$AttachmentTableTable, AttachmentEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
+  @override
+  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
+    'post_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES post_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
+    'attachmentType',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
+    'attachment_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 10),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
+  @override
+  late final GeneratedColumn<String> file = GeneratedColumn<String>(
+    'file',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    attachmentType,
+    file,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'attachment_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AttachmentEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('post_id')) {
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_postIdMeta);
+    }
+    if (data.containsKey('attachment_type')) {
+      context.handle(
+        _attachmentTypeMeta,
+        attachmentType.isAcceptableOrUnknown(
+          data['attachment_type']!,
+          _attachmentTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attachmentTypeMeta);
+    }
+    if (data.containsKey('file')) {
+      context.handle(
+        _fileMeta,
+        file.isAcceptableOrUnknown(data['file']!, _fileMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fileMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AttachmentEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttachmentEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post_id'],
+      )!,
+      attachmentType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_type'],
+      )!,
+      file: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file'],
+      )!,
+    );
+  }
+
+  @override
+  $AttachmentTableTable createAlias(String alias) {
+    return $AttachmentTableTable(attachedDatabase, alias);
+  }
+}
+
+class AttachmentEntity extends DataClass
+    implements Insertable<AttachmentEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String postId;
+  final String attachmentType;
+  final String file;
+  const AttachmentEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.postId,
+    required this.attachmentType,
+    required this.file,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['post_id'] = Variable<String>(postId);
+    map['attachment_type'] = Variable<String>(attachmentType);
+    map['file'] = Variable<String>(file);
+    return map;
+  }
+
+  AttachmentTableCompanion toCompanion(bool nullToAbsent) {
+    return AttachmentTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      postId: Value(postId),
+      attachmentType: Value(attachmentType),
+      file: Value(file),
+    );
+  }
+
+  factory AttachmentEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttachmentEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      postId: serializer.fromJson<String>(json['post_id']),
+      attachmentType: serializer.fromJson<String>(json['attachment_type']),
+      file: serializer.fromJson<String>(json['file']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'post_id': serializer.toJson<String>(postId),
+      'attachment_type': serializer.toJson<String>(attachmentType),
+      'file': serializer.toJson<String>(file),
+    };
+  }
+
+  AttachmentEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? postId,
+    String? attachmentType,
+    String? file,
+  }) => AttachmentEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    postId: postId ?? this.postId,
+    attachmentType: attachmentType ?? this.attachmentType,
+    file: file ?? this.file,
+  );
+  AttachmentEntity copyWithCompanion(AttachmentTableCompanion data) {
+    return AttachmentEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      postId: data.postId.present ? data.postId.value : this.postId,
+      attachmentType: data.attachmentType.present
+          ? data.attachmentType.value
+          : this.attachmentType,
+      file: data.file.present ? data.file.value : this.file,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttachmentEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('file: $file')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, postId, attachmentType, file);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttachmentEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.postId == this.postId &&
+          other.attachmentType == this.attachmentType &&
+          other.file == this.file);
+}
+
+class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> postId;
+  final Value<String> attachmentType;
+  final Value<String> file;
+  final Value<int> rowid;
+  const AttachmentTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.postId = const Value.absent(),
+    this.attachmentType = const Value.absent(),
+    this.file = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AttachmentTableCompanion.insert({
+    required String id,
+    required DateTime createdAt,
+    this.updatedAt = const Value.absent(),
+    required String postId,
+    required String attachmentType,
+    required String file,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       createdAt = Value(createdAt),
+       postId = Value(postId),
+       attachmentType = Value(attachmentType),
+       file = Value(file);
+  static Insertable<AttachmentEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? postId,
+    Expression<String>? attachmentType,
+    Expression<String>? file,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (postId != null) 'post_id': postId,
+      if (attachmentType != null) 'attachment_type': attachmentType,
+      if (file != null) 'file': file,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AttachmentTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? postId,
+    Value<String>? attachmentType,
+    Value<String>? file,
+    Value<int>? rowid,
+  }) {
+    return AttachmentTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      postId: postId ?? this.postId,
+      attachmentType: attachmentType ?? this.attachmentType,
+      file: file ?? this.file,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (postId.present) {
+      map['post_id'] = Variable<String>(postId.value);
+    }
+    if (attachmentType.present) {
+      map['attachment_type'] = Variable<String>(attachmentType.value);
+    }
+    if (file.present) {
+      map['file'] = Variable<String>(file.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttachmentTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('file: $file, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PostReplyTableTable extends PostReplyTable
+    with TableInfo<$PostReplyTableTable, PostReplyEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PostReplyTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
+  @override
+  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
+    'post_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES post_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    userId,
+    content,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'post_reply_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PostReplyEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('post_id')) {
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_postIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PostReplyEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PostReplyEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+    );
+  }
+
+  @override
+  $PostReplyTableTable createAlias(String alias) {
+    return $PostReplyTableTable(attachedDatabase, alias);
+  }
+}
+
+class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String postId;
+  final String userId;
+  final String content;
+  const PostReplyEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.postId,
+    required this.userId,
+    required this.content,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['post_id'] = Variable<String>(postId);
+    map['user_id'] = Variable<String>(userId);
+    map['content'] = Variable<String>(content);
+    return map;
+  }
+
+  PostReplyTableCompanion toCompanion(bool nullToAbsent) {
+    return PostReplyTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      postId: Value(postId),
+      userId: Value(userId),
+      content: Value(content),
+    );
+  }
+
+  factory PostReplyEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PostReplyEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      postId: serializer.fromJson<String>(json['post_id']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      content: serializer.fromJson<String>(json['content']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'post_id': serializer.toJson<String>(postId),
+      'user_id': serializer.toJson<String>(userId),
+      'content': serializer.toJson<String>(content),
+    };
+  }
+
+  PostReplyEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? postId,
+    String? userId,
+    String? content,
+  }) => PostReplyEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    postId: postId ?? this.postId,
+    userId: userId ?? this.userId,
+    content: content ?? this.content,
+  );
+  PostReplyEntity copyWithCompanion(PostReplyTableCompanion data) {
+    return PostReplyEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      postId: data.postId.present ? data.postId.value : this.postId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      content: data.content.present ? data.content.value : this.content,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostReplyEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, postId, userId, content);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PostReplyEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.postId == this.postId &&
+          other.userId == this.userId &&
+          other.content == this.content);
+}
+
+class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> postId;
+  final Value<String> userId;
+  final Value<String> content;
+  final Value<int> rowid;
+  const PostReplyTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.postId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PostReplyTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String postId,
+    required String userId,
+    required String content,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       postId = Value(postId),
+       userId = Value(userId),
+       content = Value(content);
+  static Insertable<PostReplyEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? postId,
+    Expression<String>? userId,
+    Expression<String>? content,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (postId != null) 'post_id': postId,
+      if (userId != null) 'user_id': userId,
+      if (content != null) 'content': content,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PostReplyTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? postId,
+    Value<String>? userId,
+    Value<String>? content,
+    Value<int>? rowid,
+  }) {
+    return PostReplyTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      postId: postId ?? this.postId,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (postId.present) {
+      map['post_id'] = Variable<String>(postId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostReplyTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('postId: $postId, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5243,19 +6515,1099 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   }
 }
 
+class $AgendaEventTable extends AgendaEvent
+    with TableInfo<$AgendaEventTable, AgendaEventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AgendaEventTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allDayMeta = const VerificationMeta('allDay');
+  @override
+  late final GeneratedColumn<bool> allDay = GeneratedColumn<bool>(
+    'all_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("all_day" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _summaryMeta = const VerificationMeta(
+    'summary',
+  );
+  @override
+  late final GeneratedColumn<String> summary = GeneratedColumn<String>(
+    'summary',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _htmlLinkMeta = const VerificationMeta(
+    'htmlLink',
+  );
+  @override
+  late final GeneratedColumn<String> htmlLink = GeneratedColumn<String>(
+    'html_link',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _calendarIdMeta = const VerificationMeta(
+    'calendarId',
+  );
+  @override
+  late final GeneratedColumn<String> calendarId = GeneratedColumn<String>(
+    'calendar_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _timezoneMeta = const VerificationMeta(
+    'timezone',
+  );
+  @override
+  late final GeneratedColumn<String> timezone = GeneratedColumn<String>(
+    'timezone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _transparencyMeta = const VerificationMeta(
+    'transparency',
+  );
+  @override
+  late final GeneratedColumn<String> transparency = GeneratedColumn<String>(
+    'transparency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
+  @override
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+    'etag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdMeta = const VerificationMeta(
+    'created',
+  );
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+    'created',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+    'start_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endTime = GeneratedColumn<DateTime>(
+    'end_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  attendees = GeneratedColumn<String>(
+    'attendees',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterattendeesn);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  recurrence = GeneratedColumn<String>(
+    'recurrence',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterrecurrencen);
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  reminders =
+      GeneratedColumn<String>(
+        'reminders',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $AgendaEventTable.$converterremindersn,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    allDay,
+    summary,
+    description,
+    location,
+    htmlLink,
+    calendarId,
+    ownerId,
+    timezone,
+    status,
+    transparency,
+    etag,
+    created,
+    updated,
+    startTime,
+    endTime,
+    attendees,
+    recurrence,
+    reminders,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'agenda_event';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AgendaEventData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('all_day')) {
+      context.handle(
+        _allDayMeta,
+        allDay.isAcceptableOrUnknown(data['all_day']!, _allDayMeta),
+      );
+    }
+    if (data.containsKey('summary')) {
+      context.handle(
+        _summaryMeta,
+        summary.isAcceptableOrUnknown(data['summary']!, _summaryMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('html_link')) {
+      context.handle(
+        _htmlLinkMeta,
+        htmlLink.isAcceptableOrUnknown(data['html_link']!, _htmlLinkMeta),
+      );
+    }
+    if (data.containsKey('calendar_id')) {
+      context.handle(
+        _calendarIdMeta,
+        calendarId.isAcceptableOrUnknown(data['calendar_id']!, _calendarIdMeta),
+      );
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    }
+    if (data.containsKey('timezone')) {
+      context.handle(
+        _timezoneMeta,
+        timezone.isAcceptableOrUnknown(data['timezone']!, _timezoneMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('transparency')) {
+      context.handle(
+        _transparencyMeta,
+        transparency.isAcceptableOrUnknown(
+          data['transparency']!,
+          _transparencyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+        _etagMeta,
+        etag.isAcceptableOrUnknown(data['etag']!, _etagMeta),
+      );
+    }
+    if (data.containsKey('created')) {
+      context.handle(
+        _createdMeta,
+        created.isAcceptableOrUnknown(data['created']!, _createdMeta),
+      );
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AgendaEventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AgendaEventData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      allDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}all_day'],
+      )!,
+      summary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}summary'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      htmlLink: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}html_link'],
+      ),
+      calendarId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}calendar_id'],
+      ),
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      ),
+      timezone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timezone'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      ),
+      transparency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transparency'],
+      ),
+      etag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}etag'],
+      ),
+      created: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created'],
+      ),
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_time'],
+      ),
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_time'],
+      ),
+      attendees: $AgendaEventTable.$converterattendeesn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}attendees'],
+        ),
+      ),
+      recurrence: $AgendaEventTable.$converterrecurrencen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}recurrence'],
+        ),
+      ),
+      reminders: $AgendaEventTable.$converterremindersn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}reminders'],
+        ),
+      ),
+    );
+  }
+
+  @override
+  $AgendaEventTable createAlias(String alias) {
+    return $AgendaEventTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<dynamic>, String> $converterattendees =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterattendeesn =
+      NullAwareTypeConverter.wrap($converterattendees);
+  static TypeConverter<List<dynamic>, String> $converterrecurrence =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterrecurrencen =
+      NullAwareTypeConverter.wrap($converterrecurrence);
+  static TypeConverter<Map<String, dynamic>, String> $converterreminders =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterremindersn =
+      NullAwareTypeConverter.wrap($converterreminders);
+}
+
+class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
+  final String id;
+  final bool allDay;
+  final String? summary;
+  final String? description;
+  final String? location;
+  final String? htmlLink;
+  final String? calendarId;
+  final String? ownerId;
+  final String? timezone;
+  final String? status;
+  final String? transparency;
+  final String? etag;
+  final DateTime? created;
+  final DateTime? updated;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final List<dynamic>? attendees;
+  final List<dynamic>? recurrence;
+  final Map<String, dynamic>? reminders;
+  const AgendaEventData({
+    required this.id,
+    required this.allDay,
+    this.summary,
+    this.description,
+    this.location,
+    this.htmlLink,
+    this.calendarId,
+    this.ownerId,
+    this.timezone,
+    this.status,
+    this.transparency,
+    this.etag,
+    this.created,
+    this.updated,
+    this.startTime,
+    this.endTime,
+    this.attendees,
+    this.recurrence,
+    this.reminders,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['all_day'] = Variable<bool>(allDay);
+    if (!nullToAbsent || summary != null) {
+      map['summary'] = Variable<String>(summary);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || htmlLink != null) {
+      map['html_link'] = Variable<String>(htmlLink);
+    }
+    if (!nullToAbsent || calendarId != null) {
+      map['calendar_id'] = Variable<String>(calendarId);
+    }
+    if (!nullToAbsent || ownerId != null) {
+      map['owner_id'] = Variable<String>(ownerId);
+    }
+    if (!nullToAbsent || timezone != null) {
+      map['timezone'] = Variable<String>(timezone);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || transparency != null) {
+      map['transparency'] = Variable<String>(transparency);
+    }
+    if (!nullToAbsent || etag != null) {
+      map['etag'] = Variable<String>(etag);
+    }
+    if (!nullToAbsent || created != null) {
+      map['created'] = Variable<DateTime>(created);
+    }
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
+    }
+    if (!nullToAbsent || startTime != null) {
+      map['start_time'] = Variable<DateTime>(startTime);
+    }
+    if (!nullToAbsent || endTime != null) {
+      map['end_time'] = Variable<DateTime>(endTime);
+    }
+    if (!nullToAbsent || attendees != null) {
+      map['attendees'] = Variable<String>(
+        $AgendaEventTable.$converterattendeesn.toSql(attendees),
+      );
+    }
+    if (!nullToAbsent || recurrence != null) {
+      map['recurrence'] = Variable<String>(
+        $AgendaEventTable.$converterrecurrencen.toSql(recurrence),
+      );
+    }
+    if (!nullToAbsent || reminders != null) {
+      map['reminders'] = Variable<String>(
+        $AgendaEventTable.$converterremindersn.toSql(reminders),
+      );
+    }
+    return map;
+  }
+
+  AgendaEventCompanion toCompanion(bool nullToAbsent) {
+    return AgendaEventCompanion(
+      id: Value(id),
+      allDay: Value(allDay),
+      summary: summary == null && nullToAbsent
+          ? const Value.absent()
+          : Value(summary),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      htmlLink: htmlLink == null && nullToAbsent
+          ? const Value.absent()
+          : Value(htmlLink),
+      calendarId: calendarId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calendarId),
+      ownerId: ownerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ownerId),
+      timezone: timezone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timezone),
+      status: status == null && nullToAbsent
+          ? const Value.absent()
+          : Value(status),
+      transparency: transparency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transparency),
+      etag: etag == null && nullToAbsent ? const Value.absent() : Value(etag),
+      created: created == null && nullToAbsent
+          ? const Value.absent()
+          : Value(created),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
+      startTime: startTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startTime),
+      endTime: endTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endTime),
+      attendees: attendees == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attendees),
+      recurrence: recurrence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrence),
+      reminders: reminders == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminders),
+    );
+  }
+
+  factory AgendaEventData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AgendaEventData(
+      id: serializer.fromJson<String>(json['id']),
+      allDay: serializer.fromJson<bool>(json['all_day']),
+      summary: serializer.fromJson<String?>(json['summary']),
+      description: serializer.fromJson<String?>(json['description']),
+      location: serializer.fromJson<String?>(json['location']),
+      htmlLink: serializer.fromJson<String?>(json['html_link']),
+      calendarId: serializer.fromJson<String?>(json['calendar_id']),
+      ownerId: serializer.fromJson<String?>(json['owner_id']),
+      timezone: serializer.fromJson<String?>(json['timezone']),
+      status: serializer.fromJson<String?>(json['status']),
+      transparency: serializer.fromJson<String?>(json['transparency']),
+      etag: serializer.fromJson<String?>(json['etag']),
+      created: serializer.fromJson<DateTime?>(json['created']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
+      startTime: serializer.fromJson<DateTime?>(json['start_time']),
+      endTime: serializer.fromJson<DateTime?>(json['end_time']),
+      attendees: serializer.fromJson<List<dynamic>?>(json['attendees']),
+      recurrence: serializer.fromJson<List<dynamic>?>(json['recurrence']),
+      reminders: serializer.fromJson<Map<String, dynamic>?>(json['reminders']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'all_day': serializer.toJson<bool>(allDay),
+      'summary': serializer.toJson<String?>(summary),
+      'description': serializer.toJson<String?>(description),
+      'location': serializer.toJson<String?>(location),
+      'html_link': serializer.toJson<String?>(htmlLink),
+      'calendar_id': serializer.toJson<String?>(calendarId),
+      'owner_id': serializer.toJson<String?>(ownerId),
+      'timezone': serializer.toJson<String?>(timezone),
+      'status': serializer.toJson<String?>(status),
+      'transparency': serializer.toJson<String?>(transparency),
+      'etag': serializer.toJson<String?>(etag),
+      'created': serializer.toJson<DateTime?>(created),
+      'updated': serializer.toJson<DateTime?>(updated),
+      'start_time': serializer.toJson<DateTime?>(startTime),
+      'end_time': serializer.toJson<DateTime?>(endTime),
+      'attendees': serializer.toJson<List<dynamic>?>(attendees),
+      'recurrence': serializer.toJson<List<dynamic>?>(recurrence),
+      'reminders': serializer.toJson<Map<String, dynamic>?>(reminders),
+    };
+  }
+
+  AgendaEventData copyWith({
+    String? id,
+    bool? allDay,
+    Value<String?> summary = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> location = const Value.absent(),
+    Value<String?> htmlLink = const Value.absent(),
+    Value<String?> calendarId = const Value.absent(),
+    Value<String?> ownerId = const Value.absent(),
+    Value<String?> timezone = const Value.absent(),
+    Value<String?> status = const Value.absent(),
+    Value<String?> transparency = const Value.absent(),
+    Value<String?> etag = const Value.absent(),
+    Value<DateTime?> created = const Value.absent(),
+    Value<DateTime?> updated = const Value.absent(),
+    Value<DateTime?> startTime = const Value.absent(),
+    Value<DateTime?> endTime = const Value.absent(),
+    Value<List<dynamic>?> attendees = const Value.absent(),
+    Value<List<dynamic>?> recurrence = const Value.absent(),
+    Value<Map<String, dynamic>?> reminders = const Value.absent(),
+  }) => AgendaEventData(
+    id: id ?? this.id,
+    allDay: allDay ?? this.allDay,
+    summary: summary.present ? summary.value : this.summary,
+    description: description.present ? description.value : this.description,
+    location: location.present ? location.value : this.location,
+    htmlLink: htmlLink.present ? htmlLink.value : this.htmlLink,
+    calendarId: calendarId.present ? calendarId.value : this.calendarId,
+    ownerId: ownerId.present ? ownerId.value : this.ownerId,
+    timezone: timezone.present ? timezone.value : this.timezone,
+    status: status.present ? status.value : this.status,
+    transparency: transparency.present ? transparency.value : this.transparency,
+    etag: etag.present ? etag.value : this.etag,
+    created: created.present ? created.value : this.created,
+    updated: updated.present ? updated.value : this.updated,
+    startTime: startTime.present ? startTime.value : this.startTime,
+    endTime: endTime.present ? endTime.value : this.endTime,
+    attendees: attendees.present ? attendees.value : this.attendees,
+    recurrence: recurrence.present ? recurrence.value : this.recurrence,
+    reminders: reminders.present ? reminders.value : this.reminders,
+  );
+  AgendaEventData copyWithCompanion(AgendaEventCompanion data) {
+    return AgendaEventData(
+      id: data.id.present ? data.id.value : this.id,
+      allDay: data.allDay.present ? data.allDay.value : this.allDay,
+      summary: data.summary.present ? data.summary.value : this.summary,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      location: data.location.present ? data.location.value : this.location,
+      htmlLink: data.htmlLink.present ? data.htmlLink.value : this.htmlLink,
+      calendarId: data.calendarId.present
+          ? data.calendarId.value
+          : this.calendarId,
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
+      timezone: data.timezone.present ? data.timezone.value : this.timezone,
+      status: data.status.present ? data.status.value : this.status,
+      transparency: data.transparency.present
+          ? data.transparency.value
+          : this.transparency,
+      etag: data.etag.present ? data.etag.value : this.etag,
+      created: data.created.present ? data.created.value : this.created,
+      updated: data.updated.present ? data.updated.value : this.updated,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      attendees: data.attendees.present ? data.attendees.value : this.attendees,
+      recurrence: data.recurrence.present
+          ? data.recurrence.value
+          : this.recurrence,
+      reminders: data.reminders.present ? data.reminders.value : this.reminders,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AgendaEventData(')
+          ..write('id: $id, ')
+          ..write('allDay: $allDay, ')
+          ..write('summary: $summary, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('htmlLink: $htmlLink, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('ownerId: $ownerId, ')
+          ..write('timezone: $timezone, ')
+          ..write('status: $status, ')
+          ..write('transparency: $transparency, ')
+          ..write('etag: $etag, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('attendees: $attendees, ')
+          ..write('recurrence: $recurrence, ')
+          ..write('reminders: $reminders')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    allDay,
+    summary,
+    description,
+    location,
+    htmlLink,
+    calendarId,
+    ownerId,
+    timezone,
+    status,
+    transparency,
+    etag,
+    created,
+    updated,
+    startTime,
+    endTime,
+    attendees,
+    recurrence,
+    reminders,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AgendaEventData &&
+          other.id == this.id &&
+          other.allDay == this.allDay &&
+          other.summary == this.summary &&
+          other.description == this.description &&
+          other.location == this.location &&
+          other.htmlLink == this.htmlLink &&
+          other.calendarId == this.calendarId &&
+          other.ownerId == this.ownerId &&
+          other.timezone == this.timezone &&
+          other.status == this.status &&
+          other.transparency == this.transparency &&
+          other.etag == this.etag &&
+          other.created == this.created &&
+          other.updated == this.updated &&
+          other.startTime == this.startTime &&
+          other.endTime == this.endTime &&
+          other.attendees == this.attendees &&
+          other.recurrence == this.recurrence &&
+          other.reminders == this.reminders);
+}
+
+class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
+  final Value<String> id;
+  final Value<bool> allDay;
+  final Value<String?> summary;
+  final Value<String?> description;
+  final Value<String?> location;
+  final Value<String?> htmlLink;
+  final Value<String?> calendarId;
+  final Value<String?> ownerId;
+  final Value<String?> timezone;
+  final Value<String?> status;
+  final Value<String?> transparency;
+  final Value<String?> etag;
+  final Value<DateTime?> created;
+  final Value<DateTime?> updated;
+  final Value<DateTime?> startTime;
+  final Value<DateTime?> endTime;
+  final Value<List<dynamic>?> attendees;
+  final Value<List<dynamic>?> recurrence;
+  final Value<Map<String, dynamic>?> reminders;
+  final Value<int> rowid;
+  const AgendaEventCompanion({
+    this.id = const Value.absent(),
+    this.allDay = const Value.absent(),
+    this.summary = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.htmlLink = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.ownerId = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.transparency = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.attendees = const Value.absent(),
+    this.recurrence = const Value.absent(),
+    this.reminders = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AgendaEventCompanion.insert({
+    required String id,
+    this.allDay = const Value.absent(),
+    this.summary = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.htmlLink = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.ownerId = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.transparency = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.attendees = const Value.absent(),
+    this.recurrence = const Value.absent(),
+    this.reminders = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<AgendaEventData> custom({
+    Expression<String>? id,
+    Expression<bool>? allDay,
+    Expression<String>? summary,
+    Expression<String>? description,
+    Expression<String>? location,
+    Expression<String>? htmlLink,
+    Expression<String>? calendarId,
+    Expression<String>? ownerId,
+    Expression<String>? timezone,
+    Expression<String>? status,
+    Expression<String>? transparency,
+    Expression<String>? etag,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<DateTime>? startTime,
+    Expression<DateTime>? endTime,
+    Expression<String>? attendees,
+    Expression<String>? recurrence,
+    Expression<String>? reminders,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (allDay != null) 'all_day': allDay,
+      if (summary != null) 'summary': summary,
+      if (description != null) 'description': description,
+      if (location != null) 'location': location,
+      if (htmlLink != null) 'html_link': htmlLink,
+      if (calendarId != null) 'calendar_id': calendarId,
+      if (ownerId != null) 'owner_id': ownerId,
+      if (timezone != null) 'timezone': timezone,
+      if (status != null) 'status': status,
+      if (transparency != null) 'transparency': transparency,
+      if (etag != null) 'etag': etag,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+      if (attendees != null) 'attendees': attendees,
+      if (recurrence != null) 'recurrence': recurrence,
+      if (reminders != null) 'reminders': reminders,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AgendaEventCompanion copyWith({
+    Value<String>? id,
+    Value<bool>? allDay,
+    Value<String?>? summary,
+    Value<String?>? description,
+    Value<String?>? location,
+    Value<String?>? htmlLink,
+    Value<String?>? calendarId,
+    Value<String?>? ownerId,
+    Value<String?>? timezone,
+    Value<String?>? status,
+    Value<String?>? transparency,
+    Value<String?>? etag,
+    Value<DateTime?>? created,
+    Value<DateTime?>? updated,
+    Value<DateTime?>? startTime,
+    Value<DateTime?>? endTime,
+    Value<List<dynamic>?>? attendees,
+    Value<List<dynamic>?>? recurrence,
+    Value<Map<String, dynamic>?>? reminders,
+    Value<int>? rowid,
+  }) {
+    return AgendaEventCompanion(
+      id: id ?? this.id,
+      allDay: allDay ?? this.allDay,
+      summary: summary ?? this.summary,
+      description: description ?? this.description,
+      location: location ?? this.location,
+      htmlLink: htmlLink ?? this.htmlLink,
+      calendarId: calendarId ?? this.calendarId,
+      ownerId: ownerId ?? this.ownerId,
+      timezone: timezone ?? this.timezone,
+      status: status ?? this.status,
+      transparency: transparency ?? this.transparency,
+      etag: etag ?? this.etag,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      attendees: attendees ?? this.attendees,
+      recurrence: recurrence ?? this.recurrence,
+      reminders: reminders ?? this.reminders,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (allDay.present) {
+      map['all_day'] = Variable<bool>(allDay.value);
+    }
+    if (summary.present) {
+      map['summary'] = Variable<String>(summary.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (htmlLink.present) {
+      map['html_link'] = Variable<String>(htmlLink.value);
+    }
+    if (calendarId.present) {
+      map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
+    if (timezone.present) {
+      map['timezone'] = Variable<String>(timezone.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (transparency.present) {
+      map['transparency'] = Variable<String>(transparency.value);
+    }
+    if (etag.present) {
+      map['etag'] = Variable<String>(etag.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<DateTime>(endTime.value);
+    }
+    if (attendees.present) {
+      map['attendees'] = Variable<String>(
+        $AgendaEventTable.$converterattendeesn.toSql(attendees.value),
+      );
+    }
+    if (recurrence.present) {
+      map['recurrence'] = Variable<String>(
+        $AgendaEventTable.$converterrecurrencen.toSql(recurrence.value),
+      );
+    }
+    if (reminders.present) {
+      map['reminders'] = Variable<String>(
+        $AgendaEventTable.$converterremindersn.toSql(reminders.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AgendaEventCompanion(')
+          ..write('id: $id, ')
+          ..write('allDay: $allDay, ')
+          ..write('summary: $summary, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('htmlLink: $htmlLink, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('ownerId: $ownerId, ')
+          ..write('timezone: $timezone, ')
+          ..write('status: $status, ')
+          ..write('transparency: $transparency, ')
+          ..write('etag: $etag, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('attendees: $attendees, ')
+          ..write('recurrence: $recurrence, ')
+          ..write('reminders: $reminders, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
   late final $TokenTable token = $TokenTable(this);
+  late final $ChirpUserTableTable chirpUserTable = $ChirpUserTableTable(this);
   late final $MessageTableTable messageTable = $MessageTableTable(this);
   late final $ConversationTableTable conversationTable =
       $ConversationTableTable(this);
-  late final $ChirpUserTableTable chirpUserTable = $ChirpUserTableTable(this);
+  late final $PostTableTable postTable = $PostTableTable(this);
+  late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
+    this,
+  );
+  late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
+  late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5263,14 +7615,35 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
     token,
+    chirpUserTable,
     messageTable,
     conversationTable,
-    chirpUserTable,
+    postTable,
+    attachmentTable,
+    postReplyTable,
     todo,
     eventTable,
     attendeeTable,
     ticketTable,
+    agendaEvent,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'post_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('attachment_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'post_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('post_reply_table', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$UserProfileTableCreateCompanionBuilder =
@@ -5970,6 +8343,248 @@ typedef $$TokenTableProcessedTableManager =
       TokenData,
       PrefetchHooks Function()
     >;
+typedef $$ChirpUserTableTableCreateCompanionBuilder =
+    ChirpUserTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String name,
+      required String email,
+      Value<int> vibepoints,
+      Value<String?> avatarUrl,
+      Value<int> rowid,
+    });
+typedef $$ChirpUserTableTableUpdateCompanionBuilder =
+    ChirpUserTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> name,
+      Value<String> email,
+      Value<int> vibepoints,
+      Value<String?> avatarUrl,
+      Value<int> rowid,
+    });
+
+class $$ChirpUserTableTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ChirpUserTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ChirpUserTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
+  $$ChirpUserTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<int> get vibepoints => $composableBuilder(
+    column: $table.vibepoints,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+}
+
+class $$ChirpUserTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ChirpUserTableTable,
+          ChirpUserData,
+          $$ChirpUserTableTableFilterComposer,
+          $$ChirpUserTableTableOrderingComposer,
+          $$ChirpUserTableTableAnnotationComposer,
+          $$ChirpUserTableTableCreateCompanionBuilder,
+          $$ChirpUserTableTableUpdateCompanionBuilder,
+          (
+            ChirpUserData,
+            BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
+          ),
+          ChirpUserData,
+          PrefetchHooks Function()
+        > {
+  $$ChirpUserTableTableTableManager(
+    _$AppDataBase db,
+    $ChirpUserTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ChirpUserTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ChirpUserTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ChirpUserTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<int> vibepoints = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ChirpUserTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                email: email,
+                vibepoints: vibepoints,
+                avatarUrl: avatarUrl,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String name,
+                required String email,
+                Value<int> vibepoints = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ChirpUserTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                email: email,
+                vibepoints: vibepoints,
+                avatarUrl: avatarUrl,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ChirpUserTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ChirpUserTableTable,
+      ChirpUserData,
+      $$ChirpUserTableTableFilterComposer,
+      $$ChirpUserTableTableOrderingComposer,
+      $$ChirpUserTableTableAnnotationComposer,
+      $$ChirpUserTableTableCreateCompanionBuilder,
+      $$ChirpUserTableTableUpdateCompanionBuilder,
+      (
+        ChirpUserData,
+        BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
+      ),
+      ChirpUserData,
+      PrefetchHooks Function()
+    >;
 typedef $$MessageTableTableCreateCompanionBuilder =
     MessageTableCompanion Function({
       required String id,
@@ -5980,6 +8595,7 @@ typedef $$MessageTableTableCreateCompanionBuilder =
       required String recipientId,
       required DateTime sentAt,
       Value<bool> isRead,
+      Value<String?> imageUrl,
       Value<int> rowid,
     });
 typedef $$MessageTableTableUpdateCompanionBuilder =
@@ -5992,6 +8608,7 @@ typedef $$MessageTableTableUpdateCompanionBuilder =
       Value<String> recipientId,
       Value<DateTime> sentAt,
       Value<bool> isRead,
+      Value<String?> imageUrl,
       Value<int> rowid,
     });
 
@@ -5999,17 +8616,17 @@ final class $$MessageTableTableReferences
     extends BaseReferences<_$AppDataBase, $MessageTableTable, MessageData> {
   $$MessageTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UserProfileTable _senderIdTable(_$AppDataBase db) =>
-      db.userProfile.createAlias(
-        $_aliasNameGenerator(db.messageTable.senderId, db.userProfile.id),
+  static $ChirpUserTableTable _senderIdTable(_$AppDataBase db) =>
+      db.chirpUserTable.createAlias(
+        $_aliasNameGenerator(db.messageTable.senderId, db.chirpUserTable.id),
       );
 
-  $$UserProfileTableProcessedTableManager get senderId {
+  $$ChirpUserTableTableProcessedTableManager get senderId {
     final $_column = $_itemColumn<String>('sender_id')!;
 
-    final manager = $$UserProfileTableTableManager(
+    final manager = $$ChirpUserTableTableTableManager(
       $_db,
-      $_db.userProfile,
+      $_db.chirpUserTable,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_senderIdTable($_db));
     if (item == null) return manager;
@@ -6018,17 +8635,17 @@ final class $$MessageTableTableReferences
     );
   }
 
-  static $UserProfileTable _recipientIdTable(_$AppDataBase db) =>
-      db.userProfile.createAlias(
-        $_aliasNameGenerator(db.messageTable.recipientId, db.userProfile.id),
+  static $ChirpUserTableTable _recipientIdTable(_$AppDataBase db) =>
+      db.chirpUserTable.createAlias(
+        $_aliasNameGenerator(db.messageTable.recipientId, db.chirpUserTable.id),
       );
 
-  $$UserProfileTableProcessedTableManager get recipientId {
+  $$ChirpUserTableTableProcessedTableManager get recipientId {
     final $_column = $_itemColumn<String>('recipient_id')!;
 
-    final manager = $$UserProfileTableTableManager(
+    final manager = $$ChirpUserTableTableTableManager(
       $_db,
-      $_db.userProfile,
+      $_db.chirpUserTable,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_recipientIdTable($_db));
     if (item == null) return manager;
@@ -6101,20 +8718,25 @@ class $$MessageTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UserProfileTableFilterComposer get senderId {
-    final $$UserProfileTableFilterComposer composer = $composerBuilder(
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ChirpUserTableTableFilterComposer get senderId {
+    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableFilterComposer(
+          }) => $$ChirpUserTableTableFilterComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6124,20 +8746,20 @@ class $$MessageTableTableFilterComposer
     return composer;
   }
 
-  $$UserProfileTableFilterComposer get recipientId {
-    final $$UserProfileTableFilterComposer composer = $composerBuilder(
+  $$ChirpUserTableTableFilterComposer get recipientId {
+    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableFilterComposer(
+          }) => $$ChirpUserTableTableFilterComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6212,20 +8834,25 @@ class $$MessageTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UserProfileTableOrderingComposer get senderId {
-    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ChirpUserTableTableOrderingComposer get senderId {
+    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableOrderingComposer(
+          }) => $$ChirpUserTableTableOrderingComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6235,20 +8862,20 @@ class $$MessageTableTableOrderingComposer
     return composer;
   }
 
-  $$UserProfileTableOrderingComposer get recipientId {
-    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUserTableTableOrderingComposer get recipientId {
+    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableOrderingComposer(
+          }) => $$ChirpUserTableTableOrderingComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6286,20 +8913,23 @@ class $$MessageTableTableAnnotationComposer
   GeneratedColumn<bool> get isRead =>
       $composableBuilder(column: $table.isRead, builder: (column) => column);
 
-  $$UserProfileTableAnnotationComposer get senderId {
-    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  $$ChirpUserTableTableAnnotationComposer get senderId {
+    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableAnnotationComposer(
+          }) => $$ChirpUserTableTableAnnotationComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6309,20 +8939,20 @@ class $$MessageTableTableAnnotationComposer
     return composer;
   }
 
-  $$UserProfileTableAnnotationComposer get recipientId {
-    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUserTableTableAnnotationComposer get recipientId {
+    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableAnnotationComposer(
+          }) => $$ChirpUserTableTableAnnotationComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6399,6 +9029,7 @@ class $$MessageTableTableTableManager
                 Value<String> recipientId = const Value.absent(),
                 Value<DateTime> sentAt = const Value.absent(),
                 Value<bool> isRead = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MessageTableCompanion(
                 id: id,
@@ -6409,6 +9040,7 @@ class $$MessageTableTableTableManager
                 recipientId: recipientId,
                 sentAt: sentAt,
                 isRead: isRead,
+                imageUrl: imageUrl,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -6421,6 +9053,7 @@ class $$MessageTableTableTableManager
                 required String recipientId,
                 required DateTime sentAt,
                 Value<bool> isRead = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MessageTableCompanion.insert(
                 id: id,
@@ -6431,6 +9064,7 @@ class $$MessageTableTableTableManager
                 recipientId: recipientId,
                 sentAt: sentAt,
                 isRead: isRead,
+                imageUrl: imageUrl,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -7020,32 +9654,73 @@ typedef $$ConversationTableTableProcessedTableManager =
       ConversationData,
       PrefetchHooks Function({bool userId, bool lastMessageId})
     >;
-typedef $$ChirpUserTableTableCreateCompanionBuilder =
-    ChirpUserTableCompanion Function({
+typedef $$PostTableTableCreateCompanionBuilder =
+    PostTableCompanion Function({
       required String id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      required String name,
-      required String email,
-      Value<int> vibepoints,
-      Value<String?> avatarUrl,
+      required String userId,
+      required String content,
+      required int likeCount,
       Value<int> rowid,
     });
-typedef $$ChirpUserTableTableUpdateCompanionBuilder =
-    ChirpUserTableCompanion Function({
+typedef $$PostTableTableUpdateCompanionBuilder =
+    PostTableCompanion Function({
       Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> email,
-      Value<int> vibepoints,
-      Value<String?> avatarUrl,
+      Value<String> userId,
+      Value<String> content,
+      Value<int> likeCount,
       Value<int> rowid,
     });
 
-class $$ChirpUserTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableFilterComposer({
+final class $$PostTableTableReferences
+    extends BaseReferences<_$AppDataBase, $PostTableTable, PostEntity> {
+  $$PostTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$AttachmentTableTable, List<AttachmentEntity>>
+  _attachmentTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.attachmentTable,
+    aliasName: $_aliasNameGenerator(db.postTable.id, db.attachmentTable.postId),
+  );
+
+  $$AttachmentTableTableProcessedTableManager get attachmentTableRefs {
+    final manager = $$AttachmentTableTableTableManager(
+      $_db,
+      $_db.attachmentTable,
+    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _attachmentTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PostReplyTableTable, List<PostReplyEntity>>
+  _postReplyTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.postReplyTable,
+    aliasName: $_aliasNameGenerator(db.postTable.id, db.postReplyTable.postId),
+  );
+
+  $$PostReplyTableTableProcessedTableManager get postReplyTableRefs {
+    final manager = $$PostReplyTableTableTableManager(
+      $_db,
+      $_db.postReplyTable,
+    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_postReplyTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$PostTableTableFilterComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7067,30 +9742,75 @@ class $$ChirpUserTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
+  ColumnFilters<int> get likeCount => $composableBuilder(
+    column: $table.likeCount,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
-    builder: (column) => ColumnFilters(column),
-  );
+  Expression<bool> attachmentTableRefs(
+    Expression<bool> Function($$AttachmentTableTableFilterComposer f) f,
+  ) {
+    final $$AttachmentTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachmentTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentTableTableFilterComposer(
+            $db: $db,
+            $table: $db.attachmentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> postReplyTableRefs(
+    Expression<bool> Function($$PostReplyTableTableFilterComposer f) f,
+  ) {
+    final $$PostReplyTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
-class $$ChirpUserTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableOrderingComposer({
+class $$PostTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7112,30 +9832,25 @@ class $$ChirpUserTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
+  ColumnOrderings<int> get likeCount => $composableBuilder(
+    column: $table.likeCount,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$ChirpUserTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableAnnotationComposer({
+class $$PostTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostTableTable> {
+  $$PostTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7151,70 +9866,111 @@ class $$ChirpUserTableTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
 
-  GeneratedColumn<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
-    builder: (column) => column,
-  );
+  GeneratedColumn<int> get likeCount =>
+      $composableBuilder(column: $table.likeCount, builder: (column) => column);
 
-  GeneratedColumn<String> get avatarUrl =>
-      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+  Expression<T> attachmentTableRefs<T extends Object>(
+    Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
+  ) {
+    final $$AttachmentTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachmentTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attachmentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> postReplyTableRefs<T extends Object>(
+    Expression<T> Function($$PostReplyTableTableAnnotationComposer a) f,
+  ) {
+    final $$PostReplyTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.postId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
-class $$ChirpUserTableTableTableManager
+class $$PostTableTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpUserTableTable,
-          ChirpUserData,
-          $$ChirpUserTableTableFilterComposer,
-          $$ChirpUserTableTableOrderingComposer,
-          $$ChirpUserTableTableAnnotationComposer,
-          $$ChirpUserTableTableCreateCompanionBuilder,
-          $$ChirpUserTableTableUpdateCompanionBuilder,
-          (
-            ChirpUserData,
-            BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-          ),
-          ChirpUserData,
-          PrefetchHooks Function()
+          $PostTableTable,
+          PostEntity,
+          $$PostTableTableFilterComposer,
+          $$PostTableTableOrderingComposer,
+          $$PostTableTableAnnotationComposer,
+          $$PostTableTableCreateCompanionBuilder,
+          $$PostTableTableUpdateCompanionBuilder,
+          (PostEntity, $$PostTableTableReferences),
+          PostEntity,
+          PrefetchHooks Function({
+            bool attachmentTableRefs,
+            bool postReplyTableRefs,
+          })
         > {
-  $$ChirpUserTableTableTableManager(
-    _$AppDataBase db,
-    $ChirpUserTableTable table,
-  ) : super(
+  $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpUserTableTableFilterComposer($db: db, $table: table),
+              $$PostTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChirpUserTableTableOrderingComposer($db: db, $table: table),
+              $$PostTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChirpUserTableTableAnnotationComposer($db: db, $table: table),
+              $$PostTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> email = const Value.absent(),
-                Value<int> vibepoints = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<int> likeCount = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserTableCompanion(
+              }) => PostTableCompanion(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                email: email,
-                vibepoints: vibepoints,
-                avatarUrl: avatarUrl,
+                userId: userId,
+                content: content,
+                likeCount: likeCount,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7222,45 +9978,799 @@ class $$ChirpUserTableTableTableManager
                 required String id,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                required String name,
-                required String email,
-                Value<int> vibepoints = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
+                required String userId,
+                required String content,
+                required int likeCount,
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserTableCompanion.insert(
+              }) => PostTableCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                email: email,
-                vibepoints: vibepoints,
-                avatarUrl: avatarUrl,
+                userId: userId,
+                content: content,
+                likeCount: likeCount,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PostTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({attachmentTableRefs = false, postReplyTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (attachmentTableRefs) db.attachmentTable,
+                    if (postReplyTableRefs) db.postReplyTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (attachmentTableRefs)
+                        await $_getPrefetchedData<
+                          PostEntity,
+                          $PostTableTable,
+                          AttachmentEntity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PostTableTableReferences
+                              ._attachmentTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PostTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attachmentTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.postId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (postReplyTableRefs)
+                        await $_getPrefetchedData<
+                          PostEntity,
+                          $PostTableTable,
+                          PostReplyEntity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PostTableTableReferences
+                              ._postReplyTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PostTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).postReplyTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.postId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
 
-typedef $$ChirpUserTableTableProcessedTableManager =
+typedef $$PostTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpUserTableTable,
-      ChirpUserData,
-      $$ChirpUserTableTableFilterComposer,
-      $$ChirpUserTableTableOrderingComposer,
-      $$ChirpUserTableTableAnnotationComposer,
-      $$ChirpUserTableTableCreateCompanionBuilder,
-      $$ChirpUserTableTableUpdateCompanionBuilder,
-      (
-        ChirpUserData,
-        BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-      ),
-      ChirpUserData,
-      PrefetchHooks Function()
+      $PostTableTable,
+      PostEntity,
+      $$PostTableTableFilterComposer,
+      $$PostTableTableOrderingComposer,
+      $$PostTableTableAnnotationComposer,
+      $$PostTableTableCreateCompanionBuilder,
+      $$PostTableTableUpdateCompanionBuilder,
+      (PostEntity, $$PostTableTableReferences),
+      PostEntity,
+      PrefetchHooks Function({
+        bool attachmentTableRefs,
+        bool postReplyTableRefs,
+      })
+    >;
+typedef $$AttachmentTableTableCreateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      required String id,
+      required DateTime createdAt,
+      Value<DateTime> updatedAt,
+      required String postId,
+      required String attachmentType,
+      required String file,
+      Value<int> rowid,
+    });
+typedef $$AttachmentTableTableUpdateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> postId,
+      Value<String> attachmentType,
+      Value<String> file,
+      Value<int> rowid,
+    });
+
+final class $$AttachmentTableTableReferences
+    extends
+        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentEntity> {
+  $$AttachmentTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $PostTableTable _postIdTable(_$AppDataBase db) =>
+      db.postTable.createAlias(
+        $_aliasNameGenerator(db.attachmentTable.postId, db.postTable.id),
+      );
+
+  $$PostTableTableProcessedTableManager get postId {
+    final $_column = $_itemColumn<String>('post_id')!;
+
+    final manager = $$PostTableTableTableManager(
+      $_db,
+      $_db.postTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AttachmentTableTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PostTableTableFilterComposer get postId {
+    final $$PostTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PostTableTableOrderingComposer get postId {
+    final $$PostTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get file =>
+      $composableBuilder(column: $table.file, builder: (column) => column);
+
+  $$PostTableTableAnnotationComposer get postId {
+    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AttachmentTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AttachmentTableTable,
+          AttachmentEntity,
+          $$AttachmentTableTableFilterComposer,
+          $$AttachmentTableTableOrderingComposer,
+          $$AttachmentTableTableAnnotationComposer,
+          $$AttachmentTableTableCreateCompanionBuilder,
+          $$AttachmentTableTableUpdateCompanionBuilder,
+          (AttachmentEntity, $$AttachmentTableTableReferences),
+          AttachmentEntity,
+          PrefetchHooks Function({bool postId})
+        > {
+  $$AttachmentTableTableTableManager(
+    _$AppDataBase db,
+    $AttachmentTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> postId = const Value.absent(),
+                Value<String> attachmentType = const Value.absent(),
+                Value<String> file = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AttachmentTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                attachmentType: attachmentType,
+                file: file,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime createdAt,
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String postId,
+                required String attachmentType,
+                required String file,
+                Value<int> rowid = const Value.absent(),
+              }) => AttachmentTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                attachmentType: attachmentType,
+                file: file,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AttachmentTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({postId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (postId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.postId,
+                                referencedTable:
+                                    $$AttachmentTableTableReferences
+                                        ._postIdTable(db),
+                                referencedColumn:
+                                    $$AttachmentTableTableReferences
+                                        ._postIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AttachmentTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AttachmentTableTable,
+      AttachmentEntity,
+      $$AttachmentTableTableFilterComposer,
+      $$AttachmentTableTableOrderingComposer,
+      $$AttachmentTableTableAnnotationComposer,
+      $$AttachmentTableTableCreateCompanionBuilder,
+      $$AttachmentTableTableUpdateCompanionBuilder,
+      (AttachmentEntity, $$AttachmentTableTableReferences),
+      AttachmentEntity,
+      PrefetchHooks Function({bool postId})
+    >;
+typedef $$PostReplyTableTableCreateCompanionBuilder =
+    PostReplyTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String postId,
+      required String userId,
+      required String content,
+      Value<int> rowid,
+    });
+typedef $$PostReplyTableTableUpdateCompanionBuilder =
+    PostReplyTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> postId,
+      Value<String> userId,
+      Value<String> content,
+      Value<int> rowid,
+    });
+
+final class $$PostReplyTableTableReferences
+    extends
+        BaseReferences<_$AppDataBase, $PostReplyTableTable, PostReplyEntity> {
+  $$PostReplyTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $PostTableTable _postIdTable(_$AppDataBase db) =>
+      db.postTable.createAlias(
+        $_aliasNameGenerator(db.postReplyTable.postId, db.postTable.id),
+      );
+
+  $$PostTableTableProcessedTableManager get postId {
+    final $_column = $_itemColumn<String>('post_id')!;
+
+    final manager = $$PostTableTableTableManager(
+      $_db,
+      $_db.postTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PostReplyTableTableFilterComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PostTableTableFilterComposer get postId {
+    final $$PostTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PostTableTableOrderingComposer get postId {
+    final $$PostTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostReplyTableTable> {
+  $$PostReplyTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  $$PostTableTableAnnotationComposer get postId {
+    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.postId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PostReplyTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $PostReplyTableTable,
+          PostReplyEntity,
+          $$PostReplyTableTableFilterComposer,
+          $$PostReplyTableTableOrderingComposer,
+          $$PostReplyTableTableAnnotationComposer,
+          $$PostReplyTableTableCreateCompanionBuilder,
+          $$PostReplyTableTableUpdateCompanionBuilder,
+          (PostReplyEntity, $$PostReplyTableTableReferences),
+          PostReplyEntity,
+          PrefetchHooks Function({bool postId})
+        > {
+  $$PostReplyTableTableTableManager(
+    _$AppDataBase db,
+    $PostReplyTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PostReplyTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PostReplyTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PostReplyTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> postId = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PostReplyTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                userId: userId,
+                content: content,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String postId,
+                required String userId,
+                required String content,
+                Value<int> rowid = const Value.absent(),
+              }) => PostReplyTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                postId: postId,
+                userId: userId,
+                content: content,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PostReplyTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({postId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (postId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.postId,
+                                referencedTable: $$PostReplyTableTableReferences
+                                    ._postIdTable(db),
+                                referencedColumn:
+                                    $$PostReplyTableTableReferences
+                                        ._postIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PostReplyTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $PostReplyTableTable,
+      PostReplyEntity,
+      $$PostReplyTableTableFilterComposer,
+      $$PostReplyTableTableOrderingComposer,
+      $$PostReplyTableTableAnnotationComposer,
+      $$PostReplyTableTableCreateCompanionBuilder,
+      $$PostReplyTableTableUpdateCompanionBuilder,
+      (PostReplyEntity, $$PostReplyTableTableReferences),
+      PostReplyEntity,
+      PrefetchHooks Function({bool postId})
     >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
@@ -9120,6 +12630,489 @@ typedef $$TicketTableTableProcessedTableManager =
       TicketData,
       PrefetchHooks Function({bool attendeeId, bool eventId})
     >;
+typedef $$AgendaEventTableCreateCompanionBuilder =
+    AgendaEventCompanion Function({
+      required String id,
+      Value<bool> allDay,
+      Value<String?> summary,
+      Value<String?> description,
+      Value<String?> location,
+      Value<String?> htmlLink,
+      Value<String?> calendarId,
+      Value<String?> ownerId,
+      Value<String?> timezone,
+      Value<String?> status,
+      Value<String?> transparency,
+      Value<String?> etag,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
+      Value<DateTime?> startTime,
+      Value<DateTime?> endTime,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
+      Value<Map<String, dynamic>?> reminders,
+      Value<int> rowid,
+    });
+typedef $$AgendaEventTableUpdateCompanionBuilder =
+    AgendaEventCompanion Function({
+      Value<String> id,
+      Value<bool> allDay,
+      Value<String?> summary,
+      Value<String?> description,
+      Value<String?> location,
+      Value<String?> htmlLink,
+      Value<String?> calendarId,
+      Value<String?> ownerId,
+      Value<String?> timezone,
+      Value<String?> status,
+      Value<String?> transparency,
+      Value<String?> etag,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
+      Value<DateTime?> startTime,
+      Value<DateTime?> endTime,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
+      Value<Map<String, dynamic>?> reminders,
+      Value<int> rowid,
+    });
+
+class $$AgendaEventTableFilterComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get allDay => $composableBuilder(
+    column: $table.allDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get htmlLink => $composableBuilder(
+    column: $table.htmlLink,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get attendees => $composableBuilder(
+    column: $table.attendees,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get recurrence => $composableBuilder(
+    column: $table.recurrence,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get reminders => $composableBuilder(
+    column: $table.reminders,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+}
+
+class $$AgendaEventTableOrderingComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get allDay => $composableBuilder(
+    column: $table.allDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get htmlLink => $composableBuilder(
+    column: $table.htmlLink,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attendees => $composableBuilder(
+    column: $table.attendees,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recurrence => $composableBuilder(
+    column: $table.recurrence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reminders => $composableBuilder(
+    column: $table.reminders,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AgendaEventTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get allDay =>
+      $composableBuilder(column: $table.allDay, builder: (column) => column);
+
+  GeneratedColumn<String> get summary =>
+      $composableBuilder(column: $table.summary, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get htmlLink =>
+      $composableBuilder(column: $table.htmlLink, builder: (column) => column);
+
+  GeneratedColumn<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
+  GeneratedColumn<String> get timezone =>
+      $composableBuilder(column: $table.timezone, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get etag =>
+      $composableBuilder(column: $table.etag, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get attendees =>
+      $composableBuilder(column: $table.attendees, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get recurrence =>
+      $composableBuilder(
+        column: $table.recurrence,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  get reminders =>
+      $composableBuilder(column: $table.reminders, builder: (column) => column);
+}
+
+class $$AgendaEventTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AgendaEventTable,
+          AgendaEventData,
+          $$AgendaEventTableFilterComposer,
+          $$AgendaEventTableOrderingComposer,
+          $$AgendaEventTableAnnotationComposer,
+          $$AgendaEventTableCreateCompanionBuilder,
+          $$AgendaEventTableUpdateCompanionBuilder,
+          (
+            AgendaEventData,
+            BaseReferences<_$AppDataBase, $AgendaEventTable, AgendaEventData>,
+          ),
+          AgendaEventData,
+          PrefetchHooks Function()
+        > {
+  $$AgendaEventTableTableManager(_$AppDataBase db, $AgendaEventTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AgendaEventTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AgendaEventTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AgendaEventTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<bool> allDay = const Value.absent(),
+                Value<String?> summary = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> htmlLink = const Value.absent(),
+                Value<String?> calendarId = const Value.absent(),
+                Value<String?> ownerId = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> status = const Value.absent(),
+                Value<String?> transparency = const Value.absent(),
+                Value<String?> etag = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
+                Value<DateTime?> startTime = const Value.absent(),
+                Value<DateTime?> endTime = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
+                Value<Map<String, dynamic>?> reminders = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AgendaEventCompanion(
+                id: id,
+                allDay: allDay,
+                summary: summary,
+                description: description,
+                location: location,
+                htmlLink: htmlLink,
+                calendarId: calendarId,
+                ownerId: ownerId,
+                timezone: timezone,
+                status: status,
+                transparency: transparency,
+                etag: etag,
+                created: created,
+                updated: updated,
+                startTime: startTime,
+                endTime: endTime,
+                attendees: attendees,
+                recurrence: recurrence,
+                reminders: reminders,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<bool> allDay = const Value.absent(),
+                Value<String?> summary = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> htmlLink = const Value.absent(),
+                Value<String?> calendarId = const Value.absent(),
+                Value<String?> ownerId = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> status = const Value.absent(),
+                Value<String?> transparency = const Value.absent(),
+                Value<String?> etag = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
+                Value<DateTime?> startTime = const Value.absent(),
+                Value<DateTime?> endTime = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
+                Value<Map<String, dynamic>?> reminders = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AgendaEventCompanion.insert(
+                id: id,
+                allDay: allDay,
+                summary: summary,
+                description: description,
+                location: location,
+                htmlLink: htmlLink,
+                calendarId: calendarId,
+                ownerId: ownerId,
+                timezone: timezone,
+                status: status,
+                transparency: transparency,
+                etag: etag,
+                created: created,
+                updated: updated,
+                startTime: startTime,
+                endTime: endTime,
+                attendees: attendees,
+                recurrence: recurrence,
+                reminders: reminders,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AgendaEventTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AgendaEventTable,
+      AgendaEventData,
+      $$AgendaEventTableFilterComposer,
+      $$AgendaEventTableOrderingComposer,
+      $$AgendaEventTableAnnotationComposer,
+      $$AgendaEventTableCreateCompanionBuilder,
+      $$AgendaEventTableUpdateCompanionBuilder,
+      (
+        AgendaEventData,
+        BaseReferences<_$AppDataBase, $AgendaEventTable, AgendaEventData>,
+      ),
+      AgendaEventData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -9128,12 +13121,18 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
+  $$ChirpUserTableTableTableManager get chirpUserTable =>
+      $$ChirpUserTableTableTableManager(_db, _db.chirpUserTable);
   $$MessageTableTableTableManager get messageTable =>
       $$MessageTableTableTableManager(_db, _db.messageTable);
   $$ConversationTableTableTableManager get conversationTable =>
       $$ConversationTableTableTableManager(_db, _db.conversationTable);
-  $$ChirpUserTableTableTableManager get chirpUserTable =>
-      $$ChirpUserTableTableTableManager(_db, _db.chirpUserTable);
+  $$PostTableTableTableManager get postTable =>
+      $$PostTableTableTableManager(_db, _db.postTable);
+  $$AttachmentTableTableTableManager get attachmentTable =>
+      $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
+  $$PostReplyTableTableTableManager get postReplyTable =>
+      $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
@@ -9141,4 +13140,6 @@ class $AppDataBaseManager {
       $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
   $$TicketTableTableTableManager get ticketTable =>
       $$TicketTableTableTableManager(_db, _db.ticketTable);
+  $$AgendaEventTableTableManager get agendaEvent =>
+      $$AgendaEventTableTableManager(_db, _db.agendaEvent);
 }

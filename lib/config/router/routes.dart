@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
-import 'package:academia/features/chirp/chirp.dart';
 
 import 'package:academia/injection_container.dart';
 
 import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
-
 
 part 'routes.g.dart';
 
@@ -48,10 +46,43 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   }
 }
 
+@TypedGoRoute<CalendarRoute>(
+  path: "/calendar",
+  routes: [
+    TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
+  ],
+)
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AgendaHomePage();
+  }
+}
+
+class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: const CreateAgendaEventPage(),
+      transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+      ) {
+        var tween = Tween(
+          begin: Offset(0.0, 1.0),
+          end: Offset.zero,
+        ).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 }
 
@@ -81,6 +112,20 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
     return ChatPage(conversationId: conversationId);
   }
 }
+
+@TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
+class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
+  final String postId;
+
+  const PostDetailRoute({required this.postId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final post = state.extra as Post;
+    return PostDetailPage(post: post);
+  }
+}
+
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -131,7 +176,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   path: "/sherehe",
   routes: [
     TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
-    TypedGoRoute<CreateEventRoute>(path: "create"), 
+    TypedGoRoute<CreateEventRoute>(path: "create"),
   ],
 )
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
@@ -145,9 +190,8 @@ class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<CreateEventBloc>(
-      create: (context) => CreateEventBloc(
-        createEventUseCase: sl<CreateEventUseCase>(),
-      ),
+      create: (context) =>
+          CreateEventBloc(createEventUseCase: sl<CreateEventUseCase>()),
       child: const CreateEventScreen(),
     );
   }
@@ -185,8 +229,6 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
     );
   }
 }
-
-
 
 @TypedGoRoute<TodosRoute>(
   path: "/todos",

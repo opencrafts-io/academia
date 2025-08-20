@@ -8,8 +8,10 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
+  $calendarRoute,
   $feedRoute,
   $chatRoute,
+  $postDetailRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
@@ -117,6 +119,40 @@ mixin _$MeteorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $calendarRoute => GoRouteData.$route(
+  path: '/calendar',
+
+  factory: _$CalendarRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'create',
+
+      factory: _$CreateAgendaEventRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$CreateAgendaEventRoute on GoRouteData {
+  static CreateAgendaEventRoute _fromState(GoRouterState state) =>
+      CreateAgendaEventRoute();
+
+  @override
+  String get location => GoRouteData.$location('/calendar/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $feedRoute =>
     GoRouteData.$route(path: '/feed', factory: _$FeedRoute._fromState);
 
@@ -156,6 +192,36 @@ mixin _$ChatRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/chat/${Uri.encodeComponent(_self.conversationId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $postDetailRoute => GoRouteData.$route(
+  path: '/post/:postId',
+
+  factory: _$PostDetailRoute._fromState,
+);
+
+mixin _$PostDetailRoute on GoRouteData {
+  static PostDetailRoute _fromState(GoRouterState state) =>
+      PostDetailRoute(postId: state.pathParameters['postId']!);
+
+  PostDetailRoute get _self => this as PostDetailRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
 
   @override
   void go(BuildContext context) => context.go(location);

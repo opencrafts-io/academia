@@ -10,7 +10,16 @@ export 'datasources/conversations/messaging_local_datasource.dart';
 export 'datasources/conversations/messaging_remote_datasource.dart';
 
 export 'datasources/chirp_remote_data_source.dart';
+export 'datasources/chirp_local_data_source.dart';
+export 'models/attachment_model_helper.dart';
+export 'models/post_model_helper.dart';
+export 'models/reply_model_helper.dart';
 export 'models/attachment_model.dart';
 export 'models/post_model.dart';
 export 'models/reply_model.dart';
 export 'repositories/chirp_repository_impl.dart';
+
+// Chirp User exports
+export 'datasources/chirp_user_remote_datasource.dart';
+export 'models/chirp_user_model.dart';
+export 'repositories/chirp_user_repository_impl.dart';

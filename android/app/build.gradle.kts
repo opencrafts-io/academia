@@ -35,8 +35,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 28
         targetSdk = 35
-        versionCode = 1
-        versionName = "2025.7.28+0"
+        versionCode = 3
+        versionName = "2025.8.12+0"
     }
 
     signingConfigs {
@@ -59,9 +59,13 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-            signingConfig = signingConfigs.getByName("staging")
-            signingConfig = signingConfigs.getByName("release")
+            if (signingConfigs.findByName("staging") != null) {
+                signingConfig = signingConfigs.getByName("staging")
+            } else if (signingConfigs.findByName("release") != null) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 
@@ -81,13 +85,13 @@ android {
             // buildConfigField "String", "API_BASE_URL", "\"https://prod.api.example.com\""
         }
         // You can add more flavors, e.g., a "staging" flavor
-        
+
         create("staging") {
             dimension = "environment"
             applicationIdSuffix = ".stg"
             versionNameSuffix = "-stg"
             // buildConfigField "String", "API_BASE_URL", "\"https://stg.api.example.com\""
-        } 
+        }
     }
 }
 
