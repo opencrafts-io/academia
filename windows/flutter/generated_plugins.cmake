@@ -6,9 +6,12 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   file_selector_windows
+  media_kit_libs_windows_video
+  media_kit_video
   sentry_flutter
   sqlite3_flutter_libs
   url_launcher_windows
+  volume_controller
   window_to_front
 )
 
