@@ -64,7 +64,7 @@ class FeedPage extends StatelessWidget {
                   if (state is FeedError) {
                     return SliverFillRemaining(
                       child: Center(
-                        child: Text("An unexpected error occurred"),
+                        child: Text("Connection error"),
                       ),
                     );
                   }
