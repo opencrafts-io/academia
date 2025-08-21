@@ -69,16 +69,16 @@ class EventDetailsHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(
-                    spacing: 2.0,
-                    runSpacing: 0.5,
+                    spacing: 5.0,
+                    runSpacing: 0.0,
                     children: event.genre.map((genre) {
                       return Chip(
                         label: Text(genre),
-                        padding: EdgeInsets.all(3),
+                        padding: EdgeInsets.all(0),
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     event.name,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -104,6 +104,19 @@ class EventDetailsHeader extends StatelessWidget {
                       ),
                       const SizedBox(width: 16),
                       Icon(
+                        Icons.share_arrival_time,
+                        size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        event.time,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Icon(
                         Icons.location_on,
                         size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
                         color: Theme.of(context).colorScheme.primary,
@@ -118,9 +131,10 @@ class EventDetailsHeader extends StatelessWidget {
                                   context,
                                 ).colorScheme.primary,
                               ),
-                          overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
+
                     ],
                   ),
                 ],
