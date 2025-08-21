@@ -15,6 +15,8 @@ class Event extends Equatable {
   final List<String> genre;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? bannerImageUrl;
+  final String? posterImageUrl;
 
   const Event({
     required this.id,
@@ -31,6 +33,8 @@ class Event extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.url,
+    this.bannerImageUrl,
+    this.posterImageUrl,
   });
 
   Event copyWith({

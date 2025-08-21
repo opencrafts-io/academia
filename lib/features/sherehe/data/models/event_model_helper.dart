@@ -13,7 +13,6 @@ extension EventModelHelper on EventData {
     imageUrl: imageUrl,
     organizerId: organizerId,
     numberOfAttendees: numberOfAttendees,
-    // Convert comma-separated string to list
     genre: genre.split(',').map((e) => e.trim()).toList(),
     createdAt: createdAt,
     updatedAt: updatedAt,
@@ -22,7 +21,7 @@ extension EventModelHelper on EventData {
 }
 
 extension EventEntityHelper on Event {
-  EventData toModel() => EventData(
+  EventData toEntity() => EventData(
     id: id,
     name: name,
     description: description,

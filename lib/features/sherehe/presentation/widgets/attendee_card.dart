@@ -8,21 +8,18 @@ class AttendeeCard extends StatelessWidget {
 
   const AttendeeCard({super.key, required this.attendee, this.isHost = false});
 
-  String _getInitials(String? firstName, String? lastName) {
+  String _getInitials(String? firstName) {
     String initials = '';
     if (firstName != null && firstName.isNotEmpty) {
       initials += firstName[0].toUpperCase();
-    }
-    if (lastName != null && lastName.isNotEmpty) {
-      initials += lastName[0].toUpperCase();
     }
     return initials.isEmpty ? '?' : initials;
   }
 
   @override
   Widget build(BuildContext context) {
-    final String initials = _getInitials(attendee.firstName, attendee.lastName);
-    final String fullName = '${attendee.firstName} ${attendee.lastName}'.trim();
+    final String initials = _getInitials(attendee.firstName);
+    final String fullName = attendee.lastName.trim();
     final String status = isHost ? 'Organizer' : 'Attending';
 
     return Container(

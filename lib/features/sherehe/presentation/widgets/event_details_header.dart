@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../domain/domain.dart';
 import '../../../../constants/constants.dart';
 
@@ -17,6 +18,14 @@ class EventDetailsHeader extends StatelessWidget {
     } else {
       // Desktop and Large Desktop
       return 500.0;
+    }
+  }
+  String _formatDate(String isoString, {String pattern = 'dd MMM yyyy'}) {
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat(pattern).format(dateTime);
+    } catch (e) {
+      return isoString;
     }
   }
 
@@ -90,7 +99,7 @@ class EventDetailsHeader extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       // Use headlineMedium
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -99,20 +108,20 @@ class EventDetailsHeader extends StatelessWidget {
                       Icon(
                         Icons.calendar_today,
                         size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        event.date,
+                        _formatDate(event.date),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onInverseSurface,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const SizedBox(width: 16),
                       Icon(
                         Icons.location_on,
                         size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
                       Expanded(
@@ -120,10 +129,9 @@ class EventDetailsHeader extends StatelessWidget {
                           event.location,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                // Use bodyMedium
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.onInverseSurface,
+                                ).colorScheme.primary,
                               ),
                           overflow: TextOverflow.ellipsis,
                         ),

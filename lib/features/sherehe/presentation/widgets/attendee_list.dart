@@ -24,7 +24,6 @@ class AttendeesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Filter attendees specific to this event
     final List<Attendee> eventSpecificAttendees = allAttendees
         .where((attendee) => attendee.eventId == event.id)
         .toList();
@@ -55,21 +54,26 @@ class AttendeesList extends StatelessWidget {
         ],
       );
     }
-
     final organizerAttendee = eventSpecificAttendees.firstWhere(
-          (attendee) => attendee.id == event.organizerId.toString(),
-      orElse: () => Attendee(
-        id: '',
-        firstName: 'Unknown',
-        lastName: 'Organizer',
-        eventId: event.id,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now()
-      ),
+          (attendee) => attendee.email == event.organizer,
+      orElse: () {
+        final oldMatch = eventSpecificAttendees.firstWhere(
+              (attendee) => attendee.lastName == event.organizer.toString(),
+          orElse: () => Attendee(
+            id: '',
+            firstName: 'Unknown',
+            lastName: 'Organizer',
+            eventId: event.id,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            email: '',
+          ),
+        );
+        return oldMatch;
+      },
     );
-
     final otherAttendees = eventSpecificAttendees
-        .where((attendee) => attendee.id != event.organizerId.toString())
+        .where((attendee) => attendee.lastName != event.organizer)
         .toList();
 
     List<Widget> columnChildren = [
@@ -81,8 +85,7 @@ class AttendeesList extends StatelessWidget {
       ),
       const SizedBox(height: 16),
     ];
-
-    if (organizerAttendee.id.isNotEmpty) {
+    if (organizerAttendee.id.isNotEmpty || organizerAttendee.email.isNotEmpty) {
       columnChildren.add(
         AttendeeCard(attendee: organizerAttendee, isHost: true),
       );
@@ -102,11 +105,12 @@ class AttendeesList extends StatelessWidget {
     );
 
     final int attendeesActuallyShown =
-        (organizerAttendee.id.isNotEmpty ? 1 : 0) + otherAttendeesToShowCount;
-    final int remainingCountBasedOnEventTotal =
-        event.numberOfAttendees - attendeesActuallyShown;
+        (organizerAttendee.id.isNotEmpty || organizerAttendee.email.isNotEmpty ? 1 : 0) +
+            otherAttendeesToShowCount;
+    final int totalKnownAttendees = eventSpecificAttendees.length;
+    final int remainingCount = totalKnownAttendees - attendeesActuallyShown;
 
-    if (remainingCountBasedOnEventTotal > 0) {
+    if (remainingCount > 0) {
       columnChildren.add(
         Container(
           padding: const EdgeInsets.all(12),
@@ -141,7 +145,7 @@ class AttendeesList extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (otherAttendees.length > 1) // Only show if > 1
+                    if (otherAttendees.length > 1)
                       Positioned(
                         left: 20,
                         child: CircleAvatar(
@@ -159,14 +163,13 @@ class AttendeesList extends StatelessWidget {
                           ),
                         ),
                       ),
-                    // Avatar 3: Show remaining count
                     Positioned(
                       left: otherAttendees.length > 1 ? 40 : 20, // Adjust position
                       child: CircleAvatar(
                         radius: 18,
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         child: Text(
-                          '+$remainingCountBasedOnEventTotal',
+                          '+$remainingCount',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 12,
@@ -181,7 +184,7 @@ class AttendeesList extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'and $remainingCountBasedOnEventTotal others are attending',
+                  'and $remainingCount others are attending',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,

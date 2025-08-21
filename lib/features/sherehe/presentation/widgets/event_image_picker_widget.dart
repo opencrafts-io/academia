@@ -8,7 +8,7 @@ class EventImagePickerWidget extends StatelessWidget {
   const EventImagePickerWidget({
     super.key,
     required this.selectedImage,
-    required this.onTap,
+    required this.onTap, required String label,
   });
 
   @override
@@ -16,7 +16,7 @@ class EventImagePickerWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 200,
+        height: 100,
         width: double.infinity,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface.withValues(alpha:0.1),
@@ -38,7 +38,7 @@ class EventImagePickerWidget extends StatelessWidget {
                       size: 50,
                       color: Theme.of(context).colorScheme.primary.withValues(alpha:0.7),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 2),
                     Text(
                       'Tap to upload event image',
                       style: TextStyle(
