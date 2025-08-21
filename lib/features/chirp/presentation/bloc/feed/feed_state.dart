@@ -24,3 +24,15 @@ class FeedError extends FeedState {
   @override
   List<Object?> get props => [message];
 }
+
+class PostCreating extends FeedState {}
+
+class PostCreated extends FeedState {}
+
+class PostCreateError extends FeedState {
+  final String message;
+  PostCreateError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

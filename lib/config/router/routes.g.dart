@@ -12,6 +12,7 @@ List<RouteBase> get $appRoutes => [
   $feedRoute,
   $chatRoute,
   $postDetailRoute,
+  $addPostRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
@@ -222,6 +223,29 @@ mixin _$PostDetailRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $addPostRoute =>
+    GoRouteData.$route(path: '/add-post', factory: _$AddPostRoute._fromState);
+
+mixin _$AddPostRoute on GoRouteData {
+  static AddPostRoute _fromState(GoRouterState state) => AddPostRoute();
+
+  @override
+  String get location => GoRouteData.$location('/add-post');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -94,7 +94,10 @@ class _AcademiaState extends State<Academia> {
           create: (context) => FeedBloc(
             getFeedPosts: sl.get<GetFeedPosts>(),
             cachePosts: sl.get<CachePostsUsecase>(),
-          )..add(LoadFeedEvent()),
+            likePost: sl.get<LikePostUsecase>(),
+            createPost: sl.get<CreatePostUsecase>(),
+            addComment: sl.get<CommentUsecase>()
+          )..add(CacheFeedEvent()),
         ),
         BlocProvider(
           create: (context) =>

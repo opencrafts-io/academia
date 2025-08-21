@@ -103,9 +103,21 @@ Future<void> init(FlavorConfig flavor) async {
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => FeedBloc(
       getFeedPosts: sl.get<GetFeedPosts>(),
       cachePosts: sl.get<CachePostsUsecase>(),
+      likePost: sl.get<LikePostUsecase>(),
+      createPost: sl.get<CreatePostUsecase>(),
+      addComment: sl.get<CommentUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(

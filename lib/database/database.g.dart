@@ -2789,6 +2789,20 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isLikedMeta = const VerificationMeta(
+    'isLiked',
+  );
+  @override
+  late final GeneratedColumn<bool> isLiked = GeneratedColumn<bool>(
+    'is_liked',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_liked" IN (0, 1))',
+    ),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2797,6 +2811,7 @@ class $PostTableTable extends PostTable
     userId,
     content,
     likeCount,
+    isLiked,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2851,6 +2866,14 @@ class $PostTableTable extends PostTable
     } else if (isInserting) {
       context.missing(_likeCountMeta);
     }
+    if (data.containsKey('is_liked')) {
+      context.handle(
+        _isLikedMeta,
+        isLiked.isAcceptableOrUnknown(data['is_liked']!, _isLikedMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isLikedMeta);
+    }
     return context;
   }
 
@@ -2884,6 +2907,10 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}like_count'],
       )!,
+      isLiked: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_liked'],
+      )!,
     );
   }
 
@@ -2900,6 +2927,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
   final String userId;
   final String content;
   final int likeCount;
+  final bool isLiked;
   const PostEntity({
     required this.id,
     required this.createdAt,
@@ -2907,6 +2935,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     required this.userId,
     required this.content,
     required this.likeCount,
+    required this.isLiked,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2917,6 +2946,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     map['user_id'] = Variable<String>(userId);
     map['content'] = Variable<String>(content);
     map['like_count'] = Variable<int>(likeCount);
+    map['is_liked'] = Variable<bool>(isLiked);
     return map;
   }
 
@@ -2928,6 +2958,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: Value(userId),
       content: Value(content),
       likeCount: Value(likeCount),
+      isLiked: Value(isLiked),
     );
   }
 
@@ -2943,6 +2974,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: serializer.fromJson<String>(json['user_id']),
       content: serializer.fromJson<String>(json['content']),
       likeCount: serializer.fromJson<int>(json['like_count']),
+      isLiked: serializer.fromJson<bool>(json['is_liked']),
     );
   }
   @override
@@ -2955,6 +2987,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       'user_id': serializer.toJson<String>(userId),
       'content': serializer.toJson<String>(content),
       'like_count': serializer.toJson<int>(likeCount),
+      'is_liked': serializer.toJson<bool>(isLiked),
     };
   }
 
@@ -2965,6 +2998,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     String? userId,
     String? content,
     int? likeCount,
+    bool? isLiked,
   }) => PostEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -2972,6 +3006,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     userId: userId ?? this.userId,
     content: content ?? this.content,
     likeCount: likeCount ?? this.likeCount,
+    isLiked: isLiked ?? this.isLiked,
   );
   PostEntity copyWithCompanion(PostTableCompanion data) {
     return PostEntity(
@@ -2981,6 +3016,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: data.userId.present ? data.userId.value : this.userId,
       content: data.content.present ? data.content.value : this.content,
       likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
+      isLiked: data.isLiked.present ? data.isLiked.value : this.isLiked,
     );
   }
 
@@ -2992,14 +3028,22 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           ..write('updatedAt: $updatedAt, ')
           ..write('userId: $userId, ')
           ..write('content: $content, ')
-          ..write('likeCount: $likeCount')
+          ..write('likeCount: $likeCount, ')
+          ..write('isLiked: $isLiked')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, userId, content, likeCount);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    userId,
+    content,
+    likeCount,
+    isLiked,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3009,7 +3053,8 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           other.updatedAt == this.updatedAt &&
           other.userId == this.userId &&
           other.content == this.content &&
-          other.likeCount == this.likeCount);
+          other.likeCount == this.likeCount &&
+          other.isLiked == this.isLiked);
 }
 
 class PostTableCompanion extends UpdateCompanion<PostEntity> {
@@ -3019,6 +3064,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
   final Value<String> userId;
   final Value<String> content;
   final Value<int> likeCount;
+  final Value<bool> isLiked;
   final Value<int> rowid;
   const PostTableCompanion({
     this.id = const Value.absent(),
@@ -3027,6 +3073,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     this.userId = const Value.absent(),
     this.content = const Value.absent(),
     this.likeCount = const Value.absent(),
+    this.isLiked = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PostTableCompanion.insert({
@@ -3036,11 +3083,13 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     required String userId,
     required String content,
     required int likeCount,
+    required bool isLiked,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        content = Value(content),
-       likeCount = Value(likeCount);
+       likeCount = Value(likeCount),
+       isLiked = Value(isLiked);
   static Insertable<PostEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -3048,6 +3097,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     Expression<String>? userId,
     Expression<String>? content,
     Expression<int>? likeCount,
+    Expression<bool>? isLiked,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3057,6 +3107,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       if (userId != null) 'user_id': userId,
       if (content != null) 'content': content,
       if (likeCount != null) 'like_count': likeCount,
+      if (isLiked != null) 'is_liked': isLiked,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3068,6 +3119,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     Value<String>? userId,
     Value<String>? content,
     Value<int>? likeCount,
+    Value<bool>? isLiked,
     Value<int>? rowid,
   }) {
     return PostTableCompanion(
@@ -3077,6 +3129,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       userId: userId ?? this.userId,
       content: content ?? this.content,
       likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3102,6 +3155,9 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     if (likeCount.present) {
       map['like_count'] = Variable<int>(likeCount.value);
     }
+    if (isLiked.present) {
+      map['is_liked'] = Variable<bool>(isLiked.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3117,6 +3173,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
           ..write('userId: $userId, ')
           ..write('content: $content, ')
           ..write('likeCount: $likeCount, ')
+          ..write('isLiked: $isLiked, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3194,6 +3251,24 @@ class $AttachmentTableTable extends AttachmentTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sizeMeta = const VerificationMeta('size');
+  @override
+  late final GeneratedColumn<double> size = GeneratedColumn<double>(
+    'size',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3202,6 +3277,8 @@ class $AttachmentTableTable extends AttachmentTable
     postId,
     attachmentType,
     file,
+    name,
+    size,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3261,6 +3338,22 @@ class $AttachmentTableTable extends AttachmentTable
     } else if (isInserting) {
       context.missing(_fileMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('size')) {
+      context.handle(
+        _sizeMeta,
+        size.isAcceptableOrUnknown(data['size']!, _sizeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sizeMeta);
+    }
     return context;
   }
 
@@ -3294,6 +3387,14 @@ class $AttachmentTableTable extends AttachmentTable
         DriftSqlType.string,
         data['${effectivePrefix}file'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      size: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}size'],
+      )!,
     );
   }
 
@@ -3311,6 +3412,8 @@ class AttachmentEntity extends DataClass
   final String postId;
   final String attachmentType;
   final String file;
+  final String name;
+  final double size;
   const AttachmentEntity({
     required this.id,
     required this.createdAt,
@@ -3318,6 +3421,8 @@ class AttachmentEntity extends DataClass
     required this.postId,
     required this.attachmentType,
     required this.file,
+    required this.name,
+    required this.size,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3328,6 +3433,8 @@ class AttachmentEntity extends DataClass
     map['post_id'] = Variable<String>(postId);
     map['attachment_type'] = Variable<String>(attachmentType);
     map['file'] = Variable<String>(file);
+    map['name'] = Variable<String>(name);
+    map['size'] = Variable<double>(size);
     return map;
   }
 
@@ -3339,6 +3446,8 @@ class AttachmentEntity extends DataClass
       postId: Value(postId),
       attachmentType: Value(attachmentType),
       file: Value(file),
+      name: Value(name),
+      size: Value(size),
     );
   }
 
@@ -3353,7 +3462,9 @@ class AttachmentEntity extends DataClass
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       postId: serializer.fromJson<String>(json['post_id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
-      file: serializer.fromJson<String>(json['file']),
+      file: serializer.fromJson<String>(json['file_url']),
+      name: serializer.fromJson<String>(json['original_filename']),
+      size: serializer.fromJson<double>(json['file_size_mb']),
     );
   }
   @override
@@ -3365,7 +3476,9 @@ class AttachmentEntity extends DataClass
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'post_id': serializer.toJson<String>(postId),
       'attachment_type': serializer.toJson<String>(attachmentType),
-      'file': serializer.toJson<String>(file),
+      'file_url': serializer.toJson<String>(file),
+      'original_filename': serializer.toJson<String>(name),
+      'file_size_mb': serializer.toJson<double>(size),
     };
   }
 
@@ -3376,6 +3489,8 @@ class AttachmentEntity extends DataClass
     String? postId,
     String? attachmentType,
     String? file,
+    String? name,
+    double? size,
   }) => AttachmentEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -3383,6 +3498,8 @@ class AttachmentEntity extends DataClass
     postId: postId ?? this.postId,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
+    name: name ?? this.name,
+    size: size ?? this.size,
   );
   AttachmentEntity copyWithCompanion(AttachmentTableCompanion data) {
     return AttachmentEntity(
@@ -3394,6 +3511,8 @@ class AttachmentEntity extends DataClass
           ? data.attachmentType.value
           : this.attachmentType,
       file: data.file.present ? data.file.value : this.file,
+      name: data.name.present ? data.name.value : this.name,
+      size: data.size.present ? data.size.value : this.size,
     );
   }
 
@@ -3405,14 +3524,24 @@ class AttachmentEntity extends DataClass
           ..write('updatedAt: $updatedAt, ')
           ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
-          ..write('file: $file')
+          ..write('file: $file, ')
+          ..write('name: $name, ')
+          ..write('size: $size')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, postId, attachmentType, file);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    attachmentType,
+    file,
+    name,
+    size,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3422,7 +3551,9 @@ class AttachmentEntity extends DataClass
           other.updatedAt == this.updatedAt &&
           other.postId == this.postId &&
           other.attachmentType == this.attachmentType &&
-          other.file == this.file);
+          other.file == this.file &&
+          other.name == this.name &&
+          other.size == this.size);
 }
 
 class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
@@ -3432,6 +3563,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
   final Value<String> postId;
   final Value<String> attachmentType;
   final Value<String> file;
+  final Value<String> name;
+  final Value<double> size;
   final Value<int> rowid;
   const AttachmentTableCompanion({
     this.id = const Value.absent(),
@@ -3440,6 +3573,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     this.postId = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
+    this.name = const Value.absent(),
+    this.size = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttachmentTableCompanion.insert({
@@ -3449,12 +3584,16 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     required String postId,
     required String attachmentType,
     required String file,
+    required String name,
+    required double size,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
        postId = Value(postId),
        attachmentType = Value(attachmentType),
-       file = Value(file);
+       file = Value(file),
+       name = Value(name),
+       size = Value(size);
   static Insertable<AttachmentEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -3462,6 +3601,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     Expression<String>? postId,
     Expression<String>? attachmentType,
     Expression<String>? file,
+    Expression<String>? name,
+    Expression<double>? size,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3471,6 +3612,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
       if (postId != null) 'post_id': postId,
       if (attachmentType != null) 'attachment_type': attachmentType,
       if (file != null) 'file': file,
+      if (name != null) 'name': name,
+      if (size != null) 'size': size,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3482,6 +3625,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     Value<String>? postId,
     Value<String>? attachmentType,
     Value<String>? file,
+    Value<String>? name,
+    Value<double>? size,
     Value<int>? rowid,
   }) {
     return AttachmentTableCompanion(
@@ -3491,6 +3636,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
       postId: postId ?? this.postId,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
+      name: name ?? this.name,
+      size: size ?? this.size,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3516,6 +3663,12 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     if (file.present) {
       map['file'] = Variable<String>(file.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (size.present) {
+      map['size'] = Variable<double>(size.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3531,6 +3684,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
           ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
+          ..write('name: $name, ')
+          ..write('size: $size, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -10370,6 +10525,7 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required String userId,
       required String content,
       required int likeCount,
+      required bool isLiked,
       Value<int> rowid,
     });
 typedef $$PostTableTableUpdateCompanionBuilder =
@@ -10380,6 +10536,7 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> content,
       Value<int> likeCount,
+      Value<bool> isLiked,
       Value<int> rowid,
     });
 
@@ -10462,6 +10619,11 @@ class $$PostTableTableFilterComposer
 
   ColumnFilters<int> get likeCount => $composableBuilder(
     column: $table.likeCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isLiked => $composableBuilder(
+    column: $table.isLiked,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10554,6 +10716,11 @@ class $$PostTableTableOrderingComposer
     column: $table.likeCount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isLiked => $composableBuilder(
+    column: $table.isLiked,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PostTableTableAnnotationComposer
@@ -10582,6 +10749,9 @@ class $$PostTableTableAnnotationComposer
 
   GeneratedColumn<int> get likeCount =>
       $composableBuilder(column: $table.likeCount, builder: (column) => column);
+
+  GeneratedColumn<bool> get isLiked =>
+      $composableBuilder(column: $table.isLiked, builder: (column) => column);
 
   Expression<T> attachmentTableRefs<T extends Object>(
     Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
@@ -10671,6 +10841,7 @@ class $$PostTableTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> content = const Value.absent(),
                 Value<int> likeCount = const Value.absent(),
+                Value<bool> isLiked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion(
                 id: id,
@@ -10679,6 +10850,7 @@ class $$PostTableTableTableManager
                 userId: userId,
                 content: content,
                 likeCount: likeCount,
+                isLiked: isLiked,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -10689,6 +10861,7 @@ class $$PostTableTableTableManager
                 required String userId,
                 required String content,
                 required int likeCount,
+                required bool isLiked,
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion.insert(
                 id: id,
@@ -10697,6 +10870,7 @@ class $$PostTableTableTableManager
                 userId: userId,
                 content: content,
                 likeCount: likeCount,
+                isLiked: isLiked,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -10793,6 +10967,8 @@ typedef $$AttachmentTableTableCreateCompanionBuilder =
       required String postId,
       required String attachmentType,
       required String file,
+      required String name,
+      required double size,
       Value<int> rowid,
     });
 typedef $$AttachmentTableTableUpdateCompanionBuilder =
@@ -10803,6 +10979,8 @@ typedef $$AttachmentTableTableUpdateCompanionBuilder =
       Value<String> postId,
       Value<String> attachmentType,
       Value<String> file,
+      Value<String> name,
+      Value<double> size,
       Value<int> rowid,
     });
 
@@ -10869,6 +11047,16 @@ class $$AttachmentTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$PostTableTableFilterComposer get postId {
     final $$PostTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -10927,6 +11115,16 @@ class $$AttachmentTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PostTableTableOrderingComposer get postId {
     final $$PostTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -10976,6 +11174,12 @@ class $$AttachmentTableTableAnnotationComposer
 
   GeneratedColumn<String> get file =>
       $composableBuilder(column: $table.file, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get size =>
+      $composableBuilder(column: $table.size, builder: (column) => column);
 
   $$PostTableTableAnnotationComposer get postId {
     final $$PostTableTableAnnotationComposer composer = $composerBuilder(
@@ -11037,6 +11241,8 @@ class $$AttachmentTableTableTableManager
                 Value<String> postId = const Value.absent(),
                 Value<String> attachmentType = const Value.absent(),
                 Value<String> file = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<double> size = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttachmentTableCompanion(
                 id: id,
@@ -11045,6 +11251,8 @@ class $$AttachmentTableTableTableManager
                 postId: postId,
                 attachmentType: attachmentType,
                 file: file,
+                name: name,
+                size: size,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -11055,6 +11263,8 @@ class $$AttachmentTableTableTableManager
                 required String postId,
                 required String attachmentType,
                 required String file,
+                required String name,
+                required double size,
                 Value<int> rowid = const Value.absent(),
               }) => AttachmentTableCompanion.insert(
                 id: id,
@@ -11063,6 +11273,8 @@ class $$AttachmentTableTableTableManager
                 postId: postId,
                 attachmentType: attachmentType,
                 file: file,
+                name: name,
+                size: size,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
