@@ -44,7 +44,7 @@ extension PostHelper on Post {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       likeCount: json['like_count'],
-      isLiked: json['is_liked'],
+      isLiked: json['is_liked']?? false,
       attachments: (json["attachments"] as List).isNotEmpty
           ? (json["attachments"])
                 .map(

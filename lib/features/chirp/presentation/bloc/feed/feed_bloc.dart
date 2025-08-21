@@ -52,6 +52,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     });
 
     on<CacheFeedEvent>((event, emit) async {
+      // Show loading only if no data exists
       if (state is! FeedLoaded) {
         emit(FeedLoading());
       }
@@ -60,16 +61,13 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
       result.fold(
         (failure) {
-          if (state is! FeedLoaded) {
+          if (state is FeedLoaded) {
+          } else {
             emit(FeedError(message: failure.message));
           }
         },
         (posts) {
-          if (state is FeedLoaded) {
-            emit(FeedLoaded(posts: posts));
-          } else {
-            emit(FeedLoaded(posts: posts));
-          }
+          emit(FeedLoaded(posts: posts));
         },
       );
     });

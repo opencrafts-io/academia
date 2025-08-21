@@ -36,9 +36,25 @@ class _AuthScreenState extends State<AuthScreen> {
               }
 
               if (state is AuthAuthenticated) {
+                print("🔐 Auth successful, triggering profile refresh...");
+                // Trigger profile refresh and let router handle navigation
                 BlocProvider.of<ProfileBloc>(
                   context,
                 ).add(RefreshProfileEvent());
+                
+                // Add a timeout fallback in case profile loading takes too long
+                Future.delayed(Duration(seconds: 5), () {
+                  if (mounted) {
+                    final currentProfileState = BlocProvider.of<ProfileBloc>(context).state;
+                    if (currentProfileState is! ProfileLoadedState) {
+                      print("⏰ Profile loading timeout, forcing navigation to home...");
+                      // Force navigation to home if profile loading is taking too long
+                      if (mounted) {
+                        HomeRoute().go(context);
+                      }
+                    }
+                  }
+                });
                 return;
               }
             },
@@ -60,11 +76,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 return;
               }
 
+              // Profile loaded successfully - router will handle navigation
               if (state is ProfileLoadedState) {
-                if (state.profile.onboarded && state.profile.termsAccepted) {
-                  return HomeRoute().go(context);
-                }
-                return CompleteProfileRoute().go(context);
+                print("👤 Profile loaded: onboarded=${state.profile.onboarded}, termsAccepted=${state.profile.termsAccepted}");
+                // Trigger router refresh to handle navigation
+                AppRouter.router.refresh();
               }
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -33,43 +34,76 @@ class _TodoCardState extends State<TodoCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
+    return Slidable(
       key: ValueKey(widget.todo.id),
-      background: Container(
-        alignment: Alignment.centerRight,
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.check,
-              color: Theme.of(context).colorScheme.onTertiaryContainer,
-            ),
-          ],
-        ),
-      ),
-      secondaryBackground: Container(
-        alignment: Alignment.centerRight,
-        color: Theme.of(context).colorScheme.error, // A color for deletion
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Icon(
-          Icons.delete_forever,
-          color: Theme.of(context).colorScheme.onError,
-        ),
-      ),
-      onDismissed: (direction) {
-        if (direction == DismissDirection.startToEnd) {
-          BlocProvider.of<TodoBloc>(
-            context,
-          ).add(CompleteTodoEvent(todo: widget.todo));
-        } else if (direction == DismissDirection.endToStart) {
-          BlocProvider.of<TodoBloc>(
-            context,
-          ).add(DeleteTodoEvent(todo: widget.todo));
-        }
-      },
+      startActionPane: ActionPane(
+        motion: DrawerMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (_) {
+              BlocProvider.of<TodoBloc>(
+                context,
+              ).add(DeleteTodoEvent(todo: widget.todo));
+            },
+            icon: Icons.delete,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
+            borderRadius: widget.borderRadius.copyWith(topRight: Radius.zero),
+            label: "Delete todo",
+          ),
+          SlidableAction(
+            onPressed: (_) {
+              BlocProvider.of<TodoBloc>(
+                context,
+              ).add(CompleteTodoEvent(todo: widget.todo));
+            },
 
+            label: "Complete todo",
+            icon: Icons.check,
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            borderRadius: widget.borderRadius.copyWith(
+              bottomRight: Radius.zero,
+              topLeft: Radius.zero,
+            ),
+          ),
+        ],
+      ),
+
+      // background: Container(
+      //   alignment: Alignment.centerRight,
+      //   color: Theme.of(context).colorScheme.tertiaryContainer,
+      //   padding: const EdgeInsets.symmetric(horizontal: 16),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.start,
+      //     children: [
+      //       Icon(
+      //         Icons.check,
+      //         color: Theme.of(context).colorScheme.onTertiaryContainer,
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      // secondaryBackground: Container(
+      //   alignment: Alignment.centerRight,
+      //   color: Theme.of(context).colorScheme.error, // A color for deletion
+      //   padding: const EdgeInsets.symmetric(horizontal: 16),
+      //   child: Icon(
+      //     Icons.delete_forever,
+      //     color: Theme.of(context).colorScheme.onError,
+      //   ),
+      // ),
+      // onDismissed: (direction) async {
+      //   if (direction == DismissDirection.startToEnd) {
+      //          //     if (await Vibration.hasVibrator()) {
+      //       Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+      //     }
+      //   } else if (direction == DismissDirection.endToStart) {
+      //          //     if (await Vibration.hasVibrator()) {
+      //       Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+      //     }
+      //   }
+      // },
       child: ClipRRect(
         borderRadius: widget.borderRadius,
         child: Card(
@@ -94,7 +128,8 @@ class _TodoCardState extends State<TodoCard> {
                 ).add(CompleteTodoEvent(todo: widget.todo));
               },
             ),
-            title: Text(truncateWithEllipsis(widget.todo.title,maxLength:60)),
+
+            title: Text(truncateWithEllipsis(widget.todo.title, maxLength: 60)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

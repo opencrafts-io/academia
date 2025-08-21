@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/router/routes.dart';
 import '../../domain/domain.dart';
-import '../bloc/event_bloc.dart';
+import '../bloc/sherehe_home_bloc.dart';
 
 class EventCardWrapper extends StatelessWidget {
   final Event event;
@@ -12,7 +12,7 @@ class EventCardWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EventBloc, EventState>(
+    return BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
       buildWhen: (previous, current) {
         if (current is! EventLoaded) return false;
         if (previous is! EventLoaded) return true;
