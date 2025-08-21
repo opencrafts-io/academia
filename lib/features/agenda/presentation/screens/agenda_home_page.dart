@@ -4,6 +4,7 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class AgendaHomePage extends StatefulWidget {
@@ -61,6 +62,110 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
               padding: EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
                 child: Wrap(children: [CalendarHomeWidget()]),
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.all(12),
+              sliver: BlocBuilder<AgendaEventBloc, AgendaEventState>(
+                builder: (context, state) {
+                  if (state is AgendaEventLoadedState) {
+                    return SliverToBoxAdapter(
+                      child: StreamBuilder(
+                        stream: state.agendaEventsStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator.adaptive();
+                          }
+                          if (snapshot.hasError) {
+                            return Text("OOps! ${snapshot.error}");
+                          }
+                          if (snapshot.hasData) {
+                            return ListView.separated(
+                              physics: NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 8),
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                final event = snapshot.data![index];
+                                return Card.outlined(
+                                  elevation: 0,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(12),
+                                      child: Column(
+                                        spacing: 8,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            event.summary ??
+                                                "Untitled Agenda Event",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.headlineSmall,
+                                          ),
+                                          Text(
+                                            event.description ??
+                                                "No description provided",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium,
+                                          ),
+                                          Text(
+                                            DateFormat.yMMMMd().format(
+                                              event.startTime!,
+                                            ),
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          ),
+                                          SizedBox(height: 12),
+                                          Row(
+                                            // spacing: 2,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Visibility(
+                                                visible: !event.allDay,
+                                                child: Text(
+                                                  "Duration ${DateFormat("HH:mm").format(event.startTime!)} - ${DateFormat("HH:mm").format(event.endTime!)}",
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: event.allDay,
+                                                child: Text(
+                                                  "Event lasts for entire day",
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              IconButton.outlined(
+                                                icon: Icon(Icons.delete),
+                                                onPressed: () {},
+                                              ),
+                                              IconButton.filled(
+                                                onPressed: () {},
+                                                icon: Icon(Icons.edit),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                          return Text("Agendas loaded");
+                        },
+                      ),
+                    );
+                  }
+                  return SliverToBoxAdapter(child: Text("Bad state"));
+                },
               ),
             ),
           ],
