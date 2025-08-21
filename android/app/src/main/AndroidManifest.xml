@@ -58,6 +58,12 @@
 		<!-- OneSignal Configuration -->
 		<meta-data android:name="onesignal_app_id" android:value="88ca0bb7-c0d7-4e36-b9e6-ea0e29213593"/>
 		<meta-data android:name="onesignal_google_project_number" android:value="YOUR_GOOGLE_PROJECT_NUMBER"/>
+
+
+    <!-- google ads -->
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-1784114980693221~6239287823"/>
 	</application>
 	<!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

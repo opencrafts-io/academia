@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -15,6 +16,13 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  late AdBloc adBloc = BlocProvider.of<AdBloc>(context);
+  @override
+  void initState() {
+    super.initState();
+    // The BannerAdWidget will automatically load the ad when it's displayed
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +86,14 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         Text(
                           "@${state.profile.username?.toLowerCase() ?? 'anonymous'}",
+                        ),
+
+                        SizedBox(height: 12),
+
+                        BannerAdWidget(
+                          adUnitId: "ca-app-pub-3940256099942544/6300978111",
+                          adSize: AdSize(width: 400, height: 60),
+                          height: 60,
                         ),
 
                         SizedBox(height: 12),

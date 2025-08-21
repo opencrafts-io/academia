@@ -132,6 +132,9 @@ class _AcademiaState extends State<Academia> {
             )
             ..add(SetNotificationPermissionEvent(enabled: true)),
         ),
+        BlocProvider(
+          create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -151,6 +154,19 @@ class _AcademiaState extends State<Academia> {
                   );
                 } else if (state is NotificationLoadingState) {
                   debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+            BlocListener<AdBloc, AdState>(
+              listener: (context, state) {
+                if (state is AdInitializedState) {
+                  debugPrint('✅ AdMob initialized successfully!');
+                } else if (state is AdErrorState) {
+                  debugPrint('❌ AdMob error: ${state.message}');
+                } else if (state is BannerAdLoadedState) {
+                  debugPrint('✅ Banner ad loaded: ${state.ad.id}');
+                } else if (state is AdLoadingState) {
+                  debugPrint('⏳ AdMob loading...');
                 }
               },
             ),

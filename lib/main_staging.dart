@@ -12,6 +12,7 @@ void main(args) async {
     return;
   }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await di.init(
     FlavorConfig(
       flavor: Flavor.staging,

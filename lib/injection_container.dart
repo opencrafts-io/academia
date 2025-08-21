@@ -354,4 +354,53 @@ Future<void> init(FlavorConfig flavor) async {
       sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
     ),
   );
+
+  // AdMob
+  sl.registerFactory<AdRemoteDataSource>(
+    () => AdRemoteDataSourceImpl(),
+  );
+
+  sl.registerFactory<AdRepository>(
+    () => AdRepositoryImpl(
+      sl.get<AdRemoteDataSource>(),
+    ),
+  );
+
+  sl.registerFactory<InitializeAdMobUsecase>(
+    () => InitializeAdMobUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadBannerAdUsecase>(
+    () => LoadBannerAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadInterstitialAdUsecase>(
+    () => LoadInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadRewardedAdUsecase>(
+    () => LoadRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowInterstitialAdUsecase>(
+    () => ShowInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowRewardedAdUsecase>(
+    () => ShowRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<GetLoadedAdsUsecase>(
+    () => GetLoadedAdsUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<SetTestModeUsecase>(
+    () => SetTestModeUsecase(sl.get<AdRepository>()),
+  );
+
+  sl.registerFactory<AdBloc>(
+    () => AdBloc(
+      initializeAdMobUsecase: sl.get<InitializeAdMobUsecase>(),
+      loadBannerAdUsecase: sl.get<LoadBannerAdUsecase>(),
+      loadInterstitialAdUsecase: sl.get<LoadInterstitialAdUsecase>(),
+      loadRewardedAdUsecase: sl.get<LoadRewardedAdUsecase>(),
+      showInterstitialAdUsecase: sl.get<ShowInterstitialAdUsecase>(),
+      showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
+      getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
+      setTestModeUsecase: sl.get<SetTestModeUsecase>(),
+    ),
+  );
 }
