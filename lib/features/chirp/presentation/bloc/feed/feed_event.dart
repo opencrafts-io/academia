@@ -9,3 +9,21 @@ abstract class FeedEvent extends Equatable {
 class LoadFeedEvent extends FeedEvent {}
 
 class CacheFeedEvent extends FeedEvent {}
+
+class CreatePostEvent extends FeedEvent {
+  final String content;
+  final List<PlatformFile> files;
+  CreatePostEvent({required this.content, required this.files});
+}
+
+class AddComment extends FeedEvent {
+  final String postId;
+  final String content;
+  AddComment({required this.postId, required this.content});
+}
+
+class ToggleLikePost extends FeedEvent {
+  final String postId;
+  final bool isCurrentlyLiked;
+  ToggleLikePost({required this.postId, required this.isCurrentlyLiked});
+}

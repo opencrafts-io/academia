@@ -133,6 +133,8 @@ class FilePickerService {
       postId: '', // This will be set when the attachment is associated with a post
       attachmentType: attachmentType,
       file: file.path ?? '', // For local files, this will be the file path
+      name: file.name,
+      size: file.size.toDouble(),
       createdAt: DateTime.now(),
     );
   }
