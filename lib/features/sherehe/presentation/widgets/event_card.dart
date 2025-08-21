@@ -235,13 +235,13 @@ class EventCard extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: sizing.spacing),
                           child: Wrap(
-                            spacing: 6.0,
-                            runSpacing: 4.0,
+                            spacing: 4.0,
+                            runSpacing: 2.0,
                             children: genres.map((genre) {
                               return Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                  vertical: 4.0,
+                                  horizontal: 4.0,
+                                  vertical: 2.0,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Theme.of(

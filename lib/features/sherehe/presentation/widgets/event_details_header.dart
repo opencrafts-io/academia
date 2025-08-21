@@ -12,11 +12,10 @@ class EventDetailsHeader extends StatelessWidget {
 
   double _getExpandedHeight(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
-      return 300.0;
+      return MediaQuery.of(context).size.height * 0.40;
     } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 400.0;
+      return MediaQuery.of(context).size.height * 0.4;
     } else {
-      // Desktop and Large Desktop
       return 500.0;
     }
   }
@@ -70,12 +69,12 @@ class EventDetailsHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
+                    spacing: 2.0,
+                    runSpacing: 0.5,
                     children: event.genre.map((genre) {
                       return Chip(
                         label: Text(genre),
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(3),
                       );
                     }).toList(),
                   ),
