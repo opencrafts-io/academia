@@ -1,3 +1,4 @@
+import 'dart:ui';
 
 import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
@@ -54,21 +55,66 @@ class _ImageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => _openFullScreen(context),
       child: Container(
+        height: 300,
+        width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: CachedNetworkImage(
-            imageUrl: url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => const SizedBox.shrink(),
-            errorWidget: (context, url, error) => Icon(
-              Icons.broken_image,
-              size: 50,
-              color: Theme.of(context).colorScheme.onSurface,
+        clipBehavior: Clip.hardEdge,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Blurred background
+            CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                child: Icon(
+                  Icons.broken_image,
+                  size: 50,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    color: Theme.of(context).colorScheme.scrim.withAlpha(10),
+                  ),
+                ),
+              ),
             ),
-          ),
+
+            // Centered original image with proper aspect ratio
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => const SizedBox.shrink(),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.broken_image,
+                  size: 50,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -126,7 +172,26 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget> {
   @override
   void initState() {
     super.initState();
-    player.open(Media(widget.url));
+    
+    Future.microtask(() async {
+      if (player.platform is NativePlayer) {
+        await (player.platform as dynamic).setProperty('force-seekable', 'yes');
+      }
+      // player.stream.log.listen((event) {
+      //   print("log $event");
+      // });
+    });
+    player.open(
+      Media(
+        widget.url,
+        httpHeaders: {
+          'User-Agent': 'MediaKit/Flutter',
+          'Accept': 'video/mp4,video/*,*/*;q=0.9',
+          'Accept-Encoding': 'identity;q=1, *;q=0',
+          'Range': 'bytes=0-',
+        },
+      ),
+    );
   }
 
   @override

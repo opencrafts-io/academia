@@ -37,8 +37,6 @@ class FeedPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               BlocBuilder<FeedBloc, FeedState>(
-                buildWhen: (previous, current) =>
-                    current is FeedLoaded || current is FeedLoading,
                 builder: (context, state) {
                   if (state is FeedLoaded) {
                     return SliverList.builder(
@@ -60,6 +58,13 @@ class FeedPage extends StatelessWidget {
                     return const SliverFillRemaining(
                       child: Center(
                         child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  }
+                  if (state is FeedError) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text("An unexpected error occurred"),
                       ),
                     );
                   }
