@@ -10,7 +10,6 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/domain.dart';
 import '../../presentation/presentation.dart';
-
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
 
@@ -251,7 +250,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         );
         return;
       }
-      // 1. Validate ALL required images
+      // Validate ALL required images
       if (_selectedPosterImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please select a poster image")),
@@ -293,8 +292,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final parts = _dateTimeController.text.split(' ');
       final datePart = parts[0];
       final timePart = parts[1];
-      // Construct default URL using user ID
-      final defaultUrl = 'https://academia.opencrafts.io/${_userProfile!.id}';
+      final defaultUrl = 'https://academia.opencrafts.io/${_userProfile!.email}';
       final event = Event(
         id: '',
         name: _nameController.text.trim(),
@@ -303,9 +301,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         location: _locationController.text.trim(),
         time: timePart,
         date: datePart,
-        organizer: _userProfile!.username ?? 'Unknown Organizer',
+        organizer: _userProfile!.name,
         imageUrl: '',
-        organizerId: '10000',
+        organizerId: _userProfile!.id.hashCode,
         numberOfAttendees: 1,
         genre: _selectedGenres,
         createdAt: DateTime.now(),
@@ -376,21 +374,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               EventImagePickerWidget(
                                 selectedImage: _selectedCardImage,
                                 onTap: _pickCardImage,
-                                label: 'Select Card Image (1:1) *',
+                                label: 'Card Image (1:1) *',
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 20),
                               EventImagePickerWidget(
                                 selectedImage: _selectedBannerImage,
                                 onTap: _pickBannerImage,
-                                label: 'Select Banner Image (16:9) *',
+                                label: 'Banner Image (16:9) *',
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 20),
                               EventImagePickerWidget(
                                 selectedImage: _selectedPosterImage,
                                 onTap: _pickPosterImage,
-                                label: 'Select Poster Image *',
+                                label: 'Poster Image *',
                               ),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 32),
+
                               TextFormField(
                                 controller: _nameController,
                                 decoration: buildModernInputDecoration(
@@ -416,6 +415,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 },
                                 screenContext: context,
                               ),
+                              const SizedBox(height: 20),
                               TextFormField(
                                 readOnly: true,
                                 controller: _dateTimeController,
@@ -470,15 +470,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               ),
                               // Remove URL TextFormField
                               const SizedBox(height: 30),
-                              // Show loading indicator for profile
+
                               if (_isLoadingProfile)
                                 const Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(16.0),
                                   child: Center(child: CircularProgressIndicator()),
                                 )
                               else if (_profileLoadError != null)
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Column(
                                     children: [
                                       Text(_profileLoadError!, style: const TextStyle(color: Colors.red)),
@@ -493,32 +493,52 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(
-                                      "Creating event as: ${_userProfile!.name ?? 'Unknown User'}",
+                                      "Creating event as: ${_userProfile!.name}",
                                       style: Theme.of(context).textTheme.bodyMedium,
+                                      textAlign: TextAlign.center, // Center the text
                                     ),
                                   ),
+
+                              // --- Submit Button Section ---
                               BlocBuilder<CreateEventBloc, CreateEventState>(
                                 builder: (context, state) {
                                   if (state is CreateEventLoading) {
                                     return const Center(
-                                      child: CircularProgressIndicator(),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(16.0), // Padding around loader
+                                        child: CircularProgressIndicator(),
+                                      ),
                                     );
                                   }
-                                  final isButtonDisabled = _isLoadingProfile || _userProfile == null ||
+                                  final isButtonDisabled = _isLoadingProfile ||
+                                      _userProfile == null ||
                                       _selectedPosterImage == null ||
                                       _selectedBannerImage == null ||
-                                      _selectedCardImage == null; // Disable if any image is missing
-                                  return FilledButton(
-                                    onPressed: isButtonDisabled ? null : _submitForm,
-                                    child: const Text('Create Event'),
+                                      _selectedCardImage == null;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0), // Vertical padding
+                                    child: FilledButton(
+                                      onPressed: isButtonDisabled ? null : _submitForm,
+                                      style: FilledButton.styleFrom(
+                                        // Optional: Make disabled button style more distinct
+                                        // backgroundColor: isButtonDisabled ? Theme.of(context).disabledColor : null,
+                                        // foregroundColor: isButtonDisabled ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38) : null,
+                                      ),
+                                      child: const Text('Create Event'),
+                                    ),
                                   );
                                 },
                               ),
                               const SizedBox(height: 20),
-                              Text(
-                                "Posting events may be subject to charges. Please contact us for more information on pricing",
-                                style: Theme.of(context).textTheme.bodySmall,
+                              // Optional: Center the pricing text
+                              Center(
+                                child: Text(
+                                  "Posting events may be subject to changes. Please stay tuned for updates.",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),

@@ -64,24 +64,27 @@ class ShereheRepositoryImpl implements ShereheRepository {
     required int page,
     required int limit,
   }) async {
-    final localResult = await localDataSource.getCachedAttendeesByEventId(eventId);
-    if (localResult.isRight()) {
-      return right((localResult as Right).value.map((e) => e.toEntity()).toList());
-    }
     final remoteResult = await remoteDataSource.getAttendeesByEventId(
       eventId: eventId,
       page: page,
       limit: limit,
     );
-    if (remoteResult.isLeft()) return left((remoteResult as Left).value);
-    final attendees = (remoteResult as Right).value;
-    final cacheResult = await localDataSource.cacheAttendees(attendees);
-    return cacheResult.fold(
+    return remoteResult.fold(
           (failure) => left(failure),
-          (models) => right(models.map((a) => a.toEntity()).toList()),
+          (attendeeDataList) async {
+        final cacheAttempt = await localDataSource.cacheAttendees(attendeeDataList);
+        cacheAttempt.fold(
+              (cacheFailure) {
+            print("[WARNING] ShereheRepositoryImpl: Failed to cache attendees for event $eventId: $cacheFailure");
+          },
+              (_) {
+            print("[INFO] ShereheRepositoryImpl: Successfully cached attendees for event $eventId.");
+          },
+        );
+        return right(attendeeDataList.map((a) => a.toEntity()).toList());
+      },
     );
   }
-
   @override
   Future<Either<Failure, Attendee>> getSpecificAttendee(String id) async {
     final remoteResult = await remoteDataSource.getSpecificAttendee(id);

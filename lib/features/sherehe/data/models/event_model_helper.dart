@@ -32,7 +32,6 @@ extension EventEntityHelper on Event {
     imageUrl: imageUrl,
     organizerId: organizerId,
     numberOfAttendees: numberOfAttendees,
-    // Convert list to comma-separated string
     genre: genre.join(', '),
     createdAt: createdAt,
     updatedAt: updatedAt,

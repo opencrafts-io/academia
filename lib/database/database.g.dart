@@ -4963,11 +4963,11 @@ class $EventTableTable extends EventTable
     'organizerId',
   );
   @override
-  late final GeneratedColumn<String> organizerId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> organizerId = GeneratedColumn<int>(
     'organizer_id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _genreMeta = const VerificationMeta('genre');
@@ -5212,7 +5212,7 @@ class $EventTableTable extends EventTable
         data['${effectivePrefix}number_of_attendees'],
       )!,
       organizerId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}organizer_id'],
       )!,
       genre: attachedDatabase.typeMapping.read(
@@ -5249,7 +5249,7 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String organizer;
   final String imageUrl;
   final int numberOfAttendees;
-  final String organizerId;
+  final int organizerId;
   final String genre;
   final String? poster;
   final String? banner;
@@ -5286,7 +5286,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['organizer'] = Variable<String>(organizer);
     map['image_url'] = Variable<String>(imageUrl);
     map['number_of_attendees'] = Variable<int>(numberOfAttendees);
-    map['organizer_id'] = Variable<String>(organizerId);
+    map['organizer_id'] = Variable<int>(organizerId);
     map['genre'] = Variable<String>(genre);
     if (!nullToAbsent || poster != null) {
       map['poster'] = Variable<String>(poster);
@@ -5340,7 +5340,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       organizer: serializer.fromJson<String>(json['organizer']),
       imageUrl: serializer.fromJson<String>(json['event_card_image']),
       numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
-      organizerId: serializer.fromJson<String>(json['organizer_id']),
+      organizerId: serializer.fromJson<int>(json['organizer_id']),
       genre: serializer.fromJson<String>(json['genre']),
       poster: serializer.fromJson<String?>(json['poster']),
       banner: serializer.fromJson<String?>(json['banner']),
@@ -5362,7 +5362,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       'organizer': serializer.toJson<String>(organizer),
       'event_card_image': serializer.toJson<String>(imageUrl),
       'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
-      'organizer_id': serializer.toJson<String>(organizerId),
+      'organizer_id': serializer.toJson<int>(organizerId),
       'genre': serializer.toJson<String>(genre),
       'poster': serializer.toJson<String?>(poster),
       'banner': serializer.toJson<String?>(banner),
@@ -5382,7 +5382,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? organizer,
     String? imageUrl,
     int? numberOfAttendees,
-    String? organizerId,
+    int? organizerId,
     String? genre,
     Value<String?> poster = const Value.absent(),
     Value<String?> banner = const Value.absent(),
@@ -5508,7 +5508,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> organizer;
   final Value<String> imageUrl;
   final Value<int> numberOfAttendees;
-  final Value<String> organizerId;
+  final Value<int> organizerId;
   final Value<String> genre;
   final Value<String?> poster;
   final Value<String?> banner;
@@ -5545,7 +5545,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String organizer,
     required String imageUrl,
     required int numberOfAttendees,
-    required String organizerId,
+    required int organizerId,
     required String genre,
     this.poster = const Value.absent(),
     this.banner = const Value.absent(),
@@ -5575,7 +5575,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? organizer,
     Expression<String>? imageUrl,
     Expression<int>? numberOfAttendees,
-    Expression<String>? organizerId,
+    Expression<int>? organizerId,
     Expression<String>? genre,
     Expression<String>? poster,
     Expression<String>? banner,
@@ -5615,7 +5615,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? organizer,
     Value<String>? imageUrl,
     Value<int>? numberOfAttendees,
-    Value<String>? organizerId,
+    Value<int>? organizerId,
     Value<String>? genre,
     Value<String?>? poster,
     Value<String?>? banner,
@@ -5682,7 +5682,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       map['number_of_attendees'] = Variable<int>(numberOfAttendees.value);
     }
     if (organizerId.present) {
-      map['organizer_id'] = Variable<String>(organizerId.value);
+      map['organizer_id'] = Variable<int>(organizerId.value);
     }
     if (genre.present) {
       map['genre'] = Variable<String>(genre.value);
@@ -11329,7 +11329,7 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String organizer,
       required String imageUrl,
       required int numberOfAttendees,
-      required String organizerId,
+      required int organizerId,
       required String genre,
       Value<String?> poster,
       Value<String?> banner,
@@ -11349,7 +11349,7 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> organizer,
       Value<String> imageUrl,
       Value<int> numberOfAttendees,
-      Value<String> organizerId,
+      Value<int> organizerId,
       Value<String> genre,
       Value<String?> poster,
       Value<String?> banner,
@@ -11466,7 +11466,7 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get organizerId => $composableBuilder(
+  ColumnFilters<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnFilters(column),
   );
@@ -11606,7 +11606,7 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get organizerId => $composableBuilder(
+  ColumnOrderings<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnOrderings(column),
   );
@@ -11676,7 +11676,7 @@ class $$EventTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get organizerId => $composableBuilder(
+  GeneratedColumn<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => column,
   );
@@ -11781,7 +11781,7 @@ class $$EventTableTableTableManager
                 Value<String> organizer = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<int> numberOfAttendees = const Value.absent(),
-                Value<String> organizerId = const Value.absent(),
+                Value<int> organizerId = const Value.absent(),
                 Value<String> genre = const Value.absent(),
                 Value<String?> poster = const Value.absent(),
                 Value<String?> banner = const Value.absent(),
@@ -11819,7 +11819,7 @@ class $$EventTableTableTableManager
                 required String organizer,
                 required String imageUrl,
                 required int numberOfAttendees,
-                required String organizerId,
+                required int organizerId,
                 required String genre,
                 Value<String?> poster = const Value.absent(),
                 Value<String?> banner = const Value.absent(),

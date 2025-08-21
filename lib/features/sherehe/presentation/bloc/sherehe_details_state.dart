@@ -16,12 +16,15 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
   final List<Attendee> attendees;
   final bool isUserAttending;
   final UserProfile? currentUserProfile;
+  final bool showConfettiEffect;
+
 
   const ShereheDetailsLoaded({
     required this.event,
     required this.attendees,
     this.isUserAttending = false,
     this.currentUserProfile,
+    this.showConfettiEffect = false,
   });
 
   ShereheDetailsLoaded copyWith({
@@ -29,12 +32,14 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
     List<Attendee>? attendees,
     bool? isUserAttending,
     UserProfile? currentUserProfile,
+    bool? showConfettiEffect,
   }) {
     return ShereheDetailsLoaded(
       event: event ?? this.event,
       attendees: attendees ?? this.attendees,
       isUserAttending: isUserAttending ?? this.isUserAttending,
       currentUserProfile: currentUserProfile ?? this.currentUserProfile,
+      showConfettiEffect: showConfettiEffect ?? this.showConfettiEffect,
     );
   }
 
@@ -44,6 +49,7 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
     attendees,
     isUserAttending,
     currentUserProfile,
+    showConfettiEffect,
   ];
 }
 
@@ -57,8 +63,6 @@ class ShereheDetailsError extends ShereheDetailsState {
 }
 
 class MarkingAsGoing extends ShereheDetailsState {}
-
-class MarkedAsGoingSuccess extends ShereheDetailsState {}
 
 class MarkedAsGoingFailure extends ShereheDetailsState {
   final String message;

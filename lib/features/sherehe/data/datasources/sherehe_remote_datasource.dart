@@ -32,11 +32,30 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200) {
-        final List<EventData> events = (response.data['data'] as List)
-            .map((e) => EventData.fromJson(e))
-            .toList();
+        final List<EventData> events = (response.data['data'] as List).map((item) {
+          final Map<String, dynamic> eventJson = Map<String, dynamic>.from(item);
+          if (eventJson['organizer_id'] is String) {
+            eventJson['organizer_id'] = int.tryParse(eventJson['organizer_id'] as String) ?? 0;
+          }
+          if (eventJson['number_of_attendees'] is String) {
+            eventJson['number_of_attendees'] = int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
+          }
+          return EventData.fromJson(eventJson);
+        }).toList();
 
-        final int? nextPage = response.data['nextPage'];
+        final dynamic nextPageValue = response.data['nextPage'];
+        int? nextPage;
+        if (nextPageValue is int) {
+          nextPage = nextPageValue;
+        } else if (nextPageValue is String) {
+          if (nextPageValue.isNotEmpty) {
+            nextPage = int.tryParse(nextPageValue);
+          } else {
+            nextPage = null;
+          }
+        } else {
+          nextPage = null;
+        }
 
         return right(PaginatedEventsData(events: events, nextPage: nextPage));
       } else {
@@ -113,7 +132,15 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200) {
-        return right(EventData.fromJson(response.data['result']));
+        final Map<String, dynamic> eventJson = Map<String, dynamic>.from(response.data['result']);
+        if (eventJson['organizer_id'] is String) {
+          eventJson['organizer_id'] = int.tryParse(eventJson['organizer_id'] as String) ?? 0;
+        }
+        if (eventJson['number_of_attendees'] is String) {
+          eventJson['number_of_attendees'] = int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
+        }
+
+        return right(EventData.fromJson(eventJson));
       } else {
         return left(
           ServerFailure(
@@ -168,7 +195,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }
 
   Future<Either<Failure, AttendeeData>> createAttendee(Attendee attendee) async {
-    final String fullTempId = 'temp_${DateTime.now().millisecondsSinceEpoch}_${attendee.eventId}_${attendee.firstName}_${attendee.lastName}_${attendee.email ?? 'noemail'}';
+    final String fullTempId = 'temp_${DateTime.now().millisecondsSinceEpoch}_${attendee.eventId}_${attendee.firstName}_${attendee.lastName}_${attendee.email}';
     final String safeTempId = fullTempId.substring(0, min(fullTempId.length, 50));
     try {
       final Map<String, dynamic> attendeeData = {
@@ -237,6 +264,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
   Future<Either<Failure, Unit>> createEvent(
+
       Event event, {
         File? eventImage,
         File? bannerImage,
@@ -270,6 +298,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'location': event.location,
         'organizer': event.organizer,
         'organizer_id': event.organizerId,
+        'url': event.url,
       };
       final FormData formData = FormData.fromMap(eventDataMap);
       String posterFileName;

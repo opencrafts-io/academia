@@ -11,6 +11,5 @@ class GetCachedUserProfileUseCase {
     return await repository.getCachedUserProfile();
   }
 
-  @override
   List<Object> get props => [repository];
 }
