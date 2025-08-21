@@ -8,4 +8,8 @@ abstract class ConversationRepository {
   Future<Either<Failure, List<Conversation>>> getConversations();
 
   Future<Either<Failure, Stream<List<Conversation>>>> refreshConversations();
+
+  Future<Either<Failure, Conversation>> createConversation(
+    List<String> participants,
+  );
 }

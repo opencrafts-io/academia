@@ -35,6 +35,20 @@ abstract class MessagingLocalDataSource {
   // Cache invalidation
   Future<Either<Failure, void>> clearConversationsCache();
   Future<Either<Failure, void>> clearMessagesCache(String conversationId);
+
+  // User cache methods
+  Future<Either<Failure, ChirpUserData?>> getCachedUser(String userId);
+  Future<Either<Failure, void>> cacheUser(ChirpUserData user);
+  Future<Either<Failure, ChirpUserData?>> getCachedUserFromSearch(
+    String userId,
+  );
+
+  // Conversation-User mapping methods
+  Future<Either<Failure, String?>> getConversationUserId(String conversationId);
+  Future<Either<Failure, void>> cacheConversationUserMapping(
+    String conversationId,
+    String userId,
+  );
 }
 
 class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
@@ -325,6 +339,114 @@ class MessagingLocalDataSourceImpl implements MessagingLocalDataSource {
         CacheFailure(
           error: e,
           message: "We couldn't clear messages cache. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, ChirpUserData?>> getCachedUser(String userId) async {
+    try {
+      final user = await (localDB.select(
+        localDB.chirpUserTable,
+      )..where((user) => user.id.equals(userId))).getSingleOrNull();
+      return Right(user);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message: "We couldn't get user data from cache. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> cacheUser(ChirpUserData user) async {
+    try {
+      await localDB
+          .into(localDB.chirpUserTable)
+          .insertReturning(user, onConflict: DoUpdate((t) => user));
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message: "We couldn't save user data to cache. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String?>> getConversationUserId(
+    String conversationId,
+  ) async {
+    try {
+      // For now, extract user ID from conversation ID format
+      // This is a temporary solution - in production, we'd have a proper mapping table
+      if (conversationId.startsWith('conv_')) {
+        final userId = conversationId.replaceAll('conv_', '');
+        return Right(userId);
+      }
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't get conversation user mapping. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> cacheConversationUserMapping(
+    String conversationId,
+    String userId,
+  ) async {
+    try {
+      // For now, we'll just log this - in production, we'd store in a proper mapping table
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "We couldn't save conversation-user mapping. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, ChirpUserData?>> getCachedUserFromSearch(
+    String userId,
+  ) async {
+    try {
+      // Search through all cached users to find a match
+      final allUsers = await (localDB.select(localDB.chirpUserTable)).get();
+
+      // Try exact match first
+      final exactMatch = allUsers
+          .where((user) => user.id == userId)
+          .firstOrNull;
+      if (exactMatch != null) {
+        return Right(exactMatch);
+      }
+
+      // If no exact match, try partial match (for cases where conversation ID format differs)
+      final partialMatch = allUsers
+          .where((user) => user.id.contains(userId) || userId.contains(user.id))
+          .firstOrNull;
+
+      return Right(partialMatch);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message: "We couldn't search cached users. Please try again.",
         ),
       );
     }

@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/data/models/conversations/message_model_helper.dart';
+import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import '../../../domain/entities/conversations/conversation.dart';
@@ -70,39 +71,96 @@ class ConversationRepositoryImpl implements ConversationRepository {
       final cachedConversations = (cachedResult as Right).value;
       if (cachedConversations.isNotEmpty) {
         // Return cached data immediately
-        final conversationEntities = await Future.wait(
-          cachedConversations.map((data) async {
-            // Use fallback user data for now
-            final chirpUser = ChirpUser(
+        final conversationEntities = <Conversation>[];
+        for (final data in cachedConversations) {
+          _logger.d(
+            'Processing conversation: ${data.id} with userId: ${data.userId}',
+          );
+
+          // Try to get cached user data first
+          final userResult = await localDataSource.getCachedUser(data.userId);
+          ChirpUser chirpUser;
+
+          if (userResult.isRight()) {
+            final userData = userResult.getOrElse(() => null);
+            if (userData != null) {
+              _logger.d('Found cached user: ${userData.name} (${userData.id})');
+              chirpUser = userData.toEntity();
+            } else {
+              _logger.d('No cached user found, trying search cache...');
+              // Try to get user data from cached search results first
+              final cachedUserResult = await localDataSource
+                  .getCachedUserFromSearch(data.userId);
+              if (cachedUserResult.isRight()) {
+                final cachedUser = cachedUserResult.getOrElse(() => null);
+                if (cachedUser != null) {
+                  _logger.d(
+                    'Found user from search cache: ${cachedUser.name} (${cachedUser.id})',
+                  );
+                  chirpUser = cachedUser.toEntity();
+                } else {
+                  _logger.w(
+                    'No user found in search cache, using unknown user',
+                  );
+                  // Fallback to unknown user
+                  chirpUser = ChirpUser(
+                    id: data.userId,
+                    name: 'Unknown User',
+                    email: 'unknown@example.com',
+                    vibepoints: 0,
+                    avatarUrl: null,
+                  );
+                }
+              } else {
+                _logger.w(
+                  'Search cache failed: ${cachedUserResult.fold((l) => l.message, (r) => 'success')}',
+                );
+                // Fallback to unknown user
+                chirpUser = ChirpUser(
+                  id: data.userId,
+                  name: 'Unknown User',
+                  email: 'unknown@example.com',
+                  vibepoints: 0,
+                  avatarUrl: null,
+                );
+              }
+            }
+          } else {
+            _logger.w(
+              'Cached user lookup failed: ${userResult.fold((l) => l.message, (r) => 'success')}',
+            );
+            chirpUser = ChirpUser(
               id: data.userId,
               name: 'Unknown User',
               email: 'unknown@example.com',
               vibepoints: 0,
               avatarUrl: null,
             );
+          }
 
-            final entity = Conversation(
-              id: data.id,
-              user: chirpUser,
-              lastMessage: null,
-              lastMessageAt: data.lastMessageAt,
-              unreadCount: data.unreadCount,
+          final entity = Conversation(
+            id: data.id,
+            user: chirpUser,
+            lastMessage: null,
+            lastMessageAt: data.lastMessageAt,
+            unreadCount: data.unreadCount,
+          );
+
+          if (data.lastMessageId != null) {
+            final messageResult = await localDataSource.getMessageById(
+              data.lastMessageId!,
             );
-
-            if (data.lastMessageId != null) {
-              final messageResult = await localDataSource.getMessageById(
-                data.lastMessageId!,
-              );
-              return messageResult.fold(
-                (messageFailure) => entity,
-                (messageData) => messageData != null
-                    ? entity.copyWith(lastMessage: messageData.toEntity())
-                    : entity,
-              );
-            }
-            return entity;
-          }),
-        );
+            final finalEntity = messageResult.fold(
+              (messageFailure) => entity,
+              (messageData) => messageData != null
+                  ? entity.copyWith(lastMessage: messageData.toEntity())
+                  : entity,
+            );
+            conversationEntities.add(finalEntity);
+          } else {
+            conversationEntities.add(entity);
+          }
+        }
         return Right(conversationEntities.cast<Conversation>());
       }
     }
@@ -118,39 +176,100 @@ class ConversationRepositoryImpl implements ConversationRepository {
           (cacheFailure) =>
               Left(failure), // Return original failure if cache also fails
           (cachedConversations) async {
-            final conversationEntities = await Future.wait(
-              cachedConversations.map((data) async {
-                // Use fallback user data for now
-                final chirpUser = ChirpUser(
-                  id: data.userId,
-                  name: 'Unknown User',
-                  email: 'unknown@example.com',
-                  vibepoints: 0,
-                  avatarUrl: null,
-                );
+            final conversationEntities = <Conversation>[];
+            for (final data in cachedConversations) {
+              // Try to get cached user data first
+              final userResult = await localDataSource.getCachedUser(
+                data.userId,
+              );
+              ChirpUser chirpUser;
 
-                final entity = Conversation(
-                  id: data.id,
-                  user: chirpUser,
-                  lastMessage: null,
-                  lastMessageAt: data.lastMessageAt,
-                  unreadCount: data.unreadCount,
-                );
-
-                if (data.lastMessageId != null) {
-                  final messageResult = await localDataSource.getMessageById(
-                    data.lastMessageId!,
-                  );
-                  return messageResult.fold(
-                    (messageFailure) => entity,
-                    (messageData) => messageData != null
-                        ? entity.copyWith(lastMessage: messageData.toEntity())
-                        : entity,
+              if (userResult.isRight()) {
+                final userData = userResult.getOrElse(() => null);
+                if (userData != null) {
+                  chirpUser = userData.toEntity();
+                } else {
+                  // Try to get user data from cached search results first
+                  final cachedUserResult = await localDataSource
+                      .getCachedUserFromSearch(data.userId);
+                  if (cachedUserResult.isRight()) {
+                    final cachedUser = cachedUserResult.getOrElse(() => null);
+                    if (cachedUser != null) {
+                      chirpUser = cachedUser.toEntity();
+                    } else {
+                      // Fallback to unknown user
+                      chirpUser = ChirpUser(
+                        id: data.userId,
+                        name: 'Unknown User',
+                        email: 'unknown@example.com',
+                        vibepoints: 0,
+                        avatarUrl: null,
+                      );
+                    }
+                  } else {
+                    // Fallback to unknown user
+                    chirpUser = ChirpUser(
+                      id: data.userId,
+                      name: 'Unknown User',
+                      email: 'unknown@example.com',
+                      vibepoints: 0,
+                      avatarUrl: null,
+                    );
+                  }
+                }
+              } else {
+                // Try to get user data from cached search results first
+                final cachedUserResult = await localDataSource
+                    .getCachedUserFromSearch(data.userId);
+                if (cachedUserResult.isRight()) {
+                  final cachedUser = cachedUserResult.getOrElse(() => null);
+                  if (cachedUser != null) {
+                    chirpUser = cachedUser.toEntity();
+                  } else {
+                    // Fallback to unknown user
+                    chirpUser = ChirpUser(
+                      id: data.userId,
+                      name: 'Unknown User',
+                      email: 'unknown@example.com',
+                      vibepoints: 0,
+                      avatarUrl: null,
+                    );
+                  }
+                } else {
+                  // Fallback to unknown user
+                  chirpUser = ChirpUser(
+                    id: data.userId,
+                    name: 'Unknown User',
+                    email: 'unknown@example.com',
+                    vibepoints: 0,
+                    avatarUrl: null,
                   );
                 }
-                return entity;
-              }),
-            );
+              }
+
+              final entity = Conversation(
+                id: data.id,
+                user: chirpUser,
+                lastMessage: null,
+                lastMessageAt: data.lastMessageAt,
+                unreadCount: data.unreadCount,
+              );
+
+              if (data.lastMessageId != null) {
+                final messageResult = await localDataSource.getMessageById(
+                  data.lastMessageId!,
+                );
+                final finalEntity = messageResult.fold(
+                  (messageFailure) => entity,
+                  (messageData) => messageData != null
+                      ? entity.copyWith(lastMessage: messageData.toEntity())
+                      : entity,
+                );
+                conversationEntities.add(finalEntity);
+              } else {
+                conversationEntities.add(entity);
+              }
+            }
             return Right(conversationEntities);
           },
         );
@@ -173,9 +292,10 @@ class ConversationRepositoryImpl implements ConversationRepository {
         final conversationEntities = await Future.wait(
           conversations.map((data) async {
             // Get real user data from backend, with fallback
-            final chirpUserResult = await chirpUserRemoteDataSource
-                .getChirpUserById(data.userId);
-            final chirpUser = chirpUserResult.fold(
+            // Try to get user data from cached search results first
+            final cachedUserResult = await localDataSource
+                .getCachedUserFromSearch(data.userId);
+            final chirpUser = cachedUserResult.fold(
               (failure) => ChirpUser(
                 id: data.userId,
                 name: 'Unknown User',
@@ -183,13 +303,15 @@ class ConversationRepositoryImpl implements ConversationRepository {
                 vibepoints: 0,
                 avatarUrl: null,
               ),
-              (userData) => ChirpUser(
-                id: userData.id,
-                name: userData.name,
-                email: userData.email,
-                vibepoints: userData.vibepoints,
-                avatarUrl: userData.avatarUrl,
-              ),
+              (userData) => userData != null
+                  ? userData.toEntity()
+                  : ChirpUser(
+                      id: data.userId,
+                      name: 'Unknown User',
+                      email: 'unknown@example.com',
+                      vibepoints: 0,
+                      avatarUrl: null,
+                    ),
             );
 
             // Create conversation entity with real user data
@@ -284,5 +406,123 @@ class ConversationRepositoryImpl implements ConversationRepository {
             .asyncMap((futures) => Future.wait(futures)),
       );
     });
+  }
+
+  @override
+  Future<Either<Failure, Conversation>> createConversation(
+    List<String> participants,
+  ) async {
+    try {
+      final result = await remoteDataSource.createConversation(participants);
+
+      return await result.fold((failure) => Left(failure), (
+        conversationData,
+      ) async {
+        // Cache the new conversation
+        final cacheResult = await localDataSource.createOrUpdateConversation(
+          conversationData,
+        );
+
+        cacheResult.fold(
+          (cacheFailure) {
+            _logger.w('Cache error: ${cacheFailure.message}');
+          },
+          (_) {
+            // Cache successful
+          },
+        );
+
+        // Get user data for the other participant
+        final currentUserId = 'default_user_123'; // This should come from auth
+        final otherParticipantId = participants.firstWhere(
+          (participant) => participant != currentUserId,
+          orElse: () => participants.first,
+        );
+
+        // Try to get user data from cache first
+        final cachedUserResult = await localDataSource.getCachedUser(
+          otherParticipantId,
+        );
+        ChirpUser chirpUser;
+
+        if (cachedUserResult.isRight()) {
+          final userData = cachedUserResult.getOrElse(() => null);
+          if (userData != null) {
+            _logger.d('Found cached user: ${userData.name}');
+            chirpUser = userData.toEntity();
+          } else {
+            // Try search cache
+            final searchCacheResult = await localDataSource
+                .getCachedUserFromSearch(otherParticipantId);
+            if (searchCacheResult.isRight()) {
+              final searchUserData = searchCacheResult.getOrElse(() => null);
+              if (searchUserData != null) {
+                _logger.d(
+                  'Found user from search cache: ${searchUserData.name}',
+                );
+                chirpUser = searchUserData.toEntity();
+              } else {
+                _logger.w('No user found in cache, using unknown user');
+                chirpUser = ChirpUser(
+                  id: otherParticipantId,
+                  name: 'Unknown User',
+                  email: 'unknown@example.com',
+                  vibepoints: 0,
+                  avatarUrl: null,
+                );
+              }
+            } else {
+              _logger.w('Search cache failed, using unknown user');
+              chirpUser = ChirpUser(
+                id: otherParticipantId,
+                name: 'Unknown User',
+                email: 'unknown@example.com',
+                vibepoints: 0,
+                avatarUrl: null,
+              );
+            }
+          }
+        } else {
+          _logger.w('Cache lookup failed, using unknown user');
+          chirpUser = ChirpUser(
+            id: otherParticipantId,
+            name: 'Unknown User',
+            email: 'unknown@example.com',
+            vibepoints: 0,
+            avatarUrl: null,
+          );
+        }
+
+        // Store the mapping between conversation ID and user ID
+        await localDataSource.cacheConversationUserMapping(
+          conversationData.id,
+          otherParticipantId,
+        );
+
+        final conversation = Conversation(
+          id: conversationData.id,
+          user: chirpUser,
+          lastMessage: null,
+          lastMessageAt: conversationData.lastMessageAt,
+          unreadCount: conversationData.unreadCount,
+        );
+
+        // Cache the user data for future use
+        if (chirpUser.name != 'Unknown User') {
+          final userData = chirpUser.toData();
+          await localDataSource.cacheUser(userData);
+        }
+
+        return Right(conversation);
+      });
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message:
+              'An unexpected error occurred while creating the conversation',
+          error: e,
+        ),
+      );
+    }
   }
 }

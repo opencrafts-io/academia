@@ -214,6 +214,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                         conversation.user.name.isNotEmpty
                                             ? conversation.user.name
                                                   .split(' ')
+                                                  .where((n) => n.isNotEmpty)
                                                   .map((n) => n[0])
                                                   .join('')
                                             : 'U',

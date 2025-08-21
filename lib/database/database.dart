@@ -39,7 +39,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -49,7 +49,13 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
-        if (to > from) {
+        if (from == 6 && to == 7) {
+          // Handle the foreign key change from UserProfile to ChirpUserTable
+          // First, drop the old foreign key constraint
+          await m.deleteTable('conversation_table');
+          // Then recreate the table with the new foreign key
+          await m.createTable(conversationTable);
+        } else if (to > from) {
           m.createAll();
           _logger.i("Migrated from version $from to version $to");
         }

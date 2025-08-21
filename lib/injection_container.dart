@@ -1,14 +1,10 @@
 import 'package:academia/config/flavor.dart';
-// import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/agenda/agenda.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -32,9 +28,6 @@ Future<void> init(FlavorConfig flavor) async {
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
     ),
   );
-  // sl.registerFactory<ChirpDioClient>(
-  //   () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
-  // );
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
@@ -52,7 +45,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
   );
-  sl.registerLazySingleton(() => CreateEventUseCase(sl.get<ShereheRepository>()));
+  sl.registerLazySingleton(
+    () => CreateEventUseCase(sl.get<ShereheRepository>()),
+  );
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
@@ -69,7 +64,13 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
 
-  sl.registerFactory(() => ShereheHomeBloc(getEvent: sl(), getAttendee: sl(), cacheEventsUseCase: sl()));
+  sl.registerFactory(
+    () => ShereheHomeBloc(
+      getEvent: sl(),
+      getAttendee: sl(),
+      cacheEventsUseCase: sl(),
+    ),
+  );
 
   sl.registerFactory(
     () => ShereheDetailsBloc(
@@ -186,23 +187,33 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<GetCachedAgendaEventsUsecase>(
-    () => GetCachedAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => GetCachedAgendaEventsUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<RefreshAgendaEventsUsecase>(
-    () => RefreshAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => RefreshAgendaEventsUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<CreateAgendaEventUsecase>(
-    () => CreateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => CreateAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<UpdateAgendaEventUsecase>(
-    () => UpdateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => UpdateAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<DeleteAgendaEventUsecase>(
-    () => DeleteAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => DeleteAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<AgendaEventBloc>(
@@ -258,6 +269,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<RefreshMessages>(
     () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
   );
+  sl.registerFactory<CreateConversation>(
+    () => CreateConversation(sl.get<ConversationRepositoryImpl>()),
+  );
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
@@ -266,6 +280,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<ChirpUserRepository>(
     () => ChirpUserRepositoryImpl(
       remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
+      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
     ),
   );
   sl.registerFactory<SearchUsersUseCase>(
@@ -282,6 +297,7 @@ Future<void> init(FlavorConfig flavor) async {
       getCachedMessages: sl.get<GetCachedMessages>(),
       refreshConversations: sl.get<RefreshConversations>(),
       refreshMessages: sl.get<RefreshMessages>(),
+      createConversation: sl.get<CreateConversation>(),
     ),
   );
 }

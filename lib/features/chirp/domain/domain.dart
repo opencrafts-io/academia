@@ -9,6 +9,7 @@ export 'usecases/conversations/get_cached_conversations.dart';
 export 'usecases/conversations/get_cached_messages.dart';
 export 'usecases/conversations/refresh_conversations.dart';
 export 'usecases/conversations/refresh_messages.dart';
+export 'usecases/conversations/create_conversation.dart';
 export 'entities/post.dart';
 export 'repositories/chirp_repository.dart';
 export 'usecases/get_feed_posts.dart';
