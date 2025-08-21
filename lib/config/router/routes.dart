@@ -46,10 +46,43 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   }
 }
 
+@TypedGoRoute<CalendarRoute>(
+  path: "/calendar",
+  routes: [
+    TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
+  ],
+)
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AgendaHomePage();
+  }
+}
+
+class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: const CreateAgendaEventPage(),
+      transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+      ) {
+        var tween = Tween(
+          begin: Offset(0.0, 1.0),
+          end: Offset.zero,
+        ).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 }
 

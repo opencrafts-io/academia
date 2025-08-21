@@ -9,10 +9,22 @@ abstract class CreateEventEvent extends Equatable {
 
 class SubmitNewEvent extends CreateEventEvent {
   final Event event;
-  final File? imageFile;
+  final File imageFile;
+  final File bannerImageFile;
+  final File cardImageFile;
 
-  const SubmitNewEvent({required this.event, this.imageFile});
+  const SubmitNewEvent({
+    required this.event,
+    required this.imageFile,
+    required this.bannerImageFile,
+    required this.cardImageFile,
+  });
 
   @override
-  List<Object?> get props => [event, imageFile];
+  List<Object?> get props => [
+    event,
+    imageFile,
+    bannerImageFile,
+    cardImageFile,
+  ];
 }

@@ -1,7 +1,7 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,39 +9,59 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      initialIndex: 1,
+      length: 4,
       child: RefreshIndicator.adaptive(
         onRefresh: () async {},
         child: CustomScrollView(
           slivers: [
-            SliverPinnedHeader(
-              child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  color: Theme.of(context).colorScheme.surface,
-                  padding: EdgeInsets.all(12),
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 420),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-
-                    child: TabBar(
-                      isScrollable: true,
-                      dividerHeight: 0,
-                      tabAlignment: TabAlignment.center,
-                      tabs: [
-                        Tab(child: Text("Chirp Feed")),
-                        Tab(child: Text("Chirp Chats")),
-                        Tab(child: Text("Sherehe & Inshallah")),
-                      ],
+            SliverAppBar(
+              pinned: true,
+              floating: true,
+              snap: true,
+              stretch: false,
+              leading: Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Image.asset("assets/icons/academia.png"),
+              ),
+              centerTitle: true,
+              title: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 600),
+                child: TextFormField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.primaryContainer,
+                    hintText: "Search for posts, events, friends",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(28),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    ProfileRoute().push(context);
+                  },
+                  icon: UserAvatar(scallopDepth: 2),
+                ),
+              ],
+              bottom: TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.center,
+                tabs: [
+                  Tab(child: Text("Leaderboard")),
+                  Tab(child: Text("For you")),
+                  Tab(child: Text("Chats")),
+                  Tab(child: Text("Sherehe")),
+                ],
+              ),
             ),
             SliverFillRemaining(
+              hasScrollBody: true,
+              fillOverscroll: true,
               child: Align(
                 alignment: Alignment.topCenter,
                 child: ConstrainedBox(
@@ -50,6 +70,7 @@ class HomePage extends StatelessWidget {
                   ),
                   child: TabBarView(
                     children: [
+                      Center(child: Text("Leaderboard")),
                       FeedPage(),
                       ConversationsPage(),
                       ShereheHome(),

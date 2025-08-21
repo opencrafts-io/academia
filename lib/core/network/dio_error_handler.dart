@@ -8,30 +8,34 @@ mixin DioErrorHandler {
       case DioExceptionType.connectionError:
         return left(
           NetworkFailure(
-            message: "Connection refused by server please try again later",
+            // "Hello, is it me you're looking for?" - Lionel Richie
+            message: "Hello, is it me you're looking for? Connection refused by server. It seems like nobody's home!",
             error: de,
           ),
         );
       case DioExceptionType.connectionTimeout:
         return left(
           NetworkFailure(
+            // "Time is on my side" - Rolling Stones
             message:
-                "Server took too long to respond, please try after a few minutes",
+                "Time is on my side! Server took too long to respond. Time may be on our side, but not today!",
             error: de,
           ),
         );
       case DioExceptionType.receiveTimeout:
         return left(
           NetworkFailure(
+            // "Waiting for a girl like you" - Foreigner
             message:
-                "Server did not send a response in time, please try again later.",
+                "We're still waiting for that server response. It's taking longer than expected!",
             error: de,
           ),
         );
       case DioExceptionType.sendTimeout:
         return left(
           NetworkFailure(
-            message: "Sending request took too long, please try again later.",
+            // "Slow ride, take it easy" - Foghat
+            message: "Slow ride, take it easy! Sending request took too long. We need to slow down and try again!",
             error: de,
           ),
         );
@@ -43,7 +47,8 @@ mixin DioErrorHandler {
                 de.response?.data["error"] ??
                 de.response?.data["message"] ??
                 de.response?.statusMessage ??
-                "An unexpected error occurred. Please try again later.",
+                // "Don't stop believin'" - Journey
+                "Don't stop believin'! An unexpected error occurred, but don't stop believing! Please try again later.",
             error: de,
           ),
         );

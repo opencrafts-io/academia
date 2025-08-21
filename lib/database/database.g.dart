@@ -4979,6 +4979,24 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _posterMeta = const VerificationMeta('poster');
+  @override
+  late final GeneratedColumn<String> poster = GeneratedColumn<String>(
+    'poster',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4995,6 +5013,8 @@ class $EventTableTable extends EventTable
     numberOfAttendees,
     organizerId,
     genre,
+    poster,
+    banner,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5122,6 +5142,18 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_genreMeta);
     }
+    if (data.containsKey('poster')) {
+      context.handle(
+        _posterMeta,
+        poster.isAcceptableOrUnknown(data['poster']!, _posterMeta),
+      );
+    }
+    if (data.containsKey('banner')) {
+      context.handle(
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
+      );
+    }
     return context;
   }
 
@@ -5187,6 +5219,14 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}genre'],
       )!,
+      poster: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}poster'],
+      ),
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
+      ),
     );
   }
 
@@ -5211,6 +5251,8 @@ class EventData extends DataClass implements Insertable<EventData> {
   final int numberOfAttendees;
   final String organizerId;
   final String genre;
+  final String? poster;
+  final String? banner;
   const EventData({
     required this.id,
     required this.createdAt,
@@ -5226,6 +5268,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     required this.numberOfAttendees,
     required this.organizerId,
     required this.genre,
+    this.poster,
+    this.banner,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5244,6 +5288,12 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['number_of_attendees'] = Variable<int>(numberOfAttendees);
     map['organizer_id'] = Variable<String>(organizerId);
     map['genre'] = Variable<String>(genre);
+    if (!nullToAbsent || poster != null) {
+      map['poster'] = Variable<String>(poster);
+    }
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
+    }
     return map;
   }
 
@@ -5263,6 +5313,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       numberOfAttendees: Value(numberOfAttendees),
       organizerId: Value(organizerId),
       genre: Value(genre),
+      poster: poster == null && nullToAbsent
+          ? const Value.absent()
+          : Value(poster),
+      banner: banner == null && nullToAbsent
+          ? const Value.absent()
+          : Value(banner),
     );
   }
 
@@ -5282,10 +5338,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       time: serializer.fromJson<String>(json['time']),
       date: serializer.fromJson<String>(json['date']),
       organizer: serializer.fromJson<String>(json['organizer']),
-      imageUrl: serializer.fromJson<String>(json['image_url']),
+      imageUrl: serializer.fromJson<String>(json['event_card_image']),
       numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
       organizerId: serializer.fromJson<String>(json['organizer_id']),
       genre: serializer.fromJson<String>(json['genre']),
+      poster: serializer.fromJson<String?>(json['poster']),
+      banner: serializer.fromJson<String?>(json['banner']),
     );
   }
   @override
@@ -5302,10 +5360,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       'time': serializer.toJson<String>(time),
       'date': serializer.toJson<String>(date),
       'organizer': serializer.toJson<String>(organizer),
-      'image_url': serializer.toJson<String>(imageUrl),
+      'event_card_image': serializer.toJson<String>(imageUrl),
       'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
       'organizer_id': serializer.toJson<String>(organizerId),
       'genre': serializer.toJson<String>(genre),
+      'poster': serializer.toJson<String?>(poster),
+      'banner': serializer.toJson<String?>(banner),
     };
   }
 
@@ -5324,6 +5384,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     int? numberOfAttendees,
     String? organizerId,
     String? genre,
+    Value<String?> poster = const Value.absent(),
+    Value<String?> banner = const Value.absent(),
   }) => EventData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -5339,6 +5401,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
     organizerId: organizerId ?? this.organizerId,
     genre: genre ?? this.genre,
+    poster: poster.present ? poster.value : this.poster,
+    banner: banner.present ? banner.value : this.banner,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
     return EventData(
@@ -5362,6 +5426,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           ? data.organizerId.value
           : this.organizerId,
       genre: data.genre.present ? data.genre.value : this.genre,
+      poster: data.poster.present ? data.poster.value : this.poster,
+      banner: data.banner.present ? data.banner.value : this.banner,
     );
   }
 
@@ -5381,7 +5447,9 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('imageUrl: $imageUrl, ')
           ..write('numberOfAttendees: $numberOfAttendees, ')
           ..write('organizerId: $organizerId, ')
-          ..write('genre: $genre')
+          ..write('genre: $genre, ')
+          ..write('poster: $poster, ')
+          ..write('banner: $banner')
           ..write(')'))
         .toString();
   }
@@ -5402,6 +5470,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     numberOfAttendees,
     organizerId,
     genre,
+    poster,
+    banner,
   );
   @override
   bool operator ==(Object other) =>
@@ -5420,7 +5490,9 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.imageUrl == this.imageUrl &&
           other.numberOfAttendees == this.numberOfAttendees &&
           other.organizerId == this.organizerId &&
-          other.genre == this.genre);
+          other.genre == this.genre &&
+          other.poster == this.poster &&
+          other.banner == this.banner);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventData> {
@@ -5438,6 +5510,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<int> numberOfAttendees;
   final Value<String> organizerId;
   final Value<String> genre;
+  final Value<String?> poster;
+  final Value<String?> banner;
   final Value<int> rowid;
   const EventTableCompanion({
     this.id = const Value.absent(),
@@ -5454,6 +5528,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.numberOfAttendees = const Value.absent(),
     this.organizerId = const Value.absent(),
     this.genre = const Value.absent(),
+    this.poster = const Value.absent(),
+    this.banner = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EventTableCompanion.insert({
@@ -5471,6 +5547,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required int numberOfAttendees,
     required String organizerId,
     required String genre,
+    this.poster = const Value.absent(),
+    this.banner = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -5499,6 +5577,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<int>? numberOfAttendees,
     Expression<String>? organizerId,
     Expression<String>? genre,
+    Expression<String>? poster,
+    Expression<String>? banner,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5516,6 +5596,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (numberOfAttendees != null) 'number_of_attendees': numberOfAttendees,
       if (organizerId != null) 'organizer_id': organizerId,
       if (genre != null) 'genre': genre,
+      if (poster != null) 'poster': poster,
+      if (banner != null) 'banner': banner,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5535,6 +5617,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<int>? numberOfAttendees,
     Value<String>? organizerId,
     Value<String>? genre,
+    Value<String?>? poster,
+    Value<String?>? banner,
     Value<int>? rowid,
   }) {
     return EventTableCompanion(
@@ -5552,6 +5636,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
       organizerId: organizerId ?? this.organizerId,
       genre: genre ?? this.genre,
+      poster: poster ?? this.poster,
+      banner: banner ?? this.banner,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5601,6 +5687,12 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (genre.present) {
       map['genre'] = Variable<String>(genre.value);
     }
+    if (poster.present) {
+      map['poster'] = Variable<String>(poster.value);
+    }
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5624,6 +5716,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('numberOfAttendees: $numberOfAttendees, ')
           ..write('organizerId: $organizerId, ')
           ..write('genre: $genre, ')
+          ..write('poster: $poster, ')
+          ..write('banner: $banner, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5716,6 +5810,15 @@ class $AttendeeTableTable extends AttendeeTable
       'REFERENCES event_table (id)',
     ),
   );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -5725,6 +5828,7 @@ class $AttendeeTableTable extends AttendeeTable
     middleName,
     lastName,
     eventId,
+    email,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5785,6 +5889,14 @@ class $AttendeeTableTable extends AttendeeTable
     } else if (isInserting) {
       context.missing(_eventIdMeta);
     }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
     return context;
   }
 
@@ -5822,6 +5934,10 @@ class $AttendeeTableTable extends AttendeeTable
         DriftSqlType.string,
         data['${effectivePrefix}event_id'],
       )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
     );
   }
 
@@ -5839,6 +5955,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final String? middleName;
   final String lastName;
   final String eventId;
+  final String email;
   const AttendeeData({
     required this.id,
     required this.createdAt,
@@ -5847,6 +5964,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     this.middleName,
     required this.lastName,
     required this.eventId,
+    required this.email,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5860,6 +5978,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     }
     map['last_name'] = Variable<String>(lastName);
     map['event_id'] = Variable<String>(eventId);
+    map['email'] = Variable<String>(email);
     return map;
   }
 
@@ -5874,6 +5993,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           : Value(middleName),
       lastName: Value(lastName),
       eventId: Value(eventId),
+      email: Value(email),
     );
   }
 
@@ -5890,6 +6010,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       middleName: serializer.fromJson<String?>(json['middle_name']),
       lastName: serializer.fromJson<String>(json['last_name']),
       eventId: serializer.fromJson<String>(json['event_id']),
+      email: serializer.fromJson<String>(json['email']),
     );
   }
   @override
@@ -5903,6 +6024,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'middle_name': serializer.toJson<String?>(middleName),
       'last_name': serializer.toJson<String>(lastName),
       'event_id': serializer.toJson<String>(eventId),
+      'email': serializer.toJson<String>(email),
     };
   }
 
@@ -5914,6 +6036,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     Value<String?> middleName = const Value.absent(),
     String? lastName,
     String? eventId,
+    String? email,
   }) => AttendeeData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -5922,6 +6045,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     middleName: middleName.present ? middleName.value : this.middleName,
     lastName: lastName ?? this.lastName,
     eventId: eventId ?? this.eventId,
+    email: email ?? this.email,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
@@ -5934,6 +6058,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           : this.middleName,
       lastName: data.lastName.present ? data.lastName.value : this.lastName,
       eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      email: data.email.present ? data.email.value : this.email,
     );
   }
 
@@ -5946,7 +6071,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('firstName: $firstName, ')
           ..write('middleName: $middleName, ')
           ..write('lastName: $lastName, ')
-          ..write('eventId: $eventId')
+          ..write('eventId: $eventId, ')
+          ..write('email: $email')
           ..write(')'))
         .toString();
   }
@@ -5960,6 +6086,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     middleName,
     lastName,
     eventId,
+    email,
   );
   @override
   bool operator ==(Object other) =>
@@ -5971,7 +6098,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.firstName == this.firstName &&
           other.middleName == this.middleName &&
           other.lastName == this.lastName &&
-          other.eventId == this.eventId);
+          other.eventId == this.eventId &&
+          other.email == this.email);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
@@ -5982,6 +6110,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<String?> middleName;
   final Value<String> lastName;
   final Value<String> eventId;
+  final Value<String> email;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
@@ -5991,6 +6120,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.middleName = const Value.absent(),
     this.lastName = const Value.absent(),
     this.eventId = const Value.absent(),
+    this.email = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
@@ -6001,11 +6131,13 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.middleName = const Value.absent(),
     required String lastName,
     required String eventId,
+    required String email,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        firstName = Value(firstName),
        lastName = Value(lastName),
-       eventId = Value(eventId);
+       eventId = Value(eventId),
+       email = Value(email);
   static Insertable<AttendeeData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -6014,6 +6146,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Expression<String>? middleName,
     Expression<String>? lastName,
     Expression<String>? eventId,
+    Expression<String>? email,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -6024,6 +6157,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       if (middleName != null) 'middle_name': middleName,
       if (lastName != null) 'last_name': lastName,
       if (eventId != null) 'event_id': eventId,
+      if (email != null) 'email': email,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -6036,6 +6170,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Value<String?>? middleName,
     Value<String>? lastName,
     Value<String>? eventId,
+    Value<String>? email,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
@@ -6046,6 +6181,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       middleName: middleName ?? this.middleName,
       lastName: lastName ?? this.lastName,
       eventId: eventId ?? this.eventId,
+      email: email ?? this.email,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -6074,6 +6210,9 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
     }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -6090,6 +6229,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
           ..write('middleName: $middleName, ')
           ..write('lastName: $lastName, ')
           ..write('eventId: $eventId, ')
+          ..write('email: $email, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6515,6 +6655,1080 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   }
 }
 
+class $AgendaEventTable extends AgendaEvent
+    with TableInfo<$AgendaEventTable, AgendaEventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AgendaEventTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allDayMeta = const VerificationMeta('allDay');
+  @override
+  late final GeneratedColumn<bool> allDay = GeneratedColumn<bool>(
+    'all_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("all_day" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _summaryMeta = const VerificationMeta(
+    'summary',
+  );
+  @override
+  late final GeneratedColumn<String> summary = GeneratedColumn<String>(
+    'summary',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _htmlLinkMeta = const VerificationMeta(
+    'htmlLink',
+  );
+  @override
+  late final GeneratedColumn<String> htmlLink = GeneratedColumn<String>(
+    'html_link',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _calendarIdMeta = const VerificationMeta(
+    'calendarId',
+  );
+  @override
+  late final GeneratedColumn<String> calendarId = GeneratedColumn<String>(
+    'calendar_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _timezoneMeta = const VerificationMeta(
+    'timezone',
+  );
+  @override
+  late final GeneratedColumn<String> timezone = GeneratedColumn<String>(
+    'timezone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _transparencyMeta = const VerificationMeta(
+    'transparency',
+  );
+  @override
+  late final GeneratedColumn<String> transparency = GeneratedColumn<String>(
+    'transparency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
+  @override
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+    'etag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdMeta = const VerificationMeta(
+    'created',
+  );
+  @override
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+    'created',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedMeta = const VerificationMeta(
+    'updated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+    'updated',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+    'start_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endTime = GeneratedColumn<DateTime>(
+    'end_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  attendees = GeneratedColumn<String>(
+    'attendees',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterattendeesn);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  recurrence = GeneratedColumn<String>(
+    'recurrence',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($AgendaEventTable.$converterrecurrencen);
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  reminders =
+      GeneratedColumn<String>(
+        'reminders',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $AgendaEventTable.$converterremindersn,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    allDay,
+    summary,
+    description,
+    location,
+    htmlLink,
+    calendarId,
+    ownerId,
+    timezone,
+    status,
+    transparency,
+    etag,
+    created,
+    updated,
+    startTime,
+    endTime,
+    attendees,
+    recurrence,
+    reminders,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'agenda_event';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AgendaEventData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('all_day')) {
+      context.handle(
+        _allDayMeta,
+        allDay.isAcceptableOrUnknown(data['all_day']!, _allDayMeta),
+      );
+    }
+    if (data.containsKey('summary')) {
+      context.handle(
+        _summaryMeta,
+        summary.isAcceptableOrUnknown(data['summary']!, _summaryMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('html_link')) {
+      context.handle(
+        _htmlLinkMeta,
+        htmlLink.isAcceptableOrUnknown(data['html_link']!, _htmlLinkMeta),
+      );
+    }
+    if (data.containsKey('calendar_id')) {
+      context.handle(
+        _calendarIdMeta,
+        calendarId.isAcceptableOrUnknown(data['calendar_id']!, _calendarIdMeta),
+      );
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    }
+    if (data.containsKey('timezone')) {
+      context.handle(
+        _timezoneMeta,
+        timezone.isAcceptableOrUnknown(data['timezone']!, _timezoneMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('transparency')) {
+      context.handle(
+        _transparencyMeta,
+        transparency.isAcceptableOrUnknown(
+          data['transparency']!,
+          _transparencyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+        _etagMeta,
+        etag.isAcceptableOrUnknown(data['etag']!, _etagMeta),
+      );
+    }
+    if (data.containsKey('created')) {
+      context.handle(
+        _createdMeta,
+        created.isAcceptableOrUnknown(data['created']!, _createdMeta),
+      );
+    }
+    if (data.containsKey('updated')) {
+      context.handle(
+        _updatedMeta,
+        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
+      );
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AgendaEventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AgendaEventData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      allDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}all_day'],
+      )!,
+      summary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}summary'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      htmlLink: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}html_link'],
+      ),
+      calendarId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}calendar_id'],
+      ),
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      ),
+      timezone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timezone'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      ),
+      transparency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transparency'],
+      ),
+      etag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}etag'],
+      ),
+      created: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created'],
+      ),
+      updated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated'],
+      ),
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_time'],
+      ),
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_time'],
+      ),
+      attendees: $AgendaEventTable.$converterattendeesn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}attendees'],
+        ),
+      ),
+      recurrence: $AgendaEventTable.$converterrecurrencen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}recurrence'],
+        ),
+      ),
+      reminders: $AgendaEventTable.$converterremindersn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}reminders'],
+        ),
+      ),
+    );
+  }
+
+  @override
+  $AgendaEventTable createAlias(String alias) {
+    return $AgendaEventTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<dynamic>, String> $converterattendees =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterattendeesn =
+      NullAwareTypeConverter.wrap($converterattendees);
+  static TypeConverter<List<dynamic>, String> $converterrecurrence =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterrecurrencen =
+      NullAwareTypeConverter.wrap($converterrecurrence);
+  static TypeConverter<Map<String, dynamic>, String> $converterreminders =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterremindersn =
+      NullAwareTypeConverter.wrap($converterreminders);
+}
+
+class AgendaEventData extends DataClass implements Insertable<AgendaEventData> {
+  final String id;
+  final bool allDay;
+  final String? summary;
+  final String? description;
+  final String? location;
+  final String? htmlLink;
+  final String? calendarId;
+  final String? ownerId;
+  final String? timezone;
+  final String? status;
+  final String? transparency;
+  final String? etag;
+  final DateTime? created;
+  final DateTime? updated;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final List<dynamic>? attendees;
+  final List<dynamic>? recurrence;
+  final Map<String, dynamic>? reminders;
+  const AgendaEventData({
+    required this.id,
+    required this.allDay,
+    this.summary,
+    this.description,
+    this.location,
+    this.htmlLink,
+    this.calendarId,
+    this.ownerId,
+    this.timezone,
+    this.status,
+    this.transparency,
+    this.etag,
+    this.created,
+    this.updated,
+    this.startTime,
+    this.endTime,
+    this.attendees,
+    this.recurrence,
+    this.reminders,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['all_day'] = Variable<bool>(allDay);
+    if (!nullToAbsent || summary != null) {
+      map['summary'] = Variable<String>(summary);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || htmlLink != null) {
+      map['html_link'] = Variable<String>(htmlLink);
+    }
+    if (!nullToAbsent || calendarId != null) {
+      map['calendar_id'] = Variable<String>(calendarId);
+    }
+    if (!nullToAbsent || ownerId != null) {
+      map['owner_id'] = Variable<String>(ownerId);
+    }
+    if (!nullToAbsent || timezone != null) {
+      map['timezone'] = Variable<String>(timezone);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || transparency != null) {
+      map['transparency'] = Variable<String>(transparency);
+    }
+    if (!nullToAbsent || etag != null) {
+      map['etag'] = Variable<String>(etag);
+    }
+    if (!nullToAbsent || created != null) {
+      map['created'] = Variable<DateTime>(created);
+    }
+    if (!nullToAbsent || updated != null) {
+      map['updated'] = Variable<DateTime>(updated);
+    }
+    if (!nullToAbsent || startTime != null) {
+      map['start_time'] = Variable<DateTime>(startTime);
+    }
+    if (!nullToAbsent || endTime != null) {
+      map['end_time'] = Variable<DateTime>(endTime);
+    }
+    if (!nullToAbsent || attendees != null) {
+      map['attendees'] = Variable<String>(
+        $AgendaEventTable.$converterattendeesn.toSql(attendees),
+      );
+    }
+    if (!nullToAbsent || recurrence != null) {
+      map['recurrence'] = Variable<String>(
+        $AgendaEventTable.$converterrecurrencen.toSql(recurrence),
+      );
+    }
+    if (!nullToAbsent || reminders != null) {
+      map['reminders'] = Variable<String>(
+        $AgendaEventTable.$converterremindersn.toSql(reminders),
+      );
+    }
+    return map;
+  }
+
+  AgendaEventCompanion toCompanion(bool nullToAbsent) {
+    return AgendaEventCompanion(
+      id: Value(id),
+      allDay: Value(allDay),
+      summary: summary == null && nullToAbsent
+          ? const Value.absent()
+          : Value(summary),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      htmlLink: htmlLink == null && nullToAbsent
+          ? const Value.absent()
+          : Value(htmlLink),
+      calendarId: calendarId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calendarId),
+      ownerId: ownerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ownerId),
+      timezone: timezone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timezone),
+      status: status == null && nullToAbsent
+          ? const Value.absent()
+          : Value(status),
+      transparency: transparency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transparency),
+      etag: etag == null && nullToAbsent ? const Value.absent() : Value(etag),
+      created: created == null && nullToAbsent
+          ? const Value.absent()
+          : Value(created),
+      updated: updated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updated),
+      startTime: startTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startTime),
+      endTime: endTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endTime),
+      attendees: attendees == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attendees),
+      recurrence: recurrence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrence),
+      reminders: reminders == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminders),
+    );
+  }
+
+  factory AgendaEventData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AgendaEventData(
+      id: serializer.fromJson<String>(json['id']),
+      allDay: serializer.fromJson<bool>(json['all_day']),
+      summary: serializer.fromJson<String?>(json['summary']),
+      description: serializer.fromJson<String?>(json['description']),
+      location: serializer.fromJson<String?>(json['location']),
+      htmlLink: serializer.fromJson<String?>(json['html_link']),
+      calendarId: serializer.fromJson<String?>(json['calendar_id']),
+      ownerId: serializer.fromJson<String?>(json['owner_id']),
+      timezone: serializer.fromJson<String?>(json['timezone']),
+      status: serializer.fromJson<String?>(json['status']),
+      transparency: serializer.fromJson<String?>(json['transparency']),
+      etag: serializer.fromJson<String?>(json['etag']),
+      created: serializer.fromJson<DateTime?>(json['created']),
+      updated: serializer.fromJson<DateTime?>(json['updated']),
+      startTime: serializer.fromJson<DateTime?>(json['start_time']),
+      endTime: serializer.fromJson<DateTime?>(json['end_time']),
+      attendees: serializer.fromJson<List<dynamic>?>(json['attendees']),
+      recurrence: serializer.fromJson<List<dynamic>?>(json['recurrence']),
+      reminders: serializer.fromJson<Map<String, dynamic>?>(json['reminders']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'all_day': serializer.toJson<bool>(allDay),
+      'summary': serializer.toJson<String?>(summary),
+      'description': serializer.toJson<String?>(description),
+      'location': serializer.toJson<String?>(location),
+      'html_link': serializer.toJson<String?>(htmlLink),
+      'calendar_id': serializer.toJson<String?>(calendarId),
+      'owner_id': serializer.toJson<String?>(ownerId),
+      'timezone': serializer.toJson<String?>(timezone),
+      'status': serializer.toJson<String?>(status),
+      'transparency': serializer.toJson<String?>(transparency),
+      'etag': serializer.toJson<String?>(etag),
+      'created': serializer.toJson<DateTime?>(created),
+      'updated': serializer.toJson<DateTime?>(updated),
+      'start_time': serializer.toJson<DateTime?>(startTime),
+      'end_time': serializer.toJson<DateTime?>(endTime),
+      'attendees': serializer.toJson<List<dynamic>?>(attendees),
+      'recurrence': serializer.toJson<List<dynamic>?>(recurrence),
+      'reminders': serializer.toJson<Map<String, dynamic>?>(reminders),
+    };
+  }
+
+  AgendaEventData copyWith({
+    String? id,
+    bool? allDay,
+    Value<String?> summary = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> location = const Value.absent(),
+    Value<String?> htmlLink = const Value.absent(),
+    Value<String?> calendarId = const Value.absent(),
+    Value<String?> ownerId = const Value.absent(),
+    Value<String?> timezone = const Value.absent(),
+    Value<String?> status = const Value.absent(),
+    Value<String?> transparency = const Value.absent(),
+    Value<String?> etag = const Value.absent(),
+    Value<DateTime?> created = const Value.absent(),
+    Value<DateTime?> updated = const Value.absent(),
+    Value<DateTime?> startTime = const Value.absent(),
+    Value<DateTime?> endTime = const Value.absent(),
+    Value<List<dynamic>?> attendees = const Value.absent(),
+    Value<List<dynamic>?> recurrence = const Value.absent(),
+    Value<Map<String, dynamic>?> reminders = const Value.absent(),
+  }) => AgendaEventData(
+    id: id ?? this.id,
+    allDay: allDay ?? this.allDay,
+    summary: summary.present ? summary.value : this.summary,
+    description: description.present ? description.value : this.description,
+    location: location.present ? location.value : this.location,
+    htmlLink: htmlLink.present ? htmlLink.value : this.htmlLink,
+    calendarId: calendarId.present ? calendarId.value : this.calendarId,
+    ownerId: ownerId.present ? ownerId.value : this.ownerId,
+    timezone: timezone.present ? timezone.value : this.timezone,
+    status: status.present ? status.value : this.status,
+    transparency: transparency.present ? transparency.value : this.transparency,
+    etag: etag.present ? etag.value : this.etag,
+    created: created.present ? created.value : this.created,
+    updated: updated.present ? updated.value : this.updated,
+    startTime: startTime.present ? startTime.value : this.startTime,
+    endTime: endTime.present ? endTime.value : this.endTime,
+    attendees: attendees.present ? attendees.value : this.attendees,
+    recurrence: recurrence.present ? recurrence.value : this.recurrence,
+    reminders: reminders.present ? reminders.value : this.reminders,
+  );
+  AgendaEventData copyWithCompanion(AgendaEventCompanion data) {
+    return AgendaEventData(
+      id: data.id.present ? data.id.value : this.id,
+      allDay: data.allDay.present ? data.allDay.value : this.allDay,
+      summary: data.summary.present ? data.summary.value : this.summary,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      location: data.location.present ? data.location.value : this.location,
+      htmlLink: data.htmlLink.present ? data.htmlLink.value : this.htmlLink,
+      calendarId: data.calendarId.present
+          ? data.calendarId.value
+          : this.calendarId,
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
+      timezone: data.timezone.present ? data.timezone.value : this.timezone,
+      status: data.status.present ? data.status.value : this.status,
+      transparency: data.transparency.present
+          ? data.transparency.value
+          : this.transparency,
+      etag: data.etag.present ? data.etag.value : this.etag,
+      created: data.created.present ? data.created.value : this.created,
+      updated: data.updated.present ? data.updated.value : this.updated,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      attendees: data.attendees.present ? data.attendees.value : this.attendees,
+      recurrence: data.recurrence.present
+          ? data.recurrence.value
+          : this.recurrence,
+      reminders: data.reminders.present ? data.reminders.value : this.reminders,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AgendaEventData(')
+          ..write('id: $id, ')
+          ..write('allDay: $allDay, ')
+          ..write('summary: $summary, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('htmlLink: $htmlLink, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('ownerId: $ownerId, ')
+          ..write('timezone: $timezone, ')
+          ..write('status: $status, ')
+          ..write('transparency: $transparency, ')
+          ..write('etag: $etag, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('attendees: $attendees, ')
+          ..write('recurrence: $recurrence, ')
+          ..write('reminders: $reminders')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    allDay,
+    summary,
+    description,
+    location,
+    htmlLink,
+    calendarId,
+    ownerId,
+    timezone,
+    status,
+    transparency,
+    etag,
+    created,
+    updated,
+    startTime,
+    endTime,
+    attendees,
+    recurrence,
+    reminders,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AgendaEventData &&
+          other.id == this.id &&
+          other.allDay == this.allDay &&
+          other.summary == this.summary &&
+          other.description == this.description &&
+          other.location == this.location &&
+          other.htmlLink == this.htmlLink &&
+          other.calendarId == this.calendarId &&
+          other.ownerId == this.ownerId &&
+          other.timezone == this.timezone &&
+          other.status == this.status &&
+          other.transparency == this.transparency &&
+          other.etag == this.etag &&
+          other.created == this.created &&
+          other.updated == this.updated &&
+          other.startTime == this.startTime &&
+          other.endTime == this.endTime &&
+          other.attendees == this.attendees &&
+          other.recurrence == this.recurrence &&
+          other.reminders == this.reminders);
+}
+
+class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
+  final Value<String> id;
+  final Value<bool> allDay;
+  final Value<String?> summary;
+  final Value<String?> description;
+  final Value<String?> location;
+  final Value<String?> htmlLink;
+  final Value<String?> calendarId;
+  final Value<String?> ownerId;
+  final Value<String?> timezone;
+  final Value<String?> status;
+  final Value<String?> transparency;
+  final Value<String?> etag;
+  final Value<DateTime?> created;
+  final Value<DateTime?> updated;
+  final Value<DateTime?> startTime;
+  final Value<DateTime?> endTime;
+  final Value<List<dynamic>?> attendees;
+  final Value<List<dynamic>?> recurrence;
+  final Value<Map<String, dynamic>?> reminders;
+  final Value<int> rowid;
+  const AgendaEventCompanion({
+    this.id = const Value.absent(),
+    this.allDay = const Value.absent(),
+    this.summary = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.htmlLink = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.ownerId = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.transparency = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.attendees = const Value.absent(),
+    this.recurrence = const Value.absent(),
+    this.reminders = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AgendaEventCompanion.insert({
+    required String id,
+    this.allDay = const Value.absent(),
+    this.summary = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.htmlLink = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.ownerId = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.status = const Value.absent(),
+    this.transparency = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.attendees = const Value.absent(),
+    this.recurrence = const Value.absent(),
+    this.reminders = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<AgendaEventData> custom({
+    Expression<String>? id,
+    Expression<bool>? allDay,
+    Expression<String>? summary,
+    Expression<String>? description,
+    Expression<String>? location,
+    Expression<String>? htmlLink,
+    Expression<String>? calendarId,
+    Expression<String>? ownerId,
+    Expression<String>? timezone,
+    Expression<String>? status,
+    Expression<String>? transparency,
+    Expression<String>? etag,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<DateTime>? startTime,
+    Expression<DateTime>? endTime,
+    Expression<String>? attendees,
+    Expression<String>? recurrence,
+    Expression<String>? reminders,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (allDay != null) 'all_day': allDay,
+      if (summary != null) 'summary': summary,
+      if (description != null) 'description': description,
+      if (location != null) 'location': location,
+      if (htmlLink != null) 'html_link': htmlLink,
+      if (calendarId != null) 'calendar_id': calendarId,
+      if (ownerId != null) 'owner_id': ownerId,
+      if (timezone != null) 'timezone': timezone,
+      if (status != null) 'status': status,
+      if (transparency != null) 'transparency': transparency,
+      if (etag != null) 'etag': etag,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+      if (attendees != null) 'attendees': attendees,
+      if (recurrence != null) 'recurrence': recurrence,
+      if (reminders != null) 'reminders': reminders,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AgendaEventCompanion copyWith({
+    Value<String>? id,
+    Value<bool>? allDay,
+    Value<String?>? summary,
+    Value<String?>? description,
+    Value<String?>? location,
+    Value<String?>? htmlLink,
+    Value<String?>? calendarId,
+    Value<String?>? ownerId,
+    Value<String?>? timezone,
+    Value<String?>? status,
+    Value<String?>? transparency,
+    Value<String?>? etag,
+    Value<DateTime?>? created,
+    Value<DateTime?>? updated,
+    Value<DateTime?>? startTime,
+    Value<DateTime?>? endTime,
+    Value<List<dynamic>?>? attendees,
+    Value<List<dynamic>?>? recurrence,
+    Value<Map<String, dynamic>?>? reminders,
+    Value<int>? rowid,
+  }) {
+    return AgendaEventCompanion(
+      id: id ?? this.id,
+      allDay: allDay ?? this.allDay,
+      summary: summary ?? this.summary,
+      description: description ?? this.description,
+      location: location ?? this.location,
+      htmlLink: htmlLink ?? this.htmlLink,
+      calendarId: calendarId ?? this.calendarId,
+      ownerId: ownerId ?? this.ownerId,
+      timezone: timezone ?? this.timezone,
+      status: status ?? this.status,
+      transparency: transparency ?? this.transparency,
+      etag: etag ?? this.etag,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      attendees: attendees ?? this.attendees,
+      recurrence: recurrence ?? this.recurrence,
+      reminders: reminders ?? this.reminders,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (allDay.present) {
+      map['all_day'] = Variable<bool>(allDay.value);
+    }
+    if (summary.present) {
+      map['summary'] = Variable<String>(summary.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (htmlLink.present) {
+      map['html_link'] = Variable<String>(htmlLink.value);
+    }
+    if (calendarId.present) {
+      map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
+    if (timezone.present) {
+      map['timezone'] = Variable<String>(timezone.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (transparency.present) {
+      map['transparency'] = Variable<String>(transparency.value);
+    }
+    if (etag.present) {
+      map['etag'] = Variable<String>(etag.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<DateTime>(endTime.value);
+    }
+    if (attendees.present) {
+      map['attendees'] = Variable<String>(
+        $AgendaEventTable.$converterattendeesn.toSql(attendees.value),
+      );
+    }
+    if (recurrence.present) {
+      map['recurrence'] = Variable<String>(
+        $AgendaEventTable.$converterrecurrencen.toSql(recurrence.value),
+      );
+    }
+    if (reminders.present) {
+      map['reminders'] = Variable<String>(
+        $AgendaEventTable.$converterremindersn.toSql(reminders.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AgendaEventCompanion(')
+          ..write('id: $id, ')
+          ..write('allDay: $allDay, ')
+          ..write('summary: $summary, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('htmlLink: $htmlLink, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('ownerId: $ownerId, ')
+          ..write('timezone: $timezone, ')
+          ..write('status: $status, ')
+          ..write('transparency: $transparency, ')
+          ..write('etag: $etag, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('attendees: $attendees, ')
+          ..write('recurrence: $recurrence, ')
+          ..write('reminders: $reminders, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -6533,6 +7747,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
+  late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6550,6 +7765,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     eventTable,
     attendeeTable,
     ticketTable,
+    agendaEvent,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -10115,6 +11331,8 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required int numberOfAttendees,
       required String organizerId,
       required String genre,
+      Value<String?> poster,
+      Value<String?> banner,
       Value<int> rowid,
     });
 typedef $$EventTableTableUpdateCompanionBuilder =
@@ -10133,6 +11351,8 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<int> numberOfAttendees,
       Value<String> organizerId,
       Value<String> genre,
+      Value<String?> poster,
+      Value<String?> banner,
       Value<int> rowid,
     });
 
@@ -10253,6 +11473,16 @@ class $$EventTableTableFilterComposer
 
   ColumnFilters<String> get genre => $composableBuilder(
     column: $table.genre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get poster => $composableBuilder(
+    column: $table.poster,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10385,6 +11615,16 @@ class $$EventTableTableOrderingComposer
     column: $table.genre,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get poster => $composableBuilder(
+    column: $table.poster,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$EventTableTableAnnotationComposer
@@ -10443,6 +11683,12 @@ class $$EventTableTableAnnotationComposer
 
   GeneratedColumn<String> get genre =>
       $composableBuilder(column: $table.genre, builder: (column) => column);
+
+  GeneratedColumn<String> get poster =>
+      $composableBuilder(column: $table.poster, builder: (column) => column);
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
 
   Expression<T> attendeeTableRefs<T extends Object>(
     Expression<T> Function($$AttendeeTableTableAnnotationComposer a) f,
@@ -10537,6 +11783,8 @@ class $$EventTableTableTableManager
                 Value<int> numberOfAttendees = const Value.absent(),
                 Value<String> organizerId = const Value.absent(),
                 Value<String> genre = const Value.absent(),
+                Value<String?> poster = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
                 id: id,
@@ -10553,6 +11801,8 @@ class $$EventTableTableTableManager
                 numberOfAttendees: numberOfAttendees,
                 organizerId: organizerId,
                 genre: genre,
+                poster: poster,
+                banner: banner,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -10571,6 +11821,8 @@ class $$EventTableTableTableManager
                 required int numberOfAttendees,
                 required String organizerId,
                 required String genre,
+                Value<String?> poster = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
                 id: id,
@@ -10587,6 +11839,8 @@ class $$EventTableTableTableManager
                 numberOfAttendees: numberOfAttendees,
                 organizerId: organizerId,
                 genre: genre,
+                poster: poster,
+                banner: banner,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -10681,6 +11935,7 @@ typedef $$AttendeeTableTableCreateCompanionBuilder =
       Value<String?> middleName,
       required String lastName,
       required String eventId,
+      required String email,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
@@ -10692,6 +11947,7 @@ typedef $$AttendeeTableTableUpdateCompanionBuilder =
       Value<String?> middleName,
       Value<String> lastName,
       Value<String> eventId,
+      Value<String> email,
       Value<int> rowid,
     });
 
@@ -10783,6 +12039,11 @@ class $$AttendeeTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$EventTableTableFilterComposer get eventId {
     final $$EventTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -10871,6 +12132,11 @@ class $$AttendeeTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$EventTableTableOrderingComposer get eventId {
     final $$EventTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -10923,6 +12189,9 @@ class $$AttendeeTableTableAnnotationComposer
 
   GeneratedColumn<String> get lastName =>
       $composableBuilder(column: $table.lastName, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
 
   $$EventTableTableAnnotationComposer get eventId {
     final $$EventTableTableAnnotationComposer composer = $composerBuilder(
@@ -11008,6 +12277,7 @@ class $$AttendeeTableTableTableManager
                 Value<String?> middleName = const Value.absent(),
                 Value<String> lastName = const Value.absent(),
                 Value<String> eventId = const Value.absent(),
+                Value<String> email = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
@@ -11017,6 +12287,7 @@ class $$AttendeeTableTableTableManager
                 middleName: middleName,
                 lastName: lastName,
                 eventId: eventId,
+                email: email,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -11028,6 +12299,7 @@ class $$AttendeeTableTableTableManager
                 Value<String?> middleName = const Value.absent(),
                 required String lastName,
                 required String eventId,
+                required String email,
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
@@ -11037,6 +12309,7 @@ class $$AttendeeTableTableTableManager
                 middleName: middleName,
                 lastName: lastName,
                 eventId: eventId,
+                email: email,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -11554,6 +12827,489 @@ typedef $$TicketTableTableProcessedTableManager =
       TicketData,
       PrefetchHooks Function({bool attendeeId, bool eventId})
     >;
+typedef $$AgendaEventTableCreateCompanionBuilder =
+    AgendaEventCompanion Function({
+      required String id,
+      Value<bool> allDay,
+      Value<String?> summary,
+      Value<String?> description,
+      Value<String?> location,
+      Value<String?> htmlLink,
+      Value<String?> calendarId,
+      Value<String?> ownerId,
+      Value<String?> timezone,
+      Value<String?> status,
+      Value<String?> transparency,
+      Value<String?> etag,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
+      Value<DateTime?> startTime,
+      Value<DateTime?> endTime,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
+      Value<Map<String, dynamic>?> reminders,
+      Value<int> rowid,
+    });
+typedef $$AgendaEventTableUpdateCompanionBuilder =
+    AgendaEventCompanion Function({
+      Value<String> id,
+      Value<bool> allDay,
+      Value<String?> summary,
+      Value<String?> description,
+      Value<String?> location,
+      Value<String?> htmlLink,
+      Value<String?> calendarId,
+      Value<String?> ownerId,
+      Value<String?> timezone,
+      Value<String?> status,
+      Value<String?> transparency,
+      Value<String?> etag,
+      Value<DateTime?> created,
+      Value<DateTime?> updated,
+      Value<DateTime?> startTime,
+      Value<DateTime?> endTime,
+      Value<List<dynamic>?> attendees,
+      Value<List<dynamic>?> recurrence,
+      Value<Map<String, dynamic>?> reminders,
+      Value<int> rowid,
+    });
+
+class $$AgendaEventTableFilterComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get allDay => $composableBuilder(
+    column: $table.allDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get htmlLink => $composableBuilder(
+    column: $table.htmlLink,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get attendees => $composableBuilder(
+    column: $table.attendees,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get recurrence => $composableBuilder(
+    column: $table.recurrence,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get reminders => $composableBuilder(
+    column: $table.reminders,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+}
+
+class $$AgendaEventTableOrderingComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get allDay => $composableBuilder(
+    column: $table.allDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get htmlLink => $composableBuilder(
+    column: $table.htmlLink,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get etag => $composableBuilder(
+    column: $table.etag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get created => $composableBuilder(
+    column: $table.created,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updated => $composableBuilder(
+    column: $table.updated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attendees => $composableBuilder(
+    column: $table.attendees,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recurrence => $composableBuilder(
+    column: $table.recurrence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reminders => $composableBuilder(
+    column: $table.reminders,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AgendaEventTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AgendaEventTable> {
+  $$AgendaEventTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get allDay =>
+      $composableBuilder(column: $table.allDay, builder: (column) => column);
+
+  GeneratedColumn<String> get summary =>
+      $composableBuilder(column: $table.summary, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get htmlLink =>
+      $composableBuilder(column: $table.htmlLink, builder: (column) => column);
+
+  GeneratedColumn<String> get calendarId => $composableBuilder(
+    column: $table.calendarId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
+  GeneratedColumn<String> get timezone =>
+      $composableBuilder(column: $table.timezone, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get transparency => $composableBuilder(
+    column: $table.transparency,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get etag =>
+      $composableBuilder(column: $table.etag, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updated =>
+      $composableBuilder(column: $table.updated, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get attendees =>
+      $composableBuilder(column: $table.attendees, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get recurrence =>
+      $composableBuilder(
+        column: $table.recurrence,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  get reminders =>
+      $composableBuilder(column: $table.reminders, builder: (column) => column);
+}
+
+class $$AgendaEventTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AgendaEventTable,
+          AgendaEventData,
+          $$AgendaEventTableFilterComposer,
+          $$AgendaEventTableOrderingComposer,
+          $$AgendaEventTableAnnotationComposer,
+          $$AgendaEventTableCreateCompanionBuilder,
+          $$AgendaEventTableUpdateCompanionBuilder,
+          (
+            AgendaEventData,
+            BaseReferences<_$AppDataBase, $AgendaEventTable, AgendaEventData>,
+          ),
+          AgendaEventData,
+          PrefetchHooks Function()
+        > {
+  $$AgendaEventTableTableManager(_$AppDataBase db, $AgendaEventTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AgendaEventTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AgendaEventTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AgendaEventTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<bool> allDay = const Value.absent(),
+                Value<String?> summary = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> htmlLink = const Value.absent(),
+                Value<String?> calendarId = const Value.absent(),
+                Value<String?> ownerId = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> status = const Value.absent(),
+                Value<String?> transparency = const Value.absent(),
+                Value<String?> etag = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
+                Value<DateTime?> startTime = const Value.absent(),
+                Value<DateTime?> endTime = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
+                Value<Map<String, dynamic>?> reminders = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AgendaEventCompanion(
+                id: id,
+                allDay: allDay,
+                summary: summary,
+                description: description,
+                location: location,
+                htmlLink: htmlLink,
+                calendarId: calendarId,
+                ownerId: ownerId,
+                timezone: timezone,
+                status: status,
+                transparency: transparency,
+                etag: etag,
+                created: created,
+                updated: updated,
+                startTime: startTime,
+                endTime: endTime,
+                attendees: attendees,
+                recurrence: recurrence,
+                reminders: reminders,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<bool> allDay = const Value.absent(),
+                Value<String?> summary = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> htmlLink = const Value.absent(),
+                Value<String?> calendarId = const Value.absent(),
+                Value<String?> ownerId = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> status = const Value.absent(),
+                Value<String?> transparency = const Value.absent(),
+                Value<String?> etag = const Value.absent(),
+                Value<DateTime?> created = const Value.absent(),
+                Value<DateTime?> updated = const Value.absent(),
+                Value<DateTime?> startTime = const Value.absent(),
+                Value<DateTime?> endTime = const Value.absent(),
+                Value<List<dynamic>?> attendees = const Value.absent(),
+                Value<List<dynamic>?> recurrence = const Value.absent(),
+                Value<Map<String, dynamic>?> reminders = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AgendaEventCompanion.insert(
+                id: id,
+                allDay: allDay,
+                summary: summary,
+                description: description,
+                location: location,
+                htmlLink: htmlLink,
+                calendarId: calendarId,
+                ownerId: ownerId,
+                timezone: timezone,
+                status: status,
+                transparency: transparency,
+                etag: etag,
+                created: created,
+                updated: updated,
+                startTime: startTime,
+                endTime: endTime,
+                attendees: attendees,
+                recurrence: recurrence,
+                reminders: reminders,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AgendaEventTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AgendaEventTable,
+      AgendaEventData,
+      $$AgendaEventTableFilterComposer,
+      $$AgendaEventTableOrderingComposer,
+      $$AgendaEventTableAnnotationComposer,
+      $$AgendaEventTableCreateCompanionBuilder,
+      $$AgendaEventTableUpdateCompanionBuilder,
+      (
+        AgendaEventData,
+        BaseReferences<_$AppDataBase, $AgendaEventTable, AgendaEventData>,
+      ),
+      AgendaEventData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -11581,4 +13337,6 @@ class $AppDataBaseManager {
       $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
   $$TicketTableTableTableManager get ticketTable =>
       $$TicketTableTableTableManager(_db, _db.ticketTable);
+  $$AgendaEventTableTableManager get agendaEvent =>
+      $$AgendaEventTableTableManager(_db, _db.agendaEvent);
 }

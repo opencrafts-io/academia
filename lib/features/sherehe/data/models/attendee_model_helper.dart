@@ -10,6 +10,7 @@ extension AttendeeModelHelper on AttendeeData {
     eventId: eventId,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    email: email
   );
 }
 
@@ -21,6 +22,7 @@ extension AttendeeEntityHelper on Attendee {
     lastName: lastName,
     eventId: eventId,
     createdAt: createdAt,
-    updatedAt: DateTime.now()
+    updatedAt: DateTime.now(),
+    email: email,
   );
 }

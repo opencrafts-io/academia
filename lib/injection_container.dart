@@ -4,6 +4,7 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/agenda/agenda.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/chirp/chirp.dart';
@@ -55,6 +56,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
+  sl.registerLazySingleton(() => CreateAttendeeUseCase(sl()));
 
   sl.registerSingleton<ShereheRepository>(
     ShereheRepositoryImpl(
@@ -74,6 +76,8 @@ Future<void> init(FlavorConfig flavor) async {
     () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
+      createAttendeeUseCase: sl(),
+      getCachedUserProfileUseCase: sl(),
     ),
   );
   // Chirp
@@ -168,6 +172,52 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<DeleteTodoUsecase>(
     () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );
+
+  // Agenda
+  sl.registerFactory<AgendaEventLocalDataSource>(
+    () => AgendaEventLocalDataSource(localDB: cacheDB),
+  );
+  sl.registerFactory<AgendaEventRemoteDatasource>(
+    () => AgendaEventRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<AgendaEventRepository>(
+    () => AgendaEventRepositoryImpl(
+      agendaEventRemoteDatasource: sl.get<AgendaEventRemoteDatasource>(),
+      agendaEventLocalDataSource: sl.get<AgendaEventLocalDataSource>(),
+    ),
+  );
+
+  sl.registerFactory<GetCachedAgendaEventsUsecase>(
+    () => GetCachedAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+  );
+
+  sl.registerFactory<RefreshAgendaEventsUsecase>(
+    () => RefreshAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+  );
+
+  sl.registerFactory<CreateAgendaEventUsecase>(
+    () => CreateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+  );
+
+  sl.registerFactory<UpdateAgendaEventUsecase>(
+    () => UpdateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+  );
+
+  sl.registerFactory<DeleteAgendaEventUsecase>(
+    () => DeleteAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+  );
+
+  sl.registerFactory<AgendaEventBloc>(
+    () => AgendaEventBloc(
+      getCachedAgendaEventsUsecase: sl.get<GetCachedAgendaEventsUsecase>(),
+      refreshAgendaEventsUsecase: sl.get<RefreshAgendaEventsUsecase>(),
+      createAgendaEventUsecase: sl.get<CreateAgendaEventUsecase>(),
+      updateAgendaEventUsecase: sl.get<UpdateAgendaEventUsecase>(),
+      deleteAgendaEventUsecase: sl.get<DeleteAgendaEventUsecase>(),
+    ),
+  );
+
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
     () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
