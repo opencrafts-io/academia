@@ -11,8 +11,9 @@ class AttendeeTable extends Table with TableMixin {
   @JsonKey('last_name')
   TextColumn get lastName => text()();
   @JsonKey('event_id')
-  TextColumn get eventId => text().references(EventTable, #id)(); 
-
+  TextColumn get eventId => text().references(EventTable, #id)();
+  @JsonKey('email')
+  TextColumn get email => text()();
   @override
   Set<Column> get primaryKey => {id};
 }

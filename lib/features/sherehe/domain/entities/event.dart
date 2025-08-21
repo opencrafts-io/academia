@@ -10,11 +10,13 @@ class Event extends Equatable {
   final String date;
   final String organizer;
   final String imageUrl;
-  final String organizerId;
+  final int organizerId;
   final int numberOfAttendees;
   final List<String> genre;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? bannerImageUrl;
+  final String? posterImageUrl;
 
   const Event({
     required this.id,
@@ -31,6 +33,8 @@ class Event extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.url,
+    this.bannerImageUrl,
+    this.posterImageUrl,
   });
 
   Event copyWith({
@@ -43,7 +47,7 @@ class Event extends Equatable {
     String? date,
     String? organizer,
     String? imageUrl,
-    String? organizerId,
+    int? organizerId,
     int? numberOfAttendees,
     List<String>? genre,
     DateTime? createdAt,

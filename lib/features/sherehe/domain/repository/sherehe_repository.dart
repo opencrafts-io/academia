@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:academia/features/sherehe/domain/entities/paginated_events.dart';
-
 import '../domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
@@ -18,6 +16,13 @@ abstract class ShereheRepository {
     required int limit,
   });
   Future<Either<Failure, Attendee>> getSpecificAttendee(String id);
-  Future<Either<Failure, Unit>> createEvent(Event event, File imageFile);
+  Future<Either<Failure, Unit>> createEvent(
+      Event event,
+      File imageFile,
+          {
+        required File bannerImageFile,
+        required File cardImageFile,
+      });
+  Future<Either<Failure, Attendee>> createAttendee(Attendee attendee);
   //TODO:Add ticketing on the next iteration//
 }

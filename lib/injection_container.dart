@@ -4,10 +4,8 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/agenda/agenda.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/profile/profile.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -51,10 +49,13 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
   );
-  sl.registerLazySingleton(() => CreateEventUseCase(sl.get<ShereheRepository>()));
+  sl.registerLazySingleton(
+    () => CreateEventUseCase(sl.get<ShereheRepository>()),
+  );
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
+  sl.registerLazySingleton(() => CreateAttendeeUseCase(sl()));
 
   sl.registerSingleton<ShereheRepository>(
     ShereheRepositoryImpl(
@@ -68,12 +69,20 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
 
-  sl.registerFactory(() => ShereheHomeBloc(getEvent: sl(), getAttendee: sl(), cacheEventsUseCase: sl()));
+  sl.registerFactory(
+    () => ShereheHomeBloc(
+      getEvent: sl(),
+      getAttendee: sl(),
+      cacheEventsUseCase: sl(),
+    ),
+  );
 
   sl.registerFactory(
     () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
+      createAttendeeUseCase: sl(),
+      getCachedUserProfileUseCase: sl(),
     ),
   );
   // Chirp
@@ -108,7 +117,7 @@ Future<void> init(FlavorConfig flavor) async {
       cachePosts: sl.get<CachePostsUsecase>(),
       likePost: sl.get<LikePostUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
-      addComment: sl.get<CommentUsecase>()
+      addComment: sl.get<CommentUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -197,23 +206,33 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<GetCachedAgendaEventsUsecase>(
-    () => GetCachedAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => GetCachedAgendaEventsUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<RefreshAgendaEventsUsecase>(
-    () => RefreshAgendaEventsUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => RefreshAgendaEventsUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<CreateAgendaEventUsecase>(
-    () => CreateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => CreateAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<UpdateAgendaEventUsecase>(
-    () => UpdateAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => UpdateAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<DeleteAgendaEventUsecase>(
-    () => DeleteAgendaEventUsecase(agendaEventRepository: sl.get<AgendaEventRepository>()),
+    () => DeleteAgendaEventUsecase(
+      agendaEventRepository: sl.get<AgendaEventRepository>(),
+    ),
   );
 
   sl.registerFactory<AgendaEventBloc>(
@@ -277,6 +296,74 @@ Future<void> init(FlavorConfig flavor) async {
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
       searchUsers: sl.get<SearchUsersUseCase>(),
+    ),
+  );
+
+  // Notifications
+  sl.registerFactory<NotificationRemoteDatasource>(
+    () => NotificationRemoteDatasource(),
+  );
+  sl.registerFactory<NotificationLocalDatasource>(
+    () => NotificationLocalDatasource(localDB: cacheDB),
+  );
+
+  sl.registerFactory<NotificationRepository>(
+    () => NotificationRepositoryImpl(
+      remoteDatasource: sl.get<NotificationRemoteDatasource>(),
+      localDatasource: sl.get<NotificationLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<InitializeOneSignalUsecase>(
+    () => InitializeOneSignalUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<GetNotificationsUsecase>(
+    () => GetNotificationsUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<MarkNotificationAsReadUsecase>(
+    () => MarkNotificationAsReadUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<MarkAllNotificationsAsReadUsecase>(
+    () => MarkAllNotificationsAsReadUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<DeleteNotificationUsecase>(
+    () => DeleteNotificationUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<ClearAllNotificationsUsecase>(
+    () => ClearAllNotificationsUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<GetNotificationCountUsecase>(
+    () => GetNotificationCountUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<GetUnreadCountUsecase>(
+    () => GetUnreadCountUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<SetNotificationPermissionUsecase>(
+    () => SetNotificationPermissionUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<GetNotificationPermissionUsecase>(
+    () => GetNotificationPermissionUsecase(sl.get<NotificationRepository>()),
+  );
+  sl.registerFactory<SendLocalNotificationUsecase>(
+    () => SendLocalNotificationUsecase(sl.get<NotificationRepository>()),
+  );
+
+  sl.registerFactory<NotificationBloc>(
+    () => NotificationBloc(
+      initializeOneSignalUsecase: sl.get<InitializeOneSignalUsecase>(),
+      getNotificationsUsecase: sl.get<GetNotificationsUsecase>(),
+      markNotificationAsReadUsecase: sl.get<MarkNotificationAsReadUsecase>(),
+      markAllNotificationsAsReadUsecase: sl
+          .get<MarkAllNotificationsAsReadUsecase>(),
+      deleteNotificationUsecase: sl.get<DeleteNotificationUsecase>(),
+      clearAllNotificationsUsecase: sl.get<ClearAllNotificationsUsecase>(),
+      getNotificationCountUsecase: sl.get<GetNotificationCountUsecase>(),
+      getUnreadCountUsecase: sl.get<GetUnreadCountUsecase>(),
+      setNotificationPermissionUsecase: sl
+          .get<SetNotificationPermissionUsecase>(),
+      getNotificationPermissionUsecase: sl
+          .get<GetNotificationPermissionUsecase>(),
+      sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
     ),
   );
 }
