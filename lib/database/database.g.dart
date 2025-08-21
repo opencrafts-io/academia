@@ -7589,6 +7589,571 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
   }
 }
 
+class $NotificationTableTable extends NotificationTable
+    with TableInfo<$NotificationTableTable, NotificationTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotificationTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  data =
+      GeneratedColumn<String>(
+        'data',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $NotificationTableTable.$converterdatan,
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+    'is_read',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_read" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actionUrlMeta = const VerificationMeta(
+    'actionUrl',
+  );
+  @override
+  late final GeneratedColumn<String> actionUrl = GeneratedColumn<String>(
+    'action_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    body,
+    imageUrl,
+    data,
+    createdAt,
+    isRead,
+    category,
+    actionUrl,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notification_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NotificationTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('is_read')) {
+      context.handle(
+        _isReadMeta,
+        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('action_url')) {
+      context.handle(
+        _actionUrlMeta,
+        actionUrl.isAcceptableOrUnknown(data['action_url']!, _actionUrlMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotificationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotificationTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      data: $NotificationTableTable.$converterdatan.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}data'],
+        ),
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      isRead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_read'],
+      )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
+      actionUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action_url'],
+      ),
+    );
+  }
+
+  @override
+  $NotificationTableTable createAlias(String alias) {
+    return $NotificationTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterdata =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterdatan =
+      NullAwareTypeConverter.wrap($converterdata);
+}
+
+class NotificationTableData extends DataClass
+    implements Insertable<NotificationTableData> {
+  final String id;
+  final String title;
+  final String body;
+  final String? imageUrl;
+  final Map<String, dynamic>? data;
+  final DateTime createdAt;
+  final bool isRead;
+  final String? category;
+  final String? actionUrl;
+  const NotificationTableData({
+    required this.id,
+    required this.title,
+    required this.body,
+    this.imageUrl,
+    this.data,
+    required this.createdAt,
+    required this.isRead,
+    this.category,
+    this.actionUrl,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['body'] = Variable<String>(body);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || data != null) {
+      map['data'] = Variable<String>(
+        $NotificationTableTable.$converterdatan.toSql(data),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_read'] = Variable<bool>(isRead);
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    if (!nullToAbsent || actionUrl != null) {
+      map['action_url'] = Variable<String>(actionUrl);
+    }
+    return map;
+  }
+
+  NotificationTableCompanion toCompanion(bool nullToAbsent) {
+    return NotificationTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      body: Value(body),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      data: data == null && nullToAbsent ? const Value.absent() : Value(data),
+      createdAt: Value(createdAt),
+      isRead: Value(isRead),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
+      actionUrl: actionUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actionUrl),
+    );
+  }
+
+  factory NotificationTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotificationTableData(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      body: serializer.fromJson<String>(json['body']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      data: serializer.fromJson<Map<String, dynamic>?>(json['data']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
+      category: serializer.fromJson<String?>(json['category']),
+      actionUrl: serializer.fromJson<String?>(json['actionUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'body': serializer.toJson<String>(body),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'data': serializer.toJson<Map<String, dynamic>?>(data),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isRead': serializer.toJson<bool>(isRead),
+      'category': serializer.toJson<String?>(category),
+      'actionUrl': serializer.toJson<String?>(actionUrl),
+    };
+  }
+
+  NotificationTableData copyWith({
+    String? id,
+    String? title,
+    String? body,
+    Value<String?> imageUrl = const Value.absent(),
+    Value<Map<String, dynamic>?> data = const Value.absent(),
+    DateTime? createdAt,
+    bool? isRead,
+    Value<String?> category = const Value.absent(),
+    Value<String?> actionUrl = const Value.absent(),
+  }) => NotificationTableData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    body: body ?? this.body,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    data: data.present ? data.value : this.data,
+    createdAt: createdAt ?? this.createdAt,
+    isRead: isRead ?? this.isRead,
+    category: category.present ? category.value : this.category,
+    actionUrl: actionUrl.present ? actionUrl.value : this.actionUrl,
+  );
+  NotificationTableData copyWithCompanion(NotificationTableCompanion data) {
+    return NotificationTableData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      body: data.body.present ? data.body.value : this.body,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      data: data.data.present ? data.data.value : this.data,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      category: data.category.present ? data.category.value : this.category,
+      actionUrl: data.actionUrl.present ? data.actionUrl.value : this.actionUrl,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTableData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead, ')
+          ..write('category: $category, ')
+          ..write('actionUrl: $actionUrl')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    title,
+    body,
+    imageUrl,
+    data,
+    createdAt,
+    isRead,
+    category,
+    actionUrl,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotificationTableData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.body == this.body &&
+          other.imageUrl == this.imageUrl &&
+          other.data == this.data &&
+          other.createdAt == this.createdAt &&
+          other.isRead == this.isRead &&
+          other.category == this.category &&
+          other.actionUrl == this.actionUrl);
+}
+
+class NotificationTableCompanion
+    extends UpdateCompanion<NotificationTableData> {
+  final Value<String> id;
+  final Value<String> title;
+  final Value<String> body;
+  final Value<String?> imageUrl;
+  final Value<Map<String, dynamic>?> data;
+  final Value<DateTime> createdAt;
+  final Value<bool> isRead;
+  final Value<String?> category;
+  final Value<String?> actionUrl;
+  final Value<int> rowid;
+  const NotificationTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.body = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.category = const Value.absent(),
+    this.actionUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NotificationTableCompanion.insert({
+    required String id,
+    required String title,
+    required String body,
+    this.imageUrl = const Value.absent(),
+    this.data = const Value.absent(),
+    required DateTime createdAt,
+    this.isRead = const Value.absent(),
+    this.category = const Value.absent(),
+    this.actionUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       title = Value(title),
+       body = Value(body),
+       createdAt = Value(createdAt);
+  static Insertable<NotificationTableData> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? body,
+    Expression<String>? imageUrl,
+    Expression<String>? data,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? isRead,
+    Expression<String>? category,
+    Expression<String>? actionUrl,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (body != null) 'body': body,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (data != null) 'data': data,
+      if (createdAt != null) 'created_at': createdAt,
+      if (isRead != null) 'is_read': isRead,
+      if (category != null) 'category': category,
+      if (actionUrl != null) 'action_url': actionUrl,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NotificationTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? title,
+    Value<String>? body,
+    Value<String?>? imageUrl,
+    Value<Map<String, dynamic>?>? data,
+    Value<DateTime>? createdAt,
+    Value<bool>? isRead,
+    Value<String?>? category,
+    Value<String?>? actionUrl,
+    Value<int>? rowid,
+  }) {
+    return NotificationTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      imageUrl: imageUrl ?? this.imageUrl,
+      data: data ?? this.data,
+      createdAt: createdAt ?? this.createdAt,
+      isRead: isRead ?? this.isRead,
+      category: category ?? this.category,
+      actionUrl: actionUrl ?? this.actionUrl,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(
+        $NotificationTableTable.$converterdatan.toSql(data.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (actionUrl.present) {
+      map['action_url'] = Variable<String>(actionUrl.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead, ')
+          ..write('category: $category, ')
+          ..write('actionUrl: $actionUrl, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -7608,6 +8173,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
+  late final $NotificationTableTable notificationTable =
+      $NotificationTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7626,6 +8193,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     attendeeTable,
     ticketTable,
     agendaEvent,
+    notificationTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -13113,6 +13681,300 @@ typedef $$AgendaEventTableProcessedTableManager =
       AgendaEventData,
       PrefetchHooks Function()
     >;
+typedef $$NotificationTableTableCreateCompanionBuilder =
+    NotificationTableCompanion Function({
+      required String id,
+      required String title,
+      required String body,
+      Value<String?> imageUrl,
+      Value<Map<String, dynamic>?> data,
+      required DateTime createdAt,
+      Value<bool> isRead,
+      Value<String?> category,
+      Value<String?> actionUrl,
+      Value<int> rowid,
+    });
+typedef $$NotificationTableTableUpdateCompanionBuilder =
+    NotificationTableCompanion Function({
+      Value<String> id,
+      Value<String> title,
+      Value<String> body,
+      Value<String?> imageUrl,
+      Value<Map<String, dynamic>?> data,
+      Value<DateTime> createdAt,
+      Value<bool> isRead,
+      Value<String?> category,
+      Value<String?> actionUrl,
+      Value<int> rowid,
+    });
+
+class $$NotificationTableTableFilterComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actionUrl => $composableBuilder(
+    column: $table.actionUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$NotificationTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actionUrl => $composableBuilder(
+    column: $table.actionUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$NotificationTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get actionUrl =>
+      $composableBuilder(column: $table.actionUrl, builder: (column) => column);
+}
+
+class $$NotificationTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $NotificationTableTable,
+          NotificationTableData,
+          $$NotificationTableTableFilterComposer,
+          $$NotificationTableTableOrderingComposer,
+          $$NotificationTableTableAnnotationComposer,
+          $$NotificationTableTableCreateCompanionBuilder,
+          $$NotificationTableTableUpdateCompanionBuilder,
+          (
+            NotificationTableData,
+            BaseReferences<
+              _$AppDataBase,
+              $NotificationTableTable,
+              NotificationTableData
+            >,
+          ),
+          NotificationTableData,
+          PrefetchHooks Function()
+        > {
+  $$NotificationTableTableTableManager(
+    _$AppDataBase db,
+    $NotificationTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> body = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<Map<String, dynamic>?> data = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String?> actionUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationTableCompanion(
+                id: id,
+                title: title,
+                body: body,
+                imageUrl: imageUrl,
+                data: data,
+                createdAt: createdAt,
+                isRead: isRead,
+                category: category,
+                actionUrl: actionUrl,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String title,
+                required String body,
+                Value<String?> imageUrl = const Value.absent(),
+                Value<Map<String, dynamic>?> data = const Value.absent(),
+                required DateTime createdAt,
+                Value<bool> isRead = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String?> actionUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationTableCompanion.insert(
+                id: id,
+                title: title,
+                body: body,
+                imageUrl: imageUrl,
+                data: data,
+                createdAt: createdAt,
+                isRead: isRead,
+                category: category,
+                actionUrl: actionUrl,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$NotificationTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $NotificationTableTable,
+      NotificationTableData,
+      $$NotificationTableTableFilterComposer,
+      $$NotificationTableTableOrderingComposer,
+      $$NotificationTableTableAnnotationComposer,
+      $$NotificationTableTableCreateCompanionBuilder,
+      $$NotificationTableTableUpdateCompanionBuilder,
+      (
+        NotificationTableData,
+        BaseReferences<
+          _$AppDataBase,
+          $NotificationTableTable,
+          NotificationTableData
+        >,
+      ),
+      NotificationTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -13142,4 +14004,6 @@ class $AppDataBaseManager {
       $$TicketTableTableTableManager(_db, _db.ticketTable);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
+  $$NotificationTableTableTableManager get notificationTable =>
+      $$NotificationTableTableTableManager(_db, _db.notificationTable);
 }
