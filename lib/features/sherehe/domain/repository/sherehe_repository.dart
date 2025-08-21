@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:academia/features/sherehe/domain/entities/paginated_events.dart';
-
 import '../domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';

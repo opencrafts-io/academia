@@ -22,7 +22,7 @@ class EventTable extends Table with TableMixin {
   @JsonKey('number_of_attendees')
   IntColumn get numberOfAttendees => integer()();
   @JsonKey('organizer_id')
-  TextColumn get organizerId => text()();
+  IntColumn get organizerId => integer()();
   @JsonKey('genre')
   TextColumn get genre => text()();
   @JsonKey('poster')

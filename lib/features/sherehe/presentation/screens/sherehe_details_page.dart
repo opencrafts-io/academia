@@ -73,8 +73,7 @@ class _ShereheDetailsPageContentState extends State<_ShereheDetailsPageContent> 
                             backgroundColor: Theme.of(context).colorScheme.error,
                           ),
                         );
-                      } else if (state is MarkedAsGoingSuccess) {
-                        // 4. Trigger confetti on success
+                      } else if (state is ShereheDetailsLoaded && state.showConfettiEffect) {
                         _confettiController.play();
                         ScaffoldMessenger.of(context).showSnackBar(
                            SnackBar(
@@ -85,6 +84,10 @@ class _ShereheDetailsPageContentState extends State<_ShereheDetailsPageContent> 
                       }
                     },
                     builder: (context, state) {
+                      bool userIsAttending = false;
+                      if (state is ShereheDetailsLoaded) {
+                        userIsAttending = state.isUserAttending;
+                      }
                       if (state is MarkingAsGoing) {
                         return const FilledButton(
                           onPressed: null,
@@ -98,11 +101,26 @@ class _ShereheDetailsPageContentState extends State<_ShereheDetailsPageContent> 
                           ),
                         );
                       }
+                      if (userIsAttending) {
+                        return FilledButton(
+                          onPressed: null,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Theme.of(context).disabledColor,
+                          ),
+                          child: const Text("You are so locked in"),
+                        );
+                      }
                       return FilledButton(
                         onPressed: () {
-                          context.read<ShereheDetailsBloc>().add(
-                            MarkAsGoing(eventId: event.id),
-                          );
+                          if (state is ShereheDetailsLoaded) {
+                            context.read<ShereheDetailsBloc>().add(
+                              MarkAsGoing(eventId: state.event.id),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Event details not available yet.")),
+                            );
+                          }
                         },
                         child: const Text("I'm Going"),
                       );

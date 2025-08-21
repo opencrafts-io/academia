@@ -38,20 +38,6 @@ class EventDetailsHeader extends StatelessWidget {
         onPressed: () => context.pop(),
         icon: const Icon(Icons.arrow_back),
       ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            // TODO: Implement bookmark functionality
-          },
-          icon: const CircleAvatar(child: Icon(Icons.bookmark_border)),
-        ),
-        IconButton(
-          onPressed: () {
-            // TODO: Implement more options functionality
-          },
-          icon: const CircleAvatar(child: Icon(Icons.more_vert)),
-        ),
-      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,

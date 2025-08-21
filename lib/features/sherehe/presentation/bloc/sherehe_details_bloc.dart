@@ -30,9 +30,8 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
     emit(ShereheDetailsLoading());
     final profileResult = await getCachedUserProfileUseCase(NoParams());
     UserProfile? currentUserProfile;
-    await profileResult.fold(
+    profileResult.fold(
           (profileFailure) {
-        // TODO: Handle profile fetch failure, log it
              print("Warning: Failed to load user profile in details BLoC: $profileFailure");
       },
           (profile) {
@@ -65,7 +64,7 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
               (attendeeFailure) async {
             // TODO: Handle attendee fetch failure, log it
           },
-              (fetchedAttendees) async {
+              (fetchedAttendees) {
             attendees = fetchedAttendees;
             if (currentUserProfile != null) {
               isUserAttending = attendees.any((attendee) => attendee.email == currentUserProfile!.email);
@@ -91,7 +90,7 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
       emit(ShereheDetailsError(message: "Event details not loaded. Please try again."));
       return;
     }
-
+    emit(currentState.copyWith(isUserAttending: false));
     emit(MarkingAsGoing());
 
     final profileResult = await getCachedUserProfileUseCase(NoParams());
@@ -110,14 +109,19 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
           (profile) async {
         final newAttendee = Attendee(
           id: '',
-          firstName: profile.name ?? '',
-          middleName: profile.name ?? '',
+          firstName: profile.name,
+          middleName: profile.name,
           lastName: profile.username ?? '',
           eventId: event.eventId,
-          email: profile.email ?? '',
+          email: profile.email,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
+
+        if (newAttendee.email.isEmpty) {
+          emit(MarkedAsGoingFailure(message: "Your email is missing. Cannot mark as going."));
+          return;
+        }
 
         final createResult = await createAttendeeUseCase(newAttendee);
         await createResult.fold(
@@ -131,26 +135,41 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
             emit(MarkedAsGoingFailure(message: errorMessage));
           },
               (createdAttendee) async {
-            emit(MarkedAsGoingSuccess());
             final attendeesResult = await getAttendeesUseCase.execute(
               eventId: event.eventId,
               page: 1,
-              limit: 200,
+              limit: 300,
             );
             List<Attendee> updatedAttendees = currentState.attendees;
+            bool isUserNowAttending = currentState.isUserAttending;
             await attendeesResult.fold(
                   (attendeeFailure) async {
-                // TODO: Log error, keep existing list
+                    print("Error re-fetching attendees after marking as going: $attendeeFailure");
               },
                   (fetchedAttendees) async {
                 updatedAttendees = fetchedAttendees;
-              },
+                isUserNowAttending = fetchedAttendees.any((att) => att.email == profile.email);
+                  },
             );
-            emit(ShereheDetailsLoaded(
+            print("[DEBUG] ShereheDetailsBloc/_onMarkAsGoing: For Event ID '${currentState.event.id}', UserProfile Email: ${profile.email}");
+            print("[DEBUG] ShereheDetailsBloc/_onMarkAsGoing: Re-fetched ${updatedAttendees.length} attendees after marking as going.");
+            if (updatedAttendees.isNotEmpty) {
+              print("[DEBUG] ShereheDetailsBloc/_onMarkAsGoing: First re-fetched attendee: ${updatedAttendees.first.firstName} ${updatedAttendees.first.lastName} (${updatedAttendees.first.email})");
+            }
+            print("[DEBUG] ShereheDetailsBloc/_onMarkAsGoing: isUserNowAttending determined as: $isUserNowAttending");
+
+                emit(ShereheDetailsLoaded(
               event: currentState.event,
               attendees: updatedAttendees,
-              isUserAttending: true, currentUserProfile: currentState.currentUserProfile ?? profile
+              isUserAttending: isUserNowAttending,
+              currentUserProfile: currentState.currentUserProfile ?? profile,
+              showConfettiEffect: true,
             ));
+            await Future.delayed(const Duration(milliseconds: 100));
+            final finalState = state;
+            if (finalState is ShereheDetailsLoaded && finalState.showConfettiEffect) {
+              emit(finalState.copyWith(showConfettiEffect: false));
+            }
           },
         );
       },
