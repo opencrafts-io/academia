@@ -15,14 +15,14 @@ class ChirpRemoteDataSource with DioErrorHandler {
       // Fetch posts
       final res = await dioClient.dio.get("/qa-chirp/statuses/");
 
-      if (res.statusCode != 200 || res.data is! List) {
+      if (res.statusCode != 200 || res.data['results'] is! List) {
         return Left(
           NetworkFailure(message: "Unexpected response", error: res.data),
         );
       }
 
       // Parse posts
-      final List<Post> posts = (res.data as List)
+      final List<Post> posts = (res.data['results'] as List)
           .map((json) => PostHelper.fromJson(json))
           .toList();
 
@@ -34,8 +34,8 @@ class ChirpRemoteDataSource with DioErrorHandler {
               "/qa-chirp/statuses/${post.id}/reply/",
             );
 
-            if (repliesRes.statusCode == 200 && repliesRes.data is List) {
-              final replies = (repliesRes.data as List)
+            if (repliesRes.statusCode == 200 && repliesRes.data['results'] is List) {
+              final replies = (repliesRes.data['results'] as List)
                   .map((replyJson) => ReplyHelper.fromJson(replyJson))
                   .toList();
               return post.copyWith(replies: replies);

@@ -15,12 +15,34 @@ class AppRouter {
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) async {
       final authState = BlocProvider.of<AuthBloc>(context).state;
+      final profileState = BlocProvider.of<ProfileBloc>(context).state;
+
+      // If currently on auth route and authenticated, check profile state
+      if (state.matchedLocation == AuthRoute().location &&
+          authState is AuthAuthenticated) {
+        if (profileState is ProfileLoadedState) {
+          if (profileState.profile.onboarded &&
+              profileState.profile.termsAccepted) {
+            return HomeRoute().location;
+          } else {
+            return CompleteProfileRoute().location;
+          }
+        }
+        // If profile not loaded yet, stay on auth screen
+        return null;
+      }
+
+      // If loading, don't redirect
       if (authState is AuthLoading) {
         return null;
       }
-      if (authState is AuthUnauthenticated) {
+
+      // If unauthenticated and not on auth route, redirect to auth
+      if (authState is AuthUnauthenticated &&
+          state.matchedLocation != AuthRoute().location) {
         return AuthRoute().location;
       }
+
       return null;
     },
   );

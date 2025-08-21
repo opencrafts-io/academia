@@ -79,7 +79,6 @@ class ShereheLocalDataSource {
     }
   }
 
-  // Cache or update attendees for an event
   Future<Either<Failure, List<AttendeeData>>> cacheAttendees(
     List<AttendeeData> attendees,
   ) async {
@@ -95,7 +94,6 @@ class ShereheLocalDataSource {
     }
   }
 
-  // Get cached attendees for a specific event
   Future<Either<Failure, List<AttendeeData>>> getCachedAttendeesByEventId(
     String eventId,
   ) async {

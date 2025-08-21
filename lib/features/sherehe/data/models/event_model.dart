@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:academia/core/core.dart'; 
+import 'package:academia/core/core.dart';
 
 @DataClassName('EventData')
 class EventTable extends Table with TableMixin {
@@ -17,15 +17,18 @@ class EventTable extends Table with TableMixin {
   TextColumn get date => text()();
   @JsonKey('organizer')
   TextColumn get organizer => text()(); 
-  @JsonKey('image_url')
+  @JsonKey('event_card_image')
   TextColumn get imageUrl => text()();
   @JsonKey('number_of_attendees')
   IntColumn get numberOfAttendees => integer()();
   @JsonKey('organizer_id')
-  TextColumn get organizerId => text()();
+  IntColumn get organizerId => integer()();
   @JsonKey('genre')
   TextColumn get genre => text()();
-
+  @JsonKey('poster')
+  TextColumn get poster => text().nullable()();
+  @JsonKey('banner')
+  TextColumn get banner => text().nullable()();
   @override
   Set<Column> get primaryKey => {id};
 }
