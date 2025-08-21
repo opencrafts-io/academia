@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../domain/domain.dart';
 import '../../../../constants/constants.dart';
 
@@ -11,12 +12,19 @@ class EventDetailsHeader extends StatelessWidget {
 
   double _getExpandedHeight(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) {
-      return 300.0;
+      return MediaQuery.of(context).size.height * 0.40;
     } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 400.0;
+      return MediaQuery.of(context).size.height * 0.4;
     } else {
-      // Desktop and Large Desktop
       return 500.0;
+    }
+  }
+  String _formatDate(String isoString, {String pattern = 'dd MMM yyyy'}) {
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat(pattern).format(dateTime);
+    } catch (e) {
+      return isoString;
     }
   }
 
@@ -29,20 +37,6 @@ class EventDetailsHeader extends StatelessWidget {
         onPressed: () => context.pop(),
         icon: const Icon(Icons.arrow_back),
       ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            // TODO: Implement bookmark functionality
-          },
-          icon: const CircleAvatar(child: Icon(Icons.bookmark_border)),
-        ),
-        IconButton(
-          onPressed: () {
-            // TODO: Implement more options functionality
-          },
-          icon: const CircleAvatar(child: Icon(Icons.more_vert)),
-        ),
-      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
@@ -75,12 +69,12 @@ class EventDetailsHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
+                    spacing: 2.0,
+                    runSpacing: 0.5,
                     children: event.genre.map((genre) {
                       return Chip(
                         label: Text(genre),
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(3),
                       );
                     }).toList(),
                   ),
@@ -90,7 +84,7 @@ class EventDetailsHeader extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       // Use headlineMedium
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -99,20 +93,20 @@ class EventDetailsHeader extends StatelessWidget {
                       Icon(
                         Icons.calendar_today,
                         size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        event.date,
+                        _formatDate(event.date),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onInverseSurface,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const SizedBox(width: 16),
                       Icon(
                         Icons.location_on,
                         size: ResponsiveBreakPoints.isMobile(context) ? 16 : 20,
-                        color: Theme.of(context).colorScheme.onInverseSurface,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
                       Expanded(
@@ -120,10 +114,9 @@ class EventDetailsHeader extends StatelessWidget {
                           event.location,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                // Use bodyMedium
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.onInverseSurface,
+                                ).colorScheme.primary,
                               ),
                           overflow: TextOverflow.ellipsis,
                         ),

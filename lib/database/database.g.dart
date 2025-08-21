@@ -4963,11 +4963,11 @@ class $EventTableTable extends EventTable
     'organizerId',
   );
   @override
-  late final GeneratedColumn<String> organizerId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> organizerId = GeneratedColumn<int>(
     'organizer_id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _genreMeta = const VerificationMeta('genre');
@@ -4978,6 +4978,24 @@ class $EventTableTable extends EventTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _posterMeta = const VerificationMeta('poster');
+  @override
+  late final GeneratedColumn<String> poster = GeneratedColumn<String>(
+    'poster',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -4995,6 +5013,8 @@ class $EventTableTable extends EventTable
     numberOfAttendees,
     organizerId,
     genre,
+    poster,
+    banner,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5122,6 +5142,18 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_genreMeta);
     }
+    if (data.containsKey('poster')) {
+      context.handle(
+        _posterMeta,
+        poster.isAcceptableOrUnknown(data['poster']!, _posterMeta),
+      );
+    }
+    if (data.containsKey('banner')) {
+      context.handle(
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
+      );
+    }
     return context;
   }
 
@@ -5180,13 +5212,21 @@ class $EventTableTable extends EventTable
         data['${effectivePrefix}number_of_attendees'],
       )!,
       organizerId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}organizer_id'],
       )!,
       genre: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}genre'],
       )!,
+      poster: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}poster'],
+      ),
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
+      ),
     );
   }
 
@@ -5209,8 +5249,10 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String organizer;
   final String imageUrl;
   final int numberOfAttendees;
-  final String organizerId;
+  final int organizerId;
   final String genre;
+  final String? poster;
+  final String? banner;
   const EventData({
     required this.id,
     required this.createdAt,
@@ -5226,6 +5268,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     required this.numberOfAttendees,
     required this.organizerId,
     required this.genre,
+    this.poster,
+    this.banner,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5242,8 +5286,14 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['organizer'] = Variable<String>(organizer);
     map['image_url'] = Variable<String>(imageUrl);
     map['number_of_attendees'] = Variable<int>(numberOfAttendees);
-    map['organizer_id'] = Variable<String>(organizerId);
+    map['organizer_id'] = Variable<int>(organizerId);
     map['genre'] = Variable<String>(genre);
+    if (!nullToAbsent || poster != null) {
+      map['poster'] = Variable<String>(poster);
+    }
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
+    }
     return map;
   }
 
@@ -5263,6 +5313,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       numberOfAttendees: Value(numberOfAttendees),
       organizerId: Value(organizerId),
       genre: Value(genre),
+      poster: poster == null && nullToAbsent
+          ? const Value.absent()
+          : Value(poster),
+      banner: banner == null && nullToAbsent
+          ? const Value.absent()
+          : Value(banner),
     );
   }
 
@@ -5282,10 +5338,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       time: serializer.fromJson<String>(json['time']),
       date: serializer.fromJson<String>(json['date']),
       organizer: serializer.fromJson<String>(json['organizer']),
-      imageUrl: serializer.fromJson<String>(json['image_url']),
+      imageUrl: serializer.fromJson<String>(json['event_card_image']),
       numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
-      organizerId: serializer.fromJson<String>(json['organizer_id']),
+      organizerId: serializer.fromJson<int>(json['organizer_id']),
       genre: serializer.fromJson<String>(json['genre']),
+      poster: serializer.fromJson<String?>(json['poster']),
+      banner: serializer.fromJson<String?>(json['banner']),
     );
   }
   @override
@@ -5302,10 +5360,12 @@ class EventData extends DataClass implements Insertable<EventData> {
       'time': serializer.toJson<String>(time),
       'date': serializer.toJson<String>(date),
       'organizer': serializer.toJson<String>(organizer),
-      'image_url': serializer.toJson<String>(imageUrl),
+      'event_card_image': serializer.toJson<String>(imageUrl),
       'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
-      'organizer_id': serializer.toJson<String>(organizerId),
+      'organizer_id': serializer.toJson<int>(organizerId),
       'genre': serializer.toJson<String>(genre),
+      'poster': serializer.toJson<String?>(poster),
+      'banner': serializer.toJson<String?>(banner),
     };
   }
 
@@ -5322,8 +5382,10 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? organizer,
     String? imageUrl,
     int? numberOfAttendees,
-    String? organizerId,
+    int? organizerId,
     String? genre,
+    Value<String?> poster = const Value.absent(),
+    Value<String?> banner = const Value.absent(),
   }) => EventData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -5339,6 +5401,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
     organizerId: organizerId ?? this.organizerId,
     genre: genre ?? this.genre,
+    poster: poster.present ? poster.value : this.poster,
+    banner: banner.present ? banner.value : this.banner,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
     return EventData(
@@ -5362,6 +5426,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           ? data.organizerId.value
           : this.organizerId,
       genre: data.genre.present ? data.genre.value : this.genre,
+      poster: data.poster.present ? data.poster.value : this.poster,
+      banner: data.banner.present ? data.banner.value : this.banner,
     );
   }
 
@@ -5381,7 +5447,9 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('imageUrl: $imageUrl, ')
           ..write('numberOfAttendees: $numberOfAttendees, ')
           ..write('organizerId: $organizerId, ')
-          ..write('genre: $genre')
+          ..write('genre: $genre, ')
+          ..write('poster: $poster, ')
+          ..write('banner: $banner')
           ..write(')'))
         .toString();
   }
@@ -5402,6 +5470,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     numberOfAttendees,
     organizerId,
     genre,
+    poster,
+    banner,
   );
   @override
   bool operator ==(Object other) =>
@@ -5420,7 +5490,9 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.imageUrl == this.imageUrl &&
           other.numberOfAttendees == this.numberOfAttendees &&
           other.organizerId == this.organizerId &&
-          other.genre == this.genre);
+          other.genre == this.genre &&
+          other.poster == this.poster &&
+          other.banner == this.banner);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventData> {
@@ -5436,8 +5508,10 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> organizer;
   final Value<String> imageUrl;
   final Value<int> numberOfAttendees;
-  final Value<String> organizerId;
+  final Value<int> organizerId;
   final Value<String> genre;
+  final Value<String?> poster;
+  final Value<String?> banner;
   final Value<int> rowid;
   const EventTableCompanion({
     this.id = const Value.absent(),
@@ -5454,6 +5528,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.numberOfAttendees = const Value.absent(),
     this.organizerId = const Value.absent(),
     this.genre = const Value.absent(),
+    this.poster = const Value.absent(),
+    this.banner = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EventTableCompanion.insert({
@@ -5469,8 +5545,10 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String organizer,
     required String imageUrl,
     required int numberOfAttendees,
-    required String organizerId,
+    required int organizerId,
     required String genre,
+    this.poster = const Value.absent(),
+    this.banner = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -5497,8 +5575,10 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? organizer,
     Expression<String>? imageUrl,
     Expression<int>? numberOfAttendees,
-    Expression<String>? organizerId,
+    Expression<int>? organizerId,
     Expression<String>? genre,
+    Expression<String>? poster,
+    Expression<String>? banner,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5516,6 +5596,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (numberOfAttendees != null) 'number_of_attendees': numberOfAttendees,
       if (organizerId != null) 'organizer_id': organizerId,
       if (genre != null) 'genre': genre,
+      if (poster != null) 'poster': poster,
+      if (banner != null) 'banner': banner,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5533,8 +5615,10 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? organizer,
     Value<String>? imageUrl,
     Value<int>? numberOfAttendees,
-    Value<String>? organizerId,
+    Value<int>? organizerId,
     Value<String>? genre,
+    Value<String?>? poster,
+    Value<String?>? banner,
     Value<int>? rowid,
   }) {
     return EventTableCompanion(
@@ -5552,6 +5636,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
       organizerId: organizerId ?? this.organizerId,
       genre: genre ?? this.genre,
+      poster: poster ?? this.poster,
+      banner: banner ?? this.banner,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5596,10 +5682,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       map['number_of_attendees'] = Variable<int>(numberOfAttendees.value);
     }
     if (organizerId.present) {
-      map['organizer_id'] = Variable<String>(organizerId.value);
+      map['organizer_id'] = Variable<int>(organizerId.value);
     }
     if (genre.present) {
       map['genre'] = Variable<String>(genre.value);
+    }
+    if (poster.present) {
+      map['poster'] = Variable<String>(poster.value);
+    }
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -5624,6 +5716,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('numberOfAttendees: $numberOfAttendees, ')
           ..write('organizerId: $organizerId, ')
           ..write('genre: $genre, ')
+          ..write('poster: $poster, ')
+          ..write('banner: $banner, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5716,6 +5810,15 @@ class $AttendeeTableTable extends AttendeeTable
       'REFERENCES event_table (id)',
     ),
   );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -5725,6 +5828,7 @@ class $AttendeeTableTable extends AttendeeTable
     middleName,
     lastName,
     eventId,
+    email,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5785,6 +5889,14 @@ class $AttendeeTableTable extends AttendeeTable
     } else if (isInserting) {
       context.missing(_eventIdMeta);
     }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
     return context;
   }
 
@@ -5822,6 +5934,10 @@ class $AttendeeTableTable extends AttendeeTable
         DriftSqlType.string,
         data['${effectivePrefix}event_id'],
       )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
     );
   }
 
@@ -5839,6 +5955,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final String? middleName;
   final String lastName;
   final String eventId;
+  final String email;
   const AttendeeData({
     required this.id,
     required this.createdAt,
@@ -5847,6 +5964,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     this.middleName,
     required this.lastName,
     required this.eventId,
+    required this.email,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5860,6 +5978,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     }
     map['last_name'] = Variable<String>(lastName);
     map['event_id'] = Variable<String>(eventId);
+    map['email'] = Variable<String>(email);
     return map;
   }
 
@@ -5874,6 +5993,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           : Value(middleName),
       lastName: Value(lastName),
       eventId: Value(eventId),
+      email: Value(email),
     );
   }
 
@@ -5890,6 +6010,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       middleName: serializer.fromJson<String?>(json['middle_name']),
       lastName: serializer.fromJson<String>(json['last_name']),
       eventId: serializer.fromJson<String>(json['event_id']),
+      email: serializer.fromJson<String>(json['email']),
     );
   }
   @override
@@ -5903,6 +6024,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'middle_name': serializer.toJson<String?>(middleName),
       'last_name': serializer.toJson<String>(lastName),
       'event_id': serializer.toJson<String>(eventId),
+      'email': serializer.toJson<String>(email),
     };
   }
 
@@ -5914,6 +6036,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     Value<String?> middleName = const Value.absent(),
     String? lastName,
     String? eventId,
+    String? email,
   }) => AttendeeData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -5922,6 +6045,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     middleName: middleName.present ? middleName.value : this.middleName,
     lastName: lastName ?? this.lastName,
     eventId: eventId ?? this.eventId,
+    email: email ?? this.email,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
@@ -5934,6 +6058,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           : this.middleName,
       lastName: data.lastName.present ? data.lastName.value : this.lastName,
       eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      email: data.email.present ? data.email.value : this.email,
     );
   }
 
@@ -5946,7 +6071,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('firstName: $firstName, ')
           ..write('middleName: $middleName, ')
           ..write('lastName: $lastName, ')
-          ..write('eventId: $eventId')
+          ..write('eventId: $eventId, ')
+          ..write('email: $email')
           ..write(')'))
         .toString();
   }
@@ -5960,6 +6086,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     middleName,
     lastName,
     eventId,
+    email,
   );
   @override
   bool operator ==(Object other) =>
@@ -5971,7 +6098,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.firstName == this.firstName &&
           other.middleName == this.middleName &&
           other.lastName == this.lastName &&
-          other.eventId == this.eventId);
+          other.eventId == this.eventId &&
+          other.email == this.email);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
@@ -5982,6 +6110,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<String?> middleName;
   final Value<String> lastName;
   final Value<String> eventId;
+  final Value<String> email;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
@@ -5991,6 +6120,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.middleName = const Value.absent(),
     this.lastName = const Value.absent(),
     this.eventId = const Value.absent(),
+    this.email = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
@@ -6001,11 +6131,13 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.middleName = const Value.absent(),
     required String lastName,
     required String eventId,
+    required String email,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        firstName = Value(firstName),
        lastName = Value(lastName),
-       eventId = Value(eventId);
+       eventId = Value(eventId),
+       email = Value(email);
   static Insertable<AttendeeData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -6014,6 +6146,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Expression<String>? middleName,
     Expression<String>? lastName,
     Expression<String>? eventId,
+    Expression<String>? email,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -6024,6 +6157,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       if (middleName != null) 'middle_name': middleName,
       if (lastName != null) 'last_name': lastName,
       if (eventId != null) 'event_id': eventId,
+      if (email != null) 'email': email,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -6036,6 +6170,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Value<String?>? middleName,
     Value<String>? lastName,
     Value<String>? eventId,
+    Value<String>? email,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
@@ -6046,6 +6181,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       middleName: middleName ?? this.middleName,
       lastName: lastName ?? this.lastName,
       eventId: eventId ?? this.eventId,
+      email: email ?? this.email,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -6074,6 +6210,9 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
     }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -6090,6 +6229,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
           ..write('middleName: $middleName, ')
           ..write('lastName: $lastName, ')
           ..write('eventId: $eventId, ')
+          ..write('email: $email, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11757,8 +11897,10 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String organizer,
       required String imageUrl,
       required int numberOfAttendees,
-      required String organizerId,
+      required int organizerId,
       required String genre,
+      Value<String?> poster,
+      Value<String?> banner,
       Value<int> rowid,
     });
 typedef $$EventTableTableUpdateCompanionBuilder =
@@ -11775,8 +11917,10 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> organizer,
       Value<String> imageUrl,
       Value<int> numberOfAttendees,
-      Value<String> organizerId,
+      Value<int> organizerId,
       Value<String> genre,
+      Value<String?> poster,
+      Value<String?> banner,
       Value<int> rowid,
     });
 
@@ -11890,13 +12034,23 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get organizerId => $composableBuilder(
+  ColumnFilters<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get genre => $composableBuilder(
     column: $table.genre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get poster => $composableBuilder(
+    column: $table.poster,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12020,13 +12174,23 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get organizerId => $composableBuilder(
+  ColumnOrderings<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get genre => $composableBuilder(
     column: $table.genre,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get poster => $composableBuilder(
+    column: $table.poster,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -12080,13 +12244,19 @@ class $$EventTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get organizerId => $composableBuilder(
+  GeneratedColumn<int> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => column,
   );
 
   GeneratedColumn<String> get genre =>
       $composableBuilder(column: $table.genre, builder: (column) => column);
+
+  GeneratedColumn<String> get poster =>
+      $composableBuilder(column: $table.poster, builder: (column) => column);
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
 
   Expression<T> attendeeTableRefs<T extends Object>(
     Expression<T> Function($$AttendeeTableTableAnnotationComposer a) f,
@@ -12179,8 +12349,10 @@ class $$EventTableTableTableManager
                 Value<String> organizer = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<int> numberOfAttendees = const Value.absent(),
-                Value<String> organizerId = const Value.absent(),
+                Value<int> organizerId = const Value.absent(),
                 Value<String> genre = const Value.absent(),
+                Value<String?> poster = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
                 id: id,
@@ -12197,6 +12369,8 @@ class $$EventTableTableTableManager
                 numberOfAttendees: numberOfAttendees,
                 organizerId: organizerId,
                 genre: genre,
+                poster: poster,
+                banner: banner,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -12213,8 +12387,10 @@ class $$EventTableTableTableManager
                 required String organizer,
                 required String imageUrl,
                 required int numberOfAttendees,
-                required String organizerId,
+                required int organizerId,
                 required String genre,
+                Value<String?> poster = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
                 id: id,
@@ -12231,6 +12407,8 @@ class $$EventTableTableTableManager
                 numberOfAttendees: numberOfAttendees,
                 organizerId: organizerId,
                 genre: genre,
+                poster: poster,
+                banner: banner,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -12325,6 +12503,7 @@ typedef $$AttendeeTableTableCreateCompanionBuilder =
       Value<String?> middleName,
       required String lastName,
       required String eventId,
+      required String email,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
@@ -12336,6 +12515,7 @@ typedef $$AttendeeTableTableUpdateCompanionBuilder =
       Value<String?> middleName,
       Value<String> lastName,
       Value<String> eventId,
+      Value<String> email,
       Value<int> rowid,
     });
 
@@ -12427,6 +12607,11 @@ class $$AttendeeTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$EventTableTableFilterComposer get eventId {
     final $$EventTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -12515,6 +12700,11 @@ class $$AttendeeTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$EventTableTableOrderingComposer get eventId {
     final $$EventTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -12567,6 +12757,9 @@ class $$AttendeeTableTableAnnotationComposer
 
   GeneratedColumn<String> get lastName =>
       $composableBuilder(column: $table.lastName, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
 
   $$EventTableTableAnnotationComposer get eventId {
     final $$EventTableTableAnnotationComposer composer = $composerBuilder(
@@ -12652,6 +12845,7 @@ class $$AttendeeTableTableTableManager
                 Value<String?> middleName = const Value.absent(),
                 Value<String> lastName = const Value.absent(),
                 Value<String> eventId = const Value.absent(),
+                Value<String> email = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
@@ -12661,6 +12855,7 @@ class $$AttendeeTableTableTableManager
                 middleName: middleName,
                 lastName: lastName,
                 eventId: eventId,
+                email: email,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -12672,6 +12867,7 @@ class $$AttendeeTableTableTableManager
                 Value<String?> middleName = const Value.absent(),
                 required String lastName,
                 required String eventId,
+                required String email,
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
@@ -12681,6 +12877,7 @@ class $$AttendeeTableTableTableManager
                 middleName: middleName,
                 lastName: lastName,
                 eventId: eventId,
+                email: email,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

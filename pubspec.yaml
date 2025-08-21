@@ -53,7 +53,6 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_native_splash: ^2.4.6
   material_symbols_icons: ^4.2815.1
-  sentry_flutter: ^9.5.0
   lottie: ^3.3.1
   flutter_svg: ^2.2.0
   phone_form_field: ^10.0.8
@@ -73,6 +72,7 @@ dependencies:
   onesignal_flutter: ^5.3.4
   firebase_core: ^4.0.0
   quick_actions: ^1.1.0
+  confetti: ^0.7.0
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1

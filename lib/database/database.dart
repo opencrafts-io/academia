@@ -60,7 +60,7 @@ class AppDataBase extends _$AppDataBase {
       },
       beforeOpen: (details) async {
         _logger.i(
-          "Openning cache db version ${details.versionNow} initial version ${details.versionBefore}",
+          "Opening cache db version ${details.versionNow} initial version ${details.versionBefore}",
         );
       },
     );
