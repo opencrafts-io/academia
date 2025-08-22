@@ -2,6 +2,8 @@ import 'package:academia/features/agenda/agenda.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class CreateAgendaEventPage extends StatefulWidget {
   const CreateAgendaEventPage({super.key});
@@ -217,8 +219,15 @@ class _AgendaFormState extends State<_AgendaForm>
     super.dispose();
   }
 
-  void _saveEvent() {
+  void _saveEvent() async {
     if (_formKey.currentState!.validate()) {
+      // Provide haptic feedback for form submission
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+      }
+      
+      if (!mounted) return;
+      
       setState(() {
         _isSubmitting = true;
       });
