@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class CalendarHomeWidget extends StatefulWidget {
   const CalendarHomeWidget({super.key});
@@ -56,11 +58,18 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
         return Container(
           constraints: BoxConstraints(maxWidth: ResponsiveBreakPoints.mobile),
           child: TableCalendar(
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-              });
-              _showDayEventsBottomSheet(context, selectedDay);
+            onDaySelected: (selectedDay, focusedDay) async {
+              // Provide haptic feedback for day selection
+              if (await Vibration.hasVibrator()) {
+                Vibration.vibrate(preset: VibrationPreset.quickSuccessAlert);
+              }
+
+              if (context.mounted) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                });
+                _showDayEventsBottomSheet(context, selectedDay);
+              }
             },
             availableCalendarFormats: {
               CalendarFormat.twoWeeks: '2 weeks View',
@@ -230,7 +239,16 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                     ),
                   ),
                   FilledButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
+                      // Provide haptic feedback for create button
+                      if (await Vibration.hasVibrator()) {
+                        Vibration.vibrate(
+                          preset: VibrationPreset.gentleReminder,
+                        );
+                      }
+
+                      if (!context.mounted) return;
+
                       Navigator.of(context).pop();
                       CreateAgendaEventRoute().push(context);
                     },
@@ -275,11 +293,28 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                           final event = dayEvents[index];
                           return AgendaEventCard(
                             event: event,
-                            onEdit: () {
+                            onEdit: () async {
+                              // Provide haptic feedback for edit action
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  preset: VibrationPreset.softPulse,
+                                );
+                              }
+
+                              if (!context.mounted) return;
+
                               Navigator.of(context).pop();
                               AgendaItemViewRoute(id: event.id).push(context);
                             },
-                            onDelete: () {
+                            onDelete: () async {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  preset: VibrationPreset.emergencyAlert,
+                                );
+                              }
+
+                              if (!context.mounted) return;
+
                               // Show delete confirmation
                               showDialog(
                                 context: context,

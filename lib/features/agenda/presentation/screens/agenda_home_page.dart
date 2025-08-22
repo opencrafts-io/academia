@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class AgendaHomePage extends StatefulWidget {
   const AgendaHomePage({super.key});
@@ -161,7 +163,14 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                       id: event.id,
                                     ).push(context);
                                   },
-                                  onDelete: () {
+                                  onDelete: () async {
+                                    if (await Vibration.hasVibrator()) {
+                                      Vibration.vibrate(
+                                        preset: VibrationPreset.emergencyAlert,
+                                      );
+                                    }
+                                    if (!context.mounted) return;
+
                                     // Show delete confirmation
                                     showDialog(
                                       context: context,
@@ -217,7 +226,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
       floatingActionButton: FloatingActionButton.extended(
         label: Text("Get organized"),
         icon: Icon(Icons.add),
-        onPressed: () {
+        onPressed: () async {
+          // Provide haptic feedback for FAB press
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+          }
+          
+          if (!context.mounted) return;
           showModalBottomSheet(
             context: context,
             constraints: BoxConstraints(

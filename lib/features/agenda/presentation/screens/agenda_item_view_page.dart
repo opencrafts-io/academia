@@ -1,6 +1,8 @@
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class AgendaItemViewPage extends StatefulWidget {
   const AgendaItemViewPage({super.key, this.agendaEventID});
@@ -57,7 +59,14 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
     super.dispose();
   }
 
-  void _toggleEditMode() {
+  void _toggleEditMode() async {
+    // Provide haptic feedback for edit mode toggle
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+    }
+    
+    if (!mounted) return;
+    
     setState(() {
       _isEditing = !_isEditing;
       if (_isEditing && agendaEvent != null) {
@@ -90,8 +99,15 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
     });
   }
 
-  void _updateEvent() {
+  void _updateEvent() async {
     if (agendaEvent != null) {
+      // Provide haptic feedback for update action
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(preset: VibrationPreset.softPulse);
+      }
+      
+      if (!mounted) return;
+      
       setState(() {
         _isSubmitting = true;
       });
@@ -147,8 +163,14 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
     }
   }
 
-  void _deleteEvent() {
+  void _deleteEvent() async {
     if (agendaEvent != null) {
+      // Provide haptic feedback for delete action
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
+      }
+      
+      if (!mounted) return;
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
