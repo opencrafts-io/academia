@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -61,7 +62,10 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Text(
                   DateFormat.yMMMMEEEEd().format(DateTime.now()),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -98,7 +102,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                             final today = DateTime.now();
                             final todayEvents = snapshot.data!.where((event) {
                               if (event.startTime == null) return false;
-                              
+
                               final eventDate = DateTime(
                                 event.startTime!.year,
                                 event.startTime!.month,
@@ -109,39 +113,38 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                 today.month,
                                 today.day,
                               );
-                              
+
                               return eventDate.isAtSameMomentAs(todayDate);
                             }).toList();
-                            
+
                             if (todayEvents.isEmpty) {
                               return Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.event_busy,
-                                      size: 64,
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    Lottie.asset(
+                                      "assets/lotties/organize.json",
+                                      width: 300,
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      'No events today',
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                      ),
+                                      'Get your school life organized with calendar',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       'Tap the + button to create an event',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                      ),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
                                     ),
                                   ],
                                 ),
                               );
                             }
-                            
+
                             return ListView.separated(
                               physics: NeverScrollableScrollPhysics(),
                               separatorBuilder: (context, index) =>
@@ -154,7 +157,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                   event: event,
                                   onEdit: () {
                                     // Navigate to edit mode
-                                    AgendaItemViewRoute(id: event.id).push(context);
+                                    AgendaItemViewRoute(
+                                      id: event.id,
+                                    ).push(context);
                                   },
                                   onDelete: () {
                                     // Show delete confirmation
@@ -167,18 +172,25 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                         ),
                                         actions: [
                                           TextButton(
-                                            onPressed: () => Navigator.of(context).pop(),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
                                             child: const Text('Cancel'),
                                           ),
                                           FilledButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
-                                              context.read<AgendaEventBloc>().add(
-                                                DeleteAgendaEventEvent(agendaEvent: event),
-                                              );
+                                              context
+                                                  .read<AgendaEventBloc>()
+                                                  .add(
+                                                    DeleteAgendaEventEvent(
+                                                      agendaEvent: event,
+                                                    ),
+                                                  );
                                             },
                                             style: FilledButton.styleFrom(
-                                              backgroundColor: Theme.of(context).colorScheme.error,
+                                              backgroundColor: Theme.of(
+                                                context,
+                                              ).colorScheme.error,
                                             ),
                                             child: const Text('Delete'),
                                           ),
@@ -202,7 +214,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Get organized"),
+        icon: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -256,9 +270,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                           TodosRoute().push(context);
                         },
                         leading: CircleAvatar(child: Icon(Symbols.list)),
-                        title: Text("Create a general todo"),
+                        title: Text("Manage your tasks"),
                         subtitle: Text(
-                          "Keep track of your tasks",
+                          "Keep track of your tasks and assignments",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -290,7 +304,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             ),
           );
         },
-        child: Icon(Icons.menu),
+        // child: Icon(Icons.menu),
       ),
     );
   }
