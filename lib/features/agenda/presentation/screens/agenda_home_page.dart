@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class AgendaHomePage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar.large(
-              title: Text("Your Calendar"),
+              title: Text("Today's Events"),
               pinned: true,
               snap: true,
               floating: true,
@@ -58,6 +59,17 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 ),
               ],
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  DateFormat.yMMMMEEEEd().format(DateTime.now()),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
             SliverPadding(
               padding: EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
@@ -82,84 +94,98 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                             return Text("OOps! ${snapshot.error}");
                           }
                           if (snapshot.hasData) {
+                            // Filter events for today only
+                            final today = DateTime.now();
+                            final todayEvents = snapshot.data!.where((event) {
+                              if (event.startTime == null) return false;
+                              
+                              final eventDate = DateTime(
+                                event.startTime!.year,
+                                event.startTime!.month,
+                                event.startTime!.day,
+                              );
+                              final todayDate = DateTime(
+                                today.year,
+                                today.month,
+                                today.day,
+                              );
+                              
+                              return eventDate.isAtSameMomentAs(todayDate);
+                            }).toList();
+                            
+                            if (todayEvents.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.event_busy,
+                                      size: 64,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'No events today',
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Tap the + button to create an event',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            
                             return ListView.separated(
                               physics: NeverScrollableScrollPhysics(),
                               separatorBuilder: (context, index) =>
                                   SizedBox(height: 8),
                               shrinkWrap: true,
-                              itemCount: snapshot.data!.length,
+                              itemCount: todayEvents.length,
                               itemBuilder: (context, index) {
-                                final event = snapshot.data![index];
-                                return Card.outlined(
-                                  elevation: 0,
-                                  child: InkWell(
-                                    onTap: () {
-                                      AgendaItemViewRoute(
-                                        id: event.id,
-                                      ).push(context);
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsetsGeometry.all(12),
-                                      child: Column(
-                                        spacing: 8,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            event.summary ??
-                                                "Untitled Agenda Event",
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.headlineSmall,
+                                final event = todayEvents[index];
+                                return AgendaEventCard(
+                                  event: event,
+                                  onEdit: () {
+                                    // Navigate to edit mode
+                                    AgendaItemViewRoute(id: event.id).push(context);
+                                  },
+                                  onDelete: () {
+                                    // Show delete confirmation
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Delete Event'),
+                                        content: const Text(
+                                          'Are you sure you want to delete this event? This action cannot be undone.',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: const Text('Cancel'),
                                           ),
-                                          Text(
-                                            event.description ??
-                                                "No description provided",
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.titleMedium,
-                                          ),
-                                          Text(
-                                            DateFormat.yMMMMd().format(
-                                              event.startTime!,
+                                          FilledButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              context.read<AgendaEventBloc>().add(
+                                                DeleteAgendaEventEvent(agendaEvent: event),
+                                              );
+                                            },
+                                            style: FilledButton.styleFrom(
+                                              backgroundColor: Theme.of(context).colorScheme.error,
                                             ),
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodySmall,
-                                          ),
-                                          SizedBox(height: 12),
-                                          Row(
-                                            // spacing: 2,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: !event.allDay,
-                                                child: Text(
-                                                  "Duration ${DateFormat("HH:mm").format(event.startTime!)} - ${DateFormat("HH:mm").format(event.endTime!)}",
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: event.allDay,
-                                                child: Text(
-                                                  "Event lasts for entire day",
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              IconButton.outlined(
-                                                icon: Icon(Icons.delete),
-                                                onPressed: () {},
-                                              ),
-                                              IconButton.filled(
-                                                onPressed: () {},
-                                                icon: Icon(Icons.edit),
-                                              ),
-                                            ],
+                                            child: const Text('Delete'),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 );
                               },
                             );
