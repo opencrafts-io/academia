@@ -64,8 +64,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 child: Wrap(children: [CalendarHomeWidget()]),
               ),
             ),
+
             SliverPadding(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               sliver: BlocBuilder<AgendaEventBloc, AgendaEventState>(
                 builder: (context, state) {
                   if (state is AgendaEventLoadedState) {
@@ -92,7 +93,11 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                 return Card.outlined(
                                   elevation: 0,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      AgendaItemViewRoute(
+                                        id: event.id,
+                                      ).push(context);
+                                    },
                                     child: Padding(
                                       padding: EdgeInsetsGeometry.all(12),
                                       child: Column(
