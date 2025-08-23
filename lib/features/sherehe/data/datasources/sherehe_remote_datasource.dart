@@ -32,30 +32,11 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200) {
-        final List<EventData> events = (response.data['data'] as List).map((item) {
-          final Map<String, dynamic> eventJson = Map<String, dynamic>.from(item);
-          if (eventJson['organizer_id'] is String) {
-            eventJson['organizer_id'] = int.tryParse(eventJson['organizer_id'] as String) ?? 0;
-          }
-          if (eventJson['number_of_attendees'] is String) {
-            eventJson['number_of_attendees'] = int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
-          }
-          return EventData.fromJson(eventJson);
-        }).toList();
+        final List<EventData> events = (response.data['data'] as List)
+            .map((e) => EventData.fromJson(e))
+            .toList();
 
-        final dynamic nextPageValue = response.data['nextPage'];
-        int? nextPage;
-        if (nextPageValue is int) {
-          nextPage = nextPageValue;
-        } else if (nextPageValue is String) {
-          if (nextPageValue.isNotEmpty) {
-            nextPage = int.tryParse(nextPageValue);
-          } else {
-            nextPage = null;
-          }
-        } else {
-          nextPage = null;
-        }
+        final int? nextPage = response.data['nextPage'];
 
         return right(PaginatedEventsData(events: events, nextPage: nextPage));
       } else {
@@ -127,17 +108,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
     try {
       final response = await dioClient.dio.get(
         'https://qasherehe.opencrafts.io/events/getEventById/$id',
-        // "/$servicePrefix/events/getEventById/$id",
 
+        // "/$servicePrefix/events/getEventById/$id",
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> eventJson = Map<String, dynamic>.from(response.data['result']);
+        final Map<String, dynamic> eventJson = Map<String, dynamic>.from(
+          response.data['result'],
+        );
         if (eventJson['organizer_id'] is String) {
-          eventJson['organizer_id'] = int.tryParse(eventJson['organizer_id'] as String) ?? 0;
+          eventJson['organizer_id'] =
+              int.tryParse(eventJson['organizer_id'] as String) ?? 0;
         }
         if (eventJson['number_of_attendees'] is String) {
-          eventJson['number_of_attendees'] = int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
+          eventJson['number_of_attendees'] =
+              int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
         }
 
         return right(EventData.fromJson(eventJson));
@@ -194,9 +179,15 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, AttendeeData>> createAttendee(Attendee attendee) async {
-    final String fullTempId = 'temp_${DateTime.now().millisecondsSinceEpoch}_${attendee.eventId}_${attendee.firstName}_${attendee.lastName}_${attendee.email}';
-    final String safeTempId = fullTempId.substring(0, min(fullTempId.length, 50));
+  Future<Either<Failure, AttendeeData>> createAttendee(
+    Attendee attendee,
+  ) async {
+    final String fullTempId =
+        'temp_${DateTime.now().millisecondsSinceEpoch}_${attendee.eventId}_${attendee.firstName}_${attendee.lastName}_${attendee.email}';
+    final String safeTempId = fullTempId.substring(
+      0,
+      min(fullTempId.length, 50),
+    );
     try {
       final Map<String, dynamic> attendeeData = {
         'first_name': attendee.firstName,
@@ -221,8 +212,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data is Map<String, dynamic> &&
             response.data['message'] == "Attendee created successfully") {
-
-          _logger.i("Attendee created successfully on server (Status 201/200).");
+          _logger.i(
+            "Attendee created successfully on server (Status 201/200).",
+          );
           final fakeAttendeeData = AttendeeData(
             id: safeTempId,
             firstName: attendee.firstName,
@@ -234,60 +226,93 @@ class ShereheRemoteDataSource with DioErrorHandler {
             updatedAt: DateTime.now(),
           );
 
-          _logger.w("Attendee creation successful, created local placeholder data based on sent data.");
+          _logger.w(
+            "Attendee creation successful, created local placeholder data based on sent data.",
+          );
           return right(fakeAttendeeData);
         } else {
-          _logger.w("Attendee creation successful (status ${response.statusCode}) but response body format unexpected: ${response.data}");
-          return left(ServerFailure(
-            message: "Attendee created on server, but the response format was unexpected.",
-            error: "Response data: ${response.data.toString()}",
-          ));
+          _logger.w(
+            "Attendee creation successful (status ${response.statusCode}) but response body format unexpected: ${response.data}",
+          );
+          return left(
+            ServerFailure(
+              message:
+                  "Attendee created on server, but the response format was unexpected.",
+              error: "Response data: ${response.data.toString()}",
+            ),
+          );
         }
       } else {
-        _logger.e("Server error creating attendee. Status: ${response.statusCode}, Response: ${response.data}");
-        String errorMessage = response.data['message'] ?? 'Unknown server error';
+        _logger.e(
+          "Server error creating attendee. Status: ${response.statusCode}, Response: ${response.data}",
+        );
+        String errorMessage =
+            response.data['message'] ?? 'Unknown server error';
         _logger.e("Server error message: $errorMessage");
-        return left(ServerFailure(
-          message: "Server error: $errorMessage (Status: ${response.statusCode})",
-          error: response,
-        ));
+        return left(
+          ServerFailure(
+            message:
+                "Server error: $errorMessage (Status: ${response.statusCode})",
+            error: response,
+          ),
+        );
       }
     } on DioException catch (de) {
-      _logger.e("DioException when creating attendee", error: de, stackTrace: de.stackTrace);
+      _logger.e(
+        "DioException when creating attendee",
+        error: de,
+        stackTrace: de.stackTrace,
+      );
       return handleDioError(de);
     } catch (e, stackTrace) {
-      _logger.e("Unexpected error while creating attendee", error: e, stackTrace: stackTrace);
-      return left(ServerFailure(
-        message: "An unexpected error occurred while creating the attendee: ${e.toString()}",
-        error: e.toString(),
-      ));
+      _logger.e(
+        "Unexpected error while creating attendee",
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred while creating the attendee: ${e.toString()}",
+          error: e.toString(),
+        ),
+      );
     }
   }
-  Future<Either<Failure, Unit>> createEvent(
 
-      Event event, {
-        File? eventImage,
-        File? bannerImage,
-        File? cardImage,
-      }) async {
+  Future<Either<Failure, Unit>> createEvent(
+    Event event, {
+    File? eventImage,
+    File? bannerImage,
+    File? cardImage,
+  }) async {
     try {
       if (eventImage == null) {
         _logger.w("createEvent called without a required poster image file.");
-        return left(ServerFailure(
+        return left(
+          ServerFailure(
             message: "No poster image provided for event creation.",
-            error: "Poster image file is required"));
+            error: "Poster image file is required",
+          ),
+        );
       }
       if (bannerImage == null) {
         _logger.w("createEvent called without a required banner image file.");
-        return left(ServerFailure(
+        return left(
+          ServerFailure(
             message: "No banner image provided for event creation.",
-            error: "Banner image file is required"));
+            error: "Banner image file is required",
+          ),
+        );
       }
       if (cardImage == null) {
         _logger.w("createEvent called without a required card image file.");
-        return left(ServerFailure(
+        return left(
+          ServerFailure(
             message: "No card image provided for event creation.",
-            error: "Card image file is required"));
+            error: "Card image file is required",
+          ),
+        );
       }
       Map<String, dynamic> eventDataMap = {
         'name': event.name,
@@ -308,7 +333,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
           throw FormatException("Extracted poster filename is empty");
         }
       } catch (e) {
-        _logger.w("Could not extract poster filename from path '${eventImage.path}'. Error: $e. Generating default filename.");
+        _logger.w(
+          "Could not extract poster filename from path '${eventImage.path}'. Error: $e. Generating default filename.",
+        );
         String extension = '.jpg';
         try {
           final pathParts = eventImage.path.split('.');
@@ -316,15 +343,23 @@ class ShereheRemoteDataSource with DioErrorHandler {
             extension = '.${pathParts.last}';
           }
         } catch (extError) {
-          _logger.d("Could not determine poster file extension, using default .jpg. Error: $extError");
+          _logger.d(
+            "Could not determine poster file extension, using default .jpg. Error: $extError",
+          );
         }
-        posterFileName = 'event_poster_${DateTime.now().millisecondsSinceEpoch}$extension';
+        posterFileName =
+            'event_poster_${DateTime.now().millisecondsSinceEpoch}$extension';
       }
       _logger.d("Using poster filename for upload: $posterFileName");
-      formData.files.add(MapEntry(
-        'poster',
-        await MultipartFile.fromFile(eventImage.path, filename: posterFileName),
-      ));
+      formData.files.add(
+        MapEntry(
+          'poster',
+          await MultipartFile.fromFile(
+            eventImage.path,
+            filename: posterFileName,
+          ),
+        ),
+      );
       String bannerFileName;
       try {
         bannerFileName = bannerImage.path.split('/').last;
@@ -332,7 +367,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
           throw FormatException("Extracted banner filename is empty");
         }
       } catch (e) {
-        _logger.w("Could not extract banner filename from path '${bannerImage.path}'. Error: $e. Generating default filename.");
+        _logger.w(
+          "Could not extract banner filename from path '${bannerImage.path}'. Error: $e. Generating default filename.",
+        );
         String extension = '.jpg';
         try {
           final pathParts = bannerImage.path.split('.');
@@ -340,15 +377,23 @@ class ShereheRemoteDataSource with DioErrorHandler {
             extension = '.${pathParts.last}';
           }
         } catch (extError) {
-          _logger.d("Could not determine banner file extension, using default .jpg. Error: $extError");
+          _logger.d(
+            "Could not determine banner file extension, using default .jpg. Error: $extError",
+          );
         }
-        bannerFileName = 'event_banner_${DateTime.now().millisecondsSinceEpoch}$extension';
+        bannerFileName =
+            'event_banner_${DateTime.now().millisecondsSinceEpoch}$extension';
       }
       _logger.d("Using banner filename for upload: $bannerFileName");
-      formData.files.add(MapEntry(
-        'banner',
-        await MultipartFile.fromFile(bannerImage.path, filename: bannerFileName),
-      ));
+      formData.files.add(
+        MapEntry(
+          'banner',
+          await MultipartFile.fromFile(
+            bannerImage.path,
+            filename: bannerFileName,
+          ),
+        ),
+      );
       String cardFileName;
       try {
         cardFileName = cardImage.path.split('/').last;
@@ -356,7 +401,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
           throw FormatException("Extracted card filename is empty");
         }
       } catch (e) {
-        _logger.w("Could not extract card filename from path '${cardImage.path}'. Error: $e. Generating default filename.");
+        _logger.w(
+          "Could not extract card filename from path '${cardImage.path}'. Error: $e. Generating default filename.",
+        );
         String extension = '.jpg';
         try {
           final pathParts = cardImage.path.split('.');
@@ -364,23 +411,26 @@ class ShereheRemoteDataSource with DioErrorHandler {
             extension = '.${pathParts.last}';
           }
         } catch (extError) {
-          _logger.d("Could not determine card file extension, using default .jpg. Error: $extError");
+          _logger.d(
+            "Could not determine card file extension, using default .jpg. Error: $extError",
+          );
         }
-        cardFileName = 'event_card_${DateTime.now().millisecondsSinceEpoch}$extension';
+        cardFileName =
+            'event_card_${DateTime.now().millisecondsSinceEpoch}$extension';
       }
       _logger.d("Using card filename for upload: $cardFileName");
-      formData.files.add(MapEntry(
-        'event_card_image',
-        await MultipartFile.fromFile(cardImage.path, filename: cardFileName),
-      ));
+      formData.files.add(
+        MapEntry(
+          'event_card_image',
+          await MultipartFile.fromFile(cardImage.path, filename: cardFileName),
+        ),
+      );
 
-      final String endpointUrl = "https://qasherehe.opencrafts.io/events/createEvent";
+      final String endpointUrl =
+          "https://qasherehe.opencrafts.io/events/createEvent";
       _logger.i("Sending event creation request to: $endpointUrl");
       _logger.d("Event data (non-file): $eventDataMap");
-      final response = await dioClient.dio.post(
-        endpointUrl,
-        data: formData,
-      );
+      final response = await dioClient.dio.post(endpointUrl, data: formData);
       _logger.i("Event creation response status: ${response.statusCode}");
       _logger.d("Event creation response data: ${response.data}");
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -388,24 +438,37 @@ class ShereheRemoteDataSource with DioErrorHandler {
         _logger.i("Event created successfully: $message");
         return right(unit);
       } else {
-        _logger.e("Server error creating event. Status: ${response.statusCode}, Response: ${response.data}");
-        String errorMessage = response.data['message'] ?? 'Unknown server error';
+        _logger.e(
+          "Server error creating event. Status: ${response.statusCode}, Response: ${response.data}",
+        );
+        String errorMessage =
+            response.data['message'] ?? 'Unknown server error';
         _logger.e("Server error message: $errorMessage");
         return left(
           ServerFailure(
-            message: "Server error: $errorMessage (Status: ${response.statusCode})",
+            message:
+                "Server error: $errorMessage (Status: ${response.statusCode})",
             error: response,
           ),
         );
       }
     } on DioException catch (de) {
-      _logger.e("DioException when creating event", error: de, stackTrace: de.stackTrace);
+      _logger.e(
+        "DioException when creating event",
+        error: de,
+        stackTrace: de.stackTrace,
+      );
       return handleDioError(de);
     } catch (e, stackTrace) {
-      _logger.e("Unexpected error while creating event", error: e, stackTrace: stackTrace);
+      _logger.e(
+        "Unexpected error while creating event",
+        error: e,
+        stackTrace: stackTrace,
+      );
       return left(
         ServerFailure(
-          message: "An unexpected error occurred while creating the event: ${e.toString()}",
+          message:
+              "An unexpected error occurred while creating the event: ${e.toString()}",
           error: e.toString(),
         ),
       );

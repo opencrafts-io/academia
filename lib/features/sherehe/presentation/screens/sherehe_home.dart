@@ -41,7 +41,7 @@ class _ShereheHomeState extends State<ShereheHome>
   @override
   void initState() {
     super.initState();
-    context.read<ShereheHomeBloc>().add(FetchAllEvents(limit: 5));
+    context.read<ShereheHomeBloc>().add(FetchAllEvents());
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -49,7 +49,7 @@ class _ShereheHomeState extends State<ShereheHome>
         final state = context.read<ShereheHomeBloc>().state;
         if (state is EventLoaded && !state.hasReachedEnd) {
           context.read<ShereheHomeBloc>().add(
-            FetchAllEvents(isLoadMore: true, limit: 5),
+            FetchAllEvents(isLoadMore: true),
           );
         }
       }
