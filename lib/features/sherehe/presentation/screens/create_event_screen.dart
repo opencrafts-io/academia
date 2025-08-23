@@ -303,7 +303,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         date: datePart,
         organizer: _userProfile!.name,
         imageUrl: '',
-        organizerId: _userProfile!.id.hashCode,
+        organizerId: _userProfile!.id.hashCode.toString(),
         numberOfAttendees: 1,
         genre: _selectedGenres,
         createdAt: DateTime.now(),
