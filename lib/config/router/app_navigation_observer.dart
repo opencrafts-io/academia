@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -19,6 +20,17 @@ class AppNavigationObserver extends NavigatorObserver {
   /// - [previousRoute]: The route that was active before the new route was pushed.
   @override
   void didPush(Route route, Route? previousRoute) {
+    FirebaseAnalytics.instance.logScreenView(
+      screenName: route.settings.name,
+      screenClass: route.toString(),
+      parameters: {
+        "args": route.settings.arguments.toString(),
+        "previous": previousRoute?.settings.name ?? "no previous route",
+        "previous_arguments":
+            previousRoute?.settings.arguments.toString() ??
+            "no previous route args",
+      },
+    );
     _logger.i({
       "trace": "did push route",
       "route": route.settings.name,

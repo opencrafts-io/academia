@@ -8,7 +8,6 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
-  $calendarRoute,
   $feedRoute,
   $chatRoute,
   $postDetailRoute,
@@ -25,7 +24,23 @@ RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
   factory: $MainLayoutShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState),
-    GoRouteData.$route(path: '/calendar', factory: _$CalendarRoute._fromState),
+    GoRouteData.$route(
+      path: '/calendar',
+
+      factory: _$CalendarRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'create',
+
+          factory: _$CreateAgendaEventRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'item/:id',
+
+          factory: _$AgendaItemViewRoute._fromState,
+        ),
+      ],
+    ),
     GoRouteData.$route(
       path: '/essentials',
 
@@ -80,6 +95,52 @@ mixin _$CalendarRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin _$CreateAgendaEventRoute on GoRouteData {
+  static CreateAgendaEventRoute _fromState(GoRouterState state) =>
+      CreateAgendaEventRoute();
+
+  @override
+  String get location => GoRouteData.$location('/calendar/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AgendaItemViewRoute on GoRouteData {
+  static AgendaItemViewRoute _fromState(GoRouterState state) =>
+      AgendaItemViewRoute(id: state.pathParameters['id']);
+
+  AgendaItemViewRoute get _self => this as AgendaItemViewRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/calendar/item/${Uri.encodeComponent(_self.id ?? '')}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin _$EssentialsRoute on GoRouteData {
   static EssentialsRoute _fromState(GoRouterState state) => EssentialsRoute();
 
@@ -105,40 +166,6 @@ mixin _$MeteorRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/meteor');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $calendarRoute => GoRouteData.$route(
-  path: '/calendar',
-
-  factory: _$CalendarRoute._fromState,
-  routes: [
-    GoRouteData.$route(
-      path: 'create',
-
-      factory: _$CreateAgendaEventRoute._fromState,
-    ),
-  ],
-);
-
-mixin _$CreateAgendaEventRoute on GoRouteData {
-  static CreateAgendaEventRoute _fromState(GoRouterState state) =>
-      CreateAgendaEventRoute();
-
-  @override
-  String get location => GoRouteData.$location('/calendar/create');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -71,7 +71,11 @@ class AgendaEventBloc extends Bloc<AgendaEventEvent, AgendaEventState> {
         (failure) {
           return emit(AgendaEventErrorState(error: failure.message));
         },
-        (agendaEvent) {
+        (agendaEvent) async {
+          // Provide haptic feedback for successful update
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(preset: VibrationPreset.softPulse);
+          }
           // Refresh the cached events to show the updated event
           add(FetchCachedAgendaEventsEvent());
         },

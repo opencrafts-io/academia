@@ -63,9 +63,7 @@ class FeedPage extends StatelessWidget {
                   }
                   if (state is FeedError) {
                     return SliverFillRemaining(
-                      child: Center(
-                        child: Text("Connection error"),
-                      ),
+                      child: Center(child: Text("Connection error")),
                     );
                   }
                   return const SliverFillRemaining(
@@ -89,4 +87,3 @@ class FeedPage extends StatelessWidget {
     );
   }
 }
-
