@@ -83,7 +83,7 @@ class AuthRemoteDatasource {
         parameters: {
           "platform": platform,
           "auth_url": authUrl,
-          "successful": true,
+          "successful": 1,
         },
       );
 
