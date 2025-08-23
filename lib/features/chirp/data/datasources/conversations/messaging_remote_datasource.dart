@@ -18,6 +18,9 @@ abstract class MessagingRemoteDatasource {
   Future<Either<Failure, void>> markMessageAsRead(String messageId);
   Future<Either<Failure, void>> deleteMessage(String messageId);
   Future<Either<Failure, void>> markConversationAsRead(String conversationId);
+  Future<Either<Failure, ConversationData>> createConversation(
+    List<String> participants,
+  );
 }
 
 class MessagingRemoteDatasourceImpl
@@ -74,7 +77,11 @@ class MessagingRemoteDatasourceImpl
       );
 
       if (response.statusCode == 200) {
-        final messages = (response.data as List)
+        // The API returns a paginated response with 'results' array
+        final responseData = response.data as Map<String, dynamic>;
+        final results = responseData['results'] as List? ?? [];
+
+        final messages = results
             .map((json) => _parseMessageFromBackend(json))
             .toList();
 
@@ -274,6 +281,40 @@ class MessagingRemoteDatasourceImpl
           error: e,
           message:
               "Something went wrong while marking conversation as read. Please try again.",
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, ConversationData>> createConversation(
+    List<String> participants,
+  ) async {
+    try {
+      final response = await dioClient.dio.post(
+        '/$servicePath/conversations/create/',
+        data: {'participants': participants},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final conversation = _parseConversationFromBackend(response.data);
+        return Right(conversation);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "We couldn't create the conversation. Please try again.",
+          error: "Status code: ${response.statusCode}",
+        ),
+      );
+    } on DioException catch (dioError) {
+      return handleDioError(dioError);
+    } catch (e) {
+      return Left(
+        CacheFailure(
+          error: e,
+          message:
+              "Something went wrong while creating the conversation. Please try again.",
         ),
       );
     }

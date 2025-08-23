@@ -56,3 +56,14 @@ class StartNewConversationEvent extends MessagingEvent {
   @override
   List<Object?> get props => [user];
 }
+
+class RefreshConversationsEvent extends MessagingEvent {}
+
+class RefreshMessagesEvent extends MessagingEvent {
+  final String conversationId;
+
+  const RefreshMessagesEvent(this.conversationId);
+
+  @override
+  List<Object?> get props => [conversationId];
+}

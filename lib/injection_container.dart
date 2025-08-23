@@ -1,5 +1,4 @@
 import 'package:academia/config/flavor.dart';
-// import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -29,9 +28,6 @@ Future<void> init(FlavorConfig flavor) async {
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
     ),
   );
-  // sl.registerFactory<ChirpDioClient>(
-  //   () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
-  // );
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
@@ -103,9 +99,21 @@ Future<void> init(FlavorConfig flavor) async {
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => FeedBloc(
       getFeedPosts: sl.get<GetFeedPosts>(),
       cachePosts: sl.get<CachePostsUsecase>(),
+      likePost: sl.get<LikePostUsecase>(),
+      createPost: sl.get<CreatePostUsecase>(),
+      addComment: sl.get<CommentUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -264,6 +272,21 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+  sl.registerFactory<GetCachedConversations>(
+    () => GetCachedConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<GetCachedMessages>(
+    () => GetCachedMessages(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshConversations>(
+    () => RefreshConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshMessages>(
+    () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<CreateConversation>(
+    () => CreateConversation(sl.get<ConversationRepositoryImpl>()),
+  );
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
@@ -272,6 +295,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<ChirpUserRepository>(
     () => ChirpUserRepositoryImpl(
       remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
+      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
     ),
   );
   sl.registerFactory<SearchUsersUseCase>(
@@ -284,6 +308,11 @@ Future<void> init(FlavorConfig flavor) async {
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
       searchUsers: sl.get<SearchUsersUseCase>(),
+      getCachedConversations: sl.get<GetCachedConversations>(),
+      getCachedMessages: sl.get<GetCachedMessages>(),
+      refreshConversations: sl.get<RefreshConversations>(),
+      refreshMessages: sl.get<RefreshMessages>(),
+      createConversation: sl.get<CreateConversation>(),
     ),
   );
 

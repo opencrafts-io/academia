@@ -6,8 +6,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   file_selector_linux
+  media_kit_libs_linux
+  media_kit_video
   sqlite3_flutter_libs
   url_launcher_linux
+  volume_controller
   window_to_front
 )
 

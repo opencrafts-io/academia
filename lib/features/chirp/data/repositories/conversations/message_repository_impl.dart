@@ -18,9 +18,31 @@ class MessageRepositoryImpl implements MessageRepository {
   });
 
   @override
+  Stream<List<Message>> getCachedMessages(String conversationId) {
+    return localDataSource
+        .getMessagesStream(conversationId)
+        .map(
+          (rawMessages) =>
+              rawMessages.map((rawMessage) => rawMessage.toEntity()).toList(),
+        );
+  }
+
+  @override
   Future<Either<Failure, List<Message>>> getMessages(
     String conversationId,
   ) async {
+    final cachedResult = await localDataSource.getCachedMessages(
+      conversationId,
+    );
+
+    if (cachedResult.isRight()) {
+      final cachedMessages = (cachedResult as Right).value;
+      if (cachedMessages.isNotEmpty) {
+        return Right(cachedMessages.map((data) => data.toEntity()).toList());
+      }
+    }
+
+    // If no cache or cache is empty, try remote
     final messagesResult = await remoteDataSource.getMessages(conversationId);
 
     return await messagesResult.fold(
@@ -68,10 +90,13 @@ class MessageRepositoryImpl implements MessageRepository {
       file: file,
     );
 
-    return messageResult.fold(
-      (failure) => Left(failure),
-      (message) => Right(message.toEntity()),
-    );
+    return messageResult.fold((failure) => Left(failure), (message) async {
+      final cacheResult = await localDataSource.createOrUpdateMessage(message);
+      cacheResult.fold((cacheFailure) {
+        debugPrint('Cache error: ${cacheFailure.message}');
+      }, (_) {});
+      return Right(message.toEntity());
+    });
   }
 
   @override
@@ -81,7 +106,45 @@ class MessageRepositoryImpl implements MessageRepository {
 
   @override
   Future<Either<Failure, void>> deleteMessage(String messageId) async {
-    return await remoteDataSource.deleteMessage(messageId);
+    final result = await remoteDataSource.deleteMessage(messageId);
+
+    return result.fold((failure) => Left(failure), (_) async {
+      final cacheResult = await localDataSource.deleteMessage(messageId);
+      return cacheResult.fold((cacheFailure) {
+        debugPrint('Cache error: ${cacheFailure.message}');
+        return const Right(null);
+      }, (_) => const Right(null));
+    });
+  }
+
+  @override
+  Future<Either<Failure, Stream<List<Message>>>> refreshMessages(
+    String conversationId,
+  ) async {
+    final messagesResult = await remoteDataSource.getMessages(conversationId);
+
+    return await messagesResult.fold((failure) => Left(failure), (
+      messages,
+    ) async {
+      final cacheResult = await localDataSource.cacheMessages(
+        conversationId,
+        messages,
+      );
+
+      if (cacheResult.isLeft()) {
+        return Left((cacheResult as Left).value);
+      }
+
+      return Right(
+        localDataSource
+            .getMessagesStream(conversationId)
+            .map(
+              (rawMessages) => rawMessages
+                  .map((rawMessage) => rawMessage.toEntity())
+                  .toList(),
+            ),
+      );
+    });
   }
 
   @override
@@ -89,5 +152,18 @@ class MessageRepositoryImpl implements MessageRepository {
     String conversationId,
   ) async {
     return await remoteDataSource.markConversationAsRead(conversationId);
+  }
+
+  @override
+  Future<Either<Failure, Message>> createOrUpdateMessage(
+    Message message,
+  ) async {
+    final messageData = message.toData();
+    final result = await localDataSource.createOrUpdateMessage(messageData);
+
+    return result.fold(
+      (failure) => Left(failure),
+      (data) => Right(data.toEntity()),
+    );
   }
 }

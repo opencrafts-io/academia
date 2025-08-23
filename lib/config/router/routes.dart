@@ -15,7 +15,13 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 @TypedShellRoute<MainLayoutShellRoute>(
   routes: <TypedRoute<RouteData>>[
     TypedGoRoute<HomeRoute>(path: '/'),
-    TypedGoRoute<CalendarRoute>(path: '/calendar'),
+    TypedGoRoute<CalendarRoute>(
+      path: '/calendar',
+      routes: [
+        TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
+        TypedGoRoute<AgendaItemViewRoute>(path: "item/:id"),
+      ],
+    ),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
   ],
@@ -46,16 +52,31 @@ class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   }
 }
 
-@TypedGoRoute<CalendarRoute>(
-  path: "/calendar",
-  routes: [
-    TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
-  ],
-)
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AgendaHomePage();
+  }
+}
+
+class AgendaItemViewRoute extends GoRouteData with _$AgendaItemViewRoute {
+  AgendaItemViewRoute({this.id});
+  String? id;
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: AgendaItemViewPage(agendaEventID: id),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var tween = Tween(
+          begin: Offset(0.0, 1.0),
+          end: Offset.zero,
+        ).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 }
 
@@ -68,20 +89,21 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: const CreateAgendaEventPage(),
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) {
-        var tween = Tween(
-          begin: Offset(0.0, 1.0),
-          end: Offset.zero,
-        ).chain(CurveTween(curve: Curves.easeInOut));
-        var offsetAnimation = animation.drive(tween);
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
 
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
     );
   }
 }
@@ -126,6 +148,13 @@ class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
   }
 }
 
+@TypedGoRoute<AddPostRoute>(path: "/add-post")
+class AddPostRoute extends GoRouteData with _$AddPostRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AddPostPage();
+  }
+}
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
