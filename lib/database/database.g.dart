@@ -2282,7 +2282,7 @@ class $ConversationTableTable extends ConversationTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_profile (id)',
+      'REFERENCES chirp_user_table (id)',
     ),
   );
   static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
@@ -8544,35 +8544,6 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$UserProfileTableReferences
-    extends BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData> {
-  $$UserProfileTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
-  _conversationTableRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.conversationTable,
-        aliasName: $_aliasNameGenerator(
-          db.userProfile.id,
-          db.conversationTable.userId,
-        ),
-      );
-
-  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
-    final manager = $$ConversationTableTableTableManager(
-      $_db,
-      $_db.conversationTable,
-    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _conversationTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$UserProfileTableFilterComposer
     extends Composer<_$AppDataBase, $UserProfileTable> {
   $$UserProfileTableFilterComposer({
@@ -8646,31 +8617,6 @@ class $$UserProfileTableFilterComposer
     column: $table.vibePoints,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> conversationTableRefs(
-    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
-  ) {
-    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.conversationTable,
-      getReferencedColumn: (t) => t.userId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ConversationTableTableFilterComposer(
-            $db: $db,
-            $table: $db.conversationTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$UserProfileTableOrderingComposer
@@ -8801,32 +8747,6 @@ class $$UserProfileTableAnnotationComposer
     column: $table.vibePoints,
     builder: (column) => column,
   );
-
-  Expression<T> conversationTableRefs<T extends Object>(
-    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
-  ) {
-    final $$ConversationTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.conversationTable,
-          getReferencedColumn: (t) => t.userId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ConversationTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.conversationTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$UserProfileTableTableManager
@@ -8840,9 +8760,12 @@ class $$UserProfileTableTableManager
           $$UserProfileTableAnnotationComposer,
           $$UserProfileTableCreateCompanionBuilder,
           $$UserProfileTableUpdateCompanionBuilder,
-          (UserProfileData, $$UserProfileTableReferences),
+          (
+            UserProfileData,
+            BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
+          ),
           UserProfileData,
-          PrefetchHooks Function({bool conversationTableRefs})
+          PrefetchHooks Function()
         > {
   $$UserProfileTableTableManager(_$AppDataBase db, $UserProfileTable table)
     : super(
@@ -8920,45 +8843,9 @@ class $$UserProfileTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$UserProfileTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({conversationTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (conversationTableRefs) db.conversationTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (conversationTableRefs)
-                    await $_getPrefetchedData<
-                      UserProfileData,
-                      $UserProfileTable,
-                      ConversationData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$UserProfileTableReferences
-                          ._conversationTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$UserProfileTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).conversationTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -8973,9 +8860,12 @@ typedef $$UserProfileTableProcessedTableManager =
       $$UserProfileTableAnnotationComposer,
       $$UserProfileTableCreateCompanionBuilder,
       $$UserProfileTableUpdateCompanionBuilder,
-      (UserProfileData, $$UserProfileTableReferences),
+      (
+        UserProfileData,
+        BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
+      ),
       UserProfileData,
-      PrefetchHooks Function({bool conversationTableRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TokenTableCreateCompanionBuilder =
     TokenCompanion Function({
@@ -9229,6 +9119,39 @@ typedef $$ChirpUserTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
+final class $$ChirpUserTableTableReferences
+    extends BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData> {
+  $$ChirpUserTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
+  _conversationTableRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.conversationTable,
+        aliasName: $_aliasNameGenerator(
+          db.chirpUserTable.id,
+          db.conversationTable.userId,
+        ),
+      );
+
+  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
+    final manager = $$ConversationTableTableTableManager(
+      $_db,
+      $_db.conversationTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _conversationTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$ChirpUserTableTableFilterComposer
     extends Composer<_$AppDataBase, $ChirpUserTableTable> {
   $$ChirpUserTableTableFilterComposer({
@@ -9272,6 +9195,31 @@ class $$ChirpUserTableTableFilterComposer
     column: $table.avatarUrl,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> conversationTableRefs(
+    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
+  ) {
+    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.conversationTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConversationTableTableFilterComposer(
+            $db: $db,
+            $table: $db.conversationTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ChirpUserTableTableOrderingComposer
@@ -9350,6 +9298,32 @@ class $$ChirpUserTableTableAnnotationComposer
 
   GeneratedColumn<String> get avatarUrl =>
       $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  Expression<T> conversationTableRefs<T extends Object>(
+    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
+  ) {
+    final $$ConversationTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.conversationTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ConversationTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.conversationTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$ChirpUserTableTableTableManager
@@ -9363,12 +9337,9 @@ class $$ChirpUserTableTableTableManager
           $$ChirpUserTableTableAnnotationComposer,
           $$ChirpUserTableTableCreateCompanionBuilder,
           $$ChirpUserTableTableUpdateCompanionBuilder,
-          (
-            ChirpUserData,
-            BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-          ),
+          (ChirpUserData, $$ChirpUserTableTableReferences),
           ChirpUserData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool conversationTableRefs})
         > {
   $$ChirpUserTableTableTableManager(
     _$AppDataBase db,
@@ -9424,9 +9395,45 @@ class $$ChirpUserTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ChirpUserTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({conversationTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (conversationTableRefs) db.conversationTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (conversationTableRefs)
+                    await $_getPrefetchedData<
+                      ChirpUserData,
+                      $ChirpUserTableTable,
+                      ConversationData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$ChirpUserTableTableReferences
+                          ._conversationTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$ChirpUserTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).conversationTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.userId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -9441,12 +9448,9 @@ typedef $$ChirpUserTableTableProcessedTableManager =
       $$ChirpUserTableTableAnnotationComposer,
       $$ChirpUserTableTableCreateCompanionBuilder,
       $$ChirpUserTableTableUpdateCompanionBuilder,
-      (
-        ChirpUserData,
-        BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-      ),
+      (ChirpUserData, $$ChirpUserTableTableReferences),
       ChirpUserData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool conversationTableRefs})
     >;
 typedef $$MessageTableTableCreateCompanionBuilder =
     MessageTableCompanion Function({
@@ -10083,17 +10087,17 @@ final class $$ConversationTableTableReferences
     super.$_typedResult,
   );
 
-  static $UserProfileTable _userIdTable(_$AppDataBase db) =>
-      db.userProfile.createAlias(
-        $_aliasNameGenerator(db.conversationTable.userId, db.userProfile.id),
+  static $ChirpUserTableTable _userIdTable(_$AppDataBase db) =>
+      db.chirpUserTable.createAlias(
+        $_aliasNameGenerator(db.conversationTable.userId, db.chirpUserTable.id),
       );
 
-  $$UserProfileTableProcessedTableManager get userId {
+  $$ChirpUserTableTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UserProfileTableTableManager(
+    final manager = $$ChirpUserTableTableTableManager(
       $_db,
-      $_db.userProfile,
+      $_db.chirpUserTable,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -10159,20 +10163,20 @@ class $$ConversationTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UserProfileTableFilterComposer get userId {
-    final $$UserProfileTableFilterComposer composer = $composerBuilder(
+  $$ChirpUserTableTableFilterComposer get userId {
+    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableFilterComposer(
+          }) => $$ChirpUserTableTableFilterComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10240,20 +10244,20 @@ class $$ConversationTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UserProfileTableOrderingComposer get userId {
-    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUserTableTableOrderingComposer get userId {
+    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableOrderingComposer(
+          }) => $$ChirpUserTableTableOrderingComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10315,20 +10319,20 @@ class $$ConversationTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$UserProfileTableAnnotationComposer get userId {
-    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUserTableTableAnnotationComposer get userId {
+    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableAnnotationComposer(
+          }) => $$ChirpUserTableTableAnnotationComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:

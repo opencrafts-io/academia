@@ -4,6 +4,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import '../models/chirp_user_model.dart';
 
 abstract class ChirpUserRemoteDatasource {
   Future<Either<Failure, List<ChirpUserData>>> getChirpUsers();
@@ -11,7 +12,11 @@ abstract class ChirpUserRemoteDatasource {
   Future<Either<Failure, ChirpUserData>> createChirpUser(ChirpUserData user);
   Future<Either<Failure, ChirpUserData>> updateChirpUser(ChirpUserData user);
   Future<Either<Failure, void>> deleteChirpUser(String userId);
-  Future<Either<Failure, List<ChirpUserData>>> searchChirpUsers(String query);
+  Future<Either<Failure, List<ChirpUserData>>> searchChirpUsers(
+    String query, {
+    String type = 'combined',
+    int limit = 10,
+  });
 }
 
 class ChirpUserRemoteDatasourceImpl
@@ -40,7 +45,7 @@ class ChirpUserRemoteDatasourceImpl
       }
 
       final users = (response.data as List)
-          .map((json) => ChirpUserData.fromJson(json))
+          .map((json) => ChirpUserDataHelper.fromJson(json))
           .toList();
 
       return Right(users);
@@ -70,7 +75,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final user = ChirpUserData.fromJson(response.data);
+      final user = ChirpUserDataHelper.fromJson(response.data);
       return Right(user);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -103,7 +108,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final createdUser = ChirpUserData.fromJson(response.data);
+      final createdUser = ChirpUserDataHelper.fromJson(response.data);
       return Right(createdUser);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -136,7 +141,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final updatedUser = ChirpUserData.fromJson(response.data);
+      final updatedUser = ChirpUserDataHelper.fromJson(response.data);
       return Right(updatedUser);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -181,12 +186,14 @@ class ChirpUserRemoteDatasourceImpl
 
   @override
   Future<Either<Failure, List<ChirpUserData>>> searchChirpUsers(
-    String query,
-  ) async {
+    String query, {
+    String type = 'combined',
+    int limit = 10,
+  }) async {
     try {
       final response = await dioClient.dio.get(
         '/$servicePath/users/search/',
-        queryParameters: {'q': query},
+        queryParameters: {'q': query, 'type': type, 'limit': limit},
       );
 
       if (response.statusCode != 200) {
@@ -198,8 +205,10 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final users = (response.data as List)
-          .map((json) => ChirpUserData.fromJson(json))
+      final responseData = response.data;
+
+      final users = (responseData['users'] as List)
+          .map((json) => ChirpUserDataHelper.fromJson(json))
           .toList();
 
       return Right(users);
