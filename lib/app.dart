@@ -157,6 +157,20 @@ class _AcademiaState extends State<Academia> {
                 }
               },
             ),
+            BlocListener<ProfileBloc, ProfileState>(
+              listener: (context, state) {
+                if (state is ProfileLoadedState) {
+                  // Set user data in OneSignal when profile is loaded
+                  context.read<NotificationBloc>().add(
+                    SetUserDataEvent(
+                      userId: state.profile.id,
+                      name: state.profile.name,
+                      email: state.profile.email,
+                    ),
+                  );
+                }
+              },
+            ),
             BlocListener<RemoteConfigBloc, RemoteConfigState>(
               listener: (context, state) {
                 if (state is RemoteConfigErrorState) {

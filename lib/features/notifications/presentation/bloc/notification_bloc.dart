@@ -19,6 +19,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final SetNotificationPermissionUsecase setNotificationPermissionUsecase;
   final GetNotificationPermissionUsecase getNotificationPermissionUsecase;
   final SendLocalNotificationUsecase sendLocalNotificationUsecase;
+  final SetUserDataUsecase setUserDataUsecase;
 
   final Logger _logger = Logger();
 
@@ -34,6 +35,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     required this.setNotificationPermissionUsecase,
     required this.getNotificationPermissionUsecase,
     required this.sendLocalNotificationUsecase,
+    required this.setUserDataUsecase,
   }) : super(NotificationInitialState()) {
     on<InitializeOneSignalEvent>(_onInitializeOneSignal);
     on<LoadNotificationsEvent>(_onLoadNotifications);
@@ -46,6 +48,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<SetNotificationPermissionEvent>(_onSetNotificationPermission);
     on<GetNotificationPermissionEvent>(_onGetNotificationPermission);
     on<SendLocalNotificationEvent>(_onSendLocalNotification);
+    on<SetUserDataEvent>(_onSetUserData);
   }
 
   Future<void> _onInitializeOneSignal(
@@ -250,6 +253,36 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       },
       (_) {
         emit(LocalNotificationSentState());
+      },
+    );
+  }
+
+  Future<void> _onSetUserData(
+    SetUserDataEvent event,
+    Emitter<NotificationState> emit,
+  ) async {
+    final params = SetUserDataParams(
+      userId: event.userId,
+      name: event.name,
+      email: event.email,
+    );
+
+    final result = await setUserDataUsecase(params);
+
+    result.fold(
+      (failure) {
+        _logger.e(
+          'Failed to set user data',
+          error: failure.error,
+        );
+        emit(NotificationErrorState(message: failure.message));
+      },
+      (_) {
+        emit(UserDataSetState(
+          userId: event.userId,
+          name: event.name,
+          email: event.email,
+        ));
       },
     );
   }

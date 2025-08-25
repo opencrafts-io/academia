@@ -6,6 +6,13 @@ abstract class NotificationRepository {
   /// Initialize OneSignal with the provided app ID
   Future<Either<Failure, void>> initializeOneSignal(String appId);
   
+  /// Set user data (external user ID and metadata) in OneSignal
+  Future<Either<Failure, void>> setUserData({
+    required String userId,
+    required String name,
+    required String email,
+  });
+  
   /// Get all notifications from local storage
   Future<Either<Failure, List<NotificationEntity>>> getNotifications();
   
