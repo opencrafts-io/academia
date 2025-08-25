@@ -62,7 +62,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('OneSignal initialized successfully');
         emit(NotificationInitializedState());
       },
     );
@@ -82,7 +81,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (notifications) {
-        _logger.d('Loaded ${notifications.length} notifications');
         emit(NotificationsLoadedState(notifications: notifications));
       },
     );
@@ -100,7 +98,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Marked notification as read: ${event.notificationId}');
         add(LoadNotificationsEvent());
       },
     );
@@ -121,7 +118,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Marked all notifications as read');
         add(LoadNotificationsEvent());
       },
     );
@@ -139,7 +135,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Deleted notification: ${event.notificationId}');
         add(LoadNotificationsEvent());
       },
     );
@@ -157,7 +152,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Cleared all notifications');
         add(LoadNotificationsEvent());
       },
     );
@@ -175,7 +169,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (count) {
-        _logger.d('Notification count: $count');
         emit(NotificationCountLoadedState(count: count));
       },
     );
@@ -193,7 +186,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (count) {
-        _logger.d('Unread count: $count');
         emit(UnreadCountLoadedState(count: count));
       },
     );
@@ -214,7 +206,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Set notification permission: ${event.enabled}');
         emit(NotificationPermissionSetState(enabled: event.enabled));
       },
     );
@@ -235,7 +226,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (enabled) {
-        _logger.d('Notification permission: $enabled');
         emit(NotificationPermissionLoadedState(enabled: enabled));
       },
     );
@@ -259,7 +249,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        _logger.d('Sent local notification: ${event.title}');
         emit(LocalNotificationSentState());
       },
     );

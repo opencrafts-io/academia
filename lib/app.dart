@@ -150,14 +150,10 @@ class _AcademiaState extends State<Academia> {
             ),
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
-                if (state is NotificationInitializedState) {
-                  debugPrint('✅ OneSignal initialized successfully!');
-                } else if (state is NotificationErrorState) {
+                if (state is NotificationErrorState) {
                   debugPrint(
                     '❌ OneSignal initialization failed: ${state.message}',
                   );
-                } else if (state is NotificationLoadingState) {
-                  debugPrint('⏳ OneSignal initialization in progress...');
                 }
               },
             ),
