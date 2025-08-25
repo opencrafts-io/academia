@@ -383,4 +383,69 @@ Future<void> init(FlavorConfig flavor) async {
       sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
     ),
   );
+
+  // Firebase Remote Config
+  sl.registerFactory<RemoteConfigRemoteDatasource>(
+    () => RemoteConfigRemoteDatasource(),
+  );
+  sl.registerFactory<RemoteConfigLocalDatasource>(
+    () => RemoteConfigLocalDatasource(),
+  );
+
+  sl.registerFactory<RemoteConfigRepository>(
+    () => RemoteConfigRepositoryImpl(
+      remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
+      localDatasource: sl.get<RemoteConfigLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<InitializeRemoteConfigUsecase>(
+    () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<FetchAndActivateUsecase>(
+    () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetStringUsecase>(
+    () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetBoolUsecase>(
+    () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetIntUsecase>(
+    () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetDoubleUsecase>(
+    () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetJsonUsecase>(
+    () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetAllParametersUsecase>(
+    () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<SetDefaultsUsecase>(
+    () => SetDefaultsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetSettingsUsecase>(
+    () => GetSettingsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<SetSettingsUsecase>(
+    () => SetSettingsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+
+  sl.registerFactory<RemoteConfigBloc>(
+    () => RemoteConfigBloc(
+      initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
+      fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
+      getStringUsecase: sl.get<GetStringUsecase>(),
+      getBoolUsecase: sl.get<GetBoolUsecase>(),
+      getIntUsecase: sl.get<GetIntUsecase>(),
+      getDoubleUsecase: sl.get<GetDoubleUsecase>(),
+      getJsonUsecase: sl.get<GetJsonUsecase>(),
+      getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
+      setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
+      getSettingsUsecase: sl.get<GetSettingsUsecase>(),
+      setSettingsUsecase: sl.get<SetSettingsUsecase>(),
+    ),
+  );
 }

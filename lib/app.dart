@@ -96,7 +96,7 @@ class _AcademiaState extends State<Academia> {
             cachePosts: sl.get<CachePostsUsecase>(),
             likePost: sl.get<LikePostUsecase>(),
             createPost: sl.get<CreatePostUsecase>(),
-            addComment: sl.get<CommentUsecase>()
+            addComment: sl.get<CommentUsecase>(),
           )..add(CacheFeedEvent()),
         ),
         BlocProvider(
@@ -135,6 +135,10 @@ class _AcademiaState extends State<Academia> {
             )
             ..add(SetNotificationPermissionEvent(enabled: true)),
         ),
+        BlocProvider(
+          create: (context) =>
+              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -154,6 +158,15 @@ class _AcademiaState extends State<Academia> {
                   );
                 } else if (state is NotificationLoadingState) {
                   debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+            BlocListener<RemoteConfigBloc, RemoteConfigState>(
+              listener: (context, state) {
+                if (state is RemoteConfigErrorState) {
+                  debugPrint(
+                    '❌ Firebase Remote Config failed: ${state.message}',
+                  );
                 }
               },
             ),
