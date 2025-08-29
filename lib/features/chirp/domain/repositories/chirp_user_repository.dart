@@ -8,5 +8,9 @@ abstract class ChirpUserRepository {
   Future<Either<Failure, ChirpUser>> createChirpUser(ChirpUser user);
   Future<Either<Failure, ChirpUser>> updateChirpUser(ChirpUser user);
   Future<Either<Failure, void>> deleteChirpUser(String userId);
-  Future<Either<Failure, List<ChirpUser>>> searchChirpUsers(String query);
+  Future<Either<Failure, List<ChirpUser>>> searchChirpUsers(
+    String query, {
+    String type = 'combined',
+    int limit = 10,
+  });
 }

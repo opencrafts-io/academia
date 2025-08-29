@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "975540451403",
+    "project_id": "academia-28cec",
+    "storage_bucket": "academia-28cec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:50f681d3cfcba7bc1975ce",
+        "android_client_info": {
+          "package_name": "io.opencrafts.academia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:ddfd2491970182121975ce",
+        "android_client_info": {
+          "package_name": "io.opencrafts.academia.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:acd2c594092788111975ce",
+        "android_client_info": {
+          "package_name": "io.opencrafts.academia.stg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,19 +1,16 @@
 import 'dart:io';
-import 'package:academia/core/error/failures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../../domain/domain.dart';
+import 'package:academia/core/core.dart';
 
 part 'create_event_event.dart';
 part 'create_event_state.dart';
 
 class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
-  final CreateEventUseCase _createEventUseCase;
-
-  CreateEventBloc({required CreateEventUseCase createEventUseCase})
-      : _createEventUseCase = createEventUseCase,
-        super(CreateEventInitial()) {
+  final CreateEventUseCase createEventUseCase;
+  CreateEventBloc({required this.createEventUseCase}) : super(CreateEventInitial()) {
     on<SubmitNewEvent>(_onSubmitNewEvent);
   }
 
@@ -22,18 +19,16 @@ class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
       Emitter<CreateEventState> emit,
       ) async {
 
-    if (event.imageFile == null) {
-      emit(CreateEventFailure(message: "Event image is required."));
-      return;
-    }
 
     emit(CreateEventLoading());
     try {
-
-      final Either<Failure, Unit> result = await _createEventUseCase(
+      final Either<Failure, Unit> result = await createEventUseCase(
         event.event,
-        event.imageFile!,
+        event.imageFile,
+        event.bannerImageFile,
+        event.cardImageFile,
       );
+
 
       result.fold(
             (Failure failure) {
@@ -43,8 +38,10 @@ class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
           emit(CreateEventSuccess(event: event.event));
         },
       );
-    } catch (e) {
-      emit(CreateEventFailure(message: "An unexpected error occurred: ${e.toString()}"));
+    } catch (e, stackTrace) {
+      print('Unexpected error in _onSubmitNewEvent: $e\nStack: $stackTrace');
+      emit(CreateEventFailure(
+          message: "An unexpected error occurred: ${e.toString()}"));
     }
   }
 }
