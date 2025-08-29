@@ -1,6 +1,7 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/features/chirp/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
@@ -26,6 +27,10 @@ part 'database.g.dart';
     EventTable,
     AttendeeTable,
     TicketTable,
+    GroupTable,
+    GroupModeratorsTable,
+    GroupMembersTable,
+    GroupBannedUsersTable,
 
     // Agenda
     AgendaEvent,
