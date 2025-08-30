@@ -269,3 +269,24 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     return TodoHomeScreen();
   }
 }
+
+@TypedGoRoute<CommunitiesRoute>(
+  path: "/communities",
+  // routes: []
+)
+class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityHome();
+  }
+}
+
+@TypedGoRoute<CreateCommunitiesRoute>(
+  path: "/create-community",
+)
+class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateCommunityScreen();
+  }
+}

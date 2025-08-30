@@ -17,6 +17,8 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $todosRoute,
+  $communitiesRoute,
+  $createCommunitiesRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -449,6 +451,59 @@ mixin _$TodosRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/todos');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $communitiesRoute => GoRouteData.$route(
+  path: '/communities',
+
+  factory: _$CommunitiesRoute._fromState,
+);
+
+mixin _$CommunitiesRoute on GoRouteData {
+  static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute();
+
+  @override
+  String get location => GoRouteData.$location('/communities');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $createCommunitiesRoute => GoRouteData.$route(
+  path: '/create-community',
+
+  factory: _$CreateCommunitiesRoute._fromState,
+);
+
+mixin _$CreateCommunitiesRoute on GoRouteData {
+  static CreateCommunitiesRoute _fromState(GoRouterState state) =>
+      CreateCommunitiesRoute();
+
+  @override
+  String get location => GoRouteData.$location('/create-community');
 
   @override
   void go(BuildContext context) => context.go(location);
