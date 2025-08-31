@@ -1,3 +1,4 @@
+import 'package:academia/config/router/routes.dart';
 import 'package:flutter/material.dart';
 
 class CommunityMembers extends StatefulWidget {
@@ -8,6 +9,87 @@ class CommunityMembers extends StatefulWidget {
 }
 
 class _CommunityMembersState extends State<CommunityMembers> {
+  void _showUserActions(
+    BuildContext context,
+    String name, {
+    bool isModerator = false,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // User header (avatar + name like WhatsApp style)
+              ListTile(
+                leading: CircleAvatar(child: Text(name[0].toUpperCase())),
+                title: Text(
+                  name,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              const Divider(),
+
+              // Always show "Message"
+              ListTile(
+                leading: const Icon(Icons.message),
+                title: Text("Message $name"),
+                onTap: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Messaging $name...")));
+                },
+              ),
+
+              // Extra actions only for regular members
+              if (!isModerator) ...[
+                ListTile(
+                  leading: const Icon(Icons.shield_moon),
+                  title: Text("Make $name moderator"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("$name is now a moderator")),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.block, color: Colors.red),
+                  title: Text("Ban $name"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("$name has been banned")),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.person_remove,
+                    color: Colors.orange,
+                  ),
+                  title: Text("Remove $name"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("$name has been removed")),
+                    );
+                  },
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,15 +133,20 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       children: List.generate(5, (index) {
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
                             child: Text(
                               ["A", "B", "C", "D", "E"][index],
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
                               ),
                             ),
                           ),
                           title: Text("Member ${index + 1}"),
+                          onTap: () => _showUserActions(context, "Member ${index + 1}"),
                         );
                       }),
                     ),
@@ -68,7 +155,13 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       alignment: Alignment.centerLeft,
                       child: TextButton(
                         onPressed: () {
-                          // TODO: Navigate to all members page
+                          CommunityUserListRoute(
+                            title: "All Members",
+                            users: List.generate(
+                              50,
+                              (index) => "Member ${index + 1}",
+                            ),
+                          ).push(context);
                         },
                         child: const Text("View all members"),
                       ),
@@ -102,15 +195,20 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       children: List.generate(5, (index) {
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
                             child: Text(
                               ["M", "N", "O", "P", "Q"][index],
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSecondaryContainer,
                               ),
                             ),
                           ),
                           title: Text("Moderator ${index + 1}"),
+                          onTap: () => _showUserActions(context, "Member ${index + 1}", isModerator: true),
                         );
                       }),
                     ),
@@ -119,7 +217,14 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       alignment: Alignment.centerLeft,
                       child: TextButton(
                         onPressed: () {
-                          // TODO: Navigate to all moderators page
+                          CommunityUserListRoute(
+                            title: "All Moderators",
+                            users: List.generate(
+                              20,
+                              (index) => "Moderator ${index + 1}",
+                            ),
+                            isModerator: true,
+                          ).push(context);
                         },
                         child: const Text("View all moderators"),
                       ),

@@ -470,6 +470,13 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities',
 
   factory: _$CommunitiesRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'users',
+
+      factory: _$CommunityUserListRoute._fromState,
+    ),
+  ],
 );
 
 mixin _$CommunitiesRoute on GoRouteData {
@@ -490,6 +497,69 @@ mixin _$CommunitiesRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$CommunityUserListRoute on GoRouteData {
+  static CommunityUserListRoute _fromState(GoRouterState state) =>
+      CommunityUserListRoute(
+        title: state.uri.queryParameters['title']!,
+        users:
+            (state.uri.queryParametersAll['users']?.map((e) => e))?.toList() ??
+            const [],
+        isModerator:
+            _$convertMapValue(
+              'is-moderator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+      );
+
+  CommunityUserListRoute get _self => this as CommunityUserListRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/users',
+    queryParams: {
+      'title': _self.title,
+      'users': _self.users.map((e) => e).toList(),
+      if (_self.isModerator != false)
+        'is-moderator': _self.isModerator.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 RouteBase get $createCommunitiesRoute => GoRouteData.$route(

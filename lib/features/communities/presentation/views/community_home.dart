@@ -136,7 +136,7 @@ class _CommunityHomeState extends State<CommunityHome>
           ],
           body: TabBarView(
             children: [
-              Center(child: Text("Posts Page")),
+              Center(child: Text("Community Posts Page")),
               const CommunityAbout(),
               const CommunityMembers(),
             ],
