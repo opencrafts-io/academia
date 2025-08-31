@@ -1,8 +1,6 @@
-import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/features/communities/presentation/views/community_about.dart';
 import 'package:academia/features/communities/presentation/views/community_members.dart';
 import 'package:flutter/material.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class CommunityHome extends StatefulWidget {
   const CommunityHome({super.key});
@@ -11,19 +9,21 @@ class CommunityHome extends StatefulWidget {
   State<CommunityHome> createState() => _CommunityHomeState();
 }
 
-class _CommunityHomeState extends State<CommunityHome> {
+class _CommunityHomeState extends State<CommunityHome>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverAppBar(
               backgroundColor: Theme.of(context).colorScheme.surface,
               foregroundColor: Theme.of(context).colorScheme.onSurface,
               expandedHeight: MediaQuery.of(context).size.height * 0.25,
               pinned: true,
+              floating: false,
               leading: IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
@@ -31,50 +31,16 @@ class _CommunityHomeState extends State<CommunityHome> {
               title: const Text("Community"),
               actions: [
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert), // the ellipsis
+                  icon: const Icon(Icons.more_vert),
                   onSelected: (value) {
-                    switch (value) {
-                      case 'add_member':
-                        // handle add member
-                        break;
-                      case 'view_members':
-                        // handle view members
-                        break;
-                      case 'leave_group':
-                        // handle leave group
-                        break;
-                      case 'delete_group':
-                        // handle delete group
-                        break;
-                    }
+                    // handle actions here
                   },
                   itemBuilder: (context) => [
                     const PopupMenuItem(
                       value: 'add_member',
                       child: ListTile(
-                        leading: Icon(Icons.person_add),
-                        title: Text("Add Member"),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'view_members',
-                      child: ListTile(
-                        leading: Icon(Icons.group),
-                        title: Text("View Members"),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'leave_group',
-                      child: ListTile(
-                        leading: Icon(Icons.exit_to_app),
-                        title: Text("Leave Group"),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete_group',
-                      child: ListTile(
-                        leading: Icon(Icons.delete, color: Colors.red),
-                        title: Text("Delete Group"),
+                        leading: Icon(Icons.edit),
+                        title: Text("Edit Community Details"),
                       ),
                     ),
                   ],
@@ -101,15 +67,17 @@ class _CommunityHomeState extends State<CommunityHome> {
                 ),
               ),
             ),
-      
-            // Profile image + details (side by side)
+
+            // Profile header under app bar
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Profile image
                     CircleAvatar(
                       radius: 40,
                       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -119,8 +87,6 @@ class _CommunityHomeState extends State<CommunityHome> {
                       ),
                     ),
                     const SizedBox(width: 16),
-      
-                    // Community name, members, button
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,39 +118,53 @@ class _CommunityHomeState extends State<CommunityHome> {
                 ),
               ),
             ),
-      
-            SliverPinnedHeader(
-              child: TabBar(
-                isScrollable: true,
-                dividerHeight: 0,
-                tabAlignment: TabAlignment.center,
-                tabs: [
-                  Tab(child: Text("Posts")),
-                  Tab(child: Text("About")),
-                  Tab(child: Text("Members")),
-                ],
-              ),
-            ),
-            SliverFillRemaining(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: ResponsiveBreakPoints.tablet,
-                  ),
-                  child: TabBarView(
-                    children: [
-                      Center(child: Text("Posts Page")),
-                      CommunityAbout(),
-                      CommunityMembers(),
-                    ],
-                  ),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverTabBarDelegate(
+                TabBar(
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.center,
+                  dividerHeight: 0,
+                  tabs: const [
+                    Tab(text: "Posts"),
+                    Tab(text: "About"),
+                    Tab(text: "Members"),
+                  ],
                 ),
               ),
             ),
           ],
+          body: TabBarView(
+            children: [
+              Center(child: Text("Posts Page")),
+              const CommunityAbout(),
+              const CommunityMembers(),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar tabBar;
+  _SliverTabBarDelegate(this.tabBar);
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: tabBar,
+    );
+  }
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
 }
