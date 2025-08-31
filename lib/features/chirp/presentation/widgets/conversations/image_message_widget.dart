@@ -90,8 +90,8 @@ class ImageMessageWidget extends StatelessWidget {
                     _formatTime(message.sentAt),
                     style: TextStyle(
                       color: isOwnMessage
-                          ? colorScheme.onPrimary.withOpacity(0.7)
-                          : colorScheme.onSurface.withOpacity(0.6),
+                          ? colorScheme.onPrimary.withValues(alpha: 0.7)
+                          : colorScheme.onSurface.withValues(alpha: 0.6),
                       fontSize: 11,
                     ),
                   ),

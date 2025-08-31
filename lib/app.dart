@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -16,9 +17,32 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> {
+  final QuickActions quickActions = QuickActions();
+
   @override
   void initState() {
     setOptimalDisplayMode();
+    // setup quick actions
+    quickActions.setShortcutItems([
+      ShortcutItem(
+        type: "action_view_todos",
+        localizedTitle: "View your tasks",
+        icon: "ic_view_tasks",
+      ),
+      ShortcutItem(
+        type: "action_add_event",
+        localizedTitle: "Create a sherehe",
+
+        icon: "ic_create_event",
+      ),
+    ]);
+    quickActions.initialize((shortcut) {
+      if (shortcut == "action_view_todos") {
+        TodosRoute().go(context);
+      } else if (shortcut == "action_add_event") {
+        CreateEventRoute().go(context);
+      }
+    });
     super.initState();
   }
 
@@ -70,7 +94,10 @@ class _AcademiaState extends State<Academia> {
           create: (context) => FeedBloc(
             getFeedPosts: sl.get<GetFeedPosts>(),
             cachePosts: sl.get<CachePostsUsecase>(),
-          )..add(LoadFeedEvent()),
+            likePost: sl.get<LikePostUsecase>(),
+            createPost: sl.get<CreatePostUsecase>(),
+            addComment: sl.get<CommentUsecase>(),
+          )..add(CacheFeedEvent()),
         ),
         BlocProvider(
           create: (context) =>
@@ -96,14 +123,54 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
         BlocProvider(
-          create: (context) => sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+          create: (context) =>
+              sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
+        ),
+        BlocProvider(
+          create: (context) => sl<NotificationBloc>()
+            ..add(
+              InitializeOneSignalEvent(
+                appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
+              ),
+            )
+            ..add(SetNotificationPermissionEvent(enabled: true)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
       ],
       child: DynamicColorBuilder(
-        builder: (lightScheme, darkScheme) => BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            AppRouter.router.refresh();
-          },
+        builder: (lightScheme, darkScheme) => MultiBlocListener(
+          listeners: [
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                AppRouter.router.refresh();
+              },
+            ),
+            BlocListener<NotificationBloc, NotificationState>(
+              listener: (context, state) {
+                if (state is NotificationInitializedState) {
+                  debugPrint('✅ OneSignal initialized successfully!');
+                } else if (state is NotificationErrorState) {
+                  debugPrint(
+                    '❌ OneSignal initialization failed: ${state.message}',
+                  );
+                } else if (state is NotificationLoadingState) {
+                  debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+            BlocListener<RemoteConfigBloc, RemoteConfigState>(
+              listener: (context, state) {
+                if (state is RemoteConfigErrorState) {
+                  debugPrint(
+                    '❌ Firebase Remote Config failed: ${state.message}',
+                  );
+                }
+              },
+            ),
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             showPerformanceOverlay: kProfileMode,

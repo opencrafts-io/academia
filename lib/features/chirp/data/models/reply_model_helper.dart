@@ -25,7 +25,20 @@ extension ReplyHelper on PostReply {
       updatedAt: updatedAt!,
     );
   }
+
+  static PostReply fromJson(Map<String, dynamic> json) {
+    return PostReply(
+      id: json["id"].toString(),
+      postId: json["id"]?.toString() ?? '',
+      userId: json["user_id"],
+      content: json["content"],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      
+    );
+  }
 }
+
 
 
 

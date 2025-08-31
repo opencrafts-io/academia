@@ -1,30 +1,48 @@
+import 'dart:async';
+
 import 'package:academia/app.dart';
 import 'package:academia/config/flavor.dart';
+import 'package:academia/firebase_options.dart';
 import 'package:academia/injection_container.dart' as di;
 import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 
 void main(args) async {
-  // await SentryFlutter.init(
-  //       (options) {
-  //     options.dsn = 'https://a80ab93fc282412306a4dc2539a5673f@o4509728817086464.ingest.us.sentry.io/4509732304191488';
-  //     options.tracesSampleRate = 1.0;
-  //     options.replay.sessionSampleRate = 1.0;
-  //     options.replay.onErrorSampleRate = 1.0;
-  //   },
-  // );
-  WidgetsFlutterBinding.ensureInitialized();
-  if (runWebViewTitleBarWidget(args)) {
-    return;
-  }
-  await di.init(
-    FlavorConfig(
-      flavor: Flavor.staging,
-      appName: "Academia - Staging",
-      apiBaseUrl: "https://api.opencrafts.io",
-    ),
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      MediaKit.ensureInitialized();
+
+      if (runWebViewTitleBarWidget(args)) {
+        return;
+      }
+
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      if (!kIsWeb) {
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
+      }
+      await di.init(
+        FlavorConfig(
+          flavor: Flavor.staging,
+          appName: "Academia - Staging",
+          apiBaseUrl: "https://api.opencrafts.io",
+        ),
+      );
+
+      runApp(Academia());
+    },
+    (error, stacktrace) {
+      if (!kIsWeb) {
+        FirebaseCrashlytics.instance.recordError(error, stacktrace);
+      }
+    },
   );
-
-  runApp(Academia());
 }
-

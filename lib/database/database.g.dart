@@ -2282,7 +2282,7 @@ class $ConversationTableTable extends ConversationTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_profile (id)',
+      'REFERENCES chirp_user_table (id)',
     ),
   );
   static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
@@ -2789,6 +2789,20 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isLikedMeta = const VerificationMeta(
+    'isLiked',
+  );
+  @override
+  late final GeneratedColumn<bool> isLiked = GeneratedColumn<bool>(
+    'is_liked',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_liked" IN (0, 1))',
+    ),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2797,6 +2811,7 @@ class $PostTableTable extends PostTable
     userId,
     content,
     likeCount,
+    isLiked,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2851,6 +2866,14 @@ class $PostTableTable extends PostTable
     } else if (isInserting) {
       context.missing(_likeCountMeta);
     }
+    if (data.containsKey('is_liked')) {
+      context.handle(
+        _isLikedMeta,
+        isLiked.isAcceptableOrUnknown(data['is_liked']!, _isLikedMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isLikedMeta);
+    }
     return context;
   }
 
@@ -2884,6 +2907,10 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}like_count'],
       )!,
+      isLiked: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_liked'],
+      )!,
     );
   }
 
@@ -2900,6 +2927,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
   final String userId;
   final String content;
   final int likeCount;
+  final bool isLiked;
   const PostEntity({
     required this.id,
     required this.createdAt,
@@ -2907,6 +2935,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     required this.userId,
     required this.content,
     required this.likeCount,
+    required this.isLiked,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2917,6 +2946,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     map['user_id'] = Variable<String>(userId);
     map['content'] = Variable<String>(content);
     map['like_count'] = Variable<int>(likeCount);
+    map['is_liked'] = Variable<bool>(isLiked);
     return map;
   }
 
@@ -2928,6 +2958,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: Value(userId),
       content: Value(content),
       likeCount: Value(likeCount),
+      isLiked: Value(isLiked),
     );
   }
 
@@ -2943,6 +2974,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: serializer.fromJson<String>(json['user_id']),
       content: serializer.fromJson<String>(json['content']),
       likeCount: serializer.fromJson<int>(json['like_count']),
+      isLiked: serializer.fromJson<bool>(json['is_liked']),
     );
   }
   @override
@@ -2955,6 +2987,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       'user_id': serializer.toJson<String>(userId),
       'content': serializer.toJson<String>(content),
       'like_count': serializer.toJson<int>(likeCount),
+      'is_liked': serializer.toJson<bool>(isLiked),
     };
   }
 
@@ -2965,6 +2998,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     String? userId,
     String? content,
     int? likeCount,
+    bool? isLiked,
   }) => PostEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -2972,6 +3006,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     userId: userId ?? this.userId,
     content: content ?? this.content,
     likeCount: likeCount ?? this.likeCount,
+    isLiked: isLiked ?? this.isLiked,
   );
   PostEntity copyWithCompanion(PostTableCompanion data) {
     return PostEntity(
@@ -2981,6 +3016,7 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       userId: data.userId.present ? data.userId.value : this.userId,
       content: data.content.present ? data.content.value : this.content,
       likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
+      isLiked: data.isLiked.present ? data.isLiked.value : this.isLiked,
     );
   }
 
@@ -2992,14 +3028,22 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           ..write('updatedAt: $updatedAt, ')
           ..write('userId: $userId, ')
           ..write('content: $content, ')
-          ..write('likeCount: $likeCount')
+          ..write('likeCount: $likeCount, ')
+          ..write('isLiked: $isLiked')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, userId, content, likeCount);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    userId,
+    content,
+    likeCount,
+    isLiked,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3009,7 +3053,8 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           other.updatedAt == this.updatedAt &&
           other.userId == this.userId &&
           other.content == this.content &&
-          other.likeCount == this.likeCount);
+          other.likeCount == this.likeCount &&
+          other.isLiked == this.isLiked);
 }
 
 class PostTableCompanion extends UpdateCompanion<PostEntity> {
@@ -3019,6 +3064,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
   final Value<String> userId;
   final Value<String> content;
   final Value<int> likeCount;
+  final Value<bool> isLiked;
   final Value<int> rowid;
   const PostTableCompanion({
     this.id = const Value.absent(),
@@ -3027,6 +3073,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     this.userId = const Value.absent(),
     this.content = const Value.absent(),
     this.likeCount = const Value.absent(),
+    this.isLiked = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PostTableCompanion.insert({
@@ -3036,11 +3083,13 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     required String userId,
     required String content,
     required int likeCount,
+    required bool isLiked,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        content = Value(content),
-       likeCount = Value(likeCount);
+       likeCount = Value(likeCount),
+       isLiked = Value(isLiked);
   static Insertable<PostEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -3048,6 +3097,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     Expression<String>? userId,
     Expression<String>? content,
     Expression<int>? likeCount,
+    Expression<bool>? isLiked,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3057,6 +3107,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       if (userId != null) 'user_id': userId,
       if (content != null) 'content': content,
       if (likeCount != null) 'like_count': likeCount,
+      if (isLiked != null) 'is_liked': isLiked,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3068,6 +3119,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     Value<String>? userId,
     Value<String>? content,
     Value<int>? likeCount,
+    Value<bool>? isLiked,
     Value<int>? rowid,
   }) {
     return PostTableCompanion(
@@ -3077,6 +3129,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       userId: userId ?? this.userId,
       content: content ?? this.content,
       likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3102,6 +3155,9 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     if (likeCount.present) {
       map['like_count'] = Variable<int>(likeCount.value);
     }
+    if (isLiked.present) {
+      map['is_liked'] = Variable<bool>(isLiked.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3117,6 +3173,7 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
           ..write('userId: $userId, ')
           ..write('content: $content, ')
           ..write('likeCount: $likeCount, ')
+          ..write('isLiked: $isLiked, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3194,6 +3251,24 @@ class $AttachmentTableTable extends AttachmentTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sizeMeta = const VerificationMeta('size');
+  @override
+  late final GeneratedColumn<double> size = GeneratedColumn<double>(
+    'size',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3202,6 +3277,8 @@ class $AttachmentTableTable extends AttachmentTable
     postId,
     attachmentType,
     file,
+    name,
+    size,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3261,6 +3338,22 @@ class $AttachmentTableTable extends AttachmentTable
     } else if (isInserting) {
       context.missing(_fileMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('size')) {
+      context.handle(
+        _sizeMeta,
+        size.isAcceptableOrUnknown(data['size']!, _sizeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sizeMeta);
+    }
     return context;
   }
 
@@ -3294,6 +3387,14 @@ class $AttachmentTableTable extends AttachmentTable
         DriftSqlType.string,
         data['${effectivePrefix}file'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      size: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}size'],
+      )!,
     );
   }
 
@@ -3311,6 +3412,8 @@ class AttachmentEntity extends DataClass
   final String postId;
   final String attachmentType;
   final String file;
+  final String name;
+  final double size;
   const AttachmentEntity({
     required this.id,
     required this.createdAt,
@@ -3318,6 +3421,8 @@ class AttachmentEntity extends DataClass
     required this.postId,
     required this.attachmentType,
     required this.file,
+    required this.name,
+    required this.size,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3328,6 +3433,8 @@ class AttachmentEntity extends DataClass
     map['post_id'] = Variable<String>(postId);
     map['attachment_type'] = Variable<String>(attachmentType);
     map['file'] = Variable<String>(file);
+    map['name'] = Variable<String>(name);
+    map['size'] = Variable<double>(size);
     return map;
   }
 
@@ -3339,6 +3446,8 @@ class AttachmentEntity extends DataClass
       postId: Value(postId),
       attachmentType: Value(attachmentType),
       file: Value(file),
+      name: Value(name),
+      size: Value(size),
     );
   }
 
@@ -3353,7 +3462,9 @@ class AttachmentEntity extends DataClass
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       postId: serializer.fromJson<String>(json['post_id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
-      file: serializer.fromJson<String>(json['file']),
+      file: serializer.fromJson<String>(json['file_url']),
+      name: serializer.fromJson<String>(json['original_filename']),
+      size: serializer.fromJson<double>(json['file_size_mb']),
     );
   }
   @override
@@ -3365,7 +3476,9 @@ class AttachmentEntity extends DataClass
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'post_id': serializer.toJson<String>(postId),
       'attachment_type': serializer.toJson<String>(attachmentType),
-      'file': serializer.toJson<String>(file),
+      'file_url': serializer.toJson<String>(file),
+      'original_filename': serializer.toJson<String>(name),
+      'file_size_mb': serializer.toJson<double>(size),
     };
   }
 
@@ -3376,6 +3489,8 @@ class AttachmentEntity extends DataClass
     String? postId,
     String? attachmentType,
     String? file,
+    String? name,
+    double? size,
   }) => AttachmentEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -3383,6 +3498,8 @@ class AttachmentEntity extends DataClass
     postId: postId ?? this.postId,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
+    name: name ?? this.name,
+    size: size ?? this.size,
   );
   AttachmentEntity copyWithCompanion(AttachmentTableCompanion data) {
     return AttachmentEntity(
@@ -3394,6 +3511,8 @@ class AttachmentEntity extends DataClass
           ? data.attachmentType.value
           : this.attachmentType,
       file: data.file.present ? data.file.value : this.file,
+      name: data.name.present ? data.name.value : this.name,
+      size: data.size.present ? data.size.value : this.size,
     );
   }
 
@@ -3405,14 +3524,24 @@ class AttachmentEntity extends DataClass
           ..write('updatedAt: $updatedAt, ')
           ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
-          ..write('file: $file')
+          ..write('file: $file, ')
+          ..write('name: $name, ')
+          ..write('size: $size')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, postId, attachmentType, file);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    postId,
+    attachmentType,
+    file,
+    name,
+    size,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3422,7 +3551,9 @@ class AttachmentEntity extends DataClass
           other.updatedAt == this.updatedAt &&
           other.postId == this.postId &&
           other.attachmentType == this.attachmentType &&
-          other.file == this.file);
+          other.file == this.file &&
+          other.name == this.name &&
+          other.size == this.size);
 }
 
 class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
@@ -3432,6 +3563,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
   final Value<String> postId;
   final Value<String> attachmentType;
   final Value<String> file;
+  final Value<String> name;
+  final Value<double> size;
   final Value<int> rowid;
   const AttachmentTableCompanion({
     this.id = const Value.absent(),
@@ -3440,6 +3573,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     this.postId = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
+    this.name = const Value.absent(),
+    this.size = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttachmentTableCompanion.insert({
@@ -3449,12 +3584,16 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     required String postId,
     required String attachmentType,
     required String file,
+    required String name,
+    required double size,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
        postId = Value(postId),
        attachmentType = Value(attachmentType),
-       file = Value(file);
+       file = Value(file),
+       name = Value(name),
+       size = Value(size);
   static Insertable<AttachmentEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
@@ -3462,6 +3601,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     Expression<String>? postId,
     Expression<String>? attachmentType,
     Expression<String>? file,
+    Expression<String>? name,
+    Expression<double>? size,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3471,6 +3612,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
       if (postId != null) 'post_id': postId,
       if (attachmentType != null) 'attachment_type': attachmentType,
       if (file != null) 'file': file,
+      if (name != null) 'name': name,
+      if (size != null) 'size': size,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3482,6 +3625,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     Value<String>? postId,
     Value<String>? attachmentType,
     Value<String>? file,
+    Value<String>? name,
+    Value<double>? size,
     Value<int>? rowid,
   }) {
     return AttachmentTableCompanion(
@@ -3491,6 +3636,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
       postId: postId ?? this.postId,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
+      name: name ?? this.name,
+      size: size ?? this.size,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3516,6 +3663,12 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     if (file.present) {
       map['file'] = Variable<String>(file.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (size.present) {
+      map['size'] = Variable<double>(size.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3531,6 +3684,8 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
           ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
+          ..write('name: $name, ')
+          ..write('size: $size, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4963,11 +5118,11 @@ class $EventTableTable extends EventTable
     'organizerId',
   );
   @override
-  late final GeneratedColumn<int> organizerId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> organizerId = GeneratedColumn<String>(
     'organizer_id',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _genreMeta = const VerificationMeta('genre');
@@ -5212,7 +5367,7 @@ class $EventTableTable extends EventTable
         data['${effectivePrefix}number_of_attendees'],
       )!,
       organizerId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}organizer_id'],
       )!,
       genre: attachedDatabase.typeMapping.read(
@@ -5249,7 +5404,7 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String organizer;
   final String imageUrl;
   final int numberOfAttendees;
-  final int organizerId;
+  final String organizerId;
   final String genre;
   final String? poster;
   final String? banner;
@@ -5286,7 +5441,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['organizer'] = Variable<String>(organizer);
     map['image_url'] = Variable<String>(imageUrl);
     map['number_of_attendees'] = Variable<int>(numberOfAttendees);
-    map['organizer_id'] = Variable<int>(organizerId);
+    map['organizer_id'] = Variable<String>(organizerId);
     map['genre'] = Variable<String>(genre);
     if (!nullToAbsent || poster != null) {
       map['poster'] = Variable<String>(poster);
@@ -5340,7 +5495,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       organizer: serializer.fromJson<String>(json['organizer']),
       imageUrl: serializer.fromJson<String>(json['event_card_image']),
       numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
-      organizerId: serializer.fromJson<int>(json['organizer_id']),
+      organizerId: serializer.fromJson<String>(json['organizer_id']),
       genre: serializer.fromJson<String>(json['genre']),
       poster: serializer.fromJson<String?>(json['poster']),
       banner: serializer.fromJson<String?>(json['banner']),
@@ -5362,7 +5517,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       'organizer': serializer.toJson<String>(organizer),
       'event_card_image': serializer.toJson<String>(imageUrl),
       'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
-      'organizer_id': serializer.toJson<int>(organizerId),
+      'organizer_id': serializer.toJson<String>(organizerId),
       'genre': serializer.toJson<String>(genre),
       'poster': serializer.toJson<String?>(poster),
       'banner': serializer.toJson<String?>(banner),
@@ -5382,7 +5537,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? organizer,
     String? imageUrl,
     int? numberOfAttendees,
-    int? organizerId,
+    String? organizerId,
     String? genre,
     Value<String?> poster = const Value.absent(),
     Value<String?> banner = const Value.absent(),
@@ -5508,7 +5663,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> organizer;
   final Value<String> imageUrl;
   final Value<int> numberOfAttendees;
-  final Value<int> organizerId;
+  final Value<String> organizerId;
   final Value<String> genre;
   final Value<String?> poster;
   final Value<String?> banner;
@@ -5545,7 +5700,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String organizer,
     required String imageUrl,
     required int numberOfAttendees,
-    required int organizerId,
+    required String organizerId,
     required String genre,
     this.poster = const Value.absent(),
     this.banner = const Value.absent(),
@@ -5575,7 +5730,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? organizer,
     Expression<String>? imageUrl,
     Expression<int>? numberOfAttendees,
-    Expression<int>? organizerId,
+    Expression<String>? organizerId,
     Expression<String>? genre,
     Expression<String>? poster,
     Expression<String>? banner,
@@ -5615,7 +5770,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? organizer,
     Value<String>? imageUrl,
     Value<int>? numberOfAttendees,
-    Value<int>? organizerId,
+    Value<String>? organizerId,
     Value<String>? genre,
     Value<String?>? poster,
     Value<String?>? banner,
@@ -5682,7 +5837,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       map['number_of_attendees'] = Variable<int>(numberOfAttendees.value);
     }
     if (organizerId.present) {
-      map['organizer_id'] = Variable<int>(organizerId.value);
+      map['organizer_id'] = Variable<String>(organizerId.value);
     }
     if (genre.present) {
       map['genre'] = Variable<String>(genre.value);
@@ -7729,6 +7884,571 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
   }
 }
 
+class $NotificationTableTable extends NotificationTable
+    with TableInfo<$NotificationTableTable, NotificationTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotificationTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  data =
+      GeneratedColumn<String>(
+        'data',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $NotificationTableTable.$converterdatan,
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+    'is_read',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_read" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actionUrlMeta = const VerificationMeta(
+    'actionUrl',
+  );
+  @override
+  late final GeneratedColumn<String> actionUrl = GeneratedColumn<String>(
+    'action_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    body,
+    imageUrl,
+    data,
+    createdAt,
+    isRead,
+    category,
+    actionUrl,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notification_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NotificationTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('is_read')) {
+      context.handle(
+        _isReadMeta,
+        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('action_url')) {
+      context.handle(
+        _actionUrlMeta,
+        actionUrl.isAcceptableOrUnknown(data['action_url']!, _actionUrlMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotificationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotificationTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      data: $NotificationTableTable.$converterdatan.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}data'],
+        ),
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      isRead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_read'],
+      )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
+      actionUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action_url'],
+      ),
+    );
+  }
+
+  @override
+  $NotificationTableTable createAlias(String alias) {
+    return $NotificationTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterdata =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterdatan =
+      NullAwareTypeConverter.wrap($converterdata);
+}
+
+class NotificationTableData extends DataClass
+    implements Insertable<NotificationTableData> {
+  final String id;
+  final String title;
+  final String body;
+  final String? imageUrl;
+  final Map<String, dynamic>? data;
+  final DateTime createdAt;
+  final bool isRead;
+  final String? category;
+  final String? actionUrl;
+  const NotificationTableData({
+    required this.id,
+    required this.title,
+    required this.body,
+    this.imageUrl,
+    this.data,
+    required this.createdAt,
+    required this.isRead,
+    this.category,
+    this.actionUrl,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['body'] = Variable<String>(body);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || data != null) {
+      map['data'] = Variable<String>(
+        $NotificationTableTable.$converterdatan.toSql(data),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_read'] = Variable<bool>(isRead);
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    if (!nullToAbsent || actionUrl != null) {
+      map['action_url'] = Variable<String>(actionUrl);
+    }
+    return map;
+  }
+
+  NotificationTableCompanion toCompanion(bool nullToAbsent) {
+    return NotificationTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      body: Value(body),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      data: data == null && nullToAbsent ? const Value.absent() : Value(data),
+      createdAt: Value(createdAt),
+      isRead: Value(isRead),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
+      actionUrl: actionUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actionUrl),
+    );
+  }
+
+  factory NotificationTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotificationTableData(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      body: serializer.fromJson<String>(json['body']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      data: serializer.fromJson<Map<String, dynamic>?>(json['data']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
+      category: serializer.fromJson<String?>(json['category']),
+      actionUrl: serializer.fromJson<String?>(json['actionUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'body': serializer.toJson<String>(body),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'data': serializer.toJson<Map<String, dynamic>?>(data),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isRead': serializer.toJson<bool>(isRead),
+      'category': serializer.toJson<String?>(category),
+      'actionUrl': serializer.toJson<String?>(actionUrl),
+    };
+  }
+
+  NotificationTableData copyWith({
+    String? id,
+    String? title,
+    String? body,
+    Value<String?> imageUrl = const Value.absent(),
+    Value<Map<String, dynamic>?> data = const Value.absent(),
+    DateTime? createdAt,
+    bool? isRead,
+    Value<String?> category = const Value.absent(),
+    Value<String?> actionUrl = const Value.absent(),
+  }) => NotificationTableData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    body: body ?? this.body,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    data: data.present ? data.value : this.data,
+    createdAt: createdAt ?? this.createdAt,
+    isRead: isRead ?? this.isRead,
+    category: category.present ? category.value : this.category,
+    actionUrl: actionUrl.present ? actionUrl.value : this.actionUrl,
+  );
+  NotificationTableData copyWithCompanion(NotificationTableCompanion data) {
+    return NotificationTableData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      body: data.body.present ? data.body.value : this.body,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      data: data.data.present ? data.data.value : this.data,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      category: data.category.present ? data.category.value : this.category,
+      actionUrl: data.actionUrl.present ? data.actionUrl.value : this.actionUrl,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTableData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead, ')
+          ..write('category: $category, ')
+          ..write('actionUrl: $actionUrl')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    title,
+    body,
+    imageUrl,
+    data,
+    createdAt,
+    isRead,
+    category,
+    actionUrl,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotificationTableData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.body == this.body &&
+          other.imageUrl == this.imageUrl &&
+          other.data == this.data &&
+          other.createdAt == this.createdAt &&
+          other.isRead == this.isRead &&
+          other.category == this.category &&
+          other.actionUrl == this.actionUrl);
+}
+
+class NotificationTableCompanion
+    extends UpdateCompanion<NotificationTableData> {
+  final Value<String> id;
+  final Value<String> title;
+  final Value<String> body;
+  final Value<String?> imageUrl;
+  final Value<Map<String, dynamic>?> data;
+  final Value<DateTime> createdAt;
+  final Value<bool> isRead;
+  final Value<String?> category;
+  final Value<String?> actionUrl;
+  final Value<int> rowid;
+  const NotificationTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.body = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.category = const Value.absent(),
+    this.actionUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NotificationTableCompanion.insert({
+    required String id,
+    required String title,
+    required String body,
+    this.imageUrl = const Value.absent(),
+    this.data = const Value.absent(),
+    required DateTime createdAt,
+    this.isRead = const Value.absent(),
+    this.category = const Value.absent(),
+    this.actionUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       title = Value(title),
+       body = Value(body),
+       createdAt = Value(createdAt);
+  static Insertable<NotificationTableData> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? body,
+    Expression<String>? imageUrl,
+    Expression<String>? data,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? isRead,
+    Expression<String>? category,
+    Expression<String>? actionUrl,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (body != null) 'body': body,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (data != null) 'data': data,
+      if (createdAt != null) 'created_at': createdAt,
+      if (isRead != null) 'is_read': isRead,
+      if (category != null) 'category': category,
+      if (actionUrl != null) 'action_url': actionUrl,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NotificationTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? title,
+    Value<String>? body,
+    Value<String?>? imageUrl,
+    Value<Map<String, dynamic>?>? data,
+    Value<DateTime>? createdAt,
+    Value<bool>? isRead,
+    Value<String?>? category,
+    Value<String?>? actionUrl,
+    Value<int>? rowid,
+  }) {
+    return NotificationTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      imageUrl: imageUrl ?? this.imageUrl,
+      data: data ?? this.data,
+      createdAt: createdAt ?? this.createdAt,
+      isRead: isRead ?? this.isRead,
+      category: category ?? this.category,
+      actionUrl: actionUrl ?? this.actionUrl,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(
+        $NotificationTableTable.$converterdatan.toSql(data.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (actionUrl.present) {
+      map['action_url'] = Variable<String>(actionUrl.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead, ')
+          ..write('category: $category, ')
+          ..write('actionUrl: $actionUrl, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -7748,6 +8468,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
+  late final $NotificationTableTable notificationTable =
+      $NotificationTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7766,6 +8488,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     attendeeTable,
     ticketTable,
     agendaEvent,
+    notificationTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -7820,35 +8543,6 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<int> vibePoints,
       Value<int> rowid,
     });
-
-final class $$UserProfileTableReferences
-    extends BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData> {
-  $$UserProfileTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
-  _conversationTableRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.conversationTable,
-        aliasName: $_aliasNameGenerator(
-          db.userProfile.id,
-          db.conversationTable.userId,
-        ),
-      );
-
-  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
-    final manager = $$ConversationTableTableTableManager(
-      $_db,
-      $_db.conversationTable,
-    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _conversationTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$UserProfileTableFilterComposer
     extends Composer<_$AppDataBase, $UserProfileTable> {
@@ -7923,31 +8617,6 @@ class $$UserProfileTableFilterComposer
     column: $table.vibePoints,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> conversationTableRefs(
-    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
-  ) {
-    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.conversationTable,
-      getReferencedColumn: (t) => t.userId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ConversationTableTableFilterComposer(
-            $db: $db,
-            $table: $db.conversationTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$UserProfileTableOrderingComposer
@@ -8078,32 +8747,6 @@ class $$UserProfileTableAnnotationComposer
     column: $table.vibePoints,
     builder: (column) => column,
   );
-
-  Expression<T> conversationTableRefs<T extends Object>(
-    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
-  ) {
-    final $$ConversationTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.conversationTable,
-          getReferencedColumn: (t) => t.userId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ConversationTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.conversationTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$UserProfileTableTableManager
@@ -8117,9 +8760,12 @@ class $$UserProfileTableTableManager
           $$UserProfileTableAnnotationComposer,
           $$UserProfileTableCreateCompanionBuilder,
           $$UserProfileTableUpdateCompanionBuilder,
-          (UserProfileData, $$UserProfileTableReferences),
+          (
+            UserProfileData,
+            BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
+          ),
           UserProfileData,
-          PrefetchHooks Function({bool conversationTableRefs})
+          PrefetchHooks Function()
         > {
   $$UserProfileTableTableManager(_$AppDataBase db, $UserProfileTable table)
     : super(
@@ -8197,45 +8843,9 @@ class $$UserProfileTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$UserProfileTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({conversationTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (conversationTableRefs) db.conversationTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (conversationTableRefs)
-                    await $_getPrefetchedData<
-                      UserProfileData,
-                      $UserProfileTable,
-                      ConversationData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$UserProfileTableReferences
-                          ._conversationTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$UserProfileTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).conversationTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -8250,9 +8860,12 @@ typedef $$UserProfileTableProcessedTableManager =
       $$UserProfileTableAnnotationComposer,
       $$UserProfileTableCreateCompanionBuilder,
       $$UserProfileTableUpdateCompanionBuilder,
-      (UserProfileData, $$UserProfileTableReferences),
+      (
+        UserProfileData,
+        BaseReferences<_$AppDataBase, $UserProfileTable, UserProfileData>,
+      ),
       UserProfileData,
-      PrefetchHooks Function({bool conversationTableRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TokenTableCreateCompanionBuilder =
     TokenCompanion Function({
@@ -8506,6 +9119,39 @@ typedef $$ChirpUserTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
+final class $$ChirpUserTableTableReferences
+    extends BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData> {
+  $$ChirpUserTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
+  _conversationTableRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.conversationTable,
+        aliasName: $_aliasNameGenerator(
+          db.chirpUserTable.id,
+          db.conversationTable.userId,
+        ),
+      );
+
+  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
+    final manager = $$ConversationTableTableTableManager(
+      $_db,
+      $_db.conversationTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _conversationTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$ChirpUserTableTableFilterComposer
     extends Composer<_$AppDataBase, $ChirpUserTableTable> {
   $$ChirpUserTableTableFilterComposer({
@@ -8549,6 +9195,31 @@ class $$ChirpUserTableTableFilterComposer
     column: $table.avatarUrl,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> conversationTableRefs(
+    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
+  ) {
+    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.conversationTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConversationTableTableFilterComposer(
+            $db: $db,
+            $table: $db.conversationTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ChirpUserTableTableOrderingComposer
@@ -8627,6 +9298,32 @@ class $$ChirpUserTableTableAnnotationComposer
 
   GeneratedColumn<String> get avatarUrl =>
       $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  Expression<T> conversationTableRefs<T extends Object>(
+    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
+  ) {
+    final $$ConversationTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.conversationTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ConversationTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.conversationTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$ChirpUserTableTableTableManager
@@ -8640,12 +9337,9 @@ class $$ChirpUserTableTableTableManager
           $$ChirpUserTableTableAnnotationComposer,
           $$ChirpUserTableTableCreateCompanionBuilder,
           $$ChirpUserTableTableUpdateCompanionBuilder,
-          (
-            ChirpUserData,
-            BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-          ),
+          (ChirpUserData, $$ChirpUserTableTableReferences),
           ChirpUserData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool conversationTableRefs})
         > {
   $$ChirpUserTableTableTableManager(
     _$AppDataBase db,
@@ -8701,9 +9395,45 @@ class $$ChirpUserTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ChirpUserTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({conversationTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (conversationTableRefs) db.conversationTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (conversationTableRefs)
+                    await $_getPrefetchedData<
+                      ChirpUserData,
+                      $ChirpUserTableTable,
+                      ConversationData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$ChirpUserTableTableReferences
+                          ._conversationTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$ChirpUserTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).conversationTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.userId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -8718,12 +9448,9 @@ typedef $$ChirpUserTableTableProcessedTableManager =
       $$ChirpUserTableTableAnnotationComposer,
       $$ChirpUserTableTableCreateCompanionBuilder,
       $$ChirpUserTableTableUpdateCompanionBuilder,
-      (
-        ChirpUserData,
-        BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData>,
-      ),
+      (ChirpUserData, $$ChirpUserTableTableReferences),
       ChirpUserData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool conversationTableRefs})
     >;
 typedef $$MessageTableTableCreateCompanionBuilder =
     MessageTableCompanion Function({
@@ -9360,17 +10087,17 @@ final class $$ConversationTableTableReferences
     super.$_typedResult,
   );
 
-  static $UserProfileTable _userIdTable(_$AppDataBase db) =>
-      db.userProfile.createAlias(
-        $_aliasNameGenerator(db.conversationTable.userId, db.userProfile.id),
+  static $ChirpUserTableTable _userIdTable(_$AppDataBase db) =>
+      db.chirpUserTable.createAlias(
+        $_aliasNameGenerator(db.conversationTable.userId, db.chirpUserTable.id),
       );
 
-  $$UserProfileTableProcessedTableManager get userId {
+  $$ChirpUserTableTableProcessedTableManager get userId {
     final $_column = $_itemColumn<String>('user_id')!;
 
-    final manager = $$UserProfileTableTableManager(
+    final manager = $$ChirpUserTableTableTableManager(
       $_db,
-      $_db.userProfile,
+      $_db.chirpUserTable,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -9436,20 +10163,20 @@ class $$ConversationTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UserProfileTableFilterComposer get userId {
-    final $$UserProfileTableFilterComposer composer = $composerBuilder(
+  $$ChirpUserTableTableFilterComposer get userId {
+    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableFilterComposer(
+          }) => $$ChirpUserTableTableFilterComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9517,20 +10244,20 @@ class $$ConversationTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UserProfileTableOrderingComposer get userId {
-    final $$UserProfileTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUserTableTableOrderingComposer get userId {
+    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableOrderingComposer(
+          }) => $$ChirpUserTableTableOrderingComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9592,20 +10319,20 @@ class $$ConversationTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$UserProfileTableAnnotationComposer get userId {
-    final $$UserProfileTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUserTableTableAnnotationComposer get userId {
+    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.userProfile,
+      referencedTable: $db.chirpUserTable,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UserProfileTableAnnotationComposer(
+          }) => $$ChirpUserTableTableAnnotationComposer(
             $db: $db,
-            $table: $db.userProfile,
+            $table: $db.chirpUserTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9802,6 +10529,7 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required String userId,
       required String content,
       required int likeCount,
+      required bool isLiked,
       Value<int> rowid,
     });
 typedef $$PostTableTableUpdateCompanionBuilder =
@@ -9812,6 +10540,7 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> content,
       Value<int> likeCount,
+      Value<bool> isLiked,
       Value<int> rowid,
     });
 
@@ -9894,6 +10623,11 @@ class $$PostTableTableFilterComposer
 
   ColumnFilters<int> get likeCount => $composableBuilder(
     column: $table.likeCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isLiked => $composableBuilder(
+    column: $table.isLiked,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9986,6 +10720,11 @@ class $$PostTableTableOrderingComposer
     column: $table.likeCount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isLiked => $composableBuilder(
+    column: $table.isLiked,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PostTableTableAnnotationComposer
@@ -10014,6 +10753,9 @@ class $$PostTableTableAnnotationComposer
 
   GeneratedColumn<int> get likeCount =>
       $composableBuilder(column: $table.likeCount, builder: (column) => column);
+
+  GeneratedColumn<bool> get isLiked =>
+      $composableBuilder(column: $table.isLiked, builder: (column) => column);
 
   Expression<T> attachmentTableRefs<T extends Object>(
     Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
@@ -10103,6 +10845,7 @@ class $$PostTableTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> content = const Value.absent(),
                 Value<int> likeCount = const Value.absent(),
+                Value<bool> isLiked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion(
                 id: id,
@@ -10111,6 +10854,7 @@ class $$PostTableTableTableManager
                 userId: userId,
                 content: content,
                 likeCount: likeCount,
+                isLiked: isLiked,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -10121,6 +10865,7 @@ class $$PostTableTableTableManager
                 required String userId,
                 required String content,
                 required int likeCount,
+                required bool isLiked,
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion.insert(
                 id: id,
@@ -10129,6 +10874,7 @@ class $$PostTableTableTableManager
                 userId: userId,
                 content: content,
                 likeCount: likeCount,
+                isLiked: isLiked,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -10225,6 +10971,8 @@ typedef $$AttachmentTableTableCreateCompanionBuilder =
       required String postId,
       required String attachmentType,
       required String file,
+      required String name,
+      required double size,
       Value<int> rowid,
     });
 typedef $$AttachmentTableTableUpdateCompanionBuilder =
@@ -10235,6 +10983,8 @@ typedef $$AttachmentTableTableUpdateCompanionBuilder =
       Value<String> postId,
       Value<String> attachmentType,
       Value<String> file,
+      Value<String> name,
+      Value<double> size,
       Value<int> rowid,
     });
 
@@ -10301,6 +11051,16 @@ class $$AttachmentTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$PostTableTableFilterComposer get postId {
     final $$PostTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -10359,6 +11119,16 @@ class $$AttachmentTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$PostTableTableOrderingComposer get postId {
     final $$PostTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -10408,6 +11178,12 @@ class $$AttachmentTableTableAnnotationComposer
 
   GeneratedColumn<String> get file =>
       $composableBuilder(column: $table.file, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get size =>
+      $composableBuilder(column: $table.size, builder: (column) => column);
 
   $$PostTableTableAnnotationComposer get postId {
     final $$PostTableTableAnnotationComposer composer = $composerBuilder(
@@ -10469,6 +11245,8 @@ class $$AttachmentTableTableTableManager
                 Value<String> postId = const Value.absent(),
                 Value<String> attachmentType = const Value.absent(),
                 Value<String> file = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<double> size = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttachmentTableCompanion(
                 id: id,
@@ -10477,6 +11255,8 @@ class $$AttachmentTableTableTableManager
                 postId: postId,
                 attachmentType: attachmentType,
                 file: file,
+                name: name,
+                size: size,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -10487,6 +11267,8 @@ class $$AttachmentTableTableTableManager
                 required String postId,
                 required String attachmentType,
                 required String file,
+                required String name,
+                required double size,
                 Value<int> rowid = const Value.absent(),
               }) => AttachmentTableCompanion.insert(
                 id: id,
@@ -10495,6 +11277,8 @@ class $$AttachmentTableTableTableManager
                 postId: postId,
                 attachmentType: attachmentType,
                 file: file,
+                name: name,
+                size: size,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -11329,7 +12113,7 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String organizer,
       required String imageUrl,
       required int numberOfAttendees,
-      required int organizerId,
+      required String organizerId,
       required String genre,
       Value<String?> poster,
       Value<String?> banner,
@@ -11349,7 +12133,7 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> organizer,
       Value<String> imageUrl,
       Value<int> numberOfAttendees,
-      Value<int> organizerId,
+      Value<String> organizerId,
       Value<String> genre,
       Value<String?> poster,
       Value<String?> banner,
@@ -11466,7 +12250,7 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get organizerId => $composableBuilder(
+  ColumnFilters<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnFilters(column),
   );
@@ -11606,7 +12390,7 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get organizerId => $composableBuilder(
+  ColumnOrderings<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnOrderings(column),
   );
@@ -11676,7 +12460,7 @@ class $$EventTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get organizerId => $composableBuilder(
+  GeneratedColumn<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => column,
   );
@@ -11781,7 +12565,7 @@ class $$EventTableTableTableManager
                 Value<String> organizer = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<int> numberOfAttendees = const Value.absent(),
-                Value<int> organizerId = const Value.absent(),
+                Value<String> organizerId = const Value.absent(),
                 Value<String> genre = const Value.absent(),
                 Value<String?> poster = const Value.absent(),
                 Value<String?> banner = const Value.absent(),
@@ -11819,7 +12603,7 @@ class $$EventTableTableTableManager
                 required String organizer,
                 required String imageUrl,
                 required int numberOfAttendees,
-                required int organizerId,
+                required String organizerId,
                 required String genre,
                 Value<String?> poster = const Value.absent(),
                 Value<String?> banner = const Value.absent(),
@@ -13310,6 +14094,300 @@ typedef $$AgendaEventTableProcessedTableManager =
       AgendaEventData,
       PrefetchHooks Function()
     >;
+typedef $$NotificationTableTableCreateCompanionBuilder =
+    NotificationTableCompanion Function({
+      required String id,
+      required String title,
+      required String body,
+      Value<String?> imageUrl,
+      Value<Map<String, dynamic>?> data,
+      required DateTime createdAt,
+      Value<bool> isRead,
+      Value<String?> category,
+      Value<String?> actionUrl,
+      Value<int> rowid,
+    });
+typedef $$NotificationTableTableUpdateCompanionBuilder =
+    NotificationTableCompanion Function({
+      Value<String> id,
+      Value<String> title,
+      Value<String> body,
+      Value<String?> imageUrl,
+      Value<Map<String, dynamic>?> data,
+      Value<DateTime> createdAt,
+      Value<bool> isRead,
+      Value<String?> category,
+      Value<String?> actionUrl,
+      Value<int> rowid,
+    });
+
+class $$NotificationTableTableFilterComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actionUrl => $composableBuilder(
+    column: $table.actionUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$NotificationTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actionUrl => $composableBuilder(
+    column: $table.actionUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$NotificationTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $NotificationTableTable> {
+  $$NotificationTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get actionUrl =>
+      $composableBuilder(column: $table.actionUrl, builder: (column) => column);
+}
+
+class $$NotificationTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $NotificationTableTable,
+          NotificationTableData,
+          $$NotificationTableTableFilterComposer,
+          $$NotificationTableTableOrderingComposer,
+          $$NotificationTableTableAnnotationComposer,
+          $$NotificationTableTableCreateCompanionBuilder,
+          $$NotificationTableTableUpdateCompanionBuilder,
+          (
+            NotificationTableData,
+            BaseReferences<
+              _$AppDataBase,
+              $NotificationTableTable,
+              NotificationTableData
+            >,
+          ),
+          NotificationTableData,
+          PrefetchHooks Function()
+        > {
+  $$NotificationTableTableTableManager(
+    _$AppDataBase db,
+    $NotificationTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> body = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<Map<String, dynamic>?> data = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String?> actionUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationTableCompanion(
+                id: id,
+                title: title,
+                body: body,
+                imageUrl: imageUrl,
+                data: data,
+                createdAt: createdAt,
+                isRead: isRead,
+                category: category,
+                actionUrl: actionUrl,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String title,
+                required String body,
+                Value<String?> imageUrl = const Value.absent(),
+                Value<Map<String, dynamic>?> data = const Value.absent(),
+                required DateTime createdAt,
+                Value<bool> isRead = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String?> actionUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationTableCompanion.insert(
+                id: id,
+                title: title,
+                body: body,
+                imageUrl: imageUrl,
+                data: data,
+                createdAt: createdAt,
+                isRead: isRead,
+                category: category,
+                actionUrl: actionUrl,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$NotificationTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $NotificationTableTable,
+      NotificationTableData,
+      $$NotificationTableTableFilterComposer,
+      $$NotificationTableTableOrderingComposer,
+      $$NotificationTableTableAnnotationComposer,
+      $$NotificationTableTableCreateCompanionBuilder,
+      $$NotificationTableTableUpdateCompanionBuilder,
+      (
+        NotificationTableData,
+        BaseReferences<
+          _$AppDataBase,
+          $NotificationTableTable,
+          NotificationTableData
+        >,
+      ),
+      NotificationTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -13339,4 +14417,6 @@ class $AppDataBaseManager {
       $$TicketTableTableTableManager(_db, _db.ticketTable);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
+  $$NotificationTableTableTableManager get notificationTable =>
+      $$NotificationTableTableTableManager(_db, _db.notificationTable);
 }

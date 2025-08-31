@@ -2,6 +2,7 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
@@ -75,6 +76,17 @@ class AuthRemoteDatasource {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
+
+      // Log successfull login
+      FirebaseAnalytics.instance.logLogin(
+        loginMethod: "Google",
+        parameters: {
+          "platform": platform,
+          "auth_url": authUrl,
+          "successful": 1,
+        },
+      );
+
       return right(
         TokenData(
           id: 1,
