@@ -29,9 +29,6 @@ part 'database.g.dart';
     AttendeeTable,
     TicketTable,
     GroupTable,
-    GroupModeratorsTable,
-    GroupMembersTable,
-    GroupBannedUsersTable,
 
     // Agenda
     AgendaEvent,
@@ -48,7 +45,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
