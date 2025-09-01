@@ -122,6 +122,8 @@ class _AcademiaState extends State<Academia> {
             deleteTodoUsecase: sl<DeleteTodoUsecase>(),
           )..add(FetchCachedTodosEvent()),
         ),
+        BlocProvider(create: (context) => sl<CreateEventBloc>()),
+        BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),

@@ -241,6 +241,38 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  // Communities
+  sl.registerFactory<CommunityRemoteDatasource>(
+    () => CommunityRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<CommunityRepositoryImpl>(
+    () => CommunityRepositoryImpl(
+      remoteDatasource: sl.get<CommunityRemoteDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityUseCase>(
+    () => CreateCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCommunityByIdUseCase>(
+    () =>
+        GetCommunityByIdUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<CommunityHomeBloc>(
+    () => CommunityHomeBloc(
+      getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityBloc>(
+    () => CreateCommunityBloc(
+      createCommunityUseCase: sl.get<CreateCommunityUseCase>(),
+    ),
+  );
+
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
     () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
