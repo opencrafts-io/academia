@@ -42,7 +42,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
       });
 
       final response = await dioClient.dio.post(
-        "$baseUrl/create/",
+        "$baseUrl/groups/create/",
         data: formData,
         options: Options(
           headers: {
