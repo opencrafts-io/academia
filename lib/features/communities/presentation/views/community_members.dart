@@ -3,7 +3,8 @@ import 'package:academia/features/communities/presentation/widgets/community_use
 import 'package:flutter/material.dart';
 
 class CommunityMembers extends StatefulWidget {
-  const CommunityMembers({super.key});
+  final String communityId;
+  const CommunityMembers({super.key, required this.communityId});
 
   @override
   State<CommunityMembers> createState() => _CommunityMembersState();
@@ -76,6 +77,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       child: TextButton(
                         onPressed: () {
                           CommunityUserListRoute(
+                            communityId: widget.communityId,
                             title: "All Members",
                             users: List.generate(
                               50,
@@ -138,6 +140,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       child: TextButton(
                         onPressed: () {
                           CommunityUserListRoute(
+                            communityId: widget.communityId,
                             title: "All Moderators",
                             users: List.generate(
                               20,

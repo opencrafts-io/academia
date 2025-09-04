@@ -2,12 +2,14 @@ import 'package:academia/features/communities/presentation/widgets/community_use
 import 'package:flutter/material.dart';
 
 class CommunityUserListScreen extends StatefulWidget {
+  final String communityId;
   final String title;
   final List<String> users;
   final bool isModerator;
 
   const CommunityUserListScreen({
     super.key,
+    required this.communityId,
     required this.title,
     required this.users,
     required this.isModerator,

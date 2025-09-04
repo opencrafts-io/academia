@@ -73,7 +73,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
-          CommunitiesRoute().push(context);
+          CommunitiesRoute(communityId: '5').push(context);
         } else if (state is CreateCommunityFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

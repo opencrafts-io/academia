@@ -3,7 +3,9 @@ import 'package:academia/features/communities/presentation/views/community_membe
 import 'package:flutter/material.dart';
 
 class CommunityHome extends StatefulWidget {
-  const CommunityHome({super.key});
+  final String communityId;
+
+  const CommunityHome({super.key, required this.communityId});
 
   @override
   State<CommunityHome> createState() => _CommunityHomeState();
@@ -138,7 +140,7 @@ class _CommunityHomeState extends State<CommunityHome>
             children: [
               Center(child: Text("Community Posts Page")),
               const CommunityAbout(),
-              const CommunityMembers(),
+              CommunityMembers(communityId: widget.communityId,),
             ],
           ),
         ),
@@ -152,7 +154,11 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverTabBarDelegate(this.tabBar);
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: tabBar,

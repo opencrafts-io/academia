@@ -467,7 +467,7 @@ mixin _$TodosRoute on GoRouteData {
 }
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
-  path: '/communities',
+  path: '/communities/:communityId',
 
   factory: _$CommunitiesRoute._fromState,
   routes: [
@@ -480,10 +480,15 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 );
 
 mixin _$CommunitiesRoute on GoRouteData {
-  static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute();
+  static CommunitiesRoute _fromState(GoRouterState state) =>
+      CommunitiesRoute(communityId: state.pathParameters['communityId']!);
+
+  CommunitiesRoute get _self => this as CommunitiesRoute;
 
   @override
-  String get location => GoRouteData.$location('/communities');
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -502,6 +507,7 @@ mixin _$CommunitiesRoute on GoRouteData {
 mixin _$CommunityUserListRoute on GoRouteData {
   static CommunityUserListRoute _fromState(GoRouterState state) =>
       CommunityUserListRoute(
+        communityId: state.pathParameters['communityId']!,
         title: state.uri.queryParameters['title']!,
         users:
             (state.uri.queryParametersAll['users']?.map((e) => e))?.toList() ??
@@ -519,7 +525,7 @@ mixin _$CommunityUserListRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location(
-    '/communities/users',
+    '/communities/${Uri.encodeComponent(_self.communityId)}/users',
     queryParams: {
       'title': _self.title,
       'users': _self.users.map((e) => e).toList(),
