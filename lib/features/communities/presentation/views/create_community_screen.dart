@@ -53,7 +53,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
             isPublic: !_isPrivate, // true if not private
             userEmail: profileState.profile.email,
             userId: profileState.profile.id,
-            userName: profileState.profile.username ?? profileState.profile.name,
+            userName: profileState.profile.name,
             logoPath: _logoImage?.path,
             bannerPath: _bannerImage?.path,
           ),

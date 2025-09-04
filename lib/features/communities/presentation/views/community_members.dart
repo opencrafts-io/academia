@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 
 class CommunityMembers extends StatefulWidget {
   final String communityId;
-  const CommunityMembers({super.key, required this.communityId});
+  final List<String> memberNames;
+  final List<String> moderatorNames;
+  const CommunityMembers({
+    super.key,
+    required this.communityId,
+    required this.memberNames,
+    required this.moderatorNames,
+  });
 
   @override
   State<CommunityMembers> createState() => _CommunityMembersState();
@@ -51,14 +58,14 @@ class _CommunityMembersState extends State<CommunityMembers> {
                     const SizedBox(height: 8),
 
                     Column(
-                      children: List.generate(5, (index) {
+                      children: widget.memberNames.take(5).map((name) {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Theme.of(
                               context,
                             ).colorScheme.primaryContainer,
                             child: Text(
-                              ["A", "B", "C", "D", "E"][index],
+                              name.isNotEmpty ? name[0].toUpperCase() : "?",
                               style: TextStyle(
                                 color: Theme.of(
                                   context,
@@ -66,10 +73,10 @@ class _CommunityMembersState extends State<CommunityMembers> {
                               ),
                             ),
                           ),
-                          title: Text("Member ${index + 1}"),
-                          onTap: () => showUserActionsSheet(context, "Member ${index + 1}"),
+                          title: Text(name),
+                          onTap: () => showUserActionsSheet(context, name),
                         );
-                      }),
+                      }).toList(),
                     ),
 
                     Align(
@@ -79,10 +86,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           CommunityUserListRoute(
                             communityId: widget.communityId,
                             title: "All Members",
-                            users: List.generate(
-                              50,
-                              (index) => "Member ${index + 1}",
-                            ),
+                            users: widget.memberNames,
                           ).push(context);
                         },
                         child: const Text("View all members"),
@@ -114,14 +118,14 @@ class _CommunityMembersState extends State<CommunityMembers> {
                     const SizedBox(height: 8),
 
                     Column(
-                      children: List.generate(5, (index) {
+                      children: widget.moderatorNames.take(5).map((name) {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Theme.of(
                               context,
                             ).colorScheme.secondaryContainer,
                             child: Text(
-                              ["M", "N", "O", "P", "Q"][index],
+                              name.isNotEmpty ? name[0].toUpperCase() : "?",
                               style: TextStyle(
                                 color: Theme.of(
                                   context,
@@ -129,10 +133,14 @@ class _CommunityMembersState extends State<CommunityMembers> {
                               ),
                             ),
                           ),
-                          title: Text("Moderator ${index + 1}"),
-                          onTap: () => showUserActionsSheet(context, "Member ${index + 1}", isModerator: true),
+                          title: Text(name),
+                          onTap: () => showUserActionsSheet(
+                            context,
+                            name,
+                            isModerator: true,
+                          ),
                         );
-                      }),
+                      }).toList(),
                     ),
 
                     Align(
@@ -142,10 +150,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           CommunityUserListRoute(
                             communityId: widget.communityId,
                             title: "All Moderators",
-                            users: List.generate(
-                              20,
-                              (index) => "Moderator ${index + 1}",
-                            ),
+                            users: widget.moderatorNames,
                             isModerator: true,
                           ).push(context);
                         },

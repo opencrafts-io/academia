@@ -86,23 +86,31 @@ class _CommunityHomeState extends State<CommunityHome>
                               imageUrl: community.bannerUrl!,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
-                                color: Theme.of(context).colorScheme.errorContainer,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.errorContainer,
                                 child: const Center(
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
                               errorWidget: (context, url, error) => Container(
-                                color: Theme.of(context).colorScheme.errorContainer,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.errorContainer,
                                 child: Icon(
                                   Icons.broken_image,
                                   size: 48,
-                                  color: Theme.of(context).colorScheme.onErrorContainer,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onErrorContainer,
                                 ),
                               ),
                             )
                           else
                             Container(
-                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
                               child: const Icon(Icons.image, size: 48),
                             ),
                           const DecoratedBox(
@@ -139,7 +147,9 @@ class _CommunityHomeState extends State<CommunityHome>
                                     placeholder: (context, url) => Container(
                                       width: 80,
                                       height: 80,
-                                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
                                       child: const Center(
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
@@ -150,21 +160,29 @@ class _CommunityHomeState extends State<CommunityHome>
                                         Container(
                                           width: 80,
                                           height: 80,
-                                          color: Theme.of(context).colorScheme.errorContainer,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.errorContainer,
                                           child: Icon(
                                             Icons.error,
-                                            color: Theme.of(context).colorScheme.onErrorContainer,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onErrorContainer,
                                           ),
                                         ),
                                   )
                                 : Container(
                                     width: 80,
                                     height: 80,
-                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHighest,
                                     child: Icon(
                                       Icons.group,
                                       size: 40,
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                           ),
@@ -224,7 +242,11 @@ class _CommunityHomeState extends State<CommunityHome>
                   children: [
                     Center(child: Text("Community Posts Page")),
                     const CommunityAbout(),
-                    CommunityMembers(communityId: widget.communityId),
+                    CommunityMembers(
+                      communityId: widget.communityId,
+                      memberNames: state.community.memberNames,
+                      moderatorNames: state.community.moderatorNames,
+                    ),
                   ],
                 ),
               ),
