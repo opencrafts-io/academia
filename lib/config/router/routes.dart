@@ -272,7 +272,10 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
 
 @TypedGoRoute<CommunitiesRoute>(
   path: "/communities/:communityId",
-  routes: [TypedGoRoute<CommunityUserListRoute>(path: "users")],
+  routes: [
+    TypedGoRoute<CommunityUserListRoute>(path: "users"),
+    TypedGoRoute<AddMembersRoute>(path: "add-members"),
+  ],
 )
 class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
   final String communityId;
@@ -288,11 +291,13 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
   final String communityId;
   final String title;
   final bool isModerator;
+  final bool isBannedUsers;
 
   const CommunityUserListRoute({
     required this.communityId,
     required this.title,
     this.isModerator = false,
+    this.isBannedUsers = false,
   });
 
   @override
@@ -303,7 +308,19 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
       title: title,
       users: users,
       isModerator: isModerator,
+      isBannedUsers: isBannedUsers,
     );
+  }
+}
+
+class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
+  final String communityId;
+
+  AddMembersRoute({required this.communityId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddMembersScreen(communityId: communityId);
   }
 }
 

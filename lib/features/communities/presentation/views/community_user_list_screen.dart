@@ -6,6 +6,7 @@ class CommunityUserListScreen extends StatefulWidget {
   final String title;
   final List<Map<String, String>> users;
   final bool isModerator;
+  final bool isBannedUsers;
 
   const CommunityUserListScreen({
     super.key,
@@ -13,6 +14,7 @@ class CommunityUserListScreen extends StatefulWidget {
     required this.title,
     required this.users,
     required this.isModerator,
+    required this.isBannedUsers,
   });
 
   @override
@@ -150,6 +152,7 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
                           widget.communityId,
                           userId,
                           isModerator: widget.isModerator,
+                          isBanned: widget.isBannedUsers,
                         );
                       },
                     );

@@ -20,6 +20,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
   }) : super(CommunityHomeInitial()) {
     on<FetchCommunityById>(_onFetchCommunityById);
     on<ModerateMembers>(_onModerateCommunityMember);
+    on<UpdateCommunity>(_onUpdateCommunity);
   }
 
   Future<void> _onFetchCommunityById(
@@ -45,7 +46,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     emit(CommunityHomeLoading());
     final result = await moderateMembers(
       groupId: event.communityId,
-      action: event.action.asApiString, 
+      action: event.action.asApiString,
       userId: event.userId,
     );
 
@@ -53,5 +54,12 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
       (failure) => emit(CommunityHomeFailure(failure.message)),
       (community) => emit(CommunityHomeLoaded(community)),
     );
+  }
+
+  Future<void> _onUpdateCommunity(
+    UpdateCommunity event,
+    Emitter<CommunityHomeState> emit,
+  ) async {
+    emit(CommunityHomeLoaded(event.community));
   }
 }

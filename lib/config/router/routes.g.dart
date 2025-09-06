@@ -476,6 +476,11 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 
       factory: _$CommunityUserListRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: 'add-members',
+
+      factory: _$AddMembersRoute._fromState,
+    ),
   ],
 );
 
@@ -516,6 +521,13 @@ mixin _$CommunityUserListRoute on GoRouteData {
               _$boolConverter,
             ) ??
             false,
+        isBannedUsers:
+            _$convertMapValue(
+              'is-banned-users',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
       );
 
   CommunityUserListRoute get _self => this as CommunityUserListRoute;
@@ -527,7 +539,34 @@ mixin _$CommunityUserListRoute on GoRouteData {
       'title': _self.title,
       if (_self.isModerator != false)
         'is-moderator': _self.isModerator.toString(),
+      if (_self.isBannedUsers != false)
+        'is-banned-users': _self.isBannedUsers.toString(),
     },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddMembersRoute on GoRouteData {
+  static AddMembersRoute _fromState(GoRouterState state) =>
+      AddMembersRoute(communityId: state.pathParameters['communityId']!);
+
+  AddMembersRoute get _self => this as AddMembersRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
   );
 
   @override

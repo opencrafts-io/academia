@@ -265,6 +265,9 @@ Future<void> init(FlavorConfig flavor) async {
     () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
+  sl.registerFactory<SearchVerisafeUsersUseCase>(()
+      => SearchVerisafeUsersUseCase(chirpUserRepository: sl.get<ChirpUserRepository>())); 
+
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(
       getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
@@ -275,6 +278,13 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<CreateCommunityBloc>(
     () => CreateCommunityBloc(
       createCommunityUseCase: sl.get<CreateCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<AddMembersBloc>(
+    () => AddMembersBloc(
+      searchUsers: sl.get<SearchVerisafeUsersUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
     ),
   );
 

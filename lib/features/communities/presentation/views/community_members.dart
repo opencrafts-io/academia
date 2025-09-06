@@ -1,6 +1,9 @@
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/features/communities/domain/entities/community.dart';
+import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class CommunityMembers extends StatefulWidget {
@@ -9,6 +12,9 @@ class CommunityMembers extends StatefulWidget {
   final List<String> memberNames;
   final List<String> moderators;
   final List<String> moderatorNames;
+  final List<String> bannedUsers;
+  final List<String> bannedUserNames;
+
   const CommunityMembers({
     super.key,
     required this.communityId,
@@ -16,6 +22,8 @@ class CommunityMembers extends StatefulWidget {
     required this.memberNames,
     required this.moderators,
     required this.moderatorNames,
+    required this.bannedUsers,
+    required this.bannedUserNames,
   });
 
   @override
@@ -50,10 +58,26 @@ class _CommunityMembersState extends State<CommunityMembers> {
     });
   }
 
+  List<Map<String, String>> _getCombinedBannedUsers() {
+    // Ensure lists are of the same length, or handle potential mismatches
+    final length = widget.bannedUsers.length < widget.bannedUserNames.length
+        ? widget.bannedUsers.length
+        : widget.bannedUserNames.length;
+
+    return List<Map<String, String>>.generate(length, (index) {
+      return {
+        'id': widget.bannedUsers[index],
+        'name': widget.bannedUserNames[index],
+      };
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final combinedMembers = _getCombinedMembers();
     final combinedModerators = _getCombinedModerators();
+    final combinedBannedUsers = _getCombinedBannedUsers();
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -74,7 +98,17 @@ class _CommunityMembersState extends State<CommunityMembers> {
                     ListTile(
                       leading: const Icon(Icons.person_add_outlined),
                       title: const Text("Add Members"),
-                      onTap: () {},
+                      onTap: () async {
+                        final updatedCommunity = await AddMembersRoute(
+                          communityId: widget.communityId,
+                        ).push<Community>(context);
+
+                        if (updatedCommunity != null && context.mounted) {
+                          context.read<CommunityHomeBloc>().add(
+                            UpdateCommunity(community: updatedCommunity),
+                          );
+                        }
+                      },
                     ),
                     ListTile(
                       leading: const Icon(Icons.link_outlined),
@@ -211,6 +245,86 @@ class _CommunityMembersState extends State<CommunityMembers> {
               ),
             ),
           ),
+
+          if (combinedBannedUsers.isEmpty)
+            const SliverToBoxAdapter()
+          else
+            // Banned Users Section
+            SliverToBoxAdapter(
+              child: Card(
+                margin: const EdgeInsets.all(12),
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Banned Users",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+
+                      Column(
+                        children: combinedBannedUsers.take(5).map((
+                          bannedUserData,
+                        ) {
+                          final name = bannedUserData['name']!;
+                          final bannedUserId = bannedUserData['id']!;
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.secondaryContainer,
+                              child: Text(
+                                name.isNotEmpty ? name[0].toUpperCase() : "?",
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSecondaryContainer,
+                                ),
+                              ),
+                            ),
+                            title: Text(name),
+                            onTap: () => showUserActionsSheet(
+                              context,
+                              name,
+                              widget.communityId,
+                              bannedUserId,
+                              isBanned: true,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: () {
+                            // Construct the path string with query parameters
+                            final String path = CommunityUserListRoute(
+                              communityId: widget.communityId,
+                              title: "Banned Users",
+                              isBannedUsers: true,
+                            ).location;
+
+                            // Use context.push with the path and the extra parameter
+                            context.push(
+                              path,
+                              extra: _getCombinedBannedUsers(),
+                            );
+                          },
+                          child: const Text("View all Banned Users"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
           // Critical Actions Section
           SliverToBoxAdapter(

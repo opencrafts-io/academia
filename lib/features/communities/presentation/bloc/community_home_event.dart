@@ -16,6 +16,15 @@ class FetchCommunityById extends CommunityHomeEvent {
   List<Object?> get props => [communityId];
 }
 
+class UpdateCommunity extends CommunityHomeEvent {
+  final Community community;
+
+  const UpdateCommunity({required this.community});
+
+  @override
+  List<Object?> get props => [community];
+} 
+
 class ModerateMembers extends CommunityHomeEvent {
   final String communityId;
   final CommunityModerationAction action;

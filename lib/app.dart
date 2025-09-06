@@ -134,6 +134,12 @@ class _AcademiaState extends State<Academia> {
           ),
         ),
         BlocProvider(
+          create: (context) => AddMembersBloc(
+            searchUsers: sl<SearchVerisafeUsersUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+          ),
+        ),
+        BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
         ),

@@ -248,6 +248,8 @@ class _CommunityHomeState extends State<CommunityHome>
                       moderatorNames: state.community.moderatorNames,
                       members: state.community.members,
                       moderators: state.community.moderators,
+                      bannedUsers: state.community.bannedUsers,
+                      bannedUserNames: state.community.bannedUserNames, 
                     ),
                   ],
                 ),
