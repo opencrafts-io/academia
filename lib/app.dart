@@ -130,6 +130,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) => CommunityHomeBloc(
             getCommunityByIdUseCase: sl<GetCommunityByIdUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
           ),
         ),
         BlocProvider(

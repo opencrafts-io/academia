@@ -246,6 +246,8 @@ class _CommunityHomeState extends State<CommunityHome>
                       communityId: widget.communityId,
                       memberNames: state.community.memberNames,
                       moderatorNames: state.community.moderatorNames,
+                      members: state.community.members,
+                      moderators: state.community.moderators,
                     ),
                   ],
                 ),

@@ -4,10 +4,12 @@ import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/features/communities/data/models/community_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
 class CommunityRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
   final String baseUrl = "https://qachirp.opencrafts.io";
+  final Logger _logger = Logger();
 
   CommunityRemoteDatasource({required this.dioClient});
 
@@ -103,6 +105,52 @@ class CommunityRemoteDatasource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred while fetching community",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, CommunityModel>> moderateCommunity({
+    required String groupId,
+    required String action,
+    required String userId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "$baseUrl/groups/$groupId/moderate/",
+        data: {"action": action, "user_id": userId},
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+        ),
+      );
+
+      _logger.d("Moderate response: ${response.data}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        final communityJson = Map<String, dynamic>.from(json["group"]);
+
+        return right(CommunityModel.fromJson(communityJson));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while moderating community.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while moderating community",
           error: e,
         ),
       );

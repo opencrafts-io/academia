@@ -509,9 +509,6 @@ mixin _$CommunityUserListRoute on GoRouteData {
       CommunityUserListRoute(
         communityId: state.pathParameters['communityId']!,
         title: state.uri.queryParameters['title']!,
-        users:
-            (state.uri.queryParametersAll['users']?.map((e) => e))?.toList() ??
-            const [],
         isModerator:
             _$convertMapValue(
               'is-moderator',
@@ -528,7 +525,6 @@ mixin _$CommunityUserListRoute on GoRouteData {
     '/communities/${Uri.encodeComponent(_self.communityId)}/users',
     queryParams: {
       'title': _self.title,
-      'users': _self.users.map((e) => e).toList(),
       if (_self.isModerator != false)
         'is-moderator': _self.isModerator.toString(),
     },

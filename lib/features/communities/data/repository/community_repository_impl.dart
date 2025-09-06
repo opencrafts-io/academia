@@ -45,4 +45,21 @@ class CommunityRepositoryImpl implements CommunityRepository {
       return right(community.toEntity());
     });
   }
+
+  @override
+  Future<Either<Failure, Community>> moderateCommunity({
+    required String groupId,
+    required String action,
+    required String userId,
+  }) async {
+    final result = await remoteDatasource.moderateCommunity(
+      groupId: groupId,
+      action: action,
+      userId: userId,
+    );
+
+    return result.fold((failure) => left(failure), (community) {
+      return right(community.toEntity());
+    });
+  }
 }

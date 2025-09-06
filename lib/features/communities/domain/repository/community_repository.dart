@@ -15,4 +15,10 @@ abstract class CommunityRepository {
   });
 
   Future<Either<Failure, Community>> getCommunityById(String id);
+  
+  Future<Either<Failure, Community>> moderateCommunity({
+    required String groupId,
+    required String action,
+    required String userId,
+  });
 }

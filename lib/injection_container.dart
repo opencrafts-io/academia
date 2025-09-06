@@ -261,9 +261,14 @@ Future<void> init(FlavorConfig flavor) async {
         GetCommunityByIdUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
+  sl.registerFactory<ModerateMembersUseCase>(
+    () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(
       getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
     ),
   );
 

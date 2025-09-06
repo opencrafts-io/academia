@@ -15,3 +15,18 @@ class FetchCommunityById extends CommunityHomeEvent {
   @override
   List<Object?> get props => [communityId];
 }
+
+class ModerateMembers extends CommunityHomeEvent {
+  final String communityId;
+  final CommunityModerationAction action;
+  final String userId;
+
+  const ModerateMembers({
+    required this.communityId,
+    required this.action,
+    required this.userId,
+  });
+
+  @override
+  List<Object?> get props => [communityId, action, userId];
+}

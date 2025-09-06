@@ -287,18 +287,17 @@ class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
 class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
   final String communityId;
   final String title;
-  final List<String> users;
   final bool isModerator;
 
   const CommunityUserListRoute({
     required this.communityId,
     required this.title,
-    required this.users,
     this.isModerator = false,
   });
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final users = state.extra as List<Map<String, String>>;
     return CommunityUserListScreen(
       communityId: communityId,
       title: title,

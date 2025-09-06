@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CommunityUserListScreen extends StatefulWidget {
   final String communityId;
   final String title;
-  final List<String> users;
+  final List<Map<String, String>> users;
   final bool isModerator;
 
   const CommunityUserListScreen({
@@ -39,7 +39,10 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredUsers = widget.users
-        .where((u) => u.toLowerCase().contains(_query.toLowerCase()))
+        .where(
+          (userMap) =>
+              userMap['name']!.toLowerCase().contains(_query.toLowerCase()),
+        )
         .toList();
 
     return Scaffold(
@@ -134,7 +137,9 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
               : SliverList.builder(
                   itemCount: filteredUsers.length,
                   itemBuilder: (context, index) {
-                    final name = filteredUsers[index];
+                    final userMap = filteredUsers[index]; // Get the user map
+                    final name = userMap['name']!; // Extract the name
+                    final userId = userMap['id']!;
                     return ListTile(
                       leading: CircleAvatar(child: Text(name[0].toUpperCase())),
                       title: Text(name),
@@ -142,6 +147,8 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
                         showUserActionsSheet(
                           context,
                           name,
+                          widget.communityId,
+                          userId,
                           isModerator: widget.isModerator,
                         );
                       },
