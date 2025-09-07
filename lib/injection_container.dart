@@ -1,5 +1,4 @@
 import 'package:academia/config/flavor.dart';
-// import 'package:academia/core/network/chirp_dio_client.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -29,9 +28,6 @@ Future<void> init(FlavorConfig flavor) async {
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
     ),
   );
-  // sl.registerFactory<ChirpDioClient>(
-  //   () => ChirpDioClient(authLocalDatasource: sl.get<AuthLocalDatasource>()),
-  // );
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
@@ -103,6 +99,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -118,6 +120,8 @@ Future<void> init(FlavorConfig flavor) async {
       likePost: sl.get<LikePostUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
       addComment: sl.get<CommentUsecase>(),
+      cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+      getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -276,6 +280,21 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendMessage>(
     () => SendMessage(sl.get<MessageRepositoryImpl>()),
   );
+  sl.registerFactory<GetCachedConversations>(
+    () => GetCachedConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<GetCachedMessages>(
+    () => GetCachedMessages(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshConversations>(
+    () => RefreshConversations(sl.get<ConversationRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshMessages>(
+    () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
+  );
+  sl.registerFactory<CreateConversation>(
+    () => CreateConversation(sl.get<ConversationRepositoryImpl>()),
+  );
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
@@ -284,6 +303,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<ChirpUserRepository>(
     () => ChirpUserRepositoryImpl(
       remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
+      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
     ),
   );
   sl.registerFactory<SearchUsersUseCase>(
@@ -296,6 +316,11 @@ Future<void> init(FlavorConfig flavor) async {
       getMessages: sl.get<GetMessages>(),
       sendMessage: sl.get<SendMessage>(),
       searchUsers: sl.get<SearchUsersUseCase>(),
+      getCachedConversations: sl.get<GetCachedConversations>(),
+      getCachedMessages: sl.get<GetCachedMessages>(),
+      refreshConversations: sl.get<RefreshConversations>(),
+      refreshMessages: sl.get<RefreshMessages>(),
+      createConversation: sl.get<CreateConversation>(),
     ),
   );
 
@@ -364,6 +389,71 @@ Future<void> init(FlavorConfig flavor) async {
       getNotificationPermissionUsecase: sl
           .get<GetNotificationPermissionUsecase>(),
       sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
+    ),
+  );
+
+  // Firebase Remote Config
+  sl.registerFactory<RemoteConfigRemoteDatasource>(
+    () => RemoteConfigRemoteDatasource(),
+  );
+  sl.registerFactory<RemoteConfigLocalDatasource>(
+    () => RemoteConfigLocalDatasource(),
+  );
+
+  sl.registerFactory<RemoteConfigRepository>(
+    () => RemoteConfigRepositoryImpl(
+      remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
+      localDatasource: sl.get<RemoteConfigLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<InitializeRemoteConfigUsecase>(
+    () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<FetchAndActivateUsecase>(
+    () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetStringUsecase>(
+    () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetBoolUsecase>(
+    () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetIntUsecase>(
+    () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetDoubleUsecase>(
+    () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetJsonUsecase>(
+    () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetAllParametersUsecase>(
+    () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<SetDefaultsUsecase>(
+    () => SetDefaultsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<GetSettingsUsecase>(
+    () => GetSettingsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+  sl.registerFactory<SetSettingsUsecase>(
+    () => SetSettingsUsecase(sl.get<RemoteConfigRepository>()),
+  );
+
+  sl.registerFactory<RemoteConfigBloc>(
+    () => RemoteConfigBloc(
+      initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
+      fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
+      getStringUsecase: sl.get<GetStringUsecase>(),
+      getBoolUsecase: sl.get<GetBoolUsecase>(),
+      getIntUsecase: sl.get<GetIntUsecase>(),
+      getDoubleUsecase: sl.get<GetDoubleUsecase>(),
+      getJsonUsecase: sl.get<GetJsonUsecase>(),
+      getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
+      setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
+      getSettingsUsecase: sl.get<GetSettingsUsecase>(),
+      setSettingsUsecase: sl.get<SetSettingsUsecase>(),
     ),
   );
 }

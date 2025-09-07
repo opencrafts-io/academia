@@ -116,7 +116,7 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
         "/$servicePath/agenda/delete/${agenda.id}",
         data: agenda.toJson(),
       );
-      if (response.statusCode == 204) {
+      if (response.statusCode == 200 || response.statusCode == 204) {
         return Right(agenda);
       }
       return Left(

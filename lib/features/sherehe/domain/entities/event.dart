@@ -10,7 +10,7 @@ class Event extends Equatable {
   final String date;
   final String organizer;
   final String imageUrl;
-  final int organizerId;
+  final String organizerId;
   final int numberOfAttendees;
   final List<String> genre;
   final DateTime createdAt;
@@ -47,7 +47,7 @@ class Event extends Equatable {
     String? date,
     String? organizer,
     String? imageUrl,
-    int? organizerId,
+    String? organizerId,
     int? numberOfAttendees,
     List<String>? genre,
     DateTime? createdAt,

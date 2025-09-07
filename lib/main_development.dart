@@ -18,7 +18,7 @@ void main(args) async {
     FlavorConfig(
       flavor: Flavor.development,
       appName: "Academia - Dev",
-      apiBaseUrl: "http://127.0.0.1:8080",
+      apiBaseUrl: "http://127.0.0.1:8000",
     ),
   );
 

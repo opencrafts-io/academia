@@ -91,3 +91,13 @@ class UsersSearchErrorState extends MessagingState {
   @override
   List<Object?> get props => [message, retryAction];
 }
+
+class ConversationCreatedState extends MessagingState {
+  final Conversation conversation;
+  final List<Conversation> conversations;
+
+  const ConversationCreatedState(this.conversation, this.conversations);
+
+  @override
+  List<Object?> get props => [conversation, conversations];
+}
