@@ -1,7 +1,5 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
-import 'package:academia/features/communities/domain/usecases/delete_community_use_case.dart';
-import 'package:academia/features/communities/domain/usecases/leave_community_use_case.dart';
 import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +19,7 @@ class CommunityMembers extends StatefulWidget {
   final bool isMember;
   final bool isBanned;
   final bool isPrivate;
+  final String userId;
 
   const CommunityMembers({
     super.key,
@@ -36,6 +35,7 @@ class CommunityMembers extends StatefulWidget {
     this.isMember = false,
     this.isBanned = false,
     this.isPrivate = false,
+    required this.userId,
   });
 
   @override
@@ -172,7 +172,8 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       }).toList(),
                     ),
 
-                    if (widget.isPrivate && !widget.isMember)
+                    if (widget.isPrivate && widget.isMember ||
+                        !widget.isPrivate && widget.isMember)
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton(
@@ -372,12 +373,8 @@ class _CommunityMembersState extends State<CommunityMembers> {
             ),
 
           // Critical Actions Section
-          if (!widget.isModerator ||
-              !widget.isCreator ||
-              !widget.isMember ||
-              widget.isBanned)
-            const SliverToBoxAdapter()
-          else
+          if ((widget.isMember || widget.isModerator || widget.isCreator) &&
+              !widget.isBanned)
             SliverToBoxAdapter(
               child: Card(
                 margin: const EdgeInsets.all(12),
@@ -396,43 +393,52 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       ),
                       const SizedBox(height: 8),
 
-                      ListTile(
-                        leading: const Icon(
-                          Icons.exit_to_app_outlined,
-                          color: Colors.orange,
-                        ),
-                        title: const Text("Leave Group"),
-                        onTap: () async {
-                          final result =
-                              await context.read<LeaveCommunityUseCase>()(
-                                widget.communityId,
+                      // Show Leave Group ONLY if not creator
+                      if (!widget.isCreator)
+                        ListTile(
+                          leading: const Icon(
+                            Icons.exit_to_app_outlined,
+                            color: Colors.orange,
+                          ),
+                          title: const Text("Leave Group"),
+                          onTap: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Leave Community"),
+                                content: const Text(
+                                  "Are you sure you want to leave this community?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text("Cancel"),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text("Leave"),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (confirm == true && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Leaving community..."),
+                                ),
                               );
 
-                          result.fold(
-                            (failure) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(failure.message),
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.error,
-                                ),
+                              context.read<CommunityHomeBloc>().add(
+                                LeaveCommunity(communityId: widget.communityId),
                               );
-                            },
-                            (message) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(message),
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                ),
-                              );
-                              FeedRoute().go(context);
-                            },
-                          );
-                        },
-                      ),
+                            }
+                          },
+                        ),
+
+                      // Show Delete Group ONLY if creator
                       if (widget.isCreator)
                         ListTile(
                           leading: const Icon(
@@ -441,41 +447,56 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           ),
                           title: const Text("Delete Group"),
                           onTap: () async {
-                            final result =
-                                await context.read<DeleteCommunityUseCase>()(
-                                  widget.communityId,
-                                );
-
-                            result.fold(
-                              (failure) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(failure.message),
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.error,
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Delete Community"),
+                                content: const Text(
+                                  "This action cannot be undone. Do you really want to delete this community?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text("Cancel"),
                                   ),
-                                );
-                              },
-                              (message) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(message),
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
+                                  FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text("Delete"),
                                   ),
-                                );
-                                FeedRoute().go(context);
-                              },
+                                ],
+                              ),
                             );
+
+                            if (confirm == true && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Deleting community..."),
+                                ),
+                              );
+
+                              context.read<CommunityHomeBloc>().add(
+                                DeleteCommunity(
+                                  communityId: widget.communityId,
+                                  userId: widget.userId,
+                                ),
+                              );
+                            }
                           },
                         ),
                     ],
                   ),
                 ),
               ),
-            ),
+            )
+          else
+            const SliverToBoxAdapter(),
 
           // Some spacing at the bottom
           const SliverToBoxAdapter(child: SizedBox(height: 24)),

@@ -1,3 +1,4 @@
+import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,28 @@ class _CommunityHomeState extends State<CommunityHome>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CommunityHomeBloc, CommunityHomeState>(
+    return BlocConsumer<CommunityHomeBloc, CommunityHomeState>(
+      listener: (context, state) {
+        if (state is CommunityLeft) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("You left the community")),
+          );
+          HomeRoute().go(context);
+        }
+
+        if (state is CommunityDeleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Community deleted")),
+          );
+          HomeRoute().go(context);
+        }
+
+        if (state is CommunityCriticalActionFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
       builder: (context, state) {
         if (state is CommunityHomeLoading) {
           return const Scaffold(
@@ -301,6 +323,7 @@ class _CommunityHomeState extends State<CommunityHome>
                       isMember: isMember,
                       isBanned: isBanned,
                       isPrivate: community.isPrivate,
+                      userId: currentUserId ?? '',
                     ),
                   ],
                 ),

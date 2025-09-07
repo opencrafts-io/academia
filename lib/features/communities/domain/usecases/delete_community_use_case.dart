@@ -7,7 +7,7 @@ class DeleteCommunityUseCase {
 
   DeleteCommunityUseCase({required this.repository});
 
-  Future<Either<Failure, String>> call(String groupId) {
-    return repository.deleteCommunity(groupId: groupId);
+  Future<Either<Failure, String>> call(String groupId, String userId) {
+    return repository.deleteCommunity(groupId: groupId, userId: userId);
   } 
 }

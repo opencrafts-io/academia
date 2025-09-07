@@ -32,7 +32,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     on<JoinCommunity>(_onJoiningGroup);
     on<LeaveCommunity>(_onLeavingGroup);
     on<DeleteCommunity>(_onDeletingGroup);
-    on<UpdateCommunity>(_onUpdateCommunity); 
+    on<UpdateCommunity>(_onUpdateCommunity);
   }
 
   Future<void> _onFetchCommunityById(
@@ -73,9 +73,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoading());
-    final result = await joinCommunityUseCase(
-      event.communityId,
-    );
+    final result = await joinCommunityUseCase(event.communityId);
 
     result.fold(
       (failure) => emit(CommunityHomeFailure(failure.message)),
@@ -88,12 +86,10 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoading());
-    final result = await leaveCommunityUseCase(
-      event.communityId,
-    );
+    final result = await leaveCommunityUseCase(event.communityId);
 
     result.fold(
-      (failure) => emit(CommunityHomeFailure(failure.message)),
+      (failure) => emit(CommunityCriticalActionFailure(failure.message)),
       (_) => emit(CommunityLeft()),
     );
   }
@@ -105,10 +101,11 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     emit(CommunityHomeLoading());
     final result = await deleteCommunityUseCase(
       event.communityId,
+      event.userId,
     );
 
     result.fold(
-      (failure) => emit(CommunityHomeFailure(failure.message)),
+      (failure) => emit(CommunityCriticalActionFailure(failure.message)),
       (_) => emit(CommunityDeleted()),
     );
   }

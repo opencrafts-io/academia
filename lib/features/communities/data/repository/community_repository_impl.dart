@@ -83,16 +83,20 @@ class CommunityRepositoryImpl implements CommunityRepository {
     return result.fold((failure) => left(failure), (message) {
       return right(message);
     });
-  } 
+  }
 
   @override
   Future<Either<Failure, String>> deleteCommunity({
     required String groupId,
+    required String userId,
   }) async {
-    final result = await remoteDatasource.deleteCommunity(groupId: groupId);
+    final result = await remoteDatasource.deleteCommunity(
+      groupId: groupId,
+      userId: userId,
+    );
 
     return result.fold((failure) => left(failure), (message) {
       return right(message);
     });
-  } 
+  }
 }

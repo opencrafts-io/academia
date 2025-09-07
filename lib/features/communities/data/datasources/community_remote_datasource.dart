@@ -166,7 +166,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         options: Options(
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
           },
         ),
       );
@@ -232,10 +232,12 @@ class CommunityRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, String>> deleteCommunity({
     required String groupId,
+    required String userId,
   }) async {
     try {
       final response = await dioClient.dio.delete(
         "$baseUrl/groups/$groupId/delete/",
+        queryParameters: {"user_id": userId},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

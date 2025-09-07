@@ -45,8 +45,9 @@ class LeaveCommunity extends CommunityHomeEvent {
 
 class DeleteCommunity extends CommunityHomeEvent {
   final String communityId;
+  final String userId;
 
-  const DeleteCommunity({required this.communityId});
+  const DeleteCommunity({required this.communityId, required this.userId});
 
   @override
   List<Object?> get props => [communityId];

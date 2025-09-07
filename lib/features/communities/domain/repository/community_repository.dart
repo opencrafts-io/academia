@@ -11,7 +11,7 @@ abstract class CommunityRepository {
     required String userName,
     required String userEmail,
     String? logoPath,
-    String? bannerPath, 
+    String? bannerPath,
   });
 
   Future<Either<Failure, Community>> getCommunityById(String id);
@@ -22,15 +22,12 @@ abstract class CommunityRepository {
     required String userId,
   });
 
-  Future<Either<Failure, Community>> joinCommunity({
-    required String groupId,
-  });
+  Future<Either<Failure, Community>> joinCommunity({required String groupId});
 
-  Future<Either<Failure, String>> leaveCommunity({
-    required String groupId,
-  });
+  Future<Either<Failure, String>> leaveCommunity({required String groupId});
 
   Future<Either<Failure, String>> deleteCommunity({
     required String groupId,
+    required String userId,
   });
 }

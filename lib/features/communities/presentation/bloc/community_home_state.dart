@@ -22,6 +22,15 @@ class CommunityHomeLoaded extends CommunityHomeState {
 
 class CommunityLeft extends CommunityHomeState {}
 
+class CommunityCriticalActionFailure extends CommunityHomeState {
+  final String message;
+
+  const CommunityCriticalActionFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+} 
+
 class CommunityDeleted extends CommunityHomeState {}
 
 class CommunityHomeFailure extends CommunityHomeState {
