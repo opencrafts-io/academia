@@ -290,14 +290,26 @@ class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
 class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
   final String communityId;
   final String title;
+  final bool isTargetModerator;
+  final bool isTargetBannedUsers;
+  final bool isTargetMember;
+  final bool isCreator;
   final bool isModerator;
-  final bool isBannedUsers;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
 
   const CommunityUserListRoute({
     required this.communityId,
     required this.title,
+    this.isTargetModerator = false,
+    this.isTargetBannedUsers = false,
+    this.isTargetMember = false,
+    this.isCreator = false,
     this.isModerator = false,
-    this.isBannedUsers = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
   });
 
   @override
@@ -307,8 +319,14 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
       communityId: communityId,
       title: title,
       users: users,
+      isTargetModerator: isTargetModerator,
+      isTargetBannedUsers: isTargetBannedUsers,
+      isTargetMembers: isTargetMember,
+      isCreator: isCreator,
       isModerator: isModerator,
-      isBannedUsers: isBannedUsers,
+      isMember: isMember,
+      isBanned: isBanned,
+      isPrivate: isPrivate,
     );
   }
 }

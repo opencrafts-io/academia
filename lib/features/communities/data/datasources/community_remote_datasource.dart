@@ -156,4 +156,110 @@ class CommunityRemoteDatasource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, CommunityModel>> joinCommunity({
+    required String groupId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "$baseUrl/groups/$groupId/join/",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/x-www-form-urlencoded",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        return right(CommunityModel.fromJson(json));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while joining community.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while joining community",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> leaveCommunity({
+    required String groupId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "$baseUrl/groups/$groupId/leave/",
+        options: Options(headers: {"Accept": "application/json"}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        return right(json["message"] as String);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while leaving community.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while leaving community",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> deleteCommunity({
+    required String groupId,
+  }) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "$baseUrl/groups/$groupId/delete/",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        return right(json["message"] as String);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while deleting community.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting community",
+          error: e,
+        ),
+      );
+    }
+  }
 }

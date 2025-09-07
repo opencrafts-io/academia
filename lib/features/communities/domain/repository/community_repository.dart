@@ -15,10 +15,22 @@ abstract class CommunityRepository {
   });
 
   Future<Either<Failure, Community>> getCommunityById(String id);
-  
+
   Future<Either<Failure, Community>> moderateCommunity({
     required String groupId,
     required String action,
     required String userId,
+  });
+
+  Future<Either<Failure, Community>> joinCommunity({
+    required String groupId,
+  });
+
+  Future<Either<Failure, String>> leaveCommunity({
+    required String groupId,
+  });
+
+  Future<Either<Failure, String>> deleteCommunity({
+    required String groupId,
   });
 }

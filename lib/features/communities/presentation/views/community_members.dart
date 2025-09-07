@@ -1,5 +1,7 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
+import 'package:academia/features/communities/domain/usecases/delete_community_use_case.dart';
+import 'package:academia/features/communities/domain/usecases/leave_community_use_case.dart';
 import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,11 @@ class CommunityMembers extends StatefulWidget {
   final List<String> moderatorNames;
   final List<String> bannedUsers;
   final List<String> bannedUserNames;
+  final bool isCreator;
+  final bool isModerator;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
 
   const CommunityMembers({
     super.key,
@@ -24,6 +31,11 @@ class CommunityMembers extends StatefulWidget {
     required this.moderatorNames,
     required this.bannedUsers,
     required this.bannedUserNames,
+    this.isCreator = false,
+    this.isModerator = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
   });
 
   @override
@@ -94,28 +106,29 @@ class _CommunityMembersState extends State<CommunityMembers> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Actions
-                    ListTile(
-                      leading: const Icon(Icons.person_add_outlined),
-                      title: const Text("Add Members"),
-                      onTap: () async {
-                        final updatedCommunity = await AddMembersRoute(
-                          communityId: widget.communityId,
-                        ).push<Community>(context);
+                    if (widget.isCreator || widget.isModerator)
+                      // Actions
+                      ListTile(
+                        leading: const Icon(Icons.person_add_outlined),
+                        title: const Text("Add Members"),
+                        onTap: () async {
+                          final updatedCommunity = await AddMembersRoute(
+                            communityId: widget.communityId,
+                          ).push<Community>(context);
 
-                        if (updatedCommunity != null && context.mounted) {
-                          context.read<CommunityHomeBloc>().add(
-                            UpdateCommunity(community: updatedCommunity),
-                          );
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.link_outlined),
-                      title: const Text("Invite via Link"),
-                      onTap: () {},
-                    ),
+                          if (updatedCommunity != null && context.mounted) {
+                            context.read<CommunityHomeBloc>().add(
+                              UpdateCommunity(community: updatedCommunity),
+                            );
+                          }
+                        },
+                      ),
 
+                    // ListTile(
+                    //   leading: const Icon(Icons.link_outlined),
+                    //   title: const Text("Invite via Link"),
+                    //   onTap: () {},
+                    // ),
                     const Divider(),
 
                     // Members
@@ -149,6 +162,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             name,
                             widget.communityId,
                             memberId,
+                            isTargetMember: true,
+                            isCreator: widget.isCreator,
+                            isModerator: widget.isModerator,
+                            isMember: widget.isMember,
+                            isBanned: widget.isBanned,
                           ),
                         );
                       }).toList(),
@@ -161,6 +179,12 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           final path = CommunityUserListRoute(
                             communityId: widget.communityId,
                             title: "All Members",
+                            isTargetMember: true,
+                            isCreator: widget.isCreator,
+                            isModerator: widget.isModerator,
+                            isMember: widget.isMember,
+                            isBanned: widget.isBanned,
+                            isPrivate: widget.isPrivate,
                           ).location;
 
                           context.push(path, extra: combinedMembers);
@@ -217,7 +241,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             name,
                             widget.communityId,
                             moderatorId,
-                            isModerator: true,
+                            isTargetModerator: true,
+                            isCreator: widget.isCreator,
+                            isModerator: widget.isModerator,
+                            isMember: widget.isMember,
+                            isBanned: widget.isBanned,
                           ),
                         );
                       }).toList(),
@@ -231,7 +259,12 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           final String path = CommunityUserListRoute(
                             communityId: widget.communityId,
                             title: "All Moderators",
-                            isModerator: true,
+                            isTargetModerator: true,
+                            isCreator: widget.isCreator,
+                            isModerator: widget.isModerator,
+                            isMember: widget.isMember,
+                            isBanned: widget.isBanned,
+                            isPrivate: widget.isPrivate,
                           ).location;
 
                           // Use context.push with the path and the extra parameter
@@ -246,7 +279,9 @@ class _CommunityMembersState extends State<CommunityMembers> {
             ),
           ),
 
-          if (combinedBannedUsers.isEmpty)
+          if (combinedBannedUsers.isEmpty ||
+              !widget.isModerator ||
+              !widget.isCreator)
             const SliverToBoxAdapter()
           else
             // Banned Users Section
@@ -294,7 +329,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                               name,
                               widget.communityId,
                               bannedUserId,
-                              isBanned: true,
+                              isTargetBanned: true,
+                              isCreator: widget.isCreator,
+                              isModerator: widget.isModerator,
+                              isMember: widget.isMember,
+                              isBanned: widget.isBanned,
                             ),
                           );
                         }).toList(),
@@ -308,7 +347,12 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             final String path = CommunityUserListRoute(
                               communityId: widget.communityId,
                               title: "Banned Users",
-                              isBannedUsers: true,
+                              isTargetBannedUsers: true,
+                              isCreator: widget.isCreator,
+                              isModerator: widget.isModerator,
+                              isMember: widget.isMember,
+                              isBanned: widget.isBanned,
+                              isPrivate: widget.isPrivate,
                             ).location;
 
                             // Use context.push with the path and the extra parameter
@@ -327,49 +371,110 @@ class _CommunityMembersState extends State<CommunityMembers> {
             ),
 
           // Critical Actions Section
-          SliverToBoxAdapter(
-            child: Card(
-              margin: const EdgeInsets.all(12),
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Critical Actions",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
+          if (!widget.isModerator ||
+              !widget.isCreator ||
+              !widget.isMember ||
+              widget.isBanned)
+            const SliverToBoxAdapter()
+          else
+            SliverToBoxAdapter(
+              child: Card(
+                margin: const EdgeInsets.all(12),
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Critical Actions",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
 
-                    ListTile(
-                      leading: const Icon(
-                        Icons.exit_to_app_outlined,
-                        color: Colors.orange,
+                      ListTile(
+                        leading: const Icon(
+                          Icons.exit_to_app_outlined,
+                          color: Colors.orange,
+                        ),
+                        title: const Text("Leave Group"),
+                        onTap: () async {
+                          final result =
+                              await context.read<LeaveCommunityUseCase>()(
+                                widget.communityId,
+                              );
+
+                          result.fold(
+                            (failure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(failure.message),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.error,
+                                ),
+                              );
+                            },
+                            (message) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(message),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                ),
+                              );
+                              FeedRoute().go(context);
+                            },
+                          );
+                        },
                       ),
-                      title: const Text("Leave Group"),
-                      onTap: () {
-                        // TODO: Leave group logic
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.red,
-                      ),
-                      title: const Text("Delete Group"),
-                      onTap: () {
-                        // TODO: Delete group logic
-                      },
-                    ),
-                  ],
+                      if (widget.isCreator)
+                        ListTile(
+                          leading: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                          title: const Text("Delete Group"),
+                          onTap: () async {
+                            final result =
+                                await context.read<DeleteCommunityUseCase>()(
+                                  widget.communityId,
+                                );
+
+                            result.fold(
+                              (failure) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(failure.message),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.error,
+                                  ),
+                                );
+                              },
+                              (message) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(message),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                );
+                                FeedRoute().go(context);
+                              },
+                            );
+                          },
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
           // Some spacing at the bottom
           const SliverToBoxAdapter(child: SizedBox(height: 24)),

@@ -5,16 +5,28 @@ class CommunityUserListScreen extends StatefulWidget {
   final String communityId;
   final String title;
   final List<Map<String, String>> users;
+  final bool isTargetModerator;
+  final bool isTargetBannedUsers;
+  final bool isTargetMembers;
+  final bool isCreator;
   final bool isModerator;
-  final bool isBannedUsers;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
 
   const CommunityUserListScreen({
     super.key,
     required this.communityId,
     required this.title,
     required this.users,
-    required this.isModerator,
-    required this.isBannedUsers,
+    required this.isTargetModerator,
+    required this.isTargetBannedUsers,
+    required this.isTargetMembers,
+    this.isCreator = false,
+    this.isModerator = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
   });
 
   @override
@@ -151,8 +163,14 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
                           name,
                           widget.communityId,
                           userId,
+                          isTargetModerator: widget.isTargetModerator,
+                          isTargetBanned: widget.isTargetBannedUsers,
+                          isTargetMember: widget.isTargetMembers,
+                          isCreator: widget.isCreator,
                           isModerator: widget.isModerator,
-                          isBanned: widget.isBannedUsers,
+                          isMember: widget.isMember,
+                          isBanned: widget.isBanned,
+                          isPrivate: widget.isPrivate,
                         );
                       },
                     );

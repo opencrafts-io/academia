@@ -13,8 +13,17 @@ Future<void> showUserActionsSheet(
   String name,
   String communityId,
   String userId, {
-  bool isModerator = false,
-  bool isBanned = false,
+  // target user state
+  bool isTargetModerator = false,
+  bool isTargetBanned = false,
+  bool isTargetMember = false,
+
+  // current logged-in user role
+  required bool isCreator,
+  required bool isModerator,
+  required bool isMember,
+  required bool isBanned,
+  bool isPrivate = false,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -22,20 +31,22 @@ Future<void> showUserActionsSheet(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) {
+      final isPrivileged = isCreator || isModerator; // only these can moderate
+
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // User header
+            // Header
             ListTile(
               leading: CircleAvatar(child: Text(name[0].toUpperCase())),
               title: Text(name, style: Theme.of(context).textTheme.titleMedium),
             ),
             const Divider(),
 
-            if (isBanned) ...[
-              // If banned → only show "Unban"
+            // If target user is banned → only show "Unban" (for privileged roles)
+            if (isTargetBanned && isPrivileged) ...[
               ListTile(
                 leading: const Icon(Icons.lock_open, color: Colors.green),
                 title: Text("Unban $name"),
@@ -54,7 +65,7 @@ Future<void> showUserActionsSheet(
                 },
               ),
             ] else ...[
-              // Always available
+              // Always available: message
               ListTile(
                 leading: const Icon(Icons.message),
                 title: Text("Message $name"),
@@ -66,8 +77,8 @@ Future<void> showUserActionsSheet(
                 },
               ),
 
-              // Extra actions for members (not moderators)
-              if (!isModerator) ...[
+              // Only moderators/creators can promote, ban, or remove
+              if (isPrivileged && !isTargetModerator) ...[
                 ListTile(
                   leading: const Icon(Icons.shield_moon),
                   title: Text("Make $name moderator"),
@@ -85,6 +96,8 @@ Future<void> showUserActionsSheet(
                     );
                   },
                 ),
+              ],
+              if (isPrivileged && isTargetMember) ...[
                 ListTile(
                   leading: const Icon(Icons.block, color: Colors.red),
                   title: Text("Ban $name"),

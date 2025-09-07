@@ -514,6 +514,34 @@ mixin _$CommunityUserListRoute on GoRouteData {
       CommunityUserListRoute(
         communityId: state.pathParameters['communityId']!,
         title: state.uri.queryParameters['title']!,
+        isTargetModerator:
+            _$convertMapValue(
+              'is-target-moderator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isTargetBannedUsers:
+            _$convertMapValue(
+              'is-target-banned-users',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isTargetMember:
+            _$convertMapValue(
+              'is-target-member',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isCreator:
+            _$convertMapValue(
+              'is-creator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
         isModerator:
             _$convertMapValue(
               'is-moderator',
@@ -521,9 +549,23 @@ mixin _$CommunityUserListRoute on GoRouteData {
               _$boolConverter,
             ) ??
             false,
-        isBannedUsers:
+        isMember:
             _$convertMapValue(
-              'is-banned-users',
+              'is-member',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isBanned:
+            _$convertMapValue(
+              'is-banned',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isPrivate:
+            _$convertMapValue(
+              'is-private',
               state.uri.queryParameters,
               _$boolConverter,
             ) ??
@@ -537,10 +579,18 @@ mixin _$CommunityUserListRoute on GoRouteData {
     '/communities/${Uri.encodeComponent(_self.communityId)}/users',
     queryParams: {
       'title': _self.title,
+      if (_self.isTargetModerator != false)
+        'is-target-moderator': _self.isTargetModerator.toString(),
+      if (_self.isTargetBannedUsers != false)
+        'is-target-banned-users': _self.isTargetBannedUsers.toString(),
+      if (_self.isTargetMember != false)
+        'is-target-member': _self.isTargetMember.toString(),
+      if (_self.isCreator != false) 'is-creator': _self.isCreator.toString(),
       if (_self.isModerator != false)
         'is-moderator': _self.isModerator.toString(),
-      if (_self.isBannedUsers != false)
-        'is-banned-users': _self.isBannedUsers.toString(),
+      if (_self.isMember != false) 'is-member': _self.isMember.toString(),
+      if (_self.isBanned != false) 'is-banned': _self.isBanned.toString(),
+      if (_self.isPrivate != false) 'is-private': _self.isPrivate.toString(),
     },
   );
 

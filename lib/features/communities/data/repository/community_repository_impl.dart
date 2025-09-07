@@ -62,4 +62,37 @@ class CommunityRepositoryImpl implements CommunityRepository {
       return right(community.toEntity());
     });
   }
+
+  @override
+  Future<Either<Failure, Community>> joinCommunity({
+    required String groupId,
+  }) async {
+    final result = await remoteDatasource.joinCommunity(groupId: groupId);
+
+    return result.fold((failure) => left(failure), (community) {
+      return right(community.toEntity());
+    });
+  }
+
+  @override
+  Future<Either<Failure, String>> leaveCommunity({
+    required String groupId,
+  }) async {
+    final result = await remoteDatasource.leaveCommunity(groupId: groupId);
+
+    return result.fold((failure) => left(failure), (message) {
+      return right(message);
+    });
+  } 
+
+  @override
+  Future<Either<Failure, String>> deleteCommunity({
+    required String groupId,
+  }) async {
+    final result = await remoteDatasource.deleteCommunity(groupId: groupId);
+
+    return result.fold((failure) => left(failure), (message) {
+      return right(message);
+    });
+  } 
 }

@@ -25,6 +25,33 @@ class UpdateCommunity extends CommunityHomeEvent {
   List<Object?> get props => [community];
 } 
 
+class JoinCommunity extends CommunityHomeEvent {
+  final String communityId;
+
+  const JoinCommunity({required this.communityId});
+
+  @override
+  List<Object?> get props => [communityId];
+}
+
+class LeaveCommunity extends CommunityHomeEvent {
+  final String communityId;
+
+  const LeaveCommunity({required this.communityId});
+
+  @override
+  List<Object?> get props => [communityId];
+} 
+
+class DeleteCommunity extends CommunityHomeEvent {
+  final String communityId;
+
+  const DeleteCommunity({required this.communityId});
+
+  @override
+  List<Object?> get props => [communityId];
+} 
+
 class ModerateMembers extends CommunityHomeEvent {
   final String communityId;
   final CommunityModerationAction action;

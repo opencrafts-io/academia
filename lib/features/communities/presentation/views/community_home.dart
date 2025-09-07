@@ -1,4 +1,5 @@
 import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
+import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,12 +17,18 @@ class CommunityHome extends StatefulWidget {
 
 class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
+  String? currentUserId;
   @override
   void initState() {
     super.initState();
     context.read<CommunityHomeBloc>().add(
       FetchCommunityById(communityId: widget.communityId),
     );
+    final profileState = context.read<ProfileBloc>().state;
+
+    if (profileState is ProfileLoadedState) {
+      currentUserId = profileState.profile.id;
+    }
   }
 
   @override
@@ -43,6 +50,14 @@ class _CommunityHomeState extends State<CommunityHome>
           );
         } else if (state is CommunityHomeLoaded) {
           final community = state.community;
+          final memberSet = community.members.toSet();
+          final moderatorSet = community.moderators.toSet();
+          final bannedSet = community.bannedUsers.toSet();
+
+          final isCreator = currentUserId == community.creatorId;
+          final isModerator = moderatorSet.contains(currentUserId);
+          final isMember = memberSet.contains(currentUserId);
+          final isBanned = bannedSet.contains(currentUserId);
 
           return DefaultTabController(
             length: 3,
@@ -209,12 +224,43 @@ class _CommunityHomeState extends State<CommunityHome>
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 12),
-                                FilledButton(
-                                  onPressed: () {
-                                    // handle join/leave
-                                  },
-                                  child: const Text("Join"),
-                                ),
+                                if (isCreator || isModerator || isMember)
+                                  FilledButton(
+                                    onPressed: () {},
+                                    child: const Text("Create Post"),
+                                  )
+                                else if (isBanned)
+                                  Text(
+                                    "You are banned from this community",
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                  )
+                                else if (!isMember && community.isPrivate)
+                                  const Text(
+                                    "This is a private community, request to join.",
+                                  )
+                                else
+                                  FilledButton(
+                                    onPressed: () {
+                                      context.read<CommunityHomeBloc>().add(
+                                        JoinCommunity(
+                                          communityId: state.community.id
+                                              .toString(),
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Joining community..."),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("Join"),
+                                  ),
                               ],
                             ),
                           ),
@@ -249,7 +295,12 @@ class _CommunityHomeState extends State<CommunityHome>
                       members: state.community.members,
                       moderators: state.community.moderators,
                       bannedUsers: state.community.bannedUsers,
-                      bannedUserNames: state.community.bannedUserNames, 
+                      bannedUserNames: state.community.bannedUserNames,
+                      isCreator: isCreator,
+                      isModerator: isModerator,
+                      isMember: isMember,
+                      isBanned: isBanned,
+                      isPrivate: community.isPrivate,
                     ),
                   ],
                 ),

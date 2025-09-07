@@ -20,6 +20,10 @@ class CommunityHomeLoaded extends CommunityHomeState {
   List<Object?> get props => [community];
 }
 
+class CommunityLeft extends CommunityHomeState {}
+
+class CommunityDeleted extends CommunityHomeState {}
+
 class CommunityHomeFailure extends CommunityHomeState {
   final String message;
 
