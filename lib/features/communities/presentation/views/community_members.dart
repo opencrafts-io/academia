@@ -172,26 +172,27 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       }).toList(),
                     ),
 
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () {
-                          final path = CommunityUserListRoute(
-                            communityId: widget.communityId,
-                            title: "All Members",
-                            isTargetMember: true,
-                            isCreator: widget.isCreator,
-                            isModerator: widget.isModerator,
-                            isMember: widget.isMember,
-                            isBanned: widget.isBanned,
-                            isPrivate: widget.isPrivate,
-                          ).location;
+                    if (widget.isPrivate && !widget.isMember)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: () {
+                            final path = CommunityUserListRoute(
+                              communityId: widget.communityId,
+                              title: "All Members",
+                              isTargetMember: true,
+                              isCreator: widget.isCreator,
+                              isModerator: widget.isModerator,
+                              isMember: widget.isMember,
+                              isBanned: widget.isBanned,
+                              isPrivate: widget.isPrivate,
+                            ).location;
 
-                          context.push(path, extra: combinedMembers);
-                        },
-                        child: const Text("View all members"),
+                            context.push(path, extra: combinedMembers);
+                          },
+                          child: const Text("View all members"),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
