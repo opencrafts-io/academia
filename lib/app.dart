@@ -97,6 +97,8 @@ class _AcademiaState extends State<Academia> {
             likePost: sl.get<LikePostUsecase>(),
             createPost: sl.get<CreatePostUsecase>(),
             addComment: sl.get<CommentUsecase>(),
+            cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+            getPostReplies: sl.get<GetPostRepliesUsecase>(),
           )..add(CacheFeedEvent()),
         ),
         BlocProvider(
