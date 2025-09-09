@@ -364,6 +364,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendLocalNotificationUsecase>(
     () => SendLocalNotificationUsecase(sl.get<NotificationRepository>()),
   );
+  sl.registerFactory<SetUserDataUsecase>(
+    () => SetUserDataUsecase(repository: sl.get<NotificationRepository>()),
+  );
 
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
@@ -381,6 +384,7 @@ Future<void> init(FlavorConfig flavor) async {
       getNotificationPermissionUsecase: sl
           .get<GetNotificationPermissionUsecase>(),
       sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
+      setUserDataUsecase: sl.get<SetUserDataUsecase>(),
     ),
   );
 
