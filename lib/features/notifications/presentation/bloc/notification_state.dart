@@ -78,6 +78,22 @@ class LocalNotificationSentState extends NotificationState {
   const LocalNotificationSentState();
 }
 
+/// State when user data has been successfully set in OneSignal
+class UserDataSetState extends NotificationState {
+  final String userId;
+  final String name;
+  final String email;
+
+  const UserDataSetState({
+    required this.userId,
+    required this.name,
+    required this.email,
+  });
+
+  @override
+  List<Object?> get props => [userId, name, email];
+}
+
 /// Error state when an operation fails
 class NotificationErrorState extends NotificationState {
   final String message;

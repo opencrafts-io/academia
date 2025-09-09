@@ -6,3 +6,4 @@ export 'chirp/chirp.dart';
 export 'agenda/agenda.dart';
 export 'todos/todos.dart';
 export 'notifications/notifications.dart';
+export 'firebase_remote_config/firebase_remote_config.dart';
