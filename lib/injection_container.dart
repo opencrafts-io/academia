@@ -5,10 +5,19 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
+  final DioRequestInspector inspector = DioRequestInspector(
+    isInspectorEnabled: true,
+    password: '123456', // remove this line if you don't need password
+    showSummary: false,
+  );
+
+  sl.registerSingleton<DioRequestInspector>(inspector);
+
   // Register the flavor
   sl.registerSingleton<FlavorConfig>(flavor);
 
@@ -19,7 +28,11 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<DioClient>(
-    () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+    () => DioClient(
+      flavor,
+      authLocalDatasource: sl.get<AuthLocalDatasource>(),
+      requestInspector: sl<DioRequestInspector>(),
+    ),
   );
 
   sl.registerFactory(
