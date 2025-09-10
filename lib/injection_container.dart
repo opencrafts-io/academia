@@ -17,10 +17,13 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
   );
-  sl.registerFactory(() => AuthRemoteDatasource(flavorConfig: flavor));
 
   sl.registerFactory<DioClient>(
     () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+  );
+
+  sl.registerFactory(
+    () => AuthRemoteDatasource(flavorConfig: flavor, dioClient: sl()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -39,6 +42,9 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshVerisafeTokenUsecase>(
+    () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
   //sherehe
