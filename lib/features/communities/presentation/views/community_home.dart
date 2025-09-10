@@ -119,18 +119,35 @@ class _CommunityHomeState extends State<CommunityHome>
                         fit: StackFit.expand,
                         children: [
                           if (community.bannerUrl != null)
-                            CachedNetworkImage(
-                              imageUrl: community.bannerUrl!,
+                            // CachedNetworkImage(
+                            //   imageUrl: community.bannerUrl!,
+                            //   fit: BoxFit.cover,
+                            //   placeholder: (context, url) => Container(
+                            //     color: Theme.of(
+                            //       context,
+                            //     ).colorScheme.errorContainer,
+                            //     child: const Center(
+                            //       child: CircularProgressIndicator(),
+                            //     ),
+                            //   ),
+                            //   errorWidget: (context, url, error) => Container(
+                            //     color: Theme.of(
+                            //       context,
+                            //     ).colorScheme.errorContainer,
+                            //     child: Icon(
+                            //       Icons.broken_image,
+                            //       size: 48,
+                            //       color: Theme.of(
+                            //         context,
+                            //       ).colorScheme.onErrorContainer,
+                            //     ),
+                            //   ),
+                            // )
+                            Image.network(
+                              community.bannerUrl!,
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.errorContainer,
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.errorContainer,

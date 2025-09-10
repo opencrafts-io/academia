@@ -4,6 +4,7 @@ import 'package:academia/features/communities/presentation/bloc/create_community
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateCommunityScreen extends StatefulWidget {
@@ -26,18 +27,56 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
   Future<void> _pickBannerImage() async {
     final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      setState(() {
-        _bannerImage = File(picked.path);
-      });
+      // Get the original file path
+      final File originalImage = File(picked.path);
+
+      // Get the compressed file path
+      final String targetPath =
+          '${originalImage.parent.path}/compressed_banner.jpg';
+
+      // Compress the image
+      final XFile? compressedImage =
+          await FlutterImageCompress.compressAndGetFile(
+            originalImage.absolute.path,
+            targetPath,
+            quality: 70,
+            minWidth: 1024,
+            minHeight: 1024,
+          );
+
+      if (compressedImage != null) {
+        setState(() {
+          _bannerImage = File(compressedImage.path);
+        });
+      }
     }
   }
 
   Future<void> _pickLogoImage() async {
     final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
-      setState(() {
-        _logoImage = File(picked.path);
-      });
+      // Get the original file path
+      final File originalImage = File(picked.path);
+
+      // Get the compressed file path
+      final String targetPath =
+          '${originalImage.parent.path}/compressed_logo.jpg';
+
+      // Compress the image
+      final XFile? compressedImage =
+          await FlutterImageCompress.compressAndGetFile(
+            originalImage.absolute.path,
+            targetPath,
+            quality: 70, 
+            minWidth: 512, 
+            minHeight: 512,
+          );
+
+      if (compressedImage != null) {
+        setState(() {
+          _logoImage = File(compressedImage.path);
+        });
+      }
     }
   }
 
@@ -73,7 +112,9 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
-          CommunitiesRoute(communityId: state.community.id.toString()).pushReplacement(context);
+          CommunitiesRoute(
+            communityId: state.community.id.toString(),
+          ).pushReplacement(context);
         } else if (state is CreateCommunityFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
