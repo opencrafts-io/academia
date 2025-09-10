@@ -23,12 +23,18 @@ class UpdateCommunity extends CommunityHomeEvent {
 
   @override
   List<Object?> get props => [community];
-} 
+}
 
 class JoinCommunity extends CommunityHomeEvent {
   final String communityId;
+  final String userId;
+  final String userName;
 
-  const JoinCommunity({required this.communityId});
+  const JoinCommunity({
+    required this.communityId,
+    required this.userId,
+    required this.userName,
+  });
 
   @override
   List<Object?> get props => [communityId];
@@ -41,7 +47,7 @@ class LeaveCommunity extends CommunityHomeEvent {
 
   @override
   List<Object?> get props => [communityId];
-} 
+}
 
 class DeleteCommunity extends CommunityHomeEvent {
   final String communityId;
@@ -51,7 +57,7 @@ class DeleteCommunity extends CommunityHomeEvent {
 
   @override
   List<Object?> get props => [communityId];
-} 
+}
 
 class ModerateMembers extends CommunityHomeEvent {
   final String communityId;

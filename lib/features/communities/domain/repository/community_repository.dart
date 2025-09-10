@@ -22,7 +22,11 @@ abstract class CommunityRepository {
     required String userId,
   });
 
-  Future<Either<Failure, Community>> joinCommunity({required String groupId});
+  Future<Either<Failure, Community>> joinCommunity({
+    required String groupId,
+    required String userId,
+    required String userName,
+  });
 
   Future<Either<Failure, String>> leaveCommunity({required String groupId});
 

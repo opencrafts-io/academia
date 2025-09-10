@@ -66,8 +66,14 @@ class CommunityRepositoryImpl implements CommunityRepository {
   @override
   Future<Either<Failure, Community>> joinCommunity({
     required String groupId,
+    required String userId,
+    required String userName,
   }) async {
-    final result = await remoteDatasource.joinCommunity(groupId: groupId);
+    final result = await remoteDatasource.joinCommunity(
+      groupId: groupId,
+      userId: userId,
+      userName: userName,
+    );
 
     return result.fold((failure) => left(failure), (community) {
       return right(community.toEntity());

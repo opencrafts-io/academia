@@ -8,7 +8,15 @@ class JoinCommunityUseCase {
 
   JoinCommunityUseCase({required this.repository});
 
-  Future<Either<Failure, Community>> call(String groupId) {
-    return repository.joinCommunity(groupId: groupId);
+  Future<Either<Failure, Community>> call(
+    String groupId,
+    String userId,
+    String userName,
+  ) {
+    return repository.joinCommunity(
+      groupId: groupId,
+      userId: userId,
+      userName: userName,
+    );
   }
 }

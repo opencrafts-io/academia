@@ -159,10 +159,13 @@ class CommunityRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, CommunityModel>> joinCommunity({
     required String groupId,
+    required String userId,
+    required String userName,
   }) async {
     try {
       final response = await dioClient.dio.post(
         "$baseUrl/groups/$groupId/join/",
+        data: {"user_id": userId, "user_name": userName},
         options: Options(
           headers: {
             "Content-Type": "application/json",
@@ -175,7 +178,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityModel.fromJson(json));
+        return right(CommunityModel.fromJson(json['group']));
       } else {
         return left(
           ServerFailure(

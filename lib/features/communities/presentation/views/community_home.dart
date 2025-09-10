@@ -18,7 +18,8 @@ class CommunityHome extends StatefulWidget {
 
 class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
-  String? currentUserId;
+  late String currentUserId;
+  late String currentUserName;
   @override
   void initState() {
     super.initState();
@@ -29,6 +30,7 @@ class _CommunityHomeState extends State<CommunityHome>
 
     if (profileState is ProfileLoadedState) {
       currentUserId = profileState.profile.id;
+      currentUserName = profileState.profile.name;
     }
   }
 
@@ -44,9 +46,9 @@ class _CommunityHomeState extends State<CommunityHome>
         }
 
         if (state is CommunityDeleted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Community deleted")),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Community deleted")));
           HomeRoute().go(context);
         }
 
@@ -119,35 +121,18 @@ class _CommunityHomeState extends State<CommunityHome>
                         fit: StackFit.expand,
                         children: [
                           if (community.bannerUrl != null)
-                            // CachedNetworkImage(
-                            //   imageUrl: community.bannerUrl!,
-                            //   fit: BoxFit.cover,
-                            //   placeholder: (context, url) => Container(
-                            //     color: Theme.of(
-                            //       context,
-                            //     ).colorScheme.errorContainer,
-                            //     child: const Center(
-                            //       child: CircularProgressIndicator(),
-                            //     ),
-                            //   ),
-                            //   errorWidget: (context, url, error) => Container(
-                            //     color: Theme.of(
-                            //       context,
-                            //     ).colorScheme.errorContainer,
-                            //     child: Icon(
-                            //       Icons.broken_image,
-                            //       size: 48,
-                            //       color: Theme.of(
-                            //         context,
-                            //       ).colorScheme.onErrorContainer,
-                            //     ),
-                            //   ),
-                            // )
-                            Image.network(
-                              community.bannerUrl!,
+                            CachedNetworkImage(
+                              imageUrl: community.bannerUrl!,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
+                              placeholder: (context, url) => Container(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.errorContainer,
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.errorContainer,
@@ -288,6 +273,8 @@ class _CommunityHomeState extends State<CommunityHome>
                                         JoinCommunity(
                                           communityId: state.community.id
                                               .toString(),
+                                          userId: currentUserId,
+                                          userName: currentUserName,
                                         ),
                                       );
                                       ScaffoldMessenger.of(
@@ -340,7 +327,7 @@ class _CommunityHomeState extends State<CommunityHome>
                       isMember: isMember,
                       isBanned: isBanned,
                       isPrivate: community.isPrivate,
-                      userId: currentUserId ?? '',
+                      userId: currentUserId,
                     ),
                   ],
                 ),

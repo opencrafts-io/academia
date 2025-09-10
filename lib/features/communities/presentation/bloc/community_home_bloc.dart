@@ -73,7 +73,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoading());
-    final result = await joinCommunityUseCase(event.communityId);
+    final result = await joinCommunityUseCase(event.communityId, event.userId, event.userName);
 
     result.fold(
       (failure) => emit(CommunityHomeFailure(failure.message)),
