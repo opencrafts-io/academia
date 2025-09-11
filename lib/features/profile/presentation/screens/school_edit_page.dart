@@ -27,12 +27,28 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
 
-        TextFormField(
-          decoration: InputDecoration(
-            label: Text("Your school"),
-            hintText: "Hogwart's ",
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        SizedBox(height: 22),
+
+        SearchAnchor.bar(
+          barElevation: WidgetStatePropertyAll(0),
+          barShape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              side: BorderSide(width: 2),
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
+          barHintText: "Hogwart's School of Wizardry",
+          barLeading: Icon(Icons.search),
+          viewElevation: 0,
+          suggestionsBuilder: (context, searchController) async {
+            return [
+              ListTile(
+                title: Text("Daystar University"),
+                subtitle: Text("daystar.ac.ke"),
+                trailing: Text("KE"),
+              ),
+            ];
+          },
         ),
 
         ListTile(
@@ -44,7 +60,6 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
-
 
         Row(
           spacing: 12,

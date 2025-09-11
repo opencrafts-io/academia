@@ -1,6 +1,7 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/presentation/bloc/institution_cubit.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
@@ -140,6 +141,8 @@ class _AcademiaState extends State<Academia> {
           create: (context) =>
               sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
+
+        BlocProvider(create: (context) => sl<InstitutionCubit>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(

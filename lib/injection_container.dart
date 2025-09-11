@@ -3,6 +3,7 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -469,6 +470,54 @@ Future<void> init(FlavorConfig flavor) async {
       setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
       getSettingsUsecase: sl.get<GetSettingsUsecase>(),
       setSettingsUsecase: sl.get<SetSettingsUsecase>(),
+    ),
+  );
+
+  // --- Institutions ---
+  sl.registerFactory<InstitutionLocalDatasource>(
+    () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
+  );
+  sl.registerFactory<InstitutionRemoteDatasource>(
+    () => InstitutionRemoteDatasource(dioClient: sl()),
+  );
+
+  sl.registerFactory<InstitutionRepository>(
+    () => InstitutionRepositoryImpl(
+      institutionLocalDatasource: sl(),
+      institutionRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<GetAllUserAccountInstitutionsUsecase>(
+    () => GetAllUserAccountInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<GetAllCachedInstitutionsUsecase>(
+    () => GetAllCachedInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddAccountToInstitution>(
+    () => AddAccountToInstitution(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<SearchForInstitutionByNameUsecase>(
+    () => SearchForInstitutionByNameUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionCubit>(
+    () => InstitutionCubit(
+      addAccountToInstitution: sl(),
+      getAllCachedInstitutionsUsecase: sl(),
+      searchForInstitutionByNameUsecase: sl(),
+      getAllUserAccountInstitutionsUsecase: sl(),
     ),
   );
 }
