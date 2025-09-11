@@ -17,9 +17,9 @@ extension InstitutionDataModelHelper on InstitutionData {
   Institution toEntity() => Institution(
     institutionId: institutionId,
     name: name,
-    domains: domains,
+    domains: domains?.cast<String>() ?? [],
     country: country,
-    webPages: webPages,
+    webPages: webPages?.cast<String>() ?? [],
     alphaTwoCode: alphaTwoCode,
     stateProvince: stateProvince,
   );

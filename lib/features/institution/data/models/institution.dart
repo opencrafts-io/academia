@@ -8,9 +8,9 @@ class Institution extends Table {
   TextColumn get name => text()();
   @JsonKey("web_pages")
   TextColumn get webPages =>
-      text().nullable().map(const StringListConverter())();
+      text().nullable().map(const JsonListConverter())();
   TextColumn get domains =>
-      text().nullable().map(const StringListConverter())();
+      text().nullable().map(const JsonListConverter())();
   @JsonKey("alpha_two_code")
   TextColumn get alphaTwoCode => text().nullable().named('alpha_two_code')();
   TextColumn get country => text().nullable()();
@@ -19,4 +19,5 @@ class Institution extends Table {
 
   @override
   Set<Column> get primaryKey => {institutionId};
+
 }

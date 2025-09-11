@@ -481,7 +481,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionRemoteDatasource(dioClient: sl()),
   );
 
-  sl.registerFactory<InstitutionRepository>(
+  sl.registerFactory<InstitutionRepositoryImpl>(
     () => InstitutionRepositoryImpl(
       institutionLocalDatasource: sl(),
       institutionRemoteDatasource: sl(),

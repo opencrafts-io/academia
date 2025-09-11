@@ -8476,23 +8476,23 @@ class $InstitutionTable extends Institution
     requiredDuringInsert: true,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<List<String>?, String> webPages =
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> webPages =
       GeneratedColumn<String>(
         'web_pages',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<String>?>($InstitutionTable.$converterwebPagesn);
+      ).withConverter<List<dynamic>?>($InstitutionTable.$converterwebPagesn);
   @override
-  late final GeneratedColumnWithTypeConverter<List<String>?, String> domains =
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> domains =
       GeneratedColumn<String>(
         'domains',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<String>?>($InstitutionTable.$converterdomainsn);
+      ).withConverter<List<dynamic>?>($InstitutionTable.$converterdomainsn);
   static const VerificationMeta _alphaTwoCodeMeta = const VerificationMeta(
     'alphaTwoCode',
   );
@@ -8638,21 +8638,21 @@ class $InstitutionTable extends Institution
     return $InstitutionTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<List<String>, String> $converterwebPages =
-      const StringListConverter();
-  static TypeConverter<List<String>?, String?> $converterwebPagesn =
+  static TypeConverter<List<dynamic>, String> $converterwebPages =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterwebPagesn =
       NullAwareTypeConverter.wrap($converterwebPages);
-  static TypeConverter<List<String>, String> $converterdomains =
-      const StringListConverter();
-  static TypeConverter<List<String>?, String?> $converterdomainsn =
+  static TypeConverter<List<dynamic>, String> $converterdomains =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterdomainsn =
       NullAwareTypeConverter.wrap($converterdomains);
 }
 
 class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   final int institutionId;
   final String name;
-  final List<String>? webPages;
-  final List<String>? domains;
+  final List<dynamic>? webPages;
+  final List<dynamic>? domains;
   final String? alphaTwoCode;
   final String? country;
   final String? stateProvince;
@@ -8722,8 +8722,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     return InstitutionData(
       institutionId: serializer.fromJson<int>(json['institution_id']),
       name: serializer.fromJson<String>(json['name']),
-      webPages: serializer.fromJson<List<String>?>(json['web_pages']),
-      domains: serializer.fromJson<List<String>?>(json['domains']),
+      webPages: serializer.fromJson<List<dynamic>?>(json['web_pages']),
+      domains: serializer.fromJson<List<dynamic>?>(json['domains']),
       alphaTwoCode: serializer.fromJson<String?>(json['alpha_two_code']),
       country: serializer.fromJson<String?>(json['country']),
       stateProvince: serializer.fromJson<String?>(json['state_province']),
@@ -8735,8 +8735,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     return <String, dynamic>{
       'institution_id': serializer.toJson<int>(institutionId),
       'name': serializer.toJson<String>(name),
-      'web_pages': serializer.toJson<List<String>?>(webPages),
-      'domains': serializer.toJson<List<String>?>(domains),
+      'web_pages': serializer.toJson<List<dynamic>?>(webPages),
+      'domains': serializer.toJson<List<dynamic>?>(domains),
       'alpha_two_code': serializer.toJson<String?>(alphaTwoCode),
       'country': serializer.toJson<String?>(country),
       'state_province': serializer.toJson<String?>(stateProvince),
@@ -8746,8 +8746,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   InstitutionData copyWith({
     int? institutionId,
     String? name,
-    Value<List<String>?> webPages = const Value.absent(),
-    Value<List<String>?> domains = const Value.absent(),
+    Value<List<dynamic>?> webPages = const Value.absent(),
+    Value<List<dynamic>?> domains = const Value.absent(),
     Value<String?> alphaTwoCode = const Value.absent(),
     Value<String?> country = const Value.absent(),
     Value<String?> stateProvince = const Value.absent(),
@@ -8820,8 +8820,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
 class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   final Value<int> institutionId;
   final Value<String> name;
-  final Value<List<String>?> webPages;
-  final Value<List<String>?> domains;
+  final Value<List<dynamic>?> webPages;
+  final Value<List<dynamic>?> domains;
   final Value<String?> alphaTwoCode;
   final Value<String?> country;
   final Value<String?> stateProvince;
@@ -8866,8 +8866,8 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   InstitutionCompanion copyWith({
     Value<int>? institutionId,
     Value<String>? name,
-    Value<List<String>?>? webPages,
-    Value<List<String>?>? domains,
+    Value<List<dynamic>?>? webPages,
+    Value<List<dynamic>?>? domains,
     Value<String?>? alphaTwoCode,
     Value<String?>? country,
     Value<String?>? stateProvince,
@@ -14874,8 +14874,8 @@ typedef $$InstitutionTableCreateCompanionBuilder =
     InstitutionCompanion Function({
       Value<int> institutionId,
       required String name,
-      Value<List<String>?> webPages,
-      Value<List<String>?> domains,
+      Value<List<dynamic>?> webPages,
+      Value<List<dynamic>?> domains,
       Value<String?> alphaTwoCode,
       Value<String?> country,
       Value<String?> stateProvince,
@@ -14884,8 +14884,8 @@ typedef $$InstitutionTableUpdateCompanionBuilder =
     InstitutionCompanion Function({
       Value<int> institutionId,
       Value<String> name,
-      Value<List<String>?> webPages,
-      Value<List<String>?> domains,
+      Value<List<dynamic>?> webPages,
+      Value<List<dynamic>?> domains,
       Value<String?> alphaTwoCode,
       Value<String?> country,
       Value<String?> stateProvince,
@@ -14910,13 +14910,13 @@ class $$InstitutionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
   get webPages => $composableBuilder(
     column: $table.webPages,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
   get domains => $composableBuilder(
     column: $table.domains,
     builder: (column) => ColumnWithTypeConverterFilters(column),
@@ -15000,10 +15000,10 @@ class $$InstitutionTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<String>?, String> get webPages =>
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get webPages =>
       $composableBuilder(column: $table.webPages, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<String>?, String> get domains =>
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get domains =>
       $composableBuilder(column: $table.domains, builder: (column) => column);
 
   GeneratedColumn<String> get alphaTwoCode => $composableBuilder(
@@ -15053,8 +15053,8 @@ class $$InstitutionTableTableManager
               ({
                 Value<int> institutionId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<List<String>?> webPages = const Value.absent(),
-                Value<List<String>?> domains = const Value.absent(),
+                Value<List<dynamic>?> webPages = const Value.absent(),
+                Value<List<dynamic>?> domains = const Value.absent(),
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),
@@ -15071,8 +15071,8 @@ class $$InstitutionTableTableManager
               ({
                 Value<int> institutionId = const Value.absent(),
                 required String name,
-                Value<List<String>?> webPages = const Value.absent(),
-                Value<List<String>?> domains = const Value.absent(),
+                Value<List<dynamic>?> webPages = const Value.absent(),
+                Value<List<dynamic>?> domains = const Value.absent(),
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),

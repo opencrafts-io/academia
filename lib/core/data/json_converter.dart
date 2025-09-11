@@ -91,4 +91,5 @@ class StringListConverter extends TypeConverter<List<String>, String> {
   String toSql(List<String> value) {
     return jsonEncode(value);
   }
+
 }

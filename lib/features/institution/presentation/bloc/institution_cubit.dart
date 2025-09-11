@@ -22,6 +22,24 @@ class InstitutionCubit extends Cubit<InstitutionState> {
   Future<Either<String, List<Institution>>> searchForInstitutionByName(
     String nameSearchTerm,
   ) async {
-    return await searchForInstitutionByName(nameSearchTerm);
+    final result = await searchForInstitutionByNameUsecase(nameSearchTerm);
+    return result.fold(
+      (error) => left(error.message),
+      (institutions) => right(institutions),
+    );
+  }
+
+  Future<Either<String, bool>> linkAccountToInstitution(
+    String accountID,
+    int institutionID,
+  ) async {
+    final result = await addAccountToInstitution(
+      AddAccountToInstitutionParams(
+        accountID: accountID,
+        institutionID: institutionID,
+      ),
+    );
+
+    return result.fold((error) => left(error.message), (ok) => right(ok));
   }
 }

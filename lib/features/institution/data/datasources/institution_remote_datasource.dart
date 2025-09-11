@@ -5,6 +5,10 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+List<InstitutionData> _parseInstitutions(List<dynamic> raw) {
+  return raw.map((e) => InstitutionData.fromJson(e)).toList();
+}
+
 class InstitutionRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
   final String servicePrefix;
@@ -13,10 +17,6 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     required this.dioClient,
     this.servicePrefix = "qa-verisafe",
   });
-
-  Future<List<InstitutionData>> _parseInstitutions(List<dynamic> raw) async {
-    return raw.map((e) => InstitutionData.fromJson(e)).toList();
-  }
 
   Future<Either<Failure, List<InstitutionData>>> searchForInstitutionByName(
     String name, {
@@ -55,7 +55,7 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     int institutionID,
   ) async {
     try {
-      final response = await dioClient.dio.get(
+      final response = await dioClient.dio.post(
         "/$servicePrefix/institutions/account",
         data: {"account_id": accountID, "institution_id": institutionID},
       );
