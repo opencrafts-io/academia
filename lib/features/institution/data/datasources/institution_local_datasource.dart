@@ -36,12 +36,13 @@ class InstitutionLocalDatasource {
       final retrieved = await localDB.select(localDB.institution).get();
       return right(retrieved);
     } catch (e) {
+      rethrow;
       return left(
         CacheFailure(
           error: e,
           message:
-              "Failed to retrieve your institution details"
-              "A quick restart or checking your storage might fix this",
+              "Failed to retrieve your institution details."
+              " A quick restart or checking your storage might fix this",
         ),
       );
     }

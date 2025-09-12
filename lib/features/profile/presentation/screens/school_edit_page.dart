@@ -36,184 +36,200 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 12,
-      children: [
-        SizedBox(height: 12),
-        Text(
-          "Which school are you from?",
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-
-        SizedBox(height: 22),
-
-        SearchAnchor.bar(
-          searchController: _searchController,
-          barElevation: WidgetStatePropertyAll(0),
-          barShape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              side: BorderSide(width: 2),
-              borderRadius: BorderRadius.circular(12),
+    return BlocListener<InstitutionBloc, InstitutionState>(
+      listener: (context, state) {
+        if (state is InstitutionLinkedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(seconds: 7),
+              content: Text(
+                "You were successfully linked to ${_selectedInstitution?.name ?? 'the selected institution'} you'll be prompted soon to import your classes",
+              ),
+              behavior: SnackBarBehavior.floating,
             ),
+          );
+
+          widget.onNext();
+          return;
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12,
+        children: [
+          SizedBox(height: 12),
+          Text(
+            "Which school are you from?",
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
-          barHintText: "Hogwart's School of Wizardry",
-          barLeading: Icon(Icons.search),
-          viewElevation: 0,
-          suggestionsBuilder: (context, searchController) async {
-            final InstitutionCubit institutionCubit =
-                BlocProvider.of<InstitutionCubit>(context);
 
-            final response = await institutionCubit.searchForInstitutionByName(
-              searchController.text,
-            );
+          SizedBox(height: 22),
 
-            return response.fold(
-              (error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(error),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
+          SearchAnchor.bar(
+            searchController: _searchController,
+            barElevation: WidgetStatePropertyAll(0),
+            barShape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                side: BorderSide(width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            barHintText: "Hogwart's School of Wizardry",
+            barLeading: Icon(Icons.search),
+            viewElevation: 0,
+            suggestionsBuilder: (context, searchController) async {
+              if (_searchController.text == '') {
                 return [];
-              },
-              (intitutions) => intitutions
-                  .map(
-                    (ins) => ListTile(
-                      onTap: () {
-                        Vibration.vibrate(
-                          preset: VibrationPreset.dramaticNotification,
+              }
+
+              context.read<InstitutionBloc>().add(
+                SearchInstitutionByNameEvent(searchController.text),
+              );
+
+              return [
+                BlocBuilder<InstitutionBloc, InstitutionState>(
+                  builder: (context, state) {
+                    if (state is InstitutionLoadingState) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    if (state is InstitutionErrorState) {
+                      return Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Card.filled(
+                          color: Theme.of(context).colorScheme.errorContainer,
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Text(
+                              state.error,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is InstitutionLoadedState) {
+                      final institutions = state.institutions;
+                      if (institutions.isEmpty) {
+                        return const ListTile(
+                          title: Text("No institutions found"),
                         );
-                        setState(() {
-                          _selectedInstitution = ins;
-                          searchController.closeView(ins.name);
-                        });
-                      },
-                      title: Text(ins.name),
-                      subtitle: Text(ins.domains?.first ?? ""),
-                      trailing: Text(ins.alphaTwoCode ?? 'TF'),
-                    ),
-                  )
-                  .toList(),
-            );
-          },
-        ),
-
-        ListTile(
-          isThreeLine: true,
-          leading: Icon(Icons.info),
-          title: Text("Why is my school information important"),
-          subtitle: Text(
-            "Some services in the application require to know where you're from to work",
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-
-        Row(
-          spacing: 12,
-          children: [
-            OutlinedButton(
-              onPressed: widget.onPrevious,
-              child: Text("Previous"),
-            ),
-            FilledButton(
-              onPressed: () {
-                if (_selectedInstitution != null) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Confirmation"),
-                      content: Text(
-                        "Are you sure you're a member of ${_selectedInstitution?.name}"
-                        "? We may have to verify your information just to comply with your institution's Terms and Conditions",
-                      ),
-                      actions: [
-                        FilledButton(
-                          onPressed: () async {
-                            final InstitutionCubit institutionCubit =
-                                BlocProvider.of<InstitutionCubit>(context);
-
-                            final result = await institutionCubit
-                                .linkAccountToInstitution(
-                                  profile!.id,
-                                  _selectedInstitution!.institutionId,
-                                );
-
-                            if (!context.mounted) return;
-                            context.pop();
-
-                            return result.fold(
-                              (error) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(error),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              },
-                              (ok) {
-                                if (ok) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "You account has successfully been linked to ${_selectedInstitution!.name}",
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
+                      }
+                      return Column(
+                        children: institutions
+                            .map(
+                              (ins) => ListTile(
+                                onTap: () {
+                                  Vibration.vibrate(
+                                    preset:
+                                        VibrationPreset.dramaticNotification,
                                   );
-                                  widget.onNext();
-                                  return;
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "We ran into an issue attempting to link you to the selected institution. Please try again later",
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                }
-                              },
-                            );
-                          },
-                          child: Text("Yes im sure"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedInstitution = null;
-                              _searchController.clear();
-                            });
-                            context.pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "We've reset your input. Please provide your authentic institution",
-                                ),
-                                behavior: SnackBarBehavior.floating,
+                                  setState(() {
+                                    _selectedInstitution = ins;
+                                    searchController.closeView(ins.name);
+                                  });
+                                },
+                                title: Text(ins.name),
+                                subtitle: Text(ins.domains?.first ?? ""),
+                                trailing: Text(ins.alphaTwoCode ?? 'TF'),
                               ),
-                            );
-                          },
-                          child: Text("I was just kidding"),
+                            )
+                            .toList(),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ];
+            },
+          ),
+
+          ListTile(
+            isThreeLine: true,
+            leading: Icon(Icons.info),
+            title: Text("Why is my school information important"),
+            subtitle: Text(
+              "Some services in the application require to know where you're from to work",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+
+          Row(
+            spacing: 12,
+            children: [
+              OutlinedButton(
+                onPressed: widget.onPrevious,
+                child: Text("Previous"),
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (_selectedInstitution != null) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Confirmation"),
+                        content: Text(
+                          "Are you sure you're a member of ${_selectedInstitution?.name}"
+                          "? We may have to verify your information just to comply with your institution's Terms and Conditions",
                         ),
-                      ],
-                    ),
-                  );
-                }
-              },
-              child: Text("Next"),
-            ),
-            Spacer(),
-            TextButton(
-              onPressed: () {
-                widget.onNext();
-              },
-              child: Text("Skip this step"),
-            ),
-          ],
-        ),
-      ],
+                        actions: [
+                          FilledButton(
+                            onPressed: () async {
+                              context.read<InstitutionBloc>().add(
+                                LinkAccountToInstitutionEvent(
+                                  accountID: profile!.id,
+                                  institutionID:
+                                      _selectedInstitution!.institutionId,
+                                ),
+                              );
+
+                              context.pop();
+                            },
+                            child: Text("Yes im sure"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedInstitution = null;
+                                _searchController.clear();
+                              });
+                              context.pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "We've reset your input. Please provide your authentic institution",
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            },
+                            child: Text("I was just kidding"),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                child: Text("Next"),
+              ),
+              Spacer(),
+              TextButton(
+                onPressed: () {
+                  widget.onNext();
+                },
+                child: Text("Skip this step"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

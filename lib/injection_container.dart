@@ -4,6 +4,7 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/institution/presentation/bloc/institution_bloc.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -512,8 +513,8 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerFactory<InstitutionCubit>(
-    () => InstitutionCubit(
+  sl.registerFactory<InstitutionBloc>(
+    () => InstitutionBloc(
       addAccountToInstitution: sl(),
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),
