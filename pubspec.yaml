@@ -83,6 +83,18 @@ dependencies:
   firebase_crashlytics: ^5.0.0
   dio_request_inspector: ^3.2.0
 
+  # Magnet for institutions
+  magnet:
+    git:
+      url: https://github.com/opencrafts-io/magnet.git
+      ref: HEAD
+
+  magnet_daystar_university:
+    git:
+      url: https://github.com/IamMuuo/magnet-daystar-university.git
+      ref: HEAD
+
+
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
   flutter_test:
