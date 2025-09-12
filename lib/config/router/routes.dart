@@ -48,7 +48,7 @@ class HomeRoute extends GoRouteData with _$HomeRoute {
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Essentials")));
+    return EssentialsPage();
   }
 }
 
