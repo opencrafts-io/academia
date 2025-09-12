@@ -1,49 +1,40 @@
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class ProfileInstitutionSection extends StatelessWidget {
   const ProfileInstitutionSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InstitutionBloc, InstitutionState>(
+    return BlocConsumer<InstitutionBloc, InstitutionState>(
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is InstitutionLoadedState) {
-          return SliverPadding(
-            padding: EdgeInsetsGeometry.all(12),
-            sliver: SliverList.builder(
-              itemCount: state.institutions.length,
-              itemBuilder: (context, index) {
-                if (state.institutions.isEmpty) {
-                  return Text("Please refresh to fetch your institutions");
-                }
-                final ins = state.institutions[index];
-                return Card.filled(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                  color: Theme.of(context).colorScheme.primary,
-                  child: ListTile(
-                    title: Text(ins.name),
-                    subtitle: Text(ins.webPages?.first ?? ''),
-                  ),
-                );
-              },
-            ),
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: state.institutions.length,
+            itemBuilder: (context, index) {
+              if (state.institutions.isEmpty) {
+                return Text("Please refresh to fetch your institutions");
+              }
+              final ins = state.institutions[index];
+              return Card.outlined(
+                child: ListTile(
+                  title: Text(ins.name),
+                  subtitle: Text("Tap to view & manage your profile"),
+                  trailing: Icon(Icons.open_in_new),
+                  onTap: () {},
+                ),
+              );
+            },
           );
         } else if (state is InstitutionErrorState) {
-          return SliverPadding(
-            padding: EdgeInsets.all(12),
-            sliver: SliverToBoxAdapter(child: Text(state.error)),
-          );
+          return Text(state.error);
         }
 
-        ///TODO: (erick) add loading indicator
-        return MultiSliver(
-          children: [Text("Please add institutions to get started")],
-        );
+        return LinearProgressIndicator();
       },
     );
   }
