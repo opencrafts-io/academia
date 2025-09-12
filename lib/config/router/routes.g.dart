@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $todosRoute,
+  $magnetRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -449,6 +450,65 @@ mixin _$TodosRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/todos');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $magnetRoute => GoRouteData.$route(
+  path: '/magnet',
+
+  factory: _$MagnetRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'auth/:institutionID',
+
+      factory: _$MagnetAuthRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$MagnetRoute on GoRouteData {
+  static MagnetRoute _fromState(GoRouterState state) => MagnetRoute();
+
+  @override
+  String get location => GoRouteData.$location('/magnet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetAuthRoute on GoRouteData {
+  static MagnetAuthRoute _fromState(GoRouterState state) => MagnetAuthRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetAuthRoute get _self => this as MagnetAuthRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/auth/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

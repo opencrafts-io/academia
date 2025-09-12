@@ -8,3 +8,4 @@ export 'todos/todos.dart';
 export 'notifications/notifications.dart';
 export 'firebase_remote_config/firebase_remote_config.dart';
 export 'essentials/essentials.dart';
+export 'magnet/magnet.dart';

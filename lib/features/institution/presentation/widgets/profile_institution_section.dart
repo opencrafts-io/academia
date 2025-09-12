@@ -1,3 +1,4 @@
+import 'package:academia/config/router/router.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,9 @@ class ProfileInstitutionSection extends StatelessWidget {
                   title: Text(ins.name),
                   subtitle: Text("Tap to view & manage your profile"),
                   trailing: Icon(Icons.open_in_new),
-                  onTap: () {},
+                  onTap: () {
+                  MagnetAuthRoute(institutionID: ins.institutionId).push(context);
+                  },
                 ),
               );
             },
