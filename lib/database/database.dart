@@ -1,4 +1,5 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
+import 'package:academia/features/auth/data/models/magnet_credentials.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
@@ -16,8 +17,15 @@ part 'database.g.dart';
 
 @DriftDatabase(
   tables: [
+    // Profile
     UserProfile,
+    MagnetStudentProfile,
+
+    // Auth
     Token,
+    MagnetCredentials,
+
+    // Chirp
     ConversationTable,
     MessageTable,
     AttachmentTable,
@@ -31,12 +39,12 @@ part 'database.g.dart';
 
     // Agenda
     AgendaEvent,
-    
+
     // Notifications
     NotificationTable,
 
     // Institution
-    Institution
+    Institution,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -47,7 +55,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {
