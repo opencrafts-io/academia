@@ -9,6 +9,6 @@ class GetAllUserAccountInstitutionsUsecase
 
   @override
   Future<Either<Failure, List<Institution>>> call(String accountID) {
-    return institutionRepository.getAllUserAccountCachedInstitutions(accountID);
+    return institutionRepository.getAllUserAccountInstitutions(accountID);
   }
 }
