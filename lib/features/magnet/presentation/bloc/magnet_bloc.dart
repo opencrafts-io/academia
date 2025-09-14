@@ -47,4 +47,15 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       );
     });
   }
+
+  bool isInstitutionSupported(int institutionID) {
+    if (!_magnetInstances.containsKey(institutionID)) {
+      return false;
+    }
+    final magnetInstance = _magnetInstances[institutionID];
+    if (magnetInstance == null) {
+      false;
+    }
+    return true;
+  }
 }
