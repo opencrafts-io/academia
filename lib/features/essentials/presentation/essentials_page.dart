@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -16,8 +17,18 @@ class _EssentialsPageState extends State<EssentialsPage> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-            title: Text("Essentials"),
+          SliverAppBar.large(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Essentials"),
+                Text(
+                  "Your school life easier. 🫠",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
             actions: [
               IconButton(onPressed: () {}, icon: Icon(Icons.settings_outlined)),
               IconButton(
@@ -43,18 +54,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
             ),
           ),
 
-          // Institutions
-          SliverPadding(
-            padding: EdgeInsets.all(12),
-            sliver: MultiSliver(
-              children: [
-                Text(
-                  "Explore your school",
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ],
-            ),
-          ),
+          EssentialsInstitutionSection(),
 
           // Academia's tools
           SliverPadding(
