@@ -1,9 +1,11 @@
+import 'package:academia/config/router/router.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class EssentialsInstitutionSection extends StatelessWidget {
   const EssentialsInstitutionSection({super.key});
@@ -53,11 +55,21 @@ class EssentialsInstitutionSection extends StatelessWidget {
                     child: ListTile(
                       enabled: isSupported,
                       title: Text(ins.name, overflow: TextOverflow.ellipsis),
-                      onTap: () {},
+                      onTap: () async {
+                        if (await Vibration.hasVibrator()) {
+                          Vibration.vibrate(
+                            preset: VibrationPreset.gentleReminder,
+                          );
+                        }
+                        if (!context.mounted) return;
+                        MagnetHomeRoute(
+                          institutionID: ins.institutionId,
+                        ).push(context);
+                      },
                       trailing: Icon(
                         isSupported
                             ? Icons.verified_outlined
-                            : Symbols.verified_off,
+                            : Icons.lock,
                       ),
                       subtitle: Text(
                         isSupported

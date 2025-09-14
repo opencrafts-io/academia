@@ -475,6 +475,11 @@ RouteBase get $magnetRoute => GoRouteData.$route(
 
       factory: _$MagnetAuthRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: ':institutionID',
+
+      factory: _$MagnetHomeRoute._fromState,
+    ),
   ],
 );
 
@@ -508,6 +513,32 @@ mixin _$MagnetAuthRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/magnet/auth/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetHomeRoute on GoRouteData {
+  static MagnetHomeRoute _fromState(GoRouterState state) => MagnetHomeRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetHomeRoute get _self => this as MagnetHomeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}',
   );
 
   @override

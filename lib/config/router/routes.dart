@@ -272,7 +272,10 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
 
 @TypedGoRoute<MagnetRoute>(
   path: "/magnet",
-  routes: [TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID")],
+  routes: [
+    TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID"),
+    TypedGoRoute<MagnetHomeRoute>(path: ":institutionID"),
+  ],
 )
 class MagnetRoute extends GoRouteData with _$MagnetRoute {
   @override
@@ -292,6 +295,37 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: MagnetAuthScreen(institutionID: institutionID),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
+  final int institutionID;
+  MagnetHomeRoute({required this.institutionID});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: MagnetHomeScreen(institutionID: institutionID),
       transitionDuration: Duration(milliseconds: 600),
       transitionsBuilder:
           (
