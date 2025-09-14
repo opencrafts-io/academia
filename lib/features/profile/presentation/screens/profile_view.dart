@@ -49,6 +49,9 @@ class _ProfileViewState extends State<ProfileView> {
           builder: (context, state) => CustomScrollView(
             slivers: [
               SliverAppBar(
+                snap: true,
+                pinned: true,
+                floating: true,
                 title: Text("Profile"),
                 actions: [
                   Visibility(

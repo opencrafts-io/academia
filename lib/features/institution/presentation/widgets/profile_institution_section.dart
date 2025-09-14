@@ -22,12 +22,15 @@ class ProfileInstitutionSection extends StatelessWidget {
               }
               final ins = state.institutions[index];
               return Card.outlined(
+                clipBehavior: Clip.antiAlias,
                 child: ListTile(
                   title: Text(ins.name),
                   subtitle: Text("Tap to view & manage your profile"),
                   trailing: Icon(Icons.open_in_new),
                   onTap: () {
-                  MagnetAuthRoute(institutionID: ins.institutionId).push(context);
+                    MagnetAuthRoute(
+                      institutionID: ins.institutionId,
+                    ).push(context);
                   },
                 ),
               );
@@ -37,7 +40,10 @@ class ProfileInstitutionSection extends StatelessWidget {
           return Text(state.error);
         }
 
-        return LinearProgressIndicator();
+        return Padding(
+          padding: EdgeInsets.all(12),
+          child: LinearProgressIndicator(),
+        );
       },
     );
   }
