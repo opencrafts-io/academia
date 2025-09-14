@@ -1,8 +1,10 @@
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/profile/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magnet/magnet.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,6 +17,8 @@ class MagnetAuthScreen extends StatefulWidget {
 }
 
 class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
@@ -51,6 +55,26 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                       showCloseIcon: true,
                       content: Text(
                         "Seems youre not enrolled to an institution yet enroll to continue..",
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
+                }
+              },
+            ),
+
+            BlocListener<MagnetBloc, MagnetState>(
+              listener: (context, state) {
+                if (state is MagnetNotSupportedState) {
+                print(widget.institutionID);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: Duration(seconds: 30),
+                      showCloseIcon: true,
+                      content: Text(
+                        "Your institution is unsupported on Academia."
+                        " Stay alert for updates supporting your institution",
                       ),
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -123,6 +147,7 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                     ),
                     SizedBox(height: 12),
                     TextFormField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         labelText: "Username",
                         hintText: "Admission Number",
@@ -133,6 +158,7 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                     ),
                     SizedBox(height: 12),
                     TextFormField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: "Password",
                         hintText: "Your school password",
@@ -143,33 +169,52 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                     ),
 
                     SizedBox(height: 22),
-                    FilledButton(
-                      onPressed: () {
-                        showAdaptiveDialog(
-                          context: context,
-                          builder: (context) => AlertDialog.adaptive(
-                            title: Text("Just a quick minute"),
-                            content: Text(
-                              "By continuing, you consent to us processing your school data in line with our policies. You remain responsible for how you use and share this data.",
-                            ),
-                            actions: [
-                              FilledButton(
-                                onPressed: () {
-                                  context.pop();
-                                },
-                                child: Text("Continue"),
+                    BlocBuilder<MagnetBloc, MagnetState>(
+                      builder: (context, state) {
+                        if (state is MagnetLoadingState) {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator.adaptive(),
+                          );
+                        }
+                        return FilledButton(
+                          onPressed: () {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (context) => AlertDialog.adaptive(
+                                title: Text("Just a quick minute"),
+                                content: Text(
+                                  "By continuing, you consent to us processing your school data in line with our policies. You remain responsible for how you use and share this data.",
+                                ),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () {
+                                      context.read<MagnetBloc>().add(
+                                        LinkMagnetAccountEvent(
+                                          credentials: Credentials(
+                                            username: _usernameController.text,
+                                            password: _passwordController.text,
+                                          ),
+                                          institutionID: widget.institutionID,
+                                        ),
+                                      );
+                                      context.pop();
+                                    },
+                                    child: Text("Continue"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    child: Text("Leave"),
+                                  ),
+                                ],
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  context.pop();
-                                },
-                                child: Text("Leave"),
-                              ),
-                            ],
-                          ),
+                            );
+                          },
+                          child: Text("Link your school account"),
                         );
                       },
-                      child: Text("Link your school account"),
                     ),
 
                     SizedBox(height: 22),
