@@ -37,9 +37,11 @@ class GetCachedMagnetCredentialEvent extends MagnetEvent {
 class LinkMagnetAccountEvent extends MagnetEvent {
   final Credentials credentials;
   final int institutionID;
+  final String userID;
   LinkMagnetAccountEvent({
     required this.credentials,
     required this.institutionID,
+    required this.userID,
   });
 
   @override

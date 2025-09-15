@@ -30,12 +30,7 @@ class MagnetLoginUsecase extends UseCase<bool, MagnetLoginUsecaseParams> {
     );
 
     return result.fold(
-      (magnetFailure) => left(
-        MagnetInstanceFailure(
-          error: magnetFailure.error ?? Object(),
-          message: magnetFailure.message,
-        ),
-      ),
+      (magnetFailure) => left(magnetFailure),
       (success) => right(success),
     );
   }

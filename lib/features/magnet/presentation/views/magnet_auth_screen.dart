@@ -245,17 +245,39 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                                   actions: [
                                     FilledButton(
                                       onPressed: () {
-                                        context.read<MagnetBloc>().add(
-                                          LinkMagnetAccountEvent(
-                                            credentials: Credentials(
-                                              username:
-                                                  _usernameController.text,
-                                              password:
-                                                  _passwordController.text,
+                                        final profileState = context
+                                            .read<ProfileBloc>()
+                                            .state;
+                                        if (profileState
+                                            is ProfileLoadedState) {
+                                          context.read<MagnetBloc>().add(
+                                            LinkMagnetAccountEvent(
+                                              credentials: Credentials(
+                                                username:
+                                                    _usernameController.text,
+                                                password:
+                                                    _passwordController.text,
+                                              ),
+                                              userID: profileState.profile.id,
+                                              institutionID:
+                                                  widget.institutionID,
                                             ),
-                                            institutionID: widget.institutionID,
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "Failed to get your profile information"
+                                                ". Please refresh your profile and "
+                                                "retry that again",
+                                              ),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                            ),
+                                          );
+                                        }
                                         context.pop();
                                       },
                                       child: Text("Continue"),

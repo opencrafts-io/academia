@@ -18,6 +18,8 @@ class MagnetInitialState extends MagnetState {
 
 class MagnetLoadingState extends MagnetState {}
 
+class MagnetAuthenticatedState extends MagnetState {}
+
 class MagnetCredentialFetched extends MagnetState {
   final MagnetCredential magnetCredential;
   MagnetCredentialFetched({required this.magnetCredential});

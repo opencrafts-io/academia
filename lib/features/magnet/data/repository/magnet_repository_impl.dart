@@ -63,21 +63,27 @@ class MagnetRepositoryImpl implements MagnetRepository {
   }
 
   @override
-  Future<Either<MagnetFailure, bool>> login(
+  Future<Either<Failure, bool>> login(
     MagnetPortalRepository magnetPortalRepositoryInstance,
     Credentials creds, {
     required int institutionID,
     required String userID,
   }) async {
     final result = await magnetPortalRepositoryInstance.login(creds);
-    return result.fold((error) => left(error), (ok) {
-      if (ok) {
-        magnetCredentialsLocalDatasource.createOrUpdateMagnetCredentials(
-          creds.toData(userID: userID, institutionID: institutionID),
-        );
-      }
-      return right(ok);
-    });
+    return result.fold(
+      (error) => left(NetworkFailure(message: error.message, error: error)),
+      (ok) async {
+        if (ok) {
+          final cacheRes = await magnetCredentialsLocalDatasource
+              .createOrUpdateMagnetCredentials(
+                creds.toData(userID: userID, institutionID: institutionID),
+              );
+
+          return cacheRes.fold((error) => left(error), (cred) => right(true));
+        }
+        return right(ok);
+      },
+    );
   }
 
   @override
