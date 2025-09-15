@@ -2,6 +2,7 @@ import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/chirp/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
@@ -11,6 +12,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../features/chirp/data/data.dart';
+import '../features/communities/data/data.dart';
 
 part 'database.g.dart';
 
@@ -28,6 +30,7 @@ part 'database.g.dart';
     EventTable,
     AttendeeTable,
     TicketTable,
+    GroupTable,
 
     // Agenda
     AgendaEvent,
@@ -36,7 +39,10 @@ part 'database.g.dart';
     NotificationTable,
 
     // Institution
-    Institution
+    Institution,
+
+    //Communities
+    CommunityTable
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -47,7 +53,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {
