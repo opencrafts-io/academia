@@ -17,6 +17,19 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
+  Future<Either<Failure, void>> setUserData({
+    required String userId,
+    required String name,
+    required String email,
+  }) async {
+    return await remoteDatasource.setUserData(
+      userId: userId,
+      name: name,
+      email: email,
+    );
+  }
+
+  @override
   Future<Either<Failure, List<NotificationEntity>>> getNotifications() async {
     return await localDatasource.getNotifications();
   }

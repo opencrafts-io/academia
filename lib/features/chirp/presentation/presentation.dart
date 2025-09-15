@@ -7,5 +7,5 @@ export 'views/add_post_screen.dart';
 // widgets
 export 'widgets/attachment_widget.dart';
 export 'widgets/post_card_widget.dart';
-
+export 'widgets/comment_widget.dart';
 

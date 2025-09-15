@@ -11,11 +11,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithGoogleUsecase signInWithGoogle;
   final SignInWithSpotifyUsecase signInWithSpotifyUsecase;
   final GetPreviousAuthState getPreviousAuthState;
+  final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
 
   AuthBloc({
     required this.signInWithGoogle,
     required this.signInWithSpotifyUsecase,
     required this.getPreviousAuthState,
+    required this.refreshVerisafeTokenUsecase,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInWithGoogleEvent>(_onSignInWithGoogle);
@@ -70,6 +72,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               token.provider == "verisafe" &&
               (token.expiresAt?.isAfter(DateTime.now()) ?? false),
         )) {
+          // -- Attempt to refresh verisafe's token
+          refreshVerisafeTokenUsecase(tokens.first);
           return emit(AuthAuthenticated(token: tokens.first));
         }
         return emit(AuthUnauthenticated());
