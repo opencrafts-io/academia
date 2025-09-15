@@ -1,4 +1,5 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/magnet/presentation/bloc/magnet_bloc.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class ProfileInstitutionSection extends StatelessWidget {
 
         return Padding(
           padding: EdgeInsets.all(12),
-          child: LinearProgressIndicator(),
+          child: SpinningScallopIndicator(),
         );
       },
     );

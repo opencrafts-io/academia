@@ -1,13 +1,17 @@
+import 'package:academia/config/router/router.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class MagnetHomeScreenAction {
   final String title;
   final String subtitle;
   final String assetImagePath;
-  final VoidCallback ontap;
+  final Function(BuildContext context, int institutionID) ontap;
 
   MagnetHomeScreenAction({
     required this.title,
@@ -27,25 +31,27 @@ class MagnetHomeScreen extends StatelessWidget {
       MagnetHomeScreenAction(
         title: "School profile",
         subtitle: "View and manage your school profile",
-        ontap: () {},
+        ontap: (BuildContext context, int institutionID) {
+          MagnetProfileRoute(institutionID: 0).push(context);
+        },
         assetImagePath: "assets/illustrations/authenticate.jpg",
       ),
       MagnetHomeScreenAction(
         title: "Classes",
         subtitle: "Never miss a class",
-        ontap: () {},
+        ontap: (BuildContext context, int institutionID) {},
         assetImagePath: "assets/illustrations/classes.jpg",
       ),
       MagnetHomeScreenAction(
         title: "Your grades",
         subtitle: "Check your grades",
-        ontap: () {},
+        ontap: (BuildContext context, int institutionID) {},
         assetImagePath: "assets/illustrations/grades.jpg",
       ),
       MagnetHomeScreenAction(
         title: "Fees statements",
         subtitle: "Your finances simplified",
-        ontap: () {},
+        ontap: (BuildContext context, int institutionID) {},
         assetImagePath: "assets/illustrations/school-fees.jpg",
       ),
     ];
@@ -112,7 +118,15 @@ class MagnetHomeScreen extends StatelessWidget {
                       return Card.outlined(
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
-                          onTap: item.ontap,
+                          onTap: () async {
+                            if (await Vibration.hasVibrator()) {
+                              Vibration.vibrate(
+                                preset: VibrationPreset.softPulse,
+                              );
+                            }
+                            if (!context.mounted) return;
+                            item.ontap(context, institutionID);
+                          },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -160,18 +174,46 @@ class MagnetHomeScreen extends StatelessWidget {
                   padding: EdgeInsets.all(12),
                   sliver: MultiSliver(
                     children: [
-                      Card.outlined(
-                        clipBehavior: Clip.antiAlias,
-                        child: ListTile(
-                          trailing: Icon(Icons.open_in_new),
-                          title: Text("Visit Institution's Official Site"),
-                          onTap: () {},
+                      BlocBuilder<InstitutionBloc, InstitutionState>(
+                        buildWhen: (previous, current) =>
+                            current is InstitutionLoadedState,
+                        builder: (context, state) => Card.outlined(
+                          clipBehavior: Clip.antiAlias,
+                          child: ListTile(
+                            trailing: Icon(Icons.open_in_new),
+                            title: Text("Visit Institution's Official Site"),
+                            onTap: () async {
+                              final institution =
+                                  (state as InstitutionLoadedState).institutions
+                                      .firstWhere(
+                                        (ins) =>
+                                            ins.institutionId == institutionID,
+                                      );
+                              final schoolUrl = Uri.parse(
+                                "https://${institution.domains?.first}",
+                              );
+
+                              if (await canLaunchUrl(schoolUrl)) {
+                                launchUrl(schoolUrl);
+                                return;
+                              }
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Failed to launch ${institution.name} url",
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-
                       SizedBox(height: 22),
                       Text(
-                        "Hello",
+                        "Copyright ${DateTime.now().year}. All Rights Reserved to its ownwers",
+                        textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -185,4 +227,3 @@ class MagnetHomeScreen extends StatelessWidget {
     );
   }
 }
-

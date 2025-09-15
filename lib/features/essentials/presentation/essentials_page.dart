@@ -35,7 +35,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 onPressed: () {
                   ProfileRoute().push(context);
                 },
-                icon: UserAvatar(scallopDepth: 2),
+                icon: UserAvatar(scallopDepth: 4,numberOfScallops: 8,),
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/profile/presentation/presentation.dart';
@@ -217,7 +218,7 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                           if (state is MagnetLoadingState) {
                             return Align(
                               alignment: Alignment.center,
-                              child: CircularProgressIndicator.adaptive(),
+                              child: SpinningScallopIndicator(),
                             );
                           }
                           return FilledButton(

@@ -15,9 +15,14 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     /// Initialize application with the appropriate magnet instance
     /// per institution linked by the institution id
     on<InitializeMagnetInstanceEvent>((event, emit) async {
-      _magnetInstances.addAll({
-        5426: await DaystarPortalRepository.create(debugMode: true),
-      });
+      try {
+        _magnetInstances.addAll({
+          5426: await DaystarPortalRepository.create(debugMode: true),
+        });
+        emit(MagnetInstancesLoadedState());
+      } catch (e) {
+        emit(MagnetErrorState(error: "Failed to initialize magnet instances"));
+      }
     });
     on<LinkMagnetAccountEvent>((event, emit) async {
       emit(MagnetLoadingState());
@@ -49,13 +54,7 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   }
 
   bool isInstitutionSupported(int institutionID) {
-    if (!_magnetInstances.containsKey(institutionID)) {
-      return false;
-    }
     final magnetInstance = _magnetInstances[institutionID];
-    if (magnetInstance == null) {
-      false;
-    }
-    return true;
+    return magnetInstance != null;
   }
 }
