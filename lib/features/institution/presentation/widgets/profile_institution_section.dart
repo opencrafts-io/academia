@@ -38,7 +38,7 @@ class ProfileInstitutionSection extends StatelessWidget {
                   trailing: Icon(Icons.open_in_new),
                   onTap: isInstitutionSupported
                       ? () {
-                          MagnetAuthRoute(
+                          MagnetHomeRoute(
                             institutionID: ins.institutionId,
                           ).push(context);
                         }
