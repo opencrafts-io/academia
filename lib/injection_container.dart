@@ -3,12 +3,23 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/institution/presentation/bloc/institution_bloc.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
+  final DioRequestInspector inspector = DioRequestInspector(
+    isInspectorEnabled: true,
+    password: '123456', // remove this line if you don't need password
+    showSummary: false,
+  );
+
+  sl.registerSingleton<DioRequestInspector>(inspector);
+
   // Register the flavor
   sl.registerSingleton<FlavorConfig>(flavor);
 
@@ -17,10 +28,17 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
   );
-  sl.registerFactory(() => AuthRemoteDatasource(flavorConfig: flavor));
 
   sl.registerFactory<DioClient>(
-    () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+    () => DioClient(
+      flavor,
+      authLocalDatasource: sl.get<AuthLocalDatasource>(),
+      requestInspector: sl<DioRequestInspector>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => AuthRemoteDatasource(flavorConfig: flavor, dioClient: sl()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -39,6 +57,9 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshVerisafeTokenUsecase>(
+    () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
   //sherehe
@@ -437,6 +458,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<SendLocalNotificationUsecase>(
     () => SendLocalNotificationUsecase(sl.get<NotificationRepository>()),
   );
+  sl.registerFactory<SetUserDataUsecase>(
+    () => SetUserDataUsecase(repository: sl.get<NotificationRepository>()),
+  );
 
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
@@ -454,6 +478,7 @@ Future<void> init(FlavorConfig flavor) async {
       getNotificationPermissionUsecase: sl
           .get<GetNotificationPermissionUsecase>(),
       sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
+      setUserDataUsecase: sl.get<SetUserDataUsecase>(),
     ),
   );
 
@@ -519,6 +544,54 @@ Future<void> init(FlavorConfig flavor) async {
       setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
       getSettingsUsecase: sl.get<GetSettingsUsecase>(),
       setSettingsUsecase: sl.get<SetSettingsUsecase>(),
+    ),
+  );
+
+  // --- Institutions ---
+  sl.registerFactory<InstitutionLocalDatasource>(
+    () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
+  );
+  sl.registerFactory<InstitutionRemoteDatasource>(
+    () => InstitutionRemoteDatasource(dioClient: sl()),
+  );
+
+  sl.registerFactory<InstitutionRepositoryImpl>(
+    () => InstitutionRepositoryImpl(
+      institutionLocalDatasource: sl(),
+      institutionRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<GetAllUserAccountInstitutionsUsecase>(
+    () => GetAllUserAccountInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<GetAllCachedInstitutionsUsecase>(
+    () => GetAllCachedInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddAccountToInstitution>(
+    () => AddAccountToInstitution(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<SearchForInstitutionByNameUsecase>(
+    () => SearchForInstitutionByNameUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionBloc>(
+    () => InstitutionBloc(
+      addAccountToInstitution: sl(),
+      getAllCachedInstitutionsUsecase: sl(),
+      searchForInstitutionByNameUsecase: sl(),
+      getAllUserAccountInstitutionsUsecase: sl(),
     ),
   );
 }

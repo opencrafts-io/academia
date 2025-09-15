@@ -14,7 +14,6 @@ class NotificationLocalDatasource {
   Future<Either<Failure, List<NotificationEntity>>> getNotifications() async {
     try {
       // For now, return empty list until database is properly set up
-      _logger.d('Retrieved 0 notifications from local storage');
       return right(<NotificationEntity>[]);
     } catch (e) {
       _logger.e('Failed to get notifications from local storage', error: e);
@@ -30,8 +29,7 @@ class NotificationLocalDatasource {
   /// Cache a notification
   Future<Either<Failure, void>> cacheNotification(NotificationEntity notification) async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Cached notification: ${notification.id}');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to cache notification', error: e);
@@ -47,8 +45,7 @@ class NotificationLocalDatasource {
   /// Cache multiple notifications
   Future<Either<Failure, void>> cacheNotifications(List<NotificationEntity> notifications) async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Cached ${notifications.length} notifications');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to cache notifications', error: e);
@@ -64,8 +61,7 @@ class NotificationLocalDatasource {
   /// Mark a notification as read
   Future<Either<Failure, void>> markAsRead(String notificationId) async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Marked notification as read: $notificationId');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to mark notification as read', error: e);
@@ -81,8 +77,7 @@ class NotificationLocalDatasource {
   /// Mark all notifications as read
   Future<Either<Failure, void>> markAllAsRead() async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Marked all notifications as read');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to mark all notifications as read', error: e);
@@ -98,8 +93,7 @@ class NotificationLocalDatasource {
   /// Delete a notification
   Future<Either<Failure, void>> deleteNotification(String notificationId) async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Deleted notification: $notificationId');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to delete notification', error: e);
@@ -115,8 +109,7 @@ class NotificationLocalDatasource {
   /// Clear all notifications
   Future<Either<Failure, void>> clearAllNotifications() async {
     try {
-      // For now, just log the attempt until database is properly set up
-      _logger.d('Cleared all notifications');
+      // For now, just return success until database is properly set up
       return right(null);
     } catch (e) {
       _logger.e('Failed to clear all notifications', error: e);
@@ -133,7 +126,6 @@ class NotificationLocalDatasource {
   Future<Either<Failure, int>> getNotificationCount() async {
     try {
       // For now, return 0 until database is properly set up
-      _logger.d('Notification count: 0');
       return right(0);
     } catch (e) {
       _logger.e('Failed to get notification count', error: e);
@@ -150,7 +142,6 @@ class NotificationLocalDatasource {
   Future<Either<Failure, int>> getUnreadCount() async {
     try {
       // For now, return 0 until database is properly set up
-      _logger.d('Unread notification count: 0');
       return right(0);
     } catch (e) {
       _logger.e('Failed to get unread notification count', error: e);

@@ -10265,6 +10265,486 @@ class NotificationTableCompanion
   }
 }
 
+class $InstitutionTable extends Institution
+    with TableInfo<$InstitutionTable, InstitutionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> webPages =
+      GeneratedColumn<String>(
+        'web_pages',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<List<dynamic>?>($InstitutionTable.$converterwebPagesn);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> domains =
+      GeneratedColumn<String>(
+        'domains',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<List<dynamic>?>($InstitutionTable.$converterdomainsn);
+  static const VerificationMeta _alphaTwoCodeMeta = const VerificationMeta(
+    'alphaTwoCode',
+  );
+  @override
+  late final GeneratedColumn<String> alphaTwoCode = GeneratedColumn<String>(
+    'alpha_two_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryMeta = const VerificationMeta(
+    'country',
+  );
+  @override
+  late final GeneratedColumn<String> country = GeneratedColumn<String>(
+    'country',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stateProvinceMeta = const VerificationMeta(
+    'stateProvince',
+  );
+  @override
+  late final GeneratedColumn<String> stateProvince = GeneratedColumn<String>(
+    'state_province',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    institutionId,
+    name,
+    webPages,
+    domains,
+    alphaTwoCode,
+    country,
+    stateProvince,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('alpha_two_code')) {
+      context.handle(
+        _alphaTwoCodeMeta,
+        alphaTwoCode.isAcceptableOrUnknown(
+          data['alpha_two_code']!,
+          _alphaTwoCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('country')) {
+      context.handle(
+        _countryMeta,
+        country.isAcceptableOrUnknown(data['country']!, _countryMeta),
+      );
+    }
+    if (data.containsKey('state_province')) {
+      context.handle(
+        _stateProvinceMeta,
+        stateProvince.isAcceptableOrUnknown(
+          data['state_province']!,
+          _stateProvinceMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {institutionId};
+  @override
+  InstitutionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionData(
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      webPages: $InstitutionTable.$converterwebPagesn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}web_pages'],
+        ),
+      ),
+      domains: $InstitutionTable.$converterdomainsn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}domains'],
+        ),
+      ),
+      alphaTwoCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alpha_two_code'],
+      ),
+      country: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country'],
+      ),
+      stateProvince: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state_province'],
+      ),
+    );
+  }
+
+  @override
+  $InstitutionTable createAlias(String alias) {
+    return $InstitutionTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<dynamic>, String> $converterwebPages =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterwebPagesn =
+      NullAwareTypeConverter.wrap($converterwebPages);
+  static TypeConverter<List<dynamic>, String> $converterdomains =
+      const JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterdomainsn =
+      NullAwareTypeConverter.wrap($converterdomains);
+}
+
+class InstitutionData extends DataClass implements Insertable<InstitutionData> {
+  final int institutionId;
+  final String name;
+  final List<dynamic>? webPages;
+  final List<dynamic>? domains;
+  final String? alphaTwoCode;
+  final String? country;
+  final String? stateProvince;
+  const InstitutionData({
+    required this.institutionId,
+    required this.name,
+    this.webPages,
+    this.domains,
+    this.alphaTwoCode,
+    this.country,
+    this.stateProvince,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['institution_id'] = Variable<int>(institutionId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || webPages != null) {
+      map['web_pages'] = Variable<String>(
+        $InstitutionTable.$converterwebPagesn.toSql(webPages),
+      );
+    }
+    if (!nullToAbsent || domains != null) {
+      map['domains'] = Variable<String>(
+        $InstitutionTable.$converterdomainsn.toSql(domains),
+      );
+    }
+    if (!nullToAbsent || alphaTwoCode != null) {
+      map['alpha_two_code'] = Variable<String>(alphaTwoCode);
+    }
+    if (!nullToAbsent || country != null) {
+      map['country'] = Variable<String>(country);
+    }
+    if (!nullToAbsent || stateProvince != null) {
+      map['state_province'] = Variable<String>(stateProvince);
+    }
+    return map;
+  }
+
+  InstitutionCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionCompanion(
+      institutionId: Value(institutionId),
+      name: Value(name),
+      webPages: webPages == null && nullToAbsent
+          ? const Value.absent()
+          : Value(webPages),
+      domains: domains == null && nullToAbsent
+          ? const Value.absent()
+          : Value(domains),
+      alphaTwoCode: alphaTwoCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alphaTwoCode),
+      country: country == null && nullToAbsent
+          ? const Value.absent()
+          : Value(country),
+      stateProvince: stateProvince == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stateProvince),
+    );
+  }
+
+  factory InstitutionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionData(
+      institutionId: serializer.fromJson<int>(json['institution_id']),
+      name: serializer.fromJson<String>(json['name']),
+      webPages: serializer.fromJson<List<dynamic>?>(json['web_pages']),
+      domains: serializer.fromJson<List<dynamic>?>(json['domains']),
+      alphaTwoCode: serializer.fromJson<String?>(json['alpha_two_code']),
+      country: serializer.fromJson<String?>(json['country']),
+      stateProvince: serializer.fromJson<String?>(json['state_province']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'institution_id': serializer.toJson<int>(institutionId),
+      'name': serializer.toJson<String>(name),
+      'web_pages': serializer.toJson<List<dynamic>?>(webPages),
+      'domains': serializer.toJson<List<dynamic>?>(domains),
+      'alpha_two_code': serializer.toJson<String?>(alphaTwoCode),
+      'country': serializer.toJson<String?>(country),
+      'state_province': serializer.toJson<String?>(stateProvince),
+    };
+  }
+
+  InstitutionData copyWith({
+    int? institutionId,
+    String? name,
+    Value<List<dynamic>?> webPages = const Value.absent(),
+    Value<List<dynamic>?> domains = const Value.absent(),
+    Value<String?> alphaTwoCode = const Value.absent(),
+    Value<String?> country = const Value.absent(),
+    Value<String?> stateProvince = const Value.absent(),
+  }) => InstitutionData(
+    institutionId: institutionId ?? this.institutionId,
+    name: name ?? this.name,
+    webPages: webPages.present ? webPages.value : this.webPages,
+    domains: domains.present ? domains.value : this.domains,
+    alphaTwoCode: alphaTwoCode.present ? alphaTwoCode.value : this.alphaTwoCode,
+    country: country.present ? country.value : this.country,
+    stateProvince: stateProvince.present
+        ? stateProvince.value
+        : this.stateProvince,
+  );
+  InstitutionData copyWithCompanion(InstitutionCompanion data) {
+    return InstitutionData(
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
+      name: data.name.present ? data.name.value : this.name,
+      webPages: data.webPages.present ? data.webPages.value : this.webPages,
+      domains: data.domains.present ? data.domains.value : this.domains,
+      alphaTwoCode: data.alphaTwoCode.present
+          ? data.alphaTwoCode.value
+          : this.alphaTwoCode,
+      country: data.country.present ? data.country.value : this.country,
+      stateProvince: data.stateProvince.present
+          ? data.stateProvince.value
+          : this.stateProvince,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionData(')
+          ..write('institutionId: $institutionId, ')
+          ..write('name: $name, ')
+          ..write('webPages: $webPages, ')
+          ..write('domains: $domains, ')
+          ..write('alphaTwoCode: $alphaTwoCode, ')
+          ..write('country: $country, ')
+          ..write('stateProvince: $stateProvince')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    institutionId,
+    name,
+    webPages,
+    domains,
+    alphaTwoCode,
+    country,
+    stateProvince,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionData &&
+          other.institutionId == this.institutionId &&
+          other.name == this.name &&
+          other.webPages == this.webPages &&
+          other.domains == this.domains &&
+          other.alphaTwoCode == this.alphaTwoCode &&
+          other.country == this.country &&
+          other.stateProvince == this.stateProvince);
+}
+
+class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
+  final Value<int> institutionId;
+  final Value<String> name;
+  final Value<List<dynamic>?> webPages;
+  final Value<List<dynamic>?> domains;
+  final Value<String?> alphaTwoCode;
+  final Value<String?> country;
+  final Value<String?> stateProvince;
+  const InstitutionCompanion({
+    this.institutionId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.webPages = const Value.absent(),
+    this.domains = const Value.absent(),
+    this.alphaTwoCode = const Value.absent(),
+    this.country = const Value.absent(),
+    this.stateProvince = const Value.absent(),
+  });
+  InstitutionCompanion.insert({
+    this.institutionId = const Value.absent(),
+    required String name,
+    this.webPages = const Value.absent(),
+    this.domains = const Value.absent(),
+    this.alphaTwoCode = const Value.absent(),
+    this.country = const Value.absent(),
+    this.stateProvince = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<InstitutionData> custom({
+    Expression<int>? institutionId,
+    Expression<String>? name,
+    Expression<String>? webPages,
+    Expression<String>? domains,
+    Expression<String>? alphaTwoCode,
+    Expression<String>? country,
+    Expression<String>? stateProvince,
+  }) {
+    return RawValuesInsertable({
+      if (institutionId != null) 'institution_id': institutionId,
+      if (name != null) 'name': name,
+      if (webPages != null) 'web_pages': webPages,
+      if (domains != null) 'domains': domains,
+      if (alphaTwoCode != null) 'alpha_two_code': alphaTwoCode,
+      if (country != null) 'country': country,
+      if (stateProvince != null) 'state_province': stateProvince,
+    });
+  }
+
+  InstitutionCompanion copyWith({
+    Value<int>? institutionId,
+    Value<String>? name,
+    Value<List<dynamic>?>? webPages,
+    Value<List<dynamic>?>? domains,
+    Value<String?>? alphaTwoCode,
+    Value<String?>? country,
+    Value<String?>? stateProvince,
+  }) {
+    return InstitutionCompanion(
+      institutionId: institutionId ?? this.institutionId,
+      name: name ?? this.name,
+      webPages: webPages ?? this.webPages,
+      domains: domains ?? this.domains,
+      alphaTwoCode: alphaTwoCode ?? this.alphaTwoCode,
+      country: country ?? this.country,
+      stateProvince: stateProvince ?? this.stateProvince,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (webPages.present) {
+      map['web_pages'] = Variable<String>(
+        $InstitutionTable.$converterwebPagesn.toSql(webPages.value),
+      );
+    }
+    if (domains.present) {
+      map['domains'] = Variable<String>(
+        $InstitutionTable.$converterdomainsn.toSql(domains.value),
+      );
+    }
+    if (alphaTwoCode.present) {
+      map['alpha_two_code'] = Variable<String>(alphaTwoCode.value);
+    }
+    if (country.present) {
+      map['country'] = Variable<String>(country.value);
+    }
+    if (stateProvince.present) {
+      map['state_province'] = Variable<String>(stateProvince.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionCompanion(')
+          ..write('institutionId: $institutionId, ')
+          ..write('name: $name, ')
+          ..write('webPages: $webPages, ')
+          ..write('domains: $domains, ')
+          ..write('alphaTwoCode: $alphaTwoCode, ')
+          ..write('country: $country, ')
+          ..write('stateProvince: $stateProvince')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -10287,6 +10767,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
+  late final $InstitutionTable institution = $InstitutionTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -10307,6 +10788,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     ticketTable,
     agendaEvent,
     notificationTable,
+    institution,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -17288,6 +17770,246 @@ typedef $$NotificationTableTableProcessedTableManager =
       NotificationTableData,
       PrefetchHooks Function()
     >;
+typedef $$InstitutionTableCreateCompanionBuilder =
+    InstitutionCompanion Function({
+      Value<int> institutionId,
+      required String name,
+      Value<List<dynamic>?> webPages,
+      Value<List<dynamic>?> domains,
+      Value<String?> alphaTwoCode,
+      Value<String?> country,
+      Value<String?> stateProvince,
+    });
+typedef $$InstitutionTableUpdateCompanionBuilder =
+    InstitutionCompanion Function({
+      Value<int> institutionId,
+      Value<String> name,
+      Value<List<dynamic>?> webPages,
+      Value<List<dynamic>?> domains,
+      Value<String?> alphaTwoCode,
+      Value<String?> country,
+      Value<String?> stateProvince,
+    });
+
+class $$InstitutionTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionTable> {
+  $$InstitutionTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get webPages => $composableBuilder(
+    column: $table.webPages,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get domains => $composableBuilder(
+    column: $table.domains,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get alphaTwoCode => $composableBuilder(
+    column: $table.alphaTwoCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get stateProvince => $composableBuilder(
+    column: $table.stateProvince,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InstitutionTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionTable> {
+  $$InstitutionTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get webPages => $composableBuilder(
+    column: $table.webPages,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get domains => $composableBuilder(
+    column: $table.domains,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alphaTwoCode => $composableBuilder(
+    column: $table.alphaTwoCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get stateProvince => $composableBuilder(
+    column: $table.stateProvince,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstitutionTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionTable> {
+  $$InstitutionTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get webPages =>
+      $composableBuilder(column: $table.webPages, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get domains =>
+      $composableBuilder(column: $table.domains, builder: (column) => column);
+
+  GeneratedColumn<String> get alphaTwoCode => $composableBuilder(
+    column: $table.alphaTwoCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get country =>
+      $composableBuilder(column: $table.country, builder: (column) => column);
+
+  GeneratedColumn<String> get stateProvince => $composableBuilder(
+    column: $table.stateProvince,
+    builder: (column) => column,
+  );
+}
+
+class $$InstitutionTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionTable,
+          InstitutionData,
+          $$InstitutionTableFilterComposer,
+          $$InstitutionTableOrderingComposer,
+          $$InstitutionTableAnnotationComposer,
+          $$InstitutionTableCreateCompanionBuilder,
+          $$InstitutionTableUpdateCompanionBuilder,
+          (
+            InstitutionData,
+            BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
+          ),
+          InstitutionData,
+          PrefetchHooks Function()
+        > {
+  $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InstitutionTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InstitutionTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> institutionId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<List<dynamic>?> webPages = const Value.absent(),
+                Value<List<dynamic>?> domains = const Value.absent(),
+                Value<String?> alphaTwoCode = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<String?> stateProvince = const Value.absent(),
+              }) => InstitutionCompanion(
+                institutionId: institutionId,
+                name: name,
+                webPages: webPages,
+                domains: domains,
+                alphaTwoCode: alphaTwoCode,
+                country: country,
+                stateProvince: stateProvince,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> institutionId = const Value.absent(),
+                required String name,
+                Value<List<dynamic>?> webPages = const Value.absent(),
+                Value<List<dynamic>?> domains = const Value.absent(),
+                Value<String?> alphaTwoCode = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<String?> stateProvince = const Value.absent(),
+              }) => InstitutionCompanion.insert(
+                institutionId: institutionId,
+                name: name,
+                webPages: webPages,
+                domains: domains,
+                alphaTwoCode: alphaTwoCode,
+                country: country,
+                stateProvince: stateProvince,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InstitutionTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionTable,
+      InstitutionData,
+      $$InstitutionTableFilterComposer,
+      $$InstitutionTableOrderingComposer,
+      $$InstitutionTableAnnotationComposer,
+      $$InstitutionTableCreateCompanionBuilder,
+      $$InstitutionTableUpdateCompanionBuilder,
+      (
+        InstitutionData,
+        BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
+      ),
+      InstitutionData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -17321,4 +18043,6 @@ class $AppDataBaseManager {
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
   $$NotificationTableTableTableManager get notificationTable =>
       $$NotificationTableTableTableManager(_db, _db.notificationTable);
+  $$InstitutionTableTableManager get institution =>
+      $$InstitutionTableTableManager(_db, _db.institution);
 }
