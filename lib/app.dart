@@ -176,6 +176,10 @@ class _AcademiaState extends State<Academia> {
                       email: state.profile.email,
                     ),
                   );
+
+                  context.read<InstitutionBloc>().add(
+                    GetCachedUserInstitutionsEvent(state.profile.id),
+                  );
                 }
               },
             ),
