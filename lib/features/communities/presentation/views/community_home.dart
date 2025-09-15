@@ -23,15 +23,20 @@ class _CommunityHomeState extends State<CommunityHome>
   @override
   void initState() {
     super.initState();
-    context.read<CommunityHomeBloc>().add(
-      FetchCommunityById(communityId: widget.communityId),
-    );
+
     final profileState = context.read<ProfileBloc>().state;
 
     if (profileState is ProfileLoadedState) {
       currentUserId = profileState.profile.id;
       currentUserName = profileState.profile.name;
     }
+
+    context.read<CommunityHomeBloc>().add(
+      FetchCommunityById(
+        communityId: widget.communityId,
+        userId: currentUserId,
+      ),
+    );
   }
 
   @override
@@ -73,15 +78,10 @@ class _CommunityHomeState extends State<CommunityHome>
             ),
           );
         } else if (state is CommunityHomeLoaded) {
-          final community = state.community;
-          final memberSet = community.members.toSet();
-          final moderatorSet = community.moderators.toSet();
-          final bannedSet = community.bannedUsers.toSet();
-
-          final isCreator = currentUserId == community.creatorId;
-          final isModerator = moderatorSet.contains(currentUserId);
-          final isMember = memberSet.contains(currentUserId);
-          final isBanned = bannedSet.contains(currentUserId);
+          final isCreator = currentUserId == state.community.creatorId;
+          final isModerator = state.community.canModerate == true;
+          final isMember = state.community.canPost == true;
+          final isBanned = state.community.isBanned == true;
 
           return DefaultTabController(
             length: 3,
@@ -98,7 +98,7 @@ class _CommunityHomeState extends State<CommunityHome>
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back),
                     ),
-                    title: Text(community.name),
+                    title: Text(state.community.name),
                     actions: [
                       PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
@@ -120,9 +120,9 @@ class _CommunityHomeState extends State<CommunityHome>
                       background: Stack(
                         fit: StackFit.expand,
                         children: [
-                          if (community.bannerUrl != null)
+                          if (state.community.bannerUrl != null)
                             CachedNetworkImage(
-                              imageUrl: community.bannerUrl!,
+                              imageUrl: state.community.bannerUrl!,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Theme.of(
@@ -177,9 +177,9 @@ class _CommunityHomeState extends State<CommunityHome>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipOval(
-                            child: community.logoUrl != null
+                            child: state.community.logoUrl != null
                                 ? CachedNetworkImage(
-                                    imageUrl: community.logoUrl!,
+                                    imageUrl: state.community.logoUrl!,
                                     width: 80,
                                     height: 80,
                                     fit: BoxFit.cover,
@@ -231,20 +231,23 @@ class _CommunityHomeState extends State<CommunityHome>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  community.name,
+                                  state.community.name,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineSmall
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  community.description,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
+                                if (state.community.description != null)
+                                  Text(
+                                    state.community.description!,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge,
+                                  ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  "${community.members.length} members",
+                                  "${state.community.memberCount} members",
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 12),
@@ -262,7 +265,7 @@ class _CommunityHomeState extends State<CommunityHome>
                                       ).colorScheme.error,
                                     ),
                                   )
-                                else if (!isMember && community.isPrivate)
+                                else if (!isMember && state.community.isPrivate)
                                   const Text(
                                     "This is a private community, request to join.",
                                   )
@@ -316,18 +319,19 @@ class _CommunityHomeState extends State<CommunityHome>
                     const CommunityAbout(),
                     CommunityMembers(
                       communityId: widget.communityId,
-                      memberNames: state.community.memberNames,
-                      moderatorNames: state.community.moderatorNames,
                       members: state.community.members,
+                      memberNames: state.community.memberNames,
                       moderators: state.community.moderators,
-                      bannedUsers: state.community.bannedUsers,
+                      moderatorNames: state.community.moderatorNames,
+                      banned: state.community.bannedUsers,
                       bannedUserNames: state.community.bannedUserNames,
                       isCreator: isCreator,
                       isModerator: isModerator,
                       isMember: isMember,
                       isBanned: isBanned,
-                      isPrivate: community.isPrivate,
+                      isPrivate: state.community.isPrivate,
                       userId: currentUserId,
+                      userName: currentUserName,
                     ),
                   ],
                 ),

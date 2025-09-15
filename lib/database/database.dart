@@ -12,6 +12,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../features/chirp/data/data.dart';
+import '../features/communities/data/data.dart';
 
 part 'database.g.dart';
 
@@ -38,7 +39,10 @@ part 'database.g.dart';
     NotificationTable,
 
     // Institution
-    Institution
+    Institution,
+
+    //Communities
+    CommunityTable
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -49,7 +53,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {

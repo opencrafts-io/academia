@@ -3,50 +3,48 @@ import 'package:equatable/equatable.dart';
 class Community extends Equatable {
   final int id;
   final String name;
-  final String description;
-  final String creatorId;
-  final String creatorName;
+  final String? description;
+  final String? creatorId;
+  final String? creatorName;
   final List<String> moderators;
   final List<String> moderatorNames;
   final List<String> members;
   final List<String> memberNames;
   final List<String> bannedUsers;
   final List<String> bannedUserNames;
-  final bool isPrivate;
   final List<String> rules;
-  final String? logo;
-  final String? banner;
+  final bool isPrivate;
   final String? logoUrl;
   final String? bannerUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? userRole;
   final bool canPost;
   final bool canModerate;
+  final bool isBanned; 
+  final int memberCount;
 
   const Community({
     required this.id,
     required this.name,
-    required this.description,
-    required this.creatorId,
-    required this.creatorName,
-    required this.moderators,
-    required this.moderatorNames,
-    required this.members,
-    required this.memberNames,
-    required this.bannedUsers,
-    required this.bannedUserNames,
-    required this.isPrivate,
-    required this.rules,
-    this.logo,
-    this.banner,
+    this.description,
+    this.creatorId,
+    this.creatorName,
+    this.moderators = const [],
+    this.moderatorNames = const [],
+    this.members = const [],
+    this.memberNames = const [],
+    this.bannedUsers = const [],
+    this.bannedUserNames = const [],
+    this.rules = const [],
+    this.isPrivate = false,
     this.logoUrl,
     this.bannerUrl,
     required this.createdAt,
     required this.updatedAt,
-    this.userRole,
-    required this.canPost,
-    required this.canModerate,
+    this.canPost = false,
+    this.canModerate = false,
+    this.isBanned = false,
+    this.memberCount = 0,
   });
 
   Community copyWith({
@@ -61,17 +59,16 @@ class Community extends Equatable {
     List<String>? memberNames,
     List<String>? bannedUsers,
     List<String>? bannedUserNames,
-    bool? isPrivate,
     List<String>? rules,
-    String? logo,
-    String? banner,
+    bool? isPrivate,
     String? logoUrl,
     String? bannerUrl,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? userRole,
     bool? canPost,
     bool? canModerate,
+    bool? isBanned, 
+    int? memberCount,
   }) {
     return Community(
       id: id ?? this.id,
@@ -85,17 +82,16 @@ class Community extends Equatable {
       memberNames: memberNames ?? this.memberNames,
       bannedUsers: bannedUsers ?? this.bannedUsers,
       bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-      isPrivate: isPrivate ?? this.isPrivate,
       rules: rules ?? this.rules,
-      logo: logo ?? this.logo,
-      banner: banner ?? this.banner,
+      isPrivate: isPrivate ?? this.isPrivate,
       logoUrl: logoUrl ?? this.logoUrl,
       bannerUrl: bannerUrl ?? this.bannerUrl,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      userRole: userRole ?? this.userRole,
       canPost: canPost ?? this.canPost,
       canModerate: canModerate ?? this.canModerate,
+      isBanned: isBanned ?? this.isBanned,
+      memberCount: memberCount ?? this.memberCount,
     );
   }
 
@@ -112,19 +108,18 @@ class Community extends Equatable {
     memberNames,
     bannedUsers,
     bannedUserNames,
-    isPrivate,
     rules,
-    logo,
-    banner,
+    isPrivate,
     logoUrl,
     bannerUrl,
     createdAt,
     updatedAt,
-    userRole,
     canPost,
     canModerate,
+    isBanned,
+    memberCount,
   ];
 
   @override
-  bool? get stringify => true;
+  bool get stringify => true;
 }

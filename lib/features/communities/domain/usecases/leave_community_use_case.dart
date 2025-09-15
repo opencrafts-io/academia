@@ -7,7 +7,15 @@ class LeaveCommunityUseCase {
 
   LeaveCommunityUseCase({required this.repository});
 
-  Future<Either<Failure, String>> call(String groupId) {
-    return repository.leaveCommunity(groupId: groupId);
+  Future<Either<Failure, String>> call(
+    String groupId,
+    String userId,
+    String userName,
+  ) {
+    return repository.leaveCommunity(
+      groupId: groupId,
+      userId: userId,
+      userName: userName,
+    );
   }
 }

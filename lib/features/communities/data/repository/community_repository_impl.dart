@@ -38,8 +38,14 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, Community>> getCommunityById(String id) async {
-    final result = await remoteDatasource.getCommunityById(id);
+  Future<Either<Failure, Community>> getCommunityById({
+    required String communityId,
+    required String userId,
+  }) async {
+    final result = await remoteDatasource.getCommunityById(
+      communityId: communityId,
+      userId: userId,
+    );
 
     return result.fold((failure) => left(failure), (community) {
       return right(community.toEntity());
@@ -51,11 +57,15 @@ class CommunityRepositoryImpl implements CommunityRepository {
     required String groupId,
     required String action,
     required String userId,
+    required String memberId,
+    required String memberName,
   }) async {
     final result = await remoteDatasource.moderateCommunity(
       groupId: groupId,
       action: action,
       userId: userId,
+      memberId: memberId,
+      memberName: memberName,
     );
 
     return result.fold((failure) => left(failure), (community) {
@@ -83,8 +93,14 @@ class CommunityRepositoryImpl implements CommunityRepository {
   @override
   Future<Either<Failure, String>> leaveCommunity({
     required String groupId,
+    required String userId,
+    required String userName,
   }) async {
-    final result = await remoteDatasource.leaveCommunity(groupId: groupId);
+    final result = await remoteDatasource.leaveCommunity(
+      groupId: groupId,
+      userId: userId,
+      userName: userName,
+    );
 
     return result.fold((failure) => left(failure), (message) {
       return right(message);

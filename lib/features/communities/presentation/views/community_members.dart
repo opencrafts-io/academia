@@ -12,7 +12,7 @@ class CommunityMembers extends StatefulWidget {
   final List<String> memberNames;
   final List<String> moderators;
   final List<String> moderatorNames;
-  final List<String> bannedUsers;
+  final List<String> banned;
   final List<String> bannedUserNames;
   final bool isCreator;
   final bool isModerator;
@@ -20,6 +20,7 @@ class CommunityMembers extends StatefulWidget {
   final bool isBanned;
   final bool isPrivate;
   final String userId;
+  final String userName;
 
   const CommunityMembers({
     super.key,
@@ -28,7 +29,7 @@ class CommunityMembers extends StatefulWidget {
     required this.memberNames,
     required this.moderators,
     required this.moderatorNames,
-    required this.bannedUsers,
+    required this.banned,
     required this.bannedUserNames,
     this.isCreator = false,
     this.isModerator = false,
@@ -36,6 +37,7 @@ class CommunityMembers extends StatefulWidget {
     this.isBanned = false,
     this.isPrivate = false,
     required this.userId,
+    required this.userName,
   });
 
   @override
@@ -72,13 +74,13 @@ class _CommunityMembersState extends State<CommunityMembers> {
 
   List<Map<String, String>> _getCombinedBannedUsers() {
     // Ensure lists are of the same length, or handle potential mismatches
-    final length = widget.bannedUsers.length < widget.bannedUserNames.length
-        ? widget.bannedUsers.length
+    final length = widget.banned.length < widget.bannedUserNames.length
+        ? widget.banned.length
         : widget.bannedUserNames.length;
 
     return List<Map<String, String>>.generate(length, (index) {
       return {
-        'id': widget.bannedUsers[index],
+        'id': widget.banned[index],
         'name': widget.bannedUserNames[index],
       };
     });
@@ -106,7 +108,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.isCreator || widget.isModerator)
+                    if (widget.isCreator || widget.isModerator) ...[
                       // Actions
                       ListTile(
                         leading: const Icon(Icons.person_add_outlined),
@@ -114,6 +116,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                         onTap: () async {
                           final updatedCommunity = await AddMembersRoute(
                             communityId: widget.communityId,
+                            userId: widget.userId,
                           ).push<Community>(context);
 
                           if (updatedCommunity != null && context.mounted) {
@@ -124,13 +127,13 @@ class _CommunityMembersState extends State<CommunityMembers> {
                         },
                       ),
 
-                    // ListTile(
-                    //   leading: const Icon(Icons.link_outlined),
-                    //   title: const Text("Invite via Link"),
-                    //   onTap: () {},
-                    // ),
-                    const Divider(),
-
+                      ListTile(
+                        leading: const Icon(Icons.link_outlined),
+                        title: const Text("Invite via Link"),
+                        onTap: () {},
+                      ),
+                      const Divider(),
+                    ],
                     // Members
                     const Text(
                       "Members",
@@ -158,10 +161,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           ),
                           title: Text(name),
                           onTap: () => showUserActionsSheet(
-                            context,
-                            name,
-                            widget.communityId,
-                            memberId,
+                            context: context,
+                            targetUserName: name,
+                            communityId: widget.communityId,
+                            targetUserId: memberId,
+                            userId: widget.userId,
                             isTargetMember: true,
                             isCreator: widget.isCreator,
                             isModerator: widget.isModerator,
@@ -180,6 +184,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           onPressed: () {
                             final path = CommunityUserListRoute(
                               communityId: widget.communityId,
+                              userId: widget.userId,
                               title: "All Members",
                               isTargetMember: true,
                               isCreator: widget.isCreator,
@@ -239,10 +244,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           ),
                           title: Text(name),
                           onTap: () => showUserActionsSheet(
-                            context,
-                            name,
-                            widget.communityId,
-                            moderatorId,
+                            context: context,
+                            targetUserName: name,
+                            communityId: widget.communityId,
+                            targetUserId: moderatorId,
+                            userId: widget.userId,
                             isTargetModerator: true,
                             isCreator: widget.isCreator,
                             isModerator: widget.isModerator,
@@ -260,6 +266,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           // Construct the path string with query parameters
                           final String path = CommunityUserListRoute(
                             communityId: widget.communityId,
+                            userId: widget.userId,
                             title: "All Moderators",
                             isTargetModerator: true,
                             isCreator: widget.isCreator,
@@ -270,7 +277,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                           ).location;
 
                           // Use context.push with the path and the extra parameter
-                          context.push(path, extra: _getCombinedModerators());
+                          context.push(path, extra: combinedModerators);
                         },
                         child: const Text("View all moderators"),
                       ),
@@ -327,10 +334,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             ),
                             title: Text(name),
                             onTap: () => showUserActionsSheet(
-                              context,
-                              name,
-                              widget.communityId,
-                              bannedUserId,
+                              context: context,
+                              targetUserName: name,
+                              communityId: widget.communityId,
+                              targetUserId: bannedUserId,
+                              userId: widget.userId,
                               isTargetBanned: true,
                               isCreator: widget.isCreator,
                               isModerator: widget.isModerator,
@@ -348,6 +356,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             // Construct the path string with query parameters
                             final String path = CommunityUserListRoute(
                               communityId: widget.communityId,
+                              userId: widget.userId,
                               title: "Banned Users",
                               isTargetBannedUsers: true,
                               isCreator: widget.isCreator,
@@ -358,10 +367,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                             ).location;
 
                             // Use context.push with the path and the extra parameter
-                            context.push(
-                              path,
-                              extra: _getCombinedBannedUsers(),
-                            );
+                            context.push(path, extra: combinedBannedUsers);
                           },
                           child: const Text("View all Banned Users"),
                         ),
@@ -432,7 +438,11 @@ class _CommunityMembersState extends State<CommunityMembers> {
                               );
 
                               context.read<CommunityHomeBloc>().add(
-                                LeaveCommunity(communityId: widget.communityId),
+                                LeaveCommunity(
+                                  communityId: widget.communityId,
+                                  userId: widget.userId,
+                                  userName: widget.userName,
+                                ),
                               );
                             }
                           },

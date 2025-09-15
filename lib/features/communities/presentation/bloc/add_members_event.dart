@@ -20,13 +20,23 @@ class AddMemberToCommunity extends AddMembersEvent {
   final String communityId;
   final CommunityModerationAction action;
   final String userId;
+  final String memberId;
+  final String memberName;
 
   const AddMemberToCommunity({
     required this.communityId,
     required this.action,
     required this.userId,
+    required this.memberId,
+    required this.memberName,
   });
 
   @override
-  List<Object?> get props => [communityId, action, userId];
+  List<Object?> get props => [
+    communityId,
+    action,
+    userId,
+    memberId,
+    memberName,
+  ];
 }

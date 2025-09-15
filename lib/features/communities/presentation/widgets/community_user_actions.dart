@@ -8,11 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// [name] - the user's display name
 /// [isModerator] - whether the user is a moderator (hides "promote/ban/remove")
 /// [isBanned] - whether the user is banned (if true, only "Unban" is shown)
-Future<void> showUserActionsSheet(
-  BuildContext context,
-  String name,
-  String communityId,
-  String userId, {
+Future<void> showUserActionsSheet({
+  required BuildContext context,
+  required String targetUserName,
+  required String communityId,
+  required String userId,
+  required String targetUserId,
   // target user state
   bool isTargetModerator = false,
   bool isTargetBanned = false,
@@ -40,8 +41,13 @@ Future<void> showUserActionsSheet(
           children: [
             // Header
             ListTile(
-              leading: CircleAvatar(child: Text(name[0].toUpperCase())),
-              title: Text(name, style: Theme.of(context).textTheme.titleMedium),
+              leading: CircleAvatar(
+                child: Text(targetUserName[0].toUpperCase()),
+              ),
+              title: Text(
+                targetUserName,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
             const Divider(),
 
@@ -49,18 +55,22 @@ Future<void> showUserActionsSheet(
             if (isTargetBanned && isPrivileged) ...[
               ListTile(
                 leading: const Icon(Icons.lock_open, color: Colors.green),
-                title: Text("Unban $name"),
+                title: Text("Unban $targetUserName"),
                 onTap: () {
                   context.read<CommunityHomeBloc>().add(
                     ModerateMembers(
                       communityId: communityId,
                       action: CommunityModerationAction.unbanUser,
                       userId: userId,
+                      memberId: targetUserId,
+                      memberName: targetUserName,
                     ),
                   );
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("$name has been unbanned")),
+                    SnackBar(
+                      content: Text("$targetUserName has been unbanned"),
+                    ),
                   );
                 },
               ),
@@ -68,12 +78,12 @@ Future<void> showUserActionsSheet(
               // Always available: message
               ListTile(
                 leading: const Icon(Icons.message),
-                title: Text("Message $name"),
+                title: Text("Message $targetUserName"),
                 onTap: () {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text("Messaging $name...")));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Messaging $targetUserName...")),
+                  );
                 },
               ),
 
@@ -81,37 +91,72 @@ Future<void> showUserActionsSheet(
               if (isPrivileged && !isTargetModerator) ...[
                 ListTile(
                   leading: const Icon(Icons.shield_moon),
-                  title: Text("Make $name moderator"),
+                  title: Text("Make $targetUserName moderator"),
                   onTap: () {
                     context.read<CommunityHomeBloc>().add(
                       ModerateMembers(
                         communityId: communityId,
                         action: CommunityModerationAction.addModerator,
                         userId: userId,
+                        memberId: targetUserId,
+                        memberName: targetUserName,
                       ),
                     );
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("$name is now a moderator")),
+                      SnackBar(
+                        content: Text("$targetUserName is now a moderator"),
+                      ),
                     );
                   },
                 ),
               ],
+              
+              if (isPrivileged && isTargetModerator) ...[
+                ListTile(
+                  leading: const Icon(Icons.shield, color: Colors.orange),
+                  title: Text("Remove $targetUserName as moderator"),
+                  onTap: () {
+                    context.read<CommunityHomeBloc>().add(
+                      ModerateMembers(
+                        communityId: communityId,
+                        action: CommunityModerationAction.removeModerator,
+                        userId: userId,
+                        memberId: targetUserId,
+                        memberName: targetUserName,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "$targetUserName is no longer a moderator",
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+
               if (isPrivileged && isTargetMember) ...[
                 ListTile(
                   leading: const Icon(Icons.block, color: Colors.red),
-                  title: Text("Ban $name"),
+                  title: Text("Ban $targetUserName"),
                   onTap: () {
                     context.read<CommunityHomeBloc>().add(
                       ModerateMembers(
                         communityId: communityId,
                         action: CommunityModerationAction.banUser,
                         userId: userId,
+                        memberId: targetUserId,
+                        memberName: targetUserName,
                       ),
                     );
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("$name has been banned")),
+                      SnackBar(
+                        content: Text("$targetUserName has been banned"),
+                      ),
                     );
                   },
                 ),
@@ -120,18 +165,22 @@ Future<void> showUserActionsSheet(
                     Icons.person_remove,
                     color: Colors.orange,
                   ),
-                  title: Text("Remove $name"),
+                  title: Text("Remove $targetUserName"),
                   onTap: () {
                     context.read<CommunityHomeBloc>().add(
                       ModerateMembers(
                         communityId: communityId,
                         action: CommunityModerationAction.removeMember,
                         userId: userId,
+                        memberId: targetUserId,
+                        memberName: targetUserName,
                       ),
                     );
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("$name has been removed")),
+                      SnackBar(
+                        content: Text("$targetUserName has been removed"),
+                      ),
                     );
                   },
                 ),

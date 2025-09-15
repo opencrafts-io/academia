@@ -9,8 +9,9 @@ abstract class CommunityHomeEvent extends Equatable {
 
 class FetchCommunityById extends CommunityHomeEvent {
   final String communityId;
+  final String userId;
 
-  const FetchCommunityById({required this.communityId});
+  const FetchCommunityById({required this.communityId, required this.userId});
 
   @override
   List<Object?> get props => [communityId];
@@ -42,11 +43,17 @@ class JoinCommunity extends CommunityHomeEvent {
 
 class LeaveCommunity extends CommunityHomeEvent {
   final String communityId;
+  final String userId;
+  final String userName;
 
-  const LeaveCommunity({required this.communityId});
+  const LeaveCommunity({
+    required this.communityId,
+    required this.userId,
+    required this.userName,
+  });
 
   @override
-  List<Object?> get props => [communityId];
+  List<Object?> get props => [communityId, userId, userName];
 }
 
 class DeleteCommunity extends CommunityHomeEvent {
@@ -63,13 +70,23 @@ class ModerateMembers extends CommunityHomeEvent {
   final String communityId;
   final CommunityModerationAction action;
   final String userId;
+  final String memberId;
+  final String memberName;
 
   const ModerateMembers({
     required this.communityId,
     required this.action,
     required this.userId,
+    required this.memberId,
+    required this.memberName,
   });
 
   @override
-  List<Object?> get props => [communityId, action, userId];
+  List<Object?> get props => [
+    communityId,
+    action,
+    userId,
+    memberId,
+    memberName,
+  ];
 }

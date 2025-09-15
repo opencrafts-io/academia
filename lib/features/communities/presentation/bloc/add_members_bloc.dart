@@ -41,6 +41,8 @@ class AddMembersBloc extends Bloc<AddMembersEvent, AddMembersState> {
       groupId: event.communityId,
       action: event.action.asApiString,
       userId: event.userId,
+      memberId: event.memberId,
+      memberName: event.memberName,
     );
 
     result.fold(

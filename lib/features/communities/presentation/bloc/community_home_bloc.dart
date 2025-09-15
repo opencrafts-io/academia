@@ -43,6 +43,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
 
     final Either<Failure, Community> result = await getCommunityByIdUseCase(
       event.communityId,
+      event.userId,
     );
 
     result.fold(
@@ -60,6 +61,8 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
       groupId: event.communityId,
       action: event.action.asApiString,
       userId: event.userId,
+      memberId: event.memberId,
+      memberName: event.memberName,
     );
 
     result.fold(
@@ -73,7 +76,11 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoading());
-    final result = await joinCommunityUseCase(event.communityId, event.userId, event.userName);
+    final result = await joinCommunityUseCase(
+      event.communityId,
+      event.userId,
+      event.userName,
+    );
 
     result.fold(
       (failure) => emit(CommunityHomeFailure(failure.message)),
@@ -86,7 +93,11 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoading());
-    final result = await leaveCommunityUseCase(event.communityId);
+    final result = await leaveCommunityUseCase(
+      event.communityId,
+      event.userId,
+      event.userName,
+    );
 
     result.fold(
       (failure) => emit(CommunityCriticalActionFailure(failure.message)),

@@ -6,8 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddMembersScreen extends StatefulWidget {
   final String communityId;
+  final String userId;
 
-  const AddMembersScreen({super.key, required this.communityId});
+  const AddMembersScreen({
+    super.key,
+    required this.communityId,
+    required this.userId,
+  });
 
   @override
   State<AddMembersScreen> createState() => _AddMembersScreenState();
@@ -138,7 +143,9 @@ class _AddMembersScreenState extends State<AddMembersScreen> {
                             AddMemberToCommunity(
                               communityId: widget.communityId,
                               action: CommunityModerationAction.addMember,
-                              userId: user.id,
+                              userId: widget.userId,
+                              memberId: user.id,
+                              memberName: user.name,
                             ),
                           );
                         },

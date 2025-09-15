@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class CommunityUserListScreen extends StatefulWidget {
   final String communityId;
+  final String userId;
   final String title;
   final List<Map<String, String>> users;
   final bool isTargetModerator;
@@ -17,6 +18,7 @@ class CommunityUserListScreen extends StatefulWidget {
   const CommunityUserListScreen({
     super.key,
     required this.communityId,
+    required this.userId,
     required this.title,
     required this.users,
     required this.isTargetModerator,
@@ -151,18 +153,19 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
               : SliverList.builder(
                   itemCount: filteredUsers.length,
                   itemBuilder: (context, index) {
-                    final userMap = filteredUsers[index]; // Get the user map
-                    final name = userMap['name']!; // Extract the name
-                    final userId = userMap['id']!;
+                    final targetUserMap = filteredUsers[index]; // Get the user map
+                    final targetUserName = targetUserMap['name']!; // Extract the name
+                    final targetUserId = targetUserMap['id']!;
                     return ListTile(
-                      leading: CircleAvatar(child: Text(name[0].toUpperCase())),
-                      title: Text(name),
+                      leading: CircleAvatar(child: Text(targetUserName[0].toUpperCase())),
+                      title: Text(targetUserName),
                       onTap: () {
                         showUserActionsSheet(
-                          context,
-                          name,
-                          widget.communityId,
-                          userId,
+                          context: context,
+                          targetUserName: targetUserName,
+                          communityId: widget.communityId,
+                          userId: widget.userId,
+                          targetUserId: targetUserId,
                           isTargetModerator: widget.isTargetModerator,
                           isTargetBanned: widget.isTargetBannedUsers,
                           isTargetMember: widget.isTargetMembers,

@@ -1,7 +1,7 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
-import 'package:academia/features/communities/data/models/community_model.dart';
+import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -13,7 +13,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
 
   CommunityRemoteDatasource({required this.dioClient});
 
-  Future<Either<Failure, CommunityModel>> createCommunity({
+  Future<Either<Failure, CommunityData>> createCommunity({
     required String name,
     required String description,
     required bool isPublic,
@@ -58,7 +58,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityModel.fromJson(json));
+        return right(CommunityData.fromJson(json));
       } else {
         return left(
           ServerFailure(
@@ -79,10 +79,14 @@ class CommunityRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, CommunityModel>> getCommunityById(String id) async {
+  Future<Either<Failure, CommunityData>> getCommunityById({
+    required String communityId,
+    required String userId,
+  }) async {
     try {
-      final response = await dioClient.dio.get(
-        "$baseUrl/groups/$id",
+      final response = await dioClient.dio.post(
+        "$baseUrl/groups/$communityId/detail/",
+        data: {"user_id": userId},
         options: Options(headers: {"Accept": "application/json"}),
       );
 
@@ -90,7 +94,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityModel.fromJson(json));
+        return right(CommunityData.fromJson(json));
       } else {
         return left(
           ServerFailure(
@@ -111,15 +115,22 @@ class CommunityRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, CommunityModel>> moderateCommunity({
+  Future<Either<Failure, CommunityData>> moderateCommunity({
     required String groupId,
     required String action,
     required String userId,
+    required String memberId,
+    required String memberName,
   }) async {
     try {
       final response = await dioClient.dio.post(
         "$baseUrl/groups/$groupId/moderate/",
-        data: {"action": action, "user_id": userId},
+        data: {
+          "action": action,
+          "user_id": userId,
+          "member_id": memberId,
+          "member_name": memberName,
+        },
         options: Options(
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +147,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         );
         final communityJson = Map<String, dynamic>.from(json["group"]);
 
-        return right(CommunityModel.fromJson(communityJson));
+        return right(CommunityData.fromJson(communityJson));
       } else {
         return left(
           ServerFailure(
@@ -157,7 +168,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, CommunityModel>> joinCommunity({
+  Future<Either<Failure, CommunityData>> joinCommunity({
     required String groupId,
     required String userId,
     required String userName,
@@ -178,7 +189,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityModel.fromJson(json['group']));
+        return right(CommunityData.fromJson(json['group']));
       } else {
         return left(
           ServerFailure(
@@ -201,10 +212,13 @@ class CommunityRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, String>> leaveCommunity({
     required String groupId,
+    required String userId,
+    required String userName,
   }) async {
     try {
       final response = await dioClient.dio.post(
         "$baseUrl/groups/$groupId/leave/",
+        data: {"user_id": userId, "user_name": userName},
         options: Options(headers: {"Accept": "application/json"}),
       );
 

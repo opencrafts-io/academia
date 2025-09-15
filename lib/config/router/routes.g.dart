@@ -513,6 +513,7 @@ mixin _$CommunityUserListRoute on GoRouteData {
   static CommunityUserListRoute _fromState(GoRouterState state) =>
       CommunityUserListRoute(
         communityId: state.pathParameters['communityId']!,
+        userId: state.uri.queryParameters['user-id']!,
         title: state.uri.queryParameters['title']!,
         isTargetModerator:
             _$convertMapValue(
@@ -578,6 +579,7 @@ mixin _$CommunityUserListRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId)}/users',
     queryParams: {
+      'user-id': _self.userId,
       'title': _self.title,
       if (_self.isTargetModerator != false)
         'is-target-moderator': _self.isTargetModerator.toString(),
@@ -609,14 +611,17 @@ mixin _$CommunityUserListRoute on GoRouteData {
 }
 
 mixin _$AddMembersRoute on GoRouteData {
-  static AddMembersRoute _fromState(GoRouterState state) =>
-      AddMembersRoute(communityId: state.pathParameters['communityId']!);
+  static AddMembersRoute _fromState(GoRouterState state) => AddMembersRoute(
+    communityId: state.pathParameters['communityId']!,
+    userId: state.uri.queryParameters['user-id']!,
+  );
 
   AddMembersRoute get _self => this as AddMembersRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
+    queryParams: {'user-id': _self.userId},
   );
 
   @override

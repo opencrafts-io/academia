@@ -289,6 +289,7 @@ class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
 
 class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
   final String communityId;
+  final String userId;
   final String title;
   final bool isTargetModerator;
   final bool isTargetBannedUsers;
@@ -301,6 +302,7 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
 
   const CommunityUserListRoute({
     required this.communityId,
+    required this.userId,
     required this.title,
     this.isTargetModerator = false,
     this.isTargetBannedUsers = false,
@@ -317,6 +319,7 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
     final users = state.extra as List<Map<String, String>>;
     return CommunityUserListScreen(
       communityId: communityId,
+      userId: userId,
       title: title,
       users: users,
       isTargetModerator: isTargetModerator,
@@ -333,12 +336,13 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
 
 class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
   final String communityId;
+  final String userId;
 
-  AddMembersRoute({required this.communityId});
+  AddMembersRoute({required this.communityId, required this.userId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AddMembersScreen(communityId: communityId);
+    return AddMembersScreen(communityId: communityId, userId: userId);
   }
 }
 
