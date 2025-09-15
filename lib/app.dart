@@ -145,7 +145,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(
           create: (context) =>
-              sl<MagnetBloc>()..add(InitializeMagnetInstanceEvent()),
+              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
         ),
       ],
       child: DynamicColorBuilder(

@@ -8,7 +8,31 @@ sealed class MagnetEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitializeMagnetInstanceEvent extends MagnetEvent {}
+class InitializeMagnetInstancesEvent extends MagnetEvent {}
+
+class GetCachedMagnetProfileEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  GetCachedMagnetProfileEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
+
+class GetCachedMagnetCredentialEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  GetCachedMagnetCredentialEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
 
 class LinkMagnetAccountEvent extends MagnetEvent {
   final Credentials credentials;

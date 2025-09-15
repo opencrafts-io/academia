@@ -6,10 +6,14 @@ import 'package:magnet/magnet.dart';
 class MagnetLoginUsecaseParams {
   Credentials credentials;
   MagnetPortalRepository magnetInstance;
+  String userID;
+  int institutionID;
 
   MagnetLoginUsecaseParams({
     required this.credentials,
     required this.magnetInstance,
+    required this.institutionID,
+    required this.userID,
   });
 }
 
@@ -21,6 +25,8 @@ class MagnetLoginUsecase extends UseCase<bool, MagnetLoginUsecaseParams> {
     final result = await magnetRepository.login(
       params.magnetInstance,
       params.credentials,
+      institutionID: params.institutionID,
+      userID: params.userID,
     );
 
     return result.fold(

@@ -18,6 +18,25 @@ class MagnetInitialState extends MagnetState {
 
 class MagnetLoadingState extends MagnetState {}
 
+class MagnetCredentialFetched extends MagnetState {
+  final MagnetCredential magnetCredential;
+  MagnetCredentialFetched({required this.magnetCredential});
+
+  @override
+  List<Object?> get props => [magnetCredential];
+}
+
+class MagnetCredentialNotFetched extends MagnetState {
+  final String error;
+  MagnetCredentialNotFetched({required this.error});
+
+  @override
+  List<Object?> get props => [error];
+
+  @override
+  bool? get stringify => true;
+}
+
 class MagnetNotSupportedState extends MagnetState {}
 
 class MagnetErrorState extends MagnetState {
