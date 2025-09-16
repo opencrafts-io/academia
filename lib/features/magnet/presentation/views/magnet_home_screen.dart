@@ -1,10 +1,10 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/magnet/data/models/magnet_credential_extension.dart';
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
@@ -99,6 +99,17 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                 MagnetAuthRoute(
                   institutionID: widget.institutionID,
                 ).push(context);
+              } else if (state is MagnetCredentialFetched) {
+                final profileState = context.read<ProfileBloc>().state;
+                if (profileState is ProfileLoadedState) {
+                  context.read<MagnetBloc>().add(
+                    RefreshMagnetAuthenticationEvent(
+                      institutionID: widget.institutionID,
+                      userID: profileState.profile.id,
+                      credentials: state.magnetCredential.toMagnet(),
+                    ),
+                  );
+                }
               }
             },
           ),
@@ -258,7 +269,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                         ),
                         SizedBox(height: 22),
                         Text(
-                          "Copyright ${DateTime.now().year}. All Rights Reserved to its ownwers",
+                          "Copyright ${DateTime.now().year}. All Rights Reserved.",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),

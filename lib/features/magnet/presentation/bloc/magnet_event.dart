@@ -45,5 +45,19 @@ class LinkMagnetAccountEvent extends MagnetEvent {
   });
 
   @override
-  List<Object?> get props => [credentials];
+  List<Object?> get props => [credentials, institutionID, userID];
+}
+
+class RefreshMagnetAuthenticationEvent extends MagnetEvent {
+  final Credentials credentials;
+  final int institutionID;
+  final String userID;
+  RefreshMagnetAuthenticationEvent({
+    required this.credentials,
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [credentials, institutionID, userID];
 }

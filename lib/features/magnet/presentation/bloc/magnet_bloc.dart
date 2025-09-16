@@ -76,6 +76,37 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
         },
       );
     });
+
+    on<RefreshMagnetAuthenticationEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      if (!_magnetInstances.containsKey(event.institutionID)) {
+        return emit(MagnetNotSupportedState());
+      }
+
+      final magnetInstance = _magnetInstances[event.institutionID]!;
+      final result = await magnetLoginUsecase(
+        MagnetLoginUsecaseParams(
+          userID: event.userID,
+          institutionID: event.institutionID,
+          credentials: event.credentials,
+          magnetInstance: magnetInstance,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (ok) {
+          if (!ok) {
+            emit(
+              MagnetErrorState(error: "We failed to authenticate your account"),
+            );
+          }
+          emit(MagnetAuthenticatedState());
+        },
+      );
+    });
   }
 
   bool isInstitutionSupported(int institutionID) {
