@@ -18,8 +18,20 @@ abstract class MagnetRepository {
     required String userID,
   });
 
-  Future<Either<MagnetFailure, List<CourseInfo>>> fetchStudentTimetable(
+  Future<Either<Failure, List<MagnetCourseInfo>>> fetchStudentTimetable(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
+    required int institutionID,
+    required String userID,
+  });
+
+  Future<Either<Failure, List<MagnetCourseInfo>>>
+  getCachedMagnetStudentTimetable({
+    required int institutionID,
+    required String userID,
+  });
+
+  Future<Either<Failure, MagnetCourseInfo>> deleteCachedMagnetCourse({
+    required String courseCode,
     required int institutionID,
     required String userID,
   });

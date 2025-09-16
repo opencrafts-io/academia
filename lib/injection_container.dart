@@ -528,10 +528,15 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<MagnetStudentProfileLocalDatasource>(
     () => MagnetStudentProfileLocalDatasource(localDB: sl()),
   );
+  sl.registerFactory<MagnetCourseLocalDataSource>(
+    () => MagnetCourseLocalDataSource(localDB: sl()),
+  );
+
   sl.registerFactory<MagnetRepositoryImpl>(
     () => MagnetRepositoryImpl(
       magnetCredentialsLocalDatasource: sl(),
       magnetStudentProfileLocalDatasource: sl(),
+      magnetCourseLocalDataSource: sl(),
     ),
   );
 
@@ -559,6 +564,22 @@ Future<void> init(FlavorConfig flavor) async {
       magnetRepository: sl<MagnetRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<FetchMagnetStudentTimetableUsecase>(
+    () => FetchMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetCachedMagnetStudentTimetableUsecase>(
+    () => GetCachedMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<DeleteMagentCourseByCourseCodeUsecase>(
+    () => DeleteMagentCourseByCourseCodeUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
 
   // -- Bloc
   sl.registerFactory<MagnetBloc>(
@@ -568,6 +589,9 @@ Future<void> init(FlavorConfig flavor) async {
       getMagnetAuthenticationStatusUsecase: sl(),
       fetchMagnetStudentProfileUsecase: sl(),
       getCachedMagnetStudentProfileUsecase: sl(),
+      fetchMagnetStudentTimetableUsecase: sl(),
+      deleteMagentCourseByCourseCodeUsecase: sl(),
+      getCachedMagnetStudentTimetableUsecase: sl(),
     ),
   );
 }

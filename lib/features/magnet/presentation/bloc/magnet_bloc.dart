@@ -15,6 +15,11 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   final FetchMagnetStudentProfileUsecase fetchMagnetStudentProfileUsecase;
   final GetCachedMagnetStudentProfileUsecase
   getCachedMagnetStudentProfileUsecase;
+  final DeleteMagentCourseByCourseCodeUsecase
+  deleteMagentCourseByCourseCodeUsecase;
+  final GetCachedMagnetStudentTimetableUsecase
+  getCachedMagnetStudentTimetableUsecase;
+  final FetchMagnetStudentTimetableUsecase fetchMagnetStudentTimetableUsecase;
 
   final Map<int, MagnetPortalRepository> _magnetInstances = {};
   MagnetBloc({
@@ -23,6 +28,9 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     required this.getMagnetAuthenticationStatusUsecase,
     required this.getCachedMagnetStudentProfileUsecase,
     required this.fetchMagnetStudentProfileUsecase,
+    required this.fetchMagnetStudentTimetableUsecase,
+    required this.getCachedMagnetStudentTimetableUsecase,
+    required this.deleteMagentCourseByCourseCodeUsecase,
   }) : super(MagnetInitialState()) {
     /// Initialize application with the appropriate magnet instance
     /// per institution linked by the institution id
@@ -92,6 +100,64 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
           emit(MagnetProfileLoadedState(magnetStudentProfile: profile));
         },
       );
+    });
+    on<FetchMagnetStudentTimeTableEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      if (!_magnetInstances.containsKey(event.institutionID)) {
+        return emit(MagnetNotSupportedState());
+      }
+      final magnetInstance = _magnetInstances[event.institutionID]!;
+      final result = await fetchMagnetStudentTimetableUsecase(
+        FetchMagnetStudentTimetableUsecaseParams(
+          magnetInstance: magnetInstance,
+          institutionID: event.institutionID,
+          userID: event.userID,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (courses) {
+          emit(MagnetTimeTableLoadedState(timetable: courses));
+        },
+      );
+    });
+    on<GetCachedMagnetStudentTimetableEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      if (!_magnetInstances.containsKey(event.institutionID)) {
+        return emit(MagnetNotSupportedState());
+      }
+      final result = await getCachedMagnetStudentTimetableUsecase(
+        GetCachedMagnetStudentTimetableUsecaseParams(
+          institutionID: event.institutionID,
+          userID: event.userID,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (courses) {
+          emit(MagnetTimeTableLoadedState(timetable: courses));
+        },
+      );
+    });
+    on<DeleteCachedMagnetStudentTimetableEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      final result = await deleteMagentCourseByCourseCodeUsecase(
+        DeleteMagentCourseByCourseCodeUsecaseParams(
+          institutionID: event.institutionID,
+          userID: event.userID,
+          courseCode: event.courseCode,
+        ),
+      );
+      result.fold((error) {
+        emit(MagnetErrorState(error: error.message));
+      }, (deleted) {});
     });
 
     on<LinkMagnetAccountEvent>((event, emit) async {

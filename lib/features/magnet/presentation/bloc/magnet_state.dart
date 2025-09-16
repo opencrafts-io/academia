@@ -69,3 +69,13 @@ class MagnetProfileLoadedState extends MagnetState {
   @override
   bool? get stringify => true;
 }
+
+// Timetable
+class MagnetTimeTableLoadedState extends MagnetState {
+  final List<MagnetCourseInfo> timetable;
+  MagnetTimeTableLoadedState({required this.timetable});
+  @override
+  List<Object?> get props => [timetable];
+  @override
+  bool? get stringify => true;
+}

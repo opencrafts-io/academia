@@ -7,10 +7,12 @@ import 'package:magnet/magnet.dart';
 class MagnetRepositoryImpl implements MagnetRepository {
   MagnetCredentialsLocalDatasource magnetCredentialsLocalDatasource;
   MagnetStudentProfileLocalDatasource magnetStudentProfileLocalDatasource;
+  MagnetCourseLocalDataSource magnetCourseLocalDataSource;
 
   MagnetRepositoryImpl({
     required this.magnetStudentProfileLocalDatasource,
     required this.magnetCredentialsLocalDatasource,
+    required this.magnetCourseLocalDataSource,
   });
 
   @override
@@ -27,12 +29,63 @@ class MagnetRepositoryImpl implements MagnetRepository {
   }
 
   @override
-  Future<Either<MagnetFailure, List<CourseInfo>>> fetchStudentTimetable(
+  Future<Either<Failure, List<MagnetCourseInfo>>> fetchStudentTimetable(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,
     required String userID,
-  }) {
-    return magnetPortalRepositoryInstance.fetchStudentTimetable();
+  }) async {
+    final result = await magnetPortalRepositoryInstance.fetchStudentTimetable();
+    return await result.fold(
+      (error) async =>
+          left(NetworkFailure(message: error.message, error: error)),
+      (magnetCourses) async {
+        for (final course in magnetCourses) {
+          await magnetCourseLocalDataSource.createOrUpdateMagnetCourseInfo(
+            course.toData(userID: userID, institutionID: institutionID),
+          );
+        }
+
+        return right(
+          magnetCourses
+              .map(
+                (course) => course.toEntity(
+                  userID: userID,
+                  institutionID: institutionID,
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<MagnetCourseInfo>>>
+  getCachedMagnetStudentTimetable({
+    required int institutionID,
+    required String userID,
+  }) async {
+    final result = await magnetCourseLocalDataSource
+        .getCachedMagnetCourseByInstitutionID(institutionID);
+    return result.fold(
+      (error) => left(error),
+      (courses) => right(courses.map((course) => course.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, MagnetCourseInfo>> deleteCachedMagnetCourse({
+    required String courseCode,
+    required int institutionID,
+    required String userID,
+  }) async {
+    final result = await magnetCourseLocalDataSource
+        .deleteMagnetCourseByCourseCode(courseCode);
+    return result.fold(
+      (error) => left(error),
+      (courses) =>
+          right(courses.map((course) => course.toEntity()).toList().first),
+    );
   }
 
   @override

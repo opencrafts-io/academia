@@ -25,10 +25,7 @@ class GetCachedMagnetProfileEvent extends MagnetEvent {
 class FetchMagnetProfileEvent extends MagnetEvent {
   final int institutionID;
   final String userID;
-  FetchMagnetProfileEvent({
-    required this.institutionID,
-    required this.userID,
-  });
+  FetchMagnetProfileEvent({required this.institutionID, required this.userID});
 
   @override
   List<Object?> get props => [institutionID, userID];
@@ -44,6 +41,44 @@ class GetCachedMagnetCredentialEvent extends MagnetEvent {
 
   @override
   List<Object?> get props => [institutionID, userID];
+}
+
+class FetchMagnetStudentTimeTableEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  FetchMagnetStudentTimeTableEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
+
+class GetCachedMagnetStudentTimetableEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  GetCachedMagnetStudentTimetableEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
+
+class DeleteCachedMagnetStudentTimetableEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  final String courseCode;
+  DeleteCachedMagnetStudentTimetableEvent({
+    required this.institutionID,
+    required this.userID,
+    required this.courseCode,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID, courseCode];
 }
 
 class LinkMagnetAccountEvent extends MagnetEvent {
