@@ -46,7 +46,9 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
       MagnetHomeScreenAction(
         title: "Classes",
         subtitle: "Never miss a class",
-        ontap: (BuildContext context, int institutionID) {},
+        ontap: (BuildContext context, int institutionID) {
+          MagnetCoursesRoute(institutionID: institutionID).push(context);
+        },
         assetImagePath: "assets/illustrations/classes.jpg",
       ),
       MagnetHomeScreenAction(

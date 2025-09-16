@@ -276,7 +276,10 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID"),
     TypedGoRoute<MagnetHomeRoute>(
       path: ":institutionID",
-      routes: [TypedGoRoute<MagnetProfileRoute>(path: "profile")],
+      routes: [
+        TypedGoRoute<MagnetProfileRoute>(path: "profile"),
+        TypedGoRoute<MagnetCoursesRoute>(path: "courses"),
+      ],
     ),
   ],
 )
@@ -324,6 +327,15 @@ class MagnetProfileRoute extends GoRouteData with _$MagnetProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return MagnetProfilePage(institutionID: institutionID);
+  }
+}
+
+class MagnetCoursesRoute extends GoRouteData with _$MagnetCoursesRoute {
+  final int institutionID;
+  MagnetCoursesRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetCoursesScreen(institutionID: institutionID);
   }
 }
 

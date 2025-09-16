@@ -155,9 +155,19 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
           courseCode: event.courseCode,
         ),
       );
-      result.fold((error) {
-        emit(MagnetErrorState(error: error.message));
-      }, (deleted) {});
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (deleted) {
+          add(
+            GetCachedMagnetStudentTimetableEvent(
+              institutionID: event.institutionID,
+              userID: event.userID,
+            ),
+          );
+        },
+      );
     });
 
     on<LinkMagnetAccountEvent>((event, emit) async {

@@ -485,6 +485,11 @@ RouteBase get $magnetRoute => GoRouteData.$route(
 
           factory: _$MagnetProfileRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'courses',
+
+          factory: _$MagnetCoursesRoute._fromState,
+        ),
       ],
     ),
   ],
@@ -573,6 +578,33 @@ mixin _$MagnetProfileRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/profile',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetCoursesRoute on GoRouteData {
+  static MagnetCoursesRoute _fromState(GoRouterState state) =>
+      MagnetCoursesRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+      );
+
+  MagnetCoursesRoute get _self => this as MagnetCoursesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/courses',
   );
 
   @override
