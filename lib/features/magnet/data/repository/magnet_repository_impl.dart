@@ -45,12 +45,16 @@ class MagnetRepositoryImpl implements MagnetRepository {
   }
 
   @override
-  Future<Either<MagnetFailure, bool>> isLoggedIn(
+  Future<Either<Failure, bool>> isLoggedIn(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,
     required String userID,
-  }) {
-    return magnetPortalRepositoryInstance.isLoggedIn();
+  }) async {
+    final result = await magnetPortalRepositoryInstance.isLoggedIn();
+    return result.fold(
+      (error) => left(NetworkFailure(message: error.message, error: error)),
+      (ok) => right(ok),
+    );
   }
 
   @override

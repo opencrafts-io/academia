@@ -60,7 +60,7 @@ abstract class MagnetRepository {
     required String userID,
   });
 
-  Future<Either<MagnetFailure, bool>> isLoggedIn(
+  Future<Either<Failure, bool>> isLoggedIn(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,
     required String userID,

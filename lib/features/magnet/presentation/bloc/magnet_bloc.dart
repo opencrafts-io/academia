@@ -10,11 +10,14 @@ part 'magnet_event.dart';
 class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   final MagnetLoginUsecase magnetLoginUsecase;
   final GetCachedMagnetCredentialUsecase getCachedMagnetCredentialUsecase;
+  final GetMagnetAuthenticationStatusUsecase
+  getMagnetAuthenticationStatusUsecase;
 
   final Map<int, MagnetPortalRepository> _magnetInstances = {};
   MagnetBloc({
     required this.magnetLoginUsecase,
     required this.getCachedMagnetCredentialUsecase,
+    required this.getMagnetAuthenticationStatusUsecase,
   }) : super(MagnetInitialState()) {
     /// Initialize application with the appropriate magnet instance
     /// per institution linked by the institution id
@@ -85,25 +88,45 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       }
 
       final magnetInstance = _magnetInstances[event.institutionID]!;
-      final result = await magnetLoginUsecase(
-        MagnetLoginUsecaseParams(
+      final authStatus = await getMagnetAuthenticationStatusUsecase(
+        GetMagnetAuthenticationStatusUsecaseParams(
           userID: event.userID,
           institutionID: event.institutionID,
-          credentials: event.credentials,
-          magnetInstance: magnetInstance,
+          magnetPortalRepository: magnetInstance,
         ),
       );
-      result.fold(
-        (error) {
-          emit(MagnetErrorState(error: error.message));
-        },
-        (ok) {
-          if (!ok) {
-            emit(
-              MagnetErrorState(error: "We failed to authenticate your account"),
-            );
-          }
-          emit(MagnetAuthenticatedState());
+
+      await authStatus.fold(
+        (error) async => emit(
+          MagnetErrorState(
+            error: "Failed to fetch magnet authentication state",
+          ),
+        ),
+        (isLoggedIn) async {
+          if (isLoggedIn) return emit(MagnetAuthenticatedState());
+          final result = await magnetLoginUsecase(
+            MagnetLoginUsecaseParams(
+              userID: event.userID,
+              institutionID: event.institutionID,
+              credentials: event.credentials,
+              magnetInstance: magnetInstance,
+            ),
+          );
+          await result.fold(
+            (error) async {
+              emit(MagnetErrorState(error: error.message));
+            },
+            (ok) async {
+              if (!ok) {
+                emit(
+                  MagnetErrorState(
+                    error: "We failed to authenticate your account",
+                  ),
+                );
+              }
+              emit(MagnetAuthenticatedState());
+            },
+          );
         },
       );
     });

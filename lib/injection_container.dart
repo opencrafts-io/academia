@@ -544,12 +544,18 @@ Future<void> init(FlavorConfig flavor) async {
       magnetRepository: sl<MagnetRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<GetMagnetAuthenticationStatusUsecase>(
+    () => GetMagnetAuthenticationStatusUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
 
   // -- Bloc
   sl.registerFactory<MagnetBloc>(
     () => MagnetBloc(
       magnetLoginUsecase: sl(),
       getCachedMagnetCredentialUsecase: sl(),
+      getMagnetAuthenticationStatusUsecase: sl(),
     ),
   );
 }
