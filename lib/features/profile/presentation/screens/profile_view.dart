@@ -1,5 +1,6 @@
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,10 +17,34 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   @override
+  void initState() {
+    super.initState();
+    // final InstitutionCubit institutionCubit = BlocProvider.of<InstitutionCubit>(
+    //   context,
+    // );
+    // final profileState = BlocProvider.of<ProfileBloc>(context).state;
+    //
+    // if (profileState is ProfileLoadedState) {
+    //   institutionCubit.getCachedUserIntitutions(profileState.profile.id);
+    // }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          // final InstitutionCubit institutionCubit =
+          //     BlocProvider.of<InstitutionCubit>(context);
+          //
+          // final profileState = BlocProvider.of<ProfileBloc>(context).state;
+          //
+          // if (profileState is ProfileLoadedState) {
+          //   institutionCubit.getAllUserAccountInstitutionsUsecase(
+          //     profileState.profile.id,
+          //   );
+          // }
+
           BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
           return Future.delayed(Duration(seconds: 2));
         },
@@ -186,6 +211,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ),
               ),
+              ProfileInstitutionSection(),
             ],
           ),
         ),

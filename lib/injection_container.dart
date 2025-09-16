@@ -3,12 +3,23 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/institution/presentation/bloc/institution_bloc.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
+  final DioRequestInspector inspector = DioRequestInspector(
+    isInspectorEnabled: true,
+    password: '123456', // remove this line if you don't need password
+    showSummary: false,
+  );
+
+  sl.registerSingleton<DioRequestInspector>(inspector);
+
   // Register the flavor
   sl.registerSingleton<FlavorConfig>(flavor);
 
@@ -17,10 +28,17 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
   );
-  sl.registerFactory(() => AuthRemoteDatasource(flavorConfig: flavor));
 
   sl.registerFactory<DioClient>(
-    () => DioClient(flavor, authLocalDatasource: sl.get<AuthLocalDatasource>()),
+    () => DioClient(
+      flavor,
+      authLocalDatasource: sl.get<AuthLocalDatasource>(),
+      requestInspector: sl<DioRequestInspector>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => AuthRemoteDatasource(flavorConfig: flavor, dioClient: sl()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -39,6 +57,9 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetPreviousAuthState>(
     () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
+  );
+  sl.registerFactory<RefreshVerisafeTokenUsecase>(
+    () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
   //sherehe
@@ -99,6 +120,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -114,6 +141,8 @@ Future<void> init(FlavorConfig flavor) async {
       likePost: sl.get<LikePostUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
       addComment: sl.get<CommentUsecase>(),
+      cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+      getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -238,6 +267,71 @@ Future<void> init(FlavorConfig flavor) async {
       createAgendaEventUsecase: sl.get<CreateAgendaEventUsecase>(),
       updateAgendaEventUsecase: sl.get<UpdateAgendaEventUsecase>(),
       deleteAgendaEventUsecase: sl.get<DeleteAgendaEventUsecase>(),
+    ),
+  );
+
+  // Communities
+  sl.registerFactory<CommunityRemoteDatasource>(
+    () => CommunityRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<CommunityRepositoryImpl>(
+    () => CommunityRepositoryImpl(
+      remoteDatasource: sl.get<CommunityRemoteDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityUseCase>(
+    () => CreateCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCommunityByIdUseCase>(
+    () =>
+        GetCommunityByIdUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<ModerateMembersUseCase>(
+    () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SearchVerisafeUsersUseCase>(
+    () => SearchVerisafeUsersUseCase(
+      chirpUserRepository: sl.get<ChirpUserRepository>(),
+    ),
+  );
+
+  sl.registerFactory<JoinCommunityUseCase>(
+    () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<LeaveCommunityUseCase>(
+    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<DeleteCommunityUseCase>(
+    () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<CommunityHomeBloc>(
+    () => CommunityHomeBloc(
+      getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
+      joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
+      leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
+      deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityBloc>(
+    () => CreateCommunityBloc(
+      createCommunityUseCase: sl.get<CreateCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<AddMembersBloc>(
+    () => AddMembersBloc(
+      searchUsers: sl.get<SearchVerisafeUsersUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
     ),
   );
 
@@ -450,6 +544,54 @@ Future<void> init(FlavorConfig flavor) async {
       setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
       getSettingsUsecase: sl.get<GetSettingsUsecase>(),
       setSettingsUsecase: sl.get<SetSettingsUsecase>(),
+    ),
+  );
+
+  // --- Institutions ---
+  sl.registerFactory<InstitutionLocalDatasource>(
+    () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
+  );
+  sl.registerFactory<InstitutionRemoteDatasource>(
+    () => InstitutionRemoteDatasource(dioClient: sl()),
+  );
+
+  sl.registerFactory<InstitutionRepositoryImpl>(
+    () => InstitutionRepositoryImpl(
+      institutionLocalDatasource: sl(),
+      institutionRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<GetAllUserAccountInstitutionsUsecase>(
+    () => GetAllUserAccountInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<GetAllCachedInstitutionsUsecase>(
+    () => GetAllCachedInstitutionsUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddAccountToInstitution>(
+    () => AddAccountToInstitution(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<SearchForInstitutionByNameUsecase>(
+    () => SearchForInstitutionByNameUsecase(
+      institutionRepository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionBloc>(
+    () => InstitutionBloc(
+      addAccountToInstitution: sl(),
+      getAllCachedInstitutionsUsecase: sl(),
+      searchForInstitutionByNameUsecase: sl(),
+      getAllUserAccountInstitutionsUsecase: sl(),
     ),
   );
 }
