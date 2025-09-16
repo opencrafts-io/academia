@@ -1,5 +1,6 @@
 import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:academia/config/config.dart';
 import 'package:logger/logger.dart';
@@ -11,10 +12,15 @@ class DioClient {
   /// Will be used to send requests to the server
   late Dio dio;
   AuthLocalDatasource authLocalDatasource;
+  DioRequestInspector requestInspector;
 
   /// Ensure that before instanciating a DioClient that
   /// you must have injected the flavor
-  DioClient(FlavorConfig flavor, {required this.authLocalDatasource}) {
+  DioClient(
+    FlavorConfig flavor, {
+    required this.authLocalDatasource,
+    required this.requestInspector,
+  }) {
     dio = Dio(
       BaseOptions(
         baseUrl: flavor.apiBaseUrl,
@@ -26,6 +32,8 @@ class DioClient {
         },
       ),
     );
+
+    dio.interceptors.add(requestInspector.getDioRequestInterceptor());
 
     dio.interceptors.add(
       PrettyDioLogger(

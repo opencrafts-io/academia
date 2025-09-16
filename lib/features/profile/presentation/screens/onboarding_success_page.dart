@@ -1,4 +1,5 @@
 import 'package:academia/features/profile/profile.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +14,9 @@ class OnboardingSuccessPage extends StatefulWidget {
 
 class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
   UserProfile? profile;
+  final ConfettiController _confettiController = ConfettiController(
+    duration: Duration(seconds: 20),
+  );
 
   @override
   void initState() {
@@ -23,6 +27,7 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
       BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
     }
     super.initState();
+    _confettiController.play();
   }
 
   @override
@@ -46,28 +51,44 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
           return;
         }
       },
-      builder: (context, state) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 12,
+      builder: (context, state) => Stack(
+        alignment: Alignment.center,
         children: [
-          Text(
-            "Yay! Thats it for now. We'll tune Academia for you",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
+          Align(
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              numberOfParticles: 20,
+            ),
           ),
-          FilledButton(
-            onPressed: () async {
-              BlocProvider.of<ProfileBloc>(context).add(
-                UpdateUserProfileEvent(
-                  profile: profile!.copyWith(
-                    onboarded: true,
-                    termsAccepted: true,
-                  ),
+
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Yay! Thats it for now. We'll tune Academia for you",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
                 ),
-              );
-              await Future.delayed(Duration(seconds: 2));
-            },
-            child: Text("Get started"),
+                FilledButton(
+                  onPressed: () async {
+                    _confettiController.play();
+                    // BlocProvider.of<ProfileBloc>(context).add(
+                    //   UpdateUserProfileEvent(
+                    //     profile: profile!.copyWith(
+                    //       onboarded: true,
+                    //       termsAccepted: true,
+                    //     ),
+                    //   ),
+                    // );
+                    // await Future.delayed(Duration(seconds: 2));
+                  },
+                  child: Text("Get started"),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -94,3 +94,19 @@ class SendLocalNotificationEvent extends NotificationEvent {
   List<Object?> get props => [title, body, data];
 }
 
+/// Event to set user data (external user ID and metadata) in OneSignal
+class SetUserDataEvent extends NotificationEvent {
+  final String userId;
+  final String name;
+  final String email;
+
+  const SetUserDataEvent({
+    required this.userId,
+    required this.name,
+    required this.email,
+  });
+
+  @override
+  List<Object?> get props => [userId, name, email];
+}
+

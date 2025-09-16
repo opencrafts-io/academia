@@ -12,7 +12,6 @@ class ChirpRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, List<Post>>> getPosts() async {
     try {
-      // Fetch posts
       final res = await dioClient.dio.get("/qa-chirp/statuses/");
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
@@ -21,33 +20,13 @@ class ChirpRemoteDataSource with DioErrorHandler {
         );
       }
 
-      // Parse posts
+      // Parse posts, replies will be empty
       final List<Post> posts = (res.data['results'] as List)
           .map((json) => PostHelper.fromJson(json))
           .toList();
 
-      // fetch replies for all posts
-      final updatedPosts = await Future.wait(
-        posts.map((post) async {
-          try {
-            final repliesRes = await dioClient.dio.get(
-              "/qa-chirp/statuses/${post.id}/reply/",
-            );
-
-            if (repliesRes.statusCode == 200 && repliesRes.data['results'] is List) {
-              final replies = (repliesRes.data['results'] as List)
-                  .map((replyJson) => ReplyHelper.fromJson(replyJson))
-                  .toList();
-              return post.copyWith(replies: replies);
-            }
-          } catch (_) {
-            // If replies fail for one post, skip and keep post as is
-          }
-          return post;
-        }),
-      );
-
-      return Right(updatedPosts);
+      // Return the list of posts
+      return Right(posts);
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
@@ -55,24 +34,54 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, Unit>> createPost(
+  Future<Either<Failure, List<PostReply>>> getPostReplies(String postId) async {
+    try {
+      final res = await dioClient.dio.get(
+        "/qa-chirp/statuses/$postId/comments/",
+      );
+
+      if (res.statusCode == 200 && res.data is List) {
+        final List<PostReply> replies = (res.data as List)
+            .map((replyJson) => ReplyHelper.fromJson(replyJson))
+            .toList();
+
+        return Right(replies);
+      }
+
+      return Left(
+        NetworkFailure(message: "Failed to fetch replies", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(CacheFailure(message: e.toString(), error: e));
+    }
+  }
+
+  Future<Either<Failure, Post>> createPost(
     String content,
-    List<MultipartFile> attachments,
-  ) async {
+    List<MultipartFile> attachments, {
+    required String userName,
+    required String email,
+    required String groupId,
+  }) async {
     try {
       final formData = FormData.fromMap({
         if (content.isNotEmpty) 'content': content,
         if (attachments.isNotEmpty) 'attachments': attachments,
+        'user_name': userName,
+        'email': email,
       });
 
       final res = await dioClient.dio.post(
-        '/qa-chirp/statuses/create/',
+        '/qa-chirp/groups/$groupId/posts/create/',
         data: formData,
         options: Options(contentType: "multipart/form-data"),
       );
 
       if (res.statusCode == 201) {
-        return Right(unit);
+        final Post post = PostHelper.fromJson(res.data);
+        return Right(post);
       }
       return Left(
         NetworkFailure(message: "Unexpected response", error: res.data),
@@ -82,16 +91,35 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, Unit>> addComment(
-    String postId,
-    String content,
-  ) async {
+  Future<Either<Failure, PostReply>> addComment({
+    required String postId,
+    required String content,
+    required String userName,
+    required String userId,
+    String? parentId,
+  }) async {
     try {
-      final res = await dioClient.dio.post(
-        '/qa-chirp/statuses/$postId/reply/',
-        data: {'content': content},
-      );
-      if (res.statusCode == 201) return const Right(unit);
+      final url = parentId != null
+          ? '/qa-chirp/statuses/$postId/comments/$parentId/replies/'
+          : '/qa-chirp/statuses/$postId/comments/';
+
+      final Map<String, dynamic> data = {
+        'content': content,
+        'user_name': userName,
+        'user_id': userId,
+      };
+
+      if (parentId != null) {
+        data['parent_comment_id'] = parentId;
+      }
+
+      final res = await dioClient.dio.post(url, data: data);
+
+      if (res.statusCode == 201) {
+        final PostReply reply = ReplyHelper.fromJson(res.data);
+        return Right(reply);
+      }
+
       return Left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
@@ -102,13 +130,14 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, Unit>> likePost(String postId, bool isLiked) async {
+  Future<Either<Failure, Map<String, dynamic>>> likePost(
+    String postId,
+    bool isLiked,
+  ) async {
     try {
-      final res = isLiked
-          ? await dioClient.dio.delete('/qa-chirp/statuses/$postId/like/')
-          : await dioClient.dio.post('/qa-chirp/statuses/$postId/like/');
+      final res = await dioClient.dio.post('/qa-chirp/statuses/$postId/like/');
       if (res.statusCode == 204 || res.statusCode == 201) {
-        return Right(unit);
+        return Right(res.data);
       }
       return Left(
         NetworkFailure(message: "Unexpected response", error: res.data),

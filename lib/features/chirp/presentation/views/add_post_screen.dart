@@ -1,7 +1,9 @@
-import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:academia/features/chirp/domain/entities/group.dart';
+import 'package:go_router/go_router.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({super.key});
@@ -13,6 +15,33 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   final _contentController = TextEditingController();
   final List<PlatformFile> _attachments = [];
+  Group? _selectedGroup;
+
+  // Dummy list of groups for demonstration
+  //TODO: fetch from community bloc
+  //TODO: fetch only communities user has joined. If none, join button??
+  final List<Group> _dummyGroups = [
+    Group(
+      id: "1",
+      name: "General",
+      description: "General community for all posts",
+    ),
+    Group(id: "2", name: "Tech Enthusiasts", description: "For all things tech"),
+    Group(
+      id: "3",
+      name: "Fech Enthusiasts",
+      description: "A community for tech lovers",
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Set a default group if available
+    if (_dummyGroups.isNotEmpty) {
+      _selectedGroup = _dummyGroups.first;
+    }
+  }
 
   Future<void> _pickAttachment() async {
     final result = await FilePicker.platform.pickFiles(
@@ -29,6 +58,13 @@ class _AddPostPageState extends State<AddPostPage> {
   void _submitPost() {
     final content = _contentController.text.trim();
 
+    if (_selectedGroup == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a community to post in.")),
+      );
+      return;
+    }
+
     if (content.isEmpty && _attachments.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -38,9 +74,35 @@ class _AddPostPageState extends State<AddPostPage> {
       return;
     }
 
-    context.read<FeedBloc>().add(
-      CreatePostEvent(content: content, files: _attachments),
-    );
+    final profileState = BlocProvider.of<ProfileBloc>(context).state;
+
+    if (profileState is ProfileLoadedState) {
+      final userName = profileState.profile.name;
+      final email = profileState.profile.email;
+
+
+      context.read<FeedBloc>().add(
+        CreatePostEvent(
+          content: content,
+          files: _attachments,
+          userName: userName,
+          email: email,
+          groupId: _selectedGroup!.id,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("User profile not loaded. Please try again."),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _contentController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,7 +119,7 @@ class _AddPostPageState extends State<AddPostPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Post created successfully!")),
             );
-            Navigator.pop(context);
+            context.pop();
           } else if (state is PostCreateError) {
             ScaffoldMessenger.of(
               context,
@@ -71,6 +133,29 @@ class _AddPostPageState extends State<AddPostPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                DropdownButtonFormField<Group>(
+                  decoration: InputDecoration(
+                    labelText: "Select Community",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  value: _selectedGroup,
+                  items: _dummyGroups.map((group) {
+                    return DropdownMenuItem<Group>(
+                      value: group,
+                      child: Text(group.name),
+                    );
+                  }).toList(),
+                  onChanged: (Group? newValue) {
+                    setState(() {
+                      _selectedGroup = newValue;
+                    });
+                  },
+                  validator: (value) =>
+                      value == null ? 'Please select a community' : null,
+                ),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _contentController,
                   decoration: InputDecoration(

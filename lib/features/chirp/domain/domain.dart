@@ -19,6 +19,8 @@ export 'entities/post_replies.dart';
 export 'usecases/comment_usecase.dart';
 export 'usecases/create_post_usecase.dart';
 export 'usecases/like_post_usecase.dart';
+export 'usecases/cache_post_replies.dart';
+export 'usecases/get_post_replies.dart';
 
 // Chirp User domain exports
 export 'entities/chirp_user.dart';

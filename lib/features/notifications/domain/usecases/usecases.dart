@@ -9,4 +9,5 @@ export 'get_unread_count_usecase.dart';
 export 'set_notification_permission_usecase.dart';
 export 'get_notification_permission_usecase.dart';
 export 'send_local_notification_usecase.dart';
+export 'set_user_data_usecase.dart';
 

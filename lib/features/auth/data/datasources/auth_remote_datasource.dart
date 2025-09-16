@@ -1,20 +1,24 @@
 import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
 
-class AuthRemoteDatasource {
+class AuthRemoteDatasource with DioErrorHandler {
   final FlavorConfig flavorConfig;
   final Logger _logger = Logger();
   final String servicePrefix;
+  final DioClient dioClient;
 
   AuthRemoteDatasource({
     required this.flavorConfig,
+    required this.dioClient,
     this.servicePrefix = "qa-verisafe",
   });
 
@@ -91,7 +95,7 @@ class AuthRemoteDatasource {
         TokenData(
           id: 1,
           provider: "verisafe",
-          expiresAt: DateTime.now().add(Duration(days: 1)),
+          expiresAt: DateTime.now().add(Duration(days: 7)),
           createdAt: DateTime.now(),
           accessToken: token!,
           refreshToken: refreshToken!,
@@ -131,14 +135,15 @@ class AuthRemoteDatasource {
       );
 
       final token = Uri.parse(result).queryParameters['token'];
+      final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
       return right(
         TokenData(
           id: 1,
           provider: "verisafe",
-          expiresAt: DateTime.now().add(Duration(days: 1)),
+          expiresAt: DateTime.now().add(Duration(days: 7)),
           createdAt: DateTime.now(),
           accessToken: token!,
-          refreshToken: "",
+          refreshToken: refreshToken!,
           updatedAt: DateTime.now(),
         ),
       );
@@ -152,6 +157,41 @@ class AuthRemoteDatasource {
       );
     } catch (e) {
       _logger.e("Failed to authenticate with google", error: e);
+      return left(
+        AuthenticationFailure(
+          message: "Something went wrong while trying to authenticate you",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, TokenData>> refreshVerisafeToken(
+    TokenData token,
+  ) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/auth/token/refresh",
+        data: token.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        return Right(
+          TokenData(
+            id: 1,
+            accessToken: response.data["access_token"],
+            refreshToken: response.data["refresh_token"],
+            provider: "verisafe",
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
+      }
+      throw ("Wrong status code recieved from server");
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Failed to refresh verisafe token", error: e);
       return left(
         AuthenticationFailure(
           message: "Something went wrong while trying to authenticate you",

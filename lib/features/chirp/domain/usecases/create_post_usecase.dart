@@ -8,11 +8,14 @@ class CreatePostUsecase {
 
   CreatePostUsecase({required this.chirpRepository});
 
-  Future<Either<Failure, Unit>> call({
+  Future<Either<Failure, Post>> call({
+    required String userName,
+    required String email,
     required String content,
     required List<MultipartFile> attachments,
+    required String groupId,
   }) async {
-    return chirpRepository.createPost(content, attachments);
+    return chirpRepository.createPost(content, attachments, userName: userName, email: email, groupId: groupId);
   }
 }
 

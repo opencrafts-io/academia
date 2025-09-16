@@ -45,14 +45,27 @@ class _PostCardState extends State<PostCard> {
               spacing: 8,
               children: [
                 CircleAvatar(radius: 16),
-                Text(
-                  'c/${widget.post.userId}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'c/${widget.post.group.name}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 3,),
+                    Text(
+                      'u/${widget.post.userName}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+
     
             SizedBox(height: 8),
     
@@ -126,11 +139,10 @@ class _PostCardState extends State<PostCard> {
                   selected: const <Vote>{Vote.up},
                   showSelectedIcon: true,
                   onSelectionChanged: (vote) {
-                    final isLiked = widget.post.isLiked;
                     context.read<FeedBloc>().add(
                       ToggleLikePost(
                         postId: widget.post.id,
-                        isCurrentlyLiked: isLiked,
+                        isCurrentlyLiked: widget.post.isLiked,
                       ),
                     );
                   },
@@ -140,7 +152,7 @@ class _PostCardState extends State<PostCard> {
                 OutlinedButton.icon(
                   icon: Icon(Symbols.chat),
                   onPressed:  widget.onTap,
-                  label: Text('${widget.post.replies.length} comments'),
+                  label: Text('${widget.post.commentCount} comments'),
                 ),
               ],
             ),

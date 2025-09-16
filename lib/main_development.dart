@@ -2,6 +2,7 @@ import 'package:academia/app.dart';
 import 'package:academia/config/flavor.dart';
 import 'package:academia/firebase_options.dart';
 import 'package:academia/injection_container.dart' as di;
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
@@ -22,5 +23,10 @@ void main(args) async {
     ),
   );
 
-  runApp(Academia());
+  runApp(
+    DioRequestInspectorMain(
+      inspector: di.sl<DioRequestInspector>(),
+      child: Academia(),
+    ),
+  );
 }

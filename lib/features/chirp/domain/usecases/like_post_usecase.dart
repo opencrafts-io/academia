@@ -7,7 +7,7 @@ class LikePostUsecase {
 
   LikePostUsecase({required this.chirpRepository});
 
-  Future<Either<Failure, Unit>> call(String postId, bool isLiked) async {
+  Future<Either<Failure, Map<String, dynamic>>> call(String postId, bool isLiked) async {
     return chirpRepository.toggleLike(postId, isLiked);
   }
 }
