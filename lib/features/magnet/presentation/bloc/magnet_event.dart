@@ -22,6 +22,18 @@ class GetCachedMagnetProfileEvent extends MagnetEvent {
   List<Object?> get props => [institutionID, userID];
 }
 
+class FetchMagnetProfileEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  FetchMagnetProfileEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
+
 class GetCachedMagnetCredentialEvent extends MagnetEvent {
   final int institutionID;
   final String userID;

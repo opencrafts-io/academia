@@ -59,3 +59,13 @@ class MagnetInstancesLoadedState extends MagnetState {
   @override
   bool? get stringify => true;
 }
+
+// Profile
+class MagnetProfileLoadedState extends MagnetState {
+  final MagnetStudentProfile magnetStudentProfile;
+  MagnetProfileLoadedState({required this.magnetStudentProfile});
+  @override
+  List<Object?> get props => [magnetStudentProfile];
+  @override
+  bool? get stringify => true;
+}

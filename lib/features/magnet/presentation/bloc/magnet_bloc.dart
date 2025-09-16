@@ -12,12 +12,17 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   final GetCachedMagnetCredentialUsecase getCachedMagnetCredentialUsecase;
   final GetMagnetAuthenticationStatusUsecase
   getMagnetAuthenticationStatusUsecase;
+  final FetchMagnetStudentProfileUsecase fetchMagnetStudentProfileUsecase;
+  final GetCachedMagnetStudentProfileUsecase
+  getCachedMagnetStudentProfileUsecase;
 
   final Map<int, MagnetPortalRepository> _magnetInstances = {};
   MagnetBloc({
     required this.magnetLoginUsecase,
     required this.getCachedMagnetCredentialUsecase,
     required this.getMagnetAuthenticationStatusUsecase,
+    required this.getCachedMagnetStudentProfileUsecase,
+    required this.fetchMagnetStudentProfileUsecase,
   }) : super(MagnetInitialState()) {
     /// Initialize application with the appropriate magnet instance
     /// per institution linked by the institution id
@@ -45,6 +50,46 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
         },
         (cred) {
           emit(MagnetCredentialFetched(magnetCredential: cred));
+        },
+      );
+    });
+    on<GetCachedMagnetProfileEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+      final result = await getCachedMagnetStudentProfileUsecase(
+        GetCachedMagnetStudentProfileUsecaseParams(
+          institutionID: event.institutionID,
+          userID: event.userID,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (profile) {
+          emit(MagnetProfileLoadedState(magnetStudentProfile: profile));
+        },
+      );
+    });
+    on<FetchMagnetProfileEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      if (!_magnetInstances.containsKey(event.institutionID)) {
+        return emit(MagnetNotSupportedState());
+      }
+      final magnetInstance = _magnetInstances[event.institutionID]!;
+      final result = await fetchMagnetStudentProfileUsecase(
+        FetchMagnetStudentProfileUsecaseParams(
+          magnetInstance: magnetInstance,
+          institutionID: event.institutionID,
+          userID: event.userID,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (profile) {
+          emit(MagnetProfileLoadedState(magnetStudentProfile: profile));
         },
       );
     });

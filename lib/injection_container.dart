@@ -549,6 +549,16 @@ Future<void> init(FlavorConfig flavor) async {
       magnetRepository: sl<MagnetRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<GetCachedMagnetStudentProfileUsecase>(
+    () => GetCachedMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetStudentProfileUsecase>(
+    () => FetchMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
 
   // -- Bloc
   sl.registerFactory<MagnetBloc>(
@@ -556,6 +566,8 @@ Future<void> init(FlavorConfig flavor) async {
       magnetLoginUsecase: sl(),
       getCachedMagnetCredentialUsecase: sl(),
       getMagnetAuthenticationStatusUsecase: sl(),
+      fetchMagnetStudentProfileUsecase: sl(),
+      getCachedMagnetStudentProfileUsecase: sl(),
     ),
   );
 }

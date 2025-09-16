@@ -39,7 +39,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
         title: "School profile",
         subtitle: "View and manage your school profile",
         ontap: (BuildContext context, int institutionID) {
-          MagnetProfileRoute(institutionID: 0).push(context);
+          MagnetProfileRoute(institutionID: institutionID).push(context);
         },
         assetImagePath: "assets/illustrations/authenticate.jpg",
       ),

@@ -58,12 +58,39 @@ class MagnetRepositoryImpl implements MagnetRepository {
   }
 
   @override
-  Future<Either<MagnetFailure, StudentProfile>> fetchStudentProfile(
+  Future<Either<Failure, MagnetStudentProfile>> fetchStudentProfile(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,
     required String userID,
-  }) {
-    return magnetPortalRepositoryInstance.fetchStudentProfile();
+  }) async {
+    final result = await magnetPortalRepositoryInstance.fetchStudentProfile();
+    return await result.fold(
+      (error) async =>
+          left(NetworkFailure(message: error.message, error: error)),
+      (profile) async {
+        final cacheRes = await magnetStudentProfileLocalDatasource
+            .createOrUpdateMagnetStudentProfile(
+              profile.toData(userID: userID, institutionID: institutionID),
+            );
+        return cacheRes.fold(
+          (error) => left(error),
+          (profile) => right(profile.toEntity()),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, MagnetStudentProfile>> getCachedMagnetStudentProfile({
+    required int institutionID,
+    required String userID,
+  }) async {
+    final cacheRes = await magnetStudentProfileLocalDatasource
+        .getCachedMagnetStudentProfileByInstitutionID(institutionID);
+    return cacheRes.fold(
+      (error) => left(error),
+      (profile) => right(profile.toEntity()),
+    );
   }
 
   @override

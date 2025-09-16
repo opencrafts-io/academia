@@ -8,8 +8,12 @@ abstract class MagnetRepository {
     required int institutionID,
     required String userID,
   });
-  Future<Either<MagnetFailure, StudentProfile>> fetchStudentProfile(
+  Future<Either<Failure, MagnetStudentProfile>> fetchStudentProfile(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
+    required int institutionID,
+    required String userID,
+  });
+  Future<Either<Failure, MagnetStudentProfile>> getCachedMagnetStudentProfile({
     required int institutionID,
     required String userID,
   });
