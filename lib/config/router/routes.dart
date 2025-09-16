@@ -316,12 +316,10 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final users = state.extra as List<Map<String, String>>;
     return CommunityUserListScreen(
       communityId: communityId,
       userId: userId,
       title: title,
-      users: users,
       isTargetModerator: isTargetModerator,
       isTargetBannedUsers: isTargetBannedUsers,
       isTargetMembers: isTargetMember,

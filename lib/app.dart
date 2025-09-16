@@ -147,6 +147,9 @@ class _AcademiaState extends State<Academia> {
           ),
         ),
         BlocProvider(
+          create: (context) => sl<CommunityUsersBloc>(),
+        ),
+        BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
         ),

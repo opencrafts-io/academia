@@ -2,6 +2,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/communities/data/models/paginated_user_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -276,6 +277,49 @@ class CommunityRemoteDatasource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred while deleting community",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedUserResponse>> getCommunityMembers({
+    required String communityId,
+    required int page,
+    required String userType
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "$baseUrl/groups/$communityId/$userType",
+        queryParameters: {"page": page},
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        final paginatedResponse = PaginatedUserResponse.fromJson(json);
+        return right(paginatedResponse);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while fetching users.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching users.",
           error: e,
         ),
       );

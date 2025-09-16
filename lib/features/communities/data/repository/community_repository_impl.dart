@@ -1,7 +1,9 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/features/communities/data/datasources/community_remote_datasource.dart';
 import 'package:academia/features/communities/data/models/community_model_helper.dart';
+import 'package:academia/features/communities/data/models/paginated_users_model_helper.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
+import 'package:academia/features/communities/domain/entities/paginated_response.dart';
 import 'package:academia/features/communities/domain/repository/community_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -119,6 +121,25 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
     return result.fold((failure) => left(failure), (message) {
       return right(message);
+    });
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResponse>> getCommunityMembers(
+    {
+    required String communityId,
+    required int page,
+    required String userType
+  }
+  ) async {
+    final result = await remoteDatasource.getCommunityMembers(
+      communityId: communityId,
+      page: page,
+      userType: userType
+    );
+
+    return result.fold((failure) => left(failure), (paginatedUserResponse) {
+      return right(paginatedUserResponse.toEntity());
     });
   }
 }
