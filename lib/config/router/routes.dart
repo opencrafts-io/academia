@@ -321,6 +321,70 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
   }
 }
 
+@TypedGoRoute<CommunitiesRoute>(
+  path: "/communities/:communityId",
+  routes: [
+    TypedGoRoute<CommunityUserListRoute>(path: "users"),
+    TypedGoRoute<AddMembersRoute>(path: "add-members"),
+  ],
+)
+class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
+  final String communityId;
+
+  CommunitiesRoute({required this.communityId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityHome(communityId: communityId);
+  }
+}
+
+class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
+  final String communityId;
+  final String userId;
+  final String title;
+  final bool isTargetModerator;
+  final bool isTargetBannedUsers;
+  final bool isTargetMember;
+  final bool isCreator;
+  final bool isModerator;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
+
+  const CommunityUserListRoute({
+    required this.communityId,
+    required this.userId,
+    required this.title,
+    this.isTargetModerator = false,
+    this.isTargetBannedUsers = false,
+    this.isTargetMember = false,
+    this.isCreator = false,
+    this.isModerator = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final users = state.extra as List<Map<String, String>>;
+    return CommunityUserListScreen(
+      communityId: communityId,
+      userId: userId,
+      title: title,
+      users: users,
+      isTargetModerator: isTargetModerator,
+      isTargetBannedUsers: isTargetBannedUsers,
+      isTargetMembers: isTargetMember,
+      isCreator: isCreator,
+      isModerator: isModerator,
+      isMember: isMember,
+      isBanned: isBanned,
+      isPrivate: isPrivate,
+    );
+  }
+}
+
 class MagnetProfileRoute extends GoRouteData with _$MagnetProfileRoute {
   final int institutionID;
   MagnetProfileRoute({required this.institutionID});
@@ -367,5 +431,25 @@ class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
             return SlideTransition(position: offsetAnimation, child: child);
           },
     );
+  }
+}
+
+class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
+  final String communityId;
+  final String userId;
+
+  AddMembersRoute({required this.communityId, required this.userId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddMembersScreen(communityId: communityId, userId: userId);
+  }
+}
+
+@TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
+class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateCommunityScreen();
   }
 }

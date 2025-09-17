@@ -6,6 +6,7 @@ import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
 import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
 import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
 import 'package:academia/features/magnet/data/models/magnet_student_profile.dart';
+import 'package:academia/features/chirp/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
@@ -15,6 +16,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../features/chirp/data/data.dart';
+import '../features/communities/data/data.dart';
 
 part 'database.g.dart';
 
@@ -37,6 +39,7 @@ part 'database.g.dart';
     EventTable,
     AttendeeTable,
     TicketTable,
+    GroupTable,
 
     // Agenda
     AgendaEvent,
@@ -52,6 +55,8 @@ part 'database.g.dart';
     MagnetCredentials,
     MagnetCourseInfo,
     MagnetFinancialTransaction,
+    //Communities
+    CommunityTable
   ],
 )
 class AppDataBase extends _$AppDataBase {

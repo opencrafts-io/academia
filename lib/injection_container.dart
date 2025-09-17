@@ -119,6 +119,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -134,6 +140,8 @@ Future<void> init(FlavorConfig flavor) async {
       likePost: sl.get<LikePostUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
       addComment: sl.get<CommentUsecase>(),
+      cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+      getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -258,6 +266,71 @@ Future<void> init(FlavorConfig flavor) async {
       createAgendaEventUsecase: sl.get<CreateAgendaEventUsecase>(),
       updateAgendaEventUsecase: sl.get<UpdateAgendaEventUsecase>(),
       deleteAgendaEventUsecase: sl.get<DeleteAgendaEventUsecase>(),
+    ),
+  );
+
+  // Communities
+  sl.registerFactory<CommunityRemoteDatasource>(
+    () => CommunityRemoteDatasource(dioClient: sl.get<DioClient>()),
+  );
+
+  sl.registerFactory<CommunityRepositoryImpl>(
+    () => CommunityRepositoryImpl(
+      remoteDatasource: sl.get<CommunityRemoteDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityUseCase>(
+    () => CreateCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCommunityByIdUseCase>(
+    () =>
+        GetCommunityByIdUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<ModerateMembersUseCase>(
+    () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SearchVerisafeUsersUseCase>(
+    () => SearchVerisafeUsersUseCase(
+      chirpUserRepository: sl.get<ChirpUserRepository>(),
+    ),
+  );
+
+  sl.registerFactory<JoinCommunityUseCase>(
+    () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<LeaveCommunityUseCase>(
+    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<DeleteCommunityUseCase>(
+    () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<CommunityHomeBloc>(
+    () => CommunityHomeBloc(
+      getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
+      joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
+      leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
+      deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityBloc>(
+    () => CreateCommunityBloc(
+      createCommunityUseCase: sl.get<CreateCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<AddMembersBloc>(
+    () => AddMembersBloc(
+      searchUsers: sl.get<SearchVerisafeUsersUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
     ),
   );
 

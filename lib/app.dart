@@ -99,6 +99,8 @@ class _AcademiaState extends State<Academia> {
             likePost: sl.get<LikePostUsecase>(),
             createPost: sl.get<CreatePostUsecase>(),
             addComment: sl.get<CommentUsecase>(),
+            cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+            getPostReplies: sl.get<GetPostRepliesUsecase>(),
           )..add(CacheFeedEvent()),
         ),
         BlocProvider(
@@ -123,6 +125,26 @@ class _AcademiaState extends State<Academia> {
             completeTodoUsecase: sl.get<CompleteTodoUsecase>(),
             deleteTodoUsecase: sl<DeleteTodoUsecase>(),
           )..add(FetchCachedTodosEvent()),
+        ),
+        BlocProvider(
+          create: (context) => CreateCommunityBloc(
+            createCommunityUseCase: sl<CreateCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => CommunityHomeBloc(
+            getCommunityByIdUseCase: sl<GetCommunityByIdUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+            joinCommunityUseCase: sl<JoinCommunityUseCase>(),
+            leaveCommunityUseCase: sl<LeaveCommunityUseCase>(),
+            deleteCommunityUseCase: sl<DeleteCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AddMembersBloc(
+            searchUsers: sl<SearchVerisafeUsersUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+          ),
         ),
         BlocProvider(
           create: (context) =>
