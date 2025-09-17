@@ -7,8 +7,7 @@ class MagnetCourseLocalDataSource {
   final AppDataBase localDB;
   MagnetCourseLocalDataSource({required this.localDB});
 
-  Future<Either<Failure, MagnetCourseInfoData>>
-  createOrUpdateMagnetCourseInfo(
+  Future<Either<Failure, MagnetCourseInfoData>> createOrUpdateMagnetCourseInfo(
     MagnetCourseInfoData magnetCourseInfoData,
   ) async {
     try {

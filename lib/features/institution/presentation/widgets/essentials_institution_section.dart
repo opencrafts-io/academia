@@ -67,7 +67,9 @@ class EssentialsInstitutionSection extends StatelessWidget {
                           onTap: isSupported
                               ? () async {
                                   if (await Vibration.hasVibrator()) {
-                                    Vibration.vibrate(duration: 500);
+                                    Vibration.vibrate(
+                                      pattern: [64, 32, 64, 32],
+                                    );
                                   }
                                   if (!context.mounted) return;
                                   MagnetHomeRoute(
@@ -99,4 +101,3 @@ class EssentialsInstitutionSection extends StatelessWidget {
     );
   }
 }
-

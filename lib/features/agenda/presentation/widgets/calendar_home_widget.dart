@@ -333,9 +333,6 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                                       onPressed: () {
                                         Navigator.of(
                                           context,
-                                        ).pop(); // Close dialog
-                                        Navigator.of(
-                                          context,
                                         ).pop(); // Close bottom sheet
                                         context.read<AgendaEventBloc>().add(
                                           DeleteAgendaEventEvent(

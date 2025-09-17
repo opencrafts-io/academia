@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 class MagnetHomeScreenAction {
   final String title;
@@ -176,9 +175,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                           child: InkWell(
                             onTap: () async {
                               if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  preset: VibrationPreset.softPulse,
-                                );
+                                Vibration.vibrate(pattern: [128, 32, 128, 32]);
                               }
                               if (!context.mounted) return;
                               item.ontap(context, widget.institutionID);

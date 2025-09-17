@@ -93,6 +93,8 @@ dependencies:
     git:
       url: https://github.com/IamMuuo/magnet-daystar-university.git
       ref: HEAD
+  google_fonts: ^6.3.1
+  rrule: ^0.2.17
 
 
 dev_dependencies:

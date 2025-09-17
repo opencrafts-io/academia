@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:magnet/magnet.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vibration/vibration.dart';
 
 class MagnetAuthScreen extends StatefulWidget {
   final int institutionID;
@@ -69,7 +70,7 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
             ),
 
             BlocListener<MagnetBloc, MagnetState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if (state is MagnetNotSupportedState) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -90,6 +91,24 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                       duration: Duration(seconds: 10),
                       showCloseIcon: true,
                       content: Text(state.error),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
+                }
+                if (state is MagnetAuthenticatedState) {
+                  if (await Vibration.hasVibrator()) {
+                    Vibration.vibrate(pattern: [128, 64, 128, 64]);
+                  }
+                  if (!context.mounted) return;
+                  context.pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: Duration(seconds: 10),
+                      showCloseIcon: true,
+                      content: Text(
+                        "You've been successfully linked to your school",
+                      ),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
