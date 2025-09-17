@@ -1,3 +1,4 @@
+import 'package:academia/features/agenda/presentation/bloc/agenda_event_bloc.dart';
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import './add_course_to_agenda_widget.dart';
 
 class MagnetCourseCard extends StatelessWidget {
   final MagnetCourseInfo course;
@@ -211,7 +213,29 @@ class MagnetCourseCard extends StatelessWidget {
                     icon: Icon(Icons.delete),
                   ),
                   FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final agenda = await showModalBottomSheet(
+                        showDragHandle: true,
+                        clipBehavior: Clip.hardEdge,
+                        context: context,
+                        builder: (context) =>
+                            AddCourseToAgendaWidget(magnetCourseInfo: course),
+                      );
+
+                      if (agenda != null && context.mounted) {
+                        context.read<AgendaEventBloc>().add(
+                          CreateAgendaEventEvent(agendaEvent: agenda),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Your course has been added to agenda events',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
                     label: Text('Add to Agenda'),
                     icon: Icon(Icons.add_link),
                   ),
