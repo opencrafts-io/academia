@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -71,11 +72,7 @@ class _ImageWidget extends StatelessWidget {
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
+                child: Center(child: SpinningScallopIndicator()),
               ),
               errorWidget: (context, url, error) => Container(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
