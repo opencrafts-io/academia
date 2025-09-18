@@ -165,6 +165,10 @@ class _AcademiaState extends State<Academia> {
         ),
 
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -193,6 +197,10 @@ class _AcademiaState extends State<Academia> {
                       name: state.profile.name,
                       email: state.profile.email,
                     ),
+                  );
+
+                  context.read<InstitutionBloc>().add(
+                    GetCachedUserInstitutionsEvent(state.profile.id),
                   );
                 }
               },

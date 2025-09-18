@@ -4,7 +4,6 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/institution/presentation/bloc/institution_bloc.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -592,6 +591,80 @@ Future<void> init(FlavorConfig flavor) async {
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
+    ),
+  );
+
+  // Magnet
+  sl.registerFactory<MagnetCredentialsLocalDatasource>(
+    () => MagnetCredentialsLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<MagnetStudentProfileLocalDatasource>(
+    () => MagnetStudentProfileLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<MagnetCourseLocalDataSource>(
+    () => MagnetCourseLocalDataSource(localDB: sl()),
+  );
+
+  sl.registerFactory<MagnetRepositoryImpl>(
+    () => MagnetRepositoryImpl(
+      magnetCredentialsLocalDatasource: sl(),
+      magnetStudentProfileLocalDatasource: sl(),
+      magnetCourseLocalDataSource: sl(),
+    ),
+  );
+
+  // -- Usecases
+  sl.registerFactory<MagnetLoginUsecase>(
+    () => MagnetLoginUsecase(magnetRepository: sl<MagnetRepositoryImpl>()),
+  );
+  sl.registerFactory<GetCachedMagnetCredentialUsecase>(
+    () => GetCachedMagnetCredentialUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetMagnetAuthenticationStatusUsecase>(
+    () => GetMagnetAuthenticationStatusUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetCachedMagnetStudentProfileUsecase>(
+    () => GetCachedMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetStudentProfileUsecase>(
+    () => FetchMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetStudentTimetableUsecase>(
+    () => FetchMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetCachedMagnetStudentTimetableUsecase>(
+    () => GetCachedMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<DeleteMagentCourseByCourseCodeUsecase>(
+    () => DeleteMagentCourseByCourseCodeUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+
+  // -- Bloc
+  sl.registerFactory<MagnetBloc>(
+    () => MagnetBloc(
+      magnetLoginUsecase: sl(),
+      getCachedMagnetCredentialUsecase: sl(),
+      getMagnetAuthenticationStatusUsecase: sl(),
+      fetchMagnetStudentProfileUsecase: sl(),
+      getCachedMagnetStudentProfileUsecase: sl(),
+      fetchMagnetStudentTimetableUsecase: sl(),
+      deleteMagentCourseByCourseCodeUsecase: sl(),
+      getCachedMagnetStudentTimetableUsecase: sl(),
     ),
   );
 }

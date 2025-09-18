@@ -19,14 +19,13 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    // final InstitutionCubit institutionCubit = BlocProvider.of<InstitutionCubit>(
-    //   context,
-    // );
-    // final profileState = BlocProvider.of<ProfileBloc>(context).state;
-    //
-    // if (profileState is ProfileLoadedState) {
-    //   institutionCubit.getCachedUserIntitutions(profileState.profile.id);
-    // }
+    final profileState = BlocProvider.of<ProfileBloc>(context).state;
+
+    if (profileState is ProfileLoadedState) {
+      context.read<InstitutionBloc>().add(
+        GetCachedUserInstitutionsEvent(profileState.profile.id),
+      );
+    }
   }
 
   @override
@@ -34,16 +33,13 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          // final InstitutionCubit institutionCubit =
-          //     BlocProvider.of<InstitutionCubit>(context);
-          //
-          // final profileState = BlocProvider.of<ProfileBloc>(context).state;
-          //
-          // if (profileState is ProfileLoadedState) {
-          //   institutionCubit.getAllUserAccountInstitutionsUsecase(
-          //     profileState.profile.id,
-          //   );
-          // }
+          final profileState = context.read<ProfileBloc>().state;
+
+          if (profileState is ProfileLoadedState) {
+            context.read<InstitutionBloc>().add(
+              RefreshUserInstitutionsEvent(profileState.profile.id),
+            );
+          }
 
           BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
           return Future.delayed(Duration(seconds: 2));
@@ -53,6 +49,9 @@ class _ProfileViewState extends State<ProfileView> {
           builder: (context, state) => CustomScrollView(
             slivers: [
               SliverAppBar(
+                snap: true,
+                pinned: true,
+                floating: true,
                 title: Text("Profile"),
                 actions: [
                   Visibility(
@@ -206,12 +205,21 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Your Institutional Profiles",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+
+                        ProfileInstitutionSection(),
                       ],
                     ),
                   ),
                 ),
               ),
-              ProfileInstitutionSection(),
             ],
           ),
         ),

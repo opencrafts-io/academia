@@ -2,6 +2,10 @@ import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
+import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
+import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
+import 'package:academia/features/magnet/data/models/magnet_student_profile.dart';
 import 'package:academia/features/chirp/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
@@ -18,8 +22,13 @@ part 'database.g.dart';
 
 @DriftDatabase(
   tables: [
+    // Profile
     UserProfile,
+
+    // Auth
     Token,
+
+    // Chirp
     ConversationTable,
     MessageTable,
     AttachmentTable,
@@ -34,13 +43,18 @@ part 'database.g.dart';
 
     // Agenda
     AgendaEvent,
-    
+
     // Notifications
     NotificationTable,
 
     // Institution
     Institution,
 
+    // Magnet
+    MagnetStudentProfile,
+    MagnetCredentials,
+    MagnetCourseInfo,
+    MagnetFinancialTransaction,
     //Communities
     CommunityTable
   ],

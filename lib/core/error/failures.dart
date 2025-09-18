@@ -65,3 +65,7 @@ class AuthenticationFailure extends Failure {
   /// Constructs a [AuthenticationFailure] with required [message] and [error] details.
   const AuthenticationFailure({required super.message, required super.error});
 }
+
+class MagnetInstanceFailure extends Failure {
+  const MagnetInstanceFailure({required super.message, required super.error});
+}
