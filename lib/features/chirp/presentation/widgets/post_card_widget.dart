@@ -27,17 +27,19 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: 1,
-            color: Theme.of(context).colorScheme.outline,
+    return InkWell(
+      onTap: widget.onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: 1,
+              color: Theme.of(context).colorScheme.outline,
+            ),
           ),
         ),
-      ),
-      child: Padding(
         padding: EdgeInsets.all(12),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,7 +56,7 @@ class _PostCardState extends State<PostCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 3,),
+                    SizedBox(height: 3),
                     Text(
                       'u/${widget.post.userName}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -66,19 +68,16 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
 
-    
             SizedBox(height: 8),
-    
+
             Text(widget.post.content),
             if (widget.post.attachments.isNotEmpty) ...[
               const SizedBox(height: 8),
-               LayoutBuilder(
+              LayoutBuilder(
                 builder: (context, constraints) {
                   final double attachmentWidth = constraints.maxWidth;
-                  final double attachmentHeight =
-                      attachmentWidth /
-                      (16 / 9);
-    
+                  final double attachmentHeight = attachmentWidth / (16 / 9);
+
                   return SizedBox(
                     height: attachmentHeight,
                     child: PageView.builder(
@@ -95,7 +94,7 @@ class _PostCardState extends State<PostCard> {
                   );
                 },
               ),
-    
+
               if (widget.post.attachments.length > 1)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -120,7 +119,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
             ],
-    
+
             SizedBox(height: 8),
             Row(
               children: [
@@ -148,10 +147,10 @@ class _PostCardState extends State<PostCard> {
                   },
                 ),
                 SizedBox(width: 16),
-    
+
                 OutlinedButton.icon(
                   icon: Icon(Symbols.chat),
-                  onPressed:  widget.onTap,
+                  onPressed: widget.onTap,
                   label: Text('${widget.post.commentCount} comments'),
                 ),
               ],
