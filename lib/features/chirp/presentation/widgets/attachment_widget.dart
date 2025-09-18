@@ -16,12 +16,11 @@ class AttachmentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (attachment.attachmentType) {
       case 'image':
-        return _ImageWidget(url: "https://qachirp.opencrafts.io${attachment.file}");
+        return _ImageWidget(url: attachment.file);
       case 'video':
-        return _MediaKitVideoWidget(url: "https://qachirp.opencrafts.io${attachment.file}",
-        );
+        return _MediaKitVideoWidget(url: attachment.file);
       case 'file':
-        return _FileWidget(url: "https://qachirp.opencrafts.io${attachment.file}", fileName: attachment.name);
+        return _FileWidget(url: attachment.file, fileName: attachment.name);
       default:
         return const SizedBox.shrink();
     }
@@ -173,7 +172,7 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     Future.microtask(() async {
       if (player.platform is NativePlayer) {
         await (player.platform as dynamic).setProperty('force-seekable', 'yes');
