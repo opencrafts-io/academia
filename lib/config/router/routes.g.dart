@@ -8,15 +8,18 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
   $mainLayoutShellRoute,
-  $calendarRoute,
   $feedRoute,
   $chatRoute,
   $postDetailRoute,
+  $addPostRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
   $shereheRoute,
   $todosRoute,
+  $magnetRoute,
+  $communitiesRoute,
+  $createCommunitiesRoute,
 ];
 
 RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
@@ -24,7 +27,23 @@ RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
   factory: $MainLayoutShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState),
-    GoRouteData.$route(path: '/calendar', factory: _$CalendarRoute._fromState),
+    GoRouteData.$route(
+      path: '/calendar',
+
+      factory: _$CalendarRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'create',
+
+          factory: _$CreateAgendaEventRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'item/:id',
+
+          factory: _$AgendaItemViewRoute._fromState,
+        ),
+      ],
+    ),
     GoRouteData.$route(
       path: '/essentials',
 
@@ -79,6 +98,52 @@ mixin _$CalendarRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin _$CreateAgendaEventRoute on GoRouteData {
+  static CreateAgendaEventRoute _fromState(GoRouterState state) =>
+      CreateAgendaEventRoute();
+
+  @override
+  String get location => GoRouteData.$location('/calendar/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AgendaItemViewRoute on GoRouteData {
+  static AgendaItemViewRoute _fromState(GoRouterState state) =>
+      AgendaItemViewRoute(id: state.pathParameters['id']);
+
+  AgendaItemViewRoute get _self => this as AgendaItemViewRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/calendar/item/${Uri.encodeComponent(_self.id ?? '')}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin _$EssentialsRoute on GoRouteData {
   static EssentialsRoute _fromState(GoRouterState state) => EssentialsRoute();
 
@@ -104,40 +169,6 @@ mixin _$MeteorRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/meteor');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $calendarRoute => GoRouteData.$route(
-  path: '/calendar',
-
-  factory: _$CalendarRoute._fromState,
-  routes: [
-    GoRouteData.$route(
-      path: 'create',
-
-      factory: _$CreateAgendaEventRoute._fromState,
-    ),
-  ],
-);
-
-mixin _$CreateAgendaEventRoute on GoRouteData {
-  static CreateAgendaEventRoute _fromState(GoRouterState state) =>
-      CreateAgendaEventRoute();
-
-  @override
-  String get location => GoRouteData.$location('/calendar/create');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -222,6 +253,29 @@ mixin _$PostDetailRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $addPostRoute =>
+    GoRouteData.$route(path: '/add-post', factory: _$AddPostRoute._fromState);
+
+mixin _$AddPostRoute on GoRouteData {
+  static AddPostRoute _fromState(GoRouterState state) => AddPostRoute();
+
+  @override
+  String get location => GoRouteData.$location('/add-post');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -398,6 +452,381 @@ mixin _$TodosRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/todos');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $magnetRoute => GoRouteData.$route(
+  path: '/magnet',
+
+  factory: _$MagnetRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'auth/:institutionID',
+
+      factory: _$MagnetAuthRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: ':institutionID',
+
+      factory: _$MagnetHomeRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'profile',
+
+          factory: _$MagnetProfileRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'courses',
+
+          factory: _$MagnetCoursesRoute._fromState,
+        ),
+      ],
+    ),
+  ],
+);
+
+mixin _$MagnetRoute on GoRouteData {
+  static MagnetRoute _fromState(GoRouterState state) => MagnetRoute();
+
+  @override
+  String get location => GoRouteData.$location('/magnet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetAuthRoute on GoRouteData {
+  static MagnetAuthRoute _fromState(GoRouterState state) => MagnetAuthRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetAuthRoute get _self => this as MagnetAuthRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/auth/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetHomeRoute on GoRouteData {
+  static MagnetHomeRoute _fromState(GoRouterState state) => MagnetHomeRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetHomeRoute get _self => this as MagnetHomeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetProfileRoute on GoRouteData {
+  static MagnetProfileRoute _fromState(GoRouterState state) =>
+      MagnetProfileRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+      );
+
+  MagnetProfileRoute get _self => this as MagnetProfileRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/profile',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetCoursesRoute on GoRouteData {
+  static MagnetCoursesRoute _fromState(GoRouterState state) =>
+      MagnetCoursesRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+      );
+
+  MagnetCoursesRoute get _self => this as MagnetCoursesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/courses',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $communitiesRoute => GoRouteData.$route(
+  path: '/communities/:communityId',
+
+  factory: _$CommunitiesRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'users',
+
+      factory: _$CommunityUserListRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'add-members',
+
+      factory: _$AddMembersRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$CommunitiesRoute on GoRouteData {
+  static CommunitiesRoute _fromState(GoRouterState state) =>
+      CommunitiesRoute(communityId: state.pathParameters['communityId']!);
+
+  CommunitiesRoute get _self => this as CommunitiesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$CommunityUserListRoute on GoRouteData {
+  static CommunityUserListRoute _fromState(GoRouterState state) =>
+      CommunityUserListRoute(
+        communityId: state.pathParameters['communityId']!,
+        userId: state.uri.queryParameters['user-id']!,
+        title: state.uri.queryParameters['title']!,
+        isTargetModerator:
+            _$convertMapValue(
+              'is-target-moderator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isTargetBannedUsers:
+            _$convertMapValue(
+              'is-target-banned-users',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isTargetMember:
+            _$convertMapValue(
+              'is-target-member',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isCreator:
+            _$convertMapValue(
+              'is-creator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isModerator:
+            _$convertMapValue(
+              'is-moderator',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isMember:
+            _$convertMapValue(
+              'is-member',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isBanned:
+            _$convertMapValue(
+              'is-banned',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        isPrivate:
+            _$convertMapValue(
+              'is-private',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+      );
+
+  CommunityUserListRoute get _self => this as CommunityUserListRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}/users',
+    queryParams: {
+      'user-id': _self.userId,
+      'title': _self.title,
+      if (_self.isTargetModerator != false)
+        'is-target-moderator': _self.isTargetModerator.toString(),
+      if (_self.isTargetBannedUsers != false)
+        'is-target-banned-users': _self.isTargetBannedUsers.toString(),
+      if (_self.isTargetMember != false)
+        'is-target-member': _self.isTargetMember.toString(),
+      if (_self.isCreator != false) 'is-creator': _self.isCreator.toString(),
+      if (_self.isModerator != false)
+        'is-moderator': _self.isModerator.toString(),
+      if (_self.isMember != false) 'is-member': _self.isMember.toString(),
+      if (_self.isBanned != false) 'is-banned': _self.isBanned.toString(),
+      if (_self.isPrivate != false) 'is-private': _self.isPrivate.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddMembersRoute on GoRouteData {
+  static AddMembersRoute _fromState(GoRouterState state) => AddMembersRoute(
+    communityId: state.pathParameters['communityId']!,
+    userId: state.uri.queryParameters['user-id']!,
+  );
+
+  AddMembersRoute get _self => this as AddMembersRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
+    queryParams: {'user-id': _self.userId},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
+}
+
+RouteBase get $createCommunitiesRoute => GoRouteData.$route(
+  path: '/create-community',
+
+  factory: _$CreateCommunitiesRoute._fromState,
+);
+
+mixin _$CreateCommunitiesRoute on GoRouteData {
+  static CreateCommunitiesRoute _fromState(GoRouterState state) =>
+      CreateCommunitiesRoute();
+
+  @override
+  String get location => GoRouteData.$location('/create-community');
 
   @override
   void go(BuildContext context) => context.go(location);

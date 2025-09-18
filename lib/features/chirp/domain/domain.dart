@@ -5,13 +5,22 @@ export 'repositories/conversations/message_repository.dart';
 export 'usecases/conversations/get_conversations.dart';
 export 'usecases/conversations/get_messages.dart';
 export 'usecases/conversations/send_message.dart';
+export 'usecases/conversations/get_cached_conversations.dart';
+export 'usecases/conversations/get_cached_messages.dart';
+export 'usecases/conversations/refresh_conversations.dart';
+export 'usecases/conversations/refresh_messages.dart';
+export 'usecases/conversations/create_conversation.dart';
 export 'entities/post.dart';
 export 'repositories/chirp_repository.dart';
 export 'usecases/get_feed_posts.dart';
 export 'usecases/cache_posts.dart';
 export 'entities/attachments.dart';
 export 'entities/post_replies.dart';
-
+export 'usecases/comment_usecase.dart';
+export 'usecases/create_post_usecase.dart';
+export 'usecases/like_post_usecase.dart';
+export 'usecases/cache_post_replies.dart';
+export 'usecases/get_post_replies.dart';
 
 // Chirp User domain exports
 export 'entities/chirp_user.dart';

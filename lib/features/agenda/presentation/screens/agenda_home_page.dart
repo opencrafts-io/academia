@@ -4,7 +4,12 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class AgendaHomePage extends StatefulWidget {
   const AgendaHomePage({super.key});
@@ -28,7 +33,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar.large(
-              title: Text("Your Calendar"),
+              title: Text("Today's Events"),
               pinned: true,
               snap: true,
               floating: true,
@@ -57,17 +62,177 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 ),
               ],
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  DateFormat.yMMMMEEEEd().format(DateTime.now()),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
             SliverPadding(
               padding: EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
                 child: Wrap(children: [CalendarHomeWidget()]),
               ),
             ),
+
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              sliver: BlocBuilder<AgendaEventBloc, AgendaEventState>(
+                builder: (context, state) {
+                  if (state is AgendaEventLoadedState) {
+                    return SliverToBoxAdapter(
+                      child: StreamBuilder(
+                        stream: state.agendaEventsStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator.adaptive();
+                          }
+                          if (snapshot.hasError) {
+                            return Text("OOps! ${snapshot.error}");
+                          }
+                          if (snapshot.hasData) {
+                            // Filter events for today only
+                            final today = DateTime.now();
+                            final todayEvents = snapshot.data!.where((event) {
+                              if (event.startTime == null) return false;
+
+                              final eventDate = DateTime(
+                                event.startTime!.year,
+                                event.startTime!.month,
+                                event.startTime!.day,
+                              );
+                              final todayDate = DateTime(
+                                today.year,
+                                today.month,
+                                today.day,
+                              );
+
+                              return eventDate.isAtSameMomentAs(todayDate);
+                            }).toList();
+
+                            if (todayEvents.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                      "assets/lotties/organize.json",
+                                      width: 300,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Get your school life organized with calendar',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Tap the + button to create an event',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            return ListView.separated(
+                              physics: NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 8),
+                              shrinkWrap: true,
+                              itemCount: todayEvents.length,
+                              itemBuilder: (context, index) {
+                                final event = todayEvents[index];
+                                return AgendaEventCard(
+                                  event: event,
+                                  onEdit: () {
+                                    // Navigate to edit mode
+                                    AgendaItemViewRoute(
+                                      id: event.id,
+                                    ).push(context);
+                                  },
+                                  onDelete: () async {
+                                    if (await Vibration.hasVibrator()) {
+                                      Vibration.vibrate(
+                                        preset: VibrationPreset.emergencyAlert,
+                                      );
+                                    }
+                                    if (!context.mounted) return;
+
+                                    // Show delete confirmation
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Delete Event'),
+                                        content: const Text(
+                                          'Are you sure you want to delete this event? This action cannot be undone.',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: const Text('Cancel'),
+                                          ),
+                                          FilledButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              context
+                                                  .read<AgendaEventBloc>()
+                                                  .add(
+                                                    DeleteAgendaEventEvent(
+                                                      agendaEvent: event,
+                                                    ),
+                                                  );
+                                            },
+                                            style: FilledButton.styleFrom(
+                                              backgroundColor: Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                            ),
+                                            child: const Text('Delete'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+                          return Text("Agendas loaded");
+                        },
+                      ),
+                    );
+                  }
+                  return SliverToBoxAdapter(child: Text("Bad state"));
+                },
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Get organized"),
+        icon: Icon(Icons.add),
+        onPressed: () async {
+          // Provide haptic feedback for FAB press
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(preset: VibrationPreset.gentleReminder);
+          }
+          
+          if (!context.mounted) return;
           showModalBottomSheet(
             context: context,
             constraints: BoxConstraints(
@@ -120,9 +285,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                           TodosRoute().push(context);
                         },
                         leading: CircleAvatar(child: Icon(Symbols.list)),
-                        title: Text("Create a general todo"),
+                        title: Text("Manage your tasks"),
                         subtitle: Text(
-                          "Keep track of your tasks",
+                          "Keep track of your tasks and assignments",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -154,7 +319,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             ),
           );
         },
-        child: Icon(Icons.menu),
+        // child: Icon(Icons.menu),
       ),
     );
   }

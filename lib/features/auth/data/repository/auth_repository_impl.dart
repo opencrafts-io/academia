@@ -44,4 +44,19 @@ class AuthRepositoryImpl implements AuthRepository {
       (tokens) => right(tokens.map((token) => token.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, Token>> refreshVerisafeToken(Token token) async {
+    final result = await authRemoteDatasource.refreshVerisafeToken(
+      token.toData(),
+    );
+
+    return result.fold((error) => left(error), (token) async {
+      final cacheRes = await authLocalDatasource.cacheOrUpdateToken(token);
+      return cacheRes.fold(
+        (error) => left(error),
+        (token) => right(token.toEntity()),
+      );
+    });
+  }
 }

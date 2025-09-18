@@ -1,6 +1,7 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
@@ -83,6 +84,7 @@ class _AcademiaState extends State<Academia> {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(
+            refreshVerisafeTokenUsecase: sl(),
             signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
             getPreviousAuthState: sl.get<GetPreviousAuthState>(),
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
@@ -94,7 +96,12 @@ class _AcademiaState extends State<Academia> {
           create: (context) => FeedBloc(
             getFeedPosts: sl.get<GetFeedPosts>(),
             cachePosts: sl.get<CachePostsUsecase>(),
-          )..add(LoadFeedEvent()),
+            likePost: sl.get<LikePostUsecase>(),
+            createPost: sl.get<CreatePostUsecase>(),
+            addComment: sl.get<CommentUsecase>(),
+            cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+            getPostReplies: sl.get<GetPostRepliesUsecase>(),
+          )..add(CacheFeedEvent()),
         ),
         BlocProvider(
           create: (context) =>
@@ -120,6 +127,26 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
         BlocProvider(
+          create: (context) => CreateCommunityBloc(
+            createCommunityUseCase: sl<CreateCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => CommunityHomeBloc(
+            getCommunityByIdUseCase: sl<GetCommunityByIdUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+            joinCommunityUseCase: sl<JoinCommunityUseCase>(),
+            leaveCommunityUseCase: sl<LeaveCommunityUseCase>(),
+            deleteCommunityUseCase: sl<DeleteCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AddMembersBloc(
+            searchUsers: sl<SearchVerisafeUsersUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+          ),
+        ),
+        BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
         ),
@@ -135,6 +162,16 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
         ),
+        BlocProvider(
+          create: (context) =>
+              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
+        ),
+
+        BlocProvider(create: (context) => sl<InstitutionBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -146,14 +183,37 @@ class _AcademiaState extends State<Academia> {
             ),
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
-                if (state is NotificationInitializedState) {
-                  debugPrint('✅ OneSignal initialized successfully!');
-                } else if (state is NotificationErrorState) {
+                if (state is NotificationErrorState) {
                   debugPrint(
                     '❌ OneSignal initialization failed: ${state.message}',
                   );
-                } else if (state is NotificationLoadingState) {
-                  debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+            BlocListener<ProfileBloc, ProfileState>(
+              listener: (context, state) {
+                if (state is ProfileLoadedState) {
+                  // Set user data in OneSignal when profile is loaded
+                  context.read<NotificationBloc>().add(
+                    SetUserDataEvent(
+                      userId: state.profile.id,
+                      name: state.profile.name,
+                      email: state.profile.email,
+                    ),
+                  );
+
+                  context.read<InstitutionBloc>().add(
+                    GetCachedUserInstitutionsEvent(state.profile.id),
+                  );
+                }
+              },
+            ),
+            BlocListener<RemoteConfigBloc, RemoteConfigState>(
+              listener: (context, state) {
+                if (state is RemoteConfigErrorState) {
+                  debugPrint(
+                    '❌ Firebase Remote Config failed: ${state.message}',
+                  );
                 }
               },
             ),

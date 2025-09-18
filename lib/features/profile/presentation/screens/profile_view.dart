@@ -1,5 +1,6 @@
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,13 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    // The BannerAdWidget will automatically load the ad when it's displayed
+    final profileState = BlocProvider.of<ProfileBloc>(context).state;
+
+    if (profileState is ProfileLoadedState) {
+      context.read<InstitutionBloc>().add(
+        GetCachedUserInstitutionsEvent(profileState.profile.id),
+      );
+    }
   }
 
   @override
@@ -28,6 +35,14 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          final profileState = context.read<ProfileBloc>().state;
+
+          if (profileState is ProfileLoadedState) {
+            context.read<InstitutionBloc>().add(
+              RefreshUserInstitutionsEvent(profileState.profile.id),
+            );
+          }
+
           BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
           return Future.delayed(Duration(seconds: 2));
         },
@@ -36,6 +51,9 @@ class _ProfileViewState extends State<ProfileView> {
           builder: (context, state) => CustomScrollView(
             slivers: [
               SliverAppBar(
+                snap: true,
+                pinned: true,
+                floating: true,
                 title: Text("Profile"),
                 actions: [
                   Visibility(
@@ -89,13 +107,6 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
 
                         SizedBox(height: 12),
-
-                        BannerAdWidget(
-                          adUnitId: "ca-app-pub-3940256099942544/6300978111",
-                          adSize: AdSize(width: 400, height: 60),
-                          height: 60,
-                        ),
-
                         SizedBox(height: 12),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -197,6 +208,26 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
+
+                        Padding(
+                          padding: EdgeInsets.all(12),
+                          child: BannerAdWidget(
+                            adUnitId: "ca-app-pub-3940256099942544/6300978111",
+                            adSize: AdSize(width: 320, height: 50),
+                            height: 50,
+                          ),
+                        ),
+
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Your Institutional Profiles",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+
+                        ProfileInstitutionSection(),
                       ],
                     ),
                   ),

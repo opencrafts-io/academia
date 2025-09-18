@@ -96,11 +96,11 @@ class ProfilePreviewModal extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   // Email
-                  if (user.email != null && user.email!.isNotEmpty)
+                  if (user.email.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
-                        user.email!,
+                        user.email,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),

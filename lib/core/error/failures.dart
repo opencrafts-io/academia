@@ -73,3 +73,7 @@ class AdMobFailure extends Failure {
   /// Constructs a [AdMobFailure] with required [message] and [error] details.
   const AdMobFailure({required super.message, required super.error});
 }
+
+class MagnetInstanceFailure extends Failure {
+  const MagnetInstanceFailure({required super.message, required super.error});
+}

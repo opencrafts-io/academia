@@ -4,9 +4,14 @@ import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import '../models/chirp_user_model.dart';
 
 abstract class UserSearchRemoteDatasource {
-  Future<Either<Failure, List<ChirpUserData>>> searchUsers(String query);
+  Future<Either<Failure, List<ChirpUserData>>> searchUsers(
+    String query, {
+    String type = 'combined',
+    int limit = 10,
+  });
 }
 
 class UserSearchRemoteDatasourceImpl
@@ -21,11 +26,15 @@ class UserSearchRemoteDatasourceImpl
   });
 
   @override
-  Future<Either<Failure, List<ChirpUserData>>> searchUsers(String query) async {
+  Future<Either<Failure, List<ChirpUserData>>> searchUsers(
+    String query, {
+    String type = 'combined',
+    int limit = 10,
+  }) async {
     try {
       final response = await dioClient.dio.get(
         '/$servicePath/users/search/',
-        queryParameters: {'q': query},
+        queryParameters: {'q': query, 'type': type, 'limit': limit},
       );
 
       if (response.statusCode != 200) {
@@ -37,8 +46,9 @@ class UserSearchRemoteDatasourceImpl
         );
       }
 
-      final users = (response.data as List)
-          .map((json) => ChirpUserData.fromJson(json))
+      final responseData = response.data;
+      final users = (responseData['users'] as List)
+          .map((json) => ChirpUserDataHelper.fromJson(json))
           .toList();
 
       return Right(users);

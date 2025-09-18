@@ -15,7 +15,13 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 @TypedShellRoute<MainLayoutShellRoute>(
   routes: <TypedRoute<RouteData>>[
     TypedGoRoute<HomeRoute>(path: '/'),
-    TypedGoRoute<CalendarRoute>(path: '/calendar'),
+    TypedGoRoute<CalendarRoute>(
+      path: '/calendar',
+      routes: [
+        TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
+        TypedGoRoute<AgendaItemViewRoute>(path: "item/:id"),
+      ],
+    ),
     TypedGoRoute<EssentialsRoute>(path: '/essentials'),
     TypedGoRoute<MeteorRoute>(path: '/meteor'),
   ],
@@ -42,20 +48,35 @@ class HomeRoute extends GoRouteData with _$HomeRoute {
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Essentials")));
+    return EssentialsPage();
   }
 }
 
-@TypedGoRoute<CalendarRoute>(
-  path: "/calendar",
-  routes: [
-    TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
-  ],
-)
 class CalendarRoute extends GoRouteData with _$CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AgendaHomePage();
+  }
+}
+
+class AgendaItemViewRoute extends GoRouteData with _$AgendaItemViewRoute {
+  AgendaItemViewRoute({this.id});
+  String? id;
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: AgendaItemViewPage(agendaEventID: id),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var tween = Tween(
+          begin: Offset(0.0, 1.0),
+          end: Offset.zero,
+        ).chain(CurveTween(curve: Curves.easeInOut));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 }
 
@@ -68,20 +89,21 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: const CreateAgendaEventPage(),
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) {
-        var tween = Tween(
-          begin: Offset(0.0, 1.0),
-          end: Offset.zero,
-        ).chain(CurveTween(curve: Curves.easeInOut));
-        var offsetAnimation = animation.drive(tween);
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
 
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
     );
   }
 }
@@ -126,6 +148,13 @@ class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
   }
 }
 
+@TypedGoRoute<AddPostRoute>(path: "/add-post")
+class AddPostRoute extends GoRouteData with _$AddPostRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AddPostPage();
+  }
+}
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
@@ -238,5 +267,189 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TodoHomeScreen();
+  }
+}
+
+@TypedGoRoute<MagnetRoute>(
+  path: "/magnet",
+  routes: [
+    TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID"),
+    TypedGoRoute<MagnetHomeRoute>(
+      path: ":institutionID",
+      routes: [
+        TypedGoRoute<MagnetProfileRoute>(path: "profile"),
+        TypedGoRoute<MagnetCoursesRoute>(path: "courses"),
+      ],
+    ),
+  ],
+)
+class MagnetRoute extends GoRouteData with _$MagnetRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return Scaffold(body: Center(child: Text("Magnet route")));
+  }
+}
+
+class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
+  final int institutionID;
+  MagnetAuthRoute({required this.institutionID});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: MagnetAuthScreen(institutionID: institutionID),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+@TypedGoRoute<CommunitiesRoute>(
+  path: "/communities/:communityId",
+  routes: [
+    TypedGoRoute<CommunityUserListRoute>(path: "users"),
+    TypedGoRoute<AddMembersRoute>(path: "add-members"),
+  ],
+)
+class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
+  final String communityId;
+
+  CommunitiesRoute({required this.communityId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityHome(communityId: communityId);
+  }
+}
+
+class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
+  final String communityId;
+  final String userId;
+  final String title;
+  final bool isTargetModerator;
+  final bool isTargetBannedUsers;
+  final bool isTargetMember;
+  final bool isCreator;
+  final bool isModerator;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
+
+  const CommunityUserListRoute({
+    required this.communityId,
+    required this.userId,
+    required this.title,
+    this.isTargetModerator = false,
+    this.isTargetBannedUsers = false,
+    this.isTargetMember = false,
+    this.isCreator = false,
+    this.isModerator = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final users = state.extra as List<Map<String, String>>;
+    return CommunityUserListScreen(
+      communityId: communityId,
+      userId: userId,
+      title: title,
+      users: users,
+      isTargetModerator: isTargetModerator,
+      isTargetBannedUsers: isTargetBannedUsers,
+      isTargetMembers: isTargetMember,
+      isCreator: isCreator,
+      isModerator: isModerator,
+      isMember: isMember,
+      isBanned: isBanned,
+      isPrivate: isPrivate,
+    );
+  }
+}
+
+class MagnetProfileRoute extends GoRouteData with _$MagnetProfileRoute {
+  final int institutionID;
+  MagnetProfileRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetProfilePage(institutionID: institutionID);
+  }
+}
+
+class MagnetCoursesRoute extends GoRouteData with _$MagnetCoursesRoute {
+  final int institutionID;
+  MagnetCoursesRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetCoursesScreen(institutionID: institutionID);
+  }
+}
+
+class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
+  final int institutionID;
+  MagnetHomeRoute({required this.institutionID});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: MagnetHomeScreen(institutionID: institutionID),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
+  final String communityId;
+  final String userId;
+
+  AddMembersRoute({required this.communityId, required this.userId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddMembersScreen(communityId: communityId, userId: userId);
+  }
+}
+
+@TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
+class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateCommunityScreen();
   }
 }

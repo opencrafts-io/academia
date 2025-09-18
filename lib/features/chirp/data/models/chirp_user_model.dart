@@ -26,6 +26,23 @@ extension ChirpUserDataHelper on ChirpUserData {
       avatarUrl: avatarUrl,
     );
   }
+
+  // Custom fromJson method that matches the API response structure
+  static ChirpUserData fromJson(Map<String, dynamic> json) {
+    return ChirpUserData(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      vibepoints: json['vibepoints'] ?? json['vibe_points'] ?? 0,
+      avatarUrl: json['avatar_url']?.toString(),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
+    );
+  }
 }
 
 extension ChirpUserEntityHelper on ChirpUser {

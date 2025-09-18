@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/admob/admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,9 +71,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     return SizedBox(
       height: widget.height ?? 50,
       width: double.infinity,
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: const Center(child: SpinningScallopIndicator()),
     );
   }
 }
@@ -144,10 +143,7 @@ class RewardedAdButton extends StatelessWidget {
 class AdStatusWidget extends StatelessWidget {
   final String adId;
 
-  const AdStatusWidget({
-    super.key,
-    required this.adId,
-  });
+  const AdStatusWidget({super.key, required this.adId});
 
   @override
   Widget build(BuildContext context) {
@@ -172,10 +168,7 @@ class AdStatusWidget extends StatelessWidget {
             ),
             child: Text(
               _getStatusText(ad.status),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 12),
             ),
           );
         }
