@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
 import './add_course_to_agenda_widget.dart';
 
 class MagnetCourseCard extends StatelessWidget {
@@ -214,6 +215,11 @@ class MagnetCourseCard extends StatelessWidget {
                   ),
                   FilledButton.icon(
                     onPressed: () async {
+                      if (await Vibration.hasVibrator()) {
+                        await Vibration.vibrate(duration: 128, amplitude: 128);
+                      }
+                      if (!context.mounted) return;
+
                       final agenda = await showModalBottomSheet(
                         showDragHandle: true,
                         clipBehavior: Clip.hardEdge,

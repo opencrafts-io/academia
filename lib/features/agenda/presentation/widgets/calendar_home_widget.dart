@@ -61,7 +61,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
             onDaySelected: (selectedDay, focusedDay) async {
               // Provide haptic feedback for day selection
               if (await Vibration.hasVibrator()) {
-                Vibration.vibrate(preset: VibrationPreset.quickSuccessAlert);
+                Vibration.vibrate(duration: 50, amplitude: 128);
               }
 
               if (context.mounted) {

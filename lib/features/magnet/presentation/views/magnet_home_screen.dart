@@ -146,16 +146,6 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                           ),
                       ],
                     ),
-                    actions: [
-                      IconButton(
-                        onPressed: () {
-                          // context.read<InstitutionBloc>().add(
-                          //   LoadInstitutionEvent(),
-                          // );
-                        },
-                        icon: const Icon(Icons.refresh),
-                      ),
-                    ],
                   ),
                   SliverPadding(
                     padding: const EdgeInsets.all(12),
@@ -175,7 +165,10 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                           child: InkWell(
                             onTap: () async {
                               if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(pattern: [128, 32, 128, 32]);
+                                Vibration.vibrate(
+                                  pattern: [0, 50, 100, 50, 100, 100],
+                                  intensities: [0, 128, 0, 128, 0, 128],
+                                );
                               }
                               if (!context.mounted) return;
                               item.ontap(context, widget.institutionID);

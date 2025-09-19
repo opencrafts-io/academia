@@ -68,7 +68,8 @@ class EssentialsInstitutionSection extends StatelessWidget {
                               ? () async {
                                   if (await Vibration.hasVibrator()) {
                                     Vibration.vibrate(
-                                      pattern: [64, 32, 64, 32],
+                                      pattern: [0, 50, 100, 50, 100, 100],
+                                      intensities: [0, 128, 0, 128, 0, 128],
                                     );
                                   }
                                   if (!context.mounted) return;

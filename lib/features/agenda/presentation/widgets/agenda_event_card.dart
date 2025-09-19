@@ -2,6 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/agenda/agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vibration/vibration.dart';
 
 class AgendaEventCard extends StatelessWidget {
   final AgendaEvent event;
@@ -22,9 +23,18 @@ class AgendaEventCard extends StatelessWidget {
     return Card.outlined(
       elevation: 0,
       child: InkWell(
-        onTap: onTap ?? () {
-          AgendaItemViewRoute(id: event.id).push(context);
-        },
+        onTap:
+            onTap ??
+            () async {
+              if (await Vibration.hasVibrator()) {
+                Vibration.vibrate(
+                  pattern: [0, 50, 100, 50],
+                  intensities: [0, 128, 0, 128],
+                );
+              }
+              if (!context.mounted) return;
+              AgendaItemViewRoute(id: event.id).push(context);
+            },
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -71,7 +81,7 @@ class AgendaEventCard extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  
+
                   // Action Buttons
                   if (onDelete != null) ...[
                     IconButton.outlined(
