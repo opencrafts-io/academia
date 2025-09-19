@@ -157,8 +157,7 @@ class _AcademiaState extends State<Academia> {
               InitializeOneSignalEvent(
                 appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
               ),
-            )
-            ..add(SetNotificationPermissionEvent(enabled: true)),
+            ),
         ),
         BlocProvider(
           create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
@@ -195,15 +194,6 @@ class _AcademiaState extends State<Academia> {
             BlocListener<ProfileBloc, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadedState) {
-                  // Set user data in OneSignal when profile is loaded
-                  context.read<NotificationBloc>().add(
-                    SetUserDataEvent(
-                      userId: state.profile.id,
-                      name: state.profile.name,
-                      email: state.profile.email,
-                    ),
-                  );
-
                   context.read<InstitutionBloc>().add(
                     GetCachedUserInstitutionsEvent(state.profile.id),
                   );

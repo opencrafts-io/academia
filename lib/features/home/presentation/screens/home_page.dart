@@ -1,13 +1,16 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    context.read<PermissionCubit>().checkPermission(AppPermission.notification);
     return DefaultTabController(
       initialIndex: 1,
       length: 4,
@@ -58,6 +61,30 @@ class HomePage extends StatelessWidget {
                   Tab(child: Text("Chats")),
                   Tab(child: Text("Sherehe")),
                 ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: BlocConsumer<PermissionCubit, PermissionState>(
+                listener: (context, state) {
+                  if (state is PermissionPermanentlyDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "You've permanently denied notification permissions."
+                          "Please enable them via phone settings",
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PermissionDenied ||
+                      state is PermissionPermanentlyDenied) {
+                    return PermissionNotificationAlertCard();
+                  }
+                  return SizedBox.shrink();
+                },
               ),
             ),
             SliverFillRemaining(
