@@ -4,6 +4,7 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -669,14 +670,10 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // AdMob
-  sl.registerFactory<AdRemoteDataSource>(
-    () => AdRemoteDataSourceImpl(),
-  );
+  sl.registerFactory<AdRemoteDataSource>(() => AdRemoteDataSourceImpl());
 
   sl.registerFactory<AdRepository>(
-    () => AdRepositoryImpl(
-      sl.get<AdRemoteDataSource>(),
-    ),
+    () => AdRepositoryImpl(sl.get<AdRemoteDataSource>()),
   );
 
   sl.registerFactory<InitializeAdMobUsecase>(
@@ -714,6 +711,24 @@ Future<void> init(FlavorConfig flavor) async {
       showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
       getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
       setTestModeUsecase: sl.get<SetTestModeUsecase>(),
+    ),
+  );
+
+  // Permissions
+  sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
+  sl.registerFactory<PermissionRepository>(
+    () => PermissionRepositoryImpl(permissionDatasource: sl()),
+  );
+  sl.registerFactory<RequestPermissionUsecase>(
+    () => RequestPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<CheckPermissionUsecase>(
+    () => CheckPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<PermissionCubit>(
+    () => PermissionCubit(
+      checkPermissionUsecase: sl(),
+      requestPermissionUsecase: sl(),
     ),
   );
 }
