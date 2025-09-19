@@ -13,14 +13,16 @@ class PermissionNotificationAlertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<ProfileBloc, ProfileState>(
+        BlocListener<PermissionCubit, PermissionState>(
           listener: (context, state) {
-            if (state is ProfileLoadedState) {
+            final profileState = context.read<ProfileBloc>().state;
+            if (state is PermissionGranted &&
+                profileState is ProfileLoadedState) {
               context.read<NotificationBloc>().add(
                 SetUserDataEvent(
-                  userId: state.profile.id,
-                  name: state.profile.name,
-                  email: state.profile.email,
+                  userId: profileState.profile.id,
+                  name: profileState.profile.name,
+                  email: profileState.profile.email,
                 ),
               );
             }
