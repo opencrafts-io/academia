@@ -1,10 +1,24 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PermissionCubit>().checkPermission(AppPermission.notification);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +41,18 @@ class HomePage extends StatelessWidget {
               centerTitle: true,
               title: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 600),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.primaryContainer,
-                    hintText: "Search for posts, events, friends",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(28),
-                      borderSide: BorderSide.none,
-                    ),
+                child: SearchAnchor.bar(
+                  suggestionsBuilder: (context, searchController) {
+                    return [];
+                  },
+                  barElevation: WidgetStatePropertyAll(0),
+                  barBackgroundColor: WidgetStatePropertyAll(
+                    Theme.of(context).colorScheme.primaryContainer,
                   ),
+                  barHintText: "Search for posts, events, friends",
+                  barLeading: Icon(Icons.search),
+                  viewElevation: 0,
+                  isFullScreen: true,
                 ),
               ),
               actions: [
@@ -57,6 +72,31 @@ class HomePage extends StatelessWidget {
                   Tab(child: Text("Chats")),
                   Tab(child: Text("Sherehe")),
                 ],
+              ),
+            ),
+
+            SliverPinnedHeader(
+              child: BlocConsumer<PermissionCubit, PermissionState>(
+                listener: (context, state) {
+                  if (state is PermissionPermanentlyDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "You've previously permanently disabled notifications."
+                          " Please re-enable them on the phone settings page.",
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PermissionDenied ||
+                      state is PermissionPermanentlyDenied) {
+                    return PermissionNotificationAlertCard();
+                  }
+                  return SizedBox.shrink();
+                },
               ),
             ),
             SliverFillRemaining(

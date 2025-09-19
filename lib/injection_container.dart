@@ -4,6 +4,7 @@ import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -665,6 +666,69 @@ Future<void> init(FlavorConfig flavor) async {
       fetchMagnetStudentTimetableUsecase: sl(),
       deleteMagentCourseByCourseCodeUsecase: sl(),
       getCachedMagnetStudentTimetableUsecase: sl(),
+    ),
+  );
+
+  // AdMob
+  sl.registerFactory<AdRemoteDataSource>(() => AdRemoteDataSourceImpl());
+
+  sl.registerFactory<AdRepository>(
+    () => AdRepositoryImpl(sl.get<AdRemoteDataSource>()),
+  );
+
+  sl.registerFactory<InitializeAdMobUsecase>(
+    () => InitializeAdMobUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadBannerAdUsecase>(
+    () => LoadBannerAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadInterstitialAdUsecase>(
+    () => LoadInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadRewardedAdUsecase>(
+    () => LoadRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowInterstitialAdUsecase>(
+    () => ShowInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowRewardedAdUsecase>(
+    () => ShowRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<GetLoadedAdsUsecase>(
+    () => GetLoadedAdsUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<SetTestModeUsecase>(
+    () => SetTestModeUsecase(sl.get<AdRepository>()),
+  );
+
+  sl.registerFactory<AdBloc>(
+    () => AdBloc(
+      initializeAdMobUsecase: sl.get<InitializeAdMobUsecase>(),
+      loadBannerAdUsecase: sl.get<LoadBannerAdUsecase>(),
+      loadInterstitialAdUsecase: sl.get<LoadInterstitialAdUsecase>(),
+      loadRewardedAdUsecase: sl.get<LoadRewardedAdUsecase>(),
+      showInterstitialAdUsecase: sl.get<ShowInterstitialAdUsecase>(),
+      showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
+      getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
+      setTestModeUsecase: sl.get<SetTestModeUsecase>(),
+    ),
+  );
+
+  // Permissions
+  sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
+  sl.registerFactory<PermissionRepository>(
+    () => PermissionRepositoryImpl(permissionDatasource: sl()),
+  );
+  sl.registerFactory<RequestPermissionUsecase>(
+    () => RequestPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<CheckPermissionUsecase>(
+    () => CheckPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<PermissionCubit>(
+    () => PermissionCubit(
+      checkPermissionUsecase: sl(),
+      requestPermissionUsecase: sl(),
     ),
   );
 }

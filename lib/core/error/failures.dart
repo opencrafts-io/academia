@@ -66,6 +66,14 @@ class AuthenticationFailure extends Failure {
   const AuthenticationFailure({required super.message, required super.error});
 }
 
+/// Represents a failure related to AdMob operations.
+/// This typically indicates issues like ad loading failures, initialization problems,
+/// or ad display errors.
+class AdMobFailure extends Failure {
+  /// Constructs a [AdMobFailure] with required [message] and [error] details.
+  const AdMobFailure({required super.message, required super.error});
+}
+
 class MagnetInstanceFailure extends Failure {
   const MagnetInstanceFailure({required super.message, required super.error});
 }
