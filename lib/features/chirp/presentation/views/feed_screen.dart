@@ -36,7 +36,7 @@ class FeedPage extends StatelessWidget {
             context.read<FeedBloc>().add(CacheFeedEvent());
           },
           child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             slivers: [
               BlocBuilder<FeedBloc, FeedState>(
                 buildWhen: (previous, current) =>

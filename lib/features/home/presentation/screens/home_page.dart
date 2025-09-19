@@ -4,13 +4,24 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
     context.read<PermissionCubit>().checkPermission(AppPermission.notification);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 1,
       length: 4,
@@ -63,15 +74,16 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
+
+            SliverPinnedHeader(
               child: BlocConsumer<PermissionCubit, PermissionState>(
                 listener: (context, state) {
                   if (state is PermissionPermanentlyDenied) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          "You've permanently denied notification permissions."
-                          "Please enable them via phone settings",
+                          "You've previously permanently disabled notifications."
+                          " Please re-enable them on the phone settings page.",
                         ),
                         behavior: SnackBarBehavior.floating,
                       ),

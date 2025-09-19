@@ -28,6 +28,6 @@ class PermissionRepositoryImpl implements PermissionRepository {
   @override
   Future<ph.PermissionStatus> checkPermission(AppPermission permission) {
     final platformPermission = _mapToPlatformPermission(permission);
-    return permissionDatasource.requestPermission(platformPermission);
+    return permissionDatasource.checkPermission(platformPermission);
   }
 }

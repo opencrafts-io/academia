@@ -24,7 +24,7 @@ class PermissionCubit extends Cubit<PermissionState> {
   }
 
   Future<void> checkPermission(AppPermission permission) async {
-    final result = await requestPermissionUsecase(permission);
+    final result = await checkPermissionUsecase(permission);
     return result.fold(
       (error) => throw "Permission returned left this shouldn't happen",
       (status) {

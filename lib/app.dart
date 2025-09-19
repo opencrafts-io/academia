@@ -4,6 +4,7 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/injection_container.dart';
+import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -223,22 +224,24 @@ class _AcademiaState extends State<Academia> {
               },
             ),
           ],
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            showPerformanceOverlay: kProfileMode,
-            theme: ThemeData(
-              fontFamily: 'ProductSans',
-              useMaterial3: true,
-              colorScheme: lightScheme,
-              brightness: Brightness.light,
+          child: SplashRemover(
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              showPerformanceOverlay: kProfileMode,
+              theme: ThemeData(
+                fontFamily: 'ProductSans',
+                useMaterial3: true,
+                colorScheme: lightScheme,
+                brightness: Brightness.light,
+              ),
+              darkTheme: ThemeData(
+                fontFamily: 'ProductSans',
+                useMaterial3: true,
+                brightness: Brightness.dark,
+                colorScheme: darkScheme,
+              ),
+              routerConfig: AppRouter.router,
             ),
-            darkTheme: ThemeData(
-              fontFamily: 'ProductSans',
-              useMaterial3: true,
-              brightness: Brightness.dark,
-              colorScheme: darkScheme,
-            ),
-            routerConfig: AppRouter.router,
           ),
         ),
       ),

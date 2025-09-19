@@ -19,9 +19,6 @@ class NotificationRemoteDatasource {
       // Set OneSignal App ID
       OneSignal.initialize(appId);
 
-      // Request permission for notifications
-      OneSignal.Notifications.requestPermission(true);
-
       // Set up notification handlers
       OneSignal.Notifications.addClickListener((event) {
         // Handle notification click
