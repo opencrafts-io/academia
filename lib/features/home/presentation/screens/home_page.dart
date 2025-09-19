@@ -27,17 +27,18 @@ class HomePage extends StatelessWidget {
               centerTitle: true,
               title: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 600),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.primaryContainer,
-                    hintText: "Search for posts, events, friends",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(28),
-                      borderSide: BorderSide.none,
-                    ),
+                child: SearchAnchor.bar(
+                  suggestionsBuilder: (context, searchController) {
+                    return [];
+                  },
+                  barElevation: WidgetStatePropertyAll(0),
+                  barBackgroundColor: WidgetStatePropertyAll(
+                    Theme.of(context).colorScheme.primaryContainer,
                   ),
+                  barHintText: "Search for posts, events, friends",
+                  barLeading: Icon(Icons.search),
+                  viewElevation: 0,
+                  isFullScreen: true,
                 ),
               ),
               actions: [

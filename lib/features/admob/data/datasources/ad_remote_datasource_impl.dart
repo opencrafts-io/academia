@@ -23,7 +23,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return const Right(null);
     } catch (e) {
       _logger.e('Failed to initialize AdMob', error: e);
-      return Left(AdMobFailure(message: 'Failed to initialize AdMob: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to initialize AdMob: $e', error: e),
+      );
     }
   }
 
@@ -40,20 +42,22 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
 
       _loadedAds[adId] = adModel;
       _logger.d('Loading banner ad: $adId');
-      
+
       // Simulate ad loading success after a short delay
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       // Update the ad status to loaded
       _loadedAds[adId] = adModel.copyWith(
         status: AdStatus.loaded,
         loadedAt: DateTime.now(),
       );
-      
+
       return Right(_loadedAds[adId]!);
     } catch (e) {
       _logger.e('Failed to load banner ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to load banner ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to load banner ad: $e', error: e),
+      );
     }
   }
 
@@ -70,20 +74,22 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
 
       _loadedAds[adId] = adModel;
       _logger.d('Loading interstitial ad: $adId');
-      
+
       // Simulate ad loading success after a short delay
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       // Update the ad status to loaded
       _loadedAds[adId] = adModel.copyWith(
         status: AdStatus.loaded,
         loadedAt: DateTime.now(),
       );
-      
+
       return Right(_loadedAds[adId]!);
     } catch (e) {
       _logger.e('Failed to load interstitial ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to load interstitial ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to load interstitial ad: $e', error: e),
+      );
     }
   }
 
@@ -100,20 +106,22 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
 
       _loadedAds[adId] = adModel;
       _logger.d('Loading rewarded ad: $adId');
-      
+
       // Simulate ad loading success after a short delay
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       // Update the ad status to loaded
       _loadedAds[adId] = adModel.copyWith(
         status: AdStatus.loaded,
         loadedAt: DateTime.now(),
       );
-      
+
       return Right(_loadedAds[adId]!);
     } catch (e) {
       _logger.e('Failed to load rewarded ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to load rewarded ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to load rewarded ad: $e', error: e),
+      );
     }
   }
 
@@ -130,11 +138,13 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
 
       _loadedAds[adId] = adModel;
       _logger.d('Loading native ad: $adId');
-      
+
       return Right(adModel);
     } catch (e) {
       _logger.e('Failed to load native ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to load native ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to load native ad: $e', error: e),
+      );
     }
   }
 
@@ -143,11 +153,18 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
     try {
       final ad = _loadedAds[adId];
       if (ad == null) {
-        return Left(AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'));
+        return Left(
+          AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'),
+        );
       }
 
       if (ad.status != AdStatus.loaded) {
-        return Left(AdMobFailure(message: 'Ad not ready to show: $adId', error: 'Ad not ready'));
+        return Left(
+          AdMobFailure(
+            message: 'Ad not ready to show: $adId',
+            error: 'Ad not ready',
+          ),
+        );
       }
 
       _loadedAds[adId] = ad.copyWith(
@@ -159,7 +176,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return const Right(null);
     } catch (e) {
       _logger.e('Failed to show interstitial ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to show interstitial ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to show interstitial ad: $e', error: e),
+      );
     }
   }
 
@@ -168,11 +187,18 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
     try {
       final ad = _loadedAds[adId];
       if (ad == null) {
-        return Left(AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'));
+        return Left(
+          AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'),
+        );
       }
 
       if (ad.status != AdStatus.loaded) {
-        return Left(AdMobFailure(message: 'Ad not ready to show: $adId', error: 'Ad not ready'));
+        return Left(
+          AdMobFailure(
+            message: 'Ad not ready to show: $adId',
+            error: 'Ad not ready',
+          ),
+        );
       }
 
       _loadedAds[adId] = ad.copyWith(
@@ -184,7 +210,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return const Right(null);
     } catch (e) {
       _logger.e('Failed to show rewarded ad', error: e);
-      return Left(AdMobFailure(message: 'Failed to show rewarded ad: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to show rewarded ad: $e', error: e),
+      );
     }
   }
 
@@ -205,13 +233,17 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
     try {
       final ad = _loadedAds[adId];
       if (ad == null) {
-        return Left(AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'));
+        return Left(
+          AdMobFailure(message: 'Ad not found: $adId', error: 'Ad not found'),
+        );
       }
 
       return Right(ad.status);
     } catch (e) {
       _logger.e('Failed to get ad status', error: e);
-      return Left(AdMobFailure(message: 'Failed to get ad status: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to get ad status: $e', error: e),
+      );
     }
   }
 
@@ -226,7 +258,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return Right(ad.status == AdStatus.loaded);
     } catch (e) {
       _logger.e('Failed to check if ad is ready', error: e);
-      return Left(AdMobFailure(message: 'Failed to check if ad is ready: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to check if ad is ready: $e', error: e),
+      );
     }
   }
 
@@ -236,7 +270,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return Right(_loadedAds.values.toList());
     } catch (e) {
       _logger.e('Failed to get loaded ads', error: e);
-      return Left(AdMobFailure(message: 'Failed to get loaded ads: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to get loaded ads: $e', error: e),
+      );
     }
   }
 
@@ -248,7 +284,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return const Right(null);
     } catch (e) {
       _logger.e('Failed to clear all ads', error: e);
-      return Left(AdMobFailure(message: 'Failed to clear all ads: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to clear all ads: $e', error: e),
+      );
     }
   }
 
@@ -260,7 +298,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return const Right(null);
     } catch (e) {
       _logger.e('Failed to set test mode', error: e);
-      return Left(AdMobFailure(message: 'Failed to set test mode: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to set test mode: $e', error: e),
+      );
     }
   }
 
@@ -270,7 +310,9 @@ class AdRemoteDataSourceImpl implements AdRemoteDataSource {
       return Right(_testMode);
     } catch (e) {
       _logger.e('Failed to get test mode', error: e);
-      return Left(AdMobFailure(message: 'Failed to get test mode: $e', error: e));
+      return Left(
+        AdMobFailure(message: 'Failed to get test mode: $e', error: e),
+      );
     }
   }
 }
