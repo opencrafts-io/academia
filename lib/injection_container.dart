@@ -488,14 +488,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<RemoteConfigRemoteDatasource>(
     () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
   );
-  sl.registerFactory<RemoteConfigLocalDatasource>(
-    () => RemoteConfigLocalDatasource(),
-  );
-
   sl.registerFactory<RemoteConfigRepository>(
     () => RemoteConfigRepositoryImpl(
       remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-      localDatasource: sl.get<RemoteConfigLocalDatasource>(),
     ),
   );
 
@@ -523,16 +518,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetAllParametersUsecase>(
     () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
   );
-  sl.registerFactory<SetDefaultsUsecase>(
-    () => SetDefaultsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetSettingsUsecase>(
-    () => GetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<SetSettingsUsecase>(
-    () => SetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-
   sl.registerFactory<RemoteConfigBloc>(
     () => RemoteConfigBloc(
       initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
@@ -543,9 +528,6 @@ Future<void> init(FlavorConfig flavor) async {
       getDoubleUsecase: sl.get<GetDoubleUsecase>(),
       getJsonUsecase: sl.get<GetJsonUsecase>(),
       getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-      setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
-      getSettingsUsecase: sl.get<GetSettingsUsecase>(),
-      setSettingsUsecase: sl.get<SetSettingsUsecase>(),
     ),
   );
 

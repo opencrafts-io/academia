@@ -58,7 +58,7 @@ class RemoteConfigRemoteDatasource {
       if (success) {
         return right(null);
       } else {
-        throw Exception('Failed to fetch and activate remote config values');
+        return right(null);
       }
     } catch (e) {
       _logger.e('Failed to fetch and activate remote config', error: e);
