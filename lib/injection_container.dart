@@ -8,6 +8,7 @@ import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -483,8 +484,9 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // Firebase Remote Config
+  sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
   sl.registerFactory<RemoteConfigRemoteDatasource>(
-    () => RemoteConfigRemoteDatasource(),
+    () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
   );
   sl.registerFactory<RemoteConfigLocalDatasource>(
     () => RemoteConfigLocalDatasource(),
