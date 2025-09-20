@@ -55,6 +55,18 @@ class FetchMagnetStudentTimeTableEvent extends MagnetEvent {
   List<Object?> get props => [institutionID, userID];
 }
 
+class FetchMagnetFeeStatementTransactionsEvent extends MagnetEvent {
+  final int institutionID;
+  final String userID;
+  FetchMagnetFeeStatementTransactionsEvent({
+    required this.institutionID,
+    required this.userID,
+  });
+
+  @override
+  List<Object?> get props => [institutionID, userID];
+}
+
 class GetCachedMagnetStudentTimetableEvent extends MagnetEvent {
   final int institutionID;
   final String userID;
