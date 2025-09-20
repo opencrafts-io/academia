@@ -4,6 +4,7 @@ import 'package:academia/features/features.dart';
 import 'package:academia/config/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:vibration/vibration.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({super.key, required this.child});
@@ -16,18 +17,28 @@ class LayoutPage extends StatefulWidget {
 class _LayoutPageState extends State<LayoutPage> {
   int selectedIndex = 0;
 
-  void _onNavigationSelected(int index) {
+  void _onNavigationSelected(int index) async {
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(duration: 50);
+    }
+
+    if (!mounted) return;
     switch (index) {
       case 0:
         HomeRoute().go(context);
+        break;
       case 1:
         CalendarRoute().go(context);
+        break;
       case 2:
         MeteorRoute().go(context);
+        break;
       case 3:
         EssentialsRoute().go(context);
+        break;
       case 4:
         FeedRoute().go(context);
+        break;
     }
     selectedIndex = index;
   }

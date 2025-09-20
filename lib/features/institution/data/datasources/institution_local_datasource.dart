@@ -36,7 +36,6 @@ class InstitutionLocalDatasource {
       final retrieved = await localDB.select(localDB.institution).get();
       return right(retrieved);
     } catch (e) {
-      rethrow;
       return left(
         CacheFailure(
           error: e,

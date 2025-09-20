@@ -2,7 +2,6 @@ import 'package:academia/features/chirp/domain/entities/post.dart';
 import 'package:academia/features/chirp/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class PostCard extends StatefulWidget {
   const PostCard({super.key, required this.post, this.onTap});
@@ -27,17 +26,19 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: 1,
-            color: Theme.of(context).colorScheme.outline,
+    return InkWell(
+      onTap: widget.onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: 1,
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
           ),
         ),
-      ),
-      child: Padding(
         padding: EdgeInsets.all(12),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,9 +55,9 @@ class _PostCardState extends State<PostCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 3,),
+                    SizedBox(height: 3),
                     Text(
-                      'u/${widget.post.userName}',
+                      widget.post.userName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         // fontWeight: FontWeight.bold,
                       ),
@@ -66,19 +67,16 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
 
-    
             SizedBox(height: 8),
-    
+
             Text(widget.post.content),
             if (widget.post.attachments.isNotEmpty) ...[
               const SizedBox(height: 8),
-               LayoutBuilder(
+              LayoutBuilder(
                 builder: (context, constraints) {
                   final double attachmentWidth = constraints.maxWidth;
-                  final double attachmentHeight =
-                      attachmentWidth /
-                      (16 / 9);
-    
+                  final double attachmentHeight = attachmentWidth / (16 / 9);
+
                   return SizedBox(
                     height: attachmentHeight,
                     child: PageView.builder(
@@ -95,7 +93,7 @@ class _PostCardState extends State<PostCard> {
                   );
                 },
               ),
-    
+
               if (widget.post.attachments.length > 1)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -120,7 +118,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
             ],
-    
+
             SizedBox(height: 8),
             Row(
               children: [
@@ -128,31 +126,47 @@ class _PostCardState extends State<PostCard> {
                   segments: [
                     ButtonSegment(
                       value: Vote.up,
-                      icon: Icon(Symbols.arrow_upward),
+                      icon: Icon(Icons.thumb_up_outlined),
                       label: Text(widget.post.likeCount.toString()),
                     ),
                     ButtonSegment(
                       value: Vote.down,
-                      icon: Icon(Symbols.arrow_upward),
+                      icon: Icon(Icons.thumb_down_outlined),
                     ),
                   ],
-                  selected: const <Vote>{Vote.up},
-                  showSelectedIcon: true,
+                  style: SegmentedButton.styleFrom(padding: EdgeInsets.all(2)),
+                  emptySelectionAllowed: true,
+                  selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
+                  selectedIcon: widget.post.isLiked
+                      ? Icon(Icons.thumb_up)
+                      : Icon(Icons.thumb_down),
                   onSelectionChanged: (vote) {
+                    final isTogglingOff = vote.isEmpty && widget.post.isLiked;
                     context.read<FeedBloc>().add(
                       ToggleLikePost(
                         postId: widget.post.id,
-                        isCurrentlyLiked: widget.post.isLiked,
+                        isCurrentlyLiked: isTogglingOff
+                            ? true
+                            : widget.post.isLiked,
                       ),
                     );
                   },
                 ),
                 SizedBox(width: 16),
-    
-                OutlinedButton.icon(
-                  icon: Icon(Symbols.chat),
-                  onPressed:  widget.onTap,
-                  label: Text('${widget.post.commentCount} comments'),
+
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    padding: EdgeInsets.all(2),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.tertiaryContainer,
+                    foregroundColor: Theme.of(
+                      context,
+                    ).colorScheme.onTertiaryContainer,
+                  ),
+                  icon: Icon(Icons.chat),
+                  onPressed: widget.onTap,
+                  label: Text('${widget.post.commentCount}'),
                 ),
               ],
             ),

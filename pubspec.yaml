@@ -79,10 +79,26 @@ dependencies:
   firebase_remote_config: ^6.0.0
   quick_actions: ^1.1.0
   confetti: ^0.7.0
+  google_mobile_ads: ^6.0.0
   firebase_analytics: ^12.0.0
   firebase_crashlytics: ^5.0.0
   dio_request_inspector: ^3.2.0
   flutter_image_compress: ^2.4.0
+
+  # Magnet for institutions
+  magnet:
+    git:
+      url: https://github.com/opencrafts-io/magnet.git
+      ref: HEAD
+
+  magnet_daystar_university:
+    git:
+      url: https://github.com/IamMuuo/magnet-daystar-university.git
+      ref: HEAD
+  google_fonts: ^6.3.1
+  rrule: ^0.2.17
+  permission_handler: ^12.0.1
+
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1

@@ -1,4 +1,5 @@
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class FeedPage extends StatelessWidget {
             context.read<FeedBloc>().add(CacheFeedEvent());
           },
           child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             slivers: [
               BlocBuilder<FeedBloc, FeedState>(
                 buildWhen: (previous, current) =>
@@ -61,9 +62,7 @@ class FeedPage extends StatelessWidget {
                   }
                   if (state is FeedLoading) {
                     return const SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
+                      child: Center(child: SpinningScallopIndicator()),
                     );
                   }
                   if (state is FeedError) {

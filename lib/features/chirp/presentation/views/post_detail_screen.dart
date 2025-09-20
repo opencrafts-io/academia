@@ -1,3 +1,4 @@
+import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
 import 'package:academia/features/chirp/presentation/widgets/comment_widget.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:academia/features/chirp/domain/entities/post_replies.dart';
 import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class PostDetailPage extends StatefulWidget {
   final Post post;
@@ -68,6 +70,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("User profile not loaded. Please try again."),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
@@ -105,6 +108,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               const SnackBar(
                 content: Text("Comment added successfully!"),
                 duration: Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
               ),
             );
           } else if (state is CommentError) {
@@ -117,6 +121,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               SnackBar(
                 content: Text("Failed to add comment: ${state.message}"),
                 backgroundColor: Theme.of(context).colorScheme.error,
+                behavior: SnackBarBehavior.floating,
               ),
             );
           }
@@ -227,7 +232,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         ? const SizedBox(
                             width: 24,
                             height: 24,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: SpinningScallopIndicator(),
                           )
                         : const Icon(Icons.send),
                   ),
@@ -276,7 +281,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  
                 ],
               ),
               const SizedBox(height: 16),
@@ -286,7 +290,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(32.0),
-                    child: CircularProgressIndicator.adaptive(),
+                    child: SpinningScallopIndicator(),
                   ),
                 ),
 
@@ -295,25 +299,17 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 8,
                       children: [
-                        Icon(
-                          Icons.comment_outlined,
-                          size: 48,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withAlpha(100),
+                        Lottie.asset(
+                          "assets/lotties/promotional-staff.json",
+                          height: 240,
                         ),
-                        const SizedBox(height: 16),
                         Text(
                           "No comments yet",
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withAlpha(150),
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        const SizedBox(height: 8),
                         Text(
                           "Be the first to share your thoughts!",
                           style: Theme.of(context).textTheme.bodyMedium
@@ -341,7 +337,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   // Helper method to build comments in proper tree structure
   List<Widget> _buildCommentsTree(List<PostReply> replies) {
-    // Sort replies by creation date 
+    // Sort replies by creation date
     final sortedReplies = List<PostReply>.from(replies);
     sortedReplies.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
