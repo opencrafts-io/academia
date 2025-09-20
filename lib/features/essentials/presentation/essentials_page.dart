@@ -30,12 +30,15 @@ class _EssentialsPageState extends State<EssentialsPage> {
               ],
             ),
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.settings_outlined)),
+              IconButton(
+                onPressed: () async {},
+                icon: Icon(Icons.settings_outlined),
+              ),
               IconButton(
                 onPressed: () {
                   ProfileRoute().push(context);
                 },
-                icon: UserAvatar(scallopDepth: 4,numberOfScallops: 8,),
+                icon: UserAvatar(scallopDepth: 4, numberOfScallops: 8),
               ),
             ],
           ),
