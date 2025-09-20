@@ -2,6 +2,7 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
 import 'package:academia/features/communities/presentation/bloc/community_home_bloc.dart';
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
+import 'package:academia/features/communities/presentation/widgets/invite_link_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -129,8 +130,24 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       ListTile(
                         leading: const Icon(Icons.link_outlined),
                         title: const Text("Invite via Link"),
-                        onTap: () {},
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(                                
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: InviteLinkWidget(),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
+
                       const Divider(),
                     ],
                     // Members
