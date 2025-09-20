@@ -59,6 +59,7 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
         },
         (_) {
           emit(const RemoteConfigInitializedState());
+          add(FetchAndActivateEvent());
         },
       );
     } catch (e) {
@@ -97,11 +98,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
   ) async {
     try {
       emit(const RemoteConfigLoadingState());
-
-      final result = await getStringUsecase(GetStringParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getStringUsecase(
+        GetStringParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -125,10 +124,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getBoolUsecase(GetBoolParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getBoolUsecase(
+        GetBoolParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -152,10 +150,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getIntUsecase(GetIntParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getIntUsecase(
+        GetIntParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -179,10 +176,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getDoubleUsecase(GetDoubleParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getDoubleUsecase(
+        GetDoubleParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -206,10 +202,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getJsonUsecase(GetJsonParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getJsonUsecase(
+        GetJsonParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -257,9 +252,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await setDefaultsUsecase(SetDefaultsParams(
-        defaults: event.defaults,
-      ));
+      final result = await setDefaultsUsecase(
+        SetDefaultsParams(defaults: event.defaults),
+      );
 
       result.fold(
         (failure) {
@@ -307,9 +302,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await setSettingsUsecase(SetSettingsParams(
-        settings: event.settings,
-      ));
+      final result = await setSettingsUsecase(
+        SetSettingsParams(settings: event.settings),
+      );
 
       result.fold(
         (failure) {
