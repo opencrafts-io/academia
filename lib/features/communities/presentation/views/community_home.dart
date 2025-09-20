@@ -20,6 +20,7 @@ class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
   late String currentUserId;
   late String currentUserName;
+
   @override
   void initState() {
     super.initState();
@@ -82,9 +83,43 @@ class _CommunityHomeState extends State<CommunityHome>
           final isModerator = state.community.canModerate == true;
           final isMember = state.community.canPost == true;
           final isBanned = state.community.isBanned == true;
+          final hasGuidelines = state.community.rules.isEmpty ? false : true;
+
+          //building the tabs dynamically
+          final tabs = <Tab>[
+            const Tab(text: "Posts"),
+            if (hasGuidelines || isCreator || isModerator)
+              const Tab(text: "About"),
+            const Tab(text: "Members"),
+          ];
+
+          final tabViews = <Widget>[
+            const Center(child: Text("Community Posts Page")),
+            if (hasGuidelines || isCreator || isModerator)
+              CommunityAbout(
+                isModerator: isCreator || isModerator,
+                // rules: state.community.rules,
+              ),
+            CommunityMembers(
+              communityId: widget.communityId,
+              members: state.community.members,
+              memberNames: state.community.memberNames,
+              moderators: state.community.moderators,
+              moderatorNames: state.community.moderatorNames,
+              banned: state.community.bannedUsers,
+              bannedUserNames: state.community.bannedUserNames,
+              isCreator: isCreator,
+              isModerator: isModerator,
+              isMember: isMember,
+              isBanned: isBanned,
+              isPrivate: state.community.isPrivate,
+              userId: currentUserId,
+              userName: currentUserName,
+            ),
+          ];
 
           return DefaultTabController(
-            length: 3,
+            length: tabs.length,
             child: Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -252,9 +287,10 @@ class _CommunityHomeState extends State<CommunityHome>
                                 ),
                                 const SizedBox(height: 12),
                                 if (isCreator || isModerator || isMember)
-                                  FilledButton(
+                                  FilledButton.icon(
+                                    icon: Icon(Icons.post_add),
                                     onPressed: () {},
-                                    child: const Text("Create Post"),
+                                    label: const Text("Create Post"),
                                   )
                                 else if (isBanned)
                                   Text(
@@ -270,7 +306,8 @@ class _CommunityHomeState extends State<CommunityHome>
                                     "This is a private community, request to join.",
                                   )
                                 else
-                                  FilledButton(
+                                  FilledButton.icon(
+                                    icon: Icon(Icons.person_add_alt_1),
                                     onPressed: () {
                                       context.read<CommunityHomeBloc>().add(
                                         JoinCommunity(
@@ -288,7 +325,7 @@ class _CommunityHomeState extends State<CommunityHome>
                                         ),
                                       );
                                     },
-                                    child: const Text("Join"),
+                                    label: const Text("Join"),
                                   ),
                               ],
                             ),
@@ -304,43 +341,18 @@ class _CommunityHomeState extends State<CommunityHome>
                         isScrollable: true,
                         tabAlignment: TabAlignment.center,
                         dividerHeight: 0,
-                        tabs: const [
-                          Tab(text: "Posts"),
-                          Tab(text: "About"),
-                          Tab(text: "Members"),
-                        ],
+                        tabs: tabs,
                       ),
                     ),
                   ),
                 ],
-                body: TabBarView(
-                  children: [
-                    Center(child: Text("Community Posts Page")),
-                    const CommunityAbout(),
-                    CommunityMembers(
-                      communityId: widget.communityId,
-                      members: state.community.members,
-                      memberNames: state.community.memberNames,
-                      moderators: state.community.moderators,
-                      moderatorNames: state.community.moderatorNames,
-                      banned: state.community.bannedUsers,
-                      bannedUserNames: state.community.bannedUserNames,
-                      isCreator: isCreator,
-                      isModerator: isModerator,
-                      isMember: isMember,
-                      isBanned: isBanned,
-                      isPrivate: state.community.isPrivate,
-                      userId: currentUserId,
-                      userName: currentUserName,
-                    ),
-                  ],
-                ),
+                body: TabBarView(children: tabViews),
               ),
             ),
           );
         }
 
-        return const SizedBox.shrink(); // fallback
+        return const SizedBox.shrink();
       },
     );
   }

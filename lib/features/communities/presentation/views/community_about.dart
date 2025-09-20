@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CommunityAbout extends StatefulWidget {
-  const CommunityAbout({super.key});
+  final bool isModerator;
+
+  const CommunityAbout({super.key, this.isModerator = false});
 
   @override
   State<CommunityAbout> createState() => _CommunityAboutState();
@@ -10,9 +12,13 @@ class CommunityAbout extends StatefulWidget {
 class _CommunityAboutState extends State<CommunityAbout> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("Community About Page"),
+        child: FilledButton.icon(
+          icon: const Icon(Icons.add),
+          onPressed: () {},
+          label: const Text("Add Community Guidelines"),
+        ),
       ),
     );
   }
