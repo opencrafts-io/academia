@@ -1,8 +1,8 @@
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import './widget/financial_transaction_card.dart';
 
 class MagnetFeesTransactionsPage extends StatefulWidget {
   const MagnetFeesTransactionsPage({super.key, required this.institutionID});
@@ -138,132 +138,6 @@ class _MagnetFeesTransactionsPageState
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class FinancialTransactionCard extends StatelessWidget {
-  final MagnetFinancialTransaction transaction;
-
-  const FinancialTransactionCard({super.key, required this.transaction});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final dateFormatted = DateFormat.yMMMd().add_jm().format(transaction.date);
-
-    // Color coding
-    final typeColor = transaction.type.toLowerCase() == 'credit'
-        ? Colors.green
-        : Colors.red;
-
-    final statusColor = transaction.status.toLowerCase() == 'completed'
-        ? Colors.green
-        : transaction.status.toLowerCase() == 'pending'
-        ? Colors.orange
-        : Colors.red;
-
-    return Card.filled(
-      color: theme.colorScheme.secondaryContainer,
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.hardEdge,
-      // shadowColor: Colors.black26,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top row: amount and type
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${transaction.currency} ${transaction.amount.toStringAsFixed(2)}',
-                  style: theme.textTheme.headlineSmall!.copyWith(
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withAlpha(64),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    transaction.status.toUpperCase(),
-                    style: theme.textTheme.labelLarge!.copyWith(
-                      color: statusColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            // Transaction type & payment method
-            Row(
-              children: [
-                Icon(
-                  transaction.type.toLowerCase() == 'credit'
-                      ? Icons.arrow_downward_rounded
-                      : Icons.arrow_upward_rounded,
-                  color: typeColor,
-                  size: 20,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  transaction.type,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  transaction.paymentMethod.toUpperCase(),
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Reference / student ID
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (transaction.referenceNumber != null)
-                  Text(
-                    'Ref: ${transaction.referenceNumber}',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                Text(
-                  dateFormatted,
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Optional description
-            if (transaction.description != null)
-              Text(transaction.description!, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            // Balance after transaction
-            Text(
-              'Balance: ${transaction.currency} ${transaction.balanceAfterTransaction.toStringAsFixed(2)}',
-              style: theme.textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
         ),
       ),
     );
