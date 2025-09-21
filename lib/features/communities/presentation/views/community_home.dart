@@ -140,12 +140,12 @@ class _CommunityHomeState extends State<CommunityHome>
                           child: state.community.logoUrl != null
                               ? CachedNetworkImage(
                                   imageUrl: state.community.logoUrl!,
-                                  width: 32,
-                                  height: 32,
+                                  width: 45,
+                                  height: 45,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => Container(
-                                    width: 32,
-                                    height: 32,
+                                    width: 45,
+                                    height: 45,
                                     decoration: BoxDecoration(
                                       color: Theme.of(
                                         context,
@@ -164,8 +164,8 @@ class _CommunityHomeState extends State<CommunityHome>
                                   ),
                                   errorWidget: (context, url, error) =>
                                       Container(
-                                        width: 32,
-                                        height: 32,
+                                        width: 45,
+                                        height: 45,
                                         decoration: BoxDecoration(
                                           color: Theme.of(
                                             context,
@@ -241,7 +241,7 @@ class _CommunityHomeState extends State<CommunityHome>
                     ],
 
                     flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
+                    
                       background: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
