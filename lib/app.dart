@@ -231,14 +231,18 @@ class _AcademiaState extends State<Academia> {
               theme: ThemeData(
                 fontFamily: 'ProductSans',
                 useMaterial3: true,
-                colorScheme: lightScheme,
+                colorScheme:
+                    lightScheme ??
+                    ColorScheme.fromSeed(seedColor: Color(0xFF5865F2)),
                 brightness: Brightness.light,
               ),
               darkTheme: ThemeData(
                 fontFamily: 'ProductSans',
                 useMaterial3: true,
                 brightness: Brightness.dark,
-                colorScheme: darkScheme,
+                colorScheme:
+                    darkScheme ??
+                    ColorScheme.fromSeed(seedColor: Color(0xFF5865F2)),
               ),
               routerConfig: AppRouter.router,
             ),
