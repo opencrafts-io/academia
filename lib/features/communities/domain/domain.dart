@@ -1,4 +1,6 @@
 export 'entities/community.dart';
+export 'entities/community_user.dart';
+export 'entities/paginated_response.dart';
 export 'usecases/create_community_use_case.dart';
 export 'usecases/get_community_by_id_use_case.dart';
 export 'usecases/moderate_members_use_case.dart';
@@ -6,4 +8,6 @@ export 'usecases/search_verisafe_users_use_case.dart';
 export 'usecases/join_community_use_case.dart';
 export 'usecases/leave_community_use_case.dart';
 export 'usecases/delete_community_use_case.dart';
+export 'usecases/get_community_members_usecase.dart';
+export 'usecases/add_community_guidelines_usecase.dart';
 export 'repository/community_repository.dart';

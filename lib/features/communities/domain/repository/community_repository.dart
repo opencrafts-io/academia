@@ -1,5 +1,6 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
+import 'package:academia/features/communities/domain/entities/paginated_response.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class CommunityRepository {
@@ -41,6 +42,18 @@ abstract class CommunityRepository {
 
   Future<Either<Failure, String>> deleteCommunity({
     required String groupId,
+    required String userId,
+  });
+
+  Future<Either<Failure, PaginatedResponse>> getCommunityMembers({
+    required String communityId,
+    required int page,
+    required String userType,
+  });
+
+  Future<Either<Failure, Community>> addCommunityGuidelines({
+    required List<String> rule,
+    required String communityId,
     required String userId,
   });
 }

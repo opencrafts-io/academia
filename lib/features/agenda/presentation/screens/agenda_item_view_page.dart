@@ -763,7 +763,14 @@ class _TimingSection extends StatelessWidget {
               Switch(
                 value: isAllDay,
                 onChanged: onAllDayChanged,
-                activeThumbColor: Theme.of(context).colorScheme.primary,
+                thumbColor: WidgetStateProperty.resolveWith<Color?>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Theme.of(context).colorScheme.primary;
+                    }
+                    return null;
+                  },
+                ),
               ),
             ],
           ),

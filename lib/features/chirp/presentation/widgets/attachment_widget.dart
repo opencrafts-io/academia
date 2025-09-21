@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,12 +17,11 @@ class AttachmentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (attachment.attachmentType) {
       case 'image':
-        return _ImageWidget(url: "https://qachirp.opencrafts.io${attachment.file}");
+        return _ImageWidget(url: attachment.file);
       case 'video':
-        return _MediaKitVideoWidget(url: "https://qachirp.opencrafts.io${attachment.file}",
-        );
+        return _MediaKitVideoWidget(url: attachment.file);
       case 'file':
-        return _FileWidget(url: "https://qachirp.opencrafts.io${attachment.file}", fileName: attachment.name);
+        return _FileWidget(url: attachment.file, fileName: attachment.name);
       default:
         return const SizedBox.shrink();
     }
@@ -72,11 +72,7 @@ class _ImageWidget extends StatelessWidget {
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
+                child: Center(child: SpinningScallopIndicator()),
               ),
               errorWidget: (context, url, error) => Container(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -173,7 +169,7 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     Future.microtask(() async {
       if (player.platform is NativePlayer) {
         await (player.platform as dynamic).setProperty('force-seekable', 'yes');

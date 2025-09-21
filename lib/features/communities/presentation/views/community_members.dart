@@ -4,7 +4,6 @@ import 'package:academia/features/communities/presentation/bloc/community_home_b
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class CommunityMembers extends StatefulWidget {
   final String communityId;
@@ -127,11 +126,27 @@ class _CommunityMembersState extends State<CommunityMembers> {
                         },
                       ),
 
-                      ListTile(
-                        leading: const Icon(Icons.link_outlined),
-                        title: const Text("Invite via Link"),
-                        onTap: () {},
-                      ),
+                      //Put on hold for now and will uncomment in next iteration
+                      // ListTile(
+                      //   leading: const Icon(Icons.link_outlined),
+                      //   title: const Text("Invite via Link"),
+                      //   onTap: () {
+                      //     showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return Dialog(
+                      //           shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(16),
+                      //           ),
+                      //           child: const Padding(
+                      //             padding: EdgeInsets.all(16.0),
+                      //             child: InviteLinkWidget(),
+                      //           ),
+                      //         );
+                      //       },
+                      //     );
+                      //   },
+                      // ),
                       const Divider(),
                     ],
                     // Members
@@ -182,19 +197,17 @@ class _CommunityMembersState extends State<CommunityMembers> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           onPressed: () {
-                            final path = CommunityUserListRoute(
+                            CommunityUserListRoute(
                               communityId: widget.communityId,
                               userId: widget.userId,
-                              title: "All Members",
+                              title: "Members",
                               isTargetMember: true,
                               isCreator: widget.isCreator,
                               isModerator: widget.isModerator,
                               isMember: widget.isMember,
                               isBanned: widget.isBanned,
                               isPrivate: widget.isPrivate,
-                            ).location;
-
-                            context.push(path, extra: combinedMembers);
+                            ).push(context);
                           },
                           child: const Text("View all members"),
                         ),
@@ -263,21 +276,17 @@ class _CommunityMembersState extends State<CommunityMembers> {
                       alignment: Alignment.centerLeft,
                       child: TextButton(
                         onPressed: () {
-                          // Construct the path string with query parameters
-                          final String path = CommunityUserListRoute(
+                          CommunityUserListRoute(
                             communityId: widget.communityId,
                             userId: widget.userId,
-                            title: "All Moderators",
+                            title: "Moderators",
                             isTargetModerator: true,
                             isCreator: widget.isCreator,
                             isModerator: widget.isModerator,
                             isMember: widget.isMember,
                             isBanned: widget.isBanned,
                             isPrivate: widget.isPrivate,
-                          ).location;
-
-                          // Use context.push with the path and the extra parameter
-                          context.push(path, extra: combinedModerators);
+                          ).push(context);
                         },
                         child: const Text("View all moderators"),
                       ),
@@ -353,8 +362,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           onPressed: () {
-                            // Construct the path string with query parameters
-                            final String path = CommunityUserListRoute(
+                            CommunityUserListRoute(
                               communityId: widget.communityId,
                               userId: widget.userId,
                               title: "Banned Users",
@@ -364,10 +372,7 @@ class _CommunityMembersState extends State<CommunityMembers> {
                               isMember: widget.isMember,
                               isBanned: widget.isBanned,
                               isPrivate: widget.isPrivate,
-                            ).location;
-
-                            // Use context.push with the path and the extra parameter
-                            context.push(path, extra: combinedBannedUsers);
+                            ).push(context);
                           },
                           child: const Text("View all Banned Users"),
                         ),

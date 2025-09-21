@@ -29,7 +29,7 @@ class CommunityCriticalActionFailure extends CommunityHomeState {
 
   @override
   List<Object?> get props => [message];
-} 
+}
 
 class CommunityDeleted extends CommunityHomeState {}
 

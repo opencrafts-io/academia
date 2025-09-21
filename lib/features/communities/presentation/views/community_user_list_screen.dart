@@ -1,11 +1,13 @@
+import 'package:academia/features/communities/domain/entities/community_users_enum.dart';
+import 'package:academia/features/communities/presentation/bloc/community_users/community_users_bloc.dart';
 import 'package:academia/features/communities/presentation/widgets/community_user_actions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommunityUserListScreen extends StatefulWidget {
   final String communityId;
   final String userId;
   final String title;
-  final List<Map<String, String>> users;
   final bool isTargetModerator;
   final bool isTargetBannedUsers;
   final bool isTargetMembers;
@@ -20,7 +22,6 @@ class CommunityUserListScreen extends StatefulWidget {
     required this.communityId,
     required this.userId,
     required this.title,
-    required this.users,
     required this.isTargetModerator,
     required this.isTargetBannedUsers,
     required this.isTargetMembers,
@@ -44,6 +45,16 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    context.read<CommunityUsersBloc>().add(
+      FetchCommunityMembers(
+        communityId: widget.communityId,
+        userType: widget.title.toLowerCase() == "members"
+            ? UserType.members
+            : widget.title.toLowerCase() == "moderators"
+            ? UserType.moderators
+            : UserType.bannedUsers,
+      ),
+    );
   }
 
   @override
@@ -54,13 +65,6 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredUsers = widget.users
-        .where(
-          (userMap) =>
-              userMap['name']!.toLowerCase().contains(_query.toLowerCase()),
-        )
-        .toList();
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -121,51 +125,72 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
             ),
           ),
 
-          // User list or empty state
-          filteredUsers.isEmpty
-              ? SliverFillRemaining(
+          BlocBuilder<CommunityUsersBloc, CommunityUsersState>(
+            builder: (context, state) {
+              if (state is CommunityUsersLoading) {
+                return const SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.person_search,
-                          size: 64,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          "No users found",
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: 0.7),
-                              ),
-                        ),
-                      ],
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (state is CommunityUsersFailure) {
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text(state.message)),
+                );
+              } else if (state is CommunityUsersLoaded) {
+                final filteredUsers = state.paginatedResponse.users
+                    .where(
+                      (user) => user.userName.toLowerCase().contains(
+                        _query.toLowerCase(),
+                      ),
+                    )
+                    .toList();
+
+                if (filteredUsers.isEmpty) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person_search,
+                            size: 64,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            "No users found",
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : SliverList.builder(
+                  );
+                }
+
+                return SliverList.builder(
                   itemCount: filteredUsers.length,
                   itemBuilder: (context, index) {
-                    final targetUserMap = filteredUsers[index]; // Get the user map
-                    final targetUserName = targetUserMap['name']!; // Extract the name
-                    final targetUserId = targetUserMap['id']!;
+                    final targetUser = filteredUsers[index];
                     return ListTile(
-                      leading: CircleAvatar(child: Text(targetUserName[0].toUpperCase())),
-                      title: Text(targetUserName),
+                      leading: CircleAvatar(
+                        child: Text(targetUser.userName[0].toUpperCase()),
+                      ),
+                      title: Text(targetUser.userName),
                       onTap: () {
                         showUserActionsSheet(
                           context: context,
-                          targetUserName: targetUserName,
+                          targetUserName: targetUser.userName,
                           communityId: widget.communityId,
                           userId: widget.userId,
-                          targetUserId: targetUserId,
+                          targetUserId: targetUser.userId,
                           isTargetModerator: widget.isTargetModerator,
                           isTargetBanned: widget.isTargetBannedUsers,
                           isTargetMember: widget.isTargetMembers,
@@ -178,7 +203,11 @@ class _CommunityUserListScreenState extends State<CommunityUserListScreen> {
                       },
                     );
                   },
-                ),
+                );
+              }
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
+            },
+          ),
 
           // Optional spacing at the bottom
           const SliverToBoxAdapter(child: SizedBox(height: 16)),

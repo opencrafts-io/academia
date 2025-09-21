@@ -1,6 +1,7 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
 import 'package:academia/features/communities/domain/entities/community_moderation_enum.dart';
+import 'package:academia/features/communities/domain/usecases/add_community_guidelines_usecase.dart';
 import 'package:academia/features/communities/domain/usecases/delete_community_use_case.dart';
 import 'package:academia/features/communities/domain/usecases/get_community_by_id_use_case.dart';
 import 'package:academia/features/communities/domain/usecases/join_community_use_case.dart';
@@ -19,6 +20,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
   final JoinCommunityUseCase joinCommunityUseCase;
   final LeaveCommunityUseCase leaveCommunityUseCase;
   final DeleteCommunityUseCase deleteCommunityUseCase;
+  final AddCommunityGuidelinesUsecase addCommunityGuidelinesUsecase;
 
   CommunityHomeBloc({
     required this.getCommunityByIdUseCase,
@@ -26,6 +28,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     required this.joinCommunityUseCase,
     required this.leaveCommunityUseCase,
     required this.deleteCommunityUseCase,
+    required this.addCommunityGuidelinesUsecase,
   }) : super(CommunityHomeInitial()) {
     on<FetchCommunityById>(_onFetchCommunityById);
     on<ModerateMembers>(_onModerateCommunityMember);
@@ -33,6 +36,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     on<LeaveCommunity>(_onLeavingGroup);
     on<DeleteCommunity>(_onDeletingGroup);
     on<UpdateCommunity>(_onUpdateCommunity);
+    on<AddCommunityGuidelines>(_onAddCommunityGuidelines);
   }
 
   Future<void> _onFetchCommunityById(
@@ -126,5 +130,22 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     Emitter<CommunityHomeState> emit,
   ) async {
     emit(CommunityHomeLoaded(event.community));
+  }
+
+  Future<void> _onAddCommunityGuidelines(
+    AddCommunityGuidelines event,
+    Emitter<CommunityHomeState> emit,
+  ) async {
+    emit(CommunityHomeLoading());
+    final result = await addCommunityGuidelinesUsecase(
+      communityId: event.communityId,
+      rule: event.rule,
+      userId: event.userId,
+    );
+
+    result.fold(
+      (failure) => emit(CommunityHomeFailure(failure.message)),
+      (community) => emit(CommunityHomeLoaded(community)),
+    );
   }
 }

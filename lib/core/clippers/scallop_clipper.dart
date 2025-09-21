@@ -116,9 +116,9 @@ class ScallopClipper extends CustomClipper<Path> {
 class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
-    this.radius = 20, // Radius of the base CircleAvatar
+    this.radius = 18, // Radius of the base CircleAvatar
     this.scallopDepth = 4.0, // Depth of the scallops, passed to ScallopClipper
-    this.numberOfScallops = 12, // Number of scallops, passed to ScallopClipper
+    this.numberOfScallops = 8, // Number of scallops, passed to ScallopClipper
   });
 
   final double radius;

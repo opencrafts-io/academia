@@ -79,10 +79,31 @@ dependencies:
   firebase_remote_config: ^6.0.0
   quick_actions: ^1.1.0
   confetti: ^0.7.0
+  google_mobile_ads: ^6.0.0
   firebase_analytics: ^12.0.0
   firebase_crashlytics: ^5.0.0
   dio_request_inspector: ^3.2.0
   flutter_image_compress: ^2.4.0
+
+  # Magnet for institutions
+  magnet:
+    git:
+      url: https://github.com/opencrafts-io/magnet.git
+      ref: HEAD
+
+  magnet_daystar_university:
+    git:
+      url: https://github.com/IamMuuo/magnet-daystar-university.git
+      ref: HEAD
+  google_fonts: ^6.3.1
+  rrule: ^0.2.17
+  permission_handler: ^12.0.1
+  animated_emoji: ^3.2.1
+  web_socket_channel: ^3.0.3
+  flutter_local_notifications: ^17.2.3
+  json_annotation: ^4.9.0
+  share_plus: ^10.1.4
+
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
@@ -98,6 +119,7 @@ dev_dependencies:
   go_router_builder: ^3.0.1
   build_runner: ^2.4.15
   drift_dev: ^2.27.0
+  json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

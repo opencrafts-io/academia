@@ -5913,6 +5913,3561 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
   }
 }
 
+class $EnhancedConversationTableTable extends EnhancedConversationTable
+    with TableInfo<$EnhancedConversationTableTable, EnhancedConversationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EnhancedConversationTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserIdMeta = const VerificationMeta(
+    'otherUserId',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserId = GeneratedColumn<String>(
+    'other_user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserNameMeta = const VerificationMeta(
+    'otherUserName',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserName = GeneratedColumn<String>(
+    'other_user_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserEmailMeta = const VerificationMeta(
+    'otherUserEmail',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserEmail = GeneratedColumn<String>(
+    'other_user_email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _otherUserAvatarMeta = const VerificationMeta(
+    'otherUserAvatar',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserAvatar = GeneratedColumn<String>(
+    'other_user_avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isOnlineMeta = const VerificationMeta(
+    'isOnline',
+  );
+  @override
+  late final GeneratedColumn<bool> isOnline = GeneratedColumn<bool>(
+    'is_online',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_online" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
+    'lastMessageId',
+  );
+  @override
+  late final GeneratedColumn<int> lastMessageId = GeneratedColumn<int>(
+    'last_message_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastMessageContentMeta =
+      const VerificationMeta('lastMessageContent');
+  @override
+  late final GeneratedColumn<String> lastMessageContent =
+      GeneratedColumn<String>(
+        'last_message_content',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastMessageAtMeta = const VerificationMeta(
+    'lastMessageAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastMessageAt =
+      GeneratedColumn<DateTime>(
+        'last_message_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _unreadCountMeta = const VerificationMeta(
+    'unreadCount',
+  );
+  @override
+  late final GeneratedColumn<int> unreadCount = GeneratedColumn<int>(
+    'unread_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _apiUpdatedAtMeta = const VerificationMeta(
+    'apiUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> apiUpdatedAt = GeneratedColumn<DateTime>(
+    'api_updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    conversationId,
+    otherUserId,
+    otherUserName,
+    otherUserEmail,
+    otherUserAvatar,
+    isOnline,
+    lastMessageId,
+    lastMessageContent,
+    lastMessageAt,
+    unreadCount,
+    apiUpdatedAt,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'enhanced_conversation_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EnhancedConversationData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('other_user_id')) {
+      context.handle(
+        _otherUserIdMeta,
+        otherUserId.isAcceptableOrUnknown(
+          data['other_user_id']!,
+          _otherUserIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_otherUserIdMeta);
+    }
+    if (data.containsKey('other_user_name')) {
+      context.handle(
+        _otherUserNameMeta,
+        otherUserName.isAcceptableOrUnknown(
+          data['other_user_name']!,
+          _otherUserNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_otherUserNameMeta);
+    }
+    if (data.containsKey('other_user_email')) {
+      context.handle(
+        _otherUserEmailMeta,
+        otherUserEmail.isAcceptableOrUnknown(
+          data['other_user_email']!,
+          _otherUserEmailMeta,
+        ),
+      );
+    }
+    if (data.containsKey('other_user_avatar')) {
+      context.handle(
+        _otherUserAvatarMeta,
+        otherUserAvatar.isAcceptableOrUnknown(
+          data['other_user_avatar']!,
+          _otherUserAvatarMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_online')) {
+      context.handle(
+        _isOnlineMeta,
+        isOnline.isAcceptableOrUnknown(data['is_online']!, _isOnlineMeta),
+      );
+    }
+    if (data.containsKey('last_message_id')) {
+      context.handle(
+        _lastMessageIdMeta,
+        lastMessageId.isAcceptableOrUnknown(
+          data['last_message_id']!,
+          _lastMessageIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_message_content')) {
+      context.handle(
+        _lastMessageContentMeta,
+        lastMessageContent.isAcceptableOrUnknown(
+          data['last_message_content']!,
+          _lastMessageContentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_message_at')) {
+      context.handle(
+        _lastMessageAtMeta,
+        lastMessageAt.isAcceptableOrUnknown(
+          data['last_message_at']!,
+          _lastMessageAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('unread_count')) {
+      context.handle(
+        _unreadCountMeta,
+        unreadCount.isAcceptableOrUnknown(
+          data['unread_count']!,
+          _unreadCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('api_updated_at')) {
+      context.handle(
+        _apiUpdatedAtMeta,
+        apiUpdatedAt.isAcceptableOrUnknown(
+          data['api_updated_at']!,
+          _apiUpdatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  @override
+  EnhancedConversationData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EnhancedConversationData(
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      otherUserId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_id'],
+      )!,
+      otherUserName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_name'],
+      )!,
+      otherUserEmail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_email'],
+      ),
+      otherUserAvatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_avatar'],
+      ),
+      isOnline: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_online'],
+      )!,
+      lastMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_message_id'],
+      ),
+      lastMessageContent: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_message_content'],
+      ),
+      lastMessageAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_message_at'],
+      ),
+      unreadCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}unread_count'],
+      )!,
+      apiUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}api_updated_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EnhancedConversationTableTable createAlias(String alias) {
+    return $EnhancedConversationTableTable(attachedDatabase, alias);
+  }
+}
+
+class EnhancedConversationData extends DataClass
+    implements Insertable<EnhancedConversationData> {
+  final String conversationId;
+  final String otherUserId;
+  final String otherUserName;
+  final String? otherUserEmail;
+  final String? otherUserAvatar;
+  final bool isOnline;
+  final int? lastMessageId;
+  final String? lastMessageContent;
+  final DateTime? lastMessageAt;
+  final int unreadCount;
+  final DateTime? apiUpdatedAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const EnhancedConversationData({
+    required this.conversationId,
+    required this.otherUserId,
+    required this.otherUserName,
+    this.otherUserEmail,
+    this.otherUserAvatar,
+    required this.isOnline,
+    this.lastMessageId,
+    this.lastMessageContent,
+    this.lastMessageAt,
+    required this.unreadCount,
+    this.apiUpdatedAt,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['other_user_id'] = Variable<String>(otherUserId);
+    map['other_user_name'] = Variable<String>(otherUserName);
+    if (!nullToAbsent || otherUserEmail != null) {
+      map['other_user_email'] = Variable<String>(otherUserEmail);
+    }
+    if (!nullToAbsent || otherUserAvatar != null) {
+      map['other_user_avatar'] = Variable<String>(otherUserAvatar);
+    }
+    map['is_online'] = Variable<bool>(isOnline);
+    if (!nullToAbsent || lastMessageId != null) {
+      map['last_message_id'] = Variable<int>(lastMessageId);
+    }
+    if (!nullToAbsent || lastMessageContent != null) {
+      map['last_message_content'] = Variable<String>(lastMessageContent);
+    }
+    if (!nullToAbsent || lastMessageAt != null) {
+      map['last_message_at'] = Variable<DateTime>(lastMessageAt);
+    }
+    map['unread_count'] = Variable<int>(unreadCount);
+    if (!nullToAbsent || apiUpdatedAt != null) {
+      map['api_updated_at'] = Variable<DateTime>(apiUpdatedAt);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  EnhancedConversationTableCompanion toCompanion(bool nullToAbsent) {
+    return EnhancedConversationTableCompanion(
+      conversationId: Value(conversationId),
+      otherUserId: Value(otherUserId),
+      otherUserName: Value(otherUserName),
+      otherUserEmail: otherUserEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(otherUserEmail),
+      otherUserAvatar: otherUserAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(otherUserAvatar),
+      isOnline: Value(isOnline),
+      lastMessageId: lastMessageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageId),
+      lastMessageContent: lastMessageContent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageContent),
+      lastMessageAt: lastMessageAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageAt),
+      unreadCount: Value(unreadCount),
+      apiUpdatedAt: apiUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiUpdatedAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory EnhancedConversationData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EnhancedConversationData(
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      otherUserId: serializer.fromJson<String>(json['otherUserId']),
+      otherUserName: serializer.fromJson<String>(json['otherUserName']),
+      otherUserEmail: serializer.fromJson<String?>(json['otherUserEmail']),
+      otherUserAvatar: serializer.fromJson<String?>(json['otherUserAvatar']),
+      isOnline: serializer.fromJson<bool>(json['isOnline']),
+      lastMessageId: serializer.fromJson<int?>(json['lastMessageId']),
+      lastMessageContent: serializer.fromJson<String?>(
+        json['lastMessageContent'],
+      ),
+      lastMessageAt: serializer.fromJson<DateTime?>(json['lastMessageAt']),
+      unreadCount: serializer.fromJson<int>(json['unreadCount']),
+      apiUpdatedAt: serializer.fromJson<DateTime?>(json['apiUpdatedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'conversationId': serializer.toJson<String>(conversationId),
+      'otherUserId': serializer.toJson<String>(otherUserId),
+      'otherUserName': serializer.toJson<String>(otherUserName),
+      'otherUserEmail': serializer.toJson<String?>(otherUserEmail),
+      'otherUserAvatar': serializer.toJson<String?>(otherUserAvatar),
+      'isOnline': serializer.toJson<bool>(isOnline),
+      'lastMessageId': serializer.toJson<int?>(lastMessageId),
+      'lastMessageContent': serializer.toJson<String?>(lastMessageContent),
+      'lastMessageAt': serializer.toJson<DateTime?>(lastMessageAt),
+      'unreadCount': serializer.toJson<int>(unreadCount),
+      'apiUpdatedAt': serializer.toJson<DateTime?>(apiUpdatedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  EnhancedConversationData copyWith({
+    String? conversationId,
+    String? otherUserId,
+    String? otherUserName,
+    Value<String?> otherUserEmail = const Value.absent(),
+    Value<String?> otherUserAvatar = const Value.absent(),
+    bool? isOnline,
+    Value<int?> lastMessageId = const Value.absent(),
+    Value<String?> lastMessageContent = const Value.absent(),
+    Value<DateTime?> lastMessageAt = const Value.absent(),
+    int? unreadCount,
+    Value<DateTime?> apiUpdatedAt = const Value.absent(),
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => EnhancedConversationData(
+    conversationId: conversationId ?? this.conversationId,
+    otherUserId: otherUserId ?? this.otherUserId,
+    otherUserName: otherUserName ?? this.otherUserName,
+    otherUserEmail: otherUserEmail.present
+        ? otherUserEmail.value
+        : this.otherUserEmail,
+    otherUserAvatar: otherUserAvatar.present
+        ? otherUserAvatar.value
+        : this.otherUserAvatar,
+    isOnline: isOnline ?? this.isOnline,
+    lastMessageId: lastMessageId.present
+        ? lastMessageId.value
+        : this.lastMessageId,
+    lastMessageContent: lastMessageContent.present
+        ? lastMessageContent.value
+        : this.lastMessageContent,
+    lastMessageAt: lastMessageAt.present
+        ? lastMessageAt.value
+        : this.lastMessageAt,
+    unreadCount: unreadCount ?? this.unreadCount,
+    apiUpdatedAt: apiUpdatedAt.present ? apiUpdatedAt.value : this.apiUpdatedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  EnhancedConversationData copyWithCompanion(
+    EnhancedConversationTableCompanion data,
+  ) {
+    return EnhancedConversationData(
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      otherUserId: data.otherUserId.present
+          ? data.otherUserId.value
+          : this.otherUserId,
+      otherUserName: data.otherUserName.present
+          ? data.otherUserName.value
+          : this.otherUserName,
+      otherUserEmail: data.otherUserEmail.present
+          ? data.otherUserEmail.value
+          : this.otherUserEmail,
+      otherUserAvatar: data.otherUserAvatar.present
+          ? data.otherUserAvatar.value
+          : this.otherUserAvatar,
+      isOnline: data.isOnline.present ? data.isOnline.value : this.isOnline,
+      lastMessageId: data.lastMessageId.present
+          ? data.lastMessageId.value
+          : this.lastMessageId,
+      lastMessageContent: data.lastMessageContent.present
+          ? data.lastMessageContent.value
+          : this.lastMessageContent,
+      lastMessageAt: data.lastMessageAt.present
+          ? data.lastMessageAt.value
+          : this.lastMessageAt,
+      unreadCount: data.unreadCount.present
+          ? data.unreadCount.value
+          : this.unreadCount,
+      apiUpdatedAt: data.apiUpdatedAt.present
+          ? data.apiUpdatedAt.value
+          : this.apiUpdatedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedConversationData(')
+          ..write('conversationId: $conversationId, ')
+          ..write('otherUserId: $otherUserId, ')
+          ..write('otherUserName: $otherUserName, ')
+          ..write('otherUserEmail: $otherUserEmail, ')
+          ..write('otherUserAvatar: $otherUserAvatar, ')
+          ..write('isOnline: $isOnline, ')
+          ..write('lastMessageId: $lastMessageId, ')
+          ..write('lastMessageContent: $lastMessageContent, ')
+          ..write('lastMessageAt: $lastMessageAt, ')
+          ..write('unreadCount: $unreadCount, ')
+          ..write('apiUpdatedAt: $apiUpdatedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    conversationId,
+    otherUserId,
+    otherUserName,
+    otherUserEmail,
+    otherUserAvatar,
+    isOnline,
+    lastMessageId,
+    lastMessageContent,
+    lastMessageAt,
+    unreadCount,
+    apiUpdatedAt,
+    updatedAt,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EnhancedConversationData &&
+          other.conversationId == this.conversationId &&
+          other.otherUserId == this.otherUserId &&
+          other.otherUserName == this.otherUserName &&
+          other.otherUserEmail == this.otherUserEmail &&
+          other.otherUserAvatar == this.otherUserAvatar &&
+          other.isOnline == this.isOnline &&
+          other.lastMessageId == this.lastMessageId &&
+          other.lastMessageContent == this.lastMessageContent &&
+          other.lastMessageAt == this.lastMessageAt &&
+          other.unreadCount == this.unreadCount &&
+          other.apiUpdatedAt == this.apiUpdatedAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class EnhancedConversationTableCompanion
+    extends UpdateCompanion<EnhancedConversationData> {
+  final Value<String> conversationId;
+  final Value<String> otherUserId;
+  final Value<String> otherUserName;
+  final Value<String?> otherUserEmail;
+  final Value<String?> otherUserAvatar;
+  final Value<bool> isOnline;
+  final Value<int?> lastMessageId;
+  final Value<String?> lastMessageContent;
+  final Value<DateTime?> lastMessageAt;
+  final Value<int> unreadCount;
+  final Value<DateTime?> apiUpdatedAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const EnhancedConversationTableCompanion({
+    this.conversationId = const Value.absent(),
+    this.otherUserId = const Value.absent(),
+    this.otherUserName = const Value.absent(),
+    this.otherUserEmail = const Value.absent(),
+    this.otherUserAvatar = const Value.absent(),
+    this.isOnline = const Value.absent(),
+    this.lastMessageId = const Value.absent(),
+    this.lastMessageContent = const Value.absent(),
+    this.lastMessageAt = const Value.absent(),
+    this.unreadCount = const Value.absent(),
+    this.apiUpdatedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  EnhancedConversationTableCompanion.insert({
+    required String conversationId,
+    required String otherUserId,
+    required String otherUserName,
+    this.otherUserEmail = const Value.absent(),
+    this.otherUserAvatar = const Value.absent(),
+    this.isOnline = const Value.absent(),
+    this.lastMessageId = const Value.absent(),
+    this.lastMessageContent = const Value.absent(),
+    this.lastMessageAt = const Value.absent(),
+    this.unreadCount = const Value.absent(),
+    this.apiUpdatedAt = const Value.absent(),
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       otherUserId = Value(otherUserId),
+       otherUserName = Value(otherUserName),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<EnhancedConversationData> custom({
+    Expression<String>? conversationId,
+    Expression<String>? otherUserId,
+    Expression<String>? otherUserName,
+    Expression<String>? otherUserEmail,
+    Expression<String>? otherUserAvatar,
+    Expression<bool>? isOnline,
+    Expression<int>? lastMessageId,
+    Expression<String>? lastMessageContent,
+    Expression<DateTime>? lastMessageAt,
+    Expression<int>? unreadCount,
+    Expression<DateTime>? apiUpdatedAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (otherUserId != null) 'other_user_id': otherUserId,
+      if (otherUserName != null) 'other_user_name': otherUserName,
+      if (otherUserEmail != null) 'other_user_email': otherUserEmail,
+      if (otherUserAvatar != null) 'other_user_avatar': otherUserAvatar,
+      if (isOnline != null) 'is_online': isOnline,
+      if (lastMessageId != null) 'last_message_id': lastMessageId,
+      if (lastMessageContent != null)
+        'last_message_content': lastMessageContent,
+      if (lastMessageAt != null) 'last_message_at': lastMessageAt,
+      if (unreadCount != null) 'unread_count': unreadCount,
+      if (apiUpdatedAt != null) 'api_updated_at': apiUpdatedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  EnhancedConversationTableCompanion copyWith({
+    Value<String>? conversationId,
+    Value<String>? otherUserId,
+    Value<String>? otherUserName,
+    Value<String?>? otherUserEmail,
+    Value<String?>? otherUserAvatar,
+    Value<bool>? isOnline,
+    Value<int?>? lastMessageId,
+    Value<String?>? lastMessageContent,
+    Value<DateTime?>? lastMessageAt,
+    Value<int>? unreadCount,
+    Value<DateTime?>? apiUpdatedAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return EnhancedConversationTableCompanion(
+      conversationId: conversationId ?? this.conversationId,
+      otherUserId: otherUserId ?? this.otherUserId,
+      otherUserName: otherUserName ?? this.otherUserName,
+      otherUserEmail: otherUserEmail ?? this.otherUserEmail,
+      otherUserAvatar: otherUserAvatar ?? this.otherUserAvatar,
+      isOnline: isOnline ?? this.isOnline,
+      lastMessageId: lastMessageId ?? this.lastMessageId,
+      lastMessageContent: lastMessageContent ?? this.lastMessageContent,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      unreadCount: unreadCount ?? this.unreadCount,
+      apiUpdatedAt: apiUpdatedAt ?? this.apiUpdatedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (otherUserId.present) {
+      map['other_user_id'] = Variable<String>(otherUserId.value);
+    }
+    if (otherUserName.present) {
+      map['other_user_name'] = Variable<String>(otherUserName.value);
+    }
+    if (otherUserEmail.present) {
+      map['other_user_email'] = Variable<String>(otherUserEmail.value);
+    }
+    if (otherUserAvatar.present) {
+      map['other_user_avatar'] = Variable<String>(otherUserAvatar.value);
+    }
+    if (isOnline.present) {
+      map['is_online'] = Variable<bool>(isOnline.value);
+    }
+    if (lastMessageId.present) {
+      map['last_message_id'] = Variable<int>(lastMessageId.value);
+    }
+    if (lastMessageContent.present) {
+      map['last_message_content'] = Variable<String>(lastMessageContent.value);
+    }
+    if (lastMessageAt.present) {
+      map['last_message_at'] = Variable<DateTime>(lastMessageAt.value);
+    }
+    if (unreadCount.present) {
+      map['unread_count'] = Variable<int>(unreadCount.value);
+    }
+    if (apiUpdatedAt.present) {
+      map['api_updated_at'] = Variable<DateTime>(apiUpdatedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedConversationTableCompanion(')
+          ..write('conversationId: $conversationId, ')
+          ..write('otherUserId: $otherUserId, ')
+          ..write('otherUserName: $otherUserName, ')
+          ..write('otherUserEmail: $otherUserEmail, ')
+          ..write('otherUserAvatar: $otherUserAvatar, ')
+          ..write('isOnline: $isOnline, ')
+          ..write('lastMessageId: $lastMessageId, ')
+          ..write('lastMessageContent: $lastMessageContent, ')
+          ..write('lastMessageAt: $lastMessageAt, ')
+          ..write('unreadCount: $unreadCount, ')
+          ..write('apiUpdatedAt: $apiUpdatedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $EnhancedMessageTableTable extends EnhancedMessageTable
+    with TableInfo<$EnhancedMessageTableTable, EnhancedMessageData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EnhancedMessageTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _apiMessageIdMeta = const VerificationMeta(
+    'apiMessageId',
+  );
+  @override
+  late final GeneratedColumn<int> apiMessageId = GeneratedColumn<int>(
+    'api_message_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderIdMeta = const VerificationMeta(
+    'senderId',
+  );
+  @override
+  late final GeneratedColumn<String> senderId = GeneratedColumn<String>(
+    'sender_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderNameMeta = const VerificationMeta(
+    'senderName',
+  );
+  @override
+  late final GeneratedColumn<String> senderName = GeneratedColumn<String>(
+    'sender_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderEmailMeta = const VerificationMeta(
+    'senderEmail',
+  );
+  @override
+  late final GeneratedColumn<String> senderEmail = GeneratedColumn<String>(
+    'sender_email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _senderAvatarMeta = const VerificationMeta(
+    'senderAvatar',
+  );
+  @override
+  late final GeneratedColumn<String> senderAvatar = GeneratedColumn<String>(
+    'sender_avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+    'is_read',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_read" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isEditedMeta = const VerificationMeta(
+    'isEdited',
+  );
+  @override
+  late final GeneratedColumn<bool> isEdited = GeneratedColumn<bool>(
+    'is_edited',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_edited" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _apiCreatedAtMeta = const VerificationMeta(
+    'apiCreatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> apiCreatedAt = GeneratedColumn<DateTime>(
+    'api_created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
+  @override
+  late final GeneratedColumn<DateTime> sentAt = GeneratedColumn<DateTime>(
+    'sent_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    apiMessageId,
+    conversationId,
+    senderId,
+    senderName,
+    senderEmail,
+    senderAvatar,
+    content,
+    imageUrl,
+    isRead,
+    isEdited,
+    isDeleted,
+    apiCreatedAt,
+    sentAt,
+    updatedAt,
+    createdAt,
+    status,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'enhanced_message_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EnhancedMessageData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('api_message_id')) {
+      context.handle(
+        _apiMessageIdMeta,
+        apiMessageId.isAcceptableOrUnknown(
+          data['api_message_id']!,
+          _apiMessageIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('sender_id')) {
+      context.handle(
+        _senderIdMeta,
+        senderId.isAcceptableOrUnknown(data['sender_id']!, _senderIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_senderIdMeta);
+    }
+    if (data.containsKey('sender_name')) {
+      context.handle(
+        _senderNameMeta,
+        senderName.isAcceptableOrUnknown(data['sender_name']!, _senderNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_senderNameMeta);
+    }
+    if (data.containsKey('sender_email')) {
+      context.handle(
+        _senderEmailMeta,
+        senderEmail.isAcceptableOrUnknown(
+          data['sender_email']!,
+          _senderEmailMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sender_avatar')) {
+      context.handle(
+        _senderAvatarMeta,
+        senderAvatar.isAcceptableOrUnknown(
+          data['sender_avatar']!,
+          _senderAvatarMeta,
+        ),
+      );
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('is_read')) {
+      context.handle(
+        _isReadMeta,
+        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
+      );
+    }
+    if (data.containsKey('is_edited')) {
+      context.handle(
+        _isEditedMeta,
+        isEdited.isAcceptableOrUnknown(data['is_edited']!, _isEditedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('api_created_at')) {
+      context.handle(
+        _apiCreatedAtMeta,
+        apiCreatedAt.isAcceptableOrUnknown(
+          data['api_created_at']!,
+          _apiCreatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sent_at')) {
+      context.handle(
+        _sentAtMeta,
+        sentAt.isAcceptableOrUnknown(data['sent_at']!, _sentAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sentAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EnhancedMessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EnhancedMessageData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      apiMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}api_message_id'],
+      ),
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      senderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_id'],
+      )!,
+      senderName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_name'],
+      )!,
+      senderEmail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_email'],
+      ),
+      senderAvatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_avatar'],
+      ),
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      isRead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_read'],
+      )!,
+      isEdited: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_edited'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      apiCreatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}api_created_at'],
+      ),
+      sentAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}sent_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+    );
+  }
+
+  @override
+  $EnhancedMessageTableTable createAlias(String alias) {
+    return $EnhancedMessageTableTable(attachedDatabase, alias);
+  }
+}
+
+class EnhancedMessageData extends DataClass
+    implements Insertable<EnhancedMessageData> {
+  final int id;
+  final int? apiMessageId;
+  final String conversationId;
+  final String senderId;
+  final String senderName;
+  final String? senderEmail;
+  final String? senderAvatar;
+  final String content;
+  final String? imageUrl;
+  final bool isRead;
+  final bool isEdited;
+  final bool isDeleted;
+  final DateTime? apiCreatedAt;
+  final DateTime sentAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  final String status;
+  const EnhancedMessageData({
+    required this.id,
+    this.apiMessageId,
+    required this.conversationId,
+    required this.senderId,
+    required this.senderName,
+    this.senderEmail,
+    this.senderAvatar,
+    required this.content,
+    this.imageUrl,
+    required this.isRead,
+    required this.isEdited,
+    required this.isDeleted,
+    this.apiCreatedAt,
+    required this.sentAt,
+    required this.updatedAt,
+    required this.createdAt,
+    required this.status,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || apiMessageId != null) {
+      map['api_message_id'] = Variable<int>(apiMessageId);
+    }
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['sender_id'] = Variable<String>(senderId);
+    map['sender_name'] = Variable<String>(senderName);
+    if (!nullToAbsent || senderEmail != null) {
+      map['sender_email'] = Variable<String>(senderEmail);
+    }
+    if (!nullToAbsent || senderAvatar != null) {
+      map['sender_avatar'] = Variable<String>(senderAvatar);
+    }
+    map['content'] = Variable<String>(content);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    map['is_read'] = Variable<bool>(isRead);
+    map['is_edited'] = Variable<bool>(isEdited);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    if (!nullToAbsent || apiCreatedAt != null) {
+      map['api_created_at'] = Variable<DateTime>(apiCreatedAt);
+    }
+    map['sent_at'] = Variable<DateTime>(sentAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  EnhancedMessageTableCompanion toCompanion(bool nullToAbsent) {
+    return EnhancedMessageTableCompanion(
+      id: Value(id),
+      apiMessageId: apiMessageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiMessageId),
+      conversationId: Value(conversationId),
+      senderId: Value(senderId),
+      senderName: Value(senderName),
+      senderEmail: senderEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderEmail),
+      senderAvatar: senderAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderAvatar),
+      content: Value(content),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      isRead: Value(isRead),
+      isEdited: Value(isEdited),
+      isDeleted: Value(isDeleted),
+      apiCreatedAt: apiCreatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiCreatedAt),
+      sentAt: Value(sentAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+      status: Value(status),
+    );
+  }
+
+  factory EnhancedMessageData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EnhancedMessageData(
+      id: serializer.fromJson<int>(json['id']),
+      apiMessageId: serializer.fromJson<int?>(json['apiMessageId']),
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      senderId: serializer.fromJson<String>(json['senderId']),
+      senderName: serializer.fromJson<String>(json['senderName']),
+      senderEmail: serializer.fromJson<String?>(json['senderEmail']),
+      senderAvatar: serializer.fromJson<String?>(json['senderAvatar']),
+      content: serializer.fromJson<String>(json['content']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
+      isEdited: serializer.fromJson<bool>(json['isEdited']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
+      apiCreatedAt: serializer.fromJson<DateTime?>(json['apiCreatedAt']),
+      sentAt: serializer.fromJson<DateTime>(json['sentAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'apiMessageId': serializer.toJson<int?>(apiMessageId),
+      'conversationId': serializer.toJson<String>(conversationId),
+      'senderId': serializer.toJson<String>(senderId),
+      'senderName': serializer.toJson<String>(senderName),
+      'senderEmail': serializer.toJson<String?>(senderEmail),
+      'senderAvatar': serializer.toJson<String?>(senderAvatar),
+      'content': serializer.toJson<String>(content),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'isRead': serializer.toJson<bool>(isRead),
+      'isEdited': serializer.toJson<bool>(isEdited),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
+      'apiCreatedAt': serializer.toJson<DateTime?>(apiCreatedAt),
+      'sentAt': serializer.toJson<DateTime>(sentAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  EnhancedMessageData copyWith({
+    int? id,
+    Value<int?> apiMessageId = const Value.absent(),
+    String? conversationId,
+    String? senderId,
+    String? senderName,
+    Value<String?> senderEmail = const Value.absent(),
+    Value<String?> senderAvatar = const Value.absent(),
+    String? content,
+    Value<String?> imageUrl = const Value.absent(),
+    bool? isRead,
+    bool? isEdited,
+    bool? isDeleted,
+    Value<DateTime?> apiCreatedAt = const Value.absent(),
+    DateTime? sentAt,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+    String? status,
+  }) => EnhancedMessageData(
+    id: id ?? this.id,
+    apiMessageId: apiMessageId.present ? apiMessageId.value : this.apiMessageId,
+    conversationId: conversationId ?? this.conversationId,
+    senderId: senderId ?? this.senderId,
+    senderName: senderName ?? this.senderName,
+    senderEmail: senderEmail.present ? senderEmail.value : this.senderEmail,
+    senderAvatar: senderAvatar.present ? senderAvatar.value : this.senderAvatar,
+    content: content ?? this.content,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    isRead: isRead ?? this.isRead,
+    isEdited: isEdited ?? this.isEdited,
+    isDeleted: isDeleted ?? this.isDeleted,
+    apiCreatedAt: apiCreatedAt.present ? apiCreatedAt.value : this.apiCreatedAt,
+    sentAt: sentAt ?? this.sentAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+    status: status ?? this.status,
+  );
+  EnhancedMessageData copyWithCompanion(EnhancedMessageTableCompanion data) {
+    return EnhancedMessageData(
+      id: data.id.present ? data.id.value : this.id,
+      apiMessageId: data.apiMessageId.present
+          ? data.apiMessageId.value
+          : this.apiMessageId,
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      senderId: data.senderId.present ? data.senderId.value : this.senderId,
+      senderName: data.senderName.present
+          ? data.senderName.value
+          : this.senderName,
+      senderEmail: data.senderEmail.present
+          ? data.senderEmail.value
+          : this.senderEmail,
+      senderAvatar: data.senderAvatar.present
+          ? data.senderAvatar.value
+          : this.senderAvatar,
+      content: data.content.present ? data.content.value : this.content,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      isEdited: data.isEdited.present ? data.isEdited.value : this.isEdited,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      apiCreatedAt: data.apiCreatedAt.present
+          ? data.apiCreatedAt.value
+          : this.apiCreatedAt,
+      sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      status: data.status.present ? data.status.value : this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedMessageData(')
+          ..write('id: $id, ')
+          ..write('apiMessageId: $apiMessageId, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderName: $senderName, ')
+          ..write('senderEmail: $senderEmail, ')
+          ..write('senderAvatar: $senderAvatar, ')
+          ..write('content: $content, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('isRead: $isRead, ')
+          ..write('isEdited: $isEdited, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('apiCreatedAt: $apiCreatedAt, ')
+          ..write('sentAt: $sentAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    apiMessageId,
+    conversationId,
+    senderId,
+    senderName,
+    senderEmail,
+    senderAvatar,
+    content,
+    imageUrl,
+    isRead,
+    isEdited,
+    isDeleted,
+    apiCreatedAt,
+    sentAt,
+    updatedAt,
+    createdAt,
+    status,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EnhancedMessageData &&
+          other.id == this.id &&
+          other.apiMessageId == this.apiMessageId &&
+          other.conversationId == this.conversationId &&
+          other.senderId == this.senderId &&
+          other.senderName == this.senderName &&
+          other.senderEmail == this.senderEmail &&
+          other.senderAvatar == this.senderAvatar &&
+          other.content == this.content &&
+          other.imageUrl == this.imageUrl &&
+          other.isRead == this.isRead &&
+          other.isEdited == this.isEdited &&
+          other.isDeleted == this.isDeleted &&
+          other.apiCreatedAt == this.apiCreatedAt &&
+          other.sentAt == this.sentAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt &&
+          other.status == this.status);
+}
+
+class EnhancedMessageTableCompanion
+    extends UpdateCompanion<EnhancedMessageData> {
+  final Value<int> id;
+  final Value<int?> apiMessageId;
+  final Value<String> conversationId;
+  final Value<String> senderId;
+  final Value<String> senderName;
+  final Value<String?> senderEmail;
+  final Value<String?> senderAvatar;
+  final Value<String> content;
+  final Value<String?> imageUrl;
+  final Value<bool> isRead;
+  final Value<bool> isEdited;
+  final Value<bool> isDeleted;
+  final Value<DateTime?> apiCreatedAt;
+  final Value<DateTime> sentAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<String> status;
+  const EnhancedMessageTableCompanion({
+    this.id = const Value.absent(),
+    this.apiMessageId = const Value.absent(),
+    this.conversationId = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderName = const Value.absent(),
+    this.senderEmail = const Value.absent(),
+    this.senderAvatar = const Value.absent(),
+    this.content = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.isEdited = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.apiCreatedAt = const Value.absent(),
+    this.sentAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.status = const Value.absent(),
+  });
+  EnhancedMessageTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.apiMessageId = const Value.absent(),
+    required String conversationId,
+    required String senderId,
+    required String senderName,
+    this.senderEmail = const Value.absent(),
+    this.senderAvatar = const Value.absent(),
+    required String content,
+    this.imageUrl = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.isEdited = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.apiCreatedAt = const Value.absent(),
+    required DateTime sentAt,
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.status = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       senderId = Value(senderId),
+       senderName = Value(senderName),
+       content = Value(content),
+       sentAt = Value(sentAt),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<EnhancedMessageData> custom({
+    Expression<int>? id,
+    Expression<int>? apiMessageId,
+    Expression<String>? conversationId,
+    Expression<String>? senderId,
+    Expression<String>? senderName,
+    Expression<String>? senderEmail,
+    Expression<String>? senderAvatar,
+    Expression<String>? content,
+    Expression<String>? imageUrl,
+    Expression<bool>? isRead,
+    Expression<bool>? isEdited,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? apiCreatedAt,
+    Expression<DateTime>? sentAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<String>? status,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (apiMessageId != null) 'api_message_id': apiMessageId,
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (senderId != null) 'sender_id': senderId,
+      if (senderName != null) 'sender_name': senderName,
+      if (senderEmail != null) 'sender_email': senderEmail,
+      if (senderAvatar != null) 'sender_avatar': senderAvatar,
+      if (content != null) 'content': content,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (isRead != null) 'is_read': isRead,
+      if (isEdited != null) 'is_edited': isEdited,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (apiCreatedAt != null) 'api_created_at': apiCreatedAt,
+      if (sentAt != null) 'sent_at': sentAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (status != null) 'status': status,
+    });
+  }
+
+  EnhancedMessageTableCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? apiMessageId,
+    Value<String>? conversationId,
+    Value<String>? senderId,
+    Value<String>? senderName,
+    Value<String?>? senderEmail,
+    Value<String?>? senderAvatar,
+    Value<String>? content,
+    Value<String?>? imageUrl,
+    Value<bool>? isRead,
+    Value<bool>? isEdited,
+    Value<bool>? isDeleted,
+    Value<DateTime?>? apiCreatedAt,
+    Value<DateTime>? sentAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<String>? status,
+  }) {
+    return EnhancedMessageTableCompanion(
+      id: id ?? this.id,
+      apiMessageId: apiMessageId ?? this.apiMessageId,
+      conversationId: conversationId ?? this.conversationId,
+      senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
+      senderEmail: senderEmail ?? this.senderEmail,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
+      content: content ?? this.content,
+      imageUrl: imageUrl ?? this.imageUrl,
+      isRead: isRead ?? this.isRead,
+      isEdited: isEdited ?? this.isEdited,
+      isDeleted: isDeleted ?? this.isDeleted,
+      apiCreatedAt: apiCreatedAt ?? this.apiCreatedAt,
+      sentAt: sentAt ?? this.sentAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      status: status ?? this.status,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (apiMessageId.present) {
+      map['api_message_id'] = Variable<int>(apiMessageId.value);
+    }
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (senderId.present) {
+      map['sender_id'] = Variable<String>(senderId.value);
+    }
+    if (senderName.present) {
+      map['sender_name'] = Variable<String>(senderName.value);
+    }
+    if (senderEmail.present) {
+      map['sender_email'] = Variable<String>(senderEmail.value);
+    }
+    if (senderAvatar.present) {
+      map['sender_avatar'] = Variable<String>(senderAvatar.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
+    if (isEdited.present) {
+      map['is_edited'] = Variable<bool>(isEdited.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (apiCreatedAt.present) {
+      map['api_created_at'] = Variable<DateTime>(apiCreatedAt.value);
+    }
+    if (sentAt.present) {
+      map['sent_at'] = Variable<DateTime>(sentAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedMessageTableCompanion(')
+          ..write('id: $id, ')
+          ..write('apiMessageId: $apiMessageId, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderName: $senderName, ')
+          ..write('senderEmail: $senderEmail, ')
+          ..write('senderAvatar: $senderAvatar, ')
+          ..write('content: $content, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('isRead: $isRead, ')
+          ..write('isEdited: $isEdited, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('apiCreatedAt: $apiCreatedAt, ')
+          ..write('sentAt: $sentAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MessageAttachmentsTableTable extends MessageAttachmentsTable
+    with TableInfo<$MessageAttachmentsTableTable, MessageAttachmentData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MessageAttachmentsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _messageIdMeta = const VerificationMeta(
+    'messageId',
+  );
+  @override
+  late final GeneratedColumn<int> messageId = GeneratedColumn<int>(
+    'message_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
+    'attachmentType',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
+    'attachment_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileNameMeta = const VerificationMeta(
+    'fileName',
+  );
+  @override
+  late final GeneratedColumn<String> fileName = GeneratedColumn<String>(
+    'file_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fileSizeMeta = const VerificationMeta(
+    'fileSize',
+  );
+  @override
+  late final GeneratedColumn<int> fileSize = GeneratedColumn<int>(
+    'file_size',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _mimeTypeMeta = const VerificationMeta(
+    'mimeType',
+  );
+  @override
+  late final GeneratedColumn<String> mimeType = GeneratedColumn<String>(
+    'mime_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    messageId,
+    attachmentType,
+    url,
+    fileName,
+    fileSize,
+    mimeType,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'message_attachments_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MessageAttachmentData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('message_id')) {
+      context.handle(
+        _messageIdMeta,
+        messageId.isAcceptableOrUnknown(data['message_id']!, _messageIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_messageIdMeta);
+    }
+    if (data.containsKey('attachment_type')) {
+      context.handle(
+        _attachmentTypeMeta,
+        attachmentType.isAcceptableOrUnknown(
+          data['attachment_type']!,
+          _attachmentTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attachmentTypeMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('file_name')) {
+      context.handle(
+        _fileNameMeta,
+        fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta),
+      );
+    }
+    if (data.containsKey('file_size')) {
+      context.handle(
+        _fileSizeMeta,
+        fileSize.isAcceptableOrUnknown(data['file_size']!, _fileSizeMeta),
+      );
+    }
+    if (data.containsKey('mime_type')) {
+      context.handle(
+        _mimeTypeMeta,
+        mimeType.isAcceptableOrUnknown(data['mime_type']!, _mimeTypeMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MessageAttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MessageAttachmentData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      messageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}message_id'],
+      )!,
+      attachmentType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_type'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      )!,
+      fileName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_name'],
+      ),
+      fileSize: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}file_size'],
+      ),
+      mimeType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mime_type'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $MessageAttachmentsTableTable createAlias(String alias) {
+    return $MessageAttachmentsTableTable(attachedDatabase, alias);
+  }
+}
+
+class MessageAttachmentData extends DataClass
+    implements Insertable<MessageAttachmentData> {
+  final int id;
+  final int messageId;
+  final String attachmentType;
+  final String url;
+  final String? fileName;
+  final int? fileSize;
+  final String? mimeType;
+  final DateTime createdAt;
+  const MessageAttachmentData({
+    required this.id,
+    required this.messageId,
+    required this.attachmentType,
+    required this.url,
+    this.fileName,
+    this.fileSize,
+    this.mimeType,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['message_id'] = Variable<int>(messageId);
+    map['attachment_type'] = Variable<String>(attachmentType);
+    map['url'] = Variable<String>(url);
+    if (!nullToAbsent || fileName != null) {
+      map['file_name'] = Variable<String>(fileName);
+    }
+    if (!nullToAbsent || fileSize != null) {
+      map['file_size'] = Variable<int>(fileSize);
+    }
+    if (!nullToAbsent || mimeType != null) {
+      map['mime_type'] = Variable<String>(mimeType);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  MessageAttachmentsTableCompanion toCompanion(bool nullToAbsent) {
+    return MessageAttachmentsTableCompanion(
+      id: Value(id),
+      messageId: Value(messageId),
+      attachmentType: Value(attachmentType),
+      url: Value(url),
+      fileName: fileName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileName),
+      fileSize: fileSize == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileSize),
+      mimeType: mimeType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mimeType),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory MessageAttachmentData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MessageAttachmentData(
+      id: serializer.fromJson<int>(json['id']),
+      messageId: serializer.fromJson<int>(json['messageId']),
+      attachmentType: serializer.fromJson<String>(json['attachmentType']),
+      url: serializer.fromJson<String>(json['url']),
+      fileName: serializer.fromJson<String?>(json['fileName']),
+      fileSize: serializer.fromJson<int?>(json['fileSize']),
+      mimeType: serializer.fromJson<String?>(json['mimeType']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'messageId': serializer.toJson<int>(messageId),
+      'attachmentType': serializer.toJson<String>(attachmentType),
+      'url': serializer.toJson<String>(url),
+      'fileName': serializer.toJson<String?>(fileName),
+      'fileSize': serializer.toJson<int?>(fileSize),
+      'mimeType': serializer.toJson<String?>(mimeType),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  MessageAttachmentData copyWith({
+    int? id,
+    int? messageId,
+    String? attachmentType,
+    String? url,
+    Value<String?> fileName = const Value.absent(),
+    Value<int?> fileSize = const Value.absent(),
+    Value<String?> mimeType = const Value.absent(),
+    DateTime? createdAt,
+  }) => MessageAttachmentData(
+    id: id ?? this.id,
+    messageId: messageId ?? this.messageId,
+    attachmentType: attachmentType ?? this.attachmentType,
+    url: url ?? this.url,
+    fileName: fileName.present ? fileName.value : this.fileName,
+    fileSize: fileSize.present ? fileSize.value : this.fileSize,
+    mimeType: mimeType.present ? mimeType.value : this.mimeType,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  MessageAttachmentData copyWithCompanion(
+    MessageAttachmentsTableCompanion data,
+  ) {
+    return MessageAttachmentData(
+      id: data.id.present ? data.id.value : this.id,
+      messageId: data.messageId.present ? data.messageId.value : this.messageId,
+      attachmentType: data.attachmentType.present
+          ? data.attachmentType.value
+          : this.attachmentType,
+      url: data.url.present ? data.url.value : this.url,
+      fileName: data.fileName.present ? data.fileName.value : this.fileName,
+      fileSize: data.fileSize.present ? data.fileSize.value : this.fileSize,
+      mimeType: data.mimeType.present ? data.mimeType.value : this.mimeType,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageAttachmentData(')
+          ..write('id: $id, ')
+          ..write('messageId: $messageId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    messageId,
+    attachmentType,
+    url,
+    fileName,
+    fileSize,
+    mimeType,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MessageAttachmentData &&
+          other.id == this.id &&
+          other.messageId == this.messageId &&
+          other.attachmentType == this.attachmentType &&
+          other.url == this.url &&
+          other.fileName == this.fileName &&
+          other.fileSize == this.fileSize &&
+          other.mimeType == this.mimeType &&
+          other.createdAt == this.createdAt);
+}
+
+class MessageAttachmentsTableCompanion
+    extends UpdateCompanion<MessageAttachmentData> {
+  final Value<int> id;
+  final Value<int> messageId;
+  final Value<String> attachmentType;
+  final Value<String> url;
+  final Value<String?> fileName;
+  final Value<int?> fileSize;
+  final Value<String?> mimeType;
+  final Value<DateTime> createdAt;
+  const MessageAttachmentsTableCompanion({
+    this.id = const Value.absent(),
+    this.messageId = const Value.absent(),
+    this.attachmentType = const Value.absent(),
+    this.url = const Value.absent(),
+    this.fileName = const Value.absent(),
+    this.fileSize = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  MessageAttachmentsTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int messageId,
+    required String attachmentType,
+    required String url,
+    this.fileName = const Value.absent(),
+    this.fileSize = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    required DateTime createdAt,
+  }) : messageId = Value(messageId),
+       attachmentType = Value(attachmentType),
+       url = Value(url),
+       createdAt = Value(createdAt);
+  static Insertable<MessageAttachmentData> custom({
+    Expression<int>? id,
+    Expression<int>? messageId,
+    Expression<String>? attachmentType,
+    Expression<String>? url,
+    Expression<String>? fileName,
+    Expression<int>? fileSize,
+    Expression<String>? mimeType,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (messageId != null) 'message_id': messageId,
+      if (attachmentType != null) 'attachment_type': attachmentType,
+      if (url != null) 'url': url,
+      if (fileName != null) 'file_name': fileName,
+      if (fileSize != null) 'file_size': fileSize,
+      if (mimeType != null) 'mime_type': mimeType,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  MessageAttachmentsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? messageId,
+    Value<String>? attachmentType,
+    Value<String>? url,
+    Value<String?>? fileName,
+    Value<int?>? fileSize,
+    Value<String?>? mimeType,
+    Value<DateTime>? createdAt,
+  }) {
+    return MessageAttachmentsTableCompanion(
+      id: id ?? this.id,
+      messageId: messageId ?? this.messageId,
+      attachmentType: attachmentType ?? this.attachmentType,
+      url: url ?? this.url,
+      fileName: fileName ?? this.fileName,
+      fileSize: fileSize ?? this.fileSize,
+      mimeType: mimeType ?? this.mimeType,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (messageId.present) {
+      map['message_id'] = Variable<int>(messageId.value);
+    }
+    if (attachmentType.present) {
+      map['attachment_type'] = Variable<String>(attachmentType.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (fileName.present) {
+      map['file_name'] = Variable<String>(fileName.value);
+    }
+    if (fileSize.present) {
+      map['file_size'] = Variable<int>(fileSize.value);
+    }
+    if (mimeType.present) {
+      map['mime_type'] = Variable<String>(mimeType.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageAttachmentsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('messageId: $messageId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DraftMessagesTableTable extends DraftMessagesTable
+    with TableInfo<$DraftMessagesTableTable, DraftMessageData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DraftMessagesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    conversationId,
+    content,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'draft_messages_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DraftMessageData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  @override
+  DraftMessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DraftMessageData(
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DraftMessagesTableTable createAlias(String alias) {
+    return $DraftMessagesTableTable(attachedDatabase, alias);
+  }
+}
+
+class DraftMessageData extends DataClass
+    implements Insertable<DraftMessageData> {
+  final String conversationId;
+  final String content;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const DraftMessageData({
+    required this.conversationId,
+    required this.content,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['content'] = Variable<String>(content);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  DraftMessagesTableCompanion toCompanion(bool nullToAbsent) {
+    return DraftMessagesTableCompanion(
+      conversationId: Value(conversationId),
+      content: Value(content),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory DraftMessageData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DraftMessageData(
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      content: serializer.fromJson<String>(json['content']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'conversationId': serializer.toJson<String>(conversationId),
+      'content': serializer.toJson<String>(content),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  DraftMessageData copyWith({
+    String? conversationId,
+    String? content,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => DraftMessageData(
+    conversationId: conversationId ?? this.conversationId,
+    content: content ?? this.content,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  DraftMessageData copyWithCompanion(DraftMessagesTableCompanion data) {
+    return DraftMessageData(
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      content: data.content.present ? data.content.value : this.content,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftMessageData(')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(conversationId, content, updatedAt, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DraftMessageData &&
+          other.conversationId == this.conversationId &&
+          other.content == this.content &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class DraftMessagesTableCompanion extends UpdateCompanion<DraftMessageData> {
+  final Value<String> conversationId;
+  final Value<String> content;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const DraftMessagesTableCompanion({
+    this.conversationId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DraftMessagesTableCompanion.insert({
+    required String conversationId,
+    required String content,
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       content = Value(content),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<DraftMessageData> custom({
+    Expression<String>? conversationId,
+    Expression<String>? content,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (content != null) 'content': content,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DraftMessagesTableCompanion copyWith({
+    Value<String>? conversationId,
+    Value<String>? content,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return DraftMessagesTableCompanion(
+      conversationId: conversationId ?? this.conversationId,
+      content: content ?? this.content,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftMessagesTableCompanion(')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WebSocketConnectionTableTable extends WebSocketConnectionTable
+    with TableInfo<$WebSocketConnectionTableTable, WebSocketConnectionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WebSocketConnectionTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastConnectedAtMeta = const VerificationMeta(
+    'lastConnectedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastConnectedAt =
+      GeneratedColumn<DateTime>(
+        'last_connected_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    connectionId,
+    state,
+    lastConnectedAt,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'web_socket_connection_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WebSocketConnectionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (data.containsKey('last_connected_at')) {
+      context.handle(
+        _lastConnectedAtMeta,
+        lastConnectedAt.isAcceptableOrUnknown(
+          data['last_connected_at']!,
+          _lastConnectedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {connectionId};
+  @override
+  WebSocketConnectionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WebSocketConnectionData(
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      )!,
+      lastConnectedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_connected_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WebSocketConnectionTableTable createAlias(String alias) {
+    return $WebSocketConnectionTableTable(attachedDatabase, alias);
+  }
+}
+
+class WebSocketConnectionData extends DataClass
+    implements Insertable<WebSocketConnectionData> {
+  final String connectionId;
+  final String state;
+  final DateTime? lastConnectedAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const WebSocketConnectionData({
+    required this.connectionId,
+    required this.state,
+    this.lastConnectedAt,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['connection_id'] = Variable<String>(connectionId);
+    map['state'] = Variable<String>(state);
+    if (!nullToAbsent || lastConnectedAt != null) {
+      map['last_connected_at'] = Variable<DateTime>(lastConnectedAt);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  WebSocketConnectionTableCompanion toCompanion(bool nullToAbsent) {
+    return WebSocketConnectionTableCompanion(
+      connectionId: Value(connectionId),
+      state: Value(state),
+      lastConnectedAt: lastConnectedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastConnectedAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory WebSocketConnectionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WebSocketConnectionData(
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      state: serializer.fromJson<String>(json['state']),
+      lastConnectedAt: serializer.fromJson<DateTime?>(json['lastConnectedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'connectionId': serializer.toJson<String>(connectionId),
+      'state': serializer.toJson<String>(state),
+      'lastConnectedAt': serializer.toJson<DateTime?>(lastConnectedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  WebSocketConnectionData copyWith({
+    String? connectionId,
+    String? state,
+    Value<DateTime?> lastConnectedAt = const Value.absent(),
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => WebSocketConnectionData(
+    connectionId: connectionId ?? this.connectionId,
+    state: state ?? this.state,
+    lastConnectedAt: lastConnectedAt.present
+        ? lastConnectedAt.value
+        : this.lastConnectedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  WebSocketConnectionData copyWithCompanion(
+    WebSocketConnectionTableCompanion data,
+  ) {
+    return WebSocketConnectionData(
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      state: data.state.present ? data.state.value : this.state,
+      lastConnectedAt: data.lastConnectedAt.present
+          ? data.lastConnectedAt.value
+          : this.lastConnectedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebSocketConnectionData(')
+          ..write('connectionId: $connectionId, ')
+          ..write('state: $state, ')
+          ..write('lastConnectedAt: $lastConnectedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(connectionId, state, lastConnectedAt, updatedAt, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WebSocketConnectionData &&
+          other.connectionId == this.connectionId &&
+          other.state == this.state &&
+          other.lastConnectedAt == this.lastConnectedAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class WebSocketConnectionTableCompanion
+    extends UpdateCompanion<WebSocketConnectionData> {
+  final Value<String> connectionId;
+  final Value<String> state;
+  final Value<DateTime?> lastConnectedAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const WebSocketConnectionTableCompanion({
+    this.connectionId = const Value.absent(),
+    this.state = const Value.absent(),
+    this.lastConnectedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WebSocketConnectionTableCompanion.insert({
+    required String connectionId,
+    required String state,
+    this.lastConnectedAt = const Value.absent(),
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : connectionId = Value(connectionId),
+       state = Value(state),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<WebSocketConnectionData> custom({
+    Expression<String>? connectionId,
+    Expression<String>? state,
+    Expression<DateTime>? lastConnectedAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (connectionId != null) 'connection_id': connectionId,
+      if (state != null) 'state': state,
+      if (lastConnectedAt != null) 'last_connected_at': lastConnectedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WebSocketConnectionTableCompanion copyWith({
+    Value<String>? connectionId,
+    Value<String>? state,
+    Value<DateTime?>? lastConnectedAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return WebSocketConnectionTableCompanion(
+      connectionId: connectionId ?? this.connectionId,
+      state: state ?? this.state,
+      lastConnectedAt: lastConnectedAt ?? this.lastConnectedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (lastConnectedAt.present) {
+      map['last_connected_at'] = Variable<DateTime>(lastConnectedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebSocketConnectionTableCompanion(')
+          ..write('connectionId: $connectionId, ')
+          ..write('state: $state, ')
+          ..write('lastConnectedAt: $lastConnectedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $OfflineMessageQueueTableTable extends OfflineMessageQueueTable
+    with TableInfo<$OfflineMessageQueueTableTable, OfflineMessageQueueData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OfflineMessageQueueTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tempMessageIdMeta = const VerificationMeta(
+    'tempMessageId',
+  );
+  @override
+  late final GeneratedColumn<String> tempMessageId = GeneratedColumn<String>(
+    'temp_message_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attachmentPathMeta = const VerificationMeta(
+    'attachmentPath',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentPath = GeneratedColumn<String>(
+    'attachment_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _retryCountMeta = const VerificationMeta(
+    'retryCount',
+  );
+  @override
+  late final GeneratedColumn<int> retryCount = GeneratedColumn<int>(
+    'retry_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastRetryAtMeta = const VerificationMeta(
+    'lastRetryAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastRetryAt = GeneratedColumn<DateTime>(
+    'last_retry_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    conversationId,
+    content,
+    tempMessageId,
+    attachmentPath,
+    retryCount,
+    createdAt,
+    lastRetryAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'offline_message_queue_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<OfflineMessageQueueData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('temp_message_id')) {
+      context.handle(
+        _tempMessageIdMeta,
+        tempMessageId.isAcceptableOrUnknown(
+          data['temp_message_id']!,
+          _tempMessageIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_tempMessageIdMeta);
+    }
+    if (data.containsKey('attachment_path')) {
+      context.handle(
+        _attachmentPathMeta,
+        attachmentPath.isAcceptableOrUnknown(
+          data['attachment_path']!,
+          _attachmentPathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('retry_count')) {
+      context.handle(
+        _retryCountMeta,
+        retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('last_retry_at')) {
+      context.handle(
+        _lastRetryAtMeta,
+        lastRetryAt.isAcceptableOrUnknown(
+          data['last_retry_at']!,
+          _lastRetryAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OfflineMessageQueueData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OfflineMessageQueueData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      tempMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_message_id'],
+      )!,
+      attachmentPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_path'],
+      ),
+      retryCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retry_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastRetryAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_retry_at'],
+      ),
+    );
+  }
+
+  @override
+  $OfflineMessageQueueTableTable createAlias(String alias) {
+    return $OfflineMessageQueueTableTable(attachedDatabase, alias);
+  }
+}
+
+class OfflineMessageQueueData extends DataClass
+    implements Insertable<OfflineMessageQueueData> {
+  final int id;
+  final String conversationId;
+  final String content;
+  final String tempMessageId;
+  final String? attachmentPath;
+  final int retryCount;
+  final DateTime createdAt;
+  final DateTime? lastRetryAt;
+  const OfflineMessageQueueData({
+    required this.id,
+    required this.conversationId,
+    required this.content,
+    required this.tempMessageId,
+    this.attachmentPath,
+    required this.retryCount,
+    required this.createdAt,
+    this.lastRetryAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['content'] = Variable<String>(content);
+    map['temp_message_id'] = Variable<String>(tempMessageId);
+    if (!nullToAbsent || attachmentPath != null) {
+      map['attachment_path'] = Variable<String>(attachmentPath);
+    }
+    map['retry_count'] = Variable<int>(retryCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastRetryAt != null) {
+      map['last_retry_at'] = Variable<DateTime>(lastRetryAt);
+    }
+    return map;
+  }
+
+  OfflineMessageQueueTableCompanion toCompanion(bool nullToAbsent) {
+    return OfflineMessageQueueTableCompanion(
+      id: Value(id),
+      conversationId: Value(conversationId),
+      content: Value(content),
+      tempMessageId: Value(tempMessageId),
+      attachmentPath: attachmentPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attachmentPath),
+      retryCount: Value(retryCount),
+      createdAt: Value(createdAt),
+      lastRetryAt: lastRetryAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastRetryAt),
+    );
+  }
+
+  factory OfflineMessageQueueData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OfflineMessageQueueData(
+      id: serializer.fromJson<int>(json['id']),
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      content: serializer.fromJson<String>(json['content']),
+      tempMessageId: serializer.fromJson<String>(json['tempMessageId']),
+      attachmentPath: serializer.fromJson<String?>(json['attachmentPath']),
+      retryCount: serializer.fromJson<int>(json['retryCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastRetryAt: serializer.fromJson<DateTime?>(json['lastRetryAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'conversationId': serializer.toJson<String>(conversationId),
+      'content': serializer.toJson<String>(content),
+      'tempMessageId': serializer.toJson<String>(tempMessageId),
+      'attachmentPath': serializer.toJson<String?>(attachmentPath),
+      'retryCount': serializer.toJson<int>(retryCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastRetryAt': serializer.toJson<DateTime?>(lastRetryAt),
+    };
+  }
+
+  OfflineMessageQueueData copyWith({
+    int? id,
+    String? conversationId,
+    String? content,
+    String? tempMessageId,
+    Value<String?> attachmentPath = const Value.absent(),
+    int? retryCount,
+    DateTime? createdAt,
+    Value<DateTime?> lastRetryAt = const Value.absent(),
+  }) => OfflineMessageQueueData(
+    id: id ?? this.id,
+    conversationId: conversationId ?? this.conversationId,
+    content: content ?? this.content,
+    tempMessageId: tempMessageId ?? this.tempMessageId,
+    attachmentPath: attachmentPath.present
+        ? attachmentPath.value
+        : this.attachmentPath,
+    retryCount: retryCount ?? this.retryCount,
+    createdAt: createdAt ?? this.createdAt,
+    lastRetryAt: lastRetryAt.present ? lastRetryAt.value : this.lastRetryAt,
+  );
+  OfflineMessageQueueData copyWithCompanion(
+    OfflineMessageQueueTableCompanion data,
+  ) {
+    return OfflineMessageQueueData(
+      id: data.id.present ? data.id.value : this.id,
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      content: data.content.present ? data.content.value : this.content,
+      tempMessageId: data.tempMessageId.present
+          ? data.tempMessageId.value
+          : this.tempMessageId,
+      attachmentPath: data.attachmentPath.present
+          ? data.attachmentPath.value
+          : this.attachmentPath,
+      retryCount: data.retryCount.present
+          ? data.retryCount.value
+          : this.retryCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastRetryAt: data.lastRetryAt.present
+          ? data.lastRetryAt.value
+          : this.lastRetryAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineMessageQueueData(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('tempMessageId: $tempMessageId, ')
+          ..write('attachmentPath: $attachmentPath, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastRetryAt: $lastRetryAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    conversationId,
+    content,
+    tempMessageId,
+    attachmentPath,
+    retryCount,
+    createdAt,
+    lastRetryAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OfflineMessageQueueData &&
+          other.id == this.id &&
+          other.conversationId == this.conversationId &&
+          other.content == this.content &&
+          other.tempMessageId == this.tempMessageId &&
+          other.attachmentPath == this.attachmentPath &&
+          other.retryCount == this.retryCount &&
+          other.createdAt == this.createdAt &&
+          other.lastRetryAt == this.lastRetryAt);
+}
+
+class OfflineMessageQueueTableCompanion
+    extends UpdateCompanion<OfflineMessageQueueData> {
+  final Value<int> id;
+  final Value<String> conversationId;
+  final Value<String> content;
+  final Value<String> tempMessageId;
+  final Value<String?> attachmentPath;
+  final Value<int> retryCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastRetryAt;
+  const OfflineMessageQueueTableCompanion({
+    this.id = const Value.absent(),
+    this.conversationId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.tempMessageId = const Value.absent(),
+    this.attachmentPath = const Value.absent(),
+    this.retryCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastRetryAt = const Value.absent(),
+  });
+  OfflineMessageQueueTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String conversationId,
+    required String content,
+    required String tempMessageId,
+    this.attachmentPath = const Value.absent(),
+    this.retryCount = const Value.absent(),
+    required DateTime createdAt,
+    this.lastRetryAt = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       content = Value(content),
+       tempMessageId = Value(tempMessageId),
+       createdAt = Value(createdAt);
+  static Insertable<OfflineMessageQueueData> custom({
+    Expression<int>? id,
+    Expression<String>? conversationId,
+    Expression<String>? content,
+    Expression<String>? tempMessageId,
+    Expression<String>? attachmentPath,
+    Expression<int>? retryCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastRetryAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (content != null) 'content': content,
+      if (tempMessageId != null) 'temp_message_id': tempMessageId,
+      if (attachmentPath != null) 'attachment_path': attachmentPath,
+      if (retryCount != null) 'retry_count': retryCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastRetryAt != null) 'last_retry_at': lastRetryAt,
+    });
+  }
+
+  OfflineMessageQueueTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? conversationId,
+    Value<String>? content,
+    Value<String>? tempMessageId,
+    Value<String?>? attachmentPath,
+    Value<int>? retryCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastRetryAt,
+  }) {
+    return OfflineMessageQueueTableCompanion(
+      id: id ?? this.id,
+      conversationId: conversationId ?? this.conversationId,
+      content: content ?? this.content,
+      tempMessageId: tempMessageId ?? this.tempMessageId,
+      attachmentPath: attachmentPath ?? this.attachmentPath,
+      retryCount: retryCount ?? this.retryCount,
+      createdAt: createdAt ?? this.createdAt,
+      lastRetryAt: lastRetryAt ?? this.lastRetryAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (tempMessageId.present) {
+      map['temp_message_id'] = Variable<String>(tempMessageId.value);
+    }
+    if (attachmentPath.present) {
+      map['attachment_path'] = Variable<String>(attachmentPath.value);
+    }
+    if (retryCount.present) {
+      map['retry_count'] = Variable<int>(retryCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastRetryAt.present) {
+      map['last_retry_at'] = Variable<DateTime>(lastRetryAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineMessageQueueTableCompanion(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('tempMessageId: $tempMessageId, ')
+          ..write('attachmentPath: $attachmentPath, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastRetryAt: $lastRetryAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -10745,6 +14300,3657 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
+class $MagnetStudentProfileTable extends MagnetStudentProfile
+    with TableInfo<$MagnetStudentProfileTable, MagnetStudentProfileData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetStudentProfileTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _admissionNumberMeta = const VerificationMeta(
+    'admissionNumber',
+  );
+  @override
+  late final GeneratedColumn<String> admissionNumber = GeneratedColumn<String>(
+    'admission_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstNameMeta = const VerificationMeta(
+    'firstName',
+  );
+  @override
+  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
+    'first_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherNamesMeta = const VerificationMeta(
+    'otherNames',
+  );
+  @override
+  late final GeneratedColumn<String> otherNames = GeneratedColumn<String>(
+    'other_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
+    'nationalId',
+  );
+  @override
+  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+    'national_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneNumberMeta = const VerificationMeta(
+    'phoneNumber',
+  );
+  @override
+  late final GeneratedColumn<String> phoneNumber = GeneratedColumn<String>(
+    'phone_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profilePictureUrlMeta = const VerificationMeta(
+    'profilePictureUrl',
+  );
+  @override
+  late final GeneratedColumn<String> profilePictureUrl =
+      GeneratedColumn<String>(
+        'profile_picture_url',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _schoolMeta = const VerificationMeta('school');
+  @override
+  late final GeneratedColumn<String> school = GeneratedColumn<String>(
+    'school',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
+  @override
+  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
+    'campus',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _enrollmentStatusMeta = const VerificationMeta(
+    'enrollmentStatus',
+  );
+  @override
+  late final GeneratedColumn<String> enrollmentStatus = GeneratedColumn<String>(
+    'enrollment_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _programmeMeta = const VerificationMeta(
+    'programme',
+  );
+  @override
+  late final GeneratedColumn<String> programme = GeneratedColumn<String>(
+    'programme',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _degreeMeta = const VerificationMeta('degree');
+  @override
+  late final GeneratedColumn<String> degree = GeneratedColumn<String>(
+    'degree',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _academicYearMeta = const VerificationMeta(
+    'academicYear',
+  );
+  @override
+  late final GeneratedColumn<int> academicYear = GeneratedColumn<int>(
+    'academic_year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _gpaMeta = const VerificationMeta('gpa');
+  @override
+  late final GeneratedColumn<double> gpa = GeneratedColumn<double>(
+    'gpa',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emergencyContactMeta = const VerificationMeta(
+    'emergencyContact',
+  );
+  @override
+  late final GeneratedColumn<String> emergencyContact = GeneratedColumn<String>(
+    'emergency_contact',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _parentNameMeta = const VerificationMeta(
+    'parentName',
+  );
+  @override
+  late final GeneratedColumn<String> parentName = GeneratedColumn<String>(
+    'parent_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateOfAdmissionMeta = const VerificationMeta(
+    'dateOfAdmission',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfAdmission =
+      GeneratedColumn<DateTime>(
+        'date_of_admission',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _graduationDateMeta = const VerificationMeta(
+    'graduationDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> graduationDate =
+      GeneratedColumn<DateTime>(
+        'graduation_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _disabilityStatusMeta = const VerificationMeta(
+    'disabilityStatus',
+  );
+  @override
+  late final GeneratedColumn<String> disabilityStatus = GeneratedColumn<String>(
+    'disability_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isInternationalStudentMeta =
+      const VerificationMeta('isInternationalStudent');
+  @override
+  late final GeneratedColumn<bool> isInternationalStudent =
+      GeneratedColumn<bool>(
+        'is_international_student',
+        aliasedName,
+        true,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_international_student" IN (0, 1))',
+        ),
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    admissionNumber,
+    firstName,
+    otherNames,
+    nationalId,
+    gender,
+    address,
+    email,
+    phoneNumber,
+    profilePictureUrl,
+    dateOfBirth,
+    school,
+    campus,
+    enrollmentStatus,
+    programme,
+    degree,
+    academicYear,
+    gpa,
+    emergencyContact,
+    parentName,
+    dateOfAdmission,
+    graduationDate,
+    disabilityStatus,
+    isInternationalStudent,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_student_profile';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetStudentProfileData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_i_d')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_i_d']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('admission_number')) {
+      context.handle(
+        _admissionNumberMeta,
+        admissionNumber.isAcceptableOrUnknown(
+          data['admission_number']!,
+          _admissionNumberMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_admissionNumberMeta);
+    }
+    if (data.containsKey('first_name')) {
+      context.handle(
+        _firstNameMeta,
+        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_firstNameMeta);
+    }
+    if (data.containsKey('other_names')) {
+      context.handle(
+        _otherNamesMeta,
+        otherNames.isAcceptableOrUnknown(data['other_names']!, _otherNamesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_otherNamesMeta);
+    }
+    if (data.containsKey('national_id')) {
+      context.handle(
+        _nationalIdMeta,
+        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
+      );
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('phone_number')) {
+      context.handle(
+        _phoneNumberMeta,
+        phoneNumber.isAcceptableOrUnknown(
+          data['phone_number']!,
+          _phoneNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_url')) {
+      context.handle(
+        _profilePictureUrlMeta,
+        profilePictureUrl.isAcceptableOrUnknown(
+          data['profile_picture_url']!,
+          _profilePictureUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('school')) {
+      context.handle(
+        _schoolMeta,
+        school.isAcceptableOrUnknown(data['school']!, _schoolMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_schoolMeta);
+    }
+    if (data.containsKey('campus')) {
+      context.handle(
+        _campusMeta,
+        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
+      );
+    }
+    if (data.containsKey('enrollment_status')) {
+      context.handle(
+        _enrollmentStatusMeta,
+        enrollmentStatus.isAcceptableOrUnknown(
+          data['enrollment_status']!,
+          _enrollmentStatusMeta,
+        ),
+      );
+    }
+    if (data.containsKey('programme')) {
+      context.handle(
+        _programmeMeta,
+        programme.isAcceptableOrUnknown(data['programme']!, _programmeMeta),
+      );
+    }
+    if (data.containsKey('degree')) {
+      context.handle(
+        _degreeMeta,
+        degree.isAcceptableOrUnknown(data['degree']!, _degreeMeta),
+      );
+    }
+    if (data.containsKey('academic_year')) {
+      context.handle(
+        _academicYearMeta,
+        academicYear.isAcceptableOrUnknown(
+          data['academic_year']!,
+          _academicYearMeta,
+        ),
+      );
+    }
+    if (data.containsKey('gpa')) {
+      context.handle(
+        _gpaMeta,
+        gpa.isAcceptableOrUnknown(data['gpa']!, _gpaMeta),
+      );
+    }
+    if (data.containsKey('emergency_contact')) {
+      context.handle(
+        _emergencyContactMeta,
+        emergencyContact.isAcceptableOrUnknown(
+          data['emergency_contact']!,
+          _emergencyContactMeta,
+        ),
+      );
+    }
+    if (data.containsKey('parent_name')) {
+      context.handle(
+        _parentNameMeta,
+        parentName.isAcceptableOrUnknown(data['parent_name']!, _parentNameMeta),
+      );
+    }
+    if (data.containsKey('date_of_admission')) {
+      context.handle(
+        _dateOfAdmissionMeta,
+        dateOfAdmission.isAcceptableOrUnknown(
+          data['date_of_admission']!,
+          _dateOfAdmissionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('graduation_date')) {
+      context.handle(
+        _graduationDateMeta,
+        graduationDate.isAcceptableOrUnknown(
+          data['graduation_date']!,
+          _graduationDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('disability_status')) {
+      context.handle(
+        _disabilityStatusMeta,
+        disabilityStatus.isAcceptableOrUnknown(
+          data['disability_status']!,
+          _disabilityStatusMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_international_student')) {
+      context.handle(
+        _isInternationalStudentMeta,
+        isInternationalStudent.isAcceptableOrUnknown(
+          data['is_international_student']!,
+          _isInternationalStudentMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    admissionNumber,
+    institutionID,
+    userID,
+  };
+  @override
+  MagnetStudentProfileData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetStudentProfileData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_i_d'],
+      )!,
+      admissionNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admission_number'],
+      )!,
+      firstName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name'],
+      )!,
+      otherNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_names'],
+      )!,
+      nationalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_id'],
+      ),
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      phoneNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone_number'],
+      ),
+      profilePictureUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture_url'],
+      ),
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      ),
+      school: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school'],
+      )!,
+      campus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}campus'],
+      ),
+      enrollmentStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}enrollment_status'],
+      ),
+      programme: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}programme'],
+      ),
+      degree: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}degree'],
+      ),
+      academicYear: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}academic_year'],
+      ),
+      gpa: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}gpa'],
+      ),
+      emergencyContact: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emergency_contact'],
+      ),
+      parentName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent_name'],
+      ),
+      dateOfAdmission: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_admission'],
+      ),
+      graduationDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}graduation_date'],
+      ),
+      disabilityStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}disability_status'],
+      ),
+      isInternationalStudent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_international_student'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetStudentProfileTable createAlias(String alias) {
+    return $MagnetStudentProfileTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetStudentProfileData extends DataClass
+    implements Insertable<MagnetStudentProfileData> {
+  final String userID;
+  final int institutionID;
+  final String admissionNumber;
+  final String firstName;
+  final String otherNames;
+  final String? nationalId;
+  final String? gender;
+  final String? address;
+  final String? email;
+  final String? phoneNumber;
+  final String? profilePictureUrl;
+  final DateTime? dateOfBirth;
+  final String school;
+  final String? campus;
+  final String? enrollmentStatus;
+  final String? programme;
+  final String? degree;
+  final int? academicYear;
+  final double? gpa;
+  final String? emergencyContact;
+  final String? parentName;
+  final DateTime? dateOfAdmission;
+  final DateTime? graduationDate;
+  final String? disabilityStatus;
+  final bool? isInternationalStudent;
+  const MagnetStudentProfileData({
+    required this.userID,
+    required this.institutionID,
+    required this.admissionNumber,
+    required this.firstName,
+    required this.otherNames,
+    this.nationalId,
+    this.gender,
+    this.address,
+    this.email,
+    this.phoneNumber,
+    this.profilePictureUrl,
+    this.dateOfBirth,
+    required this.school,
+    this.campus,
+    this.enrollmentStatus,
+    this.programme,
+    this.degree,
+    this.academicYear,
+    this.gpa,
+    this.emergencyContact,
+    this.parentName,
+    this.dateOfAdmission,
+    this.graduationDate,
+    this.disabilityStatus,
+    this.isInternationalStudent,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_i_d'] = Variable<String>(userID);
+    map['institution_i_d'] = Variable<int>(institutionID);
+    map['admission_number'] = Variable<String>(admissionNumber);
+    map['first_name'] = Variable<String>(firstName);
+    map['other_names'] = Variable<String>(otherNames);
+    if (!nullToAbsent || nationalId != null) {
+      map['national_id'] = Variable<String>(nationalId);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || phoneNumber != null) {
+      map['phone_number'] = Variable<String>(phoneNumber);
+    }
+    if (!nullToAbsent || profilePictureUrl != null) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl);
+    }
+    if (!nullToAbsent || dateOfBirth != null) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    }
+    map['school'] = Variable<String>(school);
+    if (!nullToAbsent || campus != null) {
+      map['campus'] = Variable<String>(campus);
+    }
+    if (!nullToAbsent || enrollmentStatus != null) {
+      map['enrollment_status'] = Variable<String>(enrollmentStatus);
+    }
+    if (!nullToAbsent || programme != null) {
+      map['programme'] = Variable<String>(programme);
+    }
+    if (!nullToAbsent || degree != null) {
+      map['degree'] = Variable<String>(degree);
+    }
+    if (!nullToAbsent || academicYear != null) {
+      map['academic_year'] = Variable<int>(academicYear);
+    }
+    if (!nullToAbsent || gpa != null) {
+      map['gpa'] = Variable<double>(gpa);
+    }
+    if (!nullToAbsent || emergencyContact != null) {
+      map['emergency_contact'] = Variable<String>(emergencyContact);
+    }
+    if (!nullToAbsent || parentName != null) {
+      map['parent_name'] = Variable<String>(parentName);
+    }
+    if (!nullToAbsent || dateOfAdmission != null) {
+      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission);
+    }
+    if (!nullToAbsent || graduationDate != null) {
+      map['graduation_date'] = Variable<DateTime>(graduationDate);
+    }
+    if (!nullToAbsent || disabilityStatus != null) {
+      map['disability_status'] = Variable<String>(disabilityStatus);
+    }
+    if (!nullToAbsent || isInternationalStudent != null) {
+      map['is_international_student'] = Variable<bool>(isInternationalStudent);
+    }
+    return map;
+  }
+
+  MagnetStudentProfileCompanion toCompanion(bool nullToAbsent) {
+    return MagnetStudentProfileCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      admissionNumber: Value(admissionNumber),
+      firstName: Value(firstName),
+      otherNames: Value(otherNames),
+      nationalId: nationalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationalId),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      address: address == null && nullToAbsent
+          ? const Value.absent()
+          : Value(address),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
+      phoneNumber: phoneNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phoneNumber),
+      profilePictureUrl: profilePictureUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePictureUrl),
+      dateOfBirth: dateOfBirth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfBirth),
+      school: Value(school),
+      campus: campus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campus),
+      enrollmentStatus: enrollmentStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentStatus),
+      programme: programme == null && nullToAbsent
+          ? const Value.absent()
+          : Value(programme),
+      degree: degree == null && nullToAbsent
+          ? const Value.absent()
+          : Value(degree),
+      academicYear: academicYear == null && nullToAbsent
+          ? const Value.absent()
+          : Value(academicYear),
+      gpa: gpa == null && nullToAbsent ? const Value.absent() : Value(gpa),
+      emergencyContact: emergencyContact == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emergencyContact),
+      parentName: parentName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentName),
+      dateOfAdmission: dateOfAdmission == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfAdmission),
+      graduationDate: graduationDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(graduationDate),
+      disabilityStatus: disabilityStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(disabilityStatus),
+      isInternationalStudent: isInternationalStudent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isInternationalStudent),
+    );
+  }
+
+  factory MagnetStudentProfileData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetStudentProfileData(
+      userID: serializer.fromJson<String>(json['user_id']),
+      institutionID: serializer.fromJson<int>(json['institution_id']),
+      admissionNumber: serializer.fromJson<String>(json['admission_number']),
+      firstName: serializer.fromJson<String>(json['first_name']),
+      otherNames: serializer.fromJson<String>(json['other_names']),
+      nationalId: serializer.fromJson<String?>(json['national_id']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      address: serializer.fromJson<String?>(json['address']),
+      email: serializer.fromJson<String?>(json['email']),
+      phoneNumber: serializer.fromJson<String?>(json['phone_number']),
+      profilePictureUrl: serializer.fromJson<String?>(
+        json['profile_picture_url'],
+      ),
+      dateOfBirth: serializer.fromJson<DateTime?>(json['date_of_birth']),
+      school: serializer.fromJson<String>(json['school']),
+      campus: serializer.fromJson<String?>(json['campus']),
+      enrollmentStatus: serializer.fromJson<String?>(json['enrollment_status']),
+      programme: serializer.fromJson<String?>(json['programme']),
+      degree: serializer.fromJson<String?>(json['degree']),
+      academicYear: serializer.fromJson<int?>(json['academicYear']),
+      gpa: serializer.fromJson<double?>(json['gpa']),
+      emergencyContact: serializer.fromJson<String?>(json['emergency_contact']),
+      parentName: serializer.fromJson<String?>(json['parent_name']),
+      dateOfAdmission: serializer.fromJson<DateTime?>(
+        json['date_of_admission'],
+      ),
+      graduationDate: serializer.fromJson<DateTime?>(json['graduation_date']),
+      disabilityStatus: serializer.fromJson<String?>(json['disability_status']),
+      isInternationalStudent: serializer.fromJson<bool?>(
+        json['is_international_student'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userID),
+      'institution_id': serializer.toJson<int>(institutionID),
+      'admission_number': serializer.toJson<String>(admissionNumber),
+      'first_name': serializer.toJson<String>(firstName),
+      'other_names': serializer.toJson<String>(otherNames),
+      'national_id': serializer.toJson<String?>(nationalId),
+      'gender': serializer.toJson<String?>(gender),
+      'address': serializer.toJson<String?>(address),
+      'email': serializer.toJson<String?>(email),
+      'phone_number': serializer.toJson<String?>(phoneNumber),
+      'profile_picture_url': serializer.toJson<String?>(profilePictureUrl),
+      'date_of_birth': serializer.toJson<DateTime?>(dateOfBirth),
+      'school': serializer.toJson<String>(school),
+      'campus': serializer.toJson<String?>(campus),
+      'enrollment_status': serializer.toJson<String?>(enrollmentStatus),
+      'programme': serializer.toJson<String?>(programme),
+      'degree': serializer.toJson<String?>(degree),
+      'academicYear': serializer.toJson<int?>(academicYear),
+      'gpa': serializer.toJson<double?>(gpa),
+      'emergency_contact': serializer.toJson<String?>(emergencyContact),
+      'parent_name': serializer.toJson<String?>(parentName),
+      'date_of_admission': serializer.toJson<DateTime?>(dateOfAdmission),
+      'graduation_date': serializer.toJson<DateTime?>(graduationDate),
+      'disability_status': serializer.toJson<String?>(disabilityStatus),
+      'is_international_student': serializer.toJson<bool?>(
+        isInternationalStudent,
+      ),
+    };
+  }
+
+  MagnetStudentProfileData copyWith({
+    String? userID,
+    int? institutionID,
+    String? admissionNumber,
+    String? firstName,
+    String? otherNames,
+    Value<String?> nationalId = const Value.absent(),
+    Value<String?> gender = const Value.absent(),
+    Value<String?> address = const Value.absent(),
+    Value<String?> email = const Value.absent(),
+    Value<String?> phoneNumber = const Value.absent(),
+    Value<String?> profilePictureUrl = const Value.absent(),
+    Value<DateTime?> dateOfBirth = const Value.absent(),
+    String? school,
+    Value<String?> campus = const Value.absent(),
+    Value<String?> enrollmentStatus = const Value.absent(),
+    Value<String?> programme = const Value.absent(),
+    Value<String?> degree = const Value.absent(),
+    Value<int?> academicYear = const Value.absent(),
+    Value<double?> gpa = const Value.absent(),
+    Value<String?> emergencyContact = const Value.absent(),
+    Value<String?> parentName = const Value.absent(),
+    Value<DateTime?> dateOfAdmission = const Value.absent(),
+    Value<DateTime?> graduationDate = const Value.absent(),
+    Value<String?> disabilityStatus = const Value.absent(),
+    Value<bool?> isInternationalStudent = const Value.absent(),
+  }) => MagnetStudentProfileData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    admissionNumber: admissionNumber ?? this.admissionNumber,
+    firstName: firstName ?? this.firstName,
+    otherNames: otherNames ?? this.otherNames,
+    nationalId: nationalId.present ? nationalId.value : this.nationalId,
+    gender: gender.present ? gender.value : this.gender,
+    address: address.present ? address.value : this.address,
+    email: email.present ? email.value : this.email,
+    phoneNumber: phoneNumber.present ? phoneNumber.value : this.phoneNumber,
+    profilePictureUrl: profilePictureUrl.present
+        ? profilePictureUrl.value
+        : this.profilePictureUrl,
+    dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
+    school: school ?? this.school,
+    campus: campus.present ? campus.value : this.campus,
+    enrollmentStatus: enrollmentStatus.present
+        ? enrollmentStatus.value
+        : this.enrollmentStatus,
+    programme: programme.present ? programme.value : this.programme,
+    degree: degree.present ? degree.value : this.degree,
+    academicYear: academicYear.present ? academicYear.value : this.academicYear,
+    gpa: gpa.present ? gpa.value : this.gpa,
+    emergencyContact: emergencyContact.present
+        ? emergencyContact.value
+        : this.emergencyContact,
+    parentName: parentName.present ? parentName.value : this.parentName,
+    dateOfAdmission: dateOfAdmission.present
+        ? dateOfAdmission.value
+        : this.dateOfAdmission,
+    graduationDate: graduationDate.present
+        ? graduationDate.value
+        : this.graduationDate,
+    disabilityStatus: disabilityStatus.present
+        ? disabilityStatus.value
+        : this.disabilityStatus,
+    isInternationalStudent: isInternationalStudent.present
+        ? isInternationalStudent.value
+        : this.isInternationalStudent,
+  );
+  MagnetStudentProfileData copyWithCompanion(
+    MagnetStudentProfileCompanion data,
+  ) {
+    return MagnetStudentProfileData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      admissionNumber: data.admissionNumber.present
+          ? data.admissionNumber.value
+          : this.admissionNumber,
+      firstName: data.firstName.present ? data.firstName.value : this.firstName,
+      otherNames: data.otherNames.present
+          ? data.otherNames.value
+          : this.otherNames,
+      nationalId: data.nationalId.present
+          ? data.nationalId.value
+          : this.nationalId,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      address: data.address.present ? data.address.value : this.address,
+      email: data.email.present ? data.email.value : this.email,
+      phoneNumber: data.phoneNumber.present
+          ? data.phoneNumber.value
+          : this.phoneNumber,
+      profilePictureUrl: data.profilePictureUrl.present
+          ? data.profilePictureUrl.value
+          : this.profilePictureUrl,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      school: data.school.present ? data.school.value : this.school,
+      campus: data.campus.present ? data.campus.value : this.campus,
+      enrollmentStatus: data.enrollmentStatus.present
+          ? data.enrollmentStatus.value
+          : this.enrollmentStatus,
+      programme: data.programme.present ? data.programme.value : this.programme,
+      degree: data.degree.present ? data.degree.value : this.degree,
+      academicYear: data.academicYear.present
+          ? data.academicYear.value
+          : this.academicYear,
+      gpa: data.gpa.present ? data.gpa.value : this.gpa,
+      emergencyContact: data.emergencyContact.present
+          ? data.emergencyContact.value
+          : this.emergencyContact,
+      parentName: data.parentName.present
+          ? data.parentName.value
+          : this.parentName,
+      dateOfAdmission: data.dateOfAdmission.present
+          ? data.dateOfAdmission.value
+          : this.dateOfAdmission,
+      graduationDate: data.graduationDate.present
+          ? data.graduationDate.value
+          : this.graduationDate,
+      disabilityStatus: data.disabilityStatus.present
+          ? data.disabilityStatus.value
+          : this.disabilityStatus,
+      isInternationalStudent: data.isInternationalStudent.present
+          ? data.isInternationalStudent.value
+          : this.isInternationalStudent,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetStudentProfileData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('admissionNumber: $admissionNumber, ')
+          ..write('firstName: $firstName, ')
+          ..write('otherNames: $otherNames, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('gender: $gender, ')
+          ..write('address: $address, ')
+          ..write('email: $email, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('school: $school, ')
+          ..write('campus: $campus, ')
+          ..write('enrollmentStatus: $enrollmentStatus, ')
+          ..write('programme: $programme, ')
+          ..write('degree: $degree, ')
+          ..write('academicYear: $academicYear, ')
+          ..write('gpa: $gpa, ')
+          ..write('emergencyContact: $emergencyContact, ')
+          ..write('parentName: $parentName, ')
+          ..write('dateOfAdmission: $dateOfAdmission, ')
+          ..write('graduationDate: $graduationDate, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('isInternationalStudent: $isInternationalStudent')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    userID,
+    institutionID,
+    admissionNumber,
+    firstName,
+    otherNames,
+    nationalId,
+    gender,
+    address,
+    email,
+    phoneNumber,
+    profilePictureUrl,
+    dateOfBirth,
+    school,
+    campus,
+    enrollmentStatus,
+    programme,
+    degree,
+    academicYear,
+    gpa,
+    emergencyContact,
+    parentName,
+    dateOfAdmission,
+    graduationDate,
+    disabilityStatus,
+    isInternationalStudent,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetStudentProfileData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.admissionNumber == this.admissionNumber &&
+          other.firstName == this.firstName &&
+          other.otherNames == this.otherNames &&
+          other.nationalId == this.nationalId &&
+          other.gender == this.gender &&
+          other.address == this.address &&
+          other.email == this.email &&
+          other.phoneNumber == this.phoneNumber &&
+          other.profilePictureUrl == this.profilePictureUrl &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.school == this.school &&
+          other.campus == this.campus &&
+          other.enrollmentStatus == this.enrollmentStatus &&
+          other.programme == this.programme &&
+          other.degree == this.degree &&
+          other.academicYear == this.academicYear &&
+          other.gpa == this.gpa &&
+          other.emergencyContact == this.emergencyContact &&
+          other.parentName == this.parentName &&
+          other.dateOfAdmission == this.dateOfAdmission &&
+          other.graduationDate == this.graduationDate &&
+          other.disabilityStatus == this.disabilityStatus &&
+          other.isInternationalStudent == this.isInternationalStudent);
+}
+
+class MagnetStudentProfileCompanion
+    extends UpdateCompanion<MagnetStudentProfileData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> admissionNumber;
+  final Value<String> firstName;
+  final Value<String> otherNames;
+  final Value<String?> nationalId;
+  final Value<String?> gender;
+  final Value<String?> address;
+  final Value<String?> email;
+  final Value<String?> phoneNumber;
+  final Value<String?> profilePictureUrl;
+  final Value<DateTime?> dateOfBirth;
+  final Value<String> school;
+  final Value<String?> campus;
+  final Value<String?> enrollmentStatus;
+  final Value<String?> programme;
+  final Value<String?> degree;
+  final Value<int?> academicYear;
+  final Value<double?> gpa;
+  final Value<String?> emergencyContact;
+  final Value<String?> parentName;
+  final Value<DateTime?> dateOfAdmission;
+  final Value<DateTime?> graduationDate;
+  final Value<String?> disabilityStatus;
+  final Value<bool?> isInternationalStudent;
+  final Value<int> rowid;
+  const MagnetStudentProfileCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.admissionNumber = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.otherNames = const Value.absent(),
+    this.nationalId = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.address = const Value.absent(),
+    this.email = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.school = const Value.absent(),
+    this.campus = const Value.absent(),
+    this.enrollmentStatus = const Value.absent(),
+    this.programme = const Value.absent(),
+    this.degree = const Value.absent(),
+    this.academicYear = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.emergencyContact = const Value.absent(),
+    this.parentName = const Value.absent(),
+    this.dateOfAdmission = const Value.absent(),
+    this.graduationDate = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.isInternationalStudent = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetStudentProfileCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String admissionNumber,
+    required String firstName,
+    required String otherNames,
+    this.nationalId = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.address = const Value.absent(),
+    this.email = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    required String school,
+    this.campus = const Value.absent(),
+    this.enrollmentStatus = const Value.absent(),
+    this.programme = const Value.absent(),
+    this.degree = const Value.absent(),
+    this.academicYear = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.emergencyContact = const Value.absent(),
+    this.parentName = const Value.absent(),
+    this.dateOfAdmission = const Value.absent(),
+    this.graduationDate = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.isInternationalStudent = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       admissionNumber = Value(admissionNumber),
+       firstName = Value(firstName),
+       otherNames = Value(otherNames),
+       school = Value(school);
+  static Insertable<MagnetStudentProfileData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? admissionNumber,
+    Expression<String>? firstName,
+    Expression<String>? otherNames,
+    Expression<String>? nationalId,
+    Expression<String>? gender,
+    Expression<String>? address,
+    Expression<String>? email,
+    Expression<String>? phoneNumber,
+    Expression<String>? profilePictureUrl,
+    Expression<DateTime>? dateOfBirth,
+    Expression<String>? school,
+    Expression<String>? campus,
+    Expression<String>? enrollmentStatus,
+    Expression<String>? programme,
+    Expression<String>? degree,
+    Expression<int>? academicYear,
+    Expression<double>? gpa,
+    Expression<String>? emergencyContact,
+    Expression<String>? parentName,
+    Expression<DateTime>? dateOfAdmission,
+    Expression<DateTime>? graduationDate,
+    Expression<String>? disabilityStatus,
+    Expression<bool>? isInternationalStudent,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_i_d': userID,
+      if (institutionID != null) 'institution_i_d': institutionID,
+      if (admissionNumber != null) 'admission_number': admissionNumber,
+      if (firstName != null) 'first_name': firstName,
+      if (otherNames != null) 'other_names': otherNames,
+      if (nationalId != null) 'national_id': nationalId,
+      if (gender != null) 'gender': gender,
+      if (address != null) 'address': address,
+      if (email != null) 'email': email,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
+      if (profilePictureUrl != null) 'profile_picture_url': profilePictureUrl,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (school != null) 'school': school,
+      if (campus != null) 'campus': campus,
+      if (enrollmentStatus != null) 'enrollment_status': enrollmentStatus,
+      if (programme != null) 'programme': programme,
+      if (degree != null) 'degree': degree,
+      if (academicYear != null) 'academic_year': academicYear,
+      if (gpa != null) 'gpa': gpa,
+      if (emergencyContact != null) 'emergency_contact': emergencyContact,
+      if (parentName != null) 'parent_name': parentName,
+      if (dateOfAdmission != null) 'date_of_admission': dateOfAdmission,
+      if (graduationDate != null) 'graduation_date': graduationDate,
+      if (disabilityStatus != null) 'disability_status': disabilityStatus,
+      if (isInternationalStudent != null)
+        'is_international_student': isInternationalStudent,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetStudentProfileCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? admissionNumber,
+    Value<String>? firstName,
+    Value<String>? otherNames,
+    Value<String?>? nationalId,
+    Value<String?>? gender,
+    Value<String?>? address,
+    Value<String?>? email,
+    Value<String?>? phoneNumber,
+    Value<String?>? profilePictureUrl,
+    Value<DateTime?>? dateOfBirth,
+    Value<String>? school,
+    Value<String?>? campus,
+    Value<String?>? enrollmentStatus,
+    Value<String?>? programme,
+    Value<String?>? degree,
+    Value<int?>? academicYear,
+    Value<double?>? gpa,
+    Value<String?>? emergencyContact,
+    Value<String?>? parentName,
+    Value<DateTime?>? dateOfAdmission,
+    Value<DateTime?>? graduationDate,
+    Value<String?>? disabilityStatus,
+    Value<bool?>? isInternationalStudent,
+    Value<int>? rowid,
+  }) {
+    return MagnetStudentProfileCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      admissionNumber: admissionNumber ?? this.admissionNumber,
+      firstName: firstName ?? this.firstName,
+      otherNames: otherNames ?? this.otherNames,
+      nationalId: nationalId ?? this.nationalId,
+      gender: gender ?? this.gender,
+      address: address ?? this.address,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      school: school ?? this.school,
+      campus: campus ?? this.campus,
+      enrollmentStatus: enrollmentStatus ?? this.enrollmentStatus,
+      programme: programme ?? this.programme,
+      degree: degree ?? this.degree,
+      academicYear: academicYear ?? this.academicYear,
+      gpa: gpa ?? this.gpa,
+      emergencyContact: emergencyContact ?? this.emergencyContact,
+      parentName: parentName ?? this.parentName,
+      dateOfAdmission: dateOfAdmission ?? this.dateOfAdmission,
+      graduationDate: graduationDate ?? this.graduationDate,
+      disabilityStatus: disabilityStatus ?? this.disabilityStatus,
+      isInternationalStudent:
+          isInternationalStudent ?? this.isInternationalStudent,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_i_d'] = Variable<int>(institutionID.value);
+    }
+    if (admissionNumber.present) {
+      map['admission_number'] = Variable<String>(admissionNumber.value);
+    }
+    if (firstName.present) {
+      map['first_name'] = Variable<String>(firstName.value);
+    }
+    if (otherNames.present) {
+      map['other_names'] = Variable<String>(otherNames.value);
+    }
+    if (nationalId.present) {
+      map['national_id'] = Variable<String>(nationalId.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (phoneNumber.present) {
+      map['phone_number'] = Variable<String>(phoneNumber.value);
+    }
+    if (profilePictureUrl.present) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (school.present) {
+      map['school'] = Variable<String>(school.value);
+    }
+    if (campus.present) {
+      map['campus'] = Variable<String>(campus.value);
+    }
+    if (enrollmentStatus.present) {
+      map['enrollment_status'] = Variable<String>(enrollmentStatus.value);
+    }
+    if (programme.present) {
+      map['programme'] = Variable<String>(programme.value);
+    }
+    if (degree.present) {
+      map['degree'] = Variable<String>(degree.value);
+    }
+    if (academicYear.present) {
+      map['academic_year'] = Variable<int>(academicYear.value);
+    }
+    if (gpa.present) {
+      map['gpa'] = Variable<double>(gpa.value);
+    }
+    if (emergencyContact.present) {
+      map['emergency_contact'] = Variable<String>(emergencyContact.value);
+    }
+    if (parentName.present) {
+      map['parent_name'] = Variable<String>(parentName.value);
+    }
+    if (dateOfAdmission.present) {
+      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission.value);
+    }
+    if (graduationDate.present) {
+      map['graduation_date'] = Variable<DateTime>(graduationDate.value);
+    }
+    if (disabilityStatus.present) {
+      map['disability_status'] = Variable<String>(disabilityStatus.value);
+    }
+    if (isInternationalStudent.present) {
+      map['is_international_student'] = Variable<bool>(
+        isInternationalStudent.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetStudentProfileCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('admissionNumber: $admissionNumber, ')
+          ..write('firstName: $firstName, ')
+          ..write('otherNames: $otherNames, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('gender: $gender, ')
+          ..write('address: $address, ')
+          ..write('email: $email, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('school: $school, ')
+          ..write('campus: $campus, ')
+          ..write('enrollmentStatus: $enrollmentStatus, ')
+          ..write('programme: $programme, ')
+          ..write('degree: $degree, ')
+          ..write('academicYear: $academicYear, ')
+          ..write('gpa: $gpa, ')
+          ..write('emergencyContact: $emergencyContact, ')
+          ..write('parentName: $parentName, ')
+          ..write('dateOfAdmission: $dateOfAdmission, ')
+          ..write('graduationDate: $graduationDate, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('isInternationalStudent: $isInternationalStudent, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetCredentialsTable extends MagnetCredentials
+    with TableInfo<$MagnetCredentialsTable, MagnetCredential> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetCredentialsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _passwordMeta = const VerificationMeta(
+    'password',
+  );
+  @override
+  late final GeneratedColumn<String> password = GeneratedColumn<String>(
+    'password',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _extraMeta = const VerificationMeta('extra');
+  @override
+  late final GeneratedColumn<String> extra = GeneratedColumn<String>(
+    'extra',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    username,
+    password,
+    extra,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_credentials';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetCredential> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_i_d')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_i_d']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('password')) {
+      context.handle(
+        _passwordMeta,
+        password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_passwordMeta);
+    }
+    if (data.containsKey('extra')) {
+      context.handle(
+        _extraMeta,
+        extra.isAcceptableOrUnknown(data['extra']!, _extraMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {username, institutionID, userID};
+  @override
+  MagnetCredential map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetCredential(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_i_d'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
+      password: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}password'],
+      )!,
+      extra: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extra'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetCredentialsTable createAlias(String alias) {
+    return $MagnetCredentialsTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetCredential extends DataClass
+    implements Insertable<MagnetCredential> {
+  final String userID;
+  final int institutionID;
+  final String username;
+  final String password;
+
+  /// Store the extra Map`<String, dynamic>` as a JSON string
+  final String? extra;
+  const MagnetCredential({
+    required this.userID,
+    required this.institutionID,
+    required this.username,
+    required this.password,
+    this.extra,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_i_d'] = Variable<String>(userID);
+    map['institution_i_d'] = Variable<int>(institutionID);
+    map['username'] = Variable<String>(username);
+    map['password'] = Variable<String>(password);
+    if (!nullToAbsent || extra != null) {
+      map['extra'] = Variable<String>(extra);
+    }
+    return map;
+  }
+
+  MagnetCredentialsCompanion toCompanion(bool nullToAbsent) {
+    return MagnetCredentialsCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      username: Value(username),
+      password: Value(password),
+      extra: extra == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extra),
+    );
+  }
+
+  factory MagnetCredential.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetCredential(
+      userID: serializer.fromJson<String>(json['user_id']),
+      institutionID: serializer.fromJson<int>(json['institution_id']),
+      username: serializer.fromJson<String>(json['username']),
+      password: serializer.fromJson<String>(json['password']),
+      extra: serializer.fromJson<String?>(json['extra']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userID),
+      'institution_id': serializer.toJson<int>(institutionID),
+      'username': serializer.toJson<String>(username),
+      'password': serializer.toJson<String>(password),
+      'extra': serializer.toJson<String?>(extra),
+    };
+  }
+
+  MagnetCredential copyWith({
+    String? userID,
+    int? institutionID,
+    String? username,
+    String? password,
+    Value<String?> extra = const Value.absent(),
+  }) => MagnetCredential(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    username: username ?? this.username,
+    password: password ?? this.password,
+    extra: extra.present ? extra.value : this.extra,
+  );
+  MagnetCredential copyWithCompanion(MagnetCredentialsCompanion data) {
+    return MagnetCredential(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      username: data.username.present ? data.username.value : this.username,
+      password: data.password.present ? data.password.value : this.password,
+      extra: data.extra.present ? data.extra.value : this.extra,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCredential(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
+          ..write('extra: $extra')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(userID, institutionID, username, password, extra);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetCredential &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.username == this.username &&
+          other.password == this.password &&
+          other.extra == this.extra);
+}
+
+class MagnetCredentialsCompanion extends UpdateCompanion<MagnetCredential> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> username;
+  final Value<String> password;
+  final Value<String?> extra;
+  final Value<int> rowid;
+  const MagnetCredentialsCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.username = const Value.absent(),
+    this.password = const Value.absent(),
+    this.extra = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetCredentialsCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String username,
+    required String password,
+    this.extra = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       username = Value(username),
+       password = Value(password);
+  static Insertable<MagnetCredential> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? username,
+    Expression<String>? password,
+    Expression<String>? extra,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_i_d': userID,
+      if (institutionID != null) 'institution_i_d': institutionID,
+      if (username != null) 'username': username,
+      if (password != null) 'password': password,
+      if (extra != null) 'extra': extra,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetCredentialsCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? username,
+    Value<String>? password,
+    Value<String?>? extra,
+    Value<int>? rowid,
+  }) {
+    return MagnetCredentialsCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      extra: extra ?? this.extra,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_i_d'] = Variable<int>(institutionID.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (password.present) {
+      map['password'] = Variable<String>(password.value);
+    }
+    if (extra.present) {
+      map['extra'] = Variable<String>(extra.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCredentialsCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
+          ..write('extra: $extra, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetCourseInfoTable extends MagnetCourseInfo
+    with TableInfo<$MagnetCourseInfoTable, MagnetCourseInfoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetCourseInfoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
+    'courseCode',
+  );
+  @override
+  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
+    'course_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseTitleMeta = const VerificationMeta(
+    'courseTitle',
+  );
+  @override
+  late final GeneratedColumn<String> courseTitle = GeneratedColumn<String>(
+    'course_title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseDescriptionMeta = const VerificationMeta(
+    'courseDescription',
+  );
+  @override
+  late final GeneratedColumn<String> courseDescription =
+      GeneratedColumn<String>(
+        'course_description',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _creditsMeta = const VerificationMeta(
+    'credits',
+  );
+  @override
+  late final GeneratedColumn<int> credits = GeneratedColumn<int>(
+    'credits',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _instructorMeta = const VerificationMeta(
+    'instructor',
+  );
+  @override
+  late final GeneratedColumn<String> instructor = GeneratedColumn<String>(
+    'instructor',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _semesterMeta = const VerificationMeta(
+    'semester',
+  );
+  @override
+  late final GeneratedColumn<String> semester = GeneratedColumn<String>(
+    'semester',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _scheduleMeta = const VerificationMeta(
+    'schedule',
+  );
+  @override
+  late final GeneratedColumn<DateTime> schedule = GeneratedColumn<DateTime>(
+    'schedule',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationInSecondsMeta = const VerificationMeta(
+    'durationInSeconds',
+  );
+  @override
+  late final GeneratedColumn<int> durationInSeconds = GeneratedColumn<int>(
+    'duration_in_seconds',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _prerequisitesMeta = const VerificationMeta(
+    'prerequisites',
+  );
+  @override
+  late final GeneratedColumn<String> prerequisites = GeneratedColumn<String>(
+    'prerequisites',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseTypeMeta = const VerificationMeta(
+    'courseType',
+  );
+  @override
+  late final GeneratedColumn<String> courseType = GeneratedColumn<String>(
+    'course_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseLevelMeta = const VerificationMeta(
+    'courseLevel',
+  );
+  @override
+  late final GeneratedColumn<String> courseLevel = GeneratedColumn<String>(
+    'course_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _enrollmentLimitMeta = const VerificationMeta(
+    'enrollmentLimit',
+  );
+  @override
+  late final GeneratedColumn<int> enrollmentLimit = GeneratedColumn<int>(
+    'enrollment_limit',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _currentEnrollmentMeta = const VerificationMeta(
+    'currentEnrollment',
+  );
+  @override
+  late final GeneratedColumn<int> currentEnrollment = GeneratedColumn<int>(
+    'current_enrollment',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseMaterialsMeta = const VerificationMeta(
+    'courseMaterials',
+  );
+  @override
+  late final GeneratedColumn<String> courseMaterials = GeneratedColumn<String>(
+    'course_materials',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    courseCode,
+    courseTitle,
+    courseDescription,
+    credits,
+    instructor,
+    semester,
+    schedule,
+    durationInSeconds,
+    prerequisites,
+    courseType,
+    courseLevel,
+    location,
+    enrollmentLimit,
+    currentEnrollment,
+    courseMaterials,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'courses';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetCourseInfoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('course_code')) {
+      context.handle(
+        _courseCodeMeta,
+        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseCodeMeta);
+    }
+    if (data.containsKey('course_title')) {
+      context.handle(
+        _courseTitleMeta,
+        courseTitle.isAcceptableOrUnknown(
+          data['course_title']!,
+          _courseTitleMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_courseTitleMeta);
+    }
+    if (data.containsKey('course_description')) {
+      context.handle(
+        _courseDescriptionMeta,
+        courseDescription.isAcceptableOrUnknown(
+          data['course_description']!,
+          _courseDescriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('credits')) {
+      context.handle(
+        _creditsMeta,
+        credits.isAcceptableOrUnknown(data['credits']!, _creditsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creditsMeta);
+    }
+    if (data.containsKey('instructor')) {
+      context.handle(
+        _instructorMeta,
+        instructor.isAcceptableOrUnknown(data['instructor']!, _instructorMeta),
+      );
+    }
+    if (data.containsKey('semester')) {
+      context.handle(
+        _semesterMeta,
+        semester.isAcceptableOrUnknown(data['semester']!, _semesterMeta),
+      );
+    }
+    if (data.containsKey('schedule')) {
+      context.handle(
+        _scheduleMeta,
+        schedule.isAcceptableOrUnknown(data['schedule']!, _scheduleMeta),
+      );
+    }
+    if (data.containsKey('duration_in_seconds')) {
+      context.handle(
+        _durationInSecondsMeta,
+        durationInSeconds.isAcceptableOrUnknown(
+          data['duration_in_seconds']!,
+          _durationInSecondsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('prerequisites')) {
+      context.handle(
+        _prerequisitesMeta,
+        prerequisites.isAcceptableOrUnknown(
+          data['prerequisites']!,
+          _prerequisitesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('course_type')) {
+      context.handle(
+        _courseTypeMeta,
+        courseType.isAcceptableOrUnknown(data['course_type']!, _courseTypeMeta),
+      );
+    }
+    if (data.containsKey('course_level')) {
+      context.handle(
+        _courseLevelMeta,
+        courseLevel.isAcceptableOrUnknown(
+          data['course_level']!,
+          _courseLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('enrollment_limit')) {
+      context.handle(
+        _enrollmentLimitMeta,
+        enrollmentLimit.isAcceptableOrUnknown(
+          data['enrollment_limit']!,
+          _enrollmentLimitMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_enrollment')) {
+      context.handle(
+        _currentEnrollmentMeta,
+        currentEnrollment.isAcceptableOrUnknown(
+          data['current_enrollment']!,
+          _currentEnrollmentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('course_materials')) {
+      context.handle(
+        _courseMaterialsMeta,
+        courseMaterials.isAcceptableOrUnknown(
+          data['course_materials']!,
+          _courseMaterialsMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userID, institutionID, courseCode};
+  @override
+  MagnetCourseInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetCourseInfoData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      courseCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_code'],
+      )!,
+      courseTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_title'],
+      )!,
+      courseDescription: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_description'],
+      ),
+      credits: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}credits'],
+      )!,
+      instructor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructor'],
+      ),
+      semester: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}semester'],
+      ),
+      schedule: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}schedule'],
+      ),
+      durationInSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_in_seconds'],
+      ),
+      prerequisites: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}prerequisites'],
+      ),
+      courseType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_type'],
+      ),
+      courseLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_level'],
+      ),
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      enrollmentLimit: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}enrollment_limit'],
+      ),
+      currentEnrollment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_enrollment'],
+      ),
+      courseMaterials: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_materials'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetCourseInfoTable createAlias(String alias) {
+    return $MagnetCourseInfoTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetCourseInfoData extends DataClass
+    implements Insertable<MagnetCourseInfoData> {
+  final String userID;
+  final int institutionID;
+  final String courseCode;
+  final String courseTitle;
+  final String? courseDescription;
+  final int credits;
+  final String? instructor;
+  final String? semester;
+  final DateTime? schedule;
+  final int? durationInSeconds;
+  final String? prerequisites;
+  final String? courseType;
+  final String? courseLevel;
+  final String? location;
+  final int? enrollmentLimit;
+  final int? currentEnrollment;
+  final String? courseMaterials;
+  const MagnetCourseInfoData({
+    required this.userID,
+    required this.institutionID,
+    required this.courseCode,
+    required this.courseTitle,
+    this.courseDescription,
+    required this.credits,
+    this.instructor,
+    this.semester,
+    this.schedule,
+    this.durationInSeconds,
+    this.prerequisites,
+    this.courseType,
+    this.courseLevel,
+    this.location,
+    this.enrollmentLimit,
+    this.currentEnrollment,
+    this.courseMaterials,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userID);
+    map['institution_id'] = Variable<int>(institutionID);
+    map['course_code'] = Variable<String>(courseCode);
+    map['course_title'] = Variable<String>(courseTitle);
+    if (!nullToAbsent || courseDescription != null) {
+      map['course_description'] = Variable<String>(courseDescription);
+    }
+    map['credits'] = Variable<int>(credits);
+    if (!nullToAbsent || instructor != null) {
+      map['instructor'] = Variable<String>(instructor);
+    }
+    if (!nullToAbsent || semester != null) {
+      map['semester'] = Variable<String>(semester);
+    }
+    if (!nullToAbsent || schedule != null) {
+      map['schedule'] = Variable<DateTime>(schedule);
+    }
+    if (!nullToAbsent || durationInSeconds != null) {
+      map['duration_in_seconds'] = Variable<int>(durationInSeconds);
+    }
+    if (!nullToAbsent || prerequisites != null) {
+      map['prerequisites'] = Variable<String>(prerequisites);
+    }
+    if (!nullToAbsent || courseType != null) {
+      map['course_type'] = Variable<String>(courseType);
+    }
+    if (!nullToAbsent || courseLevel != null) {
+      map['course_level'] = Variable<String>(courseLevel);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || enrollmentLimit != null) {
+      map['enrollment_limit'] = Variable<int>(enrollmentLimit);
+    }
+    if (!nullToAbsent || currentEnrollment != null) {
+      map['current_enrollment'] = Variable<int>(currentEnrollment);
+    }
+    if (!nullToAbsent || courseMaterials != null) {
+      map['course_materials'] = Variable<String>(courseMaterials);
+    }
+    return map;
+  }
+
+  MagnetCourseInfoCompanion toCompanion(bool nullToAbsent) {
+    return MagnetCourseInfoCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      courseCode: Value(courseCode),
+      courseTitle: Value(courseTitle),
+      courseDescription: courseDescription == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseDescription),
+      credits: Value(credits),
+      instructor: instructor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(instructor),
+      semester: semester == null && nullToAbsent
+          ? const Value.absent()
+          : Value(semester),
+      schedule: schedule == null && nullToAbsent
+          ? const Value.absent()
+          : Value(schedule),
+      durationInSeconds: durationInSeconds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationInSeconds),
+      prerequisites: prerequisites == null && nullToAbsent
+          ? const Value.absent()
+          : Value(prerequisites),
+      courseType: courseType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseType),
+      courseLevel: courseLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseLevel),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      enrollmentLimit: enrollmentLimit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentLimit),
+      currentEnrollment: currentEnrollment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currentEnrollment),
+      courseMaterials: courseMaterials == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseMaterials),
+    );
+  }
+
+  factory MagnetCourseInfoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetCourseInfoData(
+      userID: serializer.fromJson<String>(json['userID']),
+      institutionID: serializer.fromJson<int>(json['institutionID']),
+      courseCode: serializer.fromJson<String>(json['courseCode']),
+      courseTitle: serializer.fromJson<String>(json['courseTitle']),
+      courseDescription: serializer.fromJson<String?>(
+        json['courseDescription'],
+      ),
+      credits: serializer.fromJson<int>(json['credits']),
+      instructor: serializer.fromJson<String?>(json['instructor']),
+      semester: serializer.fromJson<String?>(json['semester']),
+      schedule: serializer.fromJson<DateTime?>(json['schedule']),
+      durationInSeconds: serializer.fromJson<int?>(json['durationInSeconds']),
+      prerequisites: serializer.fromJson<String?>(json['prerequisites']),
+      courseType: serializer.fromJson<String?>(json['courseType']),
+      courseLevel: serializer.fromJson<String?>(json['courseLevel']),
+      location: serializer.fromJson<String?>(json['location']),
+      enrollmentLimit: serializer.fromJson<int?>(json['enrollmentLimit']),
+      currentEnrollment: serializer.fromJson<int?>(json['currentEnrollment']),
+      courseMaterials: serializer.fromJson<String?>(json['courseMaterials']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userID': serializer.toJson<String>(userID),
+      'institutionID': serializer.toJson<int>(institutionID),
+      'courseCode': serializer.toJson<String>(courseCode),
+      'courseTitle': serializer.toJson<String>(courseTitle),
+      'courseDescription': serializer.toJson<String?>(courseDescription),
+      'credits': serializer.toJson<int>(credits),
+      'instructor': serializer.toJson<String?>(instructor),
+      'semester': serializer.toJson<String?>(semester),
+      'schedule': serializer.toJson<DateTime?>(schedule),
+      'durationInSeconds': serializer.toJson<int?>(durationInSeconds),
+      'prerequisites': serializer.toJson<String?>(prerequisites),
+      'courseType': serializer.toJson<String?>(courseType),
+      'courseLevel': serializer.toJson<String?>(courseLevel),
+      'location': serializer.toJson<String?>(location),
+      'enrollmentLimit': serializer.toJson<int?>(enrollmentLimit),
+      'currentEnrollment': serializer.toJson<int?>(currentEnrollment),
+      'courseMaterials': serializer.toJson<String?>(courseMaterials),
+    };
+  }
+
+  MagnetCourseInfoData copyWith({
+    String? userID,
+    int? institutionID,
+    String? courseCode,
+    String? courseTitle,
+    Value<String?> courseDescription = const Value.absent(),
+    int? credits,
+    Value<String?> instructor = const Value.absent(),
+    Value<String?> semester = const Value.absent(),
+    Value<DateTime?> schedule = const Value.absent(),
+    Value<int?> durationInSeconds = const Value.absent(),
+    Value<String?> prerequisites = const Value.absent(),
+    Value<String?> courseType = const Value.absent(),
+    Value<String?> courseLevel = const Value.absent(),
+    Value<String?> location = const Value.absent(),
+    Value<int?> enrollmentLimit = const Value.absent(),
+    Value<int?> currentEnrollment = const Value.absent(),
+    Value<String?> courseMaterials = const Value.absent(),
+  }) => MagnetCourseInfoData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    courseCode: courseCode ?? this.courseCode,
+    courseTitle: courseTitle ?? this.courseTitle,
+    courseDescription: courseDescription.present
+        ? courseDescription.value
+        : this.courseDescription,
+    credits: credits ?? this.credits,
+    instructor: instructor.present ? instructor.value : this.instructor,
+    semester: semester.present ? semester.value : this.semester,
+    schedule: schedule.present ? schedule.value : this.schedule,
+    durationInSeconds: durationInSeconds.present
+        ? durationInSeconds.value
+        : this.durationInSeconds,
+    prerequisites: prerequisites.present
+        ? prerequisites.value
+        : this.prerequisites,
+    courseType: courseType.present ? courseType.value : this.courseType,
+    courseLevel: courseLevel.present ? courseLevel.value : this.courseLevel,
+    location: location.present ? location.value : this.location,
+    enrollmentLimit: enrollmentLimit.present
+        ? enrollmentLimit.value
+        : this.enrollmentLimit,
+    currentEnrollment: currentEnrollment.present
+        ? currentEnrollment.value
+        : this.currentEnrollment,
+    courseMaterials: courseMaterials.present
+        ? courseMaterials.value
+        : this.courseMaterials,
+  );
+  MagnetCourseInfoData copyWithCompanion(MagnetCourseInfoCompanion data) {
+    return MagnetCourseInfoData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      courseCode: data.courseCode.present
+          ? data.courseCode.value
+          : this.courseCode,
+      courseTitle: data.courseTitle.present
+          ? data.courseTitle.value
+          : this.courseTitle,
+      courseDescription: data.courseDescription.present
+          ? data.courseDescription.value
+          : this.courseDescription,
+      credits: data.credits.present ? data.credits.value : this.credits,
+      instructor: data.instructor.present
+          ? data.instructor.value
+          : this.instructor,
+      semester: data.semester.present ? data.semester.value : this.semester,
+      schedule: data.schedule.present ? data.schedule.value : this.schedule,
+      durationInSeconds: data.durationInSeconds.present
+          ? data.durationInSeconds.value
+          : this.durationInSeconds,
+      prerequisites: data.prerequisites.present
+          ? data.prerequisites.value
+          : this.prerequisites,
+      courseType: data.courseType.present
+          ? data.courseType.value
+          : this.courseType,
+      courseLevel: data.courseLevel.present
+          ? data.courseLevel.value
+          : this.courseLevel,
+      location: data.location.present ? data.location.value : this.location,
+      enrollmentLimit: data.enrollmentLimit.present
+          ? data.enrollmentLimit.value
+          : this.enrollmentLimit,
+      currentEnrollment: data.currentEnrollment.present
+          ? data.currentEnrollment.value
+          : this.currentEnrollment,
+      courseMaterials: data.courseMaterials.present
+          ? data.courseMaterials.value
+          : this.courseMaterials,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCourseInfoData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseTitle: $courseTitle, ')
+          ..write('courseDescription: $courseDescription, ')
+          ..write('credits: $credits, ')
+          ..write('instructor: $instructor, ')
+          ..write('semester: $semester, ')
+          ..write('schedule: $schedule, ')
+          ..write('durationInSeconds: $durationInSeconds, ')
+          ..write('prerequisites: $prerequisites, ')
+          ..write('courseType: $courseType, ')
+          ..write('courseLevel: $courseLevel, ')
+          ..write('location: $location, ')
+          ..write('enrollmentLimit: $enrollmentLimit, ')
+          ..write('currentEnrollment: $currentEnrollment, ')
+          ..write('courseMaterials: $courseMaterials')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userID,
+    institutionID,
+    courseCode,
+    courseTitle,
+    courseDescription,
+    credits,
+    instructor,
+    semester,
+    schedule,
+    durationInSeconds,
+    prerequisites,
+    courseType,
+    courseLevel,
+    location,
+    enrollmentLimit,
+    currentEnrollment,
+    courseMaterials,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetCourseInfoData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.courseCode == this.courseCode &&
+          other.courseTitle == this.courseTitle &&
+          other.courseDescription == this.courseDescription &&
+          other.credits == this.credits &&
+          other.instructor == this.instructor &&
+          other.semester == this.semester &&
+          other.schedule == this.schedule &&
+          other.durationInSeconds == this.durationInSeconds &&
+          other.prerequisites == this.prerequisites &&
+          other.courseType == this.courseType &&
+          other.courseLevel == this.courseLevel &&
+          other.location == this.location &&
+          other.enrollmentLimit == this.enrollmentLimit &&
+          other.currentEnrollment == this.currentEnrollment &&
+          other.courseMaterials == this.courseMaterials);
+}
+
+class MagnetCourseInfoCompanion extends UpdateCompanion<MagnetCourseInfoData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> courseCode;
+  final Value<String> courseTitle;
+  final Value<String?> courseDescription;
+  final Value<int> credits;
+  final Value<String?> instructor;
+  final Value<String?> semester;
+  final Value<DateTime?> schedule;
+  final Value<int?> durationInSeconds;
+  final Value<String?> prerequisites;
+  final Value<String?> courseType;
+  final Value<String?> courseLevel;
+  final Value<String?> location;
+  final Value<int?> enrollmentLimit;
+  final Value<int?> currentEnrollment;
+  final Value<String?> courseMaterials;
+  final Value<int> rowid;
+  const MagnetCourseInfoCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.courseCode = const Value.absent(),
+    this.courseTitle = const Value.absent(),
+    this.courseDescription = const Value.absent(),
+    this.credits = const Value.absent(),
+    this.instructor = const Value.absent(),
+    this.semester = const Value.absent(),
+    this.schedule = const Value.absent(),
+    this.durationInSeconds = const Value.absent(),
+    this.prerequisites = const Value.absent(),
+    this.courseType = const Value.absent(),
+    this.courseLevel = const Value.absent(),
+    this.location = const Value.absent(),
+    this.enrollmentLimit = const Value.absent(),
+    this.currentEnrollment = const Value.absent(),
+    this.courseMaterials = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetCourseInfoCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String courseCode,
+    required String courseTitle,
+    this.courseDescription = const Value.absent(),
+    required int credits,
+    this.instructor = const Value.absent(),
+    this.semester = const Value.absent(),
+    this.schedule = const Value.absent(),
+    this.durationInSeconds = const Value.absent(),
+    this.prerequisites = const Value.absent(),
+    this.courseType = const Value.absent(),
+    this.courseLevel = const Value.absent(),
+    this.location = const Value.absent(),
+    this.enrollmentLimit = const Value.absent(),
+    this.currentEnrollment = const Value.absent(),
+    this.courseMaterials = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       courseCode = Value(courseCode),
+       courseTitle = Value(courseTitle),
+       credits = Value(credits);
+  static Insertable<MagnetCourseInfoData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? courseCode,
+    Expression<String>? courseTitle,
+    Expression<String>? courseDescription,
+    Expression<int>? credits,
+    Expression<String>? instructor,
+    Expression<String>? semester,
+    Expression<DateTime>? schedule,
+    Expression<int>? durationInSeconds,
+    Expression<String>? prerequisites,
+    Expression<String>? courseType,
+    Expression<String>? courseLevel,
+    Expression<String>? location,
+    Expression<int>? enrollmentLimit,
+    Expression<int>? currentEnrollment,
+    Expression<String>? courseMaterials,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_id': userID,
+      if (institutionID != null) 'institution_id': institutionID,
+      if (courseCode != null) 'course_code': courseCode,
+      if (courseTitle != null) 'course_title': courseTitle,
+      if (courseDescription != null) 'course_description': courseDescription,
+      if (credits != null) 'credits': credits,
+      if (instructor != null) 'instructor': instructor,
+      if (semester != null) 'semester': semester,
+      if (schedule != null) 'schedule': schedule,
+      if (durationInSeconds != null) 'duration_in_seconds': durationInSeconds,
+      if (prerequisites != null) 'prerequisites': prerequisites,
+      if (courseType != null) 'course_type': courseType,
+      if (courseLevel != null) 'course_level': courseLevel,
+      if (location != null) 'location': location,
+      if (enrollmentLimit != null) 'enrollment_limit': enrollmentLimit,
+      if (currentEnrollment != null) 'current_enrollment': currentEnrollment,
+      if (courseMaterials != null) 'course_materials': courseMaterials,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetCourseInfoCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? courseCode,
+    Value<String>? courseTitle,
+    Value<String?>? courseDescription,
+    Value<int>? credits,
+    Value<String?>? instructor,
+    Value<String?>? semester,
+    Value<DateTime?>? schedule,
+    Value<int?>? durationInSeconds,
+    Value<String?>? prerequisites,
+    Value<String?>? courseType,
+    Value<String?>? courseLevel,
+    Value<String?>? location,
+    Value<int?>? enrollmentLimit,
+    Value<int?>? currentEnrollment,
+    Value<String?>? courseMaterials,
+    Value<int>? rowid,
+  }) {
+    return MagnetCourseInfoCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      courseCode: courseCode ?? this.courseCode,
+      courseTitle: courseTitle ?? this.courseTitle,
+      courseDescription: courseDescription ?? this.courseDescription,
+      credits: credits ?? this.credits,
+      instructor: instructor ?? this.instructor,
+      semester: semester ?? this.semester,
+      schedule: schedule ?? this.schedule,
+      durationInSeconds: durationInSeconds ?? this.durationInSeconds,
+      prerequisites: prerequisites ?? this.prerequisites,
+      courseType: courseType ?? this.courseType,
+      courseLevel: courseLevel ?? this.courseLevel,
+      location: location ?? this.location,
+      enrollmentLimit: enrollmentLimit ?? this.enrollmentLimit,
+      currentEnrollment: currentEnrollment ?? this.currentEnrollment,
+      courseMaterials: courseMaterials ?? this.courseMaterials,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_id'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
+    }
+    if (courseCode.present) {
+      map['course_code'] = Variable<String>(courseCode.value);
+    }
+    if (courseTitle.present) {
+      map['course_title'] = Variable<String>(courseTitle.value);
+    }
+    if (courseDescription.present) {
+      map['course_description'] = Variable<String>(courseDescription.value);
+    }
+    if (credits.present) {
+      map['credits'] = Variable<int>(credits.value);
+    }
+    if (instructor.present) {
+      map['instructor'] = Variable<String>(instructor.value);
+    }
+    if (semester.present) {
+      map['semester'] = Variable<String>(semester.value);
+    }
+    if (schedule.present) {
+      map['schedule'] = Variable<DateTime>(schedule.value);
+    }
+    if (durationInSeconds.present) {
+      map['duration_in_seconds'] = Variable<int>(durationInSeconds.value);
+    }
+    if (prerequisites.present) {
+      map['prerequisites'] = Variable<String>(prerequisites.value);
+    }
+    if (courseType.present) {
+      map['course_type'] = Variable<String>(courseType.value);
+    }
+    if (courseLevel.present) {
+      map['course_level'] = Variable<String>(courseLevel.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (enrollmentLimit.present) {
+      map['enrollment_limit'] = Variable<int>(enrollmentLimit.value);
+    }
+    if (currentEnrollment.present) {
+      map['current_enrollment'] = Variable<int>(currentEnrollment.value);
+    }
+    if (courseMaterials.present) {
+      map['course_materials'] = Variable<String>(courseMaterials.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCourseInfoCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseTitle: $courseTitle, ')
+          ..write('courseDescription: $courseDescription, ')
+          ..write('credits: $credits, ')
+          ..write('instructor: $instructor, ')
+          ..write('semester: $semester, ')
+          ..write('schedule: $schedule, ')
+          ..write('durationInSeconds: $durationInSeconds, ')
+          ..write('prerequisites: $prerequisites, ')
+          ..write('courseType: $courseType, ')
+          ..write('courseLevel: $courseLevel, ')
+          ..write('location: $location, ')
+          ..write('enrollmentLimit: $enrollmentLimit, ')
+          ..write('currentEnrollment: $currentEnrollment, ')
+          ..write('courseMaterials: $courseMaterials, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
+    with
+        TableInfo<
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetFinancialTransactionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionIdMeta = const VerificationMeta(
+    'transactionId',
+  );
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentMethodMeta = const VerificationMeta(
+    'paymentMethod',
+  );
+  @override
+  late final GeneratedColumn<String> paymentMethod = GeneratedColumn<String>(
+    'payment_method',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _studentIdMeta = const VerificationMeta(
+    'studentId',
+  );
+  @override
+  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
+    'student_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _balanceAfterTransactionMeta =
+      const VerificationMeta('balanceAfterTransaction');
+  @override
+  late final GeneratedColumn<double> balanceAfterTransaction =
+      GeneratedColumn<double>(
+        'balance_after_transaction',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
+    'referenceNumber',
+  );
+  @override
+  late final GeneratedColumn<String> referenceNumber = GeneratedColumn<String>(
+    'reference_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    transactionId,
+    amount,
+    date,
+    type,
+    paymentMethod,
+    studentId,
+    balanceAfterTransaction,
+    status,
+    currency,
+    description,
+    referenceNumber,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_financial_transaction';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetFinancialTransactionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _transactionIdMeta,
+        transactionId.isAcceptableOrUnknown(
+          data['transaction_id']!,
+          _transactionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('payment_method')) {
+      context.handle(
+        _paymentMethodMeta,
+        paymentMethod.isAcceptableOrUnknown(
+          data['payment_method']!,
+          _paymentMethodMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentMethodMeta);
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIdMeta,
+        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('balance_after_transaction')) {
+      context.handle(
+        _balanceAfterTransactionMeta,
+        balanceAfterTransaction.isAcceptableOrUnknown(
+          data['balance_after_transaction']!,
+          _balanceAfterTransactionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_balanceAfterTransactionMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reference_number')) {
+      context.handle(
+        _referenceNumberMeta,
+        referenceNumber.isAcceptableOrUnknown(
+          data['reference_number']!,
+          _referenceNumberMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    userID,
+    institutionID,
+    transactionId,
+  };
+  @override
+  MagnetFinancialTransactionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetFinancialTransactionData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      transactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      paymentMethod: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_method'],
+      )!,
+      studentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_id'],
+      )!,
+      balanceAfterTransaction: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}balance_after_transaction'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      referenceNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference_number'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetFinancialTransactionTable createAlias(String alias) {
+    return $MagnetFinancialTransactionTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetFinancialTransactionData extends DataClass
+    implements Insertable<MagnetFinancialTransactionData> {
+  final String userID;
+  final int institutionID;
+  final String transactionId;
+  final double amount;
+  final DateTime date;
+  final String type;
+  final String paymentMethod;
+  final String studentId;
+  final double balanceAfterTransaction;
+  final String status;
+  final String currency;
+  final String? description;
+  final String? referenceNumber;
+  const MagnetFinancialTransactionData({
+    required this.userID,
+    required this.institutionID,
+    required this.transactionId,
+    required this.amount,
+    required this.date,
+    required this.type,
+    required this.paymentMethod,
+    required this.studentId,
+    required this.balanceAfterTransaction,
+    required this.status,
+    required this.currency,
+    this.description,
+    this.referenceNumber,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userID);
+    map['institution_id'] = Variable<int>(institutionID);
+    map['transaction_id'] = Variable<String>(transactionId);
+    map['amount'] = Variable<double>(amount);
+    map['date'] = Variable<DateTime>(date);
+    map['type'] = Variable<String>(type);
+    map['payment_method'] = Variable<String>(paymentMethod);
+    map['student_id'] = Variable<String>(studentId);
+    map['balance_after_transaction'] = Variable<double>(
+      balanceAfterTransaction,
+    );
+    map['status'] = Variable<String>(status);
+    map['currency'] = Variable<String>(currency);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || referenceNumber != null) {
+      map['reference_number'] = Variable<String>(referenceNumber);
+    }
+    return map;
+  }
+
+  MagnetFinancialTransactionCompanion toCompanion(bool nullToAbsent) {
+    return MagnetFinancialTransactionCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      transactionId: Value(transactionId),
+      amount: Value(amount),
+      date: Value(date),
+      type: Value(type),
+      paymentMethod: Value(paymentMethod),
+      studentId: Value(studentId),
+      balanceAfterTransaction: Value(balanceAfterTransaction),
+      status: Value(status),
+      currency: Value(currency),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      referenceNumber: referenceNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(referenceNumber),
+    );
+  }
+
+  factory MagnetFinancialTransactionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetFinancialTransactionData(
+      userID: serializer.fromJson<String>(json['userID']),
+      institutionID: serializer.fromJson<int>(json['institutionID']),
+      transactionId: serializer.fromJson<String>(json['transactionId']),
+      amount: serializer.fromJson<double>(json['amount']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      type: serializer.fromJson<String>(json['type']),
+      paymentMethod: serializer.fromJson<String>(json['paymentMethod']),
+      studentId: serializer.fromJson<String>(json['studentId']),
+      balanceAfterTransaction: serializer.fromJson<double>(
+        json['balanceAfterTransaction'],
+      ),
+      status: serializer.fromJson<String>(json['status']),
+      currency: serializer.fromJson<String>(json['currency']),
+      description: serializer.fromJson<String?>(json['description']),
+      referenceNumber: serializer.fromJson<String?>(json['referenceNumber']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userID': serializer.toJson<String>(userID),
+      'institutionID': serializer.toJson<int>(institutionID),
+      'transactionId': serializer.toJson<String>(transactionId),
+      'amount': serializer.toJson<double>(amount),
+      'date': serializer.toJson<DateTime>(date),
+      'type': serializer.toJson<String>(type),
+      'paymentMethod': serializer.toJson<String>(paymentMethod),
+      'studentId': serializer.toJson<String>(studentId),
+      'balanceAfterTransaction': serializer.toJson<double>(
+        balanceAfterTransaction,
+      ),
+      'status': serializer.toJson<String>(status),
+      'currency': serializer.toJson<String>(currency),
+      'description': serializer.toJson<String?>(description),
+      'referenceNumber': serializer.toJson<String?>(referenceNumber),
+    };
+  }
+
+  MagnetFinancialTransactionData copyWith({
+    String? userID,
+    int? institutionID,
+    String? transactionId,
+    double? amount,
+    DateTime? date,
+    String? type,
+    String? paymentMethod,
+    String? studentId,
+    double? balanceAfterTransaction,
+    String? status,
+    String? currency,
+    Value<String?> description = const Value.absent(),
+    Value<String?> referenceNumber = const Value.absent(),
+  }) => MagnetFinancialTransactionData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    transactionId: transactionId ?? this.transactionId,
+    amount: amount ?? this.amount,
+    date: date ?? this.date,
+    type: type ?? this.type,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    studentId: studentId ?? this.studentId,
+    balanceAfterTransaction:
+        balanceAfterTransaction ?? this.balanceAfterTransaction,
+    status: status ?? this.status,
+    currency: currency ?? this.currency,
+    description: description.present ? description.value : this.description,
+    referenceNumber: referenceNumber.present
+        ? referenceNumber.value
+        : this.referenceNumber,
+  );
+  MagnetFinancialTransactionData copyWithCompanion(
+    MagnetFinancialTransactionCompanion data,
+  ) {
+    return MagnetFinancialTransactionData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      transactionId: data.transactionId.present
+          ? data.transactionId.value
+          : this.transactionId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      date: data.date.present ? data.date.value : this.date,
+      type: data.type.present ? data.type.value : this.type,
+      paymentMethod: data.paymentMethod.present
+          ? data.paymentMethod.value
+          : this.paymentMethod,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      balanceAfterTransaction: data.balanceAfterTransaction.present
+          ? data.balanceAfterTransaction.value
+          : this.balanceAfterTransaction,
+      status: data.status.present ? data.status.value : this.status,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      referenceNumber: data.referenceNumber.present
+          ? data.referenceNumber.value
+          : this.referenceNumber,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetFinancialTransactionData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('type: $type, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('studentId: $studentId, ')
+          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
+          ..write('status: $status, ')
+          ..write('currency: $currency, ')
+          ..write('description: $description, ')
+          ..write('referenceNumber: $referenceNumber')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userID,
+    institutionID,
+    transactionId,
+    amount,
+    date,
+    type,
+    paymentMethod,
+    studentId,
+    balanceAfterTransaction,
+    status,
+    currency,
+    description,
+    referenceNumber,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetFinancialTransactionData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.transactionId == this.transactionId &&
+          other.amount == this.amount &&
+          other.date == this.date &&
+          other.type == this.type &&
+          other.paymentMethod == this.paymentMethod &&
+          other.studentId == this.studentId &&
+          other.balanceAfterTransaction == this.balanceAfterTransaction &&
+          other.status == this.status &&
+          other.currency == this.currency &&
+          other.description == this.description &&
+          other.referenceNumber == this.referenceNumber);
+}
+
+class MagnetFinancialTransactionCompanion
+    extends UpdateCompanion<MagnetFinancialTransactionData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> transactionId;
+  final Value<double> amount;
+  final Value<DateTime> date;
+  final Value<String> type;
+  final Value<String> paymentMethod;
+  final Value<String> studentId;
+  final Value<double> balanceAfterTransaction;
+  final Value<String> status;
+  final Value<String> currency;
+  final Value<String?> description;
+  final Value<String?> referenceNumber;
+  final Value<int> rowid;
+  const MagnetFinancialTransactionCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.transactionId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.date = const Value.absent(),
+    this.type = const Value.absent(),
+    this.paymentMethod = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.balanceAfterTransaction = const Value.absent(),
+    this.status = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.description = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetFinancialTransactionCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String transactionId,
+    required double amount,
+    required DateTime date,
+    required String type,
+    required String paymentMethod,
+    required String studentId,
+    required double balanceAfterTransaction,
+    required String status,
+    required String currency,
+    this.description = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       transactionId = Value(transactionId),
+       amount = Value(amount),
+       date = Value(date),
+       type = Value(type),
+       paymentMethod = Value(paymentMethod),
+       studentId = Value(studentId),
+       balanceAfterTransaction = Value(balanceAfterTransaction),
+       status = Value(status),
+       currency = Value(currency);
+  static Insertable<MagnetFinancialTransactionData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? transactionId,
+    Expression<double>? amount,
+    Expression<DateTime>? date,
+    Expression<String>? type,
+    Expression<String>? paymentMethod,
+    Expression<String>? studentId,
+    Expression<double>? balanceAfterTransaction,
+    Expression<String>? status,
+    Expression<String>? currency,
+    Expression<String>? description,
+    Expression<String>? referenceNumber,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_id': userID,
+      if (institutionID != null) 'institution_id': institutionID,
+      if (transactionId != null) 'transaction_id': transactionId,
+      if (amount != null) 'amount': amount,
+      if (date != null) 'date': date,
+      if (type != null) 'type': type,
+      if (paymentMethod != null) 'payment_method': paymentMethod,
+      if (studentId != null) 'student_id': studentId,
+      if (balanceAfterTransaction != null)
+        'balance_after_transaction': balanceAfterTransaction,
+      if (status != null) 'status': status,
+      if (currency != null) 'currency': currency,
+      if (description != null) 'description': description,
+      if (referenceNumber != null) 'reference_number': referenceNumber,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetFinancialTransactionCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? transactionId,
+    Value<double>? amount,
+    Value<DateTime>? date,
+    Value<String>? type,
+    Value<String>? paymentMethod,
+    Value<String>? studentId,
+    Value<double>? balanceAfterTransaction,
+    Value<String>? status,
+    Value<String>? currency,
+    Value<String?>? description,
+    Value<String?>? referenceNumber,
+    Value<int>? rowid,
+  }) {
+    return MagnetFinancialTransactionCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      transactionId: transactionId ?? this.transactionId,
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      type: type ?? this.type,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      studentId: studentId ?? this.studentId,
+      balanceAfterTransaction:
+          balanceAfterTransaction ?? this.balanceAfterTransaction,
+      status: status ?? this.status,
+      currency: currency ?? this.currency,
+      description: description ?? this.description,
+      referenceNumber: referenceNumber ?? this.referenceNumber,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_id'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
+    }
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (paymentMethod.present) {
+      map['payment_method'] = Variable<String>(paymentMethod.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<String>(studentId.value);
+    }
+    if (balanceAfterTransaction.present) {
+      map['balance_after_transaction'] = Variable<double>(
+        balanceAfterTransaction.value,
+      );
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (referenceNumber.present) {
+      map['reference_number'] = Variable<String>(referenceNumber.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetFinancialTransactionCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('type: $type, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('studentId: $studentId, ')
+          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
+          ..write('status: $status, ')
+          ..write('currency: $currency, ')
+          ..write('description: $description, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CommunityTableTable extends CommunityTable
     with TableInfo<$CommunityTableTable, CommunityData> {
   @override
@@ -11969,6 +19175,18 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
+  late final $EnhancedConversationTableTable enhancedConversationTable =
+      $EnhancedConversationTableTable(this);
+  late final $EnhancedMessageTableTable enhancedMessageTable =
+      $EnhancedMessageTableTable(this);
+  late final $MessageAttachmentsTableTable messageAttachmentsTable =
+      $MessageAttachmentsTableTable(this);
+  late final $DraftMessagesTableTable draftMessagesTable =
+      $DraftMessagesTableTable(this);
+  late final $WebSocketConnectionTableTable webSocketConnectionTable =
+      $WebSocketConnectionTableTable(this);
+  late final $OfflineMessageQueueTableTable offlineMessageQueueTable =
+      $OfflineMessageQueueTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
@@ -11977,6 +19195,15 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
   late final $InstitutionTable institution = $InstitutionTable(this);
+  late final $MagnetStudentProfileTable magnetStudentProfile =
+      $MagnetStudentProfileTable(this);
+  late final $MagnetCredentialsTable magnetCredentials =
+      $MagnetCredentialsTable(this);
+  late final $MagnetCourseInfoTable magnetCourseInfo = $MagnetCourseInfoTable(
+    this,
+  );
+  late final $MagnetFinancialTransactionTable magnetFinancialTransaction =
+      $MagnetFinancialTransactionTable(this);
   late final $CommunityTableTable communityTable = $CommunityTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -11992,6 +19219,12 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     postTable,
     attachmentTable,
     postReplyTable,
+    enhancedConversationTable,
+    enhancedMessageTable,
+    messageAttachmentsTable,
+    draftMessagesTable,
+    webSocketConnectionTable,
+    offlineMessageQueueTable,
     todo,
     eventTable,
     attendeeTable,
@@ -11999,6 +19232,10 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     agendaEvent,
     notificationTable,
     institution,
+    magnetStudentProfile,
+    magnetCredentials,
+    magnetCourseInfo,
+    magnetFinancialTransaction,
     communityTable,
   ];
   @override
@@ -16289,6 +23526,1818 @@ typedef $$PostReplyTableTableProcessedTableManager =
       PostReplyEntity,
       PrefetchHooks Function({bool parentId, bool postId})
     >;
+typedef $$EnhancedConversationTableTableCreateCompanionBuilder =
+    EnhancedConversationTableCompanion Function({
+      required String conversationId,
+      required String otherUserId,
+      required String otherUserName,
+      Value<String?> otherUserEmail,
+      Value<String?> otherUserAvatar,
+      Value<bool> isOnline,
+      Value<int?> lastMessageId,
+      Value<String?> lastMessageContent,
+      Value<DateTime?> lastMessageAt,
+      Value<int> unreadCount,
+      Value<DateTime?> apiUpdatedAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$EnhancedConversationTableTableUpdateCompanionBuilder =
+    EnhancedConversationTableCompanion Function({
+      Value<String> conversationId,
+      Value<String> otherUserId,
+      Value<String> otherUserName,
+      Value<String?> otherUserEmail,
+      Value<String?> otherUserAvatar,
+      Value<bool> isOnline,
+      Value<int?> lastMessageId,
+      Value<String?> lastMessageContent,
+      Value<DateTime?> lastMessageAt,
+      Value<int> unreadCount,
+      Value<DateTime?> apiUpdatedAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$EnhancedConversationTableTableFilterComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isOnline => $composableBuilder(
+    column: $table.isOnline,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EnhancedConversationTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isOnline => $composableBuilder(
+    column: $table.isOnline,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EnhancedConversationTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isOnline =>
+      $composableBuilder(column: $table.isOnline, builder: (column) => column);
+
+  GeneratedColumn<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$EnhancedConversationTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $EnhancedConversationTableTable,
+          EnhancedConversationData,
+          $$EnhancedConversationTableTableFilterComposer,
+          $$EnhancedConversationTableTableOrderingComposer,
+          $$EnhancedConversationTableTableAnnotationComposer,
+          $$EnhancedConversationTableTableCreateCompanionBuilder,
+          $$EnhancedConversationTableTableUpdateCompanionBuilder,
+          (
+            EnhancedConversationData,
+            BaseReferences<
+              _$AppDataBase,
+              $EnhancedConversationTableTable,
+              EnhancedConversationData
+            >,
+          ),
+          EnhancedConversationData,
+          PrefetchHooks Function()
+        > {
+  $$EnhancedConversationTableTableTableManager(
+    _$AppDataBase db,
+    $EnhancedConversationTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EnhancedConversationTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$EnhancedConversationTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$EnhancedConversationTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> conversationId = const Value.absent(),
+                Value<String> otherUserId = const Value.absent(),
+                Value<String> otherUserName = const Value.absent(),
+                Value<String?> otherUserEmail = const Value.absent(),
+                Value<String?> otherUserAvatar = const Value.absent(),
+                Value<bool> isOnline = const Value.absent(),
+                Value<int?> lastMessageId = const Value.absent(),
+                Value<String?> lastMessageContent = const Value.absent(),
+                Value<DateTime?> lastMessageAt = const Value.absent(),
+                Value<int> unreadCount = const Value.absent(),
+                Value<DateTime?> apiUpdatedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => EnhancedConversationTableCompanion(
+                conversationId: conversationId,
+                otherUserId: otherUserId,
+                otherUserName: otherUserName,
+                otherUserEmail: otherUserEmail,
+                otherUserAvatar: otherUserAvatar,
+                isOnline: isOnline,
+                lastMessageId: lastMessageId,
+                lastMessageContent: lastMessageContent,
+                lastMessageAt: lastMessageAt,
+                unreadCount: unreadCount,
+                apiUpdatedAt: apiUpdatedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String conversationId,
+                required String otherUserId,
+                required String otherUserName,
+                Value<String?> otherUserEmail = const Value.absent(),
+                Value<String?> otherUserAvatar = const Value.absent(),
+                Value<bool> isOnline = const Value.absent(),
+                Value<int?> lastMessageId = const Value.absent(),
+                Value<String?> lastMessageContent = const Value.absent(),
+                Value<DateTime?> lastMessageAt = const Value.absent(),
+                Value<int> unreadCount = const Value.absent(),
+                Value<DateTime?> apiUpdatedAt = const Value.absent(),
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => EnhancedConversationTableCompanion.insert(
+                conversationId: conversationId,
+                otherUserId: otherUserId,
+                otherUserName: otherUserName,
+                otherUserEmail: otherUserEmail,
+                otherUserAvatar: otherUserAvatar,
+                isOnline: isOnline,
+                lastMessageId: lastMessageId,
+                lastMessageContent: lastMessageContent,
+                lastMessageAt: lastMessageAt,
+                unreadCount: unreadCount,
+                apiUpdatedAt: apiUpdatedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EnhancedConversationTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $EnhancedConversationTableTable,
+      EnhancedConversationData,
+      $$EnhancedConversationTableTableFilterComposer,
+      $$EnhancedConversationTableTableOrderingComposer,
+      $$EnhancedConversationTableTableAnnotationComposer,
+      $$EnhancedConversationTableTableCreateCompanionBuilder,
+      $$EnhancedConversationTableTableUpdateCompanionBuilder,
+      (
+        EnhancedConversationData,
+        BaseReferences<
+          _$AppDataBase,
+          $EnhancedConversationTableTable,
+          EnhancedConversationData
+        >,
+      ),
+      EnhancedConversationData,
+      PrefetchHooks Function()
+    >;
+typedef $$EnhancedMessageTableTableCreateCompanionBuilder =
+    EnhancedMessageTableCompanion Function({
+      Value<int> id,
+      Value<int?> apiMessageId,
+      required String conversationId,
+      required String senderId,
+      required String senderName,
+      Value<String?> senderEmail,
+      Value<String?> senderAvatar,
+      required String content,
+      Value<String?> imageUrl,
+      Value<bool> isRead,
+      Value<bool> isEdited,
+      Value<bool> isDeleted,
+      Value<DateTime?> apiCreatedAt,
+      required DateTime sentAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<String> status,
+    });
+typedef $$EnhancedMessageTableTableUpdateCompanionBuilder =
+    EnhancedMessageTableCompanion Function({
+      Value<int> id,
+      Value<int?> apiMessageId,
+      Value<String> conversationId,
+      Value<String> senderId,
+      Value<String> senderName,
+      Value<String?> senderEmail,
+      Value<String?> senderAvatar,
+      Value<String> content,
+      Value<String?> imageUrl,
+      Value<bool> isRead,
+      Value<bool> isEdited,
+      Value<bool> isDeleted,
+      Value<DateTime?> apiCreatedAt,
+      Value<DateTime> sentAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<String> status,
+    });
+
+class $$EnhancedMessageTableTableFilterComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderId => $composableBuilder(
+    column: $table.senderId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEdited => $composableBuilder(
+    column: $table.isEdited,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EnhancedMessageTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderId => $composableBuilder(
+    column: $table.senderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEdited => $composableBuilder(
+    column: $table.isEdited,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EnhancedMessageTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderId =>
+      $composableBuilder(column: $table.senderId, builder: (column) => column);
+
+  GeneratedColumn<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<bool> get isEdited =>
+      $composableBuilder(column: $table.isEdited, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get sentAt =>
+      $composableBuilder(column: $table.sentAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+}
+
+class $$EnhancedMessageTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $EnhancedMessageTableTable,
+          EnhancedMessageData,
+          $$EnhancedMessageTableTableFilterComposer,
+          $$EnhancedMessageTableTableOrderingComposer,
+          $$EnhancedMessageTableTableAnnotationComposer,
+          $$EnhancedMessageTableTableCreateCompanionBuilder,
+          $$EnhancedMessageTableTableUpdateCompanionBuilder,
+          (
+            EnhancedMessageData,
+            BaseReferences<
+              _$AppDataBase,
+              $EnhancedMessageTableTable,
+              EnhancedMessageData
+            >,
+          ),
+          EnhancedMessageData,
+          PrefetchHooks Function()
+        > {
+  $$EnhancedMessageTableTableTableManager(
+    _$AppDataBase db,
+    $EnhancedMessageTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EnhancedMessageTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EnhancedMessageTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$EnhancedMessageTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> apiMessageId = const Value.absent(),
+                Value<String> conversationId = const Value.absent(),
+                Value<String> senderId = const Value.absent(),
+                Value<String> senderName = const Value.absent(),
+                Value<String?> senderEmail = const Value.absent(),
+                Value<String?> senderAvatar = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> isEdited = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime?> apiCreatedAt = const Value.absent(),
+                Value<DateTime> sentAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+              }) => EnhancedMessageTableCompanion(
+                id: id,
+                apiMessageId: apiMessageId,
+                conversationId: conversationId,
+                senderId: senderId,
+                senderName: senderName,
+                senderEmail: senderEmail,
+                senderAvatar: senderAvatar,
+                content: content,
+                imageUrl: imageUrl,
+                isRead: isRead,
+                isEdited: isEdited,
+                isDeleted: isDeleted,
+                apiCreatedAt: apiCreatedAt,
+                sentAt: sentAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                status: status,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> apiMessageId = const Value.absent(),
+                required String conversationId,
+                required String senderId,
+                required String senderName,
+                Value<String?> senderEmail = const Value.absent(),
+                Value<String?> senderAvatar = const Value.absent(),
+                required String content,
+                Value<String?> imageUrl = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> isEdited = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime?> apiCreatedAt = const Value.absent(),
+                required DateTime sentAt,
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<String> status = const Value.absent(),
+              }) => EnhancedMessageTableCompanion.insert(
+                id: id,
+                apiMessageId: apiMessageId,
+                conversationId: conversationId,
+                senderId: senderId,
+                senderName: senderName,
+                senderEmail: senderEmail,
+                senderAvatar: senderAvatar,
+                content: content,
+                imageUrl: imageUrl,
+                isRead: isRead,
+                isEdited: isEdited,
+                isDeleted: isDeleted,
+                apiCreatedAt: apiCreatedAt,
+                sentAt: sentAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                status: status,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EnhancedMessageTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $EnhancedMessageTableTable,
+      EnhancedMessageData,
+      $$EnhancedMessageTableTableFilterComposer,
+      $$EnhancedMessageTableTableOrderingComposer,
+      $$EnhancedMessageTableTableAnnotationComposer,
+      $$EnhancedMessageTableTableCreateCompanionBuilder,
+      $$EnhancedMessageTableTableUpdateCompanionBuilder,
+      (
+        EnhancedMessageData,
+        BaseReferences<
+          _$AppDataBase,
+          $EnhancedMessageTableTable,
+          EnhancedMessageData
+        >,
+      ),
+      EnhancedMessageData,
+      PrefetchHooks Function()
+    >;
+typedef $$MessageAttachmentsTableTableCreateCompanionBuilder =
+    MessageAttachmentsTableCompanion Function({
+      Value<int> id,
+      required int messageId,
+      required String attachmentType,
+      required String url,
+      Value<String?> fileName,
+      Value<int?> fileSize,
+      Value<String?> mimeType,
+      required DateTime createdAt,
+    });
+typedef $$MessageAttachmentsTableTableUpdateCompanionBuilder =
+    MessageAttachmentsTableCompanion Function({
+      Value<int> id,
+      Value<int> messageId,
+      Value<String> attachmentType,
+      Value<String> url,
+      Value<String?> fileName,
+      Value<int?> fileSize,
+      Value<String?> mimeType,
+      Value<DateTime> createdAt,
+    });
+
+class $$MessageAttachmentsTableTableFilterComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get messageId => $composableBuilder(
+    column: $table.messageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fileName => $composableBuilder(
+    column: $table.fileName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fileSize => $composableBuilder(
+    column: $table.fileSize,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MessageAttachmentsTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get messageId => $composableBuilder(
+    column: $table.messageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fileName => $composableBuilder(
+    column: $table.fileName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fileSize => $composableBuilder(
+    column: $table.fileSize,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MessageAttachmentsTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get messageId =>
+      $composableBuilder(column: $table.messageId, builder: (column) => column);
+
+  GeneratedColumn<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get fileName =>
+      $composableBuilder(column: $table.fileName, builder: (column) => column);
+
+  GeneratedColumn<int> get fileSize =>
+      $composableBuilder(column: $table.fileSize, builder: (column) => column);
+
+  GeneratedColumn<String> get mimeType =>
+      $composableBuilder(column: $table.mimeType, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$MessageAttachmentsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MessageAttachmentsTableTable,
+          MessageAttachmentData,
+          $$MessageAttachmentsTableTableFilterComposer,
+          $$MessageAttachmentsTableTableOrderingComposer,
+          $$MessageAttachmentsTableTableAnnotationComposer,
+          $$MessageAttachmentsTableTableCreateCompanionBuilder,
+          $$MessageAttachmentsTableTableUpdateCompanionBuilder,
+          (
+            MessageAttachmentData,
+            BaseReferences<
+              _$AppDataBase,
+              $MessageAttachmentsTableTable,
+              MessageAttachmentData
+            >,
+          ),
+          MessageAttachmentData,
+          PrefetchHooks Function()
+        > {
+  $$MessageAttachmentsTableTableTableManager(
+    _$AppDataBase db,
+    $MessageAttachmentsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MessageAttachmentsTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$MessageAttachmentsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MessageAttachmentsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> messageId = const Value.absent(),
+                Value<String> attachmentType = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<String?> fileName = const Value.absent(),
+                Value<int?> fileSize = const Value.absent(),
+                Value<String?> mimeType = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => MessageAttachmentsTableCompanion(
+                id: id,
+                messageId: messageId,
+                attachmentType: attachmentType,
+                url: url,
+                fileName: fileName,
+                fileSize: fileSize,
+                mimeType: mimeType,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int messageId,
+                required String attachmentType,
+                required String url,
+                Value<String?> fileName = const Value.absent(),
+                Value<int?> fileSize = const Value.absent(),
+                Value<String?> mimeType = const Value.absent(),
+                required DateTime createdAt,
+              }) => MessageAttachmentsTableCompanion.insert(
+                id: id,
+                messageId: messageId,
+                attachmentType: attachmentType,
+                url: url,
+                fileName: fileName,
+                fileSize: fileSize,
+                mimeType: mimeType,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MessageAttachmentsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MessageAttachmentsTableTable,
+      MessageAttachmentData,
+      $$MessageAttachmentsTableTableFilterComposer,
+      $$MessageAttachmentsTableTableOrderingComposer,
+      $$MessageAttachmentsTableTableAnnotationComposer,
+      $$MessageAttachmentsTableTableCreateCompanionBuilder,
+      $$MessageAttachmentsTableTableUpdateCompanionBuilder,
+      (
+        MessageAttachmentData,
+        BaseReferences<
+          _$AppDataBase,
+          $MessageAttachmentsTableTable,
+          MessageAttachmentData
+        >,
+      ),
+      MessageAttachmentData,
+      PrefetchHooks Function()
+    >;
+typedef $$DraftMessagesTableTableCreateCompanionBuilder =
+    DraftMessagesTableCompanion Function({
+      required String conversationId,
+      required String content,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$DraftMessagesTableTableUpdateCompanionBuilder =
+    DraftMessagesTableCompanion Function({
+      Value<String> conversationId,
+      Value<String> content,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$DraftMessagesTableTableFilterComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DraftMessagesTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DraftMessagesTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$DraftMessagesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $DraftMessagesTableTable,
+          DraftMessageData,
+          $$DraftMessagesTableTableFilterComposer,
+          $$DraftMessagesTableTableOrderingComposer,
+          $$DraftMessagesTableTableAnnotationComposer,
+          $$DraftMessagesTableTableCreateCompanionBuilder,
+          $$DraftMessagesTableTableUpdateCompanionBuilder,
+          (
+            DraftMessageData,
+            BaseReferences<
+              _$AppDataBase,
+              $DraftMessagesTableTable,
+              DraftMessageData
+            >,
+          ),
+          DraftMessageData,
+          PrefetchHooks Function()
+        > {
+  $$DraftMessagesTableTableTableManager(
+    _$AppDataBase db,
+    $DraftMessagesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DraftMessagesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DraftMessagesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DraftMessagesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> conversationId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DraftMessagesTableCompanion(
+                conversationId: conversationId,
+                content: content,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String conversationId,
+                required String content,
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => DraftMessagesTableCompanion.insert(
+                conversationId: conversationId,
+                content: content,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DraftMessagesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $DraftMessagesTableTable,
+      DraftMessageData,
+      $$DraftMessagesTableTableFilterComposer,
+      $$DraftMessagesTableTableOrderingComposer,
+      $$DraftMessagesTableTableAnnotationComposer,
+      $$DraftMessagesTableTableCreateCompanionBuilder,
+      $$DraftMessagesTableTableUpdateCompanionBuilder,
+      (
+        DraftMessageData,
+        BaseReferences<
+          _$AppDataBase,
+          $DraftMessagesTableTable,
+          DraftMessageData
+        >,
+      ),
+      DraftMessageData,
+      PrefetchHooks Function()
+    >;
+typedef $$WebSocketConnectionTableTableCreateCompanionBuilder =
+    WebSocketConnectionTableCompanion Function({
+      required String connectionId,
+      required String state,
+      Value<DateTime?> lastConnectedAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$WebSocketConnectionTableTableUpdateCompanionBuilder =
+    WebSocketConnectionTableCompanion Function({
+      Value<String> connectionId,
+      Value<String> state,
+      Value<DateTime?> lastConnectedAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$WebSocketConnectionTableTableFilterComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WebSocketConnectionTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WebSocketConnectionTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$WebSocketConnectionTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $WebSocketConnectionTableTable,
+          WebSocketConnectionData,
+          $$WebSocketConnectionTableTableFilterComposer,
+          $$WebSocketConnectionTableTableOrderingComposer,
+          $$WebSocketConnectionTableTableAnnotationComposer,
+          $$WebSocketConnectionTableTableCreateCompanionBuilder,
+          $$WebSocketConnectionTableTableUpdateCompanionBuilder,
+          (
+            WebSocketConnectionData,
+            BaseReferences<
+              _$AppDataBase,
+              $WebSocketConnectionTableTable,
+              WebSocketConnectionData
+            >,
+          ),
+          WebSocketConnectionData,
+          PrefetchHooks Function()
+        > {
+  $$WebSocketConnectionTableTableTableManager(
+    _$AppDataBase db,
+    $WebSocketConnectionTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WebSocketConnectionTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$WebSocketConnectionTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$WebSocketConnectionTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> connectionId = const Value.absent(),
+                Value<String> state = const Value.absent(),
+                Value<DateTime?> lastConnectedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WebSocketConnectionTableCompanion(
+                connectionId: connectionId,
+                state: state,
+                lastConnectedAt: lastConnectedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String connectionId,
+                required String state,
+                Value<DateTime?> lastConnectedAt = const Value.absent(),
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => WebSocketConnectionTableCompanion.insert(
+                connectionId: connectionId,
+                state: state,
+                lastConnectedAt: lastConnectedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WebSocketConnectionTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $WebSocketConnectionTableTable,
+      WebSocketConnectionData,
+      $$WebSocketConnectionTableTableFilterComposer,
+      $$WebSocketConnectionTableTableOrderingComposer,
+      $$WebSocketConnectionTableTableAnnotationComposer,
+      $$WebSocketConnectionTableTableCreateCompanionBuilder,
+      $$WebSocketConnectionTableTableUpdateCompanionBuilder,
+      (
+        WebSocketConnectionData,
+        BaseReferences<
+          _$AppDataBase,
+          $WebSocketConnectionTableTable,
+          WebSocketConnectionData
+        >,
+      ),
+      WebSocketConnectionData,
+      PrefetchHooks Function()
+    >;
+typedef $$OfflineMessageQueueTableTableCreateCompanionBuilder =
+    OfflineMessageQueueTableCompanion Function({
+      Value<int> id,
+      required String conversationId,
+      required String content,
+      required String tempMessageId,
+      Value<String?> attachmentPath,
+      Value<int> retryCount,
+      required DateTime createdAt,
+      Value<DateTime?> lastRetryAt,
+    });
+typedef $$OfflineMessageQueueTableTableUpdateCompanionBuilder =
+    OfflineMessageQueueTableCompanion Function({
+      Value<int> id,
+      Value<String> conversationId,
+      Value<String> content,
+      Value<String> tempMessageId,
+      Value<String?> attachmentPath,
+      Value<int> retryCount,
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastRetryAt,
+    });
+
+class $$OfflineMessageQueueTableTableFilterComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$OfflineMessageQueueTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$OfflineMessageQueueTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => column,
+  );
+}
+
+class $$OfflineMessageQueueTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $OfflineMessageQueueTableTable,
+          OfflineMessageQueueData,
+          $$OfflineMessageQueueTableTableFilterComposer,
+          $$OfflineMessageQueueTableTableOrderingComposer,
+          $$OfflineMessageQueueTableTableAnnotationComposer,
+          $$OfflineMessageQueueTableTableCreateCompanionBuilder,
+          $$OfflineMessageQueueTableTableUpdateCompanionBuilder,
+          (
+            OfflineMessageQueueData,
+            BaseReferences<
+              _$AppDataBase,
+              $OfflineMessageQueueTableTable,
+              OfflineMessageQueueData
+            >,
+          ),
+          OfflineMessageQueueData,
+          PrefetchHooks Function()
+        > {
+  $$OfflineMessageQueueTableTableTableManager(
+    _$AppDataBase db,
+    $OfflineMessageQueueTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OfflineMessageQueueTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$OfflineMessageQueueTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$OfflineMessageQueueTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> conversationId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<String> tempMessageId = const Value.absent(),
+                Value<String?> attachmentPath = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastRetryAt = const Value.absent(),
+              }) => OfflineMessageQueueTableCompanion(
+                id: id,
+                conversationId: conversationId,
+                content: content,
+                tempMessageId: tempMessageId,
+                attachmentPath: attachmentPath,
+                retryCount: retryCount,
+                createdAt: createdAt,
+                lastRetryAt: lastRetryAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String conversationId,
+                required String content,
+                required String tempMessageId,
+                Value<String?> attachmentPath = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> lastRetryAt = const Value.absent(),
+              }) => OfflineMessageQueueTableCompanion.insert(
+                id: id,
+                conversationId: conversationId,
+                content: content,
+                tempMessageId: tempMessageId,
+                attachmentPath: attachmentPath,
+                retryCount: retryCount,
+                createdAt: createdAt,
+                lastRetryAt: lastRetryAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$OfflineMessageQueueTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $OfflineMessageQueueTableTable,
+      OfflineMessageQueueData,
+      $$OfflineMessageQueueTableTableFilterComposer,
+      $$OfflineMessageQueueTableTableOrderingComposer,
+      $$OfflineMessageQueueTableTableAnnotationComposer,
+      $$OfflineMessageQueueTableTableCreateCompanionBuilder,
+      $$OfflineMessageQueueTableTableUpdateCompanionBuilder,
+      (
+        OfflineMessageQueueData,
+        BaseReferences<
+          _$AppDataBase,
+          $OfflineMessageQueueTableTable,
+          OfflineMessageQueueData
+        >,
+      ),
+      OfflineMessageQueueData,
+      PrefetchHooks Function()
+    >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
       Value<DateTime?> completed,
@@ -19221,6 +28270,1692 @@ typedef $$InstitutionTableProcessedTableManager =
       InstitutionData,
       PrefetchHooks Function()
     >;
+typedef $$MagnetStudentProfileTableCreateCompanionBuilder =
+    MagnetStudentProfileCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String admissionNumber,
+      required String firstName,
+      required String otherNames,
+      Value<String?> nationalId,
+      Value<String?> gender,
+      Value<String?> address,
+      Value<String?> email,
+      Value<String?> phoneNumber,
+      Value<String?> profilePictureUrl,
+      Value<DateTime?> dateOfBirth,
+      required String school,
+      Value<String?> campus,
+      Value<String?> enrollmentStatus,
+      Value<String?> programme,
+      Value<String?> degree,
+      Value<int?> academicYear,
+      Value<double?> gpa,
+      Value<String?> emergencyContact,
+      Value<String?> parentName,
+      Value<DateTime?> dateOfAdmission,
+      Value<DateTime?> graduationDate,
+      Value<String?> disabilityStatus,
+      Value<bool?> isInternationalStudent,
+      Value<int> rowid,
+    });
+typedef $$MagnetStudentProfileTableUpdateCompanionBuilder =
+    MagnetStudentProfileCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> admissionNumber,
+      Value<String> firstName,
+      Value<String> otherNames,
+      Value<String?> nationalId,
+      Value<String?> gender,
+      Value<String?> address,
+      Value<String?> email,
+      Value<String?> phoneNumber,
+      Value<String?> profilePictureUrl,
+      Value<DateTime?> dateOfBirth,
+      Value<String> school,
+      Value<String?> campus,
+      Value<String?> enrollmentStatus,
+      Value<String?> programme,
+      Value<String?> degree,
+      Value<int?> academicYear,
+      Value<double?> gpa,
+      Value<String?> emergencyContact,
+      Value<String?> parentName,
+      Value<DateTime?> dateOfAdmission,
+      Value<DateTime?> graduationDate,
+      Value<String?> disabilityStatus,
+      Value<bool?> isInternationalStudent,
+      Value<int> rowid,
+    });
+
+class $$MagnetStudentProfileTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get programme => $composableBuilder(
+    column: $table.programme,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get degree => $composableBuilder(
+    column: $table.degree,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetStudentProfileTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get programme => $composableBuilder(
+    column: $table.programme,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get degree => $composableBuilder(
+    column: $table.degree,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetStudentProfileTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get firstName =>
+      $composableBuilder(column: $table.firstName, builder: (column) => column);
+
+  GeneratedColumn<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get school =>
+      $composableBuilder(column: $table.school, builder: (column) => column);
+
+  GeneratedColumn<String> get campus =>
+      $composableBuilder(column: $table.campus, builder: (column) => column);
+
+  GeneratedColumn<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get programme =>
+      $composableBuilder(column: $table.programme, builder: (column) => column);
+
+  GeneratedColumn<String> get degree =>
+      $composableBuilder(column: $table.degree, builder: (column) => column);
+
+  GeneratedColumn<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get gpa =>
+      $composableBuilder(column: $table.gpa, builder: (column) => column);
+
+  GeneratedColumn<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetStudentProfileTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetStudentProfileTable,
+          MagnetStudentProfileData,
+          $$MagnetStudentProfileTableFilterComposer,
+          $$MagnetStudentProfileTableOrderingComposer,
+          $$MagnetStudentProfileTableAnnotationComposer,
+          $$MagnetStudentProfileTableCreateCompanionBuilder,
+          $$MagnetStudentProfileTableUpdateCompanionBuilder,
+          (
+            MagnetStudentProfileData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetStudentProfileTable,
+              MagnetStudentProfileData
+            >,
+          ),
+          MagnetStudentProfileData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetStudentProfileTableTableManager(
+    _$AppDataBase db,
+    $MagnetStudentProfileTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetStudentProfileTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetStudentProfileTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MagnetStudentProfileTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> admissionNumber = const Value.absent(),
+                Value<String> firstName = const Value.absent(),
+                Value<String> otherNames = const Value.absent(),
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<String> school = const Value.absent(),
+                Value<String?> campus = const Value.absent(),
+                Value<String?> enrollmentStatus = const Value.absent(),
+                Value<String?> programme = const Value.absent(),
+                Value<String?> degree = const Value.absent(),
+                Value<int?> academicYear = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> parentName = const Value.absent(),
+                Value<DateTime?> dateOfAdmission = const Value.absent(),
+                Value<DateTime?> graduationDate = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<bool?> isInternationalStudent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetStudentProfileCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                admissionNumber: admissionNumber,
+                firstName: firstName,
+                otherNames: otherNames,
+                nationalId: nationalId,
+                gender: gender,
+                address: address,
+                email: email,
+                phoneNumber: phoneNumber,
+                profilePictureUrl: profilePictureUrl,
+                dateOfBirth: dateOfBirth,
+                school: school,
+                campus: campus,
+                enrollmentStatus: enrollmentStatus,
+                programme: programme,
+                degree: degree,
+                academicYear: academicYear,
+                gpa: gpa,
+                emergencyContact: emergencyContact,
+                parentName: parentName,
+                dateOfAdmission: dateOfAdmission,
+                graduationDate: graduationDate,
+                disabilityStatus: disabilityStatus,
+                isInternationalStudent: isInternationalStudent,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String admissionNumber,
+                required String firstName,
+                required String otherNames,
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                required String school,
+                Value<String?> campus = const Value.absent(),
+                Value<String?> enrollmentStatus = const Value.absent(),
+                Value<String?> programme = const Value.absent(),
+                Value<String?> degree = const Value.absent(),
+                Value<int?> academicYear = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> parentName = const Value.absent(),
+                Value<DateTime?> dateOfAdmission = const Value.absent(),
+                Value<DateTime?> graduationDate = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<bool?> isInternationalStudent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetStudentProfileCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                admissionNumber: admissionNumber,
+                firstName: firstName,
+                otherNames: otherNames,
+                nationalId: nationalId,
+                gender: gender,
+                address: address,
+                email: email,
+                phoneNumber: phoneNumber,
+                profilePictureUrl: profilePictureUrl,
+                dateOfBirth: dateOfBirth,
+                school: school,
+                campus: campus,
+                enrollmentStatus: enrollmentStatus,
+                programme: programme,
+                degree: degree,
+                academicYear: academicYear,
+                gpa: gpa,
+                emergencyContact: emergencyContact,
+                parentName: parentName,
+                dateOfAdmission: dateOfAdmission,
+                graduationDate: graduationDate,
+                disabilityStatus: disabilityStatus,
+                isInternationalStudent: isInternationalStudent,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetStudentProfileTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetStudentProfileTable,
+      MagnetStudentProfileData,
+      $$MagnetStudentProfileTableFilterComposer,
+      $$MagnetStudentProfileTableOrderingComposer,
+      $$MagnetStudentProfileTableAnnotationComposer,
+      $$MagnetStudentProfileTableCreateCompanionBuilder,
+      $$MagnetStudentProfileTableUpdateCompanionBuilder,
+      (
+        MagnetStudentProfileData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetStudentProfileTable,
+          MagnetStudentProfileData
+        >,
+      ),
+      MagnetStudentProfileData,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetCredentialsTableCreateCompanionBuilder =
+    MagnetCredentialsCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String username,
+      required String password,
+      Value<String?> extra,
+      Value<int> rowid,
+    });
+typedef $$MagnetCredentialsTableUpdateCompanionBuilder =
+    MagnetCredentialsCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> username,
+      Value<String> password,
+      Value<String?> extra,
+      Value<int> rowid,
+    });
+
+class $$MagnetCredentialsTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get password => $composableBuilder(
+    column: $table.password,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extra => $composableBuilder(
+    column: $table.extra,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetCredentialsTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get password => $composableBuilder(
+    column: $table.password,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extra => $composableBuilder(
+    column: $table.extra,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetCredentialsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get password =>
+      $composableBuilder(column: $table.password, builder: (column) => column);
+
+  GeneratedColumn<String> get extra =>
+      $composableBuilder(column: $table.extra, builder: (column) => column);
+}
+
+class $$MagnetCredentialsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetCredentialsTable,
+          MagnetCredential,
+          $$MagnetCredentialsTableFilterComposer,
+          $$MagnetCredentialsTableOrderingComposer,
+          $$MagnetCredentialsTableAnnotationComposer,
+          $$MagnetCredentialsTableCreateCompanionBuilder,
+          $$MagnetCredentialsTableUpdateCompanionBuilder,
+          (
+            MagnetCredential,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetCredentialsTable,
+              MagnetCredential
+            >,
+          ),
+          MagnetCredential,
+          PrefetchHooks Function()
+        > {
+  $$MagnetCredentialsTableTableManager(
+    _$AppDataBase db,
+    $MagnetCredentialsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetCredentialsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetCredentialsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MagnetCredentialsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> username = const Value.absent(),
+                Value<String> password = const Value.absent(),
+                Value<String?> extra = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCredentialsCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                username: username,
+                password: password,
+                extra: extra,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String username,
+                required String password,
+                Value<String?> extra = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCredentialsCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                username: username,
+                password: password,
+                extra: extra,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetCredentialsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetCredentialsTable,
+      MagnetCredential,
+      $$MagnetCredentialsTableFilterComposer,
+      $$MagnetCredentialsTableOrderingComposer,
+      $$MagnetCredentialsTableAnnotationComposer,
+      $$MagnetCredentialsTableCreateCompanionBuilder,
+      $$MagnetCredentialsTableUpdateCompanionBuilder,
+      (
+        MagnetCredential,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetCredentialsTable,
+          MagnetCredential
+        >,
+      ),
+      MagnetCredential,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetCourseInfoTableCreateCompanionBuilder =
+    MagnetCourseInfoCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String courseCode,
+      required String courseTitle,
+      Value<String?> courseDescription,
+      required int credits,
+      Value<String?> instructor,
+      Value<String?> semester,
+      Value<DateTime?> schedule,
+      Value<int?> durationInSeconds,
+      Value<String?> prerequisites,
+      Value<String?> courseType,
+      Value<String?> courseLevel,
+      Value<String?> location,
+      Value<int?> enrollmentLimit,
+      Value<int?> currentEnrollment,
+      Value<String?> courseMaterials,
+      Value<int> rowid,
+    });
+typedef $$MagnetCourseInfoTableUpdateCompanionBuilder =
+    MagnetCourseInfoCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> courseCode,
+      Value<String> courseTitle,
+      Value<String?> courseDescription,
+      Value<int> credits,
+      Value<String?> instructor,
+      Value<String?> semester,
+      Value<DateTime?> schedule,
+      Value<int?> durationInSeconds,
+      Value<String?> prerequisites,
+      Value<String?> courseType,
+      Value<String?> courseLevel,
+      Value<String?> location,
+      Value<int?> enrollmentLimit,
+      Value<int?> currentEnrollment,
+      Value<String?> courseMaterials,
+      Value<int> rowid,
+    });
+
+class $$MagnetCourseInfoTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get credits => $composableBuilder(
+    column: $table.credits,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get semester => $composableBuilder(
+    column: $table.semester,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get schedule => $composableBuilder(
+    column: $table.schedule,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetCourseInfoTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get credits => $composableBuilder(
+    column: $table.credits,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get semester => $composableBuilder(
+    column: $table.semester,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get schedule => $composableBuilder(
+    column: $table.schedule,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetCourseInfoTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get credits =>
+      $composableBuilder(column: $table.credits, builder: (column) => column);
+
+  GeneratedColumn<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get semester =>
+      $composableBuilder(column: $table.semester, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get schedule =>
+      $composableBuilder(column: $table.schedule, builder: (column) => column);
+
+  GeneratedColumn<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetCourseInfoTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetCourseInfoTable,
+          MagnetCourseInfoData,
+          $$MagnetCourseInfoTableFilterComposer,
+          $$MagnetCourseInfoTableOrderingComposer,
+          $$MagnetCourseInfoTableAnnotationComposer,
+          $$MagnetCourseInfoTableCreateCompanionBuilder,
+          $$MagnetCourseInfoTableUpdateCompanionBuilder,
+          (
+            MagnetCourseInfoData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetCourseInfoTable,
+              MagnetCourseInfoData
+            >,
+          ),
+          MagnetCourseInfoData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetCourseInfoTableTableManager(
+    _$AppDataBase db,
+    $MagnetCourseInfoTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetCourseInfoTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetCourseInfoTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MagnetCourseInfoTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> courseCode = const Value.absent(),
+                Value<String> courseTitle = const Value.absent(),
+                Value<String?> courseDescription = const Value.absent(),
+                Value<int> credits = const Value.absent(),
+                Value<String?> instructor = const Value.absent(),
+                Value<String?> semester = const Value.absent(),
+                Value<DateTime?> schedule = const Value.absent(),
+                Value<int?> durationInSeconds = const Value.absent(),
+                Value<String?> prerequisites = const Value.absent(),
+                Value<String?> courseType = const Value.absent(),
+                Value<String?> courseLevel = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<int?> enrollmentLimit = const Value.absent(),
+                Value<int?> currentEnrollment = const Value.absent(),
+                Value<String?> courseMaterials = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCourseInfoCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                courseCode: courseCode,
+                courseTitle: courseTitle,
+                courseDescription: courseDescription,
+                credits: credits,
+                instructor: instructor,
+                semester: semester,
+                schedule: schedule,
+                durationInSeconds: durationInSeconds,
+                prerequisites: prerequisites,
+                courseType: courseType,
+                courseLevel: courseLevel,
+                location: location,
+                enrollmentLimit: enrollmentLimit,
+                currentEnrollment: currentEnrollment,
+                courseMaterials: courseMaterials,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String courseCode,
+                required String courseTitle,
+                Value<String?> courseDescription = const Value.absent(),
+                required int credits,
+                Value<String?> instructor = const Value.absent(),
+                Value<String?> semester = const Value.absent(),
+                Value<DateTime?> schedule = const Value.absent(),
+                Value<int?> durationInSeconds = const Value.absent(),
+                Value<String?> prerequisites = const Value.absent(),
+                Value<String?> courseType = const Value.absent(),
+                Value<String?> courseLevel = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<int?> enrollmentLimit = const Value.absent(),
+                Value<int?> currentEnrollment = const Value.absent(),
+                Value<String?> courseMaterials = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCourseInfoCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                courseCode: courseCode,
+                courseTitle: courseTitle,
+                courseDescription: courseDescription,
+                credits: credits,
+                instructor: instructor,
+                semester: semester,
+                schedule: schedule,
+                durationInSeconds: durationInSeconds,
+                prerequisites: prerequisites,
+                courseType: courseType,
+                courseLevel: courseLevel,
+                location: location,
+                enrollmentLimit: enrollmentLimit,
+                currentEnrollment: currentEnrollment,
+                courseMaterials: courseMaterials,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetCourseInfoTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetCourseInfoTable,
+      MagnetCourseInfoData,
+      $$MagnetCourseInfoTableFilterComposer,
+      $$MagnetCourseInfoTableOrderingComposer,
+      $$MagnetCourseInfoTableAnnotationComposer,
+      $$MagnetCourseInfoTableCreateCompanionBuilder,
+      $$MagnetCourseInfoTableUpdateCompanionBuilder,
+      (
+        MagnetCourseInfoData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetCourseInfoTable,
+          MagnetCourseInfoData
+        >,
+      ),
+      MagnetCourseInfoData,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetFinancialTransactionTableCreateCompanionBuilder =
+    MagnetFinancialTransactionCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String transactionId,
+      required double amount,
+      required DateTime date,
+      required String type,
+      required String paymentMethod,
+      required String studentId,
+      required double balanceAfterTransaction,
+      required String status,
+      required String currency,
+      Value<String?> description,
+      Value<String?> referenceNumber,
+      Value<int> rowid,
+    });
+typedef $$MagnetFinancialTransactionTableUpdateCompanionBuilder =
+    MagnetFinancialTransactionCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> transactionId,
+      Value<double> amount,
+      Value<DateTime> date,
+      Value<String> type,
+      Value<String> paymentMethod,
+      Value<String> studentId,
+      Value<double> balanceAfterTransaction,
+      Value<String> status,
+      Value<String> currency,
+      Value<String?> description,
+      Value<String?> referenceNumber,
+      Value<int> rowid,
+    });
+
+class $$MagnetFinancialTransactionTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetFinancialTransactionTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetFinancialTransactionTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get studentId =>
+      $composableBuilder(column: $table.studentId, builder: (column) => column);
+
+  GeneratedColumn<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetFinancialTransactionTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData,
+          $$MagnetFinancialTransactionTableFilterComposer,
+          $$MagnetFinancialTransactionTableOrderingComposer,
+          $$MagnetFinancialTransactionTableAnnotationComposer,
+          $$MagnetFinancialTransactionTableCreateCompanionBuilder,
+          $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+          (
+            MagnetFinancialTransactionData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetFinancialTransactionTable,
+              MagnetFinancialTransactionData
+            >,
+          ),
+          MagnetFinancialTransactionData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetFinancialTransactionTableTableManager(
+    _$AppDataBase db,
+    $MagnetFinancialTransactionTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetFinancialTransactionTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$MagnetFinancialTransactionTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MagnetFinancialTransactionTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> transactionId = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<String> paymentMethod = const Value.absent(),
+                Value<String> studentId = const Value.absent(),
+                Value<double> balanceAfterTransaction = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetFinancialTransactionCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                transactionId: transactionId,
+                amount: amount,
+                date: date,
+                type: type,
+                paymentMethod: paymentMethod,
+                studentId: studentId,
+                balanceAfterTransaction: balanceAfterTransaction,
+                status: status,
+                currency: currency,
+                description: description,
+                referenceNumber: referenceNumber,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String transactionId,
+                required double amount,
+                required DateTime date,
+                required String type,
+                required String paymentMethod,
+                required String studentId,
+                required double balanceAfterTransaction,
+                required String status,
+                required String currency,
+                Value<String?> description = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetFinancialTransactionCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                transactionId: transactionId,
+                amount: amount,
+                date: date,
+                type: type,
+                paymentMethod: paymentMethod,
+                studentId: studentId,
+                balanceAfterTransaction: balanceAfterTransaction,
+                status: status,
+                currency: currency,
+                description: description,
+                referenceNumber: referenceNumber,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetFinancialTransactionTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetFinancialTransactionTable,
+      MagnetFinancialTransactionData,
+      $$MagnetFinancialTransactionTableFilterComposer,
+      $$MagnetFinancialTransactionTableOrderingComposer,
+      $$MagnetFinancialTransactionTableAnnotationComposer,
+      $$MagnetFinancialTransactionTableCreateCompanionBuilder,
+      $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+      (
+        MagnetFinancialTransactionData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData
+        >,
+      ),
+      MagnetFinancialTransactionData,
+      PrefetchHooks Function()
+    >;
 typedef $$CommunityTableTableCreateCompanionBuilder =
     CommunityTableCompanion Function({
       Value<int> id,
@@ -19773,6 +30508,30 @@ class $AppDataBaseManager {
       $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
   $$PostReplyTableTableTableManager get postReplyTable =>
       $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
+  $$EnhancedConversationTableTableTableManager get enhancedConversationTable =>
+      $$EnhancedConversationTableTableTableManager(
+        _db,
+        _db.enhancedConversationTable,
+      );
+  $$EnhancedMessageTableTableTableManager get enhancedMessageTable =>
+      $$EnhancedMessageTableTableTableManager(_db, _db.enhancedMessageTable);
+  $$MessageAttachmentsTableTableTableManager get messageAttachmentsTable =>
+      $$MessageAttachmentsTableTableTableManager(
+        _db,
+        _db.messageAttachmentsTable,
+      );
+  $$DraftMessagesTableTableTableManager get draftMessagesTable =>
+      $$DraftMessagesTableTableTableManager(_db, _db.draftMessagesTable);
+  $$WebSocketConnectionTableTableTableManager get webSocketConnectionTable =>
+      $$WebSocketConnectionTableTableTableManager(
+        _db,
+        _db.webSocketConnectionTable,
+      );
+  $$OfflineMessageQueueTableTableTableManager get offlineMessageQueueTable =>
+      $$OfflineMessageQueueTableTableTableManager(
+        _db,
+        _db.offlineMessageQueueTable,
+      );
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
@@ -19786,6 +30545,18 @@ class $AppDataBaseManager {
       $$NotificationTableTableTableManager(_db, _db.notificationTable);
   $$InstitutionTableTableManager get institution =>
       $$InstitutionTableTableManager(_db, _db.institution);
+  $$MagnetStudentProfileTableTableManager get magnetStudentProfile =>
+      $$MagnetStudentProfileTableTableManager(_db, _db.magnetStudentProfile);
+  $$MagnetCredentialsTableTableManager get magnetCredentials =>
+      $$MagnetCredentialsTableTableManager(_db, _db.magnetCredentials);
+  $$MagnetCourseInfoTableTableManager get magnetCourseInfo =>
+      $$MagnetCourseInfoTableTableManager(_db, _db.magnetCourseInfo);
+  $$MagnetFinancialTransactionTableTableManager
+  get magnetFinancialTransaction =>
+      $$MagnetFinancialTransactionTableTableManager(
+        _db,
+        _db.magnetFinancialTransaction,
+      );
   $$CommunityTableTableTableManager get communityTable =>
       $$CommunityTableTableTableManager(_db, _db.communityTable);
 }

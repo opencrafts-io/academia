@@ -7,9 +7,11 @@ part of 'routes.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-  $mainLayoutShellRoute,
+  $layoutShellRoute,
   $feedRoute,
+  $conversationListRoute,
   $chatRoute,
+  $userSelectionRoute,
   $postDetailRoute,
   $addPostRoute,
   $authRoute,
@@ -17,44 +19,53 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $todosRoute,
+  $magnetRoute,
   $communitiesRoute,
   $createCommunitiesRoute,
 ];
 
-RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
-  navigatorKey: MainLayoutShellRoute.$navigatorKey,
-  factory: $MainLayoutShellRouteExtension._fromState,
-  routes: [
-    GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState),
-    GoRouteData.$route(
-      path: '/calendar',
-
-      factory: _$CalendarRoute._fromState,
+RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
+  factory: $LayoutShellRouteExtension._fromState,
+  branches: [
+    StatefulShellBranchData.$branch(
+      routes: [GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState)],
+    ),
+    StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
-          path: 'create',
+          path: '/calendar',
 
-          factory: _$CreateAgendaEventRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'item/:id',
+          factory: _$CalendarRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'create',
 
-          factory: _$AgendaItemViewRoute._fromState,
+              factory: _$CreateAgendaEventRoute._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'item/:id',
+
+              factory: _$AgendaItemViewRoute._fromState,
+            ),
+          ],
         ),
       ],
     ),
-    GoRouteData.$route(
-      path: '/essentials',
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/essentials',
 
-      factory: _$EssentialsRoute._fromState,
+          factory: _$EssentialsRoute._fromState,
+        ),
+      ],
     ),
-    GoRouteData.$route(path: '/meteor', factory: _$MeteorRoute._fromState),
   ],
 );
 
-extension $MainLayoutShellRouteExtension on MainLayoutShellRoute {
-  static MainLayoutShellRoute _fromState(GoRouterState state) =>
-      const MainLayoutShellRoute();
+extension $LayoutShellRouteExtension on LayoutShellRoute {
+  static LayoutShellRoute _fromState(GoRouterState state) =>
+      const LayoutShellRoute();
 }
 
 mixin _$HomeRoute on GoRouteData {
@@ -163,11 +174,14 @@ mixin _$EssentialsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$MeteorRoute on GoRouteData {
-  static MeteorRoute _fromState(GoRouterState state) => MeteorRoute();
+RouteBase get $feedRoute =>
+    GoRouteData.$route(path: '/feed', factory: _$FeedRoute._fromState);
+
+mixin _$FeedRoute on GoRouteData {
+  static FeedRoute _fromState(GoRouterState state) => FeedRoute();
 
   @override
-  String get location => GoRouteData.$location('/meteor');
+  String get location => GoRouteData.$location('/feed');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -183,14 +197,18 @@ mixin _$MeteorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $feedRoute =>
-    GoRouteData.$route(path: '/feed', factory: _$FeedRoute._fromState);
+RouteBase get $conversationListRoute => GoRouteData.$route(
+  path: '/conversations',
 
-mixin _$FeedRoute on GoRouteData {
-  static FeedRoute _fromState(GoRouterState state) => FeedRoute();
+  factory: _$ConversationListRoute._fromState,
+);
+
+mixin _$ConversationListRoute on GoRouteData {
+  static ConversationListRoute _fromState(GoRouterState state) =>
+      ConversationListRoute();
 
   @override
-  String get location => GoRouteData.$location('/feed');
+  String get location => GoRouteData.$location('/conversations');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -222,6 +240,33 @@ mixin _$ChatRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/chat/${Uri.encodeComponent(_self.conversationId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $userSelectionRoute => GoRouteData.$route(
+  path: '/users/select',
+
+  factory: _$UserSelectionRoute._fromState,
+);
+
+mixin _$UserSelectionRoute on GoRouteData {
+  static UserSelectionRoute _fromState(GoRouterState state) =>
+      UserSelectionRoute();
+
+  @override
+  String get location => GoRouteData.$location('/users/select');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -466,6 +511,189 @@ mixin _$TodosRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $magnetRoute => GoRouteData.$route(
+  path: '/magnet',
+
+  factory: _$MagnetRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'auth/:institutionID',
+
+      factory: _$MagnetAuthRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: ':institutionID',
+
+      factory: _$MagnetHomeRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'profile',
+
+          factory: _$MagnetProfileRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'courses',
+
+          factory: _$MagnetCoursesRoute._fromState,
+        ),
+        GoRouteData.$route(path: 'fees', factory: _$MagnetFeesRoute._fromState),
+      ],
+    ),
+  ],
+);
+
+mixin _$MagnetRoute on GoRouteData {
+  static MagnetRoute _fromState(GoRouterState state) => MagnetRoute();
+
+  @override
+  String get location => GoRouteData.$location('/magnet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetAuthRoute on GoRouteData {
+  static MagnetAuthRoute _fromState(GoRouterState state) => MagnetAuthRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetAuthRoute get _self => this as MagnetAuthRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/auth/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetHomeRoute on GoRouteData {
+  static MagnetHomeRoute _fromState(GoRouterState state) => MagnetHomeRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetHomeRoute get _self => this as MagnetHomeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetProfileRoute on GoRouteData {
+  static MagnetProfileRoute _fromState(GoRouterState state) =>
+      MagnetProfileRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+      );
+
+  MagnetProfileRoute get _self => this as MagnetProfileRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/profile',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetCoursesRoute on GoRouteData {
+  static MagnetCoursesRoute _fromState(GoRouterState state) =>
+      MagnetCoursesRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+      );
+
+  MagnetCoursesRoute get _self => this as MagnetCoursesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/courses',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetFeesRoute on GoRouteData {
+  static MagnetFeesRoute _fromState(GoRouterState state) => MagnetFeesRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetFeesRoute get _self => this as MagnetFeesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/fees',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities/:communityId',
 
@@ -480,6 +708,11 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
       path: 'add-members',
 
       factory: _$AddMembersRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'add-community-guidelines',
+
+      factory: _$AddCommunityGuidelinesRoute._fromState,
     ),
   ],
 );
@@ -621,6 +854,35 @@ mixin _$AddMembersRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
+    queryParams: {'user-id': _self.userId},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddCommunityGuidelinesRoute on GoRouteData {
+  static AddCommunityGuidelinesRoute _fromState(GoRouterState state) =>
+      AddCommunityGuidelinesRoute(
+        communityId: state.pathParameters['communityId']!,
+        userId: state.uri.queryParameters['user-id']!,
+      );
+
+  AddCommunityGuidelinesRoute get _self => this as AddCommunityGuidelinesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}/add-community-guidelines',
     queryParams: {'user-id': _self.userId},
   );
 

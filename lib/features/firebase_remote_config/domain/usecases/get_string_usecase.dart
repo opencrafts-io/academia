@@ -20,9 +20,5 @@ class GetStringParams {
   final String key;
   final String defaultValue;
 
-  GetStringParams({
-    required this.key,
-    this.defaultValue = '',
-  });
+  GetStringParams({required this.key, this.defaultValue = ''});
 }
-
