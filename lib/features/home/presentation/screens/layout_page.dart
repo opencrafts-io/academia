@@ -30,15 +30,15 @@ class _LayoutPageState extends State<LayoutPage> {
       case 1:
         CalendarRoute().go(context);
         break;
+      // case 2:
+      //   MeteorRoute().go(context);
+      //   break;
       case 2:
-        MeteorRoute().go(context);
-        break;
-      case 3:
         EssentialsRoute().go(context);
         break;
-      case 4:
-        FeedRoute().go(context);
-        break;
+      // case 3:
+      //   FeedRoute().go(context);
+      //   break;
     }
     selectedIndex = index;
   }
@@ -68,11 +68,11 @@ class _LayoutPageState extends State<LayoutPage> {
                     icon: Icon(Symbols.calendar_today),
                     label: Text("Agenda"),
                   ),
-                  NavigationRailDestination(
-                    icon: Icon(Symbols.digital_wellbeing),
-                    label: Text("Well Being"),
-                  ),
 
+                  // NavigationRailDestination(
+                  //   icon: Icon(Symbols.digital_wellbeing),
+                  //   label: Text("Well Being"),
+                  // ),
                   NavigationRailDestination(
                     icon: Icon(Symbols.grid_view),
                     label: Text("Essentials"),
@@ -100,10 +100,10 @@ class _LayoutPageState extends State<LayoutPage> {
                     selectedIcon: Icon(Symbols.calendar_today),
                     label: "Agenda",
                   ),
-                  NavigationDestination(
-                    icon: Icon(Symbols.digital_wellbeing),
-                    label: "Well Being",
-                  ),
+                  // NavigationDestination(
+                  //   icon: Icon(Symbols.digital_wellbeing),
+                  //   label: "Well Being",
+                  // ),
 
                   NavigationDestination(
                     icon: Icon(Symbols.grid_view),
