@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../domain/entities/chirp_user.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
@@ -167,7 +168,11 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
             _isSearching = false;
           });
 
-          ChatRoute(conversationId: state.conversation.id).push(context);
+          // Navigate with conversation object as extra parameter
+          context.push(
+            '/chat/${state.conversation.id}',
+            extra: state.conversation,
+          );
         }
       },
       child: BlocBuilder<MessagingBloc, MessagingState>(

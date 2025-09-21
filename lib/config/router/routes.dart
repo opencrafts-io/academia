@@ -7,6 +7,14 @@ import 'package:academia/injection_container.dart';
 
 import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
 
+// Enhanced messaging imports
+import '../../features/chirp/presentation/views/conversations/conversation_list_screen.dart';
+import '../../features/chirp/presentation/views/conversations/chat_screen.dart';
+import '../../features/chirp/presentation/views/conversations/user_selection_screen.dart';
+import '../../features/chirp/presentation/blocs/conversations/conversation_list_bloc.dart';
+import '../../features/chirp/presentation/blocs/conversations/chat_bloc.dart';
+import '../../features/chirp/domain/entities/conversations/conversation.dart';
+
 part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -128,6 +136,18 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
   }
 }
 
+// Enhanced Messaging Routes
+@TypedGoRoute<ConversationListRoute>(path: "/conversations")
+class ConversationListRoute extends GoRouteData with _$ConversationListRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider<ConversationListBloc>(
+      create: (context) => sl<ConversationListBloc>(),
+      child: const ConversationListScreen(),
+    );
+  }
+}
+
 @TypedGoRoute<ChatRoute>(path: "/chat/:conversationId")
 class ChatRoute extends GoRouteData with _$ChatRoute {
   final String conversationId;
@@ -136,7 +156,27 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ChatPage(conversationId: conversationId);
+    final conversation = state.extra as Conversation?;
+    debugPrint('🚀 ChatRoute: Building chat screen for conversation $conversationId');
+    debugPrint('🚀 ChatRoute: Conversation object: ${conversation != null ? 'present with ${conversation.participants.length} participants' : 'null'}');
+    if (conversation != null) {
+      debugPrint('🚀 ChatRoute: Participants: ${conversation.participants.map((p) => '${p.name} (${p.userId})').join(', ')}');
+    }
+    return BlocProvider<ChatBloc>(
+      create: (context) => sl<ChatBloc>(),
+      child: ChatScreen(
+        conversationId: conversationId,
+        conversation: conversation,
+      ),
+    );
+  }
+}
+
+@TypedGoRoute<UserSelectionRoute>(path: "/users/select")
+class UserSelectionRoute extends GoRouteData with _$UserSelectionRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const UserSelectionScreen();
   }
 }
 

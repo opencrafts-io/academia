@@ -1,18 +1,30 @@
 import 'package:academia/database/database.dart';
 import '../../../domain/entities/conversations/message.dart';
-import 'conversation_model_helper.dart';
+import '../../../domain/entities/conversations/conversation_participant.dart';
 
 // Convert from database model TO domain entity
 extension MessageModelHelper on MessageData {
   Message toEntity() {
+    // Create a ConversationParticipant from the sender ID
+    // Note: In a real scenario, we'd need to fetch participant details
+    final senderParticipant = ConversationParticipant(
+      id: senderId,
+      userId: senderId,
+      name: 'Unknown', // Would need to be fetched from user data
+      email: '', // Would need to be fetched from user data
+      isOnline: false,
+      isCurrentUser: false,
+    );
+    
     return Message(
-      id: id,
-      sender: senderId.toMinimalChirpUser(),
-      recipient: recipientId.toMinimalChirpUser(),
+      id: int.tryParse(id) ?? 0, // Convert String id to int
+      conversationId: recipientId, // Using recipientId as conversationId for now
+      sender: senderParticipant,
       content: content,
       sentAt: sentAt,
       isRead: isRead,
       imageUrl: imageUrl,
+      status: MessageStatus.sent, // Default status
     );
   }
 }
@@ -20,9 +32,9 @@ extension MessageModelHelper on MessageData {
 // Convert from domain entity TO database model
 extension MessageEntityHelper on Message {
   MessageData toData() => MessageData(
-    id: id,
-    senderId: sender.id,
-    recipientId: recipient.id,
+    id: id.toString(), // Convert int id to String
+    senderId: sender.userId,
+    recipientId: conversationId, // Using conversationId as recipientId
     content: content,
     sentAt: sentAt,
     isRead: isRead,

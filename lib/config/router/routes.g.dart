@@ -9,7 +9,9 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $layoutShellRoute,
   $feedRoute,
+  $conversationListRoute,
   $chatRoute,
+  $userSelectionRoute,
   $postDetailRoute,
   $addPostRoute,
   $authRoute,
@@ -195,6 +197,33 @@ mixin _$FeedRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $conversationListRoute => GoRouteData.$route(
+  path: '/conversations',
+
+  factory: _$ConversationListRoute._fromState,
+);
+
+mixin _$ConversationListRoute on GoRouteData {
+  static ConversationListRoute _fromState(GoRouterState state) =>
+      ConversationListRoute();
+
+  @override
+  String get location => GoRouteData.$location('/conversations');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $chatRoute => GoRouteData.$route(
   path: '/chat/:conversationId',
 
@@ -211,6 +240,33 @@ mixin _$ChatRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/chat/${Uri.encodeComponent(_self.conversationId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $userSelectionRoute => GoRouteData.$route(
+  path: '/users/select',
+
+  factory: _$UserSelectionRoute._fromState,
+);
+
+mixin _$UserSelectionRoute on GoRouteData {
+  static UserSelectionRoute _fromState(GoRouterState state) =>
+      UserSelectionRoute();
+
+  @override
+  String get location => GoRouteData.$location('/users/select');
 
   @override
   void go(BuildContext context) => context.go(location);

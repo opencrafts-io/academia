@@ -4,6 +4,7 @@ import 'package:academia/features/chirp/data/models/chirp_user_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import '../../../domain/entities/conversations/conversation.dart';
+import '../../../domain/entities/conversations/conversation_participant.dart';
 import '../../../domain/entities/chirp_user.dart';
 import '../../../domain/repositories/conversations/conversation_repository.dart';
 import '../../datasources/conversations/messaging_remote_datasource.dart';
@@ -28,21 +29,26 @@ class ConversationRepositoryImpl implements ConversationRepository {
         .getConversationsStream()
         .map(
           (rawConversations) => rawConversations.map((rawConversation) async {
-            // Use fallback user data for now
-            final chirpUser = ChirpUser(
+            // Use fallback participant data for now
+            final participant = ConversationParticipant(
               id: rawConversation.userId,
+              userId: rawConversation.userId,
               name: 'Unknown User',
               email: 'unknown@example.com',
-              vibepoints: 0,
-              avatarUrl: null,
+              avatar: null,
+              isOnline: false,
+              lastSeen: null,
+              isCurrentUser: false,
             );
 
             final entity = Conversation(
               id: rawConversation.id,
-              user: chirpUser,
+              participants: [participant],
               lastMessage: null,
               lastMessageAt: rawConversation.lastMessageAt,
               unreadCount: rawConversation.unreadCount,
+              createdAt: rawConversation.createdAt,
+              updatedAt: rawConversation.updatedAt,
             );
 
             if (rawConversation.lastMessageId != null) {
@@ -138,12 +144,26 @@ class ConversationRepositoryImpl implements ConversationRepository {
             );
           }
 
+          // Convert ChirpUser to ConversationParticipant
+          final participant = ConversationParticipant(
+            id: chirpUser.id,
+            userId: chirpUser.id,
+            name: chirpUser.name,
+            email: chirpUser.email,
+            avatar: chirpUser.avatarUrl,
+            isOnline: false,
+            lastSeen: null,
+            isCurrentUser: false,
+          );
+
           final entity = Conversation(
             id: data.id,
-            user: chirpUser,
+            participants: [participant],
             lastMessage: null,
             lastMessageAt: data.lastMessageAt,
             unreadCount: data.unreadCount,
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
           );
 
           if (data.lastMessageId != null) {
@@ -247,12 +267,26 @@ class ConversationRepositoryImpl implements ConversationRepository {
                 }
               }
 
+              // Convert ChirpUser to ConversationParticipant
+              final participant = ConversationParticipant(
+                id: chirpUser.id,
+                userId: chirpUser.id,
+                name: chirpUser.name,
+                email: chirpUser.email,
+                avatar: chirpUser.avatarUrl,
+                isOnline: false,
+                lastSeen: null,
+                isCurrentUser: false,
+              );
+
               final entity = Conversation(
                 id: data.id,
-                user: chirpUser,
+                participants: [participant],
                 lastMessage: null,
                 lastMessageAt: data.lastMessageAt,
                 unreadCount: data.unreadCount,
+                createdAt: data.createdAt,
+                updatedAt: data.updatedAt,
               );
 
               if (data.lastMessageId != null) {
@@ -314,13 +348,27 @@ class ConversationRepositoryImpl implements ConversationRepository {
                     ),
             );
 
+            // Convert ChirpUser to ConversationParticipant
+            final participant = ConversationParticipant(
+              id: chirpUser.id,
+              userId: chirpUser.id,
+              name: chirpUser.name,
+              email: chirpUser.email,
+              avatar: chirpUser.avatarUrl,
+              isOnline: false,
+              lastSeen: null,
+              isCurrentUser: false,
+            );
+
             // Create conversation entity with real user data
             final entity = Conversation(
               id: data.id,
-              user: chirpUser,
+              participants: [participant],
               lastMessage: null,
               lastMessageAt: data.lastMessageAt,
               unreadCount: data.unreadCount,
+              createdAt: data.createdAt,
+              updatedAt: data.updatedAt,
             );
 
             if (data.lastMessageId != null) {
@@ -381,12 +429,26 @@ class ConversationRepositoryImpl implements ConversationRepository {
                   avatarUrl: null,
                 );
 
+                // Convert ChirpUser to ConversationParticipant
+                final participant = ConversationParticipant(
+                  id: chirpUser.id,
+                  userId: chirpUser.id,
+                  name: chirpUser.name,
+                  email: chirpUser.email,
+                  avatar: chirpUser.avatarUrl,
+                  isOnline: false,
+                  lastSeen: null,
+                  isCurrentUser: false,
+                );
+
                 final entity = Conversation(
                   id: rawConversation.id,
-                  user: chirpUser,
+                  participants: [participant],
                   lastMessage: null,
                   lastMessageAt: rawConversation.lastMessageAt,
                   unreadCount: rawConversation.unreadCount,
+                  createdAt: rawConversation.createdAt,
+                  updatedAt: rawConversation.updatedAt,
                 );
 
                 if (rawConversation.lastMessageId != null) {
@@ -413,7 +475,12 @@ class ConversationRepositoryImpl implements ConversationRepository {
     List<String> participants,
   ) async {
     try {
-      final result = await remoteDataSource.createConversation(participants);
+      // Get current user ID from the first participant
+      final currentUserId = participants.isNotEmpty ? participants.first : 'default_user_123';
+      final result = await remoteDataSource.createConversation(
+        participants,
+        currentUserId: currentUserId,
+      );
 
       return await result.fold((failure) => Left(failure), (
         conversationData,
@@ -433,11 +500,10 @@ class ConversationRepositoryImpl implements ConversationRepository {
         );
 
         // Get user data for the other participant
-        final currentUserId = 'default_user_123'; // This should come from auth
-        final otherParticipantId = participants.firstWhere(
-          (participant) => participant != currentUserId,
-          orElse: () => participants.first,
-        );
+        // currentUserId is already defined above (line 479)
+        final otherParticipantId = participants.length > 1 ? participants.last : participants.first;
+        
+        _logger.d('Creating conversation between $currentUserId and $otherParticipantId');
 
         // Try to get user data from cache first
         final cachedUserResult = await localDataSource.getCachedUser(
@@ -499,12 +565,26 @@ class ConversationRepositoryImpl implements ConversationRepository {
           otherParticipantId,
         );
 
+        // Convert ChirpUser to ConversationParticipant
+        final participant = ConversationParticipant(
+          id: chirpUser.id,
+          userId: chirpUser.id,
+          name: chirpUser.name,
+          email: chirpUser.email,
+          avatar: chirpUser.avatarUrl,
+          isOnline: false,
+          lastSeen: null,
+          isCurrentUser: false,
+        );
+
         final conversation = Conversation(
           id: conversationData.id,
-          user: chirpUser,
+          participants: [participant],
           lastMessage: null,
           lastMessageAt: conversationData.lastMessageAt,
           unreadCount: conversationData.unreadCount,
+          createdAt: conversationData.createdAt,
+          updatedAt: conversationData.updatedAt,
         );
 
         // Cache the user data for future use
