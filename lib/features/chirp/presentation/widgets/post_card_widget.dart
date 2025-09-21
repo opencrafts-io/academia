@@ -2,6 +2,7 @@ import 'package:academia/features/chirp/domain/entities/post.dart';
 import 'package:academia/features/chirp/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:time_since/time_since.dart';
 
 class PostCard extends StatefulWidget {
   const PostCard({super.key, required this.post, this.onTap});
@@ -45,20 +46,26 @@ class _PostCardState extends State<PostCard> {
             Row(
               spacing: 8,
               children: [
-                CircleAvatar(radius: 16),
+                ChirpUserAvatar(
+                  avatarUrl:
+                      widget.post.avatarUrl ??
+                      'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg',
+                  numberOfScallops: 6,
+                ),
                 Column(
+                  spacing: 2,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'c/${widget.post.group.name}',
+                      'a/${widget.post.group.name}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 3),
                     Text(
-                      widget.post.userName,
+                      "${widget.post.userName} • ${timeSince(widget.post.createdAt)}",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        overflow: TextOverflow.ellipsis,
                         // fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -13,30 +13,13 @@ class FeedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<FeedBloc, FeedState>(
-        listener: (context, state) {
-          // if (state is FeedLoaded) {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(
-          //       content: Text("Feed refreshed"),
-          //       behavior: SnackBarBehavior.floating,
-          //     ),
-          //   );
-          // }
-          if (state is FeedLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Refreshing your feed"),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
+        listener: (context, state) {},
         child: RefreshIndicator(
           onRefresh: () async {
             context.read<FeedBloc>().add(CacheFeedEvent());
+            await Future.delayed(Duration(seconds: 2));
           },
           child: CustomScrollView(
-            physics: const NeverScrollableScrollPhysics(),
             slivers: [
               BlocBuilder<FeedBloc, FeedState>(
                 buildWhen: (previous, current) =>

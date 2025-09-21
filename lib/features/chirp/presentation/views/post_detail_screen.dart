@@ -9,6 +9,7 @@ import 'package:academia/features/chirp/presentation/widgets/post_card_widget.da
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class PostDetailPage extends StatefulWidget {
   final Post post;
@@ -254,14 +255,19 @@ class _PostDetailPageState extends State<PostDetailPage> {
         SliverAppBar(
           floating: true,
           pinned: true,
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => context.pop(),
-          ),
-          title: Text(
-            'c/${post.group.name}',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          actions: [
+            IconButton.filled(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Openning Community"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              icon: Icon(Icons.groups, color: Colors.white),
+            ),
+          ],
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
