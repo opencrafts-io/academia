@@ -638,6 +638,11 @@ Future<void> init(FlavorConfig flavor) async {
       magnetRepository: sl<MagnetRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<FetchMagnetFinancialFeesStatementsUsecase>(
+    () => FetchMagnetFinancialFeesStatementsUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
 
   // -- Bloc
   sl.registerFactory<MagnetBloc>(
@@ -650,6 +655,7 @@ Future<void> init(FlavorConfig flavor) async {
       fetchMagnetStudentTimetableUsecase: sl(),
       deleteMagentCourseByCourseCodeUsecase: sl(),
       getCachedMagnetStudentTimetableUsecase: sl(),
+      fetchMagnetFinancialFeesStatementsUsecase: sl(),
     ),
   );
 
