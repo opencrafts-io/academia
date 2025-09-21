@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return CircularProgressIndicator.adaptive();
+                            return Center(child: SpinningScallopIndicator());
                           }
                           if (snapshot.hasError) {
                             return Text("OOps! ${snapshot.error}");
@@ -157,7 +158,15 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                 final event = todayEvents[index];
                                 return AgendaEventCard(
                                   event: event,
-                                  onEdit: () {
+                                  onEdit: () async {
+                                    if (await Vibration.hasVibrator()) {
+                                      Vibration.vibrate(
+                                        pattern: [0, 50, 100, 50],
+                                        intensities: [0, 128, 0, 128],
+                                      );
+                                    }
+                                    if (!context.mounted) return;
+
                                     // Navigate to edit mode
                                     AgendaItemViewRoute(
                                       id: event.id,
@@ -231,7 +240,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
           if (await Vibration.hasVibrator()) {
             Vibration.vibrate(preset: VibrationPreset.gentleReminder);
           }
-          
+
           if (!context.mounted) return;
           showModalBottomSheet(
             context: context,

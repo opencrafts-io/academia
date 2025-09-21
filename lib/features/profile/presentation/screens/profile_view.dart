@@ -1,11 +1,13 @@
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -15,11 +17,32 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  late AdBloc adBloc = BlocProvider.of<AdBloc>(context);
+  @override
+  void initState() {
+    super.initState();
+    final profileState = BlocProvider.of<ProfileBloc>(context).state;
+
+    if (profileState is ProfileLoadedState) {
+      context.read<InstitutionBloc>().add(
+        GetCachedUserInstitutionsEvent(profileState.profile.id),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          final profileState = context.read<ProfileBloc>().state;
+
+          if (profileState is ProfileLoadedState) {
+            context.read<InstitutionBloc>().add(
+              RefreshUserInstitutionsEvent(profileState.profile.id),
+            );
+          }
+
           BlocProvider.of<ProfileBloc>(context).add(RefreshProfileEvent());
           return Future.delayed(Duration(seconds: 2));
         },
@@ -28,6 +51,9 @@ class _ProfileViewState extends State<ProfileView> {
           builder: (context, state) => CustomScrollView(
             slivers: [
               SliverAppBar(
+                snap: true,
+                pinned: true,
+                floating: true,
                 title: Text("Profile"),
                 actions: [
                   Visibility(
@@ -80,6 +106,7 @@ class _ProfileViewState extends State<ProfileView> {
                           "@${state.profile.username?.toLowerCase() ?? 'anonymous'}",
                         ),
 
+                        SizedBox(height: 12),
                         SizedBox(height: 12),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -181,6 +208,26 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
+
+                        Padding(
+                          padding: EdgeInsets.all(12),
+                          child: BannerAdWidget(
+                            adUnitId: "ca-app-pub-3940256099942544/6300978111",
+                            adSize: AdSize(width: 320, height: 50),
+                            height: 50,
+                          ),
+                        ),
+
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Your Institutional Profiles",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+
+                        ProfileInstitutionSection(),
                       ],
                     ),
                   ),

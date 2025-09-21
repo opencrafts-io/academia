@@ -1,6 +1,11 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
+import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
+import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
+import 'package:academia/features/magnet/data/models/magnet_student_profile.dart';
 import 'package:academia/features/chirp/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
@@ -11,19 +16,34 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../features/chirp/data/data.dart';
+import '../features/communities/data/data.dart';
+import '../features/chirp/data/models/conversations/enhanced_messaging_tables.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
   tables: [
+    // Profile
     UserProfile,
+
+    // Auth
     Token,
+
+    // Chirp
     ConversationTable,
     MessageTable,
     AttachmentTable,
     PostTable,
     PostReplyTable,
     ChirpUserTable,
+    
+    // Enhanced Messaging
+    EnhancedConversationTable,
+    EnhancedMessageTable,
+    MessageAttachmentsTable,
+    DraftMessagesTable,
+    WebSocketConnectionTable,
+    OfflineMessageQueueTable,
     Todo,
     EventTable,
     AttendeeTable,
@@ -32,9 +52,20 @@ part 'database.g.dart';
 
     // Agenda
     AgendaEvent,
-    
+
     // Notifications
     NotificationTable,
+
+    // Institution
+    Institution,
+
+    // Magnet
+    MagnetStudentProfile,
+    MagnetCredentials,
+    MagnetCourseInfo,
+    MagnetFinancialTransaction,
+    //Communities
+    CommunityTable
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -45,7 +76,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -61,6 +92,15 @@ class AppDataBase extends _$AppDataBase {
           await m.deleteTable('conversation_table');
           // Then recreate the table with the new foreign key
           await m.createTable(conversationTable);
+        } else if (from < 12 && to >= 12) {
+          // Force creation of enhanced messaging tables
+          await m.createTable(enhancedMessageTable);
+          await m.createTable(draftMessagesTable);
+          await m.createTable(enhancedConversationTable);
+          await m.createTable(messageAttachmentsTable);
+          await m.createTable(webSocketConnectionTable);
+          await m.createTable(offlineMessageQueueTable);
+          _logger.i("Created enhanced messaging tables in migration from $from to $to");
         } else if (to > from) {
           m.createAll();
           _logger.i("Migrated from version $from to version $to");

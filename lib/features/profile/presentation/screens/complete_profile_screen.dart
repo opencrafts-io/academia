@@ -52,6 +52,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         ),
         title: Text("Setup your profile"),
       ),
+      resizeToAvoidBottomInset: false,
       body: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state is ProfileErrorState) {

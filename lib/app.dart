@@ -1,7 +1,10 @@
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/injection_container.dart';
+import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +86,7 @@ class _AcademiaState extends State<Academia> {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(
+            refreshVerisafeTokenUsecase: sl(),
             signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
             getPreviousAuthState: sl.get<GetPreviousAuthState>(),
             signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
@@ -125,6 +129,26 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
         BlocProvider(
+          create: (context) => CreateCommunityBloc(
+            createCommunityUseCase: sl<CreateCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => CommunityHomeBloc(
+            getCommunityByIdUseCase: sl<GetCommunityByIdUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+            joinCommunityUseCase: sl<JoinCommunityUseCase>(),
+            leaveCommunityUseCase: sl<LeaveCommunityUseCase>(),
+            deleteCommunityUseCase: sl<DeleteCommunityUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AddMembersBloc(
+            searchUsers: sl<SearchVerisafeUsersUseCase>(),
+            moderateMembers: sl<ModerateMembersUseCase>(),
+          ),
+        ),
+        BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
         ),
@@ -134,13 +158,22 @@ class _AcademiaState extends State<Academia> {
               InitializeOneSignalEvent(
                 appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
               ),
-            )
-            ..add(SetNotificationPermissionEvent(enabled: true)),
+            ),
+        ),
+        BlocProvider(
+          create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
         ),
         BlocProvider(
           create: (context) =>
               sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
+
+        BlocProvider(create: (context) => sl<InstitutionBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
+        ),
+        BlocProvider(create: (context) => sl<PermissionCubit>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -152,14 +185,19 @@ class _AcademiaState extends State<Academia> {
             ),
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
-                if (state is NotificationInitializedState) {
-                  debugPrint('✅ OneSignal initialized successfully!');
-                } else if (state is NotificationErrorState) {
+                if (state is NotificationErrorState) {
                   debugPrint(
                     '❌ OneSignal initialization failed: ${state.message}',
                   );
-                } else if (state is NotificationLoadingState) {
-                  debugPrint('⏳ OneSignal initialization in progress...');
+                }
+              },
+            ),
+            BlocListener<ProfileBloc, ProfileState>(
+              listener: (context, state) {
+                if (state is ProfileLoadedState) {
+                  context.read<InstitutionBloc>().add(
+                    GetCachedUserInstitutionsEvent(state.profile.id),
+                  );
                 }
               },
             ),
@@ -172,23 +210,38 @@ class _AcademiaState extends State<Academia> {
                 }
               },
             ),
+            BlocListener<AdBloc, AdState>(
+              listener: (context, state) {
+                if (state is AdInitializedState) {
+                  debugPrint('✅ AdMob initialized successfully!');
+                } else if (state is AdErrorState) {
+                  debugPrint('❌ AdMob error: ${state.message}');
+                } else if (state is BannerAdLoadedState) {
+                  debugPrint('✅ Banner ad loaded: ${state.ad.id}');
+                } else if (state is AdLoadingState) {
+                  debugPrint('⏳ AdMob loading...');
+                }
+              },
+            ),
           ],
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            showPerformanceOverlay: kProfileMode,
-            theme: ThemeData(
-              fontFamily: 'ProductSans',
-              useMaterial3: true,
-              colorScheme: lightScheme,
-              brightness: Brightness.light,
+          child: SplashRemover(
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              showPerformanceOverlay: kProfileMode,
+              theme: ThemeData(
+                fontFamily: 'ProductSans',
+                useMaterial3: true,
+                colorScheme: lightScheme,
+                brightness: Brightness.light,
+              ),
+              darkTheme: ThemeData(
+                fontFamily: 'ProductSans',
+                useMaterial3: true,
+                brightness: Brightness.dark,
+                colorScheme: darkScheme,
+              ),
+              routerConfig: AppRouter.router,
             ),
-            darkTheme: ThemeData(
-              fontFamily: 'ProductSans',
-              useMaterial3: true,
-              brightness: Brightness.dark,
-              colorScheme: darkScheme,
-            ),
-            routerConfig: AppRouter.router,
           ),
         ),
       ),

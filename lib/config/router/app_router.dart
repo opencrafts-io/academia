@@ -1,6 +1,7 @@
 import 'package:academia/config/router/app_navigation_observer.dart';
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/features.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ class AppRouter {
 
   static final router = GoRouter(
     routes: $appRoutes,
-    observers: [AppNavigationObserver()],
+    observers: [AppNavigationObserver(), DioRequestInspector.navigatorObserver],
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) async {
       final authState = BlocProvider.of<AuthBloc>(context).state;

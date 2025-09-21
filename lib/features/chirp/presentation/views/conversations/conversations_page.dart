@@ -1,6 +1,7 @@
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:academia/config/router/routes.dart';
 import '../../bloc/conversations/messaging_bloc.dart';
 import '../../bloc/conversations/messaging_state.dart';
@@ -203,16 +204,19 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           itemCount: conversations.length,
                           itemBuilder: (context, index) {
                             final conversation = conversations[index];
+                            final otherParticipant = conversation.getOtherParticipant(null);
+                            final displayName = otherParticipant?.name ?? 'Unknown User';
+                            final avatarUrl = otherParticipant?.avatar;
                             return ListTile(
                               leading: CircleAvatar(
                                 backgroundImage:
-                                    conversation.user.avatarUrl != null
-                                    ? NetworkImage(conversation.user.avatarUrl!)
+                                    avatarUrl != null
+                                    ? NetworkImage(avatarUrl)
                                     : null,
-                                child: conversation.user.avatarUrl == null
+                                child: avatarUrl == null
                                     ? Text(
-                                        conversation.user.name.isNotEmpty
-                                            ? conversation.user.name
+                                        displayName.isNotEmpty
+                                            ? displayName
                                                   .split(' ')
                                                   .where((n) => n.isNotEmpty)
                                                   .map((n) => n[0])
@@ -230,7 +234,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                     : null,
                               ),
                               title: Text(
-                                conversation.user.name,
+                                displayName,
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(fontWeight: FontWeight.w600),
                               ),
@@ -254,7 +258,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        '${conversation.user.vibepoints} vibepoints',
+                                        '${otherParticipant?.name ?? 'Unknown'} • Online',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -307,9 +311,14 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                     )
                                   : null,
                               onTap: () {
-                                ChatRoute(
-                                  conversationId: conversation.id,
-                                ).push(context);
+                                debugPrint('🎯 ConversationsPage: Navigating to chat ${conversation.id} with conversation object');
+                                debugPrint('🎯 ConversationsPage: Conversation participants: ${conversation.participants.map((p) => '${p.name} (${p.userId})').join(', ')}');
+                                
+                                // Navigate with conversation object as extra parameter
+                                context.push(
+                                  '/chat/${conversation.id}',
+                                  extra: conversation,
+                                );
                               },
                             );
                           },
