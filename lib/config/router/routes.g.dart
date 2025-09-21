@@ -709,6 +709,11 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 
       factory: _$AddMembersRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: 'add-community-guidelines',
+
+      factory: _$AddCommunityGuidelinesRoute._fromState,
+    ),
   ],
 );
 
@@ -849,6 +854,35 @@ mixin _$AddMembersRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
+    queryParams: {'user-id': _self.userId},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddCommunityGuidelinesRoute on GoRouteData {
+  static AddCommunityGuidelinesRoute _fromState(GoRouterState state) =>
+      AddCommunityGuidelinesRoute(
+        communityId: state.pathParameters['communityId']!,
+        userId: state.uri.queryParameters['user-id']!,
+      );
+
+  AddCommunityGuidelinesRoute get _self => this as AddCommunityGuidelinesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId)}/add-community-guidelines',
     queryParams: {'user-id': _self.userId},
   );
 

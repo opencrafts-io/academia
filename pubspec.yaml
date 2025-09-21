@@ -102,6 +102,7 @@ dependencies:
   web_socket_channel: ^3.0.3
   flutter_local_notifications: ^17.2.3
   json_annotation: ^4.9.0
+  share_plus: ^10.1.4
 
 
 dev_dependencies:

@@ -324,6 +324,18 @@ Future<void> init(FlavorConfig flavor) async {
     () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
+  sl.registerFactory<GetCommunityMembersUsecase>(
+    () => GetCommunityMembersUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddCommunityGuidelinesUsecase>(
+    () => AddCommunityGuidelinesUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(
       getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
@@ -331,6 +343,7 @@ Future<void> init(FlavorConfig flavor) async {
       joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
       leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
       deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
+      addCommunityGuidelinesUsecase: sl.get<AddCommunityGuidelinesUsecase>(),
     ),
   );
 
@@ -344,6 +357,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => AddMembersBloc(
       searchUsers: sl.get<SearchVerisafeUsersUseCase>(),
       moderateMembers: sl.get<ModerateMembersUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<CommunityUsersBloc>(
+    () => CommunityUsersBloc(
+      getCommunityMembersUsecase: sl.get<GetCommunityMembersUsecase>(),
     ),
   );
 

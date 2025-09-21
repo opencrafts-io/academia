@@ -372,6 +372,7 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
   routes: [
     TypedGoRoute<CommunityUserListRoute>(path: "users"),
     TypedGoRoute<AddMembersRoute>(path: "add-members"),
+    TypedGoRoute<AddCommunityGuidelinesRoute>(path: "add-community-guidelines"),
   ],
 )
 class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
@@ -413,12 +414,10 @@ class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final users = state.extra as List<Map<String, String>>;
     return CommunityUserListScreen(
       communityId: communityId,
       userId: userId,
       title: title,
-      users: users,
       isTargetModerator: isTargetModerator,
       isTargetBannedUsers: isTargetBannedUsers,
       isTargetMembers: isTargetMember,
@@ -498,6 +497,25 @@ class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AddMembersScreen(communityId: communityId, userId: userId);
+  }
+}
+
+class AddCommunityGuidelinesRoute extends GoRouteData
+    with _$AddCommunityGuidelinesRoute {
+  final String communityId;
+  final String userId;
+
+  AddCommunityGuidelinesRoute({
+    required this.communityId,
+    required this.userId,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddCommunityGuidelinesScreen(
+      communityId: communityId,
+      userId: userId,
+    );
   }
 }
 
