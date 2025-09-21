@@ -99,7 +99,8 @@ class _CommunityHomeState extends State<CommunityHome>
               CommunityAbout(
                 isModerator: isCreator || isModerator,
                 communityId: state.community.id.toString(),
-                // rules: state.community.rules,
+                userId: currentUserId,
+                guidelines: state.community.rules,
               ),
             CommunityMembers(
               communityId: widget.communityId,

@@ -125,21 +125,36 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedResponse>> getCommunityMembers(
-    {
+  Future<Either<Failure, PaginatedResponse>> getCommunityMembers({
     required String communityId,
     required int page,
-    required String userType
-  }
-  ) async {
+    required String userType,
+  }) async {
     final result = await remoteDatasource.getCommunityMembers(
       communityId: communityId,
       page: page,
-      userType: userType
+      userType: userType,
     );
 
     return result.fold((failure) => left(failure), (paginatedUserResponse) {
       return right(paginatedUserResponse.toEntity());
+    });
+  }
+
+  @override
+  Future<Either<Failure, Community>> addCommunityGuidelines({
+    required List<String> rule,
+    required String communityId,
+    required String userId,
+  }) async {
+    final result = await remoteDatasource.addCommunityGuidelines(
+      rule: rule,
+      communityId: communityId,
+      userId: userId,
+    );
+
+    return result.fold((failure) => left(failure), (community) {
+      return right(community.toEntity());
     });
   }
 }

@@ -445,14 +445,22 @@ class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
   }
 }
 
-class AddCommunityGuidelinesRoute extends GoRouteData with _$AddCommunityGuidelinesRoute {
+class AddCommunityGuidelinesRoute extends GoRouteData
+    with _$AddCommunityGuidelinesRoute {
   final String communityId;
+  final String userId;
 
-  AddCommunityGuidelinesRoute({required this.communityId});
+  AddCommunityGuidelinesRoute({
+    required this.communityId,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AddCommunityGuidelinesScreen(communityId: communityId);
+    return AddCommunityGuidelinesScreen(
+      communityId: communityId,
+      userId: userId,
+    );
   }
 }
 

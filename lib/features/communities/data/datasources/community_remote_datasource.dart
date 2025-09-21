@@ -286,7 +286,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   Future<Either<Failure, PaginatedUserResponse>> getCommunityMembers({
     required String communityId,
     required int page,
-    required String userType
+    required String userType,
   }) async {
     try {
       final response = await dioClient.dio.get(
@@ -320,6 +320,44 @@ class CommunityRemoteDatasource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred while fetching users.",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, CommunityData>> addCommunityGuidelines({
+    required List<String> rule,
+    required String communityId,
+    required String userId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "$baseUrl/groups/$communityId/rules/",
+        data: {"rule": rule, "user_id": userId},
+        options: Options(headers: {"Content-Type": "application/json"}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(
+          response.data,
+        );
+        return right(CommunityData.fromJson(json['group']));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response while adding community guidelines.",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred while adding community guidelines",
           error: e,
         ),
       );

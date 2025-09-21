@@ -133,24 +133,14 @@ class _AcademiaState extends State<Academia> {
             createCommunityUseCase: sl<CreateCommunityUseCase>(),
           ),
         ),
-        BlocProvider(
-          create: (context) => CommunityHomeBloc(
-            getCommunityByIdUseCase: sl<GetCommunityByIdUseCase>(),
-            moderateMembers: sl<ModerateMembersUseCase>(),
-            joinCommunityUseCase: sl<JoinCommunityUseCase>(),
-            leaveCommunityUseCase: sl<LeaveCommunityUseCase>(),
-            deleteCommunityUseCase: sl<DeleteCommunityUseCase>(),
-          ),
-        ),
+        BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(
           create: (context) => AddMembersBloc(
             searchUsers: sl<SearchVerisafeUsersUseCase>(),
             moderateMembers: sl<ModerateMembersUseCase>(),
           ),
         ),
-        BlocProvider(
-          create: (context) => sl<CommunityUsersBloc>(),
-        ),
+        BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
         BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),

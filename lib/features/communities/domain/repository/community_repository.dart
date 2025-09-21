@@ -48,6 +48,12 @@ abstract class CommunityRepository {
   Future<Either<Failure, PaginatedResponse>> getCommunityMembers({
     required String communityId,
     required int page,
-    required String userType
+    required String userType,
+  });
+
+  Future<Either<Failure, Community>> addCommunityGuidelines({
+    required List<String> rule,
+    required String communityId,
+    required String userId,
   });
 }

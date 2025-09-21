@@ -804,6 +804,7 @@ mixin _$AddCommunityGuidelinesRoute on GoRouteData {
   static AddCommunityGuidelinesRoute _fromState(GoRouterState state) =>
       AddCommunityGuidelinesRoute(
         communityId: state.pathParameters['communityId']!,
+        userId: state.uri.queryParameters['user-id']!,
       );
 
   AddCommunityGuidelinesRoute get _self => this as AddCommunityGuidelinesRoute;
@@ -811,6 +812,7 @@ mixin _$AddCommunityGuidelinesRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId)}/add-community-guidelines',
+    queryParams: {'user-id': _self.userId},
   );
 
   @override

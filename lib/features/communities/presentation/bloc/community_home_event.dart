@@ -90,3 +90,22 @@ class ModerateMembers extends CommunityHomeEvent {
     memberName,
   ];
 }
+
+class AddCommunityGuidelines extends CommunityHomeEvent {
+  final List<String> rule;
+  final String communityId;
+  final String userId;
+
+  const AddCommunityGuidelines({
+    required this.rule,
+    required this.communityId,
+    required this.userId,
+  });
+
+  @override
+  List<Object?> get props => [
+    rule,
+    communityId,
+    userId,
+  ];
+}

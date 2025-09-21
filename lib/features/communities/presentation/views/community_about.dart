@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 class CommunityAbout extends StatefulWidget {
   final bool isModerator;
   final String communityId;
+  final String userId;
+  final List<String> guidelines;
 
   const CommunityAbout({
     super.key,
     this.isModerator = false,
     required this.communityId,
+    required this.userId,
+    required this.guidelines,
   });
 
   @override
@@ -18,17 +22,6 @@ class CommunityAbout extends StatefulWidget {
 class _CommunityAboutState extends State<CommunityAbout> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // Hardcoded sample guidelines for now
-    final guidelines = [
-      "Be respectful to all members.",
-      "No spam, self-promotion, or irrelevant links.",
-      "Use appropriate language at all times.",
-      "Report any issues to the moderators.",
-      "Stay on-topic and contribute meaningfully.",
-    ];
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -39,27 +32,30 @@ class _CommunityAboutState extends State<CommunityAbout> {
               // Title
               Text(
                 "Community Guidelines",
-                style: theme.textTheme.headlineSmall?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 12),
 
               // Guidelines list
-              guidelines.isEmpty && widget.isModerator
+              widget.guidelines.isEmpty && widget.isModerator
                   ? Center(
-                  child: FilledButton.icon(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      AddCommunityGuidelinesRoute(communityId: widget.communityId).push(context);
-                    },
-                    label: const Text("Add Community Guidelines"),
-                  ),
-                )
+                      child: FilledButton.icon(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          AddCommunityGuidelinesRoute(
+                            communityId: widget.communityId,
+                            userId: widget.userId,
+                          ).push(context);
+                        },
+                        label: const Text("Add Community Guidelines"),
+                      ),
+                    )
                   : Column(
-                      children: guidelines.map((rule) {
-                        final index = guidelines.indexOf(rule) + 1;
+                      children: widget.guidelines.map((rule) {
+                        final index = widget.guidelines.indexOf(rule) + 1;
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 6),
                           elevation: 2,
@@ -69,16 +65,16 @@ class _CommunityAboutState extends State<CommunityAbout> {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundColor:
-                                  theme.colorScheme.primaryContainer,
+                                  Theme.of(context).colorScheme.primaryContainer,
                               child: Text(
                                 index.toString(),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onPrimaryContainer,
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            title: Text(rule, style: theme.textTheme.bodyLarge),
+                            title: Text(rule, style: Theme.of(context).textTheme.bodyLarge),
                           ),
                         );
                       }).toList(),
@@ -92,7 +88,10 @@ class _CommunityAboutState extends State<CommunityAbout> {
                   child: FilledButton.icon(
                     icon: const Icon(Icons.add),
                     onPressed: () {
-                      AddCommunityGuidelinesRoute(communityId: widget.communityId).push(context);
+                      AddCommunityGuidelinesRoute(
+                        communityId: widget.communityId,
+                        userId: widget.userId,
+                      ).push(context);
                     },
                     label: const Text("Add More Community Guidelines"),
                   ),

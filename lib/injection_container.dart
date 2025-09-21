@@ -313,7 +313,15 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<GetCommunityMembersUsecase>(
-    () => GetCommunityMembersUsecase(repository: sl.get<CommunityRepositoryImpl>()),
+    () => GetCommunityMembersUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddCommunityGuidelinesUsecase>(
+    () => AddCommunityGuidelinesUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
   );
 
   sl.registerFactory<CommunityHomeBloc>(
@@ -323,6 +331,7 @@ Future<void> init(FlavorConfig flavor) async {
       joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
       leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
       deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
+      addCommunityGuidelinesUsecase: sl.get<AddCommunityGuidelinesUsecase>(),
     ),
   );
 
@@ -343,7 +352,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => CommunityUsersBloc(
       getCommunityMembersUsecase: sl.get<GetCommunityMembersUsecase>(),
     ),
-  );  
+  );
 
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
