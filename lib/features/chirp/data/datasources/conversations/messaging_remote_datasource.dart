@@ -19,8 +19,9 @@ abstract class MessagingRemoteDatasource {
   Future<Either<Failure, void>> deleteMessage(String messageId);
   Future<Either<Failure, void>> markConversationAsRead(String conversationId);
   Future<Either<Failure, ConversationData>> createConversation(
-    List<String> participants,
-  );
+    List<String> participants, {
+    String? currentUserId,
+  });
 }
 
 class MessagingRemoteDatasourceImpl
@@ -41,7 +42,7 @@ class MessagingRemoteDatasourceImpl
 
       if (response.statusCode == 200) {
         final conversations = (response.data as List)
-            .map((json) => _parseConversationFromBackend(json))
+            .map((json) => _parseConversationFromBackend(json, 'default_user_123'))
             .toList();
 
         return Right(conversations);
@@ -82,7 +83,7 @@ class MessagingRemoteDatasourceImpl
         final results = responseData['results'] as List? ?? [];
 
         final messages = results
-            .map((json) => _parseMessageFromBackend(json))
+            .map((json) => _parseMessageFromBackend(json, 'default_user_123'))
             .toList();
 
         return Right(messages);
@@ -288,16 +289,20 @@ class MessagingRemoteDatasourceImpl
 
   @override
   Future<Either<Failure, ConversationData>> createConversation(
-    List<String> participants,
-  ) async {
+    List<String> participants, {
+    String? currentUserId,
+  }) async {
     try {
+      // Use the provided currentUserId or fallback to default
+      final userId = currentUserId ?? 'default_user_123';
+      
       final response = await dioClient.dio.post(
-        '/$servicePath/conversations/create/',
+        '/$servicePath/conversations/create/?user_id=$userId',
         data: {'participants': participants},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final conversation = _parseConversationFromBackend(response.data);
+        final conversation = _parseConversationFromBackend(response.data, userId);
         return Right(conversation);
       }
 
@@ -320,34 +325,50 @@ class MessagingRemoteDatasourceImpl
     }
   }
 
-  ConversationData _parseConversationFromBackend(Map<String, dynamic> json) {
+  ConversationData _parseConversationFromBackend(
+    Map<String, dynamic> json, 
+    String currentUserId,
+  ) {
     final participants = List<String>.from(json['participants'] ?? []);
-    final currentUserId = 'default_user_123'; // This should come from auth
     final otherParticipant = participants.firstWhere(
       (participant) => participant != currentUserId,
       orElse: () =>
           participants.isNotEmpty ? participants.first : 'unknown_user',
     );
 
+    // Check if this is the API response structure (has 'conversation' wrapper)
+    final conversationData = json['conversation'] ?? json;
+    final conversationParticipants = List<String>.from(
+      conversationData['participants'] ?? json['participants'] ?? [],
+    );
+    final finalOtherParticipant = conversationParticipants.firstWhere(
+      (participant) => participant != currentUserId,
+      orElse: () => conversationParticipants.isNotEmpty 
+          ? conversationParticipants.first 
+          : 'unknown_user',
+    );
+
     return ConversationData(
-      id: json['conversation_id'] ?? '',
+      id: conversationData['conversation_id'] ?? json['conversation_id'] ?? '',
       createdAt: DateTime.parse(
-        json['created_at'] ?? DateTime.now().toIso8601String(),
+        conversationData['created_at'] ?? json['created_at'] ?? DateTime.now().toIso8601String(),
       ),
       updatedAt: DateTime.parse(
-        json['updated_at'] ?? DateTime.now().toIso8601String(),
+        conversationData['updated_at'] ?? json['updated_at'] ?? DateTime.now().toIso8601String(),
       ),
-      userId: otherParticipant,
+      userId: finalOtherParticipant,
       lastMessageId: null,
-      lastMessageAt: json['last_message_at'] != null
-          ? DateTime.parse(json['last_message_at'])
+      lastMessageAt: (conversationData['last_message_at'] ?? json['last_message_at']) != null
+          ? DateTime.parse(conversationData['last_message_at'] ?? json['last_message_at'])
           : null,
-      unreadCount: json['unread_count'] ?? 0,
+      unreadCount: conversationData['unread_count'] ?? json['unread_count'] ?? 0,
     );
   }
 
-  MessageData _parseMessageFromBackend(Map<String, dynamic> json) {
-    final currentUserId = 'default_user_123'; // This should come from auth
+  MessageData _parseMessageFromBackend(
+    Map<String, dynamic> json, 
+    String currentUserId,
+  ) {
     final senderId = json['sender_id'] ?? '';
     final recipientId = senderId == currentUserId
         ? 'other_user'

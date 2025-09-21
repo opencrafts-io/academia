@@ -98,6 +98,9 @@ dependencies:
   google_fonts: ^6.3.1
   rrule: ^0.2.17
   permission_handler: ^12.0.1
+  web_socket_channel: ^3.0.3
+  flutter_local_notifications: ^17.2.3
+  json_annotation: ^4.9.0
 
 
 dev_dependencies:
@@ -114,6 +117,7 @@ dev_dependencies:
   go_router_builder: ^3.0.1
   build_runner: ^2.4.15
   drift_dev: ^2.27.0
+  json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

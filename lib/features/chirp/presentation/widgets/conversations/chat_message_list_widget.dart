@@ -29,7 +29,9 @@ class ChatMessageListWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'No messages yet',
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

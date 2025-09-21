@@ -8,6 +8,9 @@ import '../../bloc/conversations/messaging_event.dart';
 import '../../bloc/conversations/messaging_state.dart';
 import '../../widgets/conversations/chat_message_list_widget.dart';
 import '../../widgets/conversations/profile_preview_modal.dart';
+import '../../../domain/entities/conversations/conversation_participant.dart';
+import '../../../../profile/data/datasources/profile_local_datasource.dart';
+import '../../../../../injection_container.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -25,11 +28,53 @@ class _ChatPageState extends State<ChatPage> {
   final FocusNode _messageFocusNode = FocusNode();
   final FocusNode _imageCaptionFocusNode = FocusNode();
   String? _selectedImagePath;
+  String? _currentUserId;
 
   @override
   void initState() {
     super.initState();
+    _initializeCurrentUser();
     context.read<MessagingBloc>().add(LoadMessagesEvent(widget.conversationId));
+  }
+
+  Future<void> _initializeCurrentUser() async {
+    try {
+      final profileLocalDatasource = sl.get<ProfileLocalDatasource>();
+      final result = await profileLocalDatasource.getCachedUserProfile();
+      
+      result.fold(
+        (failure) {
+          debugPrint('Failed to get current user: ${failure.message}');
+          // Fallback to placeholder - should be handled properly in production
+          _currentUserId = 'current_user';
+        },
+        (profile) {
+          setState(() {
+            _currentUserId = profile.id;
+          });
+        },
+      );
+    } catch (e) {
+      debugPrint('Error getting current user: $e');
+      _currentUserId = 'current_user'; // Fallback
+    }
+  }
+
+  String _formatLastSeen(DateTime lastSeen) {
+    final now = DateTime.now();
+    final difference = now.difference(lastSeen);
+
+    if (difference.inMinutes < 1) {
+      return 'just now';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return '${lastSeen.day}/${lastSeen.month}/${lastSeen.year}';
+    }
   }
 
   @override
@@ -62,12 +107,22 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  void _showProfilePreview(BuildContext context, ChirpUser user) {
+  void _showProfilePreview(BuildContext context, ConversationParticipant participant) {
+    // Convert ConversationParticipant to ChirpUser for the modal
+    // This is a temporary solution - ideally ProfilePreviewModal should accept ConversationParticipant
+    final chirpUser = ChirpUser(
+      id: participant.userId,
+      name: participant.name,
+      email: participant.email,
+      avatarUrl: participant.avatar,
+      vibepoints: 0, // ConversationParticipant doesn't have vibepoints field
+    );
+    
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) => ProfilePreviewModal(
-        user: user,
+        user: chirpUser,
         onClose: () => Navigator.of(context).pop(),
       ),
     );
@@ -275,80 +330,128 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildMessageInput() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: _pickImage,
-          icon: Icon(
-            Icons.attach_file,
-            color: Theme.of(context).colorScheme.primary,
+    final theme = Theme.of(context);
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainer,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, -1),
           ),
-        ),
-        Expanded(
-          child: TextField(
-            controller: _messageController,
-            focusNode: _messageFocusNode,
-            textInputAction: TextInputAction.send,
-            keyboardType: TextInputType.text,
-            maxLines: null,
-            minLines: 1,
-            decoration: InputDecoration(
-              hintText: 'Type a message...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: IconButton(
+              onPressed: _pickImage,
+              icon: Icon(
+                Icons.attach_file,
+                color: theme.colorScheme.onSecondaryContainer,
+                size: 20,
               ),
             ),
-            onSubmitted: (_) => _sendMessage(),
-            onChanged: (_) =>
-                setState(() {}), // Trigger rebuild when text changes
           ),
-        ),
-        const SizedBox(width: 8),
-        BlocBuilder<MessagingBloc, MessagingState>(
-          builder: (context, state) {
-            final isSending = state is MessageSendingState;
-            final hasText = _messageController.text.trim().isNotEmpty;
+          const SizedBox(width: 8),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: TextField(
+                controller: _messageController,
+                focusNode: _messageFocusNode,
+                textInputAction: TextInputAction.send,
+                keyboardType: TextInputType.text,
+                maxLines: 4,
+                minLines: 1,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 16,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Type a message...',
+                  hintStyle: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+                onSubmitted: (_) => _sendMessage(),
+                onChanged: (_) => setState(() {}),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          BlocBuilder<MessagingBloc, MessagingState>(
+            builder: (context, state) {
+              final isSending = state is MessageSendingState;
+              final hasText = _messageController.text.trim().isNotEmpty;
 
-            return IconButton(
-              onPressed: hasText && !isSending ? _sendMessage : null,
-              icon: isSending
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).colorScheme.primary,
+              return Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: hasText || isSending 
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: IconButton(
+                  onPressed: hasText && !isSending ? _sendMessage : null,
+                  icon: isSending
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              theme.colorScheme.onPrimary,
+                            ),
+                          ),
+                        )
+                      : Icon(
+                          Icons.send,
+                          color: hasText 
+                              ? theme.colorScheme.onPrimary 
+                              : theme.colorScheme.onSurfaceVariant,
+                          size: 20,
                         ),
-                      ),
-                    )
-                  : Icon(
-                      Icons.send,
-                      color: hasText
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurfaceVariant
-                                .withValues(alpha: 0.5),
-                    ),
-            );
-          },
-        ),
-      ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onPrimary),
           onPressed: () {
             // Mark messages as read when leaving
             context.read<MessagingBloc>().add(
@@ -359,58 +462,99 @@ class _ChatPageState extends State<ChatPage> {
         ),
         title: BlocBuilder<MessagingBloc, MessagingState>(
           builder: (context, state) {
+            String userName = 'Loading...';
+            String? userAvatar;
+            bool isOnline = false;
+            DateTime? lastSeen;
+            
             if (state is MessagesLoaded) {
               final conversation = state.conversation;
-              return GestureDetector(
-                onTap: () => _showProfilePreview(context, conversation.user),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: conversation.user.avatarUrl != null
-                          ? NetworkImage(conversation.user.avatarUrl!)
-                          : null,
-                      child: conversation.user.avatarUrl == null
-                          ? Text(
-                              conversation.user.name
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join(''),
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
-                            )
-                          : null,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            conversation.user.name,
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            '${conversation.user.vibepoints} vibepoints',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              final otherParticipant = conversation.getOtherParticipant(_currentUserId);
+              
+              if (otherParticipant != null) {
+                userName = otherParticipant.name.isNotEmpty ? otherParticipant.name : 'Unknown User';
+                userAvatar = otherParticipant.avatar;
+                isOnline = otherParticipant.isOnline;
+                lastSeen = otherParticipant.lastSeen;
+              }
+            } else if (state is MessagesLoadingState) {
+              userName = 'Loading...';
+            } else {
+              // For any other state, try to get user info from previous state or use fallback
+              userName = 'Chat';
             }
-            return const Text('Chat');
+              
+            return GestureDetector(
+              onTap: state is MessagesLoaded 
+                  ? () {
+                      final conversation = state.conversation;
+                      final otherParticipant = conversation.getOtherParticipant(_currentUserId);
+                      if (otherParticipant != null) {
+                        _showProfilePreview(context, otherParticipant);
+                      }
+                    }
+                  : null,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundImage: userAvatar != null
+                        ? NetworkImage(userAvatar)
+                        : null,
+                    backgroundColor: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
+                    child: userAvatar == null
+                        ? Text(
+                            userName.isNotEmpty
+                                ? userName
+                                    .split(' ')
+                                    .map((n) => n.isNotEmpty ? n[0] : '')
+                                    .join('')
+                                    .toUpperCase()
+                                : 'U',
+                            style: TextStyle(
+                              color: theme.colorScheme.onPrimary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          userName,
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        if (isOnline)
+                          Text(
+                            'Online',
+                            style: TextStyle(
+                              color: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
+                              fontSize: 12,
+                            ),
+                          )
+                        else if (lastSeen != null)
+                          Text(
+                            'Last seen ${_formatLastSeen(lastSeen)}',
+                            style: TextStyle(
+                              color: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           },
         ),
         elevation: 2,
@@ -476,25 +620,24 @@ class _ChatPageState extends State<ChatPage> {
                     return ChatMessageListWidget(
                       messages: messages,
                       scrollController: _scrollController,
-                      currentUserId:
-                          'current_user', // TODO: Get from auth service
+                      currentUserId: _currentUserId ?? 'current_user',
                     );
                   }
 
                   // Show empty state for other states (errors are handled via snackbars)
-                  return const Center(
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
                           Icons.chat_bubble_outline,
                           size: 64,
-                          color: Colors.grey,
+                          color: theme.colorScheme.outline,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
                           'No messages to display',
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -502,22 +645,20 @@ class _ChatPageState extends State<ChatPage> {
                 },
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outline.withValues(alpha: 0.2),
-                  ),
-                ),
-              ),
-              child: _selectedImagePath != null
-                  ? _buildImagePreview()
-                  : _buildMessageInput(),
-            ),
+            _selectedImagePath != null
+                ? Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      border: Border(
+                        top: BorderSide(
+                          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                      ),
+                    ),
+                    child: _buildImagePreview(),
+                  )
+                : _buildMessageInput(),
           ],
         ),
       ),
