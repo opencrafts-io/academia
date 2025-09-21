@@ -5913,6 +5913,3561 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
   }
 }
 
+class $EnhancedConversationTableTable extends EnhancedConversationTable
+    with TableInfo<$EnhancedConversationTableTable, EnhancedConversationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EnhancedConversationTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserIdMeta = const VerificationMeta(
+    'otherUserId',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserId = GeneratedColumn<String>(
+    'other_user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserNameMeta = const VerificationMeta(
+    'otherUserName',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserName = GeneratedColumn<String>(
+    'other_user_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherUserEmailMeta = const VerificationMeta(
+    'otherUserEmail',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserEmail = GeneratedColumn<String>(
+    'other_user_email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _otherUserAvatarMeta = const VerificationMeta(
+    'otherUserAvatar',
+  );
+  @override
+  late final GeneratedColumn<String> otherUserAvatar = GeneratedColumn<String>(
+    'other_user_avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isOnlineMeta = const VerificationMeta(
+    'isOnline',
+  );
+  @override
+  late final GeneratedColumn<bool> isOnline = GeneratedColumn<bool>(
+    'is_online',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_online" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
+    'lastMessageId',
+  );
+  @override
+  late final GeneratedColumn<int> lastMessageId = GeneratedColumn<int>(
+    'last_message_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastMessageContentMeta =
+      const VerificationMeta('lastMessageContent');
+  @override
+  late final GeneratedColumn<String> lastMessageContent =
+      GeneratedColumn<String>(
+        'last_message_content',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastMessageAtMeta = const VerificationMeta(
+    'lastMessageAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastMessageAt =
+      GeneratedColumn<DateTime>(
+        'last_message_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _unreadCountMeta = const VerificationMeta(
+    'unreadCount',
+  );
+  @override
+  late final GeneratedColumn<int> unreadCount = GeneratedColumn<int>(
+    'unread_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _apiUpdatedAtMeta = const VerificationMeta(
+    'apiUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> apiUpdatedAt = GeneratedColumn<DateTime>(
+    'api_updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    conversationId,
+    otherUserId,
+    otherUserName,
+    otherUserEmail,
+    otherUserAvatar,
+    isOnline,
+    lastMessageId,
+    lastMessageContent,
+    lastMessageAt,
+    unreadCount,
+    apiUpdatedAt,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'enhanced_conversation_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EnhancedConversationData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('other_user_id')) {
+      context.handle(
+        _otherUserIdMeta,
+        otherUserId.isAcceptableOrUnknown(
+          data['other_user_id']!,
+          _otherUserIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_otherUserIdMeta);
+    }
+    if (data.containsKey('other_user_name')) {
+      context.handle(
+        _otherUserNameMeta,
+        otherUserName.isAcceptableOrUnknown(
+          data['other_user_name']!,
+          _otherUserNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_otherUserNameMeta);
+    }
+    if (data.containsKey('other_user_email')) {
+      context.handle(
+        _otherUserEmailMeta,
+        otherUserEmail.isAcceptableOrUnknown(
+          data['other_user_email']!,
+          _otherUserEmailMeta,
+        ),
+      );
+    }
+    if (data.containsKey('other_user_avatar')) {
+      context.handle(
+        _otherUserAvatarMeta,
+        otherUserAvatar.isAcceptableOrUnknown(
+          data['other_user_avatar']!,
+          _otherUserAvatarMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_online')) {
+      context.handle(
+        _isOnlineMeta,
+        isOnline.isAcceptableOrUnknown(data['is_online']!, _isOnlineMeta),
+      );
+    }
+    if (data.containsKey('last_message_id')) {
+      context.handle(
+        _lastMessageIdMeta,
+        lastMessageId.isAcceptableOrUnknown(
+          data['last_message_id']!,
+          _lastMessageIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_message_content')) {
+      context.handle(
+        _lastMessageContentMeta,
+        lastMessageContent.isAcceptableOrUnknown(
+          data['last_message_content']!,
+          _lastMessageContentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_message_at')) {
+      context.handle(
+        _lastMessageAtMeta,
+        lastMessageAt.isAcceptableOrUnknown(
+          data['last_message_at']!,
+          _lastMessageAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('unread_count')) {
+      context.handle(
+        _unreadCountMeta,
+        unreadCount.isAcceptableOrUnknown(
+          data['unread_count']!,
+          _unreadCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('api_updated_at')) {
+      context.handle(
+        _apiUpdatedAtMeta,
+        apiUpdatedAt.isAcceptableOrUnknown(
+          data['api_updated_at']!,
+          _apiUpdatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  @override
+  EnhancedConversationData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EnhancedConversationData(
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      otherUserId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_id'],
+      )!,
+      otherUserName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_name'],
+      )!,
+      otherUserEmail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_email'],
+      ),
+      otherUserAvatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_user_avatar'],
+      ),
+      isOnline: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_online'],
+      )!,
+      lastMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_message_id'],
+      ),
+      lastMessageContent: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_message_content'],
+      ),
+      lastMessageAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_message_at'],
+      ),
+      unreadCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}unread_count'],
+      )!,
+      apiUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}api_updated_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EnhancedConversationTableTable createAlias(String alias) {
+    return $EnhancedConversationTableTable(attachedDatabase, alias);
+  }
+}
+
+class EnhancedConversationData extends DataClass
+    implements Insertable<EnhancedConversationData> {
+  final String conversationId;
+  final String otherUserId;
+  final String otherUserName;
+  final String? otherUserEmail;
+  final String? otherUserAvatar;
+  final bool isOnline;
+  final int? lastMessageId;
+  final String? lastMessageContent;
+  final DateTime? lastMessageAt;
+  final int unreadCount;
+  final DateTime? apiUpdatedAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const EnhancedConversationData({
+    required this.conversationId,
+    required this.otherUserId,
+    required this.otherUserName,
+    this.otherUserEmail,
+    this.otherUserAvatar,
+    required this.isOnline,
+    this.lastMessageId,
+    this.lastMessageContent,
+    this.lastMessageAt,
+    required this.unreadCount,
+    this.apiUpdatedAt,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['other_user_id'] = Variable<String>(otherUserId);
+    map['other_user_name'] = Variable<String>(otherUserName);
+    if (!nullToAbsent || otherUserEmail != null) {
+      map['other_user_email'] = Variable<String>(otherUserEmail);
+    }
+    if (!nullToAbsent || otherUserAvatar != null) {
+      map['other_user_avatar'] = Variable<String>(otherUserAvatar);
+    }
+    map['is_online'] = Variable<bool>(isOnline);
+    if (!nullToAbsent || lastMessageId != null) {
+      map['last_message_id'] = Variable<int>(lastMessageId);
+    }
+    if (!nullToAbsent || lastMessageContent != null) {
+      map['last_message_content'] = Variable<String>(lastMessageContent);
+    }
+    if (!nullToAbsent || lastMessageAt != null) {
+      map['last_message_at'] = Variable<DateTime>(lastMessageAt);
+    }
+    map['unread_count'] = Variable<int>(unreadCount);
+    if (!nullToAbsent || apiUpdatedAt != null) {
+      map['api_updated_at'] = Variable<DateTime>(apiUpdatedAt);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  EnhancedConversationTableCompanion toCompanion(bool nullToAbsent) {
+    return EnhancedConversationTableCompanion(
+      conversationId: Value(conversationId),
+      otherUserId: Value(otherUserId),
+      otherUserName: Value(otherUserName),
+      otherUserEmail: otherUserEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(otherUserEmail),
+      otherUserAvatar: otherUserAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(otherUserAvatar),
+      isOnline: Value(isOnline),
+      lastMessageId: lastMessageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageId),
+      lastMessageContent: lastMessageContent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageContent),
+      lastMessageAt: lastMessageAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMessageAt),
+      unreadCount: Value(unreadCount),
+      apiUpdatedAt: apiUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiUpdatedAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory EnhancedConversationData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EnhancedConversationData(
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      otherUserId: serializer.fromJson<String>(json['otherUserId']),
+      otherUserName: serializer.fromJson<String>(json['otherUserName']),
+      otherUserEmail: serializer.fromJson<String?>(json['otherUserEmail']),
+      otherUserAvatar: serializer.fromJson<String?>(json['otherUserAvatar']),
+      isOnline: serializer.fromJson<bool>(json['isOnline']),
+      lastMessageId: serializer.fromJson<int?>(json['lastMessageId']),
+      lastMessageContent: serializer.fromJson<String?>(
+        json['lastMessageContent'],
+      ),
+      lastMessageAt: serializer.fromJson<DateTime?>(json['lastMessageAt']),
+      unreadCount: serializer.fromJson<int>(json['unreadCount']),
+      apiUpdatedAt: serializer.fromJson<DateTime?>(json['apiUpdatedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'conversationId': serializer.toJson<String>(conversationId),
+      'otherUserId': serializer.toJson<String>(otherUserId),
+      'otherUserName': serializer.toJson<String>(otherUserName),
+      'otherUserEmail': serializer.toJson<String?>(otherUserEmail),
+      'otherUserAvatar': serializer.toJson<String?>(otherUserAvatar),
+      'isOnline': serializer.toJson<bool>(isOnline),
+      'lastMessageId': serializer.toJson<int?>(lastMessageId),
+      'lastMessageContent': serializer.toJson<String?>(lastMessageContent),
+      'lastMessageAt': serializer.toJson<DateTime?>(lastMessageAt),
+      'unreadCount': serializer.toJson<int>(unreadCount),
+      'apiUpdatedAt': serializer.toJson<DateTime?>(apiUpdatedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  EnhancedConversationData copyWith({
+    String? conversationId,
+    String? otherUserId,
+    String? otherUserName,
+    Value<String?> otherUserEmail = const Value.absent(),
+    Value<String?> otherUserAvatar = const Value.absent(),
+    bool? isOnline,
+    Value<int?> lastMessageId = const Value.absent(),
+    Value<String?> lastMessageContent = const Value.absent(),
+    Value<DateTime?> lastMessageAt = const Value.absent(),
+    int? unreadCount,
+    Value<DateTime?> apiUpdatedAt = const Value.absent(),
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => EnhancedConversationData(
+    conversationId: conversationId ?? this.conversationId,
+    otherUserId: otherUserId ?? this.otherUserId,
+    otherUserName: otherUserName ?? this.otherUserName,
+    otherUserEmail: otherUserEmail.present
+        ? otherUserEmail.value
+        : this.otherUserEmail,
+    otherUserAvatar: otherUserAvatar.present
+        ? otherUserAvatar.value
+        : this.otherUserAvatar,
+    isOnline: isOnline ?? this.isOnline,
+    lastMessageId: lastMessageId.present
+        ? lastMessageId.value
+        : this.lastMessageId,
+    lastMessageContent: lastMessageContent.present
+        ? lastMessageContent.value
+        : this.lastMessageContent,
+    lastMessageAt: lastMessageAt.present
+        ? lastMessageAt.value
+        : this.lastMessageAt,
+    unreadCount: unreadCount ?? this.unreadCount,
+    apiUpdatedAt: apiUpdatedAt.present ? apiUpdatedAt.value : this.apiUpdatedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  EnhancedConversationData copyWithCompanion(
+    EnhancedConversationTableCompanion data,
+  ) {
+    return EnhancedConversationData(
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      otherUserId: data.otherUserId.present
+          ? data.otherUserId.value
+          : this.otherUserId,
+      otherUserName: data.otherUserName.present
+          ? data.otherUserName.value
+          : this.otherUserName,
+      otherUserEmail: data.otherUserEmail.present
+          ? data.otherUserEmail.value
+          : this.otherUserEmail,
+      otherUserAvatar: data.otherUserAvatar.present
+          ? data.otherUserAvatar.value
+          : this.otherUserAvatar,
+      isOnline: data.isOnline.present ? data.isOnline.value : this.isOnline,
+      lastMessageId: data.lastMessageId.present
+          ? data.lastMessageId.value
+          : this.lastMessageId,
+      lastMessageContent: data.lastMessageContent.present
+          ? data.lastMessageContent.value
+          : this.lastMessageContent,
+      lastMessageAt: data.lastMessageAt.present
+          ? data.lastMessageAt.value
+          : this.lastMessageAt,
+      unreadCount: data.unreadCount.present
+          ? data.unreadCount.value
+          : this.unreadCount,
+      apiUpdatedAt: data.apiUpdatedAt.present
+          ? data.apiUpdatedAt.value
+          : this.apiUpdatedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedConversationData(')
+          ..write('conversationId: $conversationId, ')
+          ..write('otherUserId: $otherUserId, ')
+          ..write('otherUserName: $otherUserName, ')
+          ..write('otherUserEmail: $otherUserEmail, ')
+          ..write('otherUserAvatar: $otherUserAvatar, ')
+          ..write('isOnline: $isOnline, ')
+          ..write('lastMessageId: $lastMessageId, ')
+          ..write('lastMessageContent: $lastMessageContent, ')
+          ..write('lastMessageAt: $lastMessageAt, ')
+          ..write('unreadCount: $unreadCount, ')
+          ..write('apiUpdatedAt: $apiUpdatedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    conversationId,
+    otherUserId,
+    otherUserName,
+    otherUserEmail,
+    otherUserAvatar,
+    isOnline,
+    lastMessageId,
+    lastMessageContent,
+    lastMessageAt,
+    unreadCount,
+    apiUpdatedAt,
+    updatedAt,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EnhancedConversationData &&
+          other.conversationId == this.conversationId &&
+          other.otherUserId == this.otherUserId &&
+          other.otherUserName == this.otherUserName &&
+          other.otherUserEmail == this.otherUserEmail &&
+          other.otherUserAvatar == this.otherUserAvatar &&
+          other.isOnline == this.isOnline &&
+          other.lastMessageId == this.lastMessageId &&
+          other.lastMessageContent == this.lastMessageContent &&
+          other.lastMessageAt == this.lastMessageAt &&
+          other.unreadCount == this.unreadCount &&
+          other.apiUpdatedAt == this.apiUpdatedAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class EnhancedConversationTableCompanion
+    extends UpdateCompanion<EnhancedConversationData> {
+  final Value<String> conversationId;
+  final Value<String> otherUserId;
+  final Value<String> otherUserName;
+  final Value<String?> otherUserEmail;
+  final Value<String?> otherUserAvatar;
+  final Value<bool> isOnline;
+  final Value<int?> lastMessageId;
+  final Value<String?> lastMessageContent;
+  final Value<DateTime?> lastMessageAt;
+  final Value<int> unreadCount;
+  final Value<DateTime?> apiUpdatedAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const EnhancedConversationTableCompanion({
+    this.conversationId = const Value.absent(),
+    this.otherUserId = const Value.absent(),
+    this.otherUserName = const Value.absent(),
+    this.otherUserEmail = const Value.absent(),
+    this.otherUserAvatar = const Value.absent(),
+    this.isOnline = const Value.absent(),
+    this.lastMessageId = const Value.absent(),
+    this.lastMessageContent = const Value.absent(),
+    this.lastMessageAt = const Value.absent(),
+    this.unreadCount = const Value.absent(),
+    this.apiUpdatedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  EnhancedConversationTableCompanion.insert({
+    required String conversationId,
+    required String otherUserId,
+    required String otherUserName,
+    this.otherUserEmail = const Value.absent(),
+    this.otherUserAvatar = const Value.absent(),
+    this.isOnline = const Value.absent(),
+    this.lastMessageId = const Value.absent(),
+    this.lastMessageContent = const Value.absent(),
+    this.lastMessageAt = const Value.absent(),
+    this.unreadCount = const Value.absent(),
+    this.apiUpdatedAt = const Value.absent(),
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       otherUserId = Value(otherUserId),
+       otherUserName = Value(otherUserName),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<EnhancedConversationData> custom({
+    Expression<String>? conversationId,
+    Expression<String>? otherUserId,
+    Expression<String>? otherUserName,
+    Expression<String>? otherUserEmail,
+    Expression<String>? otherUserAvatar,
+    Expression<bool>? isOnline,
+    Expression<int>? lastMessageId,
+    Expression<String>? lastMessageContent,
+    Expression<DateTime>? lastMessageAt,
+    Expression<int>? unreadCount,
+    Expression<DateTime>? apiUpdatedAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (otherUserId != null) 'other_user_id': otherUserId,
+      if (otherUserName != null) 'other_user_name': otherUserName,
+      if (otherUserEmail != null) 'other_user_email': otherUserEmail,
+      if (otherUserAvatar != null) 'other_user_avatar': otherUserAvatar,
+      if (isOnline != null) 'is_online': isOnline,
+      if (lastMessageId != null) 'last_message_id': lastMessageId,
+      if (lastMessageContent != null)
+        'last_message_content': lastMessageContent,
+      if (lastMessageAt != null) 'last_message_at': lastMessageAt,
+      if (unreadCount != null) 'unread_count': unreadCount,
+      if (apiUpdatedAt != null) 'api_updated_at': apiUpdatedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  EnhancedConversationTableCompanion copyWith({
+    Value<String>? conversationId,
+    Value<String>? otherUserId,
+    Value<String>? otherUserName,
+    Value<String?>? otherUserEmail,
+    Value<String?>? otherUserAvatar,
+    Value<bool>? isOnline,
+    Value<int?>? lastMessageId,
+    Value<String?>? lastMessageContent,
+    Value<DateTime?>? lastMessageAt,
+    Value<int>? unreadCount,
+    Value<DateTime?>? apiUpdatedAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return EnhancedConversationTableCompanion(
+      conversationId: conversationId ?? this.conversationId,
+      otherUserId: otherUserId ?? this.otherUserId,
+      otherUserName: otherUserName ?? this.otherUserName,
+      otherUserEmail: otherUserEmail ?? this.otherUserEmail,
+      otherUserAvatar: otherUserAvatar ?? this.otherUserAvatar,
+      isOnline: isOnline ?? this.isOnline,
+      lastMessageId: lastMessageId ?? this.lastMessageId,
+      lastMessageContent: lastMessageContent ?? this.lastMessageContent,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      unreadCount: unreadCount ?? this.unreadCount,
+      apiUpdatedAt: apiUpdatedAt ?? this.apiUpdatedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (otherUserId.present) {
+      map['other_user_id'] = Variable<String>(otherUserId.value);
+    }
+    if (otherUserName.present) {
+      map['other_user_name'] = Variable<String>(otherUserName.value);
+    }
+    if (otherUserEmail.present) {
+      map['other_user_email'] = Variable<String>(otherUserEmail.value);
+    }
+    if (otherUserAvatar.present) {
+      map['other_user_avatar'] = Variable<String>(otherUserAvatar.value);
+    }
+    if (isOnline.present) {
+      map['is_online'] = Variable<bool>(isOnline.value);
+    }
+    if (lastMessageId.present) {
+      map['last_message_id'] = Variable<int>(lastMessageId.value);
+    }
+    if (lastMessageContent.present) {
+      map['last_message_content'] = Variable<String>(lastMessageContent.value);
+    }
+    if (lastMessageAt.present) {
+      map['last_message_at'] = Variable<DateTime>(lastMessageAt.value);
+    }
+    if (unreadCount.present) {
+      map['unread_count'] = Variable<int>(unreadCount.value);
+    }
+    if (apiUpdatedAt.present) {
+      map['api_updated_at'] = Variable<DateTime>(apiUpdatedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedConversationTableCompanion(')
+          ..write('conversationId: $conversationId, ')
+          ..write('otherUserId: $otherUserId, ')
+          ..write('otherUserName: $otherUserName, ')
+          ..write('otherUserEmail: $otherUserEmail, ')
+          ..write('otherUserAvatar: $otherUserAvatar, ')
+          ..write('isOnline: $isOnline, ')
+          ..write('lastMessageId: $lastMessageId, ')
+          ..write('lastMessageContent: $lastMessageContent, ')
+          ..write('lastMessageAt: $lastMessageAt, ')
+          ..write('unreadCount: $unreadCount, ')
+          ..write('apiUpdatedAt: $apiUpdatedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $EnhancedMessageTableTable extends EnhancedMessageTable
+    with TableInfo<$EnhancedMessageTableTable, EnhancedMessageData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EnhancedMessageTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _apiMessageIdMeta = const VerificationMeta(
+    'apiMessageId',
+  );
+  @override
+  late final GeneratedColumn<int> apiMessageId = GeneratedColumn<int>(
+    'api_message_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderIdMeta = const VerificationMeta(
+    'senderId',
+  );
+  @override
+  late final GeneratedColumn<String> senderId = GeneratedColumn<String>(
+    'sender_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderNameMeta = const VerificationMeta(
+    'senderName',
+  );
+  @override
+  late final GeneratedColumn<String> senderName = GeneratedColumn<String>(
+    'sender_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderEmailMeta = const VerificationMeta(
+    'senderEmail',
+  );
+  @override
+  late final GeneratedColumn<String> senderEmail = GeneratedColumn<String>(
+    'sender_email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _senderAvatarMeta = const VerificationMeta(
+    'senderAvatar',
+  );
+  @override
+  late final GeneratedColumn<String> senderAvatar = GeneratedColumn<String>(
+    'sender_avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+    'is_read',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_read" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isEditedMeta = const VerificationMeta(
+    'isEdited',
+  );
+  @override
+  late final GeneratedColumn<bool> isEdited = GeneratedColumn<bool>(
+    'is_edited',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_edited" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _apiCreatedAtMeta = const VerificationMeta(
+    'apiCreatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> apiCreatedAt = GeneratedColumn<DateTime>(
+    'api_created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
+  @override
+  late final GeneratedColumn<DateTime> sentAt = GeneratedColumn<DateTime>(
+    'sent_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    apiMessageId,
+    conversationId,
+    senderId,
+    senderName,
+    senderEmail,
+    senderAvatar,
+    content,
+    imageUrl,
+    isRead,
+    isEdited,
+    isDeleted,
+    apiCreatedAt,
+    sentAt,
+    updatedAt,
+    createdAt,
+    status,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'enhanced_message_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EnhancedMessageData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('api_message_id')) {
+      context.handle(
+        _apiMessageIdMeta,
+        apiMessageId.isAcceptableOrUnknown(
+          data['api_message_id']!,
+          _apiMessageIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('sender_id')) {
+      context.handle(
+        _senderIdMeta,
+        senderId.isAcceptableOrUnknown(data['sender_id']!, _senderIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_senderIdMeta);
+    }
+    if (data.containsKey('sender_name')) {
+      context.handle(
+        _senderNameMeta,
+        senderName.isAcceptableOrUnknown(data['sender_name']!, _senderNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_senderNameMeta);
+    }
+    if (data.containsKey('sender_email')) {
+      context.handle(
+        _senderEmailMeta,
+        senderEmail.isAcceptableOrUnknown(
+          data['sender_email']!,
+          _senderEmailMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sender_avatar')) {
+      context.handle(
+        _senderAvatarMeta,
+        senderAvatar.isAcceptableOrUnknown(
+          data['sender_avatar']!,
+          _senderAvatarMeta,
+        ),
+      );
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('is_read')) {
+      context.handle(
+        _isReadMeta,
+        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
+      );
+    }
+    if (data.containsKey('is_edited')) {
+      context.handle(
+        _isEditedMeta,
+        isEdited.isAcceptableOrUnknown(data['is_edited']!, _isEditedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('api_created_at')) {
+      context.handle(
+        _apiCreatedAtMeta,
+        apiCreatedAt.isAcceptableOrUnknown(
+          data['api_created_at']!,
+          _apiCreatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sent_at')) {
+      context.handle(
+        _sentAtMeta,
+        sentAt.isAcceptableOrUnknown(data['sent_at']!, _sentAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sentAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EnhancedMessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EnhancedMessageData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      apiMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}api_message_id'],
+      ),
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      senderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_id'],
+      )!,
+      senderName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_name'],
+      )!,
+      senderEmail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_email'],
+      ),
+      senderAvatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sender_avatar'],
+      ),
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      isRead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_read'],
+      )!,
+      isEdited: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_edited'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      apiCreatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}api_created_at'],
+      ),
+      sentAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}sent_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+    );
+  }
+
+  @override
+  $EnhancedMessageTableTable createAlias(String alias) {
+    return $EnhancedMessageTableTable(attachedDatabase, alias);
+  }
+}
+
+class EnhancedMessageData extends DataClass
+    implements Insertable<EnhancedMessageData> {
+  final int id;
+  final int? apiMessageId;
+  final String conversationId;
+  final String senderId;
+  final String senderName;
+  final String? senderEmail;
+  final String? senderAvatar;
+  final String content;
+  final String? imageUrl;
+  final bool isRead;
+  final bool isEdited;
+  final bool isDeleted;
+  final DateTime? apiCreatedAt;
+  final DateTime sentAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  final String status;
+  const EnhancedMessageData({
+    required this.id,
+    this.apiMessageId,
+    required this.conversationId,
+    required this.senderId,
+    required this.senderName,
+    this.senderEmail,
+    this.senderAvatar,
+    required this.content,
+    this.imageUrl,
+    required this.isRead,
+    required this.isEdited,
+    required this.isDeleted,
+    this.apiCreatedAt,
+    required this.sentAt,
+    required this.updatedAt,
+    required this.createdAt,
+    required this.status,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || apiMessageId != null) {
+      map['api_message_id'] = Variable<int>(apiMessageId);
+    }
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['sender_id'] = Variable<String>(senderId);
+    map['sender_name'] = Variable<String>(senderName);
+    if (!nullToAbsent || senderEmail != null) {
+      map['sender_email'] = Variable<String>(senderEmail);
+    }
+    if (!nullToAbsent || senderAvatar != null) {
+      map['sender_avatar'] = Variable<String>(senderAvatar);
+    }
+    map['content'] = Variable<String>(content);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    map['is_read'] = Variable<bool>(isRead);
+    map['is_edited'] = Variable<bool>(isEdited);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    if (!nullToAbsent || apiCreatedAt != null) {
+      map['api_created_at'] = Variable<DateTime>(apiCreatedAt);
+    }
+    map['sent_at'] = Variable<DateTime>(sentAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  EnhancedMessageTableCompanion toCompanion(bool nullToAbsent) {
+    return EnhancedMessageTableCompanion(
+      id: Value(id),
+      apiMessageId: apiMessageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiMessageId),
+      conversationId: Value(conversationId),
+      senderId: Value(senderId),
+      senderName: Value(senderName),
+      senderEmail: senderEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderEmail),
+      senderAvatar: senderAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderAvatar),
+      content: Value(content),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      isRead: Value(isRead),
+      isEdited: Value(isEdited),
+      isDeleted: Value(isDeleted),
+      apiCreatedAt: apiCreatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(apiCreatedAt),
+      sentAt: Value(sentAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+      status: Value(status),
+    );
+  }
+
+  factory EnhancedMessageData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EnhancedMessageData(
+      id: serializer.fromJson<int>(json['id']),
+      apiMessageId: serializer.fromJson<int?>(json['apiMessageId']),
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      senderId: serializer.fromJson<String>(json['senderId']),
+      senderName: serializer.fromJson<String>(json['senderName']),
+      senderEmail: serializer.fromJson<String?>(json['senderEmail']),
+      senderAvatar: serializer.fromJson<String?>(json['senderAvatar']),
+      content: serializer.fromJson<String>(json['content']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
+      isEdited: serializer.fromJson<bool>(json['isEdited']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
+      apiCreatedAt: serializer.fromJson<DateTime?>(json['apiCreatedAt']),
+      sentAt: serializer.fromJson<DateTime>(json['sentAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'apiMessageId': serializer.toJson<int?>(apiMessageId),
+      'conversationId': serializer.toJson<String>(conversationId),
+      'senderId': serializer.toJson<String>(senderId),
+      'senderName': serializer.toJson<String>(senderName),
+      'senderEmail': serializer.toJson<String?>(senderEmail),
+      'senderAvatar': serializer.toJson<String?>(senderAvatar),
+      'content': serializer.toJson<String>(content),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'isRead': serializer.toJson<bool>(isRead),
+      'isEdited': serializer.toJson<bool>(isEdited),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
+      'apiCreatedAt': serializer.toJson<DateTime?>(apiCreatedAt),
+      'sentAt': serializer.toJson<DateTime>(sentAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  EnhancedMessageData copyWith({
+    int? id,
+    Value<int?> apiMessageId = const Value.absent(),
+    String? conversationId,
+    String? senderId,
+    String? senderName,
+    Value<String?> senderEmail = const Value.absent(),
+    Value<String?> senderAvatar = const Value.absent(),
+    String? content,
+    Value<String?> imageUrl = const Value.absent(),
+    bool? isRead,
+    bool? isEdited,
+    bool? isDeleted,
+    Value<DateTime?> apiCreatedAt = const Value.absent(),
+    DateTime? sentAt,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+    String? status,
+  }) => EnhancedMessageData(
+    id: id ?? this.id,
+    apiMessageId: apiMessageId.present ? apiMessageId.value : this.apiMessageId,
+    conversationId: conversationId ?? this.conversationId,
+    senderId: senderId ?? this.senderId,
+    senderName: senderName ?? this.senderName,
+    senderEmail: senderEmail.present ? senderEmail.value : this.senderEmail,
+    senderAvatar: senderAvatar.present ? senderAvatar.value : this.senderAvatar,
+    content: content ?? this.content,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    isRead: isRead ?? this.isRead,
+    isEdited: isEdited ?? this.isEdited,
+    isDeleted: isDeleted ?? this.isDeleted,
+    apiCreatedAt: apiCreatedAt.present ? apiCreatedAt.value : this.apiCreatedAt,
+    sentAt: sentAt ?? this.sentAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+    status: status ?? this.status,
+  );
+  EnhancedMessageData copyWithCompanion(EnhancedMessageTableCompanion data) {
+    return EnhancedMessageData(
+      id: data.id.present ? data.id.value : this.id,
+      apiMessageId: data.apiMessageId.present
+          ? data.apiMessageId.value
+          : this.apiMessageId,
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      senderId: data.senderId.present ? data.senderId.value : this.senderId,
+      senderName: data.senderName.present
+          ? data.senderName.value
+          : this.senderName,
+      senderEmail: data.senderEmail.present
+          ? data.senderEmail.value
+          : this.senderEmail,
+      senderAvatar: data.senderAvatar.present
+          ? data.senderAvatar.value
+          : this.senderAvatar,
+      content: data.content.present ? data.content.value : this.content,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      isEdited: data.isEdited.present ? data.isEdited.value : this.isEdited,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      apiCreatedAt: data.apiCreatedAt.present
+          ? data.apiCreatedAt.value
+          : this.apiCreatedAt,
+      sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      status: data.status.present ? data.status.value : this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedMessageData(')
+          ..write('id: $id, ')
+          ..write('apiMessageId: $apiMessageId, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderName: $senderName, ')
+          ..write('senderEmail: $senderEmail, ')
+          ..write('senderAvatar: $senderAvatar, ')
+          ..write('content: $content, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('isRead: $isRead, ')
+          ..write('isEdited: $isEdited, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('apiCreatedAt: $apiCreatedAt, ')
+          ..write('sentAt: $sentAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    apiMessageId,
+    conversationId,
+    senderId,
+    senderName,
+    senderEmail,
+    senderAvatar,
+    content,
+    imageUrl,
+    isRead,
+    isEdited,
+    isDeleted,
+    apiCreatedAt,
+    sentAt,
+    updatedAt,
+    createdAt,
+    status,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EnhancedMessageData &&
+          other.id == this.id &&
+          other.apiMessageId == this.apiMessageId &&
+          other.conversationId == this.conversationId &&
+          other.senderId == this.senderId &&
+          other.senderName == this.senderName &&
+          other.senderEmail == this.senderEmail &&
+          other.senderAvatar == this.senderAvatar &&
+          other.content == this.content &&
+          other.imageUrl == this.imageUrl &&
+          other.isRead == this.isRead &&
+          other.isEdited == this.isEdited &&
+          other.isDeleted == this.isDeleted &&
+          other.apiCreatedAt == this.apiCreatedAt &&
+          other.sentAt == this.sentAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt &&
+          other.status == this.status);
+}
+
+class EnhancedMessageTableCompanion
+    extends UpdateCompanion<EnhancedMessageData> {
+  final Value<int> id;
+  final Value<int?> apiMessageId;
+  final Value<String> conversationId;
+  final Value<String> senderId;
+  final Value<String> senderName;
+  final Value<String?> senderEmail;
+  final Value<String?> senderAvatar;
+  final Value<String> content;
+  final Value<String?> imageUrl;
+  final Value<bool> isRead;
+  final Value<bool> isEdited;
+  final Value<bool> isDeleted;
+  final Value<DateTime?> apiCreatedAt;
+  final Value<DateTime> sentAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<String> status;
+  const EnhancedMessageTableCompanion({
+    this.id = const Value.absent(),
+    this.apiMessageId = const Value.absent(),
+    this.conversationId = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderName = const Value.absent(),
+    this.senderEmail = const Value.absent(),
+    this.senderAvatar = const Value.absent(),
+    this.content = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.isEdited = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.apiCreatedAt = const Value.absent(),
+    this.sentAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.status = const Value.absent(),
+  });
+  EnhancedMessageTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.apiMessageId = const Value.absent(),
+    required String conversationId,
+    required String senderId,
+    required String senderName,
+    this.senderEmail = const Value.absent(),
+    this.senderAvatar = const Value.absent(),
+    required String content,
+    this.imageUrl = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.isEdited = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.apiCreatedAt = const Value.absent(),
+    required DateTime sentAt,
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.status = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       senderId = Value(senderId),
+       senderName = Value(senderName),
+       content = Value(content),
+       sentAt = Value(sentAt),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<EnhancedMessageData> custom({
+    Expression<int>? id,
+    Expression<int>? apiMessageId,
+    Expression<String>? conversationId,
+    Expression<String>? senderId,
+    Expression<String>? senderName,
+    Expression<String>? senderEmail,
+    Expression<String>? senderAvatar,
+    Expression<String>? content,
+    Expression<String>? imageUrl,
+    Expression<bool>? isRead,
+    Expression<bool>? isEdited,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? apiCreatedAt,
+    Expression<DateTime>? sentAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<String>? status,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (apiMessageId != null) 'api_message_id': apiMessageId,
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (senderId != null) 'sender_id': senderId,
+      if (senderName != null) 'sender_name': senderName,
+      if (senderEmail != null) 'sender_email': senderEmail,
+      if (senderAvatar != null) 'sender_avatar': senderAvatar,
+      if (content != null) 'content': content,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (isRead != null) 'is_read': isRead,
+      if (isEdited != null) 'is_edited': isEdited,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (apiCreatedAt != null) 'api_created_at': apiCreatedAt,
+      if (sentAt != null) 'sent_at': sentAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (status != null) 'status': status,
+    });
+  }
+
+  EnhancedMessageTableCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? apiMessageId,
+    Value<String>? conversationId,
+    Value<String>? senderId,
+    Value<String>? senderName,
+    Value<String?>? senderEmail,
+    Value<String?>? senderAvatar,
+    Value<String>? content,
+    Value<String?>? imageUrl,
+    Value<bool>? isRead,
+    Value<bool>? isEdited,
+    Value<bool>? isDeleted,
+    Value<DateTime?>? apiCreatedAt,
+    Value<DateTime>? sentAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<String>? status,
+  }) {
+    return EnhancedMessageTableCompanion(
+      id: id ?? this.id,
+      apiMessageId: apiMessageId ?? this.apiMessageId,
+      conversationId: conversationId ?? this.conversationId,
+      senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
+      senderEmail: senderEmail ?? this.senderEmail,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
+      content: content ?? this.content,
+      imageUrl: imageUrl ?? this.imageUrl,
+      isRead: isRead ?? this.isRead,
+      isEdited: isEdited ?? this.isEdited,
+      isDeleted: isDeleted ?? this.isDeleted,
+      apiCreatedAt: apiCreatedAt ?? this.apiCreatedAt,
+      sentAt: sentAt ?? this.sentAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      status: status ?? this.status,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (apiMessageId.present) {
+      map['api_message_id'] = Variable<int>(apiMessageId.value);
+    }
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (senderId.present) {
+      map['sender_id'] = Variable<String>(senderId.value);
+    }
+    if (senderName.present) {
+      map['sender_name'] = Variable<String>(senderName.value);
+    }
+    if (senderEmail.present) {
+      map['sender_email'] = Variable<String>(senderEmail.value);
+    }
+    if (senderAvatar.present) {
+      map['sender_avatar'] = Variable<String>(senderAvatar.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
+    if (isEdited.present) {
+      map['is_edited'] = Variable<bool>(isEdited.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (apiCreatedAt.present) {
+      map['api_created_at'] = Variable<DateTime>(apiCreatedAt.value);
+    }
+    if (sentAt.present) {
+      map['sent_at'] = Variable<DateTime>(sentAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EnhancedMessageTableCompanion(')
+          ..write('id: $id, ')
+          ..write('apiMessageId: $apiMessageId, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderName: $senderName, ')
+          ..write('senderEmail: $senderEmail, ')
+          ..write('senderAvatar: $senderAvatar, ')
+          ..write('content: $content, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('isRead: $isRead, ')
+          ..write('isEdited: $isEdited, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('apiCreatedAt: $apiCreatedAt, ')
+          ..write('sentAt: $sentAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MessageAttachmentsTableTable extends MessageAttachmentsTable
+    with TableInfo<$MessageAttachmentsTableTable, MessageAttachmentData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MessageAttachmentsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _messageIdMeta = const VerificationMeta(
+    'messageId',
+  );
+  @override
+  late final GeneratedColumn<int> messageId = GeneratedColumn<int>(
+    'message_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
+    'attachmentType',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
+    'attachment_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileNameMeta = const VerificationMeta(
+    'fileName',
+  );
+  @override
+  late final GeneratedColumn<String> fileName = GeneratedColumn<String>(
+    'file_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fileSizeMeta = const VerificationMeta(
+    'fileSize',
+  );
+  @override
+  late final GeneratedColumn<int> fileSize = GeneratedColumn<int>(
+    'file_size',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _mimeTypeMeta = const VerificationMeta(
+    'mimeType',
+  );
+  @override
+  late final GeneratedColumn<String> mimeType = GeneratedColumn<String>(
+    'mime_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    messageId,
+    attachmentType,
+    url,
+    fileName,
+    fileSize,
+    mimeType,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'message_attachments_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MessageAttachmentData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('message_id')) {
+      context.handle(
+        _messageIdMeta,
+        messageId.isAcceptableOrUnknown(data['message_id']!, _messageIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_messageIdMeta);
+    }
+    if (data.containsKey('attachment_type')) {
+      context.handle(
+        _attachmentTypeMeta,
+        attachmentType.isAcceptableOrUnknown(
+          data['attachment_type']!,
+          _attachmentTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attachmentTypeMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('file_name')) {
+      context.handle(
+        _fileNameMeta,
+        fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta),
+      );
+    }
+    if (data.containsKey('file_size')) {
+      context.handle(
+        _fileSizeMeta,
+        fileSize.isAcceptableOrUnknown(data['file_size']!, _fileSizeMeta),
+      );
+    }
+    if (data.containsKey('mime_type')) {
+      context.handle(
+        _mimeTypeMeta,
+        mimeType.isAcceptableOrUnknown(data['mime_type']!, _mimeTypeMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MessageAttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MessageAttachmentData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      messageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}message_id'],
+      )!,
+      attachmentType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_type'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      )!,
+      fileName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_name'],
+      ),
+      fileSize: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}file_size'],
+      ),
+      mimeType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mime_type'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $MessageAttachmentsTableTable createAlias(String alias) {
+    return $MessageAttachmentsTableTable(attachedDatabase, alias);
+  }
+}
+
+class MessageAttachmentData extends DataClass
+    implements Insertable<MessageAttachmentData> {
+  final int id;
+  final int messageId;
+  final String attachmentType;
+  final String url;
+  final String? fileName;
+  final int? fileSize;
+  final String? mimeType;
+  final DateTime createdAt;
+  const MessageAttachmentData({
+    required this.id,
+    required this.messageId,
+    required this.attachmentType,
+    required this.url,
+    this.fileName,
+    this.fileSize,
+    this.mimeType,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['message_id'] = Variable<int>(messageId);
+    map['attachment_type'] = Variable<String>(attachmentType);
+    map['url'] = Variable<String>(url);
+    if (!nullToAbsent || fileName != null) {
+      map['file_name'] = Variable<String>(fileName);
+    }
+    if (!nullToAbsent || fileSize != null) {
+      map['file_size'] = Variable<int>(fileSize);
+    }
+    if (!nullToAbsent || mimeType != null) {
+      map['mime_type'] = Variable<String>(mimeType);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  MessageAttachmentsTableCompanion toCompanion(bool nullToAbsent) {
+    return MessageAttachmentsTableCompanion(
+      id: Value(id),
+      messageId: Value(messageId),
+      attachmentType: Value(attachmentType),
+      url: Value(url),
+      fileName: fileName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileName),
+      fileSize: fileSize == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileSize),
+      mimeType: mimeType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mimeType),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory MessageAttachmentData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MessageAttachmentData(
+      id: serializer.fromJson<int>(json['id']),
+      messageId: serializer.fromJson<int>(json['messageId']),
+      attachmentType: serializer.fromJson<String>(json['attachmentType']),
+      url: serializer.fromJson<String>(json['url']),
+      fileName: serializer.fromJson<String?>(json['fileName']),
+      fileSize: serializer.fromJson<int?>(json['fileSize']),
+      mimeType: serializer.fromJson<String?>(json['mimeType']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'messageId': serializer.toJson<int>(messageId),
+      'attachmentType': serializer.toJson<String>(attachmentType),
+      'url': serializer.toJson<String>(url),
+      'fileName': serializer.toJson<String?>(fileName),
+      'fileSize': serializer.toJson<int?>(fileSize),
+      'mimeType': serializer.toJson<String?>(mimeType),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  MessageAttachmentData copyWith({
+    int? id,
+    int? messageId,
+    String? attachmentType,
+    String? url,
+    Value<String?> fileName = const Value.absent(),
+    Value<int?> fileSize = const Value.absent(),
+    Value<String?> mimeType = const Value.absent(),
+    DateTime? createdAt,
+  }) => MessageAttachmentData(
+    id: id ?? this.id,
+    messageId: messageId ?? this.messageId,
+    attachmentType: attachmentType ?? this.attachmentType,
+    url: url ?? this.url,
+    fileName: fileName.present ? fileName.value : this.fileName,
+    fileSize: fileSize.present ? fileSize.value : this.fileSize,
+    mimeType: mimeType.present ? mimeType.value : this.mimeType,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  MessageAttachmentData copyWithCompanion(
+    MessageAttachmentsTableCompanion data,
+  ) {
+    return MessageAttachmentData(
+      id: data.id.present ? data.id.value : this.id,
+      messageId: data.messageId.present ? data.messageId.value : this.messageId,
+      attachmentType: data.attachmentType.present
+          ? data.attachmentType.value
+          : this.attachmentType,
+      url: data.url.present ? data.url.value : this.url,
+      fileName: data.fileName.present ? data.fileName.value : this.fileName,
+      fileSize: data.fileSize.present ? data.fileSize.value : this.fileSize,
+      mimeType: data.mimeType.present ? data.mimeType.value : this.mimeType,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageAttachmentData(')
+          ..write('id: $id, ')
+          ..write('messageId: $messageId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    messageId,
+    attachmentType,
+    url,
+    fileName,
+    fileSize,
+    mimeType,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MessageAttachmentData &&
+          other.id == this.id &&
+          other.messageId == this.messageId &&
+          other.attachmentType == this.attachmentType &&
+          other.url == this.url &&
+          other.fileName == this.fileName &&
+          other.fileSize == this.fileSize &&
+          other.mimeType == this.mimeType &&
+          other.createdAt == this.createdAt);
+}
+
+class MessageAttachmentsTableCompanion
+    extends UpdateCompanion<MessageAttachmentData> {
+  final Value<int> id;
+  final Value<int> messageId;
+  final Value<String> attachmentType;
+  final Value<String> url;
+  final Value<String?> fileName;
+  final Value<int?> fileSize;
+  final Value<String?> mimeType;
+  final Value<DateTime> createdAt;
+  const MessageAttachmentsTableCompanion({
+    this.id = const Value.absent(),
+    this.messageId = const Value.absent(),
+    this.attachmentType = const Value.absent(),
+    this.url = const Value.absent(),
+    this.fileName = const Value.absent(),
+    this.fileSize = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  MessageAttachmentsTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int messageId,
+    required String attachmentType,
+    required String url,
+    this.fileName = const Value.absent(),
+    this.fileSize = const Value.absent(),
+    this.mimeType = const Value.absent(),
+    required DateTime createdAt,
+  }) : messageId = Value(messageId),
+       attachmentType = Value(attachmentType),
+       url = Value(url),
+       createdAt = Value(createdAt);
+  static Insertable<MessageAttachmentData> custom({
+    Expression<int>? id,
+    Expression<int>? messageId,
+    Expression<String>? attachmentType,
+    Expression<String>? url,
+    Expression<String>? fileName,
+    Expression<int>? fileSize,
+    Expression<String>? mimeType,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (messageId != null) 'message_id': messageId,
+      if (attachmentType != null) 'attachment_type': attachmentType,
+      if (url != null) 'url': url,
+      if (fileName != null) 'file_name': fileName,
+      if (fileSize != null) 'file_size': fileSize,
+      if (mimeType != null) 'mime_type': mimeType,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  MessageAttachmentsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? messageId,
+    Value<String>? attachmentType,
+    Value<String>? url,
+    Value<String?>? fileName,
+    Value<int?>? fileSize,
+    Value<String?>? mimeType,
+    Value<DateTime>? createdAt,
+  }) {
+    return MessageAttachmentsTableCompanion(
+      id: id ?? this.id,
+      messageId: messageId ?? this.messageId,
+      attachmentType: attachmentType ?? this.attachmentType,
+      url: url ?? this.url,
+      fileName: fileName ?? this.fileName,
+      fileSize: fileSize ?? this.fileSize,
+      mimeType: mimeType ?? this.mimeType,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (messageId.present) {
+      map['message_id'] = Variable<int>(messageId.value);
+    }
+    if (attachmentType.present) {
+      map['attachment_type'] = Variable<String>(attachmentType.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (fileName.present) {
+      map['file_name'] = Variable<String>(fileName.value);
+    }
+    if (fileSize.present) {
+      map['file_size'] = Variable<int>(fileSize.value);
+    }
+    if (mimeType.present) {
+      map['mime_type'] = Variable<String>(mimeType.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageAttachmentsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('messageId: $messageId, ')
+          ..write('attachmentType: $attachmentType, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('mimeType: $mimeType, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DraftMessagesTableTable extends DraftMessagesTable
+    with TableInfo<$DraftMessagesTableTable, DraftMessageData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DraftMessagesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    conversationId,
+    content,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'draft_messages_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DraftMessageData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  @override
+  DraftMessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DraftMessageData(
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DraftMessagesTableTable createAlias(String alias) {
+    return $DraftMessagesTableTable(attachedDatabase, alias);
+  }
+}
+
+class DraftMessageData extends DataClass
+    implements Insertable<DraftMessageData> {
+  final String conversationId;
+  final String content;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const DraftMessageData({
+    required this.conversationId,
+    required this.content,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['content'] = Variable<String>(content);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  DraftMessagesTableCompanion toCompanion(bool nullToAbsent) {
+    return DraftMessagesTableCompanion(
+      conversationId: Value(conversationId),
+      content: Value(content),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory DraftMessageData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DraftMessageData(
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      content: serializer.fromJson<String>(json['content']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'conversationId': serializer.toJson<String>(conversationId),
+      'content': serializer.toJson<String>(content),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  DraftMessageData copyWith({
+    String? conversationId,
+    String? content,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => DraftMessageData(
+    conversationId: conversationId ?? this.conversationId,
+    content: content ?? this.content,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  DraftMessageData copyWithCompanion(DraftMessagesTableCompanion data) {
+    return DraftMessageData(
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      content: data.content.present ? data.content.value : this.content,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftMessageData(')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(conversationId, content, updatedAt, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DraftMessageData &&
+          other.conversationId == this.conversationId &&
+          other.content == this.content &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class DraftMessagesTableCompanion extends UpdateCompanion<DraftMessageData> {
+  final Value<String> conversationId;
+  final Value<String> content;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const DraftMessagesTableCompanion({
+    this.conversationId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DraftMessagesTableCompanion.insert({
+    required String conversationId,
+    required String content,
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       content = Value(content),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<DraftMessageData> custom({
+    Expression<String>? conversationId,
+    Expression<String>? content,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (content != null) 'content': content,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DraftMessagesTableCompanion copyWith({
+    Value<String>? conversationId,
+    Value<String>? content,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return DraftMessagesTableCompanion(
+      conversationId: conversationId ?? this.conversationId,
+      content: content ?? this.content,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftMessagesTableCompanion(')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WebSocketConnectionTableTable extends WebSocketConnectionTable
+    with TableInfo<$WebSocketConnectionTableTable, WebSocketConnectionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WebSocketConnectionTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastConnectedAtMeta = const VerificationMeta(
+    'lastConnectedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastConnectedAt =
+      GeneratedColumn<DateTime>(
+        'last_connected_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    connectionId,
+    state,
+    lastConnectedAt,
+    updatedAt,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'web_socket_connection_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WebSocketConnectionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (data.containsKey('last_connected_at')) {
+      context.handle(
+        _lastConnectedAtMeta,
+        lastConnectedAt.isAcceptableOrUnknown(
+          data['last_connected_at']!,
+          _lastConnectedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {connectionId};
+  @override
+  WebSocketConnectionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WebSocketConnectionData(
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      )!,
+      lastConnectedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_connected_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WebSocketConnectionTableTable createAlias(String alias) {
+    return $WebSocketConnectionTableTable(attachedDatabase, alias);
+  }
+}
+
+class WebSocketConnectionData extends DataClass
+    implements Insertable<WebSocketConnectionData> {
+  final String connectionId;
+  final String state;
+  final DateTime? lastConnectedAt;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  const WebSocketConnectionData({
+    required this.connectionId,
+    required this.state,
+    this.lastConnectedAt,
+    required this.updatedAt,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['connection_id'] = Variable<String>(connectionId);
+    map['state'] = Variable<String>(state);
+    if (!nullToAbsent || lastConnectedAt != null) {
+      map['last_connected_at'] = Variable<DateTime>(lastConnectedAt);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  WebSocketConnectionTableCompanion toCompanion(bool nullToAbsent) {
+    return WebSocketConnectionTableCompanion(
+      connectionId: Value(connectionId),
+      state: Value(state),
+      lastConnectedAt: lastConnectedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastConnectedAt),
+      updatedAt: Value(updatedAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory WebSocketConnectionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WebSocketConnectionData(
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      state: serializer.fromJson<String>(json['state']),
+      lastConnectedAt: serializer.fromJson<DateTime?>(json['lastConnectedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'connectionId': serializer.toJson<String>(connectionId),
+      'state': serializer.toJson<String>(state),
+      'lastConnectedAt': serializer.toJson<DateTime?>(lastConnectedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  WebSocketConnectionData copyWith({
+    String? connectionId,
+    String? state,
+    Value<DateTime?> lastConnectedAt = const Value.absent(),
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) => WebSocketConnectionData(
+    connectionId: connectionId ?? this.connectionId,
+    state: state ?? this.state,
+    lastConnectedAt: lastConnectedAt.present
+        ? lastConnectedAt.value
+        : this.lastConnectedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  WebSocketConnectionData copyWithCompanion(
+    WebSocketConnectionTableCompanion data,
+  ) {
+    return WebSocketConnectionData(
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      state: data.state.present ? data.state.value : this.state,
+      lastConnectedAt: data.lastConnectedAt.present
+          ? data.lastConnectedAt.value
+          : this.lastConnectedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebSocketConnectionData(')
+          ..write('connectionId: $connectionId, ')
+          ..write('state: $state, ')
+          ..write('lastConnectedAt: $lastConnectedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(connectionId, state, lastConnectedAt, updatedAt, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WebSocketConnectionData &&
+          other.connectionId == this.connectionId &&
+          other.state == this.state &&
+          other.lastConnectedAt == this.lastConnectedAt &&
+          other.updatedAt == this.updatedAt &&
+          other.createdAt == this.createdAt);
+}
+
+class WebSocketConnectionTableCompanion
+    extends UpdateCompanion<WebSocketConnectionData> {
+  final Value<String> connectionId;
+  final Value<String> state;
+  final Value<DateTime?> lastConnectedAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const WebSocketConnectionTableCompanion({
+    this.connectionId = const Value.absent(),
+    this.state = const Value.absent(),
+    this.lastConnectedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WebSocketConnectionTableCompanion.insert({
+    required String connectionId,
+    required String state,
+    this.lastConnectedAt = const Value.absent(),
+    required DateTime updatedAt,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : connectionId = Value(connectionId),
+       state = Value(state),
+       updatedAt = Value(updatedAt),
+       createdAt = Value(createdAt);
+  static Insertable<WebSocketConnectionData> custom({
+    Expression<String>? connectionId,
+    Expression<String>? state,
+    Expression<DateTime>? lastConnectedAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (connectionId != null) 'connection_id': connectionId,
+      if (state != null) 'state': state,
+      if (lastConnectedAt != null) 'last_connected_at': lastConnectedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WebSocketConnectionTableCompanion copyWith({
+    Value<String>? connectionId,
+    Value<String>? state,
+    Value<DateTime?>? lastConnectedAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return WebSocketConnectionTableCompanion(
+      connectionId: connectionId ?? this.connectionId,
+      state: state ?? this.state,
+      lastConnectedAt: lastConnectedAt ?? this.lastConnectedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (lastConnectedAt.present) {
+      map['last_connected_at'] = Variable<DateTime>(lastConnectedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebSocketConnectionTableCompanion(')
+          ..write('connectionId: $connectionId, ')
+          ..write('state: $state, ')
+          ..write('lastConnectedAt: $lastConnectedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $OfflineMessageQueueTableTable extends OfflineMessageQueueTable
+    with TableInfo<$OfflineMessageQueueTableTable, OfflineMessageQueueData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OfflineMessageQueueTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _conversationIdMeta = const VerificationMeta(
+    'conversationId',
+  );
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+    'conversation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tempMessageIdMeta = const VerificationMeta(
+    'tempMessageId',
+  );
+  @override
+  late final GeneratedColumn<String> tempMessageId = GeneratedColumn<String>(
+    'temp_message_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attachmentPathMeta = const VerificationMeta(
+    'attachmentPath',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentPath = GeneratedColumn<String>(
+    'attachment_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _retryCountMeta = const VerificationMeta(
+    'retryCount',
+  );
+  @override
+  late final GeneratedColumn<int> retryCount = GeneratedColumn<int>(
+    'retry_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastRetryAtMeta = const VerificationMeta(
+    'lastRetryAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastRetryAt = GeneratedColumn<DateTime>(
+    'last_retry_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    conversationId,
+    content,
+    tempMessageId,
+    attachmentPath,
+    retryCount,
+    createdAt,
+    lastRetryAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'offline_message_queue_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<OfflineMessageQueueData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+        _conversationIdMeta,
+        conversationId.isAcceptableOrUnknown(
+          data['conversation_id']!,
+          _conversationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('temp_message_id')) {
+      context.handle(
+        _tempMessageIdMeta,
+        tempMessageId.isAcceptableOrUnknown(
+          data['temp_message_id']!,
+          _tempMessageIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_tempMessageIdMeta);
+    }
+    if (data.containsKey('attachment_path')) {
+      context.handle(
+        _attachmentPathMeta,
+        attachmentPath.isAcceptableOrUnknown(
+          data['attachment_path']!,
+          _attachmentPathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('retry_count')) {
+      context.handle(
+        _retryCountMeta,
+        retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('last_retry_at')) {
+      context.handle(
+        _lastRetryAtMeta,
+        lastRetryAt.isAcceptableOrUnknown(
+          data['last_retry_at']!,
+          _lastRetryAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OfflineMessageQueueData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OfflineMessageQueueData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      conversationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conversation_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      tempMessageId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}temp_message_id'],
+      )!,
+      attachmentPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attachment_path'],
+      ),
+      retryCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retry_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastRetryAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_retry_at'],
+      ),
+    );
+  }
+
+  @override
+  $OfflineMessageQueueTableTable createAlias(String alias) {
+    return $OfflineMessageQueueTableTable(attachedDatabase, alias);
+  }
+}
+
+class OfflineMessageQueueData extends DataClass
+    implements Insertable<OfflineMessageQueueData> {
+  final int id;
+  final String conversationId;
+  final String content;
+  final String tempMessageId;
+  final String? attachmentPath;
+  final int retryCount;
+  final DateTime createdAt;
+  final DateTime? lastRetryAt;
+  const OfflineMessageQueueData({
+    required this.id,
+    required this.conversationId,
+    required this.content,
+    required this.tempMessageId,
+    this.attachmentPath,
+    required this.retryCount,
+    required this.createdAt,
+    this.lastRetryAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['content'] = Variable<String>(content);
+    map['temp_message_id'] = Variable<String>(tempMessageId);
+    if (!nullToAbsent || attachmentPath != null) {
+      map['attachment_path'] = Variable<String>(attachmentPath);
+    }
+    map['retry_count'] = Variable<int>(retryCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastRetryAt != null) {
+      map['last_retry_at'] = Variable<DateTime>(lastRetryAt);
+    }
+    return map;
+  }
+
+  OfflineMessageQueueTableCompanion toCompanion(bool nullToAbsent) {
+    return OfflineMessageQueueTableCompanion(
+      id: Value(id),
+      conversationId: Value(conversationId),
+      content: Value(content),
+      tempMessageId: Value(tempMessageId),
+      attachmentPath: attachmentPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attachmentPath),
+      retryCount: Value(retryCount),
+      createdAt: Value(createdAt),
+      lastRetryAt: lastRetryAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastRetryAt),
+    );
+  }
+
+  factory OfflineMessageQueueData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OfflineMessageQueueData(
+      id: serializer.fromJson<int>(json['id']),
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      content: serializer.fromJson<String>(json['content']),
+      tempMessageId: serializer.fromJson<String>(json['tempMessageId']),
+      attachmentPath: serializer.fromJson<String?>(json['attachmentPath']),
+      retryCount: serializer.fromJson<int>(json['retryCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastRetryAt: serializer.fromJson<DateTime?>(json['lastRetryAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'conversationId': serializer.toJson<String>(conversationId),
+      'content': serializer.toJson<String>(content),
+      'tempMessageId': serializer.toJson<String>(tempMessageId),
+      'attachmentPath': serializer.toJson<String?>(attachmentPath),
+      'retryCount': serializer.toJson<int>(retryCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastRetryAt': serializer.toJson<DateTime?>(lastRetryAt),
+    };
+  }
+
+  OfflineMessageQueueData copyWith({
+    int? id,
+    String? conversationId,
+    String? content,
+    String? tempMessageId,
+    Value<String?> attachmentPath = const Value.absent(),
+    int? retryCount,
+    DateTime? createdAt,
+    Value<DateTime?> lastRetryAt = const Value.absent(),
+  }) => OfflineMessageQueueData(
+    id: id ?? this.id,
+    conversationId: conversationId ?? this.conversationId,
+    content: content ?? this.content,
+    tempMessageId: tempMessageId ?? this.tempMessageId,
+    attachmentPath: attachmentPath.present
+        ? attachmentPath.value
+        : this.attachmentPath,
+    retryCount: retryCount ?? this.retryCount,
+    createdAt: createdAt ?? this.createdAt,
+    lastRetryAt: lastRetryAt.present ? lastRetryAt.value : this.lastRetryAt,
+  );
+  OfflineMessageQueueData copyWithCompanion(
+    OfflineMessageQueueTableCompanion data,
+  ) {
+    return OfflineMessageQueueData(
+      id: data.id.present ? data.id.value : this.id,
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      content: data.content.present ? data.content.value : this.content,
+      tempMessageId: data.tempMessageId.present
+          ? data.tempMessageId.value
+          : this.tempMessageId,
+      attachmentPath: data.attachmentPath.present
+          ? data.attachmentPath.value
+          : this.attachmentPath,
+      retryCount: data.retryCount.present
+          ? data.retryCount.value
+          : this.retryCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastRetryAt: data.lastRetryAt.present
+          ? data.lastRetryAt.value
+          : this.lastRetryAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineMessageQueueData(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('tempMessageId: $tempMessageId, ')
+          ..write('attachmentPath: $attachmentPath, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastRetryAt: $lastRetryAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    conversationId,
+    content,
+    tempMessageId,
+    attachmentPath,
+    retryCount,
+    createdAt,
+    lastRetryAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OfflineMessageQueueData &&
+          other.id == this.id &&
+          other.conversationId == this.conversationId &&
+          other.content == this.content &&
+          other.tempMessageId == this.tempMessageId &&
+          other.attachmentPath == this.attachmentPath &&
+          other.retryCount == this.retryCount &&
+          other.createdAt == this.createdAt &&
+          other.lastRetryAt == this.lastRetryAt);
+}
+
+class OfflineMessageQueueTableCompanion
+    extends UpdateCompanion<OfflineMessageQueueData> {
+  final Value<int> id;
+  final Value<String> conversationId;
+  final Value<String> content;
+  final Value<String> tempMessageId;
+  final Value<String?> attachmentPath;
+  final Value<int> retryCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastRetryAt;
+  const OfflineMessageQueueTableCompanion({
+    this.id = const Value.absent(),
+    this.conversationId = const Value.absent(),
+    this.content = const Value.absent(),
+    this.tempMessageId = const Value.absent(),
+    this.attachmentPath = const Value.absent(),
+    this.retryCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastRetryAt = const Value.absent(),
+  });
+  OfflineMessageQueueTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String conversationId,
+    required String content,
+    required String tempMessageId,
+    this.attachmentPath = const Value.absent(),
+    this.retryCount = const Value.absent(),
+    required DateTime createdAt,
+    this.lastRetryAt = const Value.absent(),
+  }) : conversationId = Value(conversationId),
+       content = Value(content),
+       tempMessageId = Value(tempMessageId),
+       createdAt = Value(createdAt);
+  static Insertable<OfflineMessageQueueData> custom({
+    Expression<int>? id,
+    Expression<String>? conversationId,
+    Expression<String>? content,
+    Expression<String>? tempMessageId,
+    Expression<String>? attachmentPath,
+    Expression<int>? retryCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastRetryAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (content != null) 'content': content,
+      if (tempMessageId != null) 'temp_message_id': tempMessageId,
+      if (attachmentPath != null) 'attachment_path': attachmentPath,
+      if (retryCount != null) 'retry_count': retryCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastRetryAt != null) 'last_retry_at': lastRetryAt,
+    });
+  }
+
+  OfflineMessageQueueTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? conversationId,
+    Value<String>? content,
+    Value<String>? tempMessageId,
+    Value<String?>? attachmentPath,
+    Value<int>? retryCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastRetryAt,
+  }) {
+    return OfflineMessageQueueTableCompanion(
+      id: id ?? this.id,
+      conversationId: conversationId ?? this.conversationId,
+      content: content ?? this.content,
+      tempMessageId: tempMessageId ?? this.tempMessageId,
+      attachmentPath: attachmentPath ?? this.attachmentPath,
+      retryCount: retryCount ?? this.retryCount,
+      createdAt: createdAt ?? this.createdAt,
+      lastRetryAt: lastRetryAt ?? this.lastRetryAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (tempMessageId.present) {
+      map['temp_message_id'] = Variable<String>(tempMessageId.value);
+    }
+    if (attachmentPath.present) {
+      map['attachment_path'] = Variable<String>(attachmentPath.value);
+    }
+    if (retryCount.present) {
+      map['retry_count'] = Variable<int>(retryCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastRetryAt.present) {
+      map['last_retry_at'] = Variable<DateTime>(lastRetryAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineMessageQueueTableCompanion(')
+          ..write('id: $id, ')
+          ..write('conversationId: $conversationId, ')
+          ..write('content: $content, ')
+          ..write('tempMessageId: $tempMessageId, ')
+          ..write('attachmentPath: $attachmentPath, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastRetryAt: $lastRetryAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -15620,6 +19175,18 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
+  late final $EnhancedConversationTableTable enhancedConversationTable =
+      $EnhancedConversationTableTable(this);
+  late final $EnhancedMessageTableTable enhancedMessageTable =
+      $EnhancedMessageTableTable(this);
+  late final $MessageAttachmentsTableTable messageAttachmentsTable =
+      $MessageAttachmentsTableTable(this);
+  late final $DraftMessagesTableTable draftMessagesTable =
+      $DraftMessagesTableTable(this);
+  late final $WebSocketConnectionTableTable webSocketConnectionTable =
+      $WebSocketConnectionTableTable(this);
+  late final $OfflineMessageQueueTableTable offlineMessageQueueTable =
+      $OfflineMessageQueueTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
@@ -15652,6 +19219,12 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     postTable,
     attachmentTable,
     postReplyTable,
+    enhancedConversationTable,
+    enhancedMessageTable,
+    messageAttachmentsTable,
+    draftMessagesTable,
+    webSocketConnectionTable,
+    offlineMessageQueueTable,
     todo,
     eventTable,
     attendeeTable,
@@ -19952,6 +23525,1818 @@ typedef $$PostReplyTableTableProcessedTableManager =
       (PostReplyEntity, $$PostReplyTableTableReferences),
       PostReplyEntity,
       PrefetchHooks Function({bool parentId, bool postId})
+    >;
+typedef $$EnhancedConversationTableTableCreateCompanionBuilder =
+    EnhancedConversationTableCompanion Function({
+      required String conversationId,
+      required String otherUserId,
+      required String otherUserName,
+      Value<String?> otherUserEmail,
+      Value<String?> otherUserAvatar,
+      Value<bool> isOnline,
+      Value<int?> lastMessageId,
+      Value<String?> lastMessageContent,
+      Value<DateTime?> lastMessageAt,
+      Value<int> unreadCount,
+      Value<DateTime?> apiUpdatedAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$EnhancedConversationTableTableUpdateCompanionBuilder =
+    EnhancedConversationTableCompanion Function({
+      Value<String> conversationId,
+      Value<String> otherUserId,
+      Value<String> otherUserName,
+      Value<String?> otherUserEmail,
+      Value<String?> otherUserAvatar,
+      Value<bool> isOnline,
+      Value<int?> lastMessageId,
+      Value<String?> lastMessageContent,
+      Value<DateTime?> lastMessageAt,
+      Value<int> unreadCount,
+      Value<DateTime?> apiUpdatedAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$EnhancedConversationTableTableFilterComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isOnline => $composableBuilder(
+    column: $table.isOnline,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EnhancedConversationTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isOnline => $composableBuilder(
+    column: $table.isOnline,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EnhancedConversationTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $EnhancedConversationTableTable> {
+  $$EnhancedConversationTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserId => $composableBuilder(
+    column: $table.otherUserId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserName => $composableBuilder(
+    column: $table.otherUserName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserEmail => $composableBuilder(
+    column: $table.otherUserEmail,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get otherUserAvatar => $composableBuilder(
+    column: $table.otherUserAvatar,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isOnline =>
+      $composableBuilder(column: $table.isOnline, builder: (column) => column);
+
+  GeneratedColumn<int> get lastMessageId => $composableBuilder(
+    column: $table.lastMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastMessageContent => $composableBuilder(
+    column: $table.lastMessageContent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastMessageAt => $composableBuilder(
+    column: $table.lastMessageAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get unreadCount => $composableBuilder(
+    column: $table.unreadCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get apiUpdatedAt => $composableBuilder(
+    column: $table.apiUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$EnhancedConversationTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $EnhancedConversationTableTable,
+          EnhancedConversationData,
+          $$EnhancedConversationTableTableFilterComposer,
+          $$EnhancedConversationTableTableOrderingComposer,
+          $$EnhancedConversationTableTableAnnotationComposer,
+          $$EnhancedConversationTableTableCreateCompanionBuilder,
+          $$EnhancedConversationTableTableUpdateCompanionBuilder,
+          (
+            EnhancedConversationData,
+            BaseReferences<
+              _$AppDataBase,
+              $EnhancedConversationTableTable,
+              EnhancedConversationData
+            >,
+          ),
+          EnhancedConversationData,
+          PrefetchHooks Function()
+        > {
+  $$EnhancedConversationTableTableTableManager(
+    _$AppDataBase db,
+    $EnhancedConversationTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EnhancedConversationTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$EnhancedConversationTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$EnhancedConversationTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> conversationId = const Value.absent(),
+                Value<String> otherUserId = const Value.absent(),
+                Value<String> otherUserName = const Value.absent(),
+                Value<String?> otherUserEmail = const Value.absent(),
+                Value<String?> otherUserAvatar = const Value.absent(),
+                Value<bool> isOnline = const Value.absent(),
+                Value<int?> lastMessageId = const Value.absent(),
+                Value<String?> lastMessageContent = const Value.absent(),
+                Value<DateTime?> lastMessageAt = const Value.absent(),
+                Value<int> unreadCount = const Value.absent(),
+                Value<DateTime?> apiUpdatedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => EnhancedConversationTableCompanion(
+                conversationId: conversationId,
+                otherUserId: otherUserId,
+                otherUserName: otherUserName,
+                otherUserEmail: otherUserEmail,
+                otherUserAvatar: otherUserAvatar,
+                isOnline: isOnline,
+                lastMessageId: lastMessageId,
+                lastMessageContent: lastMessageContent,
+                lastMessageAt: lastMessageAt,
+                unreadCount: unreadCount,
+                apiUpdatedAt: apiUpdatedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String conversationId,
+                required String otherUserId,
+                required String otherUserName,
+                Value<String?> otherUserEmail = const Value.absent(),
+                Value<String?> otherUserAvatar = const Value.absent(),
+                Value<bool> isOnline = const Value.absent(),
+                Value<int?> lastMessageId = const Value.absent(),
+                Value<String?> lastMessageContent = const Value.absent(),
+                Value<DateTime?> lastMessageAt = const Value.absent(),
+                Value<int> unreadCount = const Value.absent(),
+                Value<DateTime?> apiUpdatedAt = const Value.absent(),
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => EnhancedConversationTableCompanion.insert(
+                conversationId: conversationId,
+                otherUserId: otherUserId,
+                otherUserName: otherUserName,
+                otherUserEmail: otherUserEmail,
+                otherUserAvatar: otherUserAvatar,
+                isOnline: isOnline,
+                lastMessageId: lastMessageId,
+                lastMessageContent: lastMessageContent,
+                lastMessageAt: lastMessageAt,
+                unreadCount: unreadCount,
+                apiUpdatedAt: apiUpdatedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EnhancedConversationTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $EnhancedConversationTableTable,
+      EnhancedConversationData,
+      $$EnhancedConversationTableTableFilterComposer,
+      $$EnhancedConversationTableTableOrderingComposer,
+      $$EnhancedConversationTableTableAnnotationComposer,
+      $$EnhancedConversationTableTableCreateCompanionBuilder,
+      $$EnhancedConversationTableTableUpdateCompanionBuilder,
+      (
+        EnhancedConversationData,
+        BaseReferences<
+          _$AppDataBase,
+          $EnhancedConversationTableTable,
+          EnhancedConversationData
+        >,
+      ),
+      EnhancedConversationData,
+      PrefetchHooks Function()
+    >;
+typedef $$EnhancedMessageTableTableCreateCompanionBuilder =
+    EnhancedMessageTableCompanion Function({
+      Value<int> id,
+      Value<int?> apiMessageId,
+      required String conversationId,
+      required String senderId,
+      required String senderName,
+      Value<String?> senderEmail,
+      Value<String?> senderAvatar,
+      required String content,
+      Value<String?> imageUrl,
+      Value<bool> isRead,
+      Value<bool> isEdited,
+      Value<bool> isDeleted,
+      Value<DateTime?> apiCreatedAt,
+      required DateTime sentAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<String> status,
+    });
+typedef $$EnhancedMessageTableTableUpdateCompanionBuilder =
+    EnhancedMessageTableCompanion Function({
+      Value<int> id,
+      Value<int?> apiMessageId,
+      Value<String> conversationId,
+      Value<String> senderId,
+      Value<String> senderName,
+      Value<String?> senderEmail,
+      Value<String?> senderAvatar,
+      Value<String> content,
+      Value<String?> imageUrl,
+      Value<bool> isRead,
+      Value<bool> isEdited,
+      Value<bool> isDeleted,
+      Value<DateTime?> apiCreatedAt,
+      Value<DateTime> sentAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<String> status,
+    });
+
+class $$EnhancedMessageTableTableFilterComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderId => $composableBuilder(
+    column: $table.senderId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isEdited => $composableBuilder(
+    column: $table.isEdited,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EnhancedMessageTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderId => $composableBuilder(
+    column: $table.senderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isEdited => $composableBuilder(
+    column: $table.isEdited,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get sentAt => $composableBuilder(
+    column: $table.sentAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EnhancedMessageTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $EnhancedMessageTableTable> {
+  $$EnhancedMessageTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get apiMessageId => $composableBuilder(
+    column: $table.apiMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderId =>
+      $composableBuilder(column: $table.senderId, builder: (column) => column);
+
+  GeneratedColumn<String> get senderName => $composableBuilder(
+    column: $table.senderName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderEmail => $composableBuilder(
+    column: $table.senderEmail,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get senderAvatar => $composableBuilder(
+    column: $table.senderAvatar,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<bool> get isEdited =>
+      $composableBuilder(column: $table.isEdited, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get apiCreatedAt => $composableBuilder(
+    column: $table.apiCreatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get sentAt =>
+      $composableBuilder(column: $table.sentAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+}
+
+class $$EnhancedMessageTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $EnhancedMessageTableTable,
+          EnhancedMessageData,
+          $$EnhancedMessageTableTableFilterComposer,
+          $$EnhancedMessageTableTableOrderingComposer,
+          $$EnhancedMessageTableTableAnnotationComposer,
+          $$EnhancedMessageTableTableCreateCompanionBuilder,
+          $$EnhancedMessageTableTableUpdateCompanionBuilder,
+          (
+            EnhancedMessageData,
+            BaseReferences<
+              _$AppDataBase,
+              $EnhancedMessageTableTable,
+              EnhancedMessageData
+            >,
+          ),
+          EnhancedMessageData,
+          PrefetchHooks Function()
+        > {
+  $$EnhancedMessageTableTableTableManager(
+    _$AppDataBase db,
+    $EnhancedMessageTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EnhancedMessageTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EnhancedMessageTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$EnhancedMessageTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> apiMessageId = const Value.absent(),
+                Value<String> conversationId = const Value.absent(),
+                Value<String> senderId = const Value.absent(),
+                Value<String> senderName = const Value.absent(),
+                Value<String?> senderEmail = const Value.absent(),
+                Value<String?> senderAvatar = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> isEdited = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime?> apiCreatedAt = const Value.absent(),
+                Value<DateTime> sentAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+              }) => EnhancedMessageTableCompanion(
+                id: id,
+                apiMessageId: apiMessageId,
+                conversationId: conversationId,
+                senderId: senderId,
+                senderName: senderName,
+                senderEmail: senderEmail,
+                senderAvatar: senderAvatar,
+                content: content,
+                imageUrl: imageUrl,
+                isRead: isRead,
+                isEdited: isEdited,
+                isDeleted: isDeleted,
+                apiCreatedAt: apiCreatedAt,
+                sentAt: sentAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                status: status,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> apiMessageId = const Value.absent(),
+                required String conversationId,
+                required String senderId,
+                required String senderName,
+                Value<String?> senderEmail = const Value.absent(),
+                Value<String?> senderAvatar = const Value.absent(),
+                required String content,
+                Value<String?> imageUrl = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> isEdited = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime?> apiCreatedAt = const Value.absent(),
+                required DateTime sentAt,
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<String> status = const Value.absent(),
+              }) => EnhancedMessageTableCompanion.insert(
+                id: id,
+                apiMessageId: apiMessageId,
+                conversationId: conversationId,
+                senderId: senderId,
+                senderName: senderName,
+                senderEmail: senderEmail,
+                senderAvatar: senderAvatar,
+                content: content,
+                imageUrl: imageUrl,
+                isRead: isRead,
+                isEdited: isEdited,
+                isDeleted: isDeleted,
+                apiCreatedAt: apiCreatedAt,
+                sentAt: sentAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                status: status,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EnhancedMessageTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $EnhancedMessageTableTable,
+      EnhancedMessageData,
+      $$EnhancedMessageTableTableFilterComposer,
+      $$EnhancedMessageTableTableOrderingComposer,
+      $$EnhancedMessageTableTableAnnotationComposer,
+      $$EnhancedMessageTableTableCreateCompanionBuilder,
+      $$EnhancedMessageTableTableUpdateCompanionBuilder,
+      (
+        EnhancedMessageData,
+        BaseReferences<
+          _$AppDataBase,
+          $EnhancedMessageTableTable,
+          EnhancedMessageData
+        >,
+      ),
+      EnhancedMessageData,
+      PrefetchHooks Function()
+    >;
+typedef $$MessageAttachmentsTableTableCreateCompanionBuilder =
+    MessageAttachmentsTableCompanion Function({
+      Value<int> id,
+      required int messageId,
+      required String attachmentType,
+      required String url,
+      Value<String?> fileName,
+      Value<int?> fileSize,
+      Value<String?> mimeType,
+      required DateTime createdAt,
+    });
+typedef $$MessageAttachmentsTableTableUpdateCompanionBuilder =
+    MessageAttachmentsTableCompanion Function({
+      Value<int> id,
+      Value<int> messageId,
+      Value<String> attachmentType,
+      Value<String> url,
+      Value<String?> fileName,
+      Value<int?> fileSize,
+      Value<String?> mimeType,
+      Value<DateTime> createdAt,
+    });
+
+class $$MessageAttachmentsTableTableFilterComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get messageId => $composableBuilder(
+    column: $table.messageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fileName => $composableBuilder(
+    column: $table.fileName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fileSize => $composableBuilder(
+    column: $table.fileSize,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MessageAttachmentsTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get messageId => $composableBuilder(
+    column: $table.messageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fileName => $composableBuilder(
+    column: $table.fileName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fileSize => $composableBuilder(
+    column: $table.fileSize,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mimeType => $composableBuilder(
+    column: $table.mimeType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MessageAttachmentsTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MessageAttachmentsTableTable> {
+  $$MessageAttachmentsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get messageId =>
+      $composableBuilder(column: $table.messageId, builder: (column) => column);
+
+  GeneratedColumn<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get fileName =>
+      $composableBuilder(column: $table.fileName, builder: (column) => column);
+
+  GeneratedColumn<int> get fileSize =>
+      $composableBuilder(column: $table.fileSize, builder: (column) => column);
+
+  GeneratedColumn<String> get mimeType =>
+      $composableBuilder(column: $table.mimeType, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$MessageAttachmentsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MessageAttachmentsTableTable,
+          MessageAttachmentData,
+          $$MessageAttachmentsTableTableFilterComposer,
+          $$MessageAttachmentsTableTableOrderingComposer,
+          $$MessageAttachmentsTableTableAnnotationComposer,
+          $$MessageAttachmentsTableTableCreateCompanionBuilder,
+          $$MessageAttachmentsTableTableUpdateCompanionBuilder,
+          (
+            MessageAttachmentData,
+            BaseReferences<
+              _$AppDataBase,
+              $MessageAttachmentsTableTable,
+              MessageAttachmentData
+            >,
+          ),
+          MessageAttachmentData,
+          PrefetchHooks Function()
+        > {
+  $$MessageAttachmentsTableTableTableManager(
+    _$AppDataBase db,
+    $MessageAttachmentsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MessageAttachmentsTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$MessageAttachmentsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MessageAttachmentsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> messageId = const Value.absent(),
+                Value<String> attachmentType = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<String?> fileName = const Value.absent(),
+                Value<int?> fileSize = const Value.absent(),
+                Value<String?> mimeType = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => MessageAttachmentsTableCompanion(
+                id: id,
+                messageId: messageId,
+                attachmentType: attachmentType,
+                url: url,
+                fileName: fileName,
+                fileSize: fileSize,
+                mimeType: mimeType,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int messageId,
+                required String attachmentType,
+                required String url,
+                Value<String?> fileName = const Value.absent(),
+                Value<int?> fileSize = const Value.absent(),
+                Value<String?> mimeType = const Value.absent(),
+                required DateTime createdAt,
+              }) => MessageAttachmentsTableCompanion.insert(
+                id: id,
+                messageId: messageId,
+                attachmentType: attachmentType,
+                url: url,
+                fileName: fileName,
+                fileSize: fileSize,
+                mimeType: mimeType,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MessageAttachmentsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MessageAttachmentsTableTable,
+      MessageAttachmentData,
+      $$MessageAttachmentsTableTableFilterComposer,
+      $$MessageAttachmentsTableTableOrderingComposer,
+      $$MessageAttachmentsTableTableAnnotationComposer,
+      $$MessageAttachmentsTableTableCreateCompanionBuilder,
+      $$MessageAttachmentsTableTableUpdateCompanionBuilder,
+      (
+        MessageAttachmentData,
+        BaseReferences<
+          _$AppDataBase,
+          $MessageAttachmentsTableTable,
+          MessageAttachmentData
+        >,
+      ),
+      MessageAttachmentData,
+      PrefetchHooks Function()
+    >;
+typedef $$DraftMessagesTableTableCreateCompanionBuilder =
+    DraftMessagesTableCompanion Function({
+      required String conversationId,
+      required String content,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$DraftMessagesTableTableUpdateCompanionBuilder =
+    DraftMessagesTableCompanion Function({
+      Value<String> conversationId,
+      Value<String> content,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$DraftMessagesTableTableFilterComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DraftMessagesTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DraftMessagesTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $DraftMessagesTableTable> {
+  $$DraftMessagesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$DraftMessagesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $DraftMessagesTableTable,
+          DraftMessageData,
+          $$DraftMessagesTableTableFilterComposer,
+          $$DraftMessagesTableTableOrderingComposer,
+          $$DraftMessagesTableTableAnnotationComposer,
+          $$DraftMessagesTableTableCreateCompanionBuilder,
+          $$DraftMessagesTableTableUpdateCompanionBuilder,
+          (
+            DraftMessageData,
+            BaseReferences<
+              _$AppDataBase,
+              $DraftMessagesTableTable,
+              DraftMessageData
+            >,
+          ),
+          DraftMessageData,
+          PrefetchHooks Function()
+        > {
+  $$DraftMessagesTableTableTableManager(
+    _$AppDataBase db,
+    $DraftMessagesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DraftMessagesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DraftMessagesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DraftMessagesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> conversationId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DraftMessagesTableCompanion(
+                conversationId: conversationId,
+                content: content,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String conversationId,
+                required String content,
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => DraftMessagesTableCompanion.insert(
+                conversationId: conversationId,
+                content: content,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DraftMessagesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $DraftMessagesTableTable,
+      DraftMessageData,
+      $$DraftMessagesTableTableFilterComposer,
+      $$DraftMessagesTableTableOrderingComposer,
+      $$DraftMessagesTableTableAnnotationComposer,
+      $$DraftMessagesTableTableCreateCompanionBuilder,
+      $$DraftMessagesTableTableUpdateCompanionBuilder,
+      (
+        DraftMessageData,
+        BaseReferences<
+          _$AppDataBase,
+          $DraftMessagesTableTable,
+          DraftMessageData
+        >,
+      ),
+      DraftMessageData,
+      PrefetchHooks Function()
+    >;
+typedef $$WebSocketConnectionTableTableCreateCompanionBuilder =
+    WebSocketConnectionTableCompanion Function({
+      required String connectionId,
+      required String state,
+      Value<DateTime?> lastConnectedAt,
+      required DateTime updatedAt,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$WebSocketConnectionTableTableUpdateCompanionBuilder =
+    WebSocketConnectionTableCompanion Function({
+      Value<String> connectionId,
+      Value<String> state,
+      Value<DateTime?> lastConnectedAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$WebSocketConnectionTableTableFilterComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WebSocketConnectionTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WebSocketConnectionTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $WebSocketConnectionTableTable> {
+  $$WebSocketConnectionTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get connectionId => $composableBuilder(
+    column: $table.connectionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastConnectedAt => $composableBuilder(
+    column: $table.lastConnectedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$WebSocketConnectionTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $WebSocketConnectionTableTable,
+          WebSocketConnectionData,
+          $$WebSocketConnectionTableTableFilterComposer,
+          $$WebSocketConnectionTableTableOrderingComposer,
+          $$WebSocketConnectionTableTableAnnotationComposer,
+          $$WebSocketConnectionTableTableCreateCompanionBuilder,
+          $$WebSocketConnectionTableTableUpdateCompanionBuilder,
+          (
+            WebSocketConnectionData,
+            BaseReferences<
+              _$AppDataBase,
+              $WebSocketConnectionTableTable,
+              WebSocketConnectionData
+            >,
+          ),
+          WebSocketConnectionData,
+          PrefetchHooks Function()
+        > {
+  $$WebSocketConnectionTableTableTableManager(
+    _$AppDataBase db,
+    $WebSocketConnectionTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WebSocketConnectionTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$WebSocketConnectionTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$WebSocketConnectionTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> connectionId = const Value.absent(),
+                Value<String> state = const Value.absent(),
+                Value<DateTime?> lastConnectedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WebSocketConnectionTableCompanion(
+                connectionId: connectionId,
+                state: state,
+                lastConnectedAt: lastConnectedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String connectionId,
+                required String state,
+                Value<DateTime?> lastConnectedAt = const Value.absent(),
+                required DateTime updatedAt,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => WebSocketConnectionTableCompanion.insert(
+                connectionId: connectionId,
+                state: state,
+                lastConnectedAt: lastConnectedAt,
+                updatedAt: updatedAt,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WebSocketConnectionTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $WebSocketConnectionTableTable,
+      WebSocketConnectionData,
+      $$WebSocketConnectionTableTableFilterComposer,
+      $$WebSocketConnectionTableTableOrderingComposer,
+      $$WebSocketConnectionTableTableAnnotationComposer,
+      $$WebSocketConnectionTableTableCreateCompanionBuilder,
+      $$WebSocketConnectionTableTableUpdateCompanionBuilder,
+      (
+        WebSocketConnectionData,
+        BaseReferences<
+          _$AppDataBase,
+          $WebSocketConnectionTableTable,
+          WebSocketConnectionData
+        >,
+      ),
+      WebSocketConnectionData,
+      PrefetchHooks Function()
+    >;
+typedef $$OfflineMessageQueueTableTableCreateCompanionBuilder =
+    OfflineMessageQueueTableCompanion Function({
+      Value<int> id,
+      required String conversationId,
+      required String content,
+      required String tempMessageId,
+      Value<String?> attachmentPath,
+      Value<int> retryCount,
+      required DateTime createdAt,
+      Value<DateTime?> lastRetryAt,
+    });
+typedef $$OfflineMessageQueueTableTableUpdateCompanionBuilder =
+    OfflineMessageQueueTableCompanion Function({
+      Value<int> id,
+      Value<String> conversationId,
+      Value<String> content,
+      Value<String> tempMessageId,
+      Value<String?> attachmentPath,
+      Value<int> retryCount,
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastRetryAt,
+    });
+
+class $$OfflineMessageQueueTableTableFilterComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$OfflineMessageQueueTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$OfflineMessageQueueTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $OfflineMessageQueueTableTable> {
+  $$OfflineMessageQueueTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+    column: $table.conversationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get tempMessageId => $composableBuilder(
+    column: $table.tempMessageId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get attachmentPath => $composableBuilder(
+    column: $table.attachmentPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get retryCount => $composableBuilder(
+    column: $table.retryCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastRetryAt => $composableBuilder(
+    column: $table.lastRetryAt,
+    builder: (column) => column,
+  );
+}
+
+class $$OfflineMessageQueueTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $OfflineMessageQueueTableTable,
+          OfflineMessageQueueData,
+          $$OfflineMessageQueueTableTableFilterComposer,
+          $$OfflineMessageQueueTableTableOrderingComposer,
+          $$OfflineMessageQueueTableTableAnnotationComposer,
+          $$OfflineMessageQueueTableTableCreateCompanionBuilder,
+          $$OfflineMessageQueueTableTableUpdateCompanionBuilder,
+          (
+            OfflineMessageQueueData,
+            BaseReferences<
+              _$AppDataBase,
+              $OfflineMessageQueueTableTable,
+              OfflineMessageQueueData
+            >,
+          ),
+          OfflineMessageQueueData,
+          PrefetchHooks Function()
+        > {
+  $$OfflineMessageQueueTableTableTableManager(
+    _$AppDataBase db,
+    $OfflineMessageQueueTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OfflineMessageQueueTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$OfflineMessageQueueTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$OfflineMessageQueueTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> conversationId = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<String> tempMessageId = const Value.absent(),
+                Value<String?> attachmentPath = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastRetryAt = const Value.absent(),
+              }) => OfflineMessageQueueTableCompanion(
+                id: id,
+                conversationId: conversationId,
+                content: content,
+                tempMessageId: tempMessageId,
+                attachmentPath: attachmentPath,
+                retryCount: retryCount,
+                createdAt: createdAt,
+                lastRetryAt: lastRetryAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String conversationId,
+                required String content,
+                required String tempMessageId,
+                Value<String?> attachmentPath = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> lastRetryAt = const Value.absent(),
+              }) => OfflineMessageQueueTableCompanion.insert(
+                id: id,
+                conversationId: conversationId,
+                content: content,
+                tempMessageId: tempMessageId,
+                attachmentPath: attachmentPath,
+                retryCount: retryCount,
+                createdAt: createdAt,
+                lastRetryAt: lastRetryAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$OfflineMessageQueueTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $OfflineMessageQueueTableTable,
+      OfflineMessageQueueData,
+      $$OfflineMessageQueueTableTableFilterComposer,
+      $$OfflineMessageQueueTableTableOrderingComposer,
+      $$OfflineMessageQueueTableTableAnnotationComposer,
+      $$OfflineMessageQueueTableTableCreateCompanionBuilder,
+      $$OfflineMessageQueueTableTableUpdateCompanionBuilder,
+      (
+        OfflineMessageQueueData,
+        BaseReferences<
+          _$AppDataBase,
+          $OfflineMessageQueueTableTable,
+          OfflineMessageQueueData
+        >,
+      ),
+      OfflineMessageQueueData,
+      PrefetchHooks Function()
     >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
@@ -25123,6 +30508,30 @@ class $AppDataBaseManager {
       $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
   $$PostReplyTableTableTableManager get postReplyTable =>
       $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
+  $$EnhancedConversationTableTableTableManager get enhancedConversationTable =>
+      $$EnhancedConversationTableTableTableManager(
+        _db,
+        _db.enhancedConversationTable,
+      );
+  $$EnhancedMessageTableTableTableManager get enhancedMessageTable =>
+      $$EnhancedMessageTableTableTableManager(_db, _db.enhancedMessageTable);
+  $$MessageAttachmentsTableTableTableManager get messageAttachmentsTable =>
+      $$MessageAttachmentsTableTableTableManager(
+        _db,
+        _db.messageAttachmentsTable,
+      );
+  $$DraftMessagesTableTableTableManager get draftMessagesTable =>
+      $$DraftMessagesTableTableTableManager(_db, _db.draftMessagesTable);
+  $$WebSocketConnectionTableTableTableManager get webSocketConnectionTable =>
+      $$WebSocketConnectionTableTableTableManager(
+        _db,
+        _db.webSocketConnectionTable,
+      );
+  $$OfflineMessageQueueTableTableTableManager get offlineMessageQueueTable =>
+      $$OfflineMessageQueueTableTableTableManager(
+        _db,
+        _db.offlineMessageQueueTable,
+      );
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);

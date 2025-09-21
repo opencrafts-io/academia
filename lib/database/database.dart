@@ -17,6 +17,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../features/chirp/data/data.dart';
 import '../features/communities/data/data.dart';
+import '../features/chirp/data/models/conversations/enhanced_messaging_tables.dart';
 
 part 'database.g.dart';
 
@@ -35,6 +36,14 @@ part 'database.g.dart';
     PostTable,
     PostReplyTable,
     ChirpUserTable,
+    
+    // Enhanced Messaging
+    EnhancedConversationTable,
+    EnhancedMessageTable,
+    MessageAttachmentsTable,
+    DraftMessagesTable,
+    WebSocketConnectionTable,
+    OfflineMessageQueueTable,
     Todo,
     EventTable,
     AttendeeTable,
@@ -67,7 +76,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -83,6 +92,15 @@ class AppDataBase extends _$AppDataBase {
           await m.deleteTable('conversation_table');
           // Then recreate the table with the new foreign key
           await m.createTable(conversationTable);
+        } else if (from < 12 && to >= 12) {
+          // Force creation of enhanced messaging tables
+          await m.createTable(enhancedMessageTable);
+          await m.createTable(draftMessagesTable);
+          await m.createTable(enhancedConversationTable);
+          await m.createTable(messageAttachmentsTable);
+          await m.createTable(webSocketConnectionTable);
+          await m.createTable(offlineMessageQueueTable);
+          _logger.i("Created enhanced messaging tables in migration from $from to $to");
         } else if (to > from) {
           m.createAll();
           _logger.i("Migrated from version $from to version $to");
