@@ -53,13 +53,24 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
       MagnetHomeScreenAction(
         title: "Your grades",
         subtitle: "Check your grades",
-        ontap: (BuildContext context, int institutionID) {},
+        ontap: (BuildContext context, int institutionID) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Your institution does not support showing this information yet",
+              ),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        },
         assetImagePath: "assets/illustrations/grades.jpg",
       ),
       MagnetHomeScreenAction(
         title: "Fees statements",
         subtitle: "Your finances simplified",
-        ontap: (BuildContext context, int institutionID) {},
+        ontap: (BuildContext context, int institutionID) {
+          MagnetFeesRoute(institutionID: institutionID).push(context);
+        },
         assetImagePath: "assets/illustrations/school-fees.jpg",
       ),
     ];

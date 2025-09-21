@@ -171,13 +171,30 @@ class MagnetRepositoryImpl implements MagnetRepository {
   }
 
   @override
-  Future<Either<MagnetFailure, List<FinancialTransaction>>>
+  Future<Either<Failure, List<MagnetFinancialTransaction>>>
   fetchStudentFeeStatements(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,
     required String userID,
-  }) {
-    return magnetPortalRepositoryInstance.fetchStudentFeeStatements();
+  }) async {
+    final result = await magnetPortalRepositoryInstance
+        .fetchStudentFeeStatements();
+    return result.fold(
+      (magnetFailure) => left(
+        NetworkFailure(
+          message: magnetFailure.message,
+          error: magnetFailure.error!,
+        ),
+      ),
+      (rawTransactions) => right(
+        rawTransactions
+            .map(
+              (trn) =>
+                  trn.toEntity(userID: userID, institutionID: institutionID),
+            )
+            .toList(),
+      ),
+    );
   }
 
   @override

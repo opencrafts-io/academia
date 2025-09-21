@@ -11,30 +11,35 @@ part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
-// Main pages
-@TypedShellRoute<MainLayoutShellRoute>(
-  routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<HomeRoute>(path: '/'),
-    TypedGoRoute<CalendarRoute>(
-      path: '/calendar',
+@TypedStatefulShellRoute<LayoutShellRoute>(
+  branches: [
+    TypedStatefulShellBranch(routes: [TypedGoRoute<HomeRoute>(path: '/')]),
+    TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
-        TypedGoRoute<AgendaItemViewRoute>(path: "item/:id"),
+        TypedGoRoute<CalendarRoute>(
+          path: '/calendar',
+          routes: [
+            TypedGoRoute<CreateAgendaEventRoute>(path: 'create'),
+            TypedGoRoute<AgendaItemViewRoute>(path: 'item/:id'),
+          ],
+        ),
       ],
     ),
-    TypedGoRoute<EssentialsRoute>(path: '/essentials'),
-    TypedGoRoute<MeteorRoute>(path: '/meteor'),
+    TypedStatefulShellBranch(
+      routes: [TypedGoRoute<EssentialsRoute>(path: '/essentials')],
+    ),
   ],
 )
-class MainLayoutShellRoute extends ShellRouteData {
-  const MainLayoutShellRoute();
-
-  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorKey;
+class LayoutShellRoute extends StatefulShellRouteData {
+  const LayoutShellRoute();
 
   @override
-  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    // In the navigator, we get the current tab widget.
-    return LayoutPage(child: navigator);
+  Widget builder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return LayoutPage(navigationShell: navigationShell);
   }
 }
 
@@ -108,12 +113,12 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
   }
 }
 
-class MeteorRoute extends GoRouteData with _$MeteorRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("MeteorRoute")));
-  }
-}
+// class MeteorRoute extends GoRouteData with _$MeteorRoute {
+//   @override
+//   Widget build(BuildContext context, GoRouterState state) {
+//     return Scaffold(body: Center(child: Text("MeteorRoute")));
+//   }
+// }
 
 @TypedGoRoute<FeedRoute>(path: "/feed")
 class FeedRoute extends GoRouteData with _$FeedRoute {
@@ -279,6 +284,7 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
       routes: [
         TypedGoRoute<MagnetProfileRoute>(path: "profile"),
         TypedGoRoute<MagnetCoursesRoute>(path: "courses"),
+        TypedGoRoute<MagnetFeesRoute>(path: "fees"),
       ],
     ),
   ],
@@ -399,6 +405,15 @@ class MagnetCoursesRoute extends GoRouteData with _$MagnetCoursesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return MagnetCoursesScreen(institutionID: institutionID);
+  }
+}
+
+class MagnetFeesRoute extends GoRouteData with _$MagnetFeesRoute {
+  final int institutionID;
+  MagnetFeesRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetFeesTransactionsPage(institutionID: institutionID);
   }
 }
 

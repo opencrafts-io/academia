@@ -8,6 +8,7 @@ import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -502,17 +503,13 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // Firebase Remote Config
+  sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
   sl.registerFactory<RemoteConfigRemoteDatasource>(
-    () => RemoteConfigRemoteDatasource(),
+    () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
   );
-  sl.registerFactory<RemoteConfigLocalDatasource>(
-    () => RemoteConfigLocalDatasource(),
-  );
-
   sl.registerFactory<RemoteConfigRepository>(
     () => RemoteConfigRepositoryImpl(
       remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-      localDatasource: sl.get<RemoteConfigLocalDatasource>(),
     ),
   );
 
@@ -540,16 +537,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetAllParametersUsecase>(
     () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
   );
-  sl.registerFactory<SetDefaultsUsecase>(
-    () => SetDefaultsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetSettingsUsecase>(
-    () => GetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<SetSettingsUsecase>(
-    () => SetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-
   sl.registerFactory<RemoteConfigBloc>(
     () => RemoteConfigBloc(
       initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
@@ -560,9 +547,6 @@ Future<void> init(FlavorConfig flavor) async {
       getDoubleUsecase: sl.get<GetDoubleUsecase>(),
       getJsonUsecase: sl.get<GetJsonUsecase>(),
       getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-      setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
-      getSettingsUsecase: sl.get<GetSettingsUsecase>(),
-      setSettingsUsecase: sl.get<SetSettingsUsecase>(),
     ),
   );
 
@@ -673,6 +657,11 @@ Future<void> init(FlavorConfig flavor) async {
       magnetRepository: sl<MagnetRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<FetchMagnetFinancialFeesStatementsUsecase>(
+    () => FetchMagnetFinancialFeesStatementsUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
 
   // -- Bloc
   sl.registerFactory<MagnetBloc>(
@@ -685,6 +674,7 @@ Future<void> init(FlavorConfig flavor) async {
       fetchMagnetStudentTimetableUsecase: sl(),
       deleteMagentCourseByCourseCodeUsecase: sl(),
       getCachedMagnetStudentTimetableUsecase: sl(),
+      fetchMagnetFinancialFeesStatementsUsecase: sl(),
     ),
   );
 

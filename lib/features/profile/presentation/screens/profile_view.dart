@@ -17,7 +17,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late AdBloc adBloc = BlocProvider.of<AdBloc>(context);
   @override
   void initState() {
     super.initState();
@@ -78,10 +77,6 @@ class _ProfileViewState extends State<ProfileView> {
                         );
                       },
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Symbols.edit_rounded),
-                    onPressed: () {},
                   ),
                 ],
               ),
@@ -206,15 +201,6 @@ class _ProfileViewState extends State<ProfileView> {
                               "Time since you joined Academia",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: BannerAdWidget(
-                            adUnitId: "ca-app-pub-3940256099942544/6300978111",
-                            adSize: AdSize(width: 320, height: 50),
-                            height: 50,
                           ),
                         ),
 

@@ -79,3 +79,13 @@ class MagnetTimeTableLoadedState extends MagnetState {
   @override
   bool? get stringify => true;
 }
+
+// Fees statements
+class MagnetFeesTransactionsLoadedState extends MagnetState {
+  final List<MagnetFinancialTransaction> transactions;
+  MagnetFeesTransactionsLoadedState({required this.transactions});
+  @override
+  List<Object?> get props => [transactions];
+  @override
+  bool? get stringify => true;
+}

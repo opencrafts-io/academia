@@ -6,3 +6,4 @@ export 'fetch_magnet_student_profile_usecase.dart';
 export 'fetch_magnet_student_timetable_usecase.dart';
 export 'get_cached_magnet_student_timetable_usecase.dart';
 export 'delete_magent_course_by_course_code_usecase.dart';
+export 'fetch_magnet_financial_fees_statements_usecase.dart';
