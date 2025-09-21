@@ -1,46 +1,45 @@
-import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/constants.dart';
-import 'package:academia/features/features.dart';
-import 'package:academia/config/router/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:vibration/vibration.dart';
 
 class LayoutPage extends StatefulWidget {
-  const LayoutPage({super.key, required this.child});
+  const LayoutPage({super.key, required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
 
-  final Widget child;
   @override
   State<LayoutPage> createState() => _LayoutPageState();
 }
 
 class _LayoutPageState extends State<LayoutPage> {
-  int selectedIndex = 0;
+  // int selectedIndex = 0;
 
   void _onNavigationSelected(int index) async {
     if (await Vibration.hasVibrator()) {
       Vibration.vibrate(duration: 50);
     }
-
-    if (!mounted) return;
-    switch (index) {
-      case 0:
-        HomeRoute().go(context);
-        break;
-      case 1:
-        CalendarRoute().go(context);
-        break;
-      // case 2:
-      //   MeteorRoute().go(context);
-      //   break;
-      case 2:
-        EssentialsRoute().go(context);
-        break;
-      // case 3:
-      //   FeedRoute().go(context);
-      //   break;
-    }
-    selectedIndex = index;
+    widget.navigationShell.goBranch(index);
+    //
+    // if (!mounted) return;
+    // switch (index) {
+    //   case 0:
+    //     HomeRoute().go(context);
+    //     break;
+    //   case 1:
+    //     CalendarRoute().go(context);
+    //     break;
+    //   // case 2:
+    //   //   MeteorRoute().go(context);
+    //   //   break;
+    //   case 2:
+    //     EssentialsRoute().go(context);
+    //     break;
+    //   // case 3:
+    //   //   FeedRoute().go(context);
+    //   //   break;
+    // }
+    // selectedIndex = index;
   }
 
   @override
@@ -78,17 +77,17 @@ class _LayoutPageState extends State<LayoutPage> {
                     label: Text("Essentials"),
                   ),
                 ],
-                selectedIndex: selectedIndex,
+                selectedIndex: widget.navigationShell.currentIndex,
               ),
             ),
-            Expanded(flex: 5, child: widget.child),
+            Expanded(flex: 5, child: widget.navigationShell),
           ],
         ),
         bottomNavigationBar: !ResponsiveBreakPoints.isMobile(context)
             ? null
             : NavigationBar(
                 onDestinationSelected: _onNavigationSelected,
-                selectedIndex: selectedIndex,
+                selectedIndex: widget.navigationShell.currentIndex,
                 destinations: [
                   NavigationDestination(
                     icon: Icon(Symbols.house),
@@ -100,11 +99,11 @@ class _LayoutPageState extends State<LayoutPage> {
                     selectedIcon: Icon(Symbols.calendar_today),
                     label: "Agenda",
                   ),
+
                   // NavigationDestination(
                   //   icon: Icon(Symbols.digital_wellbeing),
                   //   label: "Well Being",
                   // ),
-
                   NavigationDestination(
                     icon: Icon(Symbols.grid_view),
                     selectedIcon: Icon(Symbols.grid_view),
