@@ -49,7 +49,7 @@ abstract class MagnetRepository {
     required int institutionID,
     required String userID,
   });
-  Future<Either<MagnetFailure, List<FinancialTransaction>>>
+  Future<Either<Failure, List<MagnetFinancialTransaction>>>
   fetchStudentFeeStatements(
     MagnetPortalRepository magnetPortalRepositoryInstance, {
     required int institutionID,

@@ -7,7 +7,7 @@ part of 'routes.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-  $mainLayoutShellRoute,
+  $layoutShellRoute,
   $feedRoute,
   $conversationListRoute,
   $chatRoute,
@@ -24,40 +24,48 @@ List<RouteBase> get $appRoutes => [
   $createCommunitiesRoute,
 ];
 
-RouteBase get $mainLayoutShellRoute => ShellRouteData.$route(
-  navigatorKey: MainLayoutShellRoute.$navigatorKey,
-  factory: $MainLayoutShellRouteExtension._fromState,
-  routes: [
-    GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState),
-    GoRouteData.$route(
-      path: '/calendar',
-
-      factory: _$CalendarRoute._fromState,
+RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
+  factory: $LayoutShellRouteExtension._fromState,
+  branches: [
+    StatefulShellBranchData.$branch(
+      routes: [GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState)],
+    ),
+    StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
-          path: 'create',
+          path: '/calendar',
 
-          factory: _$CreateAgendaEventRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'item/:id',
+          factory: _$CalendarRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'create',
 
-          factory: _$AgendaItemViewRoute._fromState,
+              factory: _$CreateAgendaEventRoute._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'item/:id',
+
+              factory: _$AgendaItemViewRoute._fromState,
+            ),
+          ],
         ),
       ],
     ),
-    GoRouteData.$route(
-      path: '/essentials',
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/essentials',
 
-      factory: _$EssentialsRoute._fromState,
+          factory: _$EssentialsRoute._fromState,
+        ),
+      ],
     ),
-    GoRouteData.$route(path: '/meteor', factory: _$MeteorRoute._fromState),
   ],
 );
 
-extension $MainLayoutShellRouteExtension on MainLayoutShellRoute {
-  static MainLayoutShellRoute _fromState(GoRouterState state) =>
-      const MainLayoutShellRoute();
+extension $LayoutShellRouteExtension on LayoutShellRoute {
+  static LayoutShellRoute _fromState(GoRouterState state) =>
+      const LayoutShellRoute();
 }
 
 mixin _$HomeRoute on GoRouteData {
@@ -151,26 +159,6 @@ mixin _$EssentialsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/essentials');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin _$MeteorRoute on GoRouteData {
-  static MeteorRoute _fromState(GoRouterState state) => MeteorRoute();
-
-  @override
-  String get location => GoRouteData.$location('/meteor');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -548,6 +536,7 @@ RouteBase get $magnetRoute => GoRouteData.$route(
 
           factory: _$MagnetCoursesRoute._fromState,
         ),
+        GoRouteData.$route(path: 'fees', factory: _$MagnetFeesRoute._fromState),
       ],
     ),
   ],
@@ -663,6 +652,32 @@ mixin _$MagnetCoursesRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/courses',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$MagnetFeesRoute on GoRouteData {
+  static MagnetFeesRoute _fromState(GoRouterState state) => MagnetFeesRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+  );
+
+  MagnetFeesRoute get _self => this as MagnetFeesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/magnet/${Uri.encodeComponent(_self.institutionID.toString())}/fees',
   );
 
   @override

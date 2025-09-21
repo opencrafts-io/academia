@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.7.1"
+  animated_emoji:
+    dependency: "direct main"
+    description:
+      name: animated_emoji
+      sha256: "2876d590db470baf6e660df125bdbe889eade7df6c0e7d79c56ad2fcbf5af890"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   ansicolor:
     dependency: transitive
     description:

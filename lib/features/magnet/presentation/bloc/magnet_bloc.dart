@@ -20,6 +20,8 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   final GetCachedMagnetStudentTimetableUsecase
   getCachedMagnetStudentTimetableUsecase;
   final FetchMagnetStudentTimetableUsecase fetchMagnetStudentTimetableUsecase;
+  final FetchMagnetFinancialFeesStatementsUsecase
+  fetchMagnetFinancialFeesStatementsUsecase;
 
   final Map<int, MagnetPortalRepository> _magnetInstances = {};
   MagnetBloc({
@@ -31,6 +33,7 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     required this.fetchMagnetStudentTimetableUsecase,
     required this.getCachedMagnetStudentTimetableUsecase,
     required this.deleteMagentCourseByCourseCodeUsecase,
+    required this.fetchMagnetFinancialFeesStatementsUsecase,
   }) : super(MagnetInitialState()) {
     /// Initialize application with the appropriate magnet instance
     /// per institution linked by the institution id
@@ -166,6 +169,31 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
               userID: event.userID,
             ),
           );
+        },
+      );
+    });
+
+    on<FetchMagnetFeeStatementTransactionsEvent>((event, emit) async {
+      emit(MagnetLoadingState());
+
+      if (!_magnetInstances.containsKey(event.institutionID)) {
+        return emit(MagnetNotSupportedState());
+      }
+
+      final magnetInstance = _magnetInstances[event.institutionID]!;
+      final result = await fetchMagnetFinancialFeesStatementsUsecase(
+        FetchMagnetFinancialFeesStatementsUsecaseParams(
+          userID: event.userID,
+          institutionID: event.institutionID,
+          magnetPortalRepository: magnetInstance,
+        ),
+      );
+      result.fold(
+        (error) {
+          emit(MagnetErrorState(error: error.message));
+        },
+        (transactions) {
+          emit(MagnetFeesTransactionsLoadedState(transactions: transactions));
         },
       );
     });
