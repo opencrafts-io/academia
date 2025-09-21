@@ -98,6 +98,7 @@ class _CommunityHomeState extends State<CommunityHome>
             if (hasGuidelines || isCreator || isModerator)
               CommunityAbout(
                 isModerator: isCreator || isModerator,
+                communityId: state.community.id.toString(),
                 // rules: state.community.rules,
               ),
             CommunityMembers(
@@ -123,17 +124,103 @@ class _CommunityHomeState extends State<CommunityHome>
             child: Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                  SliverAppBar(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    foregroundColor: Theme.of(context).colorScheme.onSurface,
-                    expandedHeight: MediaQuery.of(context).size.height * 0.25,
+                  SliverAppBar.large(
+                    expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     pinned: true,
                     floating: false,
                     leading: IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back),
                     ),
-                    title: Text(state.community.name),
+                    // Collapsed title (logo + details row)
+                    title: Row(
+                      children: [
+                        ClipOval(
+                          child: state.community.logoUrl != null
+                              ? CachedNetworkImage(
+                                  imageUrl: state.community.logoUrl!,
+                                  width: 32,
+                                  height: 32,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: SizedBox(
+                                        width: 12,
+                                        height: 12,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.errorContainer,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.error,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onErrorContainer,
+                                        ),
+                                      ),
+                                )
+                              : Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHighest,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.group,
+                                    size: 18,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                state.community.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${state.community.memberCount} members",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
                     actions: [
                       PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
@@ -151,198 +238,204 @@ class _CommunityHomeState extends State<CommunityHome>
                         ],
                       ),
                     ],
+
                     flexibleSpace: FlexibleSpaceBar(
-                      background: Stack(
-                        fit: StackFit.expand,
+                      collapseMode: CollapseMode.parallax,
+                      background: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Banner at the top
                           if (state.community.bannerUrl != null)
                             CachedNetworkImage(
                               imageUrl: state.community.bannerUrl!,
+                              width: double.infinity,
+                              height: MediaQuery.of(context).size.height * 0.18,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.errorContainer,
+                                ).colorScheme.surfaceContainerHighest,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.18,
                                 child: const Center(
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
                               errorWidget: (context, url, error) => Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.18,
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.errorContainer,
-                                child: Icon(
-                                  Icons.broken_image,
-                                  size: 48,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onErrorContainer,
-                                ),
+                                child: const Icon(Icons.broken_image, size: 48),
                               ),
                             )
                           else
                             Container(
+                              width: double.infinity,
+                              height: MediaQuery.of(context).size.height * 0.18,
                               color: Theme.of(
                                 context,
                               ).colorScheme.surfaceContainerHighest,
                               child: const Icon(Icons.image, size: 48),
                             ),
-                          const DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Colors.transparent, Colors.black],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
 
-                  // Profile header under app bar
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipOval(
-                            child: state.community.logoUrl != null
-                                ? CachedNetworkImage(
-                                    imageUrl: state.community.logoUrl!,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Container(
-                                      width: 80,
-                                      height: 80,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainerHighest,
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
+                          // Community details below banner
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipOval(
+                                  child: state.community.logoUrl != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: state.community.logoUrl!,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                                width: 80,
+                                                height: 80,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
+                                                child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                ),
+                                              ),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                                width: 80,
+                                                height: 80,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.errorContainer,
+                                                child: Icon(
+                                                  Icons.error,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onErrorContainer,
+                                                ),
+                                              ),
+                                        )
+                                      : Container(
                                           width: 80,
                                           height: 80,
                                           color: Theme.of(
                                             context,
-                                          ).colorScheme.errorContainer,
+                                          ).colorScheme.surfaceContainerHighest,
                                           child: Icon(
-                                            Icons.error,
+                                            Icons.group,
+                                            size: 40,
                                             color: Theme.of(
                                               context,
-                                            ).colorScheme.onErrorContainer,
+                                            ).colorScheme.onSurfaceVariant,
                                           ),
                                         ),
-                                  )
-                                : Container(
-                                    width: 80,
-                                    height: 80,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainerHighest,
-                                    child: Icon(
-                                      Icons.group,
-                                      size: 40,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.community.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall
-                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
-                                const SizedBox(height: 4),
-                                if (state.community.description != null)
-                                  Text(
-                                    state.community.description!,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        state.community.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      if (state.community.description != null)
+                                        Text(
+                                          state.community.description!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
+                                        ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "${state.community.memberCount} members",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      if (isCreator || isModerator || isMember)
+                                        FilledButton.icon(
+                                          icon: Icon(Icons.post_add),
+                                          onPressed: () {},
+                                          label: const Text("Create Post"),
+                                        )
+                                      else if (isBanned)
+                                        Text(
+                                          "You are banned from this community",
+                                          style: TextStyle(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.error,
+                                          ),
+                                        )
+                                      else if (!isMember &&
+                                          state.community.isPrivate)
+                                        const Text(
+                                          "This is a private community, request to join.",
+                                        )
+                                      else
+                                        FilledButton.icon(
+                                          icon: Icon(Icons.person_add_alt_1),
+                                          onPressed: () {
+                                            context
+                                                .read<CommunityHomeBloc>()
+                                                .add(
+                                                  JoinCommunity(
+                                                    communityId: state
+                                                        .community
+                                                        .id
+                                                        .toString(),
+                                                    userId: currentUserId,
+                                                    userName: currentUserName,
+                                                  ),
+                                                );
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  "Joining community...",
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          label: const Text("Join"),
+                                        ),
+                                    ],
                                   ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "${state.community.memberCount} members",
-                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
-                                const SizedBox(height: 12),
-                                if (isCreator || isModerator || isMember)
-                                  FilledButton.icon(
-                                    icon: Icon(Icons.post_add),
-                                    onPressed: () {},
-                                    label: const Text("Create Post"),
-                                  )
-                                else if (isBanned)
-                                  Text(
-                                    "You are banned from this community",
-                                    style: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                                  )
-                                else if (!isMember && state.community.isPrivate)
-                                  const Text(
-                                    "This is a private community, request to join.",
-                                  )
-                                else
-                                  FilledButton.icon(
-                                    icon: Icon(Icons.person_add_alt_1),
-                                    onPressed: () {
-                                      context.read<CommunityHomeBloc>().add(
-                                        JoinCommunity(
-                                          communityId: state.community.id
-                                              .toString(),
-                                          userId: currentUserId,
-                                          userName: currentUserName,
-                                        ),
-                                      );
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text("Joining community..."),
-                                        ),
-                                      );
-                                    },
-                                    label: const Text("Join"),
-                                  ),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _SliverTabBarDelegate(
-                      TabBar(
-                        isScrollable: true,
-                        tabAlignment: TabAlignment.center,
-                        dividerHeight: 0,
-                        tabs: tabs,
-                      ),
+                    bottom: TabBar(
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.center,
+                      dividerHeight: 0,
+                      tabs: tabs,
                     ),
                   ),
                 ],
@@ -356,30 +449,4 @@ class _CommunityHomeState extends State<CommunityHome>
       },
     );
   }
-}
-
-class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar tabBar;
-  _SliverTabBarDelegate(this.tabBar);
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: tabBar,
-    );
-  }
-
-  @override
-  double get maxExtent => tabBar.preferredSize.height;
-
-  @override
-  double get minExtent => tabBar.preferredSize.height;
-
-  @override
-  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
 }
