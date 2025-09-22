@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
@@ -23,12 +24,21 @@ class ChirpUserRemoteDatasourceImpl
     with DioErrorHandler
     implements ChirpUserRemoteDatasource {
   final DioClient dioClient;
-  final String servicePath;
+  late String servicePath;
+  final FlavorConfig flavor;
 
   ChirpUserRemoteDatasourceImpl({
     required this.dioClient,
-    this.servicePath = "qa-chirp",
-  });
+    required this.flavor,
+  }) {
+    if (flavor.isProduction) {
+      servicePath = "chirp";
+    } else if (flavor.isStaging) {
+      servicePath = 'qa-chirp';
+    } else {
+      servicePath = "dev-chirp";
+    }
+  }
 
   @override
   Future<Either<Failure, List<ChirpUserData>>> getChirpUsers() async {

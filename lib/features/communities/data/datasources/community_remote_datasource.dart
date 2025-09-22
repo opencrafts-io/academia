@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
@@ -9,10 +10,19 @@ import 'package:logger/logger.dart';
 
 class CommunityRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
-  final String baseUrl = "https://qachirp.opencrafts.io";
+  late String servicePrefix;
   final Logger _logger = Logger();
+  final FlavorConfig flavor;
 
-  CommunityRemoteDatasource({required this.dioClient});
+  CommunityRemoteDatasource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePrefix = "chirp";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-chirp';
+    } else {
+      servicePrefix = "dev-chirp";
+    }
+  }
 
   Future<Either<Failure, CommunityData>> createCommunity({
     required String name,
@@ -45,7 +55,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
       });
 
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/create/",
+        "$servicePrefix/groups/create/",
         data: formData,
         options: Options(
           headers: {
@@ -86,7 +96,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/$communityId/detail/",
+        "$servicePrefix/groups/$communityId/detail/",
         data: {"user_id": userId},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -125,7 +135,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/$groupId/moderate/",
+        "$servicePrefix/groups/$groupId/moderate/",
         data: {
           "action": action,
           "user_id": userId,
@@ -176,7 +186,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/$groupId/join/",
+        "$servicePrefix/groups/$groupId/join/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(
           headers: {
@@ -218,7 +228,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/$groupId/leave/",
+        "$servicePrefix/groups/$groupId/leave/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -254,7 +264,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.delete(
-        "$baseUrl/groups/$groupId/delete/",
+        "$servicePrefix/groups/$groupId/delete/",
         queryParameters: {"user_id": userId},
       );
 
@@ -290,7 +300,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "$baseUrl/groups/$communityId/$userType",
+        "$servicePrefix/groups/$communityId/$userType",
         queryParameters: {"page": page},
         options: Options(
           headers: {
@@ -333,7 +343,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$baseUrl/groups/$communityId/rules/",
+        "$servicePrefix/groups/$communityId/rules/",
         data: {"rule": rule, "user_id": userId},
         options: Options(headers: {"Content-Type": "application/json"}),
       );

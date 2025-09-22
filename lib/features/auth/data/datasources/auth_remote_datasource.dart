@@ -11,16 +11,20 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
 
 class AuthRemoteDatasource with DioErrorHandler {
-  final FlavorConfig flavorConfig;
+  final FlavorConfig flavor;
   final Logger _logger = Logger();
-  final String servicePrefix;
+  late String servicePrefix;
   final DioClient dioClient;
 
-  AuthRemoteDatasource({
-    required this.flavorConfig,
-    required this.dioClient,
-    this.servicePrefix = "qa-verisafe",
-  });
+  AuthRemoteDatasource({required this.flavor, required this.dioClient}) {
+    if (flavor.isProduction) {
+      servicePrefix = "verisafe";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-verisafe';
+    } else {
+      servicePrefix = "dev-verisafe";
+    }
+  }
 
   // Helper to get the current host URL
   String? getHostBaseUrl() {
@@ -37,7 +41,7 @@ class AuthRemoteDatasource with DioErrorHandler {
       String platform;
       String authUrl;
 
-      switch (flavorConfig.flavor) {
+      switch (flavor.flavor) {
         case Flavor.staging:
           authUrl = "https://qaverisafe.opencrafts.io/auth/google";
           break;

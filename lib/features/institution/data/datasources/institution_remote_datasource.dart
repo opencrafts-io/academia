@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
@@ -11,12 +12,18 @@ List<InstitutionData> _parseInstitutions(List<dynamic> raw) {
 
 class InstitutionRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
-  final String servicePrefix;
+  late String servicePrefix;
+  final FlavorConfig flavor;
 
-  InstitutionRemoteDatasource({
-    required this.dioClient,
-    this.servicePrefix = "qa-verisafe",
-  });
+  InstitutionRemoteDatasource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePrefix = "verisafe";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-verisafe';
+    } else {
+      servicePrefix = "dev-verisafe";
+    }
+  }
 
   Future<Either<Failure, List<InstitutionData>>> searchForInstitutionByName(
     String name, {

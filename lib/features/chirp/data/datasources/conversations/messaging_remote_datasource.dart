@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/core/core.dart';
@@ -28,12 +29,21 @@ class MessagingRemoteDatasourceImpl
     with DioErrorHandler
     implements MessagingRemoteDatasource {
   final DioClient dioClient;
-  final String servicePath;
+  late String servicePath;
+  final FlavorConfig flavor;
 
   MessagingRemoteDatasourceImpl({
     required this.dioClient,
-    this.servicePath = "qa-chirp",
-  });
+    required this.flavor,
+  }) {
+    if (flavor.isProduction) {
+      servicePath = "chirp";
+    } else if (flavor.isStaging) {
+      servicePath = 'qa-chirp';
+    } else {
+      servicePath = "dev-chirp";
+    }
+  }
 
   @override
   Future<Either<Failure, List<ConversationData>>> getConversations() async {
@@ -42,7 +52,9 @@ class MessagingRemoteDatasourceImpl
 
       if (response.statusCode == 200) {
         final conversations = (response.data as List)
-            .map((json) => _parseConversationFromBackend(json, 'default_user_123'))
+            .map(
+              (json) => _parseConversationFromBackend(json, 'default_user_123'),
+            )
             .toList();
 
         return Right(conversations);
@@ -295,14 +307,17 @@ class MessagingRemoteDatasourceImpl
     try {
       // Use the provided currentUserId or fallback to default
       final userId = currentUserId ?? 'default_user_123';
-      
+
       final response = await dioClient.dio.post(
         '/$servicePath/conversations/create/?user_id=$userId',
         data: {'participants': participants},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final conversation = _parseConversationFromBackend(response.data, userId);
+        final conversation = _parseConversationFromBackend(
+          response.data,
+          userId,
+        );
         return Right(conversation);
       }
 
@@ -326,7 +341,7 @@ class MessagingRemoteDatasourceImpl
   }
 
   ConversationData _parseConversationFromBackend(
-    Map<String, dynamic> json, 
+    Map<String, dynamic> json,
     String currentUserId,
   ) {
     final participants = List<String>.from(json['participants'] ?? []);
@@ -343,30 +358,39 @@ class MessagingRemoteDatasourceImpl
     );
     final finalOtherParticipant = conversationParticipants.firstWhere(
       (participant) => participant != currentUserId,
-      orElse: () => conversationParticipants.isNotEmpty 
-          ? conversationParticipants.first 
+      orElse: () => conversationParticipants.isNotEmpty
+          ? conversationParticipants.first
           : 'unknown_user',
     );
 
     return ConversationData(
       id: conversationData['conversation_id'] ?? json['conversation_id'] ?? '',
       createdAt: DateTime.parse(
-        conversationData['created_at'] ?? json['created_at'] ?? DateTime.now().toIso8601String(),
+        conversationData['created_at'] ??
+            json['created_at'] ??
+            DateTime.now().toIso8601String(),
       ),
       updatedAt: DateTime.parse(
-        conversationData['updated_at'] ?? json['updated_at'] ?? DateTime.now().toIso8601String(),
+        conversationData['updated_at'] ??
+            json['updated_at'] ??
+            DateTime.now().toIso8601String(),
       ),
       userId: finalOtherParticipant,
       lastMessageId: null,
-      lastMessageAt: (conversationData['last_message_at'] ?? json['last_message_at']) != null
-          ? DateTime.parse(conversationData['last_message_at'] ?? json['last_message_at'])
+      lastMessageAt:
+          (conversationData['last_message_at'] ?? json['last_message_at']) !=
+              null
+          ? DateTime.parse(
+              conversationData['last_message_at'] ?? json['last_message_at'],
+            )
           : null,
-      unreadCount: conversationData['unread_count'] ?? json['unread_count'] ?? 0,
+      unreadCount:
+          conversationData['unread_count'] ?? json['unread_count'] ?? 0,
     );
   }
 
   MessageData _parseMessageFromBackend(
-    Map<String, dynamic> json, 
+    Map<String, dynamic> json,
     String currentUserId,
   ) {
     final senderId = json['sender_id'] ?? '';

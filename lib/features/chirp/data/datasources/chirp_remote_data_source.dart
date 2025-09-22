@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/features/features.dart';
@@ -7,12 +8,22 @@ import 'package:dio/dio.dart';
 
 class ChirpRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
+  final FlavorConfig flavor;
+  late String servicePrefix;
 
-  ChirpRemoteDataSource({required this.dioClient});
+  ChirpRemoteDataSource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePrefix = "chirp";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-chirp';
+    } else {
+      servicePrefix = "dev-chirp";
+    }
+  }
 
   Future<Either<Failure, List<Post>>> getPosts() async {
     try {
-      final res = await dioClient.dio.get("/qa-chirp/statuses/");
+      final res = await dioClient.dio.get("/$servicePrefix/statuses/");
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
         return Left(
@@ -37,7 +48,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, List<PostReply>>> getPostReplies(String postId) async {
     try {
       final res = await dioClient.dio.get(
-        "/qa-chirp/statuses/$postId/comments/",
+        "/$servicePrefix/statuses/$postId/comments/",
       );
 
       if (res.statusCode == 200 && res.data is List) {
@@ -74,7 +85,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
       });
 
       final res = await dioClient.dio.post(
-        '/qa-chirp/groups/$groupId/posts/create/',
+        '/$servicePrefix/groups/$groupId/posts/create/',
         data: formData,
         options: Options(contentType: "multipart/form-data"),
       );
@@ -100,8 +111,8 @@ class ChirpRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final url = parentId != null
-          ? '/qa-chirp/statuses/$postId/comments/$parentId/replies/'
-          : '/qa-chirp/statuses/$postId/comments/';
+          ? '/$servicePrefix/statuses/$postId/comments/$parentId/replies/'
+          : '/$servicePrefix/statuses/$postId/comments/';
 
       final Map<String, dynamic> data = {
         'content': content,
@@ -135,7 +146,9 @@ class ChirpRemoteDataSource with DioErrorHandler {
     bool isLiked,
   ) async {
     try {
-      final res = await dioClient.dio.post('/qa-chirp/statuses/$postId/like/');
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/statuses/$postId/like/',
+      );
       if (res.statusCode == 204 || res.statusCode == 201) {
         return Right(res.data);
       }

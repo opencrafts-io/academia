@@ -50,7 +50,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(
-    () => AuthRemoteDatasource(flavorConfig: flavor, dioClient: sl()),
+    () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -76,7 +76,7 @@ Future<void> init(FlavorConfig flavor) async {
 
   //sherehe
   sl.registerLazySingleton<ShereheRemoteDataSource>(
-    () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
+    () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
   );
   sl.registerLazySingleton(
     () => CreateEventUseCase(sl.get<ShereheRepository>()),
@@ -116,7 +116,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
   // Chirp
   sl.registerFactory<ChirpRemoteDataSource>(
-    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>()),
+    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
   sl.registerFactory<ChirpLocalDataSource>(
     () => ChirpLocalDataSource(db: cacheDB),
@@ -158,7 +158,8 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
-    () => ProfileRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () =>
+        ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
   sl.registerFactory<ProfileLocalDatasource>(
     () => ProfileLocalDatasource(localDB: cacheDB),
@@ -196,7 +197,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => TodoLocalDatasource(localDB: cacheDB),
   );
   sl.registerFactory<TodoRemoteDatasource>(
-    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
 
   sl.registerFactory<TodoRepository>(
@@ -232,7 +233,10 @@ Future<void> init(FlavorConfig flavor) async {
     () => AgendaEventLocalDataSource(localDB: cacheDB),
   );
   sl.registerFactory<AgendaEventRemoteDatasource>(
-    () => AgendaEventRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () => AgendaEventRemoteDatasource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
   );
 
   sl.registerFactory<AgendaEventRepository>(
@@ -284,7 +288,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Communities
   sl.registerFactory<CommunityRemoteDatasource>(
-    () => CommunityRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () => CommunityRemoteDatasource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
   );
 
   sl.registerFactory<CommunityRepositoryImpl>(
@@ -368,7 +375,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Add Chirp dependencies
   sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+    () => MessagingRemoteDatasourceImpl(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
   );
   sl.registerFactory<MessagingLocalDataSourceImpl>(
     () => MessagingLocalDataSourceImpl(localDB: cacheDB),
@@ -415,7 +425,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   // Chirp User dependencies
   sl.registerFactory<ChirpUserRemoteDatasource>(
-    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
+    () => ChirpUserRemoteDatasourceImpl(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
   );
   sl.registerFactory<ChirpUserRepository>(
     () => ChirpUserRepositoryImpl(
@@ -568,7 +581,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
   );
   sl.registerFactory<InstitutionRemoteDatasource>(
-    () => InstitutionRemoteDatasource(dioClient: sl()),
+    () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
 
   sl.registerFactory<InstitutionRepositoryImpl>(
@@ -766,19 +779,18 @@ Future<void> init(FlavorConfig flavor) async {
       notificationService: sl.get<MessagingNotificationService>(),
     ),
   );
-  
+
   // Enhanced Data Sources
   sl.registerFactory<EnhancedMessagingRemoteDataSource>(
     () => EnhancedMessagingRemoteDataSourceImpl(
       dioClient: sl.get<DioClient>(),
+      flavor: flavor,
     ),
   );
   sl.registerFactory<EnhancedMessagingLocalDataSource>(
-    () => EnhancedMessagingLocalDataSourceImpl(
-      localDB: sl.get<AppDataBase>(),
-    ),
+    () => EnhancedMessagingLocalDataSourceImpl(localDB: sl.get<AppDataBase>()),
   );
-  
+
   // Enhanced Repository
   sl.registerFactory<EnhancedConversationRepository>(
     () => EnhancedConversationRepositoryImpl(
@@ -789,13 +801,14 @@ Future<void> init(FlavorConfig flavor) async {
       notificationService: sl.get<MessagingNotificationService>(),
     ),
   );
-  
+
   // Enhanced Use Cases
   sl.registerFactory<GetConversationsUseCase>(
     () => GetConversationsUseCase(sl.get<EnhancedConversationRepository>()),
   );
   sl.registerFactory<GetConversationsStreamUseCase>(
-    () => GetConversationsStreamUseCase(sl.get<EnhancedConversationRepository>()),
+    () =>
+        GetConversationsStreamUseCase(sl.get<EnhancedConversationRepository>()),
   );
   sl.registerFactory<CreateConversationUseCase>(
     () => CreateConversationUseCase(sl.get<EnhancedConversationRepository>()),
@@ -834,7 +847,8 @@ Future<void> init(FlavorConfig flavor) async {
     () => ConnectToRealTimeUseCase(sl.get<EnhancedConversationRepository>()),
   );
   sl.registerFactory<DisconnectFromRealTimeUseCase>(
-    () => DisconnectFromRealTimeUseCase(sl.get<EnhancedConversationRepository>()),
+    () =>
+        DisconnectFromRealTimeUseCase(sl.get<EnhancedConversationRepository>()),
   );
   sl.registerFactory<SyncOfflineMessagesUseCase>(
     () => SyncOfflineMessagesUseCase(sl.get<EnhancedConversationRepository>()),
@@ -852,12 +866,16 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetNewMessagesStreamUseCase(sl.get<EnhancedConversationRepository>()),
   );
   sl.registerFactory<GetTypingIndicatorsStreamUseCase>(
-    () => GetTypingIndicatorsStreamUseCase(sl.get<EnhancedConversationRepository>()),
+    () => GetTypingIndicatorsStreamUseCase(
+      sl.get<EnhancedConversationRepository>(),
+    ),
   );
   sl.registerFactory<GetConnectionStateStreamUseCase>(
-    () => GetConnectionStateStreamUseCase(sl.get<EnhancedConversationRepository>()),
+    () => GetConnectionStateStreamUseCase(
+      sl.get<EnhancedConversationRepository>(),
+    ),
   );
-  
+
   // Enhanced BLoCs
   sl.registerFactory<ConversationListBloc>(
     () => ConversationListBloc(
@@ -866,7 +884,8 @@ Future<void> init(FlavorConfig flavor) async {
       createConversationUseCase: sl.get<CreateConversationUseCase>(),
       connectToRealTimeUseCase: sl.get<ConnectToRealTimeUseCase>(),
       disconnectFromRealTimeUseCase: sl.get<DisconnectFromRealTimeUseCase>(),
-      getConnectionStateStreamUseCase: sl.get<GetConnectionStateStreamUseCase>(),
+      getConnectionStateStreamUseCase: sl
+          .get<GetConnectionStateStreamUseCase>(),
       getNewMessagesStreamUseCase: sl.get<GetNewMessagesStreamUseCase>(),
       syncOfflineMessagesUseCase: sl.get<SyncOfflineMessagesUseCase>(),
     ),
@@ -887,8 +906,10 @@ Future<void> init(FlavorConfig flavor) async {
       getDraftUseCase: sl.get<GetDraftUseCase>(),
       saveDraftUseCase: sl.get<SaveDraftUseCase>(),
       deleteDraftUseCase: sl.get<DeleteDraftUseCase>(),
-      getTypingIndicatorsStreamUseCase: sl.get<GetTypingIndicatorsStreamUseCase>(),
-      getConnectionStateStreamUseCase: sl.get<GetConnectionStateStreamUseCase>(),
+      getTypingIndicatorsStreamUseCase: sl
+          .get<GetTypingIndicatorsStreamUseCase>(),
+      getConnectionStateStreamUseCase: sl
+          .get<GetConnectionStateStreamUseCase>(),
       getNewMessagesStreamUseCase: sl.get<GetNewMessagesStreamUseCase>(),
     ),
   );

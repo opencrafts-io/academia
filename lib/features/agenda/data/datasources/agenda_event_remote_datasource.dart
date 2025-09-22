@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/data/paginated_result.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
@@ -7,12 +8,18 @@ import 'package:dio/dio.dart';
 
 class AgendaEventRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
-  final String servicePath;
+  late String servicePath;
+  final FlavorConfig flavor;
 
-  AgendaEventRemoteDatasource({
-    required this.dioClient,
-    this.servicePath = "qa-keepup",
-  });
+  AgendaEventRemoteDatasource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePath = "keepup";
+    } else if (flavor.isStaging) {
+      servicePath = 'qa-keepup';
+    } else {
+      servicePath = "dev-keepup";
+    }
+  }
 
   Future<Either<Failure, PaginatedResult<AgendaEventData>>>
   refreshAgendaEvents({int page = 0, int pageSize = 100}) async {
@@ -62,7 +69,8 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
       return Left(
         NetworkFailure(
           // "I can't get no satisfaction" - Rolling Stones
-          message: "I can't get no satisfaction! Something went wrong while creating your event. The server's not feeling it today!",
+          message:
+              "I can't get no satisfaction! Something went wrong while creating your event. The server's not feeling it today!",
           error: "",
         ),
       );
@@ -92,7 +100,8 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
       return Left(
         NetworkFailure(
           // "Changes" - David Bowie
-          message: "Changes! We couldn't make those changes happen. Even Ziggy Stardust would be confused!",
+          message:
+              "Changes! We couldn't make those changes happen. Even Ziggy Stardust would be confused!",
           error: "",
         ),
       );
@@ -100,7 +109,7 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
       return left(
         CacheFailure(
           error: e,
-          message: 
+          message:
               // "Should I stay or should I go?" - The Clash
               "Should I stay or should I go? We couldn't update your agenda event. The system is having an identity crisis!",
         ),
@@ -122,7 +131,8 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
       return Left(
         NetworkFailure(
           // "Another one bites the dust" - Queen
-          message: "Another one bites the dust! We couldn't delete that event. It's being stubborn like a rock!",
+          message:
+              "Another one bites the dust! We couldn't delete that event. It's being stubborn like a rock!",
           error: "",
         ),
       );
@@ -130,7 +140,7 @@ class AgendaEventRemoteDatasource with DioErrorHandler {
       return left(
         CacheFailure(
           error: e,
-          message: 
+          message:
               // "I will survive" - Gloria Gaynor
               "I will survive! That event is refusing to be deleted. It's got survival instincts!",
         ),

@@ -226,7 +226,10 @@ class _AcademiaState extends State<Academia> {
                 useMaterial3: true,
                 colorScheme:
                     lightScheme ??
-                    ColorScheme.fromSeed(seedColor: Color(0xFF5865F2)),
+                    ColorScheme.fromSeed(
+                      seedColor: Color(0xFF5865F2),
+                      brightness: Brightness.light,
+                    ),
                 brightness: Brightness.light,
               ),
               darkTheme: ThemeData(
@@ -235,7 +238,10 @@ class _AcademiaState extends State<Academia> {
                 brightness: Brightness.dark,
                 colorScheme:
                     darkScheme ??
-                    ColorScheme.fromSeed(seedColor: Color(0xFF5865F2)),
+                    ColorScheme.fromSeed(
+                      seedColor: Color(0xFF5865F2),
+                      brightness: Brightness.dark,
+                    ),
               ),
               routerConfig: AppRouter.router,
             ),
