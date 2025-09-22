@@ -8,4 +8,5 @@ export 'views/add_post_screen.dart';
 export 'widgets/attachment_widget.dart';
 export 'widgets/post_card_widget.dart';
 export 'widgets/comment_widget.dart';
+export 'widgets/chirp_user_avatar.dart';
 
