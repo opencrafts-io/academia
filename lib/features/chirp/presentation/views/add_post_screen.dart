@@ -75,12 +75,65 @@ class _AddPostPageState extends State<AddPostPage> {
           slivers: [
             SliverAppBar.large(title: Text("Create Post")),
             SliverPadding(
+              padding: EdgeInsetsGeometry.all(12),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchAnchor.bar(
+                      barElevation: WidgetStateProperty.all(0),
+                      barHintText: "Community to post",
+                      barHintStyle: WidgetStateProperty.all(
+                        Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      barSide: WidgetStateProperty.all(BorderSide(width: 1)),
+                      suggestionsBuilder: (context, controller) {
+                        return [];
+                      },
+                    ),
+                    SizedBox(height: 22),
+                    Text("Configure your post"),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLength: 250,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      decoration: InputDecoration(
+                        prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                        hintText: "Whats on your mind",
+                        hintStyle: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      maxLines: null,
+                      minLines: 3,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        hintText: "Talk about the issue alittle more..",
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverPadding(
               padding: EdgeInsets.all(12),
               sliver: SliverPinnedHeader(
                 child: Container(
                   color: Theme.of(context).colorScheme.surface,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text("Configure post attachments"),
+                      SizedBox(height: 22),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -186,7 +239,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                       if (!context.mounted) return;
                                       context.pop();
                                       _showSnackBar(
-                                        "Item successfully removed!",
+                                        "Item successfully removed",
                                       );
                                     },
                                   ),
@@ -231,46 +284,6 @@ class _AddPostPageState extends State<AddPostPage> {
                       }).toList(),
                     ),
                   ),
-                ),
-              ),
-            ),
-
-            SliverPadding(
-              padding: EdgeInsetsGeometry.all(12),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // SizedBox(height: 22),
-                    Text("Configure your post"),
-                    SizedBox(height: 8),
-                    TextFormField(
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLength: 250,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      decoration: InputDecoration(
-                        prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        hintText: "Whats on your mind",
-                        hintStyle: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      maxLines: null,
-                      minLines: 3,
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        hintText: "Talk about the issue alittle more..",
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ),
