@@ -1,9 +1,9 @@
-import 'package:academia/features/features.dart';
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/features/chirp/domain/entities/group.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({super.key});
@@ -13,205 +13,314 @@ class AddPostPage extends StatefulWidget {
 }
 
 class _AddPostPageState extends State<AddPostPage> {
-  final _contentController = TextEditingController();
-  final List<PlatformFile> _attachments = [];
-  Group? _selectedGroup;
+  final picker = ImagePicker();
+  XFile? file;
+  final List<XFile> attachments = [];
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await picker.pickImage(source: source);
+      if (pickedFile == null) return;
 
-  // Dummy list of groups for demonstration
-  //TODO: fetch from community bloc
-  //TODO: fetch only communities user has joined. If none, join button??
-  final List<Group> _dummyGroups = [
-    Group(
-      id: "1",
-      name: "General",
-      description: "General community for all posts",
-    ),
-    Group(id: "2", name: "Tech Enthusiasts", description: "For all things tech"),
-    Group(
-      id: "3",
-      name: "Fech Enthusiasts",
-      description: "A community for tech lovers",
-    ),
-  ];
+      final imageData = await pickedFile.readAsBytes();
+      if (!mounted) return;
 
-  @override
-  void initState() {
-    super.initState();
-    // Set a default group if available
-    if (_dummyGroups.isNotEmpty) {
-      _selectedGroup = _dummyGroups.first;
+      final editedImage = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ImageEditor(image: imageData)),
+      );
+
+      if (editedImage != null) {
+        setState(() => attachments.add(XFile.fromData(editedImage)));
+      }
+    } catch (e) {
+      _showSnackBar("Failed to pick or edit image: $e");
     }
   }
 
-  Future<void> _pickAttachment() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-      allowMultiple: true,
+  Future<void> _pickVideo(ImageSource source) async {
+    try {
+      final pickedFile = await picker.pickVideo(source: source);
+      if (pickedFile == null) return;
+
+      if (!mounted) return;
+
+      // final trimmedVideo = await Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) =>
+      //         VideoTrimmerPage(videoFile: File(pickedFile.path)),
+      //   ),
+      // );
+      //
+      // if (trimmedVideo != null) {
+      //   setState(() => file = XFile(trimmedVideo.path));
+      // }
+    } catch (e) {
+      _showSnackBar("Failed to pick or trim video: $e");
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
-    if (result != null) {
-      setState(() {
-        _attachments.addAll(result.files);
-      });
-    }
-  }
-
-  void _submitPost() {
-    final content = _contentController.text.trim();
-
-    if (_selectedGroup == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a community to post in.")),
-      );
-      return;
-    }
-
-    if (content.isEmpty && _attachments.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Post must have content or an attachment."),
-        ),
-      );
-      return;
-    }
-
-    final profileState = BlocProvider.of<ProfileBloc>(context).state;
-
-    if (profileState is ProfileLoadedState) {
-      final userName = profileState.profile.name;
-      final email = profileState.profile.email;
-
-
-      context.read<FeedBloc>().add(
-        CreatePostEvent(
-          content: content,
-          files: _attachments,
-          userName: userName,
-          email: email,
-          groupId: _selectedGroup!.id,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("User profile not loaded. Please try again."),
-        ),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _contentController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("New Post")),
-      body: BlocConsumer<FeedBloc, FeedState>(
-        listener: (context, state) {
-          if (state is PostCreated) {
-            _contentController.clear();
-            setState(() {
-              _attachments.clear();
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Post created successfully!")),
-            );
-            context.pop();
-          } else if (state is PostCreateError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        builder: (context, state) {
-          final isSubmitting = state is PostCreating;
+      resizeToAvoidBottomInset: true,
+      body: Form(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar.large(title: Text("Create Post")),
+            SliverPadding(
+              padding: EdgeInsets.all(12),
+              sliver: SliverPinnedHeader(
+                child: Container(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              LabeledIconButton(
+                                onPressed: () async =>
+                                    _pickImage(ImageSource.camera),
 
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                DropdownButtonFormField<Group>(
-                  decoration: InputDecoration(
-                    labelText: "Select Community",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                                label: "Take photo",
+                                icon: Icons.photo_camera_outlined,
+                              ),
+                            ],
+                          ),
+                          LabeledIconButton(
+                            label: "Take Video",
+                            onPressed: () async =>
+                                _pickVideo(ImageSource.camera),
+                            icon: Icons.video_camera_back_outlined,
+                          ),
+
+                          LabeledIconButton(
+                            onPressed: () async =>
+                                _pickImage(ImageSource.gallery),
+                            label: "Photo Gallery",
+                            icon: Icons.add_photo_alternate_outlined,
+                          ),
+                          LabeledIconButton(
+                            label: "Video gallery",
+                            onPressed: () async =>
+                                _pickVideo(ImageSource.gallery),
+                            icon: Icons.video_library_outlined,
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                    ],
                   ),
-                  value: _selectedGroup,
-                  items: _dummyGroups.map((group) {
-                    return DropdownMenuItem<Group>(
-                      value: group,
-                      child: Text(group.name),
-                    );
-                  }).toList(),
-                  onChanged: (Group? newValue) {
-                    setState(() {
-                      _selectedGroup = newValue;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? 'Please select a community' : null,
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _contentController,
-                  decoration: InputDecoration(
-                    hintText: "What's on your mind?",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  maxLines: 4,
-                ),
-                const SizedBox(height: 12),
-                if (_attachments.isNotEmpty)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _attachments.length,
-                      itemBuilder: (context, index) {
-                        final file = _attachments[index];
-                        return ListTile(
-                          title: Text(file.name),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                _attachments.removeAt(index);
-                              });
-                            },
+              ),
+            ),
+            SliverVisibility(
+              visible: attachments.isNotEmpty,
+              maintainSize: false,
+              maintainState: true,
+              sliver: SliverPadding(
+                padding: EdgeInsetsGeometry.all(12),
+                sliver: SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 300,
+                    child: CarouselView.weighted(
+                      enableSplash: true,
+                      onTap: (index) {
+                        showModalBottomSheet(
+                          showDragHandle: true,
+                          context: context,
+                          builder: (context) => Container(
+                            padding: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                // Card.filled(
+                                //   shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadiusGeometry.vertical(
+                                //       top: Radius.circular(22),
+                                //     ),
+                                //   ),
+                                //   margin: EdgeInsets.all(0),
+                                //   color: Theme.of(
+                                //     context,
+                                //   ).colorScheme.primaryContainer,
+                                //   child: ListTile(
+                                //     leading: Icon(Icons.save),
+                                //     title: Text("Save to gallery"),
+                                //     onTap: () async {
+                                //       await attachments[index].saveTo(
+                                //         "academia_img_${DateTime.now().toString()}",
+                                //       );
+                                //       if (!context.mounted) return;
+                                //       context.pop();
+                                //       _showSnackBar("Successfully saved!");
+                                //     },
+                                //   ),
+                                // ),
+                                Card.filled(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.vertical(
+                                      top: Radius.circular(22),
+                                      bottom: Radius.circular(22),
+                                    ),
+                                  ),
+
+                                  margin: EdgeInsets.all(0),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.errorContainer,
+                                  child: ListTile(
+                                    leading: Icon(Icons.delete),
+                                    title: Text("Remove selected attachment"),
+                                    onTap: () {
+                                      setState(() {
+                                        attachments.removeAt(index);
+                                      });
+                                      if (!context.mounted) return;
+                                      context.pop();
+                                      _showSnackBar(
+                                        "Item successfully removed!",
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
+                      consumeMaxWeight: true,
+                      itemSnapping: true,
+                      shrinkExtent: 50,
+                      flexWeights: [1, 5, 1],
+                      children: attachments.map((attachment) {
+                        return FutureBuilder(
+                          future: attachment.readAsBytes(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.hasData) {
+                              return ClipRRect(
+                                child: SizedBox(
+                                  height: 230,
+                                  width: double.infinity,
+                                  child: Image.memory(
+                                    snapshot.data!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Center(
+                                child: Text('Error loading image.'),
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        );
+                      }).toList(),
                     ),
                   ),
-                const SizedBox(height: 8),
-                Row(
+                ),
+              ),
+            ),
+
+            SliverPadding(
+              padding: EdgeInsetsGeometry.all(12),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: isSubmitting ? null : _pickAttachment,
-                      icon: const Icon(Icons.attach_file),
-                      label: const Text("Add Attachment"),
+                    // SizedBox(height: 22),
+                    Text("Configure your post"),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLength: 250,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      decoration: InputDecoration(
+                        prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                        hintText: "Whats on your mind",
+                        hintStyle: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                      ),
                     ),
-                    const Spacer(),
-                    ElevatedButton(
-                      onPressed: isSubmitting ? null : _submitPost,
-                      child: isSubmitting
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text("Post"),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      maxLines: null,
+                      minLines: 3,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        hintText: "Talk about the issue alittle more..",
+                      ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          );
-        },
+
+            SliverPadding(
+              padding: EdgeInsets.all(12),
+              sliver: SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: FilledButton(
+                    onPressed: () {},
+                    child: Text("Create post"),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LabeledIconButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  const LabeledIconButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 24.0),
+            const SizedBox(height: 4.0),
+            Text(label, style: TextStyle(fontSize: 12.0)),
+          ],
+        ),
       ),
     );
   }

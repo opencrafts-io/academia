@@ -103,6 +103,8 @@ dependencies:
   flutter_local_notifications: ^17.2.3
   json_annotation: ^4.9.0
   share_plus: ^10.1.4
+  video_trimmer: ^5.0.0
+  image_editor_plus: ^1.0.8
 
 
 dev_dependencies:
