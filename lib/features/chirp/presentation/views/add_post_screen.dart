@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+import 'package:academia/config/router/routes.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({super.key});
@@ -44,19 +47,33 @@ class _AddPostPageState extends State<AddPostPage> {
 
       if (!mounted) return;
 
-      // final trimmedVideo = await Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) =>
-      //         VideoTrimmerPage(videoFile: File(pickedFile.path)),
-      //   ),
-      // );
-      //
-      // if (trimmedVideo != null) {
-      //   setState(() => file = XFile(trimmedVideo.path));
-      // }
+      final trimmedVideoPath = await TrimVideoRoute(
+        videoPath: pickedFile.path,
+      ).push(context);
+
+      if (trimmedVideoPath != null) {
+        setState(() => attachments.add(XFile(trimmedVideoPath)));
+      }
     } catch (e) {
       _showSnackBar("Failed to pick or trim video: $e");
+    }
+  }
+
+  Future<Uint8List?> _getAttachmentThumbnail(XFile attachment) async {
+    try {
+      if (attachment.path.contains('mp4')) {
+        final thumbnailBytes = await VideoThumbnail.thumbnailData(
+          video: attachment.path,
+          imageFormat: ImageFormat.JPEG,
+          quality: 25,
+        );
+        return thumbnailBytes;
+      } else {
+        return await attachment.readAsBytes();
+      }
+    } catch (e) {
+      _showSnackBar("Failed to generate thumbnail for post attachment");
+      return null;
     }
   }
 
@@ -82,11 +99,15 @@ class _AddPostPageState extends State<AddPostPage> {
                   children: [
                     SearchAnchor.bar(
                       barElevation: WidgetStateProperty.all(0),
-                      barHintText: "Community to post",
+                      barHintText: "Select community",
                       barHintStyle: WidgetStateProperty.all(
-                        Theme.of(context).textTheme.headlineSmall,
+                        Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                       ),
-                      barSide: WidgetStateProperty.all(BorderSide(width: 1)),
+                      barBackgroundColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.tertiaryContainer,
+                      ),
                       suggestionsBuilder: (context, controller) {
                         return [];
                       },
@@ -255,26 +276,45 @@ class _AddPostPageState extends State<AddPostPage> {
                       flexWeights: [1, 5, 1],
                       children: attachments.map((attachment) {
                         return FutureBuilder(
-                          future: attachment.readAsBytes(),
+                          future: _getAttachmentThumbnail(
+                            attachment,
+                          ), // Use the helper function here
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                     ConnectionState.done &&
                                 snapshot.hasData) {
-                              return ClipRRect(
-                                child: SizedBox(
-                                  height: 230,
-                                  width: double.infinity,
-                                  child: Image.memory(
-                                    snapshot.data!,
-                                    fit: BoxFit.cover,
+                              return Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  // Display the image or video thumbnail
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.memory(
+                                      snapshot.data!,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
+                                  if (attachment.path.endsWith('mp4'))
+                                    Positioned(
+                                      bottom: 8,
+                                      right: 8,
+                                      child: CircleAvatar(
+                                        child: Icon(
+                                          Icons.play_circle_outline,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               );
                             } else if (snapshot.hasError) {
                               return const Center(
-                                child: Text('Error loading image.'),
+                                child: Text('Error loading attachment'),
                               );
                             } else {
+                              // Show a loading indicator while the thumbnail is generated
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -291,12 +331,11 @@ class _AddPostPageState extends State<AddPostPage> {
             SliverPadding(
               padding: EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: FilledButton(
-                    onPressed: () {},
-                    child: Text("Create post"),
-                  ),
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(padding: EdgeInsets.all(32)),
+                  onPressed: () {},
+                  label: Text("Create post"),
+                  icon: Icon(Icons.add),
                 ),
               ),
             ),
