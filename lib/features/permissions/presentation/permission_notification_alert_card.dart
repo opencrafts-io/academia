@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
+import 'package:animated_emoji/animated_emoji.dart';
 
 class PermissionNotificationAlertCard extends StatelessWidget {
   const PermissionNotificationAlertCard({super.key});
@@ -35,10 +36,10 @@ class PermissionNotificationAlertCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           color: Theme.of(context).colorScheme.primaryContainer,
           child: ListTile(
-            leading: Icon(Icons.notifications),
+            leading:AnimatedEmoji(AnimatedEmojis.headNod),
             title: Text("Get message notifications"),
             subtitle: Text(
-              "Stay in the loop 🎉 — turn on notifications so you never miss important messages",
+              "Turn on notifications so that you never miss any updates",
             ),
             subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
             onTap: () async {

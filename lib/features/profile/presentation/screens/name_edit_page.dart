@@ -1,6 +1,8 @@
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vibration/vibration.dart';
+import 'package:animated_emoji/animated_emoji.dart';
 
 class NameEditPage extends StatefulWidget {
   const NameEditPage({
@@ -66,6 +68,11 @@ class _NameEditPageState extends State<NameEditPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 12,
           children: [
+            SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AnimatedEmoji(AnimatedEmojis.nerdFace, size: 120),
+            ),
             SizedBox(height: 12),
             Text(
               "Lets get to know you by name",
@@ -149,7 +156,14 @@ class _NameEditPageState extends State<NameEditPage> {
                   child: Text("Previous"),
                 ),
                 FilledButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (await Vibration.hasVibrator()) {
+                      await Vibration.vibrate(
+                        pattern: [0, 50],
+                        intensities: [0, 128],
+                      );
+                    }
+                    if (!context.mounted) return;
                     if (_formKey.currentState?.validate() ?? false) {
                       // Only update profile if the form is valid
                       BlocProvider.of<ProfileBloc>(context).add(

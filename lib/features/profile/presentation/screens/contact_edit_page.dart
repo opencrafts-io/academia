@@ -2,6 +2,8 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+import 'package:animated_emoji/animated_emoji.dart';
+import 'package:vibration/vibration.dart';
 
 class ContactEditPage extends StatefulWidget {
   const ContactEditPage({
@@ -65,6 +67,12 @@ class _ContactEditPageState extends State<ContactEditPage> {
           spacing: 12,
           children: [
             SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AnimatedEmoji(AnimatedEmojis.callMeHand, size: 120),
+            ),
+
+            SizedBox(height: 12),
             Text(
               "How can we reach you",
               style: Theme.of(context).textTheme.headlineSmall,
@@ -111,7 +119,15 @@ class _ContactEditPageState extends State<ContactEditPage> {
                   child: Text("Previous"),
                 ),
                 FilledButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (await Vibration.hasVibrator()) {
+                      await Vibration.vibrate(
+                        pattern: [0, 50],
+                        intensities: [0, 128],
+                      );
+                    }
+                    if (!context.mounted) return;
+
                     if (_formKey.currentState?.validate() ?? false) {
                       // Handle phone number submission
                       BlocProvider.of<ProfileBloc>(context).add(
