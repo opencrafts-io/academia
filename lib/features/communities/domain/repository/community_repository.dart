@@ -56,4 +56,6 @@ abstract class CommunityRepository {
     required String communityId,
     required String userId,
   });
+
+  Future<Either<Failure, List<Community>>> getPostableCommunities();
 }

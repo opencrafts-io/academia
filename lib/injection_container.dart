@@ -2,6 +2,7 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/communities/domain/usecases/get_postable_communities_usecase.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -294,9 +295,14 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<CommunityLocalDatasource>(
+    () => CommunityLocalDatasource(localDB: sl()),
+  );
+
   sl.registerFactory<CommunityRepositoryImpl>(
     () => CommunityRepositoryImpl(
-      remoteDatasource: sl.get<CommunityRemoteDatasource>(),
+      remoteDatasource: sl.get(),
+      communityLocalDatasource: sl.get(),
     ),
   );
 
@@ -342,6 +348,14 @@ Future<void> init(FlavorConfig flavor) async {
       repository: sl.get<CommunityRepositoryImpl>(),
     ),
   );
+
+  sl.registerFactory<GetPostableCommunitiesUsecase>(
+    () => GetPostableCommunitiesUsecase(
+      communityRepository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory(() => CommunityBloc(getPostableCommunitiesUsecase: sl()));
 
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(

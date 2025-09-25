@@ -373,4 +373,32 @@ class CommunityRemoteDatasource with DioErrorHandler {
       );
     }
   }
+
+  // TODO: SAM to add pagination for this fucking endpoint
+  Future<Either<Failure, List<CommunityData>>> getPostableCommunities() async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/groups/postable/",
+      );
+      if (response.statusCode == 200) {
+        final rawList = response.data as List; // ensure it's a List
+        final communities = rawList
+            .map((e) => CommunityData.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        return right(communities);
+      }
+      throw "Programming error";
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              "Something went wrong while attempting to fetch your communities",
+          error: e,
+        ),
+      );
+    }
+  }
 }

@@ -10,4 +10,5 @@ export 'usecases/leave_community_use_case.dart';
 export 'usecases/delete_community_use_case.dart';
 export 'usecases/get_community_members_usecase.dart';
 export 'usecases/add_community_guidelines_usecase.dart';
+export 'usecases/get_postable_communities_usecase.dart';
 export 'repository/community_repository.dart';

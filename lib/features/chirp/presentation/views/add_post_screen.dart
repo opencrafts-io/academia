@@ -1,11 +1,15 @@
 import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:vibration/vibration.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class AddPostPage extends StatefulWidget {
@@ -19,6 +23,8 @@ class _AddPostPageState extends State<AddPostPage> {
   final picker = ImagePicker();
   XFile? file;
   final List<XFile> attachments = [];
+  Community? _selectedCommunity;
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final pickedFile = await picker.pickImage(source: source);
@@ -84,6 +90,11 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -108,8 +119,64 @@ class _AddPostPageState extends State<AddPostPage> {
                       barBackgroundColor: WidgetStateProperty.all(
                         Theme.of(context).colorScheme.tertiaryContainer,
                       ),
+                      barTextStyle: WidgetStatePropertyAll(
+                        Theme.of(context).textTheme.headlineSmall,
+                      ),
+
                       suggestionsBuilder: (context, controller) {
-                        return [];
+                        if (controller.text.trim().isNotEmpty) {
+                          context.read<CommunityBloc>().add(
+                            GetPostableCommunityEvent(
+                              searchTerm: controller.text.trim(),
+                            ),
+                          );
+                        }
+                        return [
+                          BlocBuilder<CommunityBloc, CommunityState>(
+                            builder: (context, state) {
+                              if (state is CommunityLoadingState) {
+                                return Column(
+                                  children: [SpinningScallopIndicator()],
+                                );
+                              } else if (state is CommunitiesLoadedState) {
+                                final communities = state.communities;
+                                if (communities.isEmpty) {
+                                  return const ListTile(
+                                    leading: AnimatedEmoji(AnimatedEmojis.sad),
+                                    title: Text(
+                                      "No communities found try joining one",
+                                    ),
+                                  );
+                                }
+                                return Column(
+                                  children: communities
+                                      .map(
+                                        (community) => ListTile(
+                                          onTap: () {
+                                            Vibration.vibrate(duration: 50);
+                                            setState(() {
+                                            _selectedCommunity = community;
+                                              controller.closeView(
+                                                community.name,
+                                              );
+                                            });
+                                          },
+                                          leading: CircleAvatar(),
+                                          title: Text(community.name),
+                                          subtitle: Text(
+                                            community.description ??
+                                                'No description',
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                );
+                              }
+
+                              return SizedBox.shrink();
+                            },
+                          ),
+                        ];
                       },
                     ),
                     SizedBox(height: 22),
@@ -331,11 +398,14 @@ class _AddPostPageState extends State<AddPostPage> {
             SliverPadding(
               padding: EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(padding: EdgeInsets.all(32)),
-                  onPressed: () {},
-                  label: Text("Create post"),
-                  icon: Icon(Icons.add),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: FilledButton.icon(
+                    style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
+                    onPressed: () {},
+                    label: Text("Create post"),
+                    icon: Icon(Icons.add),
+                  ),
                 ),
               ),
             ),
