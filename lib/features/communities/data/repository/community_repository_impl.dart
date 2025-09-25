@@ -190,4 +190,28 @@ class CommunityRepositoryImpl implements CommunityRepository {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
+    String searchTerm, {
+    int page = 0,
+    int pageSize = 100,
+  }) async {
+    final result = await remoteDatasource.searchForCommunity(
+      searchTerm,
+      page: page,
+      pageSize: pageSize,
+    );
+
+    return await result.fold(
+      (failure) => left(failure),
+      (searched) => right(
+        PaginatedCommunity(
+          communities: searched.communities.map((e) => e.toEntity()).toList(),
+          count: searched.count,
+          hasMore: searched.next != null,
+        ),
+      ),
+    );
+  }
 }

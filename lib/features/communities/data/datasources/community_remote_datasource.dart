@@ -3,6 +3,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/communities/communities.dart';
 import 'package:academia/features/communities/data/models/paginated_user_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -396,6 +397,36 @@ class CommunityRemoteDatasource with DioErrorHandler {
         ServerFailure(
           message:
               "Something went wrong while attempting to fetch your communities",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedCommunityResponse>> searchForCommunity(
+    String searchTerm, {
+    int page = 1,
+    int pageSize = 100,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/search/",
+        queryParameters: {
+          "q": "c/$searchTerm",
+          "page": page,
+          "pageSize": pageSize,
+        },
+      );
+      if (response.statusCode == 200) {
+        return right(PaginatedCommunityResponse.fromJson(response.data));
+      }
+      throw "Programming error";
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "Something went wrong while searching for community.",
           error: e,
         ),
       );

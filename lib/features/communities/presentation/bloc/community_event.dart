@@ -3,18 +3,22 @@ part of 'community_bloc.dart';
 sealed class CommunityEvent extends Equatable {}
 
 class CommunityPaginatedEventParameter {
-  int limit;
-  int offset;
+  int page;
+  int pageSize;
 
-  CommunityPaginatedEventParameter({this.limit = 100, this.offset = 0});
+  CommunityPaginatedEventParameter({this.page = 1, this.pageSize = 100});
 }
 
 /// SearchCommunityEvent - For searching for a community
 class SearchCommunityEvent extends CommunityEvent {
   final CommunityPaginatedEventParameter paginationParam;
-  SearchCommunityEvent({required this.paginationParam});
+  final String searchTerm;
+  SearchCommunityEvent({
+    required this.paginationParam,
+    required this.searchTerm,
+  });
   @override
-  List<Object?> get props => [paginationParam];
+  List<Object?> get props => [paginationParam, searchTerm];
 }
 
 /// CreateCommunityEvent - For creating a community.

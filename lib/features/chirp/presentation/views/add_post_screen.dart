@@ -25,6 +25,10 @@ class _AddPostPageState extends State<AddPostPage> {
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
 
+  final TextEditingController _postTitleController = TextEditingController();
+  final TextEditingController _postDescriptionController =
+      TextEditingController();
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final pickedFile = await picker.pickImage(source: source);
@@ -155,7 +159,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                           onTap: () {
                                             Vibration.vibrate(duration: 50);
                                             setState(() {
-                                            _selectedCommunity = community;
+                                              _selectedCommunity = community;
                                               controller.closeView(
                                                 community.name,
                                               );
@@ -183,6 +187,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     Text("Configure your post"),
                     SizedBox(height: 8),
                     TextFormField(
+                      controller: _postTitleController,
                       textCapitalization: TextCapitalization.sentences,
                       maxLength: 250,
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -198,6 +203,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     ),
                     SizedBox(height: 16),
                     TextFormField(
+                      controller: _postDescriptionController,
                       maxLines: null,
                       minLines: 3,
                       textCapitalization: TextCapitalization.sentences,

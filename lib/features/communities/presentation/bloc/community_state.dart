@@ -12,6 +12,8 @@ class CommunityInitialState extends CommunityState {}
 
 class CommunityLoadingState extends CommunityState {}
 
+class CommunitySearchingState extends CommunityState {}
+
 class CommunityErrorState extends CommunityState {
   final String message;
   CommunityErrorState({required this.message});
@@ -26,4 +28,13 @@ class CommunitiesLoadedState extends CommunityState {
 
   @override
   List<Object?> get props => [communities];
+}
+
+// Fore representing a retrieval / search through the api
+class CommunitiesRetrievedState extends CommunityState {
+  final PaginatedCommunity retrieved;
+  CommunitiesRetrievedState({required this.retrieved});
+
+  @override
+  List<Object?> get props => [retrieved];
 }
