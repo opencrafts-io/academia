@@ -1,4 +1,12 @@
+import 'package:academia/config/config.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/communities/communities.dart';
+import 'package:animated_emoji/animated_emoji.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:animated_emoji/emoji.dart';
+import 'package:vibration/vibration.dart';
 
 class GlobalSearchBar extends StatefulWidget {
   const GlobalSearchBar({super.key});
@@ -8,22 +16,51 @@ class GlobalSearchBar extends StatefulWidget {
 }
 
 class _GlobalSearchBarState extends State<GlobalSearchBar> {
+  int _currentTabIndex = 0;
+  void _performSearch(BuildContext context, String query) {
+    switch (_currentTabIndex) {
+      case 0:
+        debugPrint("Searching Posts for: $query");
+        break;
+      case 1:
+        context.read<CommunityBloc>().add(
+          SearchCommunityEvent(
+            paginationParam: CommunityPaginatedEventParameter(
+              pageSize: 100,
+              page: 1,
+            ),
+            searchTerm: query,
+          ),
+        );
+        break;
+      case 2:
+        debugPrint("Searching Users for: $query");
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) => ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 600),
-        child: SearchAnchor.bar(
-          suggestionsBuilder: (context, searchController) {
-            return [
-              DefaultTabController(
-                length: 3,
-                child: Column(
+    return SearchAnchor.bar(
+      suggestionsBuilder: (context, searchController) {
+        return [
+          DefaultTabController(
+            length: 3,
+            child: Builder(
+              builder: (tabContext) {
+                final tabController = DefaultTabController.of(tabContext);
+                tabController.addListener(() {
+                  if (!tabController.indexIsChanging) {
+                    setState(() {
+                      _currentTabIndex = tabController.index;
+                    });
+                  }
+                });
+                return Column(
                   children: [
                     TabBar(
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicatorAnimation: TabIndicatorAnimation.elastic,
-                      automaticIndicatorColorAdjustment: true,
                       tabs: [
                         Tab(text: "Posts", icon: Icon(Icons.newspaper)),
                         Tab(text: "Communities", icon: Icon(Icons.group)),
@@ -31,28 +68,129 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
+                      height: MediaQuery.of(tabContext).size.height * 0.8,
                       child: TabBarView(
                         children: [
                           Center(child: Text("Posts")),
-                          Center(child: Text("Communities")),
+                          if (_currentTabIndex == 1)
+                            _buildSearchCommunitiesSection()
+                          else
+                            const SizedBox.shrink(),
                           Center(child: Text("Users")),
                         ],
                       ),
                     ),
                   ],
-                ),
-              ),
-            ];
-          },
-          barElevation: WidgetStatePropertyAll(0),
-          barBackgroundColor: WidgetStatePropertyAll(
-            Theme.of(context).colorScheme.primaryContainer,
+                );
+              },
+            ),
           ),
-          barHintText: "Search for posts, events, friends",
-          barLeading: Icon(Icons.search),
-          viewElevation: 0,
-          isFullScreen: true,
+        ];
+      },
+      barElevation: WidgetStatePropertyAll(0),
+      barBackgroundColor: WidgetStatePropertyAll(
+        Theme.of(context).colorScheme.primaryContainer,
+      ),
+      barHintText: "Search for posts, events, friends",
+      barLeading: Icon(Icons.search),
+      viewElevation: 0,
+      isFullScreen: true,
+      onChanged: (query) => _performSearch(context, query),
+      shrinkWrap: true,
+    );
+  }
+
+  Widget _buildSearchCommunitiesSection() {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(12),
+      child: BlocBuilder<CommunityBloc, CommunityState>(
+        builder: (context, state) {
+          if (state is CommunitiesRetrievedState) {
+            if (state.retrieved.communities.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AnimatedEmoji(AnimatedEmojis.seeNoEvilMonkey, size: 80),
+                  Text("Searched community does not exist!"),
+                ],
+              );
+            }
+
+            return SingleChildScrollView(
+              child: Column(
+                children: state.retrieved.communities
+                    .map(
+                      (community) => CommunitySearchCard(community: community),
+                    )
+                    .toList(),
+              ),
+            );
+          } else if (state is CommunityLoadingState) {
+            return Center(child: SpinningScallopIndicator());
+          }
+          return Text("Why am i here");
+        },
+      ),
+    );
+  }
+}
+
+class CommunitySearchCard extends StatelessWidget {
+  const CommunitySearchCard({super.key, required this.community});
+  final Community community;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.outlined(
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: () async {
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(
+              pattern: [0, 50, 100, 128],
+              intensities: [0, 100, 0, 128],
+            );
+          }
+
+          if(!context.mounted)return;
+          CommunitiesRoute(communityId: community.id.toString()).push(context);
+      
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: CachedNetworkImage(
+                imageUrl: community.bannerUrl ?? '',
+                errorWidget: (context, error, child) => Image.asset(
+                  "assets/illustrations/community.jpg",
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                height: 200,
+                fit: BoxFit.fill,
+              ),
+            ),
+
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage: community.logoUrl == null
+                    ? null
+                    : CachedNetworkImageProvider(
+                        community.logoUrl!,
+                        errorListener: (error) {},
+                      ),
+                child: Text(community.name[0]),
+              ),
+              title: Text(community.name),
+              subtitle: Text(
+                community.description ?? 'No description available yet',
+              ),
+              subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+              trailing: Icon(Icons.open_in_new),
+            ),
+          ],
         ),
       ),
     );

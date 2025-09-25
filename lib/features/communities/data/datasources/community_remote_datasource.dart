@@ -56,7 +56,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
       });
 
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/create/",
+        "/$servicePrefix/groups/create/",
         data: formData,
         options: Options(
           headers: {
@@ -97,7 +97,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$communityId/detail/",
+        "/$servicePrefix/groups/$communityId/detail/",
         data: {"user_id": userId},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -136,7 +136,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/moderate/",
+        "/$servicePrefix/groups/$groupId/moderate/",
         data: {
           "action": action,
           "user_id": userId,
@@ -187,7 +187,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/join/",
+        "/$servicePrefix/groups/$groupId/join/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(
           headers: {
@@ -229,7 +229,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/leave/",
+        "/$servicePrefix/groups/$groupId/leave/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -265,7 +265,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.delete(
-        "$servicePrefix/groups/$groupId/delete/",
+        "/$servicePrefix/groups/$groupId/delete/",
         queryParameters: {"user_id": userId},
       );
 
@@ -301,7 +301,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "$servicePrefix/groups/$communityId/$userType",
+        "/$servicePrefix/groups/$communityId/$userType",
         queryParameters: {"page": page},
         options: Options(
           headers: {
@@ -344,7 +344,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$communityId/rules/",
+        "/$servicePrefix/groups/$communityId/rules/",
         data: {"rule": rule, "user_id": userId},
         options: Options(headers: {"Content-Type": "application/json"}),
       );
@@ -409,7 +409,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
     int pageSize = 100,
   }) async {
     try {
-      final response = await dioClient.dio.post(
+      final response = await dioClient.dio.get(
         "/$servicePrefix/search/",
         queryParameters: {
           "q": "c/$searchTerm",
