@@ -129,7 +129,18 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
           } else if (state is CommunityLoadingState) {
             return Center(child: SpinningScallopIndicator());
           }
-          return Text("Why am i here");
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AnimatedEmoji(AnimatedEmojis.hugFace, size: 80),
+              Text(
+                "Find groups of people that share your interests.",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          );
         },
       ),
     );
@@ -153,9 +164,8 @@ class CommunitySearchCard extends StatelessWidget {
             );
           }
 
-          if(!context.mounted)return;
+          if (!context.mounted) return;
           CommunitiesRoute(communityId: community.id.toString()).push(context);
-      
         },
         child: Column(
           children: [
