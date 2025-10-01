@@ -129,10 +129,6 @@ class _CommunityHomeState extends State<CommunityHome>
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     pinned: true,
                     floating: false,
-                    leading: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back),
-                    ),
                     // Collapsed title (logo + details row)
                     title: Row(
                       children: [
@@ -208,12 +204,12 @@ class _CommunityHomeState extends State<CommunityHome>
                               Text(
                                 state.community.name,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.titleMedium
+                                style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 "${state.community.memberCount} members",
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -223,25 +219,10 @@ class _CommunityHomeState extends State<CommunityHome>
                     ),
 
                     actions: [
-                      PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          // handle actions
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: ListTile(
-                              leading: Icon(Icons.edit),
-                              title: Text("Edit Community Details"),
-                            ),
-                          ),
-                        ],
-                      ),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
                     ],
 
                     flexibleSpace: FlexibleSpaceBar(
-                    
                       background: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

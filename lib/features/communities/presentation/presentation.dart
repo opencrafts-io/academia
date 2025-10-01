@@ -7,3 +7,4 @@ export 'bloc/community_home_bloc.dart';
 export 'bloc/create_community_bloc.dart';
 export 'bloc/add_members_bloc.dart';
 export 'bloc/community_users/community_users_bloc.dart';
+export 'bloc/community_bloc.dart';

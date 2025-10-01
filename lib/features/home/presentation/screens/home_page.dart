@@ -39,22 +39,7 @@ class _HomePageState extends State<HomePage> {
                 child: Image.asset("assets/icons/academia.png"),
               ),
               centerTitle: true,
-              title: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 600),
-                child: SearchAnchor.bar(
-                  suggestionsBuilder: (context, searchController) {
-                    return [];
-                  },
-                  barElevation: WidgetStatePropertyAll(0),
-                  barBackgroundColor: WidgetStatePropertyAll(
-                    Theme.of(context).colorScheme.primaryContainer,
-                  ),
-                  barHintText: "Search for posts, events, friends",
-                  barLeading: Icon(Icons.search),
-                  viewElevation: 0,
-                  isFullScreen: true,
-                ),
-              ),
+              title: GlobalSearchBar(),
               actions: [
                 IconButton(
                   onPressed: () {

@@ -1,9 +1,11 @@
+import 'package:academia/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
 
 import 'package:academia/injection_container.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
 
@@ -157,10 +159,16 @@ class ChatRoute extends GoRouteData with _$ChatRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final conversation = state.extra as Conversation?;
-    debugPrint('🚀 ChatRoute: Building chat screen for conversation $conversationId');
-    debugPrint('🚀 ChatRoute: Conversation object: ${conversation != null ? 'present with ${conversation.participants.length} participants' : 'null'}');
+    debugPrint(
+      '🚀 ChatRoute: Building chat screen for conversation $conversationId',
+    );
+    debugPrint(
+      '🚀 ChatRoute: Conversation object: ${conversation != null ? 'present with ${conversation.participants.length} participants' : 'null'}',
+    );
     if (conversation != null) {
-      debugPrint('🚀 ChatRoute: Participants: ${conversation.participants.map((p) => '${p.name} (${p.userId})').join(', ')}');
+      debugPrint(
+        '🚀 ChatRoute: Participants: ${conversation.participants.map((p) => '${p.name} (${p.userId})').join(', ')}',
+      );
     }
     return BlocProvider<ChatBloc>(
       create: (context) => sl<ChatBloc>(),
@@ -524,5 +532,15 @@ class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CreateCommunityScreen();
+  }
+}
+
+@TypedGoRoute<TrimVideoRoute>(path: "/video-trimer/:videoPath")
+class TrimVideoRoute extends GoRouteData with _$TrimVideoRoute {
+  TrimVideoRoute({required this.videoPath});
+  final String videoPath;
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return VideoTrimmerPage(videoPath: videoPath);
   }
 }

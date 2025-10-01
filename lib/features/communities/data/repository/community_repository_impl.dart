@@ -1,16 +1,17 @@
 import 'package:academia/core/error/failures.dart';
-import 'package:academia/features/communities/data/datasources/community_remote_datasource.dart';
-import 'package:academia/features/communities/data/models/community_model_helper.dart';
+import 'package:academia/database/database.dart';
+import 'package:academia/features/communities/communities.dart';
 import 'package:academia/features/communities/data/models/paginated_users_model_helper.dart';
-import 'package:academia/features/communities/domain/entities/community.dart';
-import 'package:academia/features/communities/domain/entities/paginated_response.dart';
-import 'package:academia/features/communities/domain/repository/community_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class CommunityRepositoryImpl implements CommunityRepository {
   final CommunityRemoteDatasource remoteDatasource;
+  final CommunityLocalDatasource communityLocalDatasource;
 
-  CommunityRepositoryImpl({required this.remoteDatasource});
+  CommunityRepositoryImpl({
+    required this.remoteDatasource,
+    required this.communityLocalDatasource,
+  });
 
   @override
   Future<Either<Failure, Community>> createCommunity({
@@ -87,7 +88,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
       userName: userName,
     );
 
-    return result.fold((failure) => left(failure), (community) {
+    return await result.fold((failure) => left(failure), (community) async {
+      await communityLocalDatasource.createorUpdateCommunity(community);
       return right(community.toEntity());
     });
   }
@@ -104,7 +106,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
       userName: userName,
     );
 
-    return result.fold((failure) => left(failure), (message) {
+    return await result.fold((failure) => left(failure), (message) async {
       return right(message);
     });
   }
@@ -156,5 +158,60 @@ class CommunityRepositoryImpl implements CommunityRepository {
     return result.fold((failure) => left(failure), (community) {
       return right(community.toEntity());
     });
+  }
+
+  @override
+  Future<Either<Failure, List<Community>>> getPostableCommunities() async {
+    final result = await remoteDatasource.getPostableCommunities();
+    return await result.fold(
+      (failure) async {
+        final cacheRes = await communityLocalDatasource.getCachedCommunities();
+        if (cacheRes.isLeft()) {
+          return left(failure);
+        }
+
+        final rawCommunities = (cacheRes as Right).value as List<CommunityData>;
+        return right(
+          rawCommunities.map((community) => community.toEntity()).toList(),
+        );
+      },
+      (rawCommunities) async {
+        final List<Community> communities = [];
+        for (final community in rawCommunities) {
+          final result = await communityLocalDatasource.createorUpdateCommunity(
+            community,
+          );
+
+          if (result.isRight()) {
+            communities.add(community.toEntity());
+          }
+        }
+        return right(communities);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
+    String searchTerm, {
+    int page = 0,
+    int pageSize = 100,
+  }) async {
+    final result = await remoteDatasource.searchForCommunity(
+      searchTerm,
+      page: page,
+      pageSize: pageSize,
+    );
+
+    return await result.fold(
+      (failure) => left(failure),
+      (searched) => right(
+        PaginatedCommunity(
+          communities: searched.communities.map((e) => e.toEntity()).toList(),
+          count: searched.count,
+          hasMore: searched.next != null,
+        ),
+      ),
+    );
   }
 }

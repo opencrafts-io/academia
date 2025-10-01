@@ -1,4 +1,5 @@
 import 'package:academia/core/error/failures.dart';
+import 'package:academia/features/communities/communities.dart';
 import 'package:academia/features/communities/domain/entities/community.dart';
 import 'package:academia/features/communities/domain/entities/paginated_response.dart';
 import 'package:dartz/dartz.dart';
@@ -55,5 +56,13 @@ abstract class CommunityRepository {
     required List<String> rule,
     required String communityId,
     required String userId,
+  });
+
+  Future<Either<Failure, List<Community>>> getPostableCommunities();
+
+  Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
+    String searchTerm, {
+    int page = 1,
+    int pageSize = 100,
   });
 }
