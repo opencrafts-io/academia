@@ -71,12 +71,14 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
                       height: MediaQuery.of(tabContext).size.height * 0.8,
                       child: TabBarView(
                         children: [
-                          Center(child: Text("Posts")),
-                          if (_currentTabIndex == 1)
-                            _buildSearchCommunitiesSection()
-                          else
-                            const SizedBox.shrink(),
-                          Center(child: Text("Users")),
+                          // if (_currentTabIndex == 0)
+                          _buildSearchPostSection(),
+                          // else if (_currentTabIndex == 1)
+                          _buildSearchCommunitiesSection(),
+                          // else if (_currentTabIndex == 2)
+                          _buildSearchFriendsSection(),
+                          // else
+                          // const SizedBox.shrink(),
                         ],
                       ),
                     ),
@@ -97,6 +99,42 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
       isFullScreen: true,
       onChanged: (query) => _performSearch(context, query),
       shrinkWrap: true,
+    );
+  }
+
+  Widget _buildSearchPostSection() {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AnimatedEmoji(AnimatedEmojis.thinkingFace, size: 80),
+          Text(
+            "There's just that post ",
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchFriendsSection() {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AnimatedEmoji(AnimatedEmojis.pleading, size: 80),
+          Text(
+            "Find your friends via academia",
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 
