@@ -1,77 +1,77 @@
-import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName("CommunityData")
 class CommunityTable extends Table {
-  IntColumn get id => integer()();
+  @JsonKey("id")
+  IntColumn get id => integer().autoIncrement()();
 
+  @JsonKey("name")
   TextColumn get name => text()();
+
+  @JsonKey("description")
   TextColumn get description => text().nullable()();
 
-  @JsonKey("creator_id")
-  TextColumn get creatorId => text().nullable()();
+  @JsonKey("nsfw")
+  BoolColumn get nsfw => boolean().withDefault(Constant(false))();
 
-  @JsonKey("creator_name")
-  TextColumn get creatorName => text().nullable()();
+  @JsonKey("private")
+  BoolColumn get private => boolean().withDefault(Constant(false))();
 
-  /// Moderators (IDs)
-  @JsonKey("moderators")
-  TextColumn get moderators =>
-      text().map(const JsonListConverter()).nullable()();
+  @JsonKey("verified")
+  BoolColumn get verified => boolean().withDefault(Constant(false))();
 
-  /// Moderator names
-  @JsonKey("moderator_names")
-  TextColumn get moderatorNames =>
-      text().map(const JsonListConverter()).nullable()();
+  @JsonKey("visibility")
+  TextColumn get visibility => text()();
 
-  /// Members (IDs)
-  @JsonKey("members")
-  TextColumn get members => text().map(const JsonListConverter()).nullable()();
+  @JsonKey("member_count")
+  IntColumn get memberCount => integer().withDefault(Constant(0))();
 
-  /// Member names
-  @JsonKey("member_names")
-  TextColumn get memberNames =>
-      text().map(const JsonListConverter()).nullable()();
+  @JsonKey("moderator_count")
+  IntColumn get moderatorCount => integer().withDefault(Constant(0))();
 
-  /// Banned users (IDs)
-  @JsonKey("banned_users")
-  TextColumn get bannedUsers =>
-      text().map(const JsonListConverter()).nullable()();
+  @JsonKey("banned_users_count")
+  IntColumn get bannedUsersCount => integer().withDefault(Constant(0))();
 
-  /// Banned user names
-  @JsonKey("banned_user_names")
-  TextColumn get bannedUserNames =>
-      text().map(const JsonListConverter()).nullable()();
+  @JsonKey("monthly_visitor_count")
+  IntColumn get monthlyVisitorCount => integer().withDefault(Constant(0))();
 
-  @JsonKey("is_private")
-  BoolColumn get isPrivate => boolean().withDefault(const Constant(false))();
+  @JsonKey("weekly_visitor_count")
+  IntColumn get weeklyVisitorCount => integer().withDefault(Constant(0))();
 
-  TextColumn get rules => text().map(const JsonListConverter()).nullable()();
+  @JsonKey("banner")
+  TextColumn get banner => text().nullable()();
 
-  @JsonKey("logo_url")
-  TextColumn get logoUrl => text().nullable()();
+  @JsonKey("banner_height")
+  IntColumn get bannerHeight => integer().withDefault(Constant(0))();
+
+  @JsonKey("banner_width")
+  IntColumn get bannerWidth => integer().withDefault(Constant(0))();
 
   @JsonKey("banner_url")
   TextColumn get bannerUrl => text().nullable()();
+
+  @JsonKey("profile_picture")
+  TextColumn get profilePicture => text().nullable()();
+
+  @JsonKey("profile_picture_height")
+  IntColumn get profilePictureHeight => integer().withDefault(Constant(0))();
+
+  @JsonKey("profile_picture_width")
+  IntColumn get profilePictureWidth => integer().withDefault(Constant(0))();
+
+  @JsonKey("profile_picture_url")
+  TextColumn get profilePictureUrl => text().nullable()();
+
+  @JsonKey("creator_id")
+  TextColumn get creatorId => text().references(ChirpUserTable, #id)();
+  @JsonKey("guidelines")
+  TextColumn get guidelines => text().map(JsonListConverter())();
 
   @JsonKey("created_at")
   DateTimeColumn get createdAt => dateTime()();
 
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime()();
-
-  @JsonKey("can_moderate")
-  BoolColumn get canModerate => boolean().withDefault(const Constant(false))();
-
-  @JsonKey("can_post")
-  BoolColumn get canPost => boolean().withDefault(const Constant(false))();
-
-  @JsonKey("is_banned")
-  BoolColumn get isBanned => boolean().withDefault(const Constant(false))();
-
-  @JsonKey("member_count")
-  IntColumn get memberCount => integer().withDefault(const Constant(0))();
-
-  @override
-  Set<Column> get primaryKey => {id};
 }

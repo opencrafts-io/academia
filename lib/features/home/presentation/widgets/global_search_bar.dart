@@ -223,10 +223,10 @@ class CommunitySearchCard extends StatelessWidget {
 
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: community.logoUrl == null
+                backgroundImage: community.profilePictureUrl == null
                     ? null
                     : CachedNetworkImageProvider(
-                        community.logoUrl!,
+                        community.profilePictureUrl!,
                         errorListener: (error) {},
                       ),
                 child: Text(community.name[0]),

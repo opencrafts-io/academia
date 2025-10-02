@@ -18019,8 +18019,12 @@ class $CommunityTableTable extends CommunityTable
     'id',
     aliasedName,
     false,
+    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -18042,122 +18046,150 @@ class $CommunityTableTable extends CommunityTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
-    'creatorId',
-  );
+  static const VerificationMeta _nsfwMeta = const VerificationMeta('nsfw');
   @override
-  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
-    'creator_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
-    'creatorName',
-  );
-  @override
-  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
-    'creator_name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  moderators = GeneratedColumn<String>(
-    'moderators',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<List<dynamic>?>($CommunityTableTable.$convertermoderatorsn);
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  moderatorNames =
-      GeneratedColumn<String>(
-        'moderator_names',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>(
-        $CommunityTableTable.$convertermoderatorNamesn,
-      );
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> members =
-      GeneratedColumn<String>(
-        'members',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($CommunityTableTable.$convertermembersn);
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  memberNames = GeneratedColumn<String>(
-    'member_names',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<List<dynamic>?>($CommunityTableTable.$convertermemberNamesn);
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  bannedUsers = GeneratedColumn<String>(
-    'banned_users',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<List<dynamic>?>($CommunityTableTable.$converterbannedUsersn);
-  @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  bannedUserNames =
-      GeneratedColumn<String>(
-        'banned_user_names',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>(
-        $CommunityTableTable.$converterbannedUserNamesn,
-      );
-  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
-    'isPrivate',
-  );
-  @override
-  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
-    'is_private',
+  late final GeneratedColumn<bool> nsfw = GeneratedColumn<bool>(
+    'nsfw',
     aliasedName,
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_private" IN (0, 1))',
+      'CHECK ("nsfw" IN (0, 1))',
     ),
-    defaultValue: const Constant(false),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _privateMeta = const VerificationMeta(
+    'private',
   );
   @override
-  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> rules =
-      GeneratedColumn<String>(
-        'rules',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($CommunityTableTable.$converterrulesn);
-  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
-    'logoUrl',
+  late final GeneratedColumn<bool> private = GeneratedColumn<bool>(
+    'private',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("private" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _verifiedMeta = const VerificationMeta(
+    'verified',
   );
   @override
-  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
-    'logo_url',
+  late final GeneratedColumn<bool> verified = GeneratedColumn<bool>(
+    'verified',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("verified" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _visibilityMeta = const VerificationMeta(
+    'visibility',
+  );
+  @override
+  late final GeneratedColumn<String> visibility = GeneratedColumn<String>(
+    'visibility',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _memberCountMeta = const VerificationMeta(
+    'memberCount',
+  );
+  @override
+  late final GeneratedColumn<int> memberCount = GeneratedColumn<int>(
+    'member_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _moderatorCountMeta = const VerificationMeta(
+    'moderatorCount',
+  );
+  @override
+  late final GeneratedColumn<int> moderatorCount = GeneratedColumn<int>(
+    'moderator_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannedUsersCountMeta = const VerificationMeta(
+    'bannedUsersCount',
+  );
+  @override
+  late final GeneratedColumn<int> bannedUsersCount = GeneratedColumn<int>(
+    'banned_users_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _monthlyVisitorCountMeta =
+      const VerificationMeta('monthlyVisitorCount');
+  @override
+  late final GeneratedColumn<int> monthlyVisitorCount = GeneratedColumn<int>(
+    'monthly_visitor_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _weeklyVisitorCountMeta =
+      const VerificationMeta('weeklyVisitorCount');
+  @override
+  late final GeneratedColumn<int> weeklyVisitorCount = GeneratedColumn<int>(
+    'weekly_visitor_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerHeightMeta = const VerificationMeta(
+    'bannerHeight',
+  );
+  @override
+  late final GeneratedColumn<int> bannerHeight = GeneratedColumn<int>(
+    'banner_height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannerWidthMeta = const VerificationMeta(
+    'bannerWidth',
+  );
+  @override
+  late final GeneratedColumn<int> bannerWidth = GeneratedColumn<int>(
+    'banner_width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
   );
   static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
     'bannerUrl',
@@ -18170,6 +18202,74 @@ class $CommunityTableTable extends CommunityTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _profilePictureMeta = const VerificationMeta(
+    'profilePicture',
+  );
+  @override
+  late final GeneratedColumn<String> profilePicture = GeneratedColumn<String>(
+    'profile_picture',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profilePictureHeightMeta =
+      const VerificationMeta('profilePictureHeight');
+  @override
+  late final GeneratedColumn<int> profilePictureHeight = GeneratedColumn<int>(
+    'profile_picture_height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _profilePictureWidthMeta =
+      const VerificationMeta('profilePictureWidth');
+  @override
+  late final GeneratedColumn<int> profilePictureWidth = GeneratedColumn<int>(
+    'profile_picture_width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _profilePictureUrlMeta = const VerificationMeta(
+    'profilePictureUrl',
+  );
+  @override
+  late final GeneratedColumn<String> profilePictureUrl =
+      GeneratedColumn<String>(
+        'profile_picture_url',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
+    'creatorId',
+  );
+  @override
+  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
+    'creator_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES chirp_user_table (id)',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String>
+  guidelines = GeneratedColumn<String>(
+    'guidelines',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<List<dynamic>>($CommunityTableTable.$converterguidelines);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -18192,86 +18292,32 @@ class $CommunityTableTable extends CommunityTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _canModerateMeta = const VerificationMeta(
-    'canModerate',
-  );
-  @override
-  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
-    'can_moderate',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_moderate" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _canPostMeta = const VerificationMeta(
-    'canPost',
-  );
-  @override
-  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
-    'can_post',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_post" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _isBannedMeta = const VerificationMeta(
-    'isBanned',
-  );
-  @override
-  late final GeneratedColumn<bool> isBanned = GeneratedColumn<bool>(
-    'is_banned',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_banned" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _memberCountMeta = const VerificationMeta(
-    'memberCount',
-  );
-  @override
-  late final GeneratedColumn<int> memberCount = GeneratedColumn<int>(
-    'member_count',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     name,
     description,
-    creatorId,
-    creatorName,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logoUrl,
+    nsfw,
+    private,
+    verified,
+    visibility,
+    memberCount,
+    moderatorCount,
+    bannedUsersCount,
+    monthlyVisitorCount,
+    weeklyVisitorCount,
+    banner,
+    bannerHeight,
+    bannerWidth,
     bannerUrl,
+    profilePicture,
+    profilePictureHeight,
+    profilePictureWidth,
+    profilePictureUrl,
+    creatorId,
+    guidelines,
     createdAt,
     updatedAt,
-    canModerate,
-    canPost,
-    isBanned,
-    memberCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -18305,31 +18351,99 @@ class $CommunityTableTable extends CommunityTable
         ),
       );
     }
-    if (data.containsKey('creator_id')) {
+    if (data.containsKey('nsfw')) {
       context.handle(
-        _creatorIdMeta,
-        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
+        _nsfwMeta,
+        nsfw.isAcceptableOrUnknown(data['nsfw']!, _nsfwMeta),
       );
     }
-    if (data.containsKey('creator_name')) {
+    if (data.containsKey('private')) {
       context.handle(
-        _creatorNameMeta,
-        creatorName.isAcceptableOrUnknown(
-          data['creator_name']!,
-          _creatorNameMeta,
+        _privateMeta,
+        private.isAcceptableOrUnknown(data['private']!, _privateMeta),
+      );
+    }
+    if (data.containsKey('verified')) {
+      context.handle(
+        _verifiedMeta,
+        verified.isAcceptableOrUnknown(data['verified']!, _verifiedMeta),
+      );
+    }
+    if (data.containsKey('visibility')) {
+      context.handle(
+        _visibilityMeta,
+        visibility.isAcceptableOrUnknown(data['visibility']!, _visibilityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_visibilityMeta);
+    }
+    if (data.containsKey('member_count')) {
+      context.handle(
+        _memberCountMeta,
+        memberCount.isAcceptableOrUnknown(
+          data['member_count']!,
+          _memberCountMeta,
         ),
       );
     }
-    if (data.containsKey('is_private')) {
+    if (data.containsKey('moderator_count')) {
       context.handle(
-        _isPrivateMeta,
-        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
+        _moderatorCountMeta,
+        moderatorCount.isAcceptableOrUnknown(
+          data['moderator_count']!,
+          _moderatorCountMeta,
+        ),
       );
     }
-    if (data.containsKey('logo_url')) {
+    if (data.containsKey('banned_users_count')) {
       context.handle(
-        _logoUrlMeta,
-        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
+        _bannedUsersCountMeta,
+        bannedUsersCount.isAcceptableOrUnknown(
+          data['banned_users_count']!,
+          _bannedUsersCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('monthly_visitor_count')) {
+      context.handle(
+        _monthlyVisitorCountMeta,
+        monthlyVisitorCount.isAcceptableOrUnknown(
+          data['monthly_visitor_count']!,
+          _monthlyVisitorCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weekly_visitor_count')) {
+      context.handle(
+        _weeklyVisitorCountMeta,
+        weeklyVisitorCount.isAcceptableOrUnknown(
+          data['weekly_visitor_count']!,
+          _weeklyVisitorCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banner')) {
+      context.handle(
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
+      );
+    }
+    if (data.containsKey('banner_height')) {
+      context.handle(
+        _bannerHeightMeta,
+        bannerHeight.isAcceptableOrUnknown(
+          data['banner_height']!,
+          _bannerHeightMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banner_width')) {
+      context.handle(
+        _bannerWidthMeta,
+        bannerWidth.isAcceptableOrUnknown(
+          data['banner_width']!,
+          _bannerWidthMeta,
+        ),
       );
     }
     if (data.containsKey('banner_url')) {
@@ -18337,6 +18451,50 @@ class $CommunityTableTable extends CommunityTable
         _bannerUrlMeta,
         bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
       );
+    }
+    if (data.containsKey('profile_picture')) {
+      context.handle(
+        _profilePictureMeta,
+        profilePicture.isAcceptableOrUnknown(
+          data['profile_picture']!,
+          _profilePictureMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_height')) {
+      context.handle(
+        _profilePictureHeightMeta,
+        profilePictureHeight.isAcceptableOrUnknown(
+          data['profile_picture_height']!,
+          _profilePictureHeightMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_width')) {
+      context.handle(
+        _profilePictureWidthMeta,
+        profilePictureWidth.isAcceptableOrUnknown(
+          data['profile_picture_width']!,
+          _profilePictureWidthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_url')) {
+      context.handle(
+        _profilePictureUrlMeta,
+        profilePictureUrl.isAcceptableOrUnknown(
+          data['profile_picture_url']!,
+          _profilePictureUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('creator_id')) {
+      context.handle(
+        _creatorIdMeta,
+        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorIdMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -18353,36 +18511,6 @@ class $CommunityTableTable extends CommunityTable
       );
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
-    }
-    if (data.containsKey('can_moderate')) {
-      context.handle(
-        _canModerateMeta,
-        canModerate.isAcceptableOrUnknown(
-          data['can_moderate']!,
-          _canModerateMeta,
-        ),
-      );
-    }
-    if (data.containsKey('can_post')) {
-      context.handle(
-        _canPostMeta,
-        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
-      );
-    }
-    if (data.containsKey('is_banned')) {
-      context.handle(
-        _isBannedMeta,
-        isBanned.isAcceptableOrUnknown(data['is_banned']!, _isBannedMeta),
-      );
-    }
-    if (data.containsKey('member_count')) {
-      context.handle(
-        _memberCountMeta,
-        memberCount.isAcceptableOrUnknown(
-          data['member_count']!,
-          _memberCountMeta,
-        ),
-      );
     }
     return context;
   }
@@ -18405,67 +18533,83 @@ class $CommunityTableTable extends CommunityTable
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
-      creatorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_id'],
-      ),
-      creatorName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_name'],
-      ),
-      moderators: $CommunityTableTable.$convertermoderatorsn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}moderators'],
-        ),
-      ),
-      moderatorNames: $CommunityTableTable.$convertermoderatorNamesn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}moderator_names'],
-        ),
-      ),
-      members: $CommunityTableTable.$convertermembersn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}members'],
-        ),
-      ),
-      memberNames: $CommunityTableTable.$convertermemberNamesn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}member_names'],
-        ),
-      ),
-      bannedUsers: $CommunityTableTable.$converterbannedUsersn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}banned_users'],
-        ),
-      ),
-      bannedUserNames: $CommunityTableTable.$converterbannedUserNamesn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}banned_user_names'],
-        ),
-      ),
-      isPrivate: attachedDatabase.typeMapping.read(
+      nsfw: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
-        data['${effectivePrefix}is_private'],
+        data['${effectivePrefix}nsfw'],
       )!,
-      rules: $CommunityTableTable.$converterrulesn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}rules'],
-        ),
-      ),
-      logoUrl: attachedDatabase.typeMapping.read(
+      private: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}private'],
+      )!,
+      verified: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}verified'],
+      )!,
+      visibility: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}logo_url'],
+        data['${effectivePrefix}visibility'],
+      )!,
+      memberCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}member_count'],
+      )!,
+      moderatorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}moderator_count'],
+      )!,
+      bannedUsersCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banned_users_count'],
+      )!,
+      monthlyVisitorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}monthly_visitor_count'],
+      )!,
+      weeklyVisitorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_visitor_count'],
+      )!,
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
       ),
+      bannerHeight: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banner_height'],
+      )!,
+      bannerWidth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banner_width'],
+      )!,
       bannerUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}banner_url'],
+      ),
+      profilePicture: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture'],
+      ),
+      profilePictureHeight: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_picture_height'],
+      )!,
+      profilePictureWidth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_picture_width'],
+      )!,
+      profilePictureUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture_url'],
+      ),
+      creatorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}creator_id'],
+      )!,
+      guidelines: $CommunityTableTable.$converterguidelines.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}guidelines'],
+        )!,
       ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -18475,22 +18619,6 @@ class $CommunityTableTable extends CommunityTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
-      canModerate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_moderate'],
-      )!,
-      canPost: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_post'],
-      )!,
-      isBanned: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_banned'],
-      )!,
-      memberCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}member_count'],
-      )!,
     );
   }
 
@@ -18499,92 +18627,60 @@ class $CommunityTableTable extends CommunityTable
     return $CommunityTableTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<List<dynamic>, String> $convertermoderators =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $convertermoderatorsn =
-      NullAwareTypeConverter.wrap($convertermoderators);
-  static TypeConverter<List<dynamic>, String> $convertermoderatorNames =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $convertermoderatorNamesn =
-      NullAwareTypeConverter.wrap($convertermoderatorNames);
-  static TypeConverter<List<dynamic>, String> $convertermembers =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $convertermembersn =
-      NullAwareTypeConverter.wrap($convertermembers);
-  static TypeConverter<List<dynamic>, String> $convertermemberNames =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $convertermemberNamesn =
-      NullAwareTypeConverter.wrap($convertermemberNames);
-  static TypeConverter<List<dynamic>, String> $converterbannedUsers =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $converterbannedUsersn =
-      NullAwareTypeConverter.wrap($converterbannedUsers);
-  static TypeConverter<List<dynamic>, String> $converterbannedUserNames =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $converterbannedUserNamesn =
-      NullAwareTypeConverter.wrap($converterbannedUserNames);
-  static TypeConverter<List<dynamic>, String> $converterrules =
-      const JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $converterrulesn =
-      NullAwareTypeConverter.wrap($converterrules);
+  static TypeConverter<List<dynamic>, String> $converterguidelines =
+      JsonListConverter();
 }
 
 class CommunityData extends DataClass implements Insertable<CommunityData> {
   final int id;
   final String name;
   final String? description;
-  final String? creatorId;
-  final String? creatorName;
-
-  /// Moderators (IDs)
-  final List<dynamic>? moderators;
-
-  /// Moderator names
-  final List<dynamic>? moderatorNames;
-
-  /// Members (IDs)
-  final List<dynamic>? members;
-
-  /// Member names
-  final List<dynamic>? memberNames;
-
-  /// Banned users (IDs)
-  final List<dynamic>? bannedUsers;
-
-  /// Banned user names
-  final List<dynamic>? bannedUserNames;
-  final bool isPrivate;
-  final List<dynamic>? rules;
-  final String? logoUrl;
+  final bool nsfw;
+  final bool private;
+  final bool verified;
+  final String visibility;
+  final int memberCount;
+  final int moderatorCount;
+  final int bannedUsersCount;
+  final int monthlyVisitorCount;
+  final int weeklyVisitorCount;
+  final String? banner;
+  final int bannerHeight;
+  final int bannerWidth;
   final String? bannerUrl;
+  final String? profilePicture;
+  final int profilePictureHeight;
+  final int profilePictureWidth;
+  final String? profilePictureUrl;
+  final String creatorId;
+  final List<dynamic> guidelines;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final bool canModerate;
-  final bool canPost;
-  final bool isBanned;
-  final int memberCount;
   const CommunityData({
     required this.id,
     required this.name,
     this.description,
-    this.creatorId,
-    this.creatorName,
-    this.moderators,
-    this.moderatorNames,
-    this.members,
-    this.memberNames,
-    this.bannedUsers,
-    this.bannedUserNames,
-    required this.isPrivate,
-    this.rules,
-    this.logoUrl,
+    required this.nsfw,
+    required this.private,
+    required this.verified,
+    required this.visibility,
+    required this.memberCount,
+    required this.moderatorCount,
+    required this.bannedUsersCount,
+    required this.monthlyVisitorCount,
+    required this.weeklyVisitorCount,
+    this.banner,
+    required this.bannerHeight,
+    required this.bannerWidth,
     this.bannerUrl,
+    this.profilePicture,
+    required this.profilePictureHeight,
+    required this.profilePictureWidth,
+    this.profilePictureUrl,
+    required this.creatorId,
+    required this.guidelines,
     required this.createdAt,
     required this.updatedAt,
-    required this.canModerate,
-    required this.canPost,
-    required this.isBanned,
-    required this.memberCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -18594,60 +18690,39 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    if (!nullToAbsent || creatorId != null) {
-      map['creator_id'] = Variable<String>(creatorId);
+    map['nsfw'] = Variable<bool>(nsfw);
+    map['private'] = Variable<bool>(private);
+    map['verified'] = Variable<bool>(verified);
+    map['visibility'] = Variable<String>(visibility);
+    map['member_count'] = Variable<int>(memberCount);
+    map['moderator_count'] = Variable<int>(moderatorCount);
+    map['banned_users_count'] = Variable<int>(bannedUsersCount);
+    map['monthly_visitor_count'] = Variable<int>(monthlyVisitorCount);
+    map['weekly_visitor_count'] = Variable<int>(weeklyVisitorCount);
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
     }
-    if (!nullToAbsent || creatorName != null) {
-      map['creator_name'] = Variable<String>(creatorName);
-    }
-    if (!nullToAbsent || moderators != null) {
-      map['moderators'] = Variable<String>(
-        $CommunityTableTable.$convertermoderatorsn.toSql(moderators),
-      );
-    }
-    if (!nullToAbsent || moderatorNames != null) {
-      map['moderator_names'] = Variable<String>(
-        $CommunityTableTable.$convertermoderatorNamesn.toSql(moderatorNames),
-      );
-    }
-    if (!nullToAbsent || members != null) {
-      map['members'] = Variable<String>(
-        $CommunityTableTable.$convertermembersn.toSql(members),
-      );
-    }
-    if (!nullToAbsent || memberNames != null) {
-      map['member_names'] = Variable<String>(
-        $CommunityTableTable.$convertermemberNamesn.toSql(memberNames),
-      );
-    }
-    if (!nullToAbsent || bannedUsers != null) {
-      map['banned_users'] = Variable<String>(
-        $CommunityTableTable.$converterbannedUsersn.toSql(bannedUsers),
-      );
-    }
-    if (!nullToAbsent || bannedUserNames != null) {
-      map['banned_user_names'] = Variable<String>(
-        $CommunityTableTable.$converterbannedUserNamesn.toSql(bannedUserNames),
-      );
-    }
-    map['is_private'] = Variable<bool>(isPrivate);
-    if (!nullToAbsent || rules != null) {
-      map['rules'] = Variable<String>(
-        $CommunityTableTable.$converterrulesn.toSql(rules),
-      );
-    }
-    if (!nullToAbsent || logoUrl != null) {
-      map['logo_url'] = Variable<String>(logoUrl);
-    }
+    map['banner_height'] = Variable<int>(bannerHeight);
+    map['banner_width'] = Variable<int>(bannerWidth);
     if (!nullToAbsent || bannerUrl != null) {
       map['banner_url'] = Variable<String>(bannerUrl);
     }
+    if (!nullToAbsent || profilePicture != null) {
+      map['profile_picture'] = Variable<String>(profilePicture);
+    }
+    map['profile_picture_height'] = Variable<int>(profilePictureHeight);
+    map['profile_picture_width'] = Variable<int>(profilePictureWidth);
+    if (!nullToAbsent || profilePictureUrl != null) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl);
+    }
+    map['creator_id'] = Variable<String>(creatorId);
+    {
+      map['guidelines'] = Variable<String>(
+        $CommunityTableTable.$converterguidelines.toSql(guidelines),
+      );
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['can_moderate'] = Variable<bool>(canModerate);
-    map['can_post'] = Variable<bool>(canPost);
-    map['is_banned'] = Variable<bool>(isBanned);
-    map['member_count'] = Variable<int>(memberCount);
     return map;
   }
 
@@ -18658,46 +18733,35 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      creatorId: creatorId == null && nullToAbsent
+      nsfw: Value(nsfw),
+      private: Value(private),
+      verified: Value(verified),
+      visibility: Value(visibility),
+      memberCount: Value(memberCount),
+      moderatorCount: Value(moderatorCount),
+      bannedUsersCount: Value(bannedUsersCount),
+      monthlyVisitorCount: Value(monthlyVisitorCount),
+      weeklyVisitorCount: Value(weeklyVisitorCount),
+      banner: banner == null && nullToAbsent
           ? const Value.absent()
-          : Value(creatorId),
-      creatorName: creatorName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(creatorName),
-      moderators: moderators == null && nullToAbsent
-          ? const Value.absent()
-          : Value(moderators),
-      moderatorNames: moderatorNames == null && nullToAbsent
-          ? const Value.absent()
-          : Value(moderatorNames),
-      members: members == null && nullToAbsent
-          ? const Value.absent()
-          : Value(members),
-      memberNames: memberNames == null && nullToAbsent
-          ? const Value.absent()
-          : Value(memberNames),
-      bannedUsers: bannedUsers == null && nullToAbsent
-          ? const Value.absent()
-          : Value(bannedUsers),
-      bannedUserNames: bannedUserNames == null && nullToAbsent
-          ? const Value.absent()
-          : Value(bannedUserNames),
-      isPrivate: Value(isPrivate),
-      rules: rules == null && nullToAbsent
-          ? const Value.absent()
-          : Value(rules),
-      logoUrl: logoUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(logoUrl),
+          : Value(banner),
+      bannerHeight: Value(bannerHeight),
+      bannerWidth: Value(bannerWidth),
       bannerUrl: bannerUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(bannerUrl),
+      profilePicture: profilePicture == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePicture),
+      profilePictureHeight: Value(profilePictureHeight),
+      profilePictureWidth: Value(profilePictureWidth),
+      profilePictureUrl: profilePictureUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePictureUrl),
+      creatorId: Value(creatorId),
+      guidelines: Value(guidelines),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      canModerate: Value(canModerate),
-      canPost: Value(canPost),
-      isBanned: Value(isBanned),
-      memberCount: Value(memberCount),
     );
   }
 
@@ -18710,28 +18774,37 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
-      creatorId: serializer.fromJson<String?>(json['creator_id']),
-      creatorName: serializer.fromJson<String?>(json['creator_name']),
-      moderators: serializer.fromJson<List<dynamic>?>(json['moderators']),
-      moderatorNames: serializer.fromJson<List<dynamic>?>(
-        json['moderator_names'],
+      nsfw: serializer.fromJson<bool>(json['nsfw']),
+      private: serializer.fromJson<bool>(json['private']),
+      verified: serializer.fromJson<bool>(json['verified']),
+      visibility: serializer.fromJson<String>(json['visibility']),
+      memberCount: serializer.fromJson<int>(json['member_count']),
+      moderatorCount: serializer.fromJson<int>(json['moderator_count']),
+      bannedUsersCount: serializer.fromJson<int>(json['banned_users_count']),
+      monthlyVisitorCount: serializer.fromJson<int>(
+        json['monthly_visitor_count'],
       ),
-      members: serializer.fromJson<List<dynamic>?>(json['members']),
-      memberNames: serializer.fromJson<List<dynamic>?>(json['member_names']),
-      bannedUsers: serializer.fromJson<List<dynamic>?>(json['banned_users']),
-      bannedUserNames: serializer.fromJson<List<dynamic>?>(
-        json['banned_user_names'],
+      weeklyVisitorCount: serializer.fromJson<int>(
+        json['weekly_visitor_count'],
       ),
-      isPrivate: serializer.fromJson<bool>(json['is_private']),
-      rules: serializer.fromJson<List<dynamic>?>(json['rules']),
-      logoUrl: serializer.fromJson<String?>(json['logo_url']),
+      banner: serializer.fromJson<String?>(json['banner']),
+      bannerHeight: serializer.fromJson<int>(json['banner_height']),
+      bannerWidth: serializer.fromJson<int>(json['banner_width']),
       bannerUrl: serializer.fromJson<String?>(json['banner_url']),
+      profilePicture: serializer.fromJson<String?>(json['profile_picture']),
+      profilePictureHeight: serializer.fromJson<int>(
+        json['profile_picture_height'],
+      ),
+      profilePictureWidth: serializer.fromJson<int>(
+        json['profile_picture_width'],
+      ),
+      profilePictureUrl: serializer.fromJson<String?>(
+        json['profile_picture_url'],
+      ),
+      creatorId: serializer.fromJson<String>(json['creator_id']),
+      guidelines: serializer.fromJson<List<dynamic>>(json['guidelines']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      canModerate: serializer.fromJson<bool>(json['can_moderate']),
-      canPost: serializer.fromJson<bool>(json['can_post']),
-      isBanned: serializer.fromJson<bool>(json['is_banned']),
-      memberCount: serializer.fromJson<int>(json['member_count']),
     );
   }
   @override
@@ -18741,24 +18814,27 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
-      'creator_id': serializer.toJson<String?>(creatorId),
-      'creator_name': serializer.toJson<String?>(creatorName),
-      'moderators': serializer.toJson<List<dynamic>?>(moderators),
-      'moderator_names': serializer.toJson<List<dynamic>?>(moderatorNames),
-      'members': serializer.toJson<List<dynamic>?>(members),
-      'member_names': serializer.toJson<List<dynamic>?>(memberNames),
-      'banned_users': serializer.toJson<List<dynamic>?>(bannedUsers),
-      'banned_user_names': serializer.toJson<List<dynamic>?>(bannedUserNames),
-      'is_private': serializer.toJson<bool>(isPrivate),
-      'rules': serializer.toJson<List<dynamic>?>(rules),
-      'logo_url': serializer.toJson<String?>(logoUrl),
+      'nsfw': serializer.toJson<bool>(nsfw),
+      'private': serializer.toJson<bool>(private),
+      'verified': serializer.toJson<bool>(verified),
+      'visibility': serializer.toJson<String>(visibility),
+      'member_count': serializer.toJson<int>(memberCount),
+      'moderator_count': serializer.toJson<int>(moderatorCount),
+      'banned_users_count': serializer.toJson<int>(bannedUsersCount),
+      'monthly_visitor_count': serializer.toJson<int>(monthlyVisitorCount),
+      'weekly_visitor_count': serializer.toJson<int>(weeklyVisitorCount),
+      'banner': serializer.toJson<String?>(banner),
+      'banner_height': serializer.toJson<int>(bannerHeight),
+      'banner_width': serializer.toJson<int>(bannerWidth),
       'banner_url': serializer.toJson<String?>(bannerUrl),
+      'profile_picture': serializer.toJson<String?>(profilePicture),
+      'profile_picture_height': serializer.toJson<int>(profilePictureHeight),
+      'profile_picture_width': serializer.toJson<int>(profilePictureWidth),
+      'profile_picture_url': serializer.toJson<String?>(profilePictureUrl),
+      'creator_id': serializer.toJson<String>(creatorId),
+      'guidelines': serializer.toJson<List<dynamic>>(guidelines),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'can_moderate': serializer.toJson<bool>(canModerate),
-      'can_post': serializer.toJson<bool>(canPost),
-      'is_banned': serializer.toJson<bool>(isBanned),
-      'member_count': serializer.toJson<int>(memberCount),
     };
   }
 
@@ -18766,50 +18842,56 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     int? id,
     String? name,
     Value<String?> description = const Value.absent(),
-    Value<String?> creatorId = const Value.absent(),
-    Value<String?> creatorName = const Value.absent(),
-    Value<List<dynamic>?> moderators = const Value.absent(),
-    Value<List<dynamic>?> moderatorNames = const Value.absent(),
-    Value<List<dynamic>?> members = const Value.absent(),
-    Value<List<dynamic>?> memberNames = const Value.absent(),
-    Value<List<dynamic>?> bannedUsers = const Value.absent(),
-    Value<List<dynamic>?> bannedUserNames = const Value.absent(),
-    bool? isPrivate,
-    Value<List<dynamic>?> rules = const Value.absent(),
-    Value<String?> logoUrl = const Value.absent(),
+    bool? nsfw,
+    bool? private,
+    bool? verified,
+    String? visibility,
+    int? memberCount,
+    int? moderatorCount,
+    int? bannedUsersCount,
+    int? monthlyVisitorCount,
+    int? weeklyVisitorCount,
+    Value<String?> banner = const Value.absent(),
+    int? bannerHeight,
+    int? bannerWidth,
     Value<String?> bannerUrl = const Value.absent(),
+    Value<String?> profilePicture = const Value.absent(),
+    int? profilePictureHeight,
+    int? profilePictureWidth,
+    Value<String?> profilePictureUrl = const Value.absent(),
+    String? creatorId,
+    List<dynamic>? guidelines,
     DateTime? createdAt,
     DateTime? updatedAt,
-    bool? canModerate,
-    bool? canPost,
-    bool? isBanned,
-    int? memberCount,
   }) => CommunityData(
     id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
-    creatorId: creatorId.present ? creatorId.value : this.creatorId,
-    creatorName: creatorName.present ? creatorName.value : this.creatorName,
-    moderators: moderators.present ? moderators.value : this.moderators,
-    moderatorNames: moderatorNames.present
-        ? moderatorNames.value
-        : this.moderatorNames,
-    members: members.present ? members.value : this.members,
-    memberNames: memberNames.present ? memberNames.value : this.memberNames,
-    bannedUsers: bannedUsers.present ? bannedUsers.value : this.bannedUsers,
-    bannedUserNames: bannedUserNames.present
-        ? bannedUserNames.value
-        : this.bannedUserNames,
-    isPrivate: isPrivate ?? this.isPrivate,
-    rules: rules.present ? rules.value : this.rules,
-    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
+    nsfw: nsfw ?? this.nsfw,
+    private: private ?? this.private,
+    verified: verified ?? this.verified,
+    visibility: visibility ?? this.visibility,
+    memberCount: memberCount ?? this.memberCount,
+    moderatorCount: moderatorCount ?? this.moderatorCount,
+    bannedUsersCount: bannedUsersCount ?? this.bannedUsersCount,
+    monthlyVisitorCount: monthlyVisitorCount ?? this.monthlyVisitorCount,
+    weeklyVisitorCount: weeklyVisitorCount ?? this.weeklyVisitorCount,
+    banner: banner.present ? banner.value : this.banner,
+    bannerHeight: bannerHeight ?? this.bannerHeight,
+    bannerWidth: bannerWidth ?? this.bannerWidth,
     bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
+    profilePicture: profilePicture.present
+        ? profilePicture.value
+        : this.profilePicture,
+    profilePictureHeight: profilePictureHeight ?? this.profilePictureHeight,
+    profilePictureWidth: profilePictureWidth ?? this.profilePictureWidth,
+    profilePictureUrl: profilePictureUrl.present
+        ? profilePictureUrl.value
+        : this.profilePictureUrl,
+    creatorId: creatorId ?? this.creatorId,
+    guidelines: guidelines ?? this.guidelines,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    canModerate: canModerate ?? this.canModerate,
-    canPost: canPost ?? this.canPost,
-    isBanned: isBanned ?? this.isBanned,
-    memberCount: memberCount ?? this.memberCount,
   );
   CommunityData copyWithCompanion(CommunityTableCompanion data) {
     return CommunityData(
@@ -18818,40 +18900,53 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       description: data.description.present
           ? data.description.value
           : this.description,
-      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
-      creatorName: data.creatorName.present
-          ? data.creatorName.value
-          : this.creatorName,
-      moderators: data.moderators.present
-          ? data.moderators.value
-          : this.moderators,
-      moderatorNames: data.moderatorNames.present
-          ? data.moderatorNames.value
-          : this.moderatorNames,
-      members: data.members.present ? data.members.value : this.members,
-      memberNames: data.memberNames.present
-          ? data.memberNames.value
-          : this.memberNames,
-      bannedUsers: data.bannedUsers.present
-          ? data.bannedUsers.value
-          : this.bannedUsers,
-      bannedUserNames: data.bannedUserNames.present
-          ? data.bannedUserNames.value
-          : this.bannedUserNames,
-      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
-      rules: data.rules.present ? data.rules.value : this.rules,
-      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
-      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      canModerate: data.canModerate.present
-          ? data.canModerate.value
-          : this.canModerate,
-      canPost: data.canPost.present ? data.canPost.value : this.canPost,
-      isBanned: data.isBanned.present ? data.isBanned.value : this.isBanned,
+      nsfw: data.nsfw.present ? data.nsfw.value : this.nsfw,
+      private: data.private.present ? data.private.value : this.private,
+      verified: data.verified.present ? data.verified.value : this.verified,
+      visibility: data.visibility.present
+          ? data.visibility.value
+          : this.visibility,
       memberCount: data.memberCount.present
           ? data.memberCount.value
           : this.memberCount,
+      moderatorCount: data.moderatorCount.present
+          ? data.moderatorCount.value
+          : this.moderatorCount,
+      bannedUsersCount: data.bannedUsersCount.present
+          ? data.bannedUsersCount.value
+          : this.bannedUsersCount,
+      monthlyVisitorCount: data.monthlyVisitorCount.present
+          ? data.monthlyVisitorCount.value
+          : this.monthlyVisitorCount,
+      weeklyVisitorCount: data.weeklyVisitorCount.present
+          ? data.weeklyVisitorCount.value
+          : this.weeklyVisitorCount,
+      banner: data.banner.present ? data.banner.value : this.banner,
+      bannerHeight: data.bannerHeight.present
+          ? data.bannerHeight.value
+          : this.bannerHeight,
+      bannerWidth: data.bannerWidth.present
+          ? data.bannerWidth.value
+          : this.bannerWidth,
+      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
+      profilePicture: data.profilePicture.present
+          ? data.profilePicture.value
+          : this.profilePicture,
+      profilePictureHeight: data.profilePictureHeight.present
+          ? data.profilePictureHeight.value
+          : this.profilePictureHeight,
+      profilePictureWidth: data.profilePictureWidth.present
+          ? data.profilePictureWidth.value
+          : this.profilePictureWidth,
+      profilePictureUrl: data.profilePictureUrl.present
+          ? data.profilePictureUrl.value
+          : this.profilePictureUrl,
+      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
+      guidelines: data.guidelines.present
+          ? data.guidelines.value
+          : this.guidelines,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -18861,24 +18956,27 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logoUrl: $logoUrl, ')
+          ..write('nsfw: $nsfw, ')
+          ..write('private: $private, ')
+          ..write('verified: $verified, ')
+          ..write('visibility: $visibility, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('moderatorCount: $moderatorCount, ')
+          ..write('bannedUsersCount: $bannedUsersCount, ')
+          ..write('monthlyVisitorCount: $monthlyVisitorCount, ')
+          ..write('weeklyVisitorCount: $weeklyVisitorCount, ')
+          ..write('banner: $banner, ')
+          ..write('bannerHeight: $bannerHeight, ')
+          ..write('bannerWidth: $bannerWidth, ')
           ..write('bannerUrl: $bannerUrl, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('profilePictureHeight: $profilePictureHeight, ')
+          ..write('profilePictureWidth: $profilePictureWidth, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('guidelines: $guidelines, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canPost: $canPost, ')
-          ..write('isBanned: $isBanned, ')
-          ..write('memberCount: $memberCount')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -18888,24 +18986,27 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     id,
     name,
     description,
-    creatorId,
-    creatorName,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logoUrl,
+    nsfw,
+    private,
+    verified,
+    visibility,
+    memberCount,
+    moderatorCount,
+    bannedUsersCount,
+    monthlyVisitorCount,
+    weeklyVisitorCount,
+    banner,
+    bannerHeight,
+    bannerWidth,
     bannerUrl,
+    profilePicture,
+    profilePictureHeight,
+    profilePictureWidth,
+    profilePictureUrl,
+    creatorId,
+    guidelines,
     createdAt,
     updatedAt,
-    canModerate,
-    canPost,
-    isBanned,
-    memberCount,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -18914,141 +19015,166 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
-          other.creatorId == this.creatorId &&
-          other.creatorName == this.creatorName &&
-          other.moderators == this.moderators &&
-          other.moderatorNames == this.moderatorNames &&
-          other.members == this.members &&
-          other.memberNames == this.memberNames &&
-          other.bannedUsers == this.bannedUsers &&
-          other.bannedUserNames == this.bannedUserNames &&
-          other.isPrivate == this.isPrivate &&
-          other.rules == this.rules &&
-          other.logoUrl == this.logoUrl &&
+          other.nsfw == this.nsfw &&
+          other.private == this.private &&
+          other.verified == this.verified &&
+          other.visibility == this.visibility &&
+          other.memberCount == this.memberCount &&
+          other.moderatorCount == this.moderatorCount &&
+          other.bannedUsersCount == this.bannedUsersCount &&
+          other.monthlyVisitorCount == this.monthlyVisitorCount &&
+          other.weeklyVisitorCount == this.weeklyVisitorCount &&
+          other.banner == this.banner &&
+          other.bannerHeight == this.bannerHeight &&
+          other.bannerWidth == this.bannerWidth &&
           other.bannerUrl == this.bannerUrl &&
+          other.profilePicture == this.profilePicture &&
+          other.profilePictureHeight == this.profilePictureHeight &&
+          other.profilePictureWidth == this.profilePictureWidth &&
+          other.profilePictureUrl == this.profilePictureUrl &&
+          other.creatorId == this.creatorId &&
+          other.guidelines == this.guidelines &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.canModerate == this.canModerate &&
-          other.canPost == this.canPost &&
-          other.isBanned == this.isBanned &&
-          other.memberCount == this.memberCount);
+          other.updatedAt == this.updatedAt);
 }
 
 class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
-  final Value<String?> creatorId;
-  final Value<String?> creatorName;
-  final Value<List<dynamic>?> moderators;
-  final Value<List<dynamic>?> moderatorNames;
-  final Value<List<dynamic>?> members;
-  final Value<List<dynamic>?> memberNames;
-  final Value<List<dynamic>?> bannedUsers;
-  final Value<List<dynamic>?> bannedUserNames;
-  final Value<bool> isPrivate;
-  final Value<List<dynamic>?> rules;
-  final Value<String?> logoUrl;
+  final Value<bool> nsfw;
+  final Value<bool> private;
+  final Value<bool> verified;
+  final Value<String> visibility;
+  final Value<int> memberCount;
+  final Value<int> moderatorCount;
+  final Value<int> bannedUsersCount;
+  final Value<int> monthlyVisitorCount;
+  final Value<int> weeklyVisitorCount;
+  final Value<String?> banner;
+  final Value<int> bannerHeight;
+  final Value<int> bannerWidth;
   final Value<String?> bannerUrl;
+  final Value<String?> profilePicture;
+  final Value<int> profilePictureHeight;
+  final Value<int> profilePictureWidth;
+  final Value<String?> profilePictureUrl;
+  final Value<String> creatorId;
+  final Value<List<dynamic>> guidelines;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  final Value<bool> canModerate;
-  final Value<bool> canPost;
-  final Value<bool> isBanned;
-  final Value<int> memberCount;
   const CommunityTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
-    this.creatorId = const Value.absent(),
-    this.creatorName = const Value.absent(),
-    this.moderators = const Value.absent(),
-    this.moderatorNames = const Value.absent(),
-    this.members = const Value.absent(),
-    this.memberNames = const Value.absent(),
-    this.bannedUsers = const Value.absent(),
-    this.bannedUserNames = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.rules = const Value.absent(),
-    this.logoUrl = const Value.absent(),
+    this.nsfw = const Value.absent(),
+    this.private = const Value.absent(),
+    this.verified = const Value.absent(),
+    this.visibility = const Value.absent(),
+    this.memberCount = const Value.absent(),
+    this.moderatorCount = const Value.absent(),
+    this.bannedUsersCount = const Value.absent(),
+    this.monthlyVisitorCount = const Value.absent(),
+    this.weeklyVisitorCount = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.bannerHeight = const Value.absent(),
+    this.bannerWidth = const Value.absent(),
     this.bannerUrl = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.profilePictureHeight = const Value.absent(),
+    this.profilePictureWidth = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.creatorId = const Value.absent(),
+    this.guidelines = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.canModerate = const Value.absent(),
-    this.canPost = const Value.absent(),
-    this.isBanned = const Value.absent(),
-    this.memberCount = const Value.absent(),
   });
   CommunityTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
-    this.creatorId = const Value.absent(),
-    this.creatorName = const Value.absent(),
-    this.moderators = const Value.absent(),
-    this.moderatorNames = const Value.absent(),
-    this.members = const Value.absent(),
-    this.memberNames = const Value.absent(),
-    this.bannedUsers = const Value.absent(),
-    this.bannedUserNames = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.rules = const Value.absent(),
-    this.logoUrl = const Value.absent(),
+    this.nsfw = const Value.absent(),
+    this.private = const Value.absent(),
+    this.verified = const Value.absent(),
+    required String visibility,
+    this.memberCount = const Value.absent(),
+    this.moderatorCount = const Value.absent(),
+    this.bannedUsersCount = const Value.absent(),
+    this.monthlyVisitorCount = const Value.absent(),
+    this.weeklyVisitorCount = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.bannerHeight = const Value.absent(),
+    this.bannerWidth = const Value.absent(),
     this.bannerUrl = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.profilePictureHeight = const Value.absent(),
+    this.profilePictureWidth = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    required String creatorId,
+    required List<dynamic> guidelines,
     required DateTime createdAt,
     required DateTime updatedAt,
-    this.canModerate = const Value.absent(),
-    this.canPost = const Value.absent(),
-    this.isBanned = const Value.absent(),
-    this.memberCount = const Value.absent(),
   }) : name = Value(name),
+       visibility = Value(visibility),
+       creatorId = Value(creatorId),
+       guidelines = Value(guidelines),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
   static Insertable<CommunityData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
-    Expression<String>? creatorId,
-    Expression<String>? creatorName,
-    Expression<String>? moderators,
-    Expression<String>? moderatorNames,
-    Expression<String>? members,
-    Expression<String>? memberNames,
-    Expression<String>? bannedUsers,
-    Expression<String>? bannedUserNames,
-    Expression<bool>? isPrivate,
-    Expression<String>? rules,
-    Expression<String>? logoUrl,
+    Expression<bool>? nsfw,
+    Expression<bool>? private,
+    Expression<bool>? verified,
+    Expression<String>? visibility,
+    Expression<int>? memberCount,
+    Expression<int>? moderatorCount,
+    Expression<int>? bannedUsersCount,
+    Expression<int>? monthlyVisitorCount,
+    Expression<int>? weeklyVisitorCount,
+    Expression<String>? banner,
+    Expression<int>? bannerHeight,
+    Expression<int>? bannerWidth,
     Expression<String>? bannerUrl,
+    Expression<String>? profilePicture,
+    Expression<int>? profilePictureHeight,
+    Expression<int>? profilePictureWidth,
+    Expression<String>? profilePictureUrl,
+    Expression<String>? creatorId,
+    Expression<String>? guidelines,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<bool>? canModerate,
-    Expression<bool>? canPost,
-    Expression<bool>? isBanned,
-    Expression<int>? memberCount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
-      if (creatorId != null) 'creator_id': creatorId,
-      if (creatorName != null) 'creator_name': creatorName,
-      if (moderators != null) 'moderators': moderators,
-      if (moderatorNames != null) 'moderator_names': moderatorNames,
-      if (members != null) 'members': members,
-      if (memberNames != null) 'member_names': memberNames,
-      if (bannedUsers != null) 'banned_users': bannedUsers,
-      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
-      if (isPrivate != null) 'is_private': isPrivate,
-      if (rules != null) 'rules': rules,
-      if (logoUrl != null) 'logo_url': logoUrl,
+      if (nsfw != null) 'nsfw': nsfw,
+      if (private != null) 'private': private,
+      if (verified != null) 'verified': verified,
+      if (visibility != null) 'visibility': visibility,
+      if (memberCount != null) 'member_count': memberCount,
+      if (moderatorCount != null) 'moderator_count': moderatorCount,
+      if (bannedUsersCount != null) 'banned_users_count': bannedUsersCount,
+      if (monthlyVisitorCount != null)
+        'monthly_visitor_count': monthlyVisitorCount,
+      if (weeklyVisitorCount != null)
+        'weekly_visitor_count': weeklyVisitorCount,
+      if (banner != null) 'banner': banner,
+      if (bannerHeight != null) 'banner_height': bannerHeight,
+      if (bannerWidth != null) 'banner_width': bannerWidth,
       if (bannerUrl != null) 'banner_url': bannerUrl,
+      if (profilePicture != null) 'profile_picture': profilePicture,
+      if (profilePictureHeight != null)
+        'profile_picture_height': profilePictureHeight,
+      if (profilePictureWidth != null)
+        'profile_picture_width': profilePictureWidth,
+      if (profilePictureUrl != null) 'profile_picture_url': profilePictureUrl,
+      if (creatorId != null) 'creator_id': creatorId,
+      if (guidelines != null) 'guidelines': guidelines,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (canModerate != null) 'can_moderate': canModerate,
-      if (canPost != null) 'can_post': canPost,
-      if (isBanned != null) 'is_banned': isBanned,
-      if (memberCount != null) 'member_count': memberCount,
     });
   }
 
@@ -19056,47 +19182,53 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
-    Value<String?>? creatorId,
-    Value<String?>? creatorName,
-    Value<List<dynamic>?>? moderators,
-    Value<List<dynamic>?>? moderatorNames,
-    Value<List<dynamic>?>? members,
-    Value<List<dynamic>?>? memberNames,
-    Value<List<dynamic>?>? bannedUsers,
-    Value<List<dynamic>?>? bannedUserNames,
-    Value<bool>? isPrivate,
-    Value<List<dynamic>?>? rules,
-    Value<String?>? logoUrl,
+    Value<bool>? nsfw,
+    Value<bool>? private,
+    Value<bool>? verified,
+    Value<String>? visibility,
+    Value<int>? memberCount,
+    Value<int>? moderatorCount,
+    Value<int>? bannedUsersCount,
+    Value<int>? monthlyVisitorCount,
+    Value<int>? weeklyVisitorCount,
+    Value<String?>? banner,
+    Value<int>? bannerHeight,
+    Value<int>? bannerWidth,
     Value<String?>? bannerUrl,
+    Value<String?>? profilePicture,
+    Value<int>? profilePictureHeight,
+    Value<int>? profilePictureWidth,
+    Value<String?>? profilePictureUrl,
+    Value<String>? creatorId,
+    Value<List<dynamic>>? guidelines,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
-    Value<bool>? canModerate,
-    Value<bool>? canPost,
-    Value<bool>? isBanned,
-    Value<int>? memberCount,
   }) {
     return CommunityTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      creatorId: creatorId ?? this.creatorId,
-      creatorName: creatorName ?? this.creatorName,
-      moderators: moderators ?? this.moderators,
-      moderatorNames: moderatorNames ?? this.moderatorNames,
-      members: members ?? this.members,
-      memberNames: memberNames ?? this.memberNames,
-      bannedUsers: bannedUsers ?? this.bannedUsers,
-      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-      isPrivate: isPrivate ?? this.isPrivate,
-      rules: rules ?? this.rules,
-      logoUrl: logoUrl ?? this.logoUrl,
+      nsfw: nsfw ?? this.nsfw,
+      private: private ?? this.private,
+      verified: verified ?? this.verified,
+      visibility: visibility ?? this.visibility,
+      memberCount: memberCount ?? this.memberCount,
+      moderatorCount: moderatorCount ?? this.moderatorCount,
+      bannedUsersCount: bannedUsersCount ?? this.bannedUsersCount,
+      monthlyVisitorCount: monthlyVisitorCount ?? this.monthlyVisitorCount,
+      weeklyVisitorCount: weeklyVisitorCount ?? this.weeklyVisitorCount,
+      banner: banner ?? this.banner,
+      bannerHeight: bannerHeight ?? this.bannerHeight,
+      bannerWidth: bannerWidth ?? this.bannerWidth,
       bannerUrl: bannerUrl ?? this.bannerUrl,
+      profilePicture: profilePicture ?? this.profilePicture,
+      profilePictureHeight: profilePictureHeight ?? this.profilePictureHeight,
+      profilePictureWidth: profilePictureWidth ?? this.profilePictureWidth,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      creatorId: creatorId ?? this.creatorId,
+      guidelines: guidelines ?? this.guidelines,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      canModerate: canModerate ?? this.canModerate,
-      canPost: canPost ?? this.canPost,
-      isBanned: isBanned ?? this.isBanned,
-      memberCount: memberCount ?? this.memberCount,
     );
   }
 
@@ -19112,77 +19244,70 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
-    if (creatorId.present) {
-      map['creator_id'] = Variable<String>(creatorId.value);
+    if (nsfw.present) {
+      map['nsfw'] = Variable<bool>(nsfw.value);
     }
-    if (creatorName.present) {
-      map['creator_name'] = Variable<String>(creatorName.value);
+    if (private.present) {
+      map['private'] = Variable<bool>(private.value);
     }
-    if (moderators.present) {
-      map['moderators'] = Variable<String>(
-        $CommunityTableTable.$convertermoderatorsn.toSql(moderators.value),
-      );
+    if (verified.present) {
+      map['verified'] = Variable<bool>(verified.value);
     }
-    if (moderatorNames.present) {
-      map['moderator_names'] = Variable<String>(
-        $CommunityTableTable.$convertermoderatorNamesn.toSql(
-          moderatorNames.value,
-        ),
-      );
+    if (visibility.present) {
+      map['visibility'] = Variable<String>(visibility.value);
     }
-    if (members.present) {
-      map['members'] = Variable<String>(
-        $CommunityTableTable.$convertermembersn.toSql(members.value),
-      );
+    if (memberCount.present) {
+      map['member_count'] = Variable<int>(memberCount.value);
     }
-    if (memberNames.present) {
-      map['member_names'] = Variable<String>(
-        $CommunityTableTable.$convertermemberNamesn.toSql(memberNames.value),
-      );
+    if (moderatorCount.present) {
+      map['moderator_count'] = Variable<int>(moderatorCount.value);
     }
-    if (bannedUsers.present) {
-      map['banned_users'] = Variable<String>(
-        $CommunityTableTable.$converterbannedUsersn.toSql(bannedUsers.value),
-      );
+    if (bannedUsersCount.present) {
+      map['banned_users_count'] = Variable<int>(bannedUsersCount.value);
     }
-    if (bannedUserNames.present) {
-      map['banned_user_names'] = Variable<String>(
-        $CommunityTableTable.$converterbannedUserNamesn.toSql(
-          bannedUserNames.value,
-        ),
-      );
+    if (monthlyVisitorCount.present) {
+      map['monthly_visitor_count'] = Variable<int>(monthlyVisitorCount.value);
     }
-    if (isPrivate.present) {
-      map['is_private'] = Variable<bool>(isPrivate.value);
+    if (weeklyVisitorCount.present) {
+      map['weekly_visitor_count'] = Variable<int>(weeklyVisitorCount.value);
     }
-    if (rules.present) {
-      map['rules'] = Variable<String>(
-        $CommunityTableTable.$converterrulesn.toSql(rules.value),
-      );
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
     }
-    if (logoUrl.present) {
-      map['logo_url'] = Variable<String>(logoUrl.value);
+    if (bannerHeight.present) {
+      map['banner_height'] = Variable<int>(bannerHeight.value);
+    }
+    if (bannerWidth.present) {
+      map['banner_width'] = Variable<int>(bannerWidth.value);
     }
     if (bannerUrl.present) {
       map['banner_url'] = Variable<String>(bannerUrl.value);
+    }
+    if (profilePicture.present) {
+      map['profile_picture'] = Variable<String>(profilePicture.value);
+    }
+    if (profilePictureHeight.present) {
+      map['profile_picture_height'] = Variable<int>(profilePictureHeight.value);
+    }
+    if (profilePictureWidth.present) {
+      map['profile_picture_width'] = Variable<int>(profilePictureWidth.value);
+    }
+    if (profilePictureUrl.present) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl.value);
+    }
+    if (creatorId.present) {
+      map['creator_id'] = Variable<String>(creatorId.value);
+    }
+    if (guidelines.present) {
+      map['guidelines'] = Variable<String>(
+        $CommunityTableTable.$converterguidelines.toSql(guidelines.value),
+      );
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (canModerate.present) {
-      map['can_moderate'] = Variable<bool>(canModerate.value);
-    }
-    if (canPost.present) {
-      map['can_post'] = Variable<bool>(canPost.value);
-    }
-    if (isBanned.present) {
-      map['is_banned'] = Variable<bool>(isBanned.value);
-    }
-    if (memberCount.present) {
-      map['member_count'] = Variable<int>(memberCount.value);
     }
     return map;
   }
@@ -19193,24 +19318,27 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logoUrl: $logoUrl, ')
+          ..write('nsfw: $nsfw, ')
+          ..write('private: $private, ')
+          ..write('verified: $verified, ')
+          ..write('visibility: $visibility, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('moderatorCount: $moderatorCount, ')
+          ..write('bannedUsersCount: $bannedUsersCount, ')
+          ..write('monthlyVisitorCount: $monthlyVisitorCount, ')
+          ..write('weeklyVisitorCount: $weeklyVisitorCount, ')
+          ..write('banner: $banner, ')
+          ..write('bannerHeight: $bannerHeight, ')
+          ..write('bannerWidth: $bannerWidth, ')
           ..write('bannerUrl: $bannerUrl, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('profilePictureHeight: $profilePictureHeight, ')
+          ..write('profilePictureWidth: $profilePictureWidth, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('guidelines: $guidelines, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canPost: $canPost, ')
-          ..write('isBanned: $isBanned, ')
-          ..write('memberCount: $memberCount')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -19963,6 +20091,27 @@ final class $$ChirpUserTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$CommunityTableTable, List<CommunityData>>
+  _communityTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.communityTable,
+    aliasName: $_aliasNameGenerator(
+      db.chirpUserTable.id,
+      db.communityTable.creatorId,
+    ),
+  );
+
+  $$CommunityTableTableProcessedTableManager get communityTableRefs {
+    final manager = $$CommunityTableTableTableManager(
+      $_db,
+      $_db.communityTable,
+    ).filter((f) => f.creatorId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_communityTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$ChirpUserTableTableFilterComposer
@@ -20030,6 +20179,31 @@ class $$ChirpUserTableTableFilterComposer
           }) => $$ConversationTableTableFilterComposer(
             $db: $db,
             $table: $db.conversationTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> communityTableRefs(
+    Expression<bool> Function($$CommunityTableTableFilterComposer f) f,
+  ) {
+    final $$CommunityTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.communityTable,
+      getReferencedColumn: (t) => t.creatorId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CommunityTableTableFilterComposer(
+            $db: $db,
+            $table: $db.communityTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -20150,6 +20324,31 @@ class $$ChirpUserTableTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> communityTableRefs<T extends Object>(
+    Expression<T> Function($$CommunityTableTableAnnotationComposer a) f,
+  ) {
+    final $$CommunityTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.communityTable,
+      getReferencedColumn: (t) => t.creatorId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CommunityTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.communityTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ChirpUserTableTableTableManager
@@ -20165,7 +20364,10 @@ class $$ChirpUserTableTableTableManager
           $$ChirpUserTableTableUpdateCompanionBuilder,
           (ChirpUserData, $$ChirpUserTableTableReferences),
           ChirpUserData,
-          PrefetchHooks Function({bool conversationTableRefs})
+          PrefetchHooks Function({
+            bool conversationTableRefs,
+            bool communityTableRefs,
+          })
         > {
   $$ChirpUserTableTableTableManager(
     _$AppDataBase db,
@@ -20232,38 +20434,63 @@ class $$ChirpUserTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({conversationTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (conversationTableRefs) db.conversationTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (conversationTableRefs)
-                    await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTableTable,
-                      ConversationData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$ChirpUserTableTableReferences
-                          ._conversationTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).conversationTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({conversationTableRefs = false, communityTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (conversationTableRefs) db.conversationTable,
+                    if (communityTableRefs) db.communityTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (conversationTableRefs)
+                        await $_getPrefetchedData<
+                          ChirpUserData,
+                          $ChirpUserTableTable,
+                          ConversationData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ChirpUserTableTableReferences
+                              ._conversationTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ChirpUserTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).conversationTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (communityTableRefs)
+                        await $_getPrefetchedData<
+                          ChirpUserData,
+                          $ChirpUserTableTable,
+                          CommunityData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ChirpUserTableTableReferences
+                              ._communityTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ChirpUserTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).communityTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.creatorId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -20280,7 +20507,10 @@ typedef $$ChirpUserTableTableProcessedTableManager =
       $$ChirpUserTableTableUpdateCompanionBuilder,
       (ChirpUserData, $$ChirpUserTableTableReferences),
       ChirpUserData,
-      PrefetchHooks Function({bool conversationTableRefs})
+      PrefetchHooks Function({
+        bool conversationTableRefs,
+        bool communityTableRefs,
+      })
     >;
 typedef $$MessageTableTableCreateCompanionBuilder =
     MessageTableCompanion Function({
@@ -30036,49 +30266,83 @@ typedef $$CommunityTableTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       Value<String?> description,
-      Value<String?> creatorId,
-      Value<String?> creatorName,
-      Value<List<dynamic>?> moderators,
-      Value<List<dynamic>?> moderatorNames,
-      Value<List<dynamic>?> members,
-      Value<List<dynamic>?> memberNames,
-      Value<List<dynamic>?> bannedUsers,
-      Value<List<dynamic>?> bannedUserNames,
-      Value<bool> isPrivate,
-      Value<List<dynamic>?> rules,
-      Value<String?> logoUrl,
+      Value<bool> nsfw,
+      Value<bool> private,
+      Value<bool> verified,
+      required String visibility,
+      Value<int> memberCount,
+      Value<int> moderatorCount,
+      Value<int> bannedUsersCount,
+      Value<int> monthlyVisitorCount,
+      Value<int> weeklyVisitorCount,
+      Value<String?> banner,
+      Value<int> bannerHeight,
+      Value<int> bannerWidth,
       Value<String?> bannerUrl,
+      Value<String?> profilePicture,
+      Value<int> profilePictureHeight,
+      Value<int> profilePictureWidth,
+      Value<String?> profilePictureUrl,
+      required String creatorId,
+      required List<dynamic> guidelines,
       required DateTime createdAt,
       required DateTime updatedAt,
-      Value<bool> canModerate,
-      Value<bool> canPost,
-      Value<bool> isBanned,
-      Value<int> memberCount,
     });
 typedef $$CommunityTableTableUpdateCompanionBuilder =
     CommunityTableCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String?> description,
-      Value<String?> creatorId,
-      Value<String?> creatorName,
-      Value<List<dynamic>?> moderators,
-      Value<List<dynamic>?> moderatorNames,
-      Value<List<dynamic>?> members,
-      Value<List<dynamic>?> memberNames,
-      Value<List<dynamic>?> bannedUsers,
-      Value<List<dynamic>?> bannedUserNames,
-      Value<bool> isPrivate,
-      Value<List<dynamic>?> rules,
-      Value<String?> logoUrl,
+      Value<bool> nsfw,
+      Value<bool> private,
+      Value<bool> verified,
+      Value<String> visibility,
+      Value<int> memberCount,
+      Value<int> moderatorCount,
+      Value<int> bannedUsersCount,
+      Value<int> monthlyVisitorCount,
+      Value<int> weeklyVisitorCount,
+      Value<String?> banner,
+      Value<int> bannerHeight,
+      Value<int> bannerWidth,
       Value<String?> bannerUrl,
+      Value<String?> profilePicture,
+      Value<int> profilePictureHeight,
+      Value<int> profilePictureWidth,
+      Value<String?> profilePictureUrl,
+      Value<String> creatorId,
+      Value<List<dynamic>> guidelines,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<bool> canModerate,
-      Value<bool> canPost,
-      Value<bool> isBanned,
-      Value<int> memberCount,
     });
+
+final class $$CommunityTableTableReferences
+    extends BaseReferences<_$AppDataBase, $CommunityTableTable, CommunityData> {
+  $$CommunityTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ChirpUserTableTable _creatorIdTable(_$AppDataBase db) =>
+      db.chirpUserTable.createAlias(
+        $_aliasNameGenerator(db.communityTable.creatorId, db.chirpUserTable.id),
+      );
+
+  $$ChirpUserTableTableProcessedTableManager get creatorId {
+    final $_column = $_itemColumn<String>('creator_id')!;
+
+    final manager = $$ChirpUserTableTableTableManager(
+      $_db,
+      $_db.chirpUserTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_creatorIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$CommunityTableTableFilterComposer
     extends Composer<_$AppDataBase, $CommunityTableTable> {
@@ -30104,71 +30368,95 @@ class $$CommunityTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
+  ColumnFilters<bool> get nsfw => $composableBuilder(
+    column: $table.nsfw,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
+  ColumnFilters<bool> get private => $composableBuilder(
+    column: $table.private,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
+  ColumnFilters<bool> get verified => $composableBuilder(
+    column: $table.verified,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+  ColumnFilters<String> get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
+  ColumnFilters<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get bannerUrl => $composableBuilder(
     column: $table.bannerUrl,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get guidelines => $composableBuilder(
+    column: $table.guidelines,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
@@ -30181,25 +30469,28 @@ class $$CommunityTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isBanned => $composableBuilder(
-    column: $table.isBanned,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberCount => $composableBuilder(
-    column: $table.memberCount,
-    builder: (column) => ColumnFilters(column),
-  );
+  $$ChirpUserTableTableFilterComposer get creatorId {
+    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.creatorId,
+      referencedTable: $db.chirpUserTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChirpUserTableTableFilterComposer(
+            $db: $db,
+            $table: $db.chirpUserTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CommunityTableTableOrderingComposer
@@ -30226,63 +30517,93 @@ class $$CommunityTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
+  ColumnOrderings<bool> get nsfw => $composableBuilder(
+    column: $table.nsfw,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
+  ColumnOrderings<bool> get private => $composableBuilder(
+    column: $table.private,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get moderators => $composableBuilder(
-    column: $table.moderators,
+  ColumnOrderings<bool> get verified => $composableBuilder(
+    column: $table.verified,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
+  ColumnOrderings<String> get visibility => $composableBuilder(
+    column: $table.visibility,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get members => $composableBuilder(
-    column: $table.members,
+  ColumnOrderings<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
+  ColumnOrderings<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
+  ColumnOrderings<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
+  ColumnOrderings<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
+  ColumnOrderings<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get rules => $composableBuilder(
-    column: $table.rules,
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
+  ColumnOrderings<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<String> get bannerUrl => $composableBuilder(
     column: $table.bannerUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get guidelines => $composableBuilder(
+    column: $table.guidelines,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -30296,25 +30617,28 @@ class $$CommunityTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isBanned => $composableBuilder(
-    column: $table.isBanned,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberCount => $composableBuilder(
-    column: $table.memberCount,
-    builder: (column) => ColumnOrderings(column),
-  );
+  $$ChirpUserTableTableOrderingComposer get creatorId {
+    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.creatorId,
+      referencedTable: $db.chirpUserTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChirpUserTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.chirpUserTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CommunityTableTableAnnotationComposer
@@ -30337,58 +30661,86 @@ class $$CommunityTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get creatorId =>
-      $composableBuilder(column: $table.creatorId, builder: (column) => column);
+  GeneratedColumn<bool> get nsfw =>
+      $composableBuilder(column: $table.nsfw, builder: (column) => column);
 
-  GeneratedColumn<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
+  GeneratedColumn<bool> get private =>
+      $composableBuilder(column: $table.private, builder: (column) => column);
+
+  GeneratedColumn<bool> get verified =>
+      $composableBuilder(column: $table.verified, builder: (column) => column);
+
+  GeneratedColumn<String> get visibility => $composableBuilder(
+    column: $table.visibility,
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get moderators =>
-      $composableBuilder(
-        column: $table.moderators,
-        builder: (column) => column,
-      );
-
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get moderatorNames =>
-      $composableBuilder(
-        column: $table.moderatorNames,
-        builder: (column) => column,
-      );
-
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get members =>
-      $composableBuilder(column: $table.members, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get memberNames =>
-      $composableBuilder(
-        column: $table.memberNames,
-        builder: (column) => column,
-      );
-
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get bannedUsers =>
-      $composableBuilder(
-        column: $table.bannedUsers,
-        builder: (column) => column,
-      );
-
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
+  GeneratedColumn<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
     builder: (column) => column,
   );
 
-  GeneratedColumn<bool> get isPrivate =>
-      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
+  GeneratedColumn<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
+    builder: (column) => column,
+  );
 
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get rules =>
-      $composableBuilder(column: $table.rules, builder: (column) => column);
+  GeneratedColumn<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get logoUrl =>
-      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
+  GeneratedColumn<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
+
+  GeneratedColumn<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get bannerUrl =>
       $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get guidelines =>
+      $composableBuilder(
+        column: $table.guidelines,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -30396,21 +30748,28 @@ class $$CommunityTableTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  GeneratedColumn<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get canPost =>
-      $composableBuilder(column: $table.canPost, builder: (column) => column);
-
-  GeneratedColumn<bool> get isBanned =>
-      $composableBuilder(column: $table.isBanned, builder: (column) => column);
-
-  GeneratedColumn<int> get memberCount => $composableBuilder(
-    column: $table.memberCount,
-    builder: (column) => column,
-  );
+  $$ChirpUserTableTableAnnotationComposer get creatorId {
+    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.creatorId,
+      referencedTable: $db.chirpUserTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChirpUserTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.chirpUserTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CommunityTableTableTableManager
@@ -30424,12 +30783,9 @@ class $$CommunityTableTableTableManager
           $$CommunityTableTableAnnotationComposer,
           $$CommunityTableTableCreateCompanionBuilder,
           $$CommunityTableTableUpdateCompanionBuilder,
-          (
-            CommunityData,
-            BaseReferences<_$AppDataBase, $CommunityTableTable, CommunityData>,
-          ),
+          (CommunityData, $$CommunityTableTableReferences),
           CommunityData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool creatorId})
         > {
   $$CommunityTableTableTableManager(
     _$AppDataBase db,
@@ -30449,97 +30805,155 @@ class $$CommunityTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
-                Value<String?> creatorId = const Value.absent(),
-                Value<String?> creatorName = const Value.absent(),
-                Value<List<dynamic>?> moderators = const Value.absent(),
-                Value<List<dynamic>?> moderatorNames = const Value.absent(),
-                Value<List<dynamic>?> members = const Value.absent(),
-                Value<List<dynamic>?> memberNames = const Value.absent(),
-                Value<List<dynamic>?> bannedUsers = const Value.absent(),
-                Value<List<dynamic>?> bannedUserNames = const Value.absent(),
-                Value<bool> isPrivate = const Value.absent(),
-                Value<List<dynamic>?> rules = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
+                Value<bool> nsfw = const Value.absent(),
+                Value<bool> private = const Value.absent(),
+                Value<bool> verified = const Value.absent(),
+                Value<String> visibility = const Value.absent(),
+                Value<int> memberCount = const Value.absent(),
+                Value<int> moderatorCount = const Value.absent(),
+                Value<int> bannedUsersCount = const Value.absent(),
+                Value<int> monthlyVisitorCount = const Value.absent(),
+                Value<int> weeklyVisitorCount = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<int> bannerHeight = const Value.absent(),
+                Value<int> bannerWidth = const Value.absent(),
                 Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<int> profilePictureHeight = const Value.absent(),
+                Value<int> profilePictureWidth = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<String> creatorId = const Value.absent(),
+                Value<List<dynamic>> guidelines = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<bool> canModerate = const Value.absent(),
-                Value<bool> canPost = const Value.absent(),
-                Value<bool> isBanned = const Value.absent(),
-                Value<int> memberCount = const Value.absent(),
               }) => CommunityTableCompanion(
                 id: id,
                 name: name,
                 description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logoUrl: logoUrl,
+                nsfw: nsfw,
+                private: private,
+                verified: verified,
+                visibility: visibility,
+                memberCount: memberCount,
+                moderatorCount: moderatorCount,
+                bannedUsersCount: bannedUsersCount,
+                monthlyVisitorCount: monthlyVisitorCount,
+                weeklyVisitorCount: weeklyVisitorCount,
+                banner: banner,
+                bannerHeight: bannerHeight,
+                bannerWidth: bannerWidth,
                 bannerUrl: bannerUrl,
+                profilePicture: profilePicture,
+                profilePictureHeight: profilePictureHeight,
+                profilePictureWidth: profilePictureWidth,
+                profilePictureUrl: profilePictureUrl,
+                creatorId: creatorId,
+                guidelines: guidelines,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                canModerate: canModerate,
-                canPost: canPost,
-                isBanned: isBanned,
-                memberCount: memberCount,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
-                Value<String?> creatorId = const Value.absent(),
-                Value<String?> creatorName = const Value.absent(),
-                Value<List<dynamic>?> moderators = const Value.absent(),
-                Value<List<dynamic>?> moderatorNames = const Value.absent(),
-                Value<List<dynamic>?> members = const Value.absent(),
-                Value<List<dynamic>?> memberNames = const Value.absent(),
-                Value<List<dynamic>?> bannedUsers = const Value.absent(),
-                Value<List<dynamic>?> bannedUserNames = const Value.absent(),
-                Value<bool> isPrivate = const Value.absent(),
-                Value<List<dynamic>?> rules = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
+                Value<bool> nsfw = const Value.absent(),
+                Value<bool> private = const Value.absent(),
+                Value<bool> verified = const Value.absent(),
+                required String visibility,
+                Value<int> memberCount = const Value.absent(),
+                Value<int> moderatorCount = const Value.absent(),
+                Value<int> bannedUsersCount = const Value.absent(),
+                Value<int> monthlyVisitorCount = const Value.absent(),
+                Value<int> weeklyVisitorCount = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<int> bannerHeight = const Value.absent(),
+                Value<int> bannerWidth = const Value.absent(),
                 Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<int> profilePictureHeight = const Value.absent(),
+                Value<int> profilePictureWidth = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                required String creatorId,
+                required List<dynamic> guidelines,
                 required DateTime createdAt,
                 required DateTime updatedAt,
-                Value<bool> canModerate = const Value.absent(),
-                Value<bool> canPost = const Value.absent(),
-                Value<bool> isBanned = const Value.absent(),
-                Value<int> memberCount = const Value.absent(),
               }) => CommunityTableCompanion.insert(
                 id: id,
                 name: name,
                 description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logoUrl: logoUrl,
+                nsfw: nsfw,
+                private: private,
+                verified: verified,
+                visibility: visibility,
+                memberCount: memberCount,
+                moderatorCount: moderatorCount,
+                bannedUsersCount: bannedUsersCount,
+                monthlyVisitorCount: monthlyVisitorCount,
+                weeklyVisitorCount: weeklyVisitorCount,
+                banner: banner,
+                bannerHeight: bannerHeight,
+                bannerWidth: bannerWidth,
                 bannerUrl: bannerUrl,
+                profilePicture: profilePicture,
+                profilePictureHeight: profilePictureHeight,
+                profilePictureWidth: profilePictureWidth,
+                profilePictureUrl: profilePictureUrl,
+                creatorId: creatorId,
+                guidelines: guidelines,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                canModerate: canModerate,
-                canPost: canPost,
-                isBanned: isBanned,
-                memberCount: memberCount,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CommunityTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({creatorId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (creatorId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.creatorId,
+                                referencedTable: $$CommunityTableTableReferences
+                                    ._creatorIdTable(db),
+                                referencedColumn:
+                                    $$CommunityTableTableReferences
+                                        ._creatorIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -30554,12 +30968,9 @@ typedef $$CommunityTableTableProcessedTableManager =
       $$CommunityTableTableAnnotationComposer,
       $$CommunityTableTableCreateCompanionBuilder,
       $$CommunityTableTableUpdateCompanionBuilder,
-      (
-        CommunityData,
-        BaseReferences<_$AppDataBase, $CommunityTableTable, CommunityData>,
-      ),
+      (CommunityData, $$CommunityTableTableReferences),
       CommunityData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool creatorId})
     >;
 
 class $AppDataBaseManager {

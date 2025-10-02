@@ -80,10 +80,10 @@ class _CommunityHomeState extends State<CommunityHome>
           );
         } else if (state is CommunityHomeLoaded) {
           final isCreator = currentUserId == state.community.creatorId;
-          final isModerator = state.community.canModerate == true;
-          final isMember = state.community.canPost == true;
-          final isBanned = state.community.isBanned == true;
-          final hasGuidelines = state.community.rules.isEmpty ? false : true;
+          final isModerator = true;
+          final isMember = true;
+          final isBanned = true;
+          final hasGuidelines = state.community.private ? false : true;
 
           //building the tabs dynamically
           final tabs = <Tab>[
@@ -100,24 +100,24 @@ class _CommunityHomeState extends State<CommunityHome>
                 isModerator: isCreator || isModerator,
                 communityId: state.community.id.toString(),
                 userId: currentUserId,
-                guidelines: state.community.rules,
+                guidelines: state.community.guidelines,
               ),
-            CommunityMembers(
-              communityId: widget.communityId,
-              members: state.community.members,
-              memberNames: state.community.memberNames,
-              moderators: state.community.moderators,
-              moderatorNames: state.community.moderatorNames,
-              banned: state.community.bannedUsers,
-              bannedUserNames: state.community.bannedUserNames,
-              isCreator: isCreator,
-              isModerator: isModerator,
-              isMember: isMember,
-              isBanned: isBanned,
-              isPrivate: state.community.isPrivate,
-              userId: currentUserId,
-              userName: currentUserName,
-            ),
+            // CommunityMembers(
+            //   communityId: widget.communityId,
+            //   members: state.community.members,
+            //   memberNames: state.community.memberNames,
+            //   moderators: state.community.moderators,
+            //   moderatorNames: state.community.moderatorNames,
+            //   banned: state.community.bannedUsers,
+            //   bannedUserNames: state.community.bannedUserNames,
+            //   isCreator: isCreator,
+            //   isModerator: isModerator,
+            //   isMember: isMember,
+            //   isBanned: isBanned,
+            //   isPrivate: state.community.private,
+            //   userId: currentUserId,
+            //   userName: currentUserName,
+            // ),
           ];
 
           return DefaultTabController(
@@ -133,9 +133,9 @@ class _CommunityHomeState extends State<CommunityHome>
                     title: Row(
                       children: [
                         ClipOval(
-                          child: state.community.logoUrl != null
+                          child: state.community.profilePictureUrl != null
                               ? CachedNetworkImage(
-                                  imageUrl: state.community.logoUrl!,
+                                  imageUrl: state.community.profilePictureUrl!,
                                   width: 45,
                                   height: 45,
                                   fit: BoxFit.cover,
@@ -269,9 +269,9 @@ class _CommunityHomeState extends State<CommunityHome>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipOval(
-                                  child: state.community.logoUrl != null
+                                  child: state.community.profilePictureUrl != null
                                       ? CachedNetworkImage(
-                                          imageUrl: state.community.logoUrl!,
+                                          imageUrl: state.community.profilePictureUrl!,
                                           width: 80,
                                           height: 80,
                                           fit: BoxFit.cover,
@@ -356,54 +356,54 @@ class _CommunityHomeState extends State<CommunityHome>
                                             ),
                                       ),
                                       SizedBox(height: 5),
-                                      if (isCreator || isModerator || isMember)
-                                        FilledButton.icon(
-                                          icon: Icon(Icons.post_add),
-                                          onPressed: () {},
-                                          label: const Text("Create Post"),
-                                        )
-                                      else if (isBanned)
-                                        Text(
-                                          "You are banned from this community",
-                                          style: TextStyle(
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.error,
-                                          ),
-                                        )
-                                      else if (!isMember &&
-                                          state.community.isPrivate)
-                                        const Text(
-                                          "This is a private community, request to join.",
-                                        )
-                                      else
-                                        FilledButton.icon(
-                                          icon: Icon(Icons.person_add_alt_1),
-                                          onPressed: () {
-                                            context
-                                                .read<CommunityHomeBloc>()
-                                                .add(
-                                                  JoinCommunity(
-                                                    communityId: state
-                                                        .community
-                                                        .id
-                                                        .toString(),
-                                                    userId: currentUserId,
-                                                    userName: currentUserName,
-                                                  ),
-                                                );
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  "Joining community...",
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          label: const Text("Join"),
-                                        ),
+                                      // if (isCreator || isModerator || isMember)
+                                      //   FilledButton.icon(
+                                      //     icon: Icon(Icons.post_add),
+                                      //     onPressed: () {},
+                                      //     label: const Text("Create Post"),
+                                      //   )
+                                      // else if (isBanned)
+                                      //   Text(
+                                      //     "You are banned from this community",
+                                      //     style: TextStyle(
+                                      //       color: Theme.of(
+                                      //         context,
+                                      //       ).colorScheme.error,
+                                      //     ),
+                                      //   )
+                                      // else if (!isMember &&
+                                      //     state.community.isPrivate)
+                                      //   const Text(
+                                      //     "This is a private community, request to join.",
+                                      //   )
+                                      // else
+                                      //   FilledButton.icon(
+                                      //     icon: Icon(Icons.person_add_alt_1),
+                                      //     onPressed: () {
+                                      //       context
+                                      //           .read<CommunityHomeBloc>()
+                                      //           .add(
+                                      //             JoinCommunity(
+                                      //               communityId: state
+                                      //                   .community
+                                      //                   .id
+                                      //                   .toString(),
+                                      //               userId: currentUserId,
+                                      //               userName: currentUserName,
+                                      //             ),
+                                      //           );
+                                      //       ScaffoldMessenger.of(
+                                      //         context,
+                                      //       ).showSnackBar(
+                                      //         const SnackBar(
+                                      //           content: Text(
+                                      //             "Joining community...",
+                                      //           ),
+                                      //         ),
+                                      //       );
+                                      //     },
+                                      //     label: const Text("Join"),
+                                      //   ),
                                     ],
                                   ),
                                 ),
