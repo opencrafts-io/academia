@@ -1258,6 +1258,18 @@ class $ChirpUserTableTable extends ChirpUserTable
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1304,6 +1316,7 @@ class $ChirpUserTableTable extends ChirpUserTable
     id,
     createdAt,
     updatedAt,
+    username,
     name,
     email,
     vibepoints,
@@ -1337,6 +1350,14 @@ class $ChirpUserTableTable extends ChirpUserTable
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -1387,6 +1408,10 @@ class $ChirpUserTableTable extends ChirpUserTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -1416,6 +1441,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String username;
   final String name;
   final String email;
   final int vibepoints;
@@ -1424,6 +1450,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    required this.username,
     required this.name,
     required this.email,
     required this.vibepoints,
@@ -1435,6 +1462,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['username'] = Variable<String>(username);
     map['name'] = Variable<String>(name);
     map['email'] = Variable<String>(email);
     map['vibepoints'] = Variable<int>(vibepoints);
@@ -1449,6 +1477,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      username: Value(username),
       name: Value(name),
       email: Value(email),
       vibepoints: Value(vibepoints),
@@ -1464,26 +1493,28 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChirpUserData(
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<String>(json['user_id']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      username: serializer.fromJson<String>(json['username']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
-      vibepoints: serializer.fromJson<int>(json['vibepoints']),
-      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+      vibepoints: serializer.fromJson<int>(json['vibe_points']),
+      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'user_id': serializer.toJson<String>(id),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'username': serializer.toJson<String>(username),
       'name': serializer.toJson<String>(name),
       'email': serializer.toJson<String>(email),
-      'vibepoints': serializer.toJson<int>(vibepoints),
-      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+      'vibe_points': serializer.toJson<int>(vibepoints),
+      'avatar_url': serializer.toJson<String?>(avatarUrl),
     };
   }
 
@@ -1491,6 +1522,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? username,
     String? name,
     String? email,
     int? vibepoints,
@@ -1499,6 +1531,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    username: username ?? this.username,
     name: name ?? this.name,
     email: email ?? this.email,
     vibepoints: vibepoints ?? this.vibepoints,
@@ -1509,6 +1542,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       id: data.id.present ? data.id.value : this.id,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      username: data.username.present ? data.username.value : this.username,
       name: data.name.present ? data.name.value : this.name,
       email: data.email.present ? data.email.value : this.email,
       vibepoints: data.vibepoints.present
@@ -1524,6 +1558,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('username: $username, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
           ..write('vibepoints: $vibepoints, ')
@@ -1533,8 +1568,16 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, name, email, vibepoints, avatarUrl);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    username,
+    name,
+    email,
+    vibepoints,
+    avatarUrl,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1542,6 +1585,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.username == this.username &&
           other.name == this.name &&
           other.email == this.email &&
           other.vibepoints == this.vibepoints &&
@@ -1552,6 +1596,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String> username;
   final Value<String> name;
   final Value<String> email;
   final Value<int> vibepoints;
@@ -1561,6 +1606,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.username = const Value.absent(),
     this.name = const Value.absent(),
     this.email = const Value.absent(),
     this.vibepoints = const Value.absent(),
@@ -1571,18 +1617,21 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    required String username,
     required String name,
     required String email,
     this.vibepoints = const Value.absent(),
     this.avatarUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
+       username = Value(username),
        name = Value(name),
        email = Value(email);
   static Insertable<ChirpUserData> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? username,
     Expression<String>? name,
     Expression<String>? email,
     Expression<int>? vibepoints,
@@ -1593,6 +1642,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (username != null) 'username': username,
       if (name != null) 'name': name,
       if (email != null) 'email': email,
       if (vibepoints != null) 'vibepoints': vibepoints,
@@ -1605,6 +1655,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     Value<String>? id,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<String>? username,
     Value<String>? name,
     Value<String>? email,
     Value<int>? vibepoints,
@@ -1615,6 +1666,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      username: username ?? this.username,
       name: name ?? this.name,
       email: email ?? this.email,
       vibepoints: vibepoints ?? this.vibepoints,
@@ -1634,6 +1686,9 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -1659,6 +1714,7 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('username: $username, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
           ..write('vibepoints: $vibepoints, ')
@@ -19856,6 +19912,7 @@ typedef $$ChirpUserTableTableCreateCompanionBuilder =
       required String id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      required String username,
       required String name,
       required String email,
       Value<int> vibepoints,
@@ -19867,6 +19924,7 @@ typedef $$ChirpUserTableTableUpdateCompanionBuilder =
       Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String> username,
       Value<String> name,
       Value<String> email,
       Value<int> vibepoints,
@@ -19928,6 +19986,11 @@ class $$ChirpUserTableTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20001,6 +20064,11 @@ class $$ChirpUserTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -20039,6 +20107,9 @@ class $$ChirpUserTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -20114,6 +20185,7 @@ class $$ChirpUserTableTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> username = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<int> vibepoints = const Value.absent(),
@@ -20123,6 +20195,7 @@ class $$ChirpUserTableTableTableManager
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                username: username,
                 name: name,
                 email: email,
                 vibepoints: vibepoints,
@@ -20134,6 +20207,7 @@ class $$ChirpUserTableTableTableManager
                 required String id,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                required String username,
                 required String name,
                 required String email,
                 Value<int> vibepoints = const Value.absent(),
@@ -20143,6 +20217,7 @@ class $$ChirpUserTableTableTableManager
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                username: username,
                 name: name,
                 email: email,
                 vibepoints: vibepoints,

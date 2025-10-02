@@ -105,6 +105,7 @@ class ConversationParticipantApiModel extends Equatable {
   /// Convert to ChirpUser entity
   ChirpUser toChirpUser() {
     return ChirpUser(
+      username: "",
       id: userId,
       name: userName,
       email: email ?? '',

@@ -55,7 +55,7 @@ class ChirpUserRemoteDatasourceImpl
       }
 
       final users = (response.data as List)
-          .map((json) => ChirpUserDataHelper.fromJson(json))
+          .map((json) => ChirpUserData.fromJson(json))
           .toList();
 
       return Right(users);
@@ -85,7 +85,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final user = ChirpUserDataHelper.fromJson(response.data);
+      final user = ChirpUserData.fromJson(response.data);
       return Right(user);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -118,7 +118,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final createdUser = ChirpUserDataHelper.fromJson(response.data);
+      final createdUser = ChirpUserData.fromJson(response.data);
       return Right(createdUser);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -151,7 +151,7 @@ class ChirpUserRemoteDatasourceImpl
         );
       }
 
-      final updatedUser = ChirpUserDataHelper.fromJson(response.data);
+      final updatedUser = ChirpUserData.fromJson(response.data);
       return Right(updatedUser);
     } on DioException catch (dioError) {
       return handleDioError(dioError);
@@ -218,7 +218,7 @@ class ChirpUserRemoteDatasourceImpl
       final responseData = response.data;
 
       final users = (responseData['users'] as List)
-          .map((json) => ChirpUserDataHelper.fromJson(json))
+          .map((json) => ChirpUserData.fromJson(json))
           .toList();
 
       return Right(users);

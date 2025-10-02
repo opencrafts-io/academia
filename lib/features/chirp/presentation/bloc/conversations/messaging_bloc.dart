@@ -176,9 +176,12 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
 
     // Store the user data for future use
     if (existingConversation != null) {
-      final otherParticipant = existingConversation.getOtherParticipant(null); // We don't have currentUserId here
+      final otherParticipant = existingConversation.getOtherParticipant(
+        null,
+      ); // We don't have currentUserId here
       if (otherParticipant != null) {
         _conversationUserMap[event.conversationId] = ChirpUser(
+          username: "",
           id: otherParticipant.userId,
           name: otherParticipant.name,
           email: otherParticipant.email,
@@ -204,86 +207,105 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
         if (storedUser != null) {
           userForConversation = storedUser;
         } else if (existingConversation != null) {
-          final otherParticipant = existingConversation.getOtherParticipant(null);
-          if (otherParticipant != null && otherParticipant.name != 'Unknown User') {
+          final otherParticipant = existingConversation.getOtherParticipant(
+            null,
+          );
+          if (otherParticipant != null &&
+              otherParticipant.name != 'Unknown User') {
             userForConversation = ChirpUser(
+              username: "",
               id: otherParticipant.userId,
               name: otherParticipant.name,
               email: otherParticipant.email,
               avatarUrl: otherParticipant.avatar,
             );
-        } else {
-          // Fallback to getting user from conversation ID
-          userForConversation = _getUserForConversation(event.conversationId);
-        }
+          } else {
+            // Fallback to getting user from conversation ID
+            userForConversation = _getUserForConversation(event.conversationId);
+          }
 
-        final conversation =
-            existingConversation?.copyWith(
-              lastMessage: sortedMessages.isNotEmpty
-                  ? sortedMessages.last
-                  : null,
-              lastMessageAt: sortedMessages.isNotEmpty
-                  ? sortedMessages.last.sentAt
-                  : null,
-              unreadCount: 0,
-            ) ??
-            Conversation(
-              id: event.conversationId,
-              participants: [
-                ConversationParticipant(
-                  id: userForConversation.id,
-                  userId: userForConversation.id,
-                  name: userForConversation.name,
-                  email: userForConversation.email,
-                  avatar: userForConversation.avatarUrl,
-                  isOnline: false,
-                  lastSeen: null,
-                  isCurrentUser: false,
-                ),
-              ],
-              lastMessage: sortedMessages.isNotEmpty
-                  ? sortedMessages.last
-                  : null,
-              lastMessageAt: sortedMessages.isNotEmpty
-                  ? sortedMessages.last.sentAt
-                  : null,
-              unreadCount: 0,
-              updatedAt: DateTime.now(),
-              createdAt: DateTime.now(),
-            );
-        emit(
-          MessagesLoaded(sortedMessages, conversation, currentConversations),
-        );
+          final conversation =
+              existingConversation?.copyWith(
+                lastMessage: sortedMessages.isNotEmpty
+                    ? sortedMessages.last
+                    : null,
+                lastMessageAt: sortedMessages.isNotEmpty
+                    ? sortedMessages.last.sentAt
+                    : null,
+                unreadCount: 0,
+              ) ??
+              Conversation(
+                id: event.conversationId,
+                participants: [
+                  ConversationParticipant(
+                    id: userForConversation.id,
+                    userId: userForConversation.id,
+                    name: userForConversation.name,
+                    email: userForConversation.email,
+                    avatar: userForConversation.avatarUrl,
+                    isOnline: false,
+                    lastSeen: null,
+                    isCurrentUser: false,
+                  ),
+                ],
+                lastMessage: sortedMessages.isNotEmpty
+                    ? sortedMessages.last
+                    : null,
+                lastMessageAt: sortedMessages.isNotEmpty
+                    ? sortedMessages.last.sentAt
+                    : null,
+                unreadCount: 0,
+                updatedAt: DateTime.now(),
+                createdAt: DateTime.now(),
+              );
+          emit(
+            MessagesLoaded(sortedMessages, conversation, currentConversations),
+          );
+        }
       }
-    }});
+    });
 
     // Listen to real-time WebSocket messages
     _webSocketMessageSubscription?.cancel();
-    print('🚀 MessagingBloc: Setting up WebSocket listener for conversation: ${event.conversationId}');
-    _webSocketMessageSubscription = conversationRepository.newMessages.listen((message) {
-      print('🐛 MessagingBloc received WebSocket message: ${message.id} for conversation: ${message.conversationId}');
+    print(
+      '🚀 MessagingBloc: Setting up WebSocket listener for conversation: ${event.conversationId}',
+    );
+    _webSocketMessageSubscription = conversationRepository.newMessages.listen((
+      message,
+    ) {
+      print(
+        '🐛 MessagingBloc received WebSocket message: ${message.id} for conversation: ${message.conversationId}',
+      );
       print('🐛 Current conversation: ${event.conversationId}');
       print('🐛 Bloc state: ${state.runtimeType}');
-      
+
       if (!emit.isDone && state is MessagesLoaded) {
         final currentState = state as MessagesLoaded;
-        
+
         // Only add message if it's for the current conversation
         if (message.conversationId == event.conversationId) {
           print('🐛 Adding message to UI - Message: "${message.content}"');
-          
+
           final updatedMessages = [...currentState.messages, message];
           final sortedMessages = List<Message>.from(updatedMessages)
             ..sort((a, b) => a.sentAt.compareTo(b.sentAt));
-          
+
           final updatedConversation = currentState.conversation.copyWith(
             lastMessage: message,
             lastMessageAt: message.sentAt,
           );
-          
-          emit(MessagesLoaded(sortedMessages, updatedConversation, currentState.conversations));
+
+          emit(
+            MessagesLoaded(
+              sortedMessages,
+              updatedConversation,
+              currentState.conversations,
+            ),
+          );
         } else {
-          print('🐛 Message conversation ID mismatch: ${message.conversationId} != ${event.conversationId}');
+          print(
+            '🐛 Message conversation ID mismatch: ${message.conversationId} != ${event.conversationId}',
+          );
         }
       } else {
         print('🐛 Cannot add message - bloc not in MessagesLoaded state');
@@ -321,10 +343,12 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
             userForConversation = storedUser;
           } else if (existingConversation != null) {
             final otherParticipant = existingConversation.getOtherParticipant(
-                null);
+              null,
+            );
             if (otherParticipant != null &&
                 otherParticipant.name != 'Unknown User') {
               userForConversation = ChirpUser(
+                username: "",
                 id: otherParticipant.userId,
                 name: otherParticipant.name,
                 email: otherParticipant.email,
@@ -332,8 +356,9 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
               );
             } else {
               // Fallback to getting user from conversation ID
-              userForConversation =
-                  _getUserForConversation(event.conversationId);
+              userForConversation = _getUserForConversation(
+                event.conversationId,
+              );
             }
 
             final conversation =
@@ -346,37 +371,41 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
                       : null,
                   unreadCount: 0,
                 ) ??
-                    Conversation(
-                      id: event.conversationId,
-                      participants: [
-                        ConversationParticipant(
-                          id: userForConversation.id,
-                          userId: userForConversation.id,
-                          name: userForConversation.name,
-                          email: userForConversation.email,
-                          avatar: userForConversation.avatarUrl,
-                          isOnline: false,
-                          lastSeen: null,
-                          isCurrentUser: false,
-                        ),
-                      ],
-                      lastMessage: sortedMessages.isNotEmpty
-                          ? sortedMessages.last
-                          : null,
-                      lastMessageAt: sortedMessages.isNotEmpty
-                          ? sortedMessages.last.sentAt
-                          : null,
-                      unreadCount: 0,
-                      updatedAt: DateTime.now(),
-                      createdAt: DateTime.now(),
-                    );
+                Conversation(
+                  id: event.conversationId,
+                  participants: [
+                    ConversationParticipant(
+                      id: userForConversation.id,
+                      userId: userForConversation.id,
+                      name: userForConversation.name,
+                      email: userForConversation.email,
+                      avatar: userForConversation.avatarUrl,
+                      isOnline: false,
+                      lastSeen: null,
+                      isCurrentUser: false,
+                    ),
+                  ],
+                  lastMessage: sortedMessages.isNotEmpty
+                      ? sortedMessages.last
+                      : null,
+                  lastMessageAt: sortedMessages.isNotEmpty
+                      ? sortedMessages.last.sentAt
+                      : null,
+                  unreadCount: 0,
+                  updatedAt: DateTime.now(),
+                  createdAt: DateTime.now(),
+                );
             emit(
               MessagesLoaded(
-                  sortedMessages, conversation, currentConversations),
+                sortedMessages,
+                conversation,
+                currentConversations,
+              ),
             );
           }
         }
-      });
+      },
+    );
   }
 
   Future<void> _onSendMessage(
@@ -529,7 +558,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     // Check if conversation already exists
     final conversationExists = currentConversations.any((conv) {
       final otherParticipant = conv.getOtherParticipant(null);
-      return otherParticipant != null && otherParticipant.userId == event.user.id;
+      return otherParticipant != null &&
+          otherParticipant.userId == event.user.id;
     });
     if (conversationExists) {
       // Conversation already exists, just emit the current state
@@ -539,12 +569,9 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     // Get current user ID from cached profile
     String? currentUserId;
     final profileRes = await getCachedProfileUsecase(NoParams());
-    profileRes.fold(
-      (failure) {},
-      (profile) {
-        currentUserId = profile.id;
-      },
-    );
+    profileRes.fold((failure) {}, (profile) {
+      currentUserId = profile.id;
+    });
 
     if (currentUserId == null || currentUserId!.isEmpty) {
       // If we cannot get the current user, emit an error
@@ -559,8 +586,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
 
     // Create conversation on the backend
     // Make sure we don't duplicate the same user ID
-    final participants = currentUserId == event.user.id 
-        ? [currentUserId!] 
+    final participants = currentUserId == event.user.id
+        ? [currentUserId!]
         : [currentUserId!, event.user.id];
 
     final params = CreateConversationParams(participants: participants);
@@ -592,7 +619,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
 
         final conversationAlreadyExists = currentConversations.any((conv) {
           final otherParticipant = conv.getOtherParticipant(null);
-          return otherParticipant != null && otherParticipant.userId == event.user.id;
+          return otherParticipant != null &&
+              otherParticipant.userId == event.user.id;
         });
         if (!conversationAlreadyExists) {
           currentConversations = [...currentConversations, conversation];
@@ -610,7 +638,8 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
         // Add the new conversation to the list
         final conversationAlreadyExists = currentConversations.any((conv) {
           final otherParticipant = conv.getOtherParticipant(null);
-          return otherParticipant != null && otherParticipant.userId == event.user.id;
+          return otherParticipant != null &&
+              otherParticipant.userId == event.user.id;
         });
         if (!conversationAlreadyExists) {
           currentConversations = [...currentConversations, conversation];
@@ -691,6 +720,7 @@ class MessagingBloc extends Bloc<MessagingEvent, MessagingState> {
     // For now, create a minimal user but with better naming
     // TODO: This should be replaced with actual cached user data lookup
     return ChirpUser(
+      username: "",
       id: actualUserId,
       name: actualUserId.length > 8
           ? actualUserId.substring(0, 8)

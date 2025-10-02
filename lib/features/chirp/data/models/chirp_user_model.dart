@@ -6,12 +6,18 @@ import '../../domain/entities/chirp_user.dart';
 @DataClassName('ChirpUserData')
 class ChirpUserTable extends Table with TableMixin {
   @override
+  @JsonKey("user_id")
   TextColumn get id => text()();
+  @JsonKey("username")
+  TextColumn get username => text().unique()();
+  @JsonKey("name")
   TextColumn get name => text()();
+  @JsonKey("email")
   TextColumn get email => text()();
+  @JsonKey("vibe_points")
   IntColumn get vibepoints => integer().withDefault(Constant(0))();
+  @JsonKey("avatar_url")
   TextColumn get avatarUrl => text().nullable()();
-
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
@@ -24,23 +30,9 @@ extension ChirpUserDataHelper on ChirpUserData {
       email: email,
       vibepoints: vibepoints,
       avatarUrl: avatarUrl,
-    );
-  }
-
-  // Custom fromJson method that matches the API response structure
-  static ChirpUserData fromJson(Map<String, dynamic> json) {
-    return ChirpUserData(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-      email: json['email']?.toString() ?? '',
-      vibepoints: json['vibepoints'] ?? json['vibe_points'] ?? 0,
-      avatarUrl: json['avatar_url']?.toString(),
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : DateTime.now(),
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : DateTime.now(),
+      username: username,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }
@@ -55,6 +47,7 @@ extension ChirpUserEntityHelper on ChirpUser {
       avatarUrl: avatarUrl,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      username: username,
     );
   }
 }
