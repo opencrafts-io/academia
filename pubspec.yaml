@@ -106,6 +106,7 @@ dependencies:
   video_trimmer: ^5.0.0
   image_editor_plus: ^1.0.8
   video_thumbnail: ^0.5.6
+  upgrader: ^12.1.0
 
 
 dev_dependencies:
