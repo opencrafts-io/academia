@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/communities/communities.dart';
 import 'package:academia/features/communities/presentation/bloc/create_community_bloc.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class CreateCommunityScreen extends StatefulWidget {
   const CreateCommunityScreen({super.key});
@@ -67,8 +70,8 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
           await FlutterImageCompress.compressAndGetFile(
             originalImage.absolute.path,
             targetPath,
-            quality: 70, 
-            minWidth: 512, 
+            quality: 70,
+            minWidth: 512,
             minHeight: 512,
           );
 
@@ -128,7 +131,43 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
         return Scaffold(
           body: CustomScrollView(
             slivers: [
-              SliverAppBar(pinned: true, title: const Text("Create Community")),
+              SliverAppBar.large(
+                floating: true,
+                snap: true,
+                pinned: true,
+                title: const Text("Create Community"),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: _bannerImage == null
+                          ? null
+                          : DecorationImage(
+                              image: FileImage(_bannerImage!),
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
+                  title: Text("Create Community"),
+                ),
+                actions: [
+                  IconButton.filled(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                    onPressed: () {
+                      _nameController.text = "";
+                      _descriptionController.text = "";
+                      setState(() {
+                        _bannerImage = null;
+                        _logoImage = null;
+                      });
+                    },
+                    tooltip: "Reset the form",
+                    icon: Icon(Symbols.device_reset, color: Colors.white),
+                  ),
+                ],
+              ),
               // Main form content
               SliverToBoxAdapter(
                 child: Padding(
@@ -138,89 +177,52 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Banner upload
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Banner Image",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                            GestureDetector(
+                        SizedBox(
+                          width: double.infinity,
+                          child: Card.outlined(
+                            child: ListTile(
                               onTap: () => _pickBannerImage(),
-                              child: Container(
-                                height: 150,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceContainerHighest,
-                                  borderRadius: BorderRadius.circular(12),
-                                  image: _bannerImage != null
-                                      ? DecorationImage(
-                                          image: FileImage(_bannerImage!),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.image_outlined, size: 40),
-                                ),
-                              ),
+                              title: Text("Tap to upload banner image"),
+                              trailing: Icon(Icons.image),
                             ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: _logoImage != null
+                                ? FileImage(_logoImage!)
+                                : null,
 
-                        // Logo image upload
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              onTap: () => _pickLogoImage(),
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.surfaceContainerHighest,
-                                backgroundImage: _logoImage != null
-                                    ? FileImage(_logoImage!)
-                                    : null,
+                            child: ClipRRect(
+                              clipBehavior: Clip.hardEdge,
+                              borderRadius: BorderRadius.circular(60),
+                              child: GestureDetector(
+                                onTap: () => _pickLogoImage(),
                                 child: _logoImage == null
-                                    ? const Icon(
-                                        Icons.camera_alt_outlined,
-                                        size: 30,
-                                      )
+                                    ? Text("Hello")
                                     : null,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "Logo Image",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                          ],
+                          ),
                         ),
                         const SizedBox(height: 24),
                         // Community name
                         TextFormField(
                           controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: "Community Name",
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            hintText: "A name for your community",
+                            filled: true,
+                            fillColor: Theme.of(
+                              context,
+                            ).colorScheme.outlineVariant,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) => value == null || value.isEmpty
                               ? "Enter a name"
                               : null,
@@ -231,38 +233,61 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                         TextFormField(
                           controller: _descriptionController,
                           maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: "Description",
-                            border: OutlineInputBorder(),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: InputDecoration(
+                            hintText:
+                                "Please describe what your community is all about",
+                            filled: true,
+                            fillColor: Theme.of(
+                              context,
+                            ).colorScheme.outlineVariant,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 16),
 
                         // Privacy toggle
-                        SwitchListTile(
-                          title: const Text("Private Community"),
-                          subtitle: Text(
-                            _isPrivate
-                                ? "Only invited members can join"
-                                : "Anyone can join",
+                        Card.filled(
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(22),
                           ),
-                          value: _isPrivate,
-                          onChanged: (val) {
-                            setState(() => _isPrivate = val);
-                          },
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          child: SwitchListTile(
+                            title: Text(
+                              _isPrivate
+                                  ? "Private community"
+                                  : "Public Community",
+                            ),
+                            subtitle: Text(
+                              _isPrivate
+                                  ? "Only invited members can join"
+                                  : "Anyone can join",
+                            ),
+                            value: _isPrivate,
+                            onChanged: (val) {
+                              setState(() => _isPrivate = val);
+                            },
+                          ),
                         ),
                         const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: () => state is CreateCommunityLoading
-                                ? null
-                                : _onSubmit(context),
-                            child: state is CreateCommunityLoading
-                                ? const CircularProgressIndicator()
-                                : const Text("Create Community"),
-                          ),
+
+                        Align(
+                          alignment: Alignment.center,
+                          child: state is CreateCommunityLoading
+                              ? SpinningScallopIndicator()
+                              : FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                    padding: EdgeInsets.all(22),
+                                  ),
+                                  onPressed: () => _onSubmit(context),
+                                  label: const Text("Create Community"),
+                                ),
                         ),
+                        SizedBox(width: 12),
                       ],
                     ),
                   ),
