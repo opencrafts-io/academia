@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/communities/communities.dart';
@@ -7,6 +8,8 @@ import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:image_editor_plus/options.dart' as image_editor_options;
 import 'package:image_picker/image_picker.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -28,57 +31,119 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickBannerImage() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      // Get the original file path
-      final File originalImage = File(picked.path);
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (picked == null) return;
 
-      // Get the compressed file path
+      final File originalImage = File(picked.path);
+      final imageData = await originalImage.readAsBytes();
+      if (!mounted) return;
+
+      // Crop the image, locked to 16:9
+      final Uint8List? croppedBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageCropper(
+            image: imageData,
+            availableRatios: [
+              image_editor_options.AspectRatio(title: "16:9", ratio: 16 / 9),
+            ],
+          ),
+        ),
+      );
+
+      if (croppedBytes == null) return;
+
+      final String croppedPath =
+          '${originalImage.parent.path}/cropped_banner.jpg';
+      final File croppedFile = await File(
+        croppedPath,
+      ).writeAsBytes(croppedBytes);
+
+      // Compress cropped file
       final String targetPath =
           '${originalImage.parent.path}/compressed_banner.jpg';
-
-      // Compress the image
-      final XFile? compressedImage =
+      final XFile? compressedFile =
           await FlutterImageCompress.compressAndGetFile(
-            originalImage.absolute.path,
+            croppedFile.path,
             targetPath,
             quality: 70,
             minWidth: 1024,
             minHeight: 1024,
           );
 
-      if (compressedImage != null) {
+      if (compressedFile != null && mounted) {
         setState(() {
-          _bannerImage = File(compressedImage.path);
+          _bannerImage = File(compressedFile.path);
         });
+      }
+    } catch (e) {
+      debugPrint("Error picking or cropping banner: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to process banner image")),
+        );
       }
     }
   }
 
   Future<void> _pickLogoImage() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      // Get the original file path
-      final File originalImage = File(picked.path);
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (picked == null) return;
 
-      // Get the compressed file path
+      final File originalImage = File(picked.path);
+      final imageData = await originalImage.readAsBytes();
+      if (!mounted) return;
+
+      final Uint8List? croppedBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageCropper(
+            image: imageData,
+            availableRatios: [
+              image_editor_options.AspectRatio(title: "1:1", ratio: 1 / 1),
+            ],
+          ),
+        ),
+      );
+
+      if (croppedBytes == null) return;
+
+      // Save cropped bytes to temporary file
+      final String croppedPath =
+          '${originalImage.parent.path}/cropped_logo.jpg';
+      final File croppedFile = await File(
+        croppedPath,
+      ).writeAsBytes(croppedBytes);
+
+      // Compress the cropped file
       final String targetPath =
           '${originalImage.parent.path}/compressed_logo.jpg';
-
-      // Compress the image
-      final XFile? compressedImage =
+      final XFile? compressedFile =
           await FlutterImageCompress.compressAndGetFile(
-            originalImage.absolute.path,
+            croppedFile.path,
             targetPath,
             quality: 70,
             minWidth: 512,
             minHeight: 512,
           );
 
-      if (compressedImage != null) {
+      if (compressedFile != null && mounted) {
         setState(() {
-          _logoImage = File(compressedImage.path);
+          _logoImage = File(compressedFile.path);
         });
+      }
+    } catch (e) {
+      debugPrint("Error picking or cropping logo: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to process logo image")),
+        );
       }
     }
   }
@@ -177,16 +242,6 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Card.outlined(
-                            child: ListTile(
-                              onTap: () => _pickBannerImage(),
-                              title: Text("Tap to upload banner image"),
-                              trailing: Icon(Icons.image),
-                            ),
-                          ),
-                        ),
                         Align(
                           alignment: Alignment.center,
                           child: CircleAvatar(
@@ -201,12 +256,24 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                               child: GestureDetector(
                                 onTap: () => _pickLogoImage(),
                                 child: _logoImage == null
-                                    ? Text("Hello")
+                                    ? Text("Pick Profile")
                                     : null,
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Card.outlined(
+                            child: ListTile(
+                              onTap: () => _pickBannerImage(),
+                              title: Text("Tap to upload banner image"),
+                              trailing: Icon(Icons.image),
+                            ),
+                          ),
+                        ),
+
                         const SizedBox(height: 24),
                         // Community name
                         TextFormField(

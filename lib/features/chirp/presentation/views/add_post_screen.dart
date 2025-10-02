@@ -203,7 +203,6 @@ class _AddPostPageState extends State<AddPostPage> {
                     ),
                     SizedBox(height: 16),
                     TextFormField(
-                      controller: _postDescriptionController,
                       maxLines: null,
                       minLines: 3,
                       textCapitalization: TextCapitalization.sentences,
