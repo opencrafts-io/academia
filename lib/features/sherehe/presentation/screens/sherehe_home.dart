@@ -138,7 +138,7 @@ class _ShereheHomeState extends State<ShereheHome>
                               const SizedBox(height: 12),
 
                               Text(
-                                "You've worked so hard during the week, just close that laptop na let's create a sherehe 😂",
+                                "You've worked so hard during the week, just close that laptop na let's get started by creating a Sherehe",
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: Theme.of(
