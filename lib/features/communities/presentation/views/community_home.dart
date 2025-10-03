@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:academia/features/communities/presentation/views/community_about.dart';
-import 'package:academia/features/communities/presentation/views/community_members.dart';
+import 'package:intl/intl.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:animated_emoji/animated_emoji.dart';
 
 class CommunityHome extends StatefulWidget {
   final String communityId;
@@ -79,349 +81,82 @@ class _CommunityHomeState extends State<CommunityHome>
             ),
           );
         } else if (state is CommunityHomeLoaded) {
-          final isCreator = currentUserId == state.community.creatorId;
-          final isModerator = true;
-          final isMember = true;
-          final isBanned = true;
-          final hasGuidelines = state.community.private ? false : true;
-
-          //building the tabs dynamically
-          final tabs = <Tab>[
-            const Tab(text: "Posts"),
-            if (hasGuidelines || isCreator || isModerator)
-              const Tab(text: "About"),
-            const Tab(text: "Members"),
-          ];
-
-          final tabViews = <Widget>[
-            const Center(child: Text("Community Posts Page")),
-            if (hasGuidelines || isCreator || isModerator)
-              CommunityAbout(
-                isModerator: isCreator || isModerator,
-                communityId: state.community.id.toString(),
-                userId: currentUserId,
-                guidelines: state.community.guidelines,
-              ),
-            // CommunityMembers(
-            //   communityId: widget.communityId,
-            //   members: state.community.members,
-            //   memberNames: state.community.memberNames,
-            //   moderators: state.community.moderators,
-            //   moderatorNames: state.community.moderatorNames,
-            //   banned: state.community.bannedUsers,
-            //   bannedUserNames: state.community.bannedUserNames,
-            //   isCreator: isCreator,
-            //   isModerator: isModerator,
-            //   isMember: isMember,
-            //   isBanned: isBanned,
-            //   isPrivate: state.community.private,
-            //   userId: currentUserId,
-            //   userName: currentUserName,
-            // ),
-          ];
-
-          return DefaultTabController(
-            length: tabs.length,
+          return RefreshIndicator.adaptive(
+            onRefresh: () async {
+              await Future.delayed(Duration(seconds: 2));
+            },
             child: Scaffold(
+              // drawer: Drawer(),
               body: NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverAppBar.large(
-                    expandedHeight: MediaQuery.of(context).size.height * 0.4,
-                    pinned: true,
-                    floating: false,
-                    // Collapsed title (logo + details row)
-                    title: Row(
-                      children: [
-                        ClipOval(
-                          child: state.community.profilePictureUrl != null
-                              ? CachedNetworkImage(
-                                  imageUrl: state.community.profilePictureUrl!,
-                                  width: 45,
-                                  height: 45,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Container(
-                                    width: 45,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainerHighest,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Center(
-                                      child: SizedBox(
-                                        width: 12,
-                                        height: 12,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                        width: 45,
-                                        height: 45,
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.errorContainer,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.error,
-                                          size: 18,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onErrorContainer,
-                                        ),
-                                      ),
-                                )
-                              : Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainerHighest,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.group,
-                                    size: 18,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                state.community.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "${state.community.memberCount} members",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [Text(state.community.name)],
                     ),
-
                     actions: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.person_add_outlined),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: CircleAvatar(
+                          backgroundImage:
+                              state.community.profilePictureUrl == null
+                              ? null
+                              : CachedNetworkImageProvider(
+                                  state.community.profilePictureUrl!,
+                                  errorListener: (error) {},
+                                ),
+                          child: state.community.profilePictureUrl == null
+                              ? Text(state.community.name[0])
+                              : null,
+                        ),
+                      ),
                     ],
+                  ),
 
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  SliverPinnedHeader(
+                    child: Container(
+                      color: Theme.of(context).colorScheme.surface,
+                      child: Row(
+                        spacing: 4,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Banner at the top
-                          if (state.community.bannerUrl != null)
-                            CachedNetworkImage(
-                              imageUrl: state.community.bannerUrl!,
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.18,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.surfaceContainerHighest,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.18,
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.18,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.errorContainer,
-                                child: const Icon(Icons.broken_image, size: 48),
-                              ),
-                            )
-                          else
-                            Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.18,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.surfaceContainerHighest,
-                              child: const Icon(Icons.image, size: 48),
+                          Chip(
+                            label: Text(
+                              "${NumberFormat.compact().format(state.community.memberCount)} members",
                             ),
-
-                          // Community details below banner
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipOval(
-                                  child: state.community.profilePictureUrl != null
-                                      ? CachedNetworkImage(
-                                          imageUrl: state.community.profilePictureUrl!,
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              Container(
-                                                width: 80,
-                                                height: 80,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .surfaceContainerHighest,
-                                                child: const Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                      ),
-                                                ),
-                                              ),
-                                          errorWidget: (context, url, error) =>
-                                              Container(
-                                                width: 80,
-                                                height: 80,
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.errorContainer,
-                                                child: Icon(
-                                                  Icons.error,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onErrorContainer,
-                                                ),
-                                              ),
-                                        )
-                                      : Container(
-                                          width: 80,
-                                          height: 80,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.surfaceContainerHighest,
-                                          child: Icon(
-                                            Icons.group,
-                                            size: 40,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onSurfaceVariant,
-                                          ),
-                                        ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        state.community.name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      if (state.community.description != null)
-                                        Text(
-                                          state.community.description!,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodyMedium,
-                                        ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        "${state.community.memberCount} members",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      // if (isCreator || isModerator || isMember)
-                                      //   FilledButton.icon(
-                                      //     icon: Icon(Icons.post_add),
-                                      //     onPressed: () {},
-                                      //     label: const Text("Create Post"),
-                                      //   )
-                                      // else if (isBanned)
-                                      //   Text(
-                                      //     "You are banned from this community",
-                                      //     style: TextStyle(
-                                      //       color: Theme.of(
-                                      //         context,
-                                      //       ).colorScheme.error,
-                                      //     ),
-                                      //   )
-                                      // else if (!isMember &&
-                                      //     state.community.isPrivate)
-                                      //   const Text(
-                                      //     "This is a private community, request to join.",
-                                      //   )
-                                      // else
-                                      //   FilledButton.icon(
-                                      //     icon: Icon(Icons.person_add_alt_1),
-                                      //     onPressed: () {
-                                      //       context
-                                      //           .read<CommunityHomeBloc>()
-                                      //           .add(
-                                      //             JoinCommunity(
-                                      //               communityId: state
-                                      //                   .community
-                                      //                   .id
-                                      //                   .toString(),
-                                      //               userId: currentUserId,
-                                      //               userName: currentUserName,
-                                      //             ),
-                                      //           );
-                                      //       ScaffoldMessenger.of(
-                                      //         context,
-                                      //       ).showSnackBar(
-                                      //         const SnackBar(
-                                      //           content: Text(
-                                      //             "Joining community...",
-                                      //           ),
-                                      //         ),
-                                      //       );
-                                      //     },
-                                      //     label: const Text("Join"),
-                                      //   ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            avatar: AnimatedEmoji(
+                              AnimatedEmojis.clown,
+                              repeat: false,
+                            ),
+                          ),
+                          Chip(
+                            label: Text(
+                              "${NumberFormat.compact().format(state.community.moderatorCount)} moderators",
+                            ),
+                            avatar: AnimatedEmoji(
+                              AnimatedEmojis.wink,
+                              repeat: false,
+                            ),
+                          ),
+                          Chip(
+                            label: Text(
+                              "${NumberFormat.compact().format(state.community.weeklyVisitorCount)} visitors",
+                            ),
+                            avatar: AnimatedEmoji(
+                              AnimatedEmojis.nerdFace,
+                              repeat: false,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    bottom: TabBar(
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.center,
-                      dividerHeight: 0,
-                      tabs: tabs,
-                    ),
                   ),
                 ],
-                body: TabBarView(children: tabViews),
+                body: Center(child: Text("Community posts")),
               ),
             ),
           );

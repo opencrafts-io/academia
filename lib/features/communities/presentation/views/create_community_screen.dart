@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/communities/communities.dart';
-import 'package:academia/features/communities/presentation/bloc/create_community_bloc.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

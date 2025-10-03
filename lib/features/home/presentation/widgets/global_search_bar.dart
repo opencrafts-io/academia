@@ -5,7 +5,6 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:animated_emoji/emoji.dart';
 import 'package:vibration/vibration.dart';
 
 class GlobalSearchBar extends StatefulWidget {
@@ -210,7 +209,7 @@ class CommunitySearchCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: CachedNetworkImage(
-                imageUrl: community.bannerUrl ?? '',
+                imageUrl: community.banner ?? '',
                 errorWidget: (context, error, child) => Image.asset(
                   "assets/illustrations/community.jpg",
                   width: double.infinity,
