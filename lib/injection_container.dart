@@ -294,9 +294,14 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<CommunityLocalDatasource>(
+    () => CommunityLocalDatasource(localDB: sl()),
+  );
+
   sl.registerFactory<CommunityRepositoryImpl>(
     () => CommunityRepositoryImpl(
-      remoteDatasource: sl.get<CommunityRemoteDatasource>(),
+      remoteDatasource: sl.get(),
+      communityLocalDatasource: sl.get(),
     ),
   );
 
@@ -340,6 +345,25 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<AddCommunityGuidelinesUsecase>(
     () => AddCommunityGuidelinesUsecase(
       repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<GetPostableCommunitiesUsecase>(
+    () => GetPostableCommunitiesUsecase(
+      communityRepository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => SearchForCommunityUsecase(
+      communityRepository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => CommunityBloc(
+      getPostableCommunitiesUsecase: sl(),
+      searchForCommunityUsecase: sl(),
     ),
   );
 

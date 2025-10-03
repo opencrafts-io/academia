@@ -3,6 +3,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/communities/communities.dart';
 import 'package:academia/features/communities/data/models/paginated_user_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -55,7 +56,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
       });
 
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/create/",
+        "/$servicePrefix/groups/create/",
         data: formData,
         options: Options(
           headers: {
@@ -96,7 +97,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$communityId/detail/",
+        "/$servicePrefix/groups/$communityId/detail/",
         data: {"user_id": userId},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -135,7 +136,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/moderate/",
+        "/$servicePrefix/groups/$groupId/moderate/",
         data: {
           "action": action,
           "user_id": userId,
@@ -186,7 +187,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/join/",
+        "/$servicePrefix/groups/$groupId/join/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(
           headers: {
@@ -228,7 +229,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$groupId/leave/",
+        "/$servicePrefix/groups/$groupId/leave/",
         data: {"user_id": userId, "user_name": userName},
         options: Options(headers: {"Accept": "application/json"}),
       );
@@ -264,7 +265,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.delete(
-        "$servicePrefix/groups/$groupId/delete/",
+        "/$servicePrefix/groups/$groupId/delete/",
         queryParameters: {"user_id": userId},
       );
 
@@ -300,7 +301,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "$servicePrefix/groups/$communityId/$userType",
+        "/$servicePrefix/groups/$communityId/$userType",
         queryParameters: {"page": page},
         options: Options(
           headers: {
@@ -343,7 +344,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/groups/$communityId/rules/",
+        "/$servicePrefix/groups/$communityId/rules/",
         data: {"rule": rule, "user_id": userId},
         options: Options(headers: {"Content-Type": "application/json"}),
       );
@@ -368,6 +369,64 @@ class CommunityRemoteDatasource with DioErrorHandler {
         ServerFailure(
           message:
               "An unexpected error occurred while adding community guidelines",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // TODO: SAM to add pagination for this fucking endpoint
+  Future<Either<Failure, List<CommunityData>>> getPostableCommunities() async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/groups/postable/",
+      );
+      if (response.statusCode == 200) {
+        final rawList = response.data as List; // ensure it's a List
+        final communities = rawList
+            .map((e) => CommunityData.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        return right(communities);
+      }
+      throw "Programming error";
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              "Something went wrong while attempting to fetch your communities",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedCommunityResponse>> searchForCommunity(
+    String searchTerm, {
+    int page = 1,
+    int pageSize = 100,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/search/",
+        queryParameters: {
+          "q": "c/$searchTerm",
+          "page": page,
+          "pageSize": pageSize,
+        },
+      );
+      if (response.statusCode == 200) {
+        return right(PaginatedCommunityResponse.fromJson(response.data));
+      }
+      throw "Programming error";
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "Something went wrong while searching for community.",
           error: e,
         ),
       );
