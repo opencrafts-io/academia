@@ -155,14 +155,19 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
       if (profileState is ProfileLoadedState) {
         context.read<CreateCommunityBloc>().add(
           SubmitNewCommunity(
-            name: _nameController.text.trim(),
-            description: _descriptionController.text.trim(),
-            isPublic: !_isPrivate, // true if not private
-            userEmail: profileState.profile.email,
-            userId: profileState.profile.id,
-            userName: profileState.profile.name,
-            logoPath: _logoImage?.path,
-            bannerPath: _bannerImage?.path,
+            community: Community(
+              updatedAt: DateTime.now(),
+              createdAt: DateTime.now(),
+              creatorId: profileState.profile.id,
+              guidelines: [],
+              visibility: _isPrivate ? "private" : "public",
+              name: _nameController.text.trim(),
+              description: _descriptionController.text.trim(),
+              id: 0,
+              profilePictureUrl: _logoImage?.path,
+              bannerUrl: _bannerImage?.path,
+              nsfw: false,
+            ),
           ),
         );
       }
@@ -177,7 +182,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text("Community successfully created!"),
-              backgroundColor: Theme.of(context).colorScheme.primary,
+              behavior: SnackBarBehavior.floating,
             ),
           );
           CommunitiesRoute(
@@ -187,6 +192,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -194,6 +200,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
       },
       builder: (context, state) {
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           body: CustomScrollView(
             slivers: [
               SliverAppBar.large(
@@ -220,14 +227,35 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.error,
                     ),
-                    onPressed: () {
-                      _nameController.text = "";
-                      _descriptionController.text = "";
-                      setState(() {
-                        _bannerImage = null;
-                        _logoImage = null;
-                      });
-                    },
+                    onPressed: () => showAdaptiveDialog(
+                      context: context,
+                      builder: (context) => AlertDialog.adaptive(
+                        title: Text("Clear form?"),
+                        content: Text(
+                          "Are you sure you want to reset the form?",
+                        ),
+                        actions: [
+                          FilledButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _nameController.text = "";
+                              _descriptionController.text = "";
+                              setState(() {
+                                _bannerImage = null;
+                                _logoImage = null;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: Text("Im sure"),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // {
+                    //
                     tooltip: "Reset the form",
                     icon: Icon(Symbols.device_reset, color: Colors.white),
                   ),

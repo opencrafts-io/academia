@@ -8,10 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'create_community_event.dart';
 part 'create_community_state.dart';
 
-class CreateCommunityBloc extends Bloc<CreateCommunityEvent, CreateCommunityState> {
+class CreateCommunityBloc
+    extends Bloc<CreateCommunityEvent, CreateCommunityState> {
   final CreateCommunityUseCase createCommunityUseCase;
 
-  CreateCommunityBloc({required this.createCommunityUseCase}) : super(CreateCommunityInitial()) {
+  CreateCommunityBloc({required this.createCommunityUseCase})
+    : super(CreateCommunityInitial()) {
     on<SubmitNewCommunity>(_onSubmitNewCommunity);
   }
 
@@ -22,14 +24,7 @@ class CreateCommunityBloc extends Bloc<CreateCommunityEvent, CreateCommunityStat
     emit(CreateCommunityLoading());
 
     final Either<Failure, Community> result = await createCommunityUseCase.call(
-      name: event.name,
-      description: event.description,
-      isPublic: event.isPublic,
-      userId: event.userId,
-      userName: event.userName,
-      userEmail: event.userEmail,
-      logoPath: event.logoPath,
-      bannerPath: event.bannerPath,
+      event.community,
     );
 
     result.fold(

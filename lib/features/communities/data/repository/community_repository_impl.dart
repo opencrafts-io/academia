@@ -14,25 +14,11 @@ class CommunityRepositoryImpl implements CommunityRepository {
   });
 
   @override
-  Future<Either<Failure, Community>> createCommunity({
-    required String name,
-    required String description,
-    required bool isPublic,
-    required String userId,
-    required String userName,
-    required String userEmail,
-    String? logoPath,
-    String? bannerPath,
-  }) async {
+  Future<Either<Failure, Community>> createCommunity(
+    Community community,
+  ) async {
     final result = await remoteDatasource.createCommunity(
-      name: name,
-      description: description,
-      isPublic: isPublic,
-      userId: userId,
-      userName: userName,
-      userEmail: userEmail,
-      logoPath: logoPath,
-      bannerPath: bannerPath,
+      community: community.toData(),
     );
 
     return result.fold((failure) => left(failure), (community) {

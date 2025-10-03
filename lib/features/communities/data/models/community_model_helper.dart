@@ -22,7 +22,7 @@ extension CommunityModelHelper on CommunityData {
     monthlyVisitorCount: monthlyVisitorCount,
     profilePictureWidth: profilePictureWidth,
     profilePictureHeight: profilePictureHeight,
-    guidelines: guidelines as List<String>,
+    guidelines: List<String>.from(guidelines),
     bannerUrl: bannerUrl,
     createdAt: createdAt,
     updatedAt: updatedAt,

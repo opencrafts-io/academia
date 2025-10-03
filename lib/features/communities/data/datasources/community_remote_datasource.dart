@@ -26,44 +26,28 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }
 
   Future<Either<Failure, CommunityData>> createCommunity({
-    required String name,
-    required String description,
-    required bool isPublic,
-    required String userId,
-    required String userName,
-    required String userEmail,
-    String? logoPath,
-    String? bannerPath,
+    required CommunityData community,
   }) async {
     try {
-      final formData = FormData.fromMap({
-        "name": name,
-        "description": description,
-        "is_public": isPublic.toString(), // backend expects string for booleans
-        "user_id": userId,
-        "user_name": userName,
-        "user_email": userEmail,
-        if (logoPath != null)
-          "logo": await MultipartFile.fromFile(
-            logoPath,
-            filename: logoPath.split('/').last,
-          ),
-        if (bannerPath != null)
-          "banner": await MultipartFile.fromFile(
-            bannerPath,
-            filename: bannerPath.split('/').last,
-          ),
-      });
+      final requestData = community.toJson();
+      requestData["id"] = null;
+      requestData["creator"] = requestData["creator_id"];
+      requestData.remove("creator_id");
+      if (requestData["profile_picture"] != null) {
+        requestData["profile_picture"] = MultipartFile.fromFile(
+          requestData["profile_picture"].toString().split("/").last,
+        );
+      }
+      if (requestData["banner"] != null) {
+        requestData["banner"] = MultipartFile.fromFile(
+          requestData["banner"].toString().split("/").last,
+        );
+      }
+      final formData = FormData.fromMap(requestData);
 
       final response = await dioClient.dio.post(
-        "/$servicePrefix/groups/create/",
+        "/$servicePrefix/community/create/",
         data: formData,
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-        ),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -71,14 +55,8 @@ class CommunityRemoteDatasource with DioErrorHandler {
           response.data,
         );
         return right(CommunityData.fromJson(json));
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected response while creating community.",
-            error: response,
-          ),
-        );
       }
+      throw ("Programming error");
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -96,10 +74,9 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userId,
   }) async {
     try {
-      final response = await dioClient.dio.post(
-        "/$servicePrefix/groups/$communityId/detail/",
-        data: {"user_id": userId},
-        options: Options(headers: {"Accept": "application/json"}),
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/$communityId/details",
+        // data: {"user_id": userId},
       );
 
       if (response.statusCode == 200) {
@@ -410,9 +387,9 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "/$servicePrefix/search/",
+        "/$servicePrefix/community/search/",
         queryParameters: {
-          "q": "c/$searchTerm",
+          "q": searchTerm,
           "page": page,
           "pageSize": pageSize,
         },
