@@ -5,6 +5,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vibration/vibration.dart';
 
 class GlobalSearchBar extends StatefulWidget {
@@ -156,11 +157,12 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
 
             return SingleChildScrollView(
               child: Column(
-                children: state.retrieved.communities
-                    .map(
-                      (community) => CommunitySearchCard(community: community),
-                    )
-                    .toList(),
+                children: [
+                  ...state.retrieved.communities.map(
+                    (community) => CommunitySearchCard(community: community),
+                  ),
+                  SizedBox(height: 80),
+                ],
               ),
             );
           } else if (state is CommunityLoadingState) {
@@ -170,7 +172,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AnimatedEmoji(AnimatedEmojis.hugFace, size: 80),
+              AnimatedEmoji(AnimatedEmojis.hugFace, size: 120),
               Text(
                 "Find groups of people that share your interests.",
                 style: Theme.of(context).textTheme.headlineSmall,
@@ -202,7 +204,34 @@ class CommunitySearchCard extends StatelessWidget {
           }
 
           if (!context.mounted) return;
-          CommunitiesRoute(communityId: community.id.toString()).push(context);
+          if (community.nsfw) {
+            showAdaptiveDialog(
+              context: context,
+              builder: (context) => AlertDialog.adaptive(
+                title: Text("Proceed"),
+                content: Text(
+                  "${community.name} is marked as Not Safe For Work, are you sure you want to continue.. ",
+                ),
+                actions: [
+                  FilledButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: Text("Back to safety"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                      CommunitiesRoute(
+                        communityId: community.id.toString(),
+                      ).push(context);
+                    },
+                    child: Text("Continue"),
+                  ),
+                ],
+              ),
+            );
+          }
         },
         child: Column(
           children: [
@@ -228,9 +257,25 @@ class CommunitySearchCard extends StatelessWidget {
                         community.profilePictureUrl!,
                         errorListener: (error) {},
                       ),
-                child: Text(community.name[0]),
+                child: community.profilePictureUrl == null
+                    ? Text(community.name[0])
+                    : null,
               ),
-              title: Text(community.name),
+              title: Row(
+                children: [
+                  Text(community.name),
+                  Card.filled(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        "😈",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               subtitle: Text(
                 community.description ?? 'No description available yet',
               ),
