@@ -34,13 +34,15 @@ class CommunityRemoteDatasource with DioErrorHandler {
       requestData["creator"] = requestData["creator_id"];
       requestData.remove("creator_id");
       if (requestData["profile_picture"] != null) {
-        requestData["profile_picture"] = MultipartFile.fromFile(
-          requestData["profile_picture"].toString().split("/").last,
+        requestData["profile_picture"] = await MultipartFile.fromFile(
+          requestData["profile_picture"].toString(),
+          filename: requestData["profile_picture"].toString().split("/").last,
         );
       }
       if (requestData["banner"] != null) {
-        requestData["banner"] = MultipartFile.fromFile(
-          requestData["banner"].toString().split("/").last,
+        requestData["banner"] = await MultipartFile.fromFile(
+          requestData["banner"].toString(),
+          filename: requestData["banner"].toString().split("/").last,
         );
       }
       final formData = FormData.fromMap(requestData);
@@ -388,11 +390,7 @@ class CommunityRemoteDatasource with DioErrorHandler {
     try {
       final response = await dioClient.dio.get(
         "/$servicePrefix/community/search/",
-        queryParameters: {
-          "q": searchTerm,
-          "page": page,
-          "pageSize": pageSize,
-        },
+        queryParameters: {"q": searchTerm, "page": page, "pageSize": pageSize},
       );
       if (response.statusCode == 200) {
         return right(PaginatedCommunityResponse.fromJson(response.data));

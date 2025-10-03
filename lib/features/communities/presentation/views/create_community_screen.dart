@@ -24,6 +24,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   bool _isPrivate = false;
+  bool _isNSFW = false;
   File? _bannerImage;
   File? _logoImage;
 
@@ -160,12 +161,13 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
               creatorId: profileState.profile.id,
               guidelines: [],
               visibility: _isPrivate ? "private" : "public",
+              private: _isPrivate,
               name: _nameController.text.trim(),
               description: _descriptionController.text.trim(),
               id: 0,
-              profilePictureUrl: _logoImage?.path,
-              bannerUrl: _bannerImage?.path,
-              nsfw: false,
+              profilePicture: _logoImage?.path,
+              banner: _bannerImage?.path,
+              nsfw: _isNSFW,
             ),
           ),
         );
@@ -364,6 +366,29 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                             value: _isPrivate,
                             onChanged: (val) {
                               setState(() => _isPrivate = val);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+                        Card.filled(
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(22),
+                          ),
+
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          child: CheckboxListTile(
+                            title: Text("Add NSFW tag"),
+                            subtitle: Text(
+                              "Community may contain mature content",
+                              // style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            value: _isNSFW,
+                            onChanged: (val) {
+                              setState(() {
+                                _isNSFW = val!;
+                              });
                             },
                           ),
                         ),
