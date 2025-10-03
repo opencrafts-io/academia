@@ -29,7 +29,8 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
     final result = await getPostableCommunitiesUsecase(NoParams());
     result.fold(
       (error) => emit(CommunityErrorState(message: error.message)),
-      (communities) => emit(CommunitiesLoadedState(communities: communities)),
+      (paginatedCommunity) =>
+          emit(CommunitiesLoadedState(paginatedCommunity: paginatedCommunity)),
     );
   }
 

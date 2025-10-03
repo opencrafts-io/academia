@@ -47,7 +47,7 @@ abstract class CommunityRepository {
     required String userId,
   });
 
-  Future<Either<Failure, List<Community>>> getPostableCommunities();
+  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities();
 
   Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
     String searchTerm, {

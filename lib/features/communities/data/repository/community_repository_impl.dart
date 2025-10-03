@@ -147,7 +147,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, List<Community>>> getPostableCommunities() async {
+  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities() async {
     final result = await remoteDatasource.getPostableCommunities();
     return await result.fold(
       (failure) async {
@@ -157,13 +157,18 @@ class CommunityRepositoryImpl implements CommunityRepository {
         }
 
         final rawCommunities = (cacheRes as Right).value as List<CommunityData>;
+
         return right(
-          rawCommunities.map((community) => community.toEntity()).toList(),
+          PaginatedCommunity(
+            count: rawCommunities.length,
+            hasMore: false,
+            communities: rawCommunities.map((e) => e.toEntity()).toList(),
+          ),
         );
       },
-      (rawCommunities) async {
+      (paginatedCommunity) async {
         final List<Community> communities = [];
-        for (final community in rawCommunities) {
+        for (final community in paginatedCommunity.communities) {
           final result = await communityLocalDatasource.createorUpdateCommunity(
             community,
           );
@@ -172,7 +177,13 @@ class CommunityRepositoryImpl implements CommunityRepository {
             communities.add(community.toEntity());
           }
         }
-        return right(communities);
+        return right(
+          PaginatedCommunity(
+            communities: communities,
+            hasMore: paginatedCommunity.next != null,
+            count: communities.length,
+          ),
+        );
       },
     );
   }

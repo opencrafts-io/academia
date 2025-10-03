@@ -143,8 +143,8 @@ class _AddPostPageState extends State<AddPostPage> {
                                   children: [SpinningScallopIndicator()],
                                 );
                               } else if (state is CommunitiesLoadedState) {
-                                final communities = state.communities;
-                                if (communities.isEmpty) {
+                                final communities = state.paginatedCommunity;
+                                if (communities.communities.isEmpty) {
                                   return const ListTile(
                                     leading: AnimatedEmoji(AnimatedEmojis.sad),
                                     title: Text(
@@ -153,7 +153,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   );
                                 }
                                 return Column(
-                                  children: communities
+                                  children: communities.communities
                                       .map(
                                         (community) => ListTile(
                                           onTap: () {

@@ -23,11 +23,11 @@ class CommunityErrorState extends CommunityState {
 }
 
 class CommunitiesLoadedState extends CommunityState {
-  final List<Community> communities;
-  CommunitiesLoadedState({required this.communities});
+  final PaginatedCommunity paginatedCommunity;
+  CommunitiesLoadedState({required this.paginatedCommunity});
 
   @override
-  List<Object?> get props => [communities];
+  List<Object?> get props => [paginatedCommunity];
 }
 
 // Fore representing a retrieval / search through the api
