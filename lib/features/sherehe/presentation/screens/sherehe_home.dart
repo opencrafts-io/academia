@@ -48,9 +48,7 @@ class _ShereheHomeState extends State<ShereheHome>
           _scrollController.position.maxScrollExtent - 200) {
         final state = context.read<ShereheHomeBloc>().state;
         if (state is EventLoaded && !state.hasReachedEnd) {
-          context.read<ShereheHomeBloc>().add(
-            FetchAllEvents(isLoadMore: true),
-          );
+          context.read<ShereheHomeBloc>().add(FetchAllEvents(isLoadMore: true));
         }
       }
     });
@@ -113,6 +111,50 @@ class _ShereheHomeState extends State<ShereheHome>
                 } else if (state is EventLoaded) {
                   final events = state.events;
 
+                  if (events.isEmpty) {
+                    return SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 64.0,
+                          horizontal: 16.0,
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.celebration,
+                                size: 80,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(height: 24),
+
+                              Text(
+                                "It’s a little quiet here 🎶",
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 12),
+
+                              Text(
+                                "You've worked so hard during the week, just close that laptop na let's get started by creating a Sherehe",
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  // If events exist, show grid
                   return SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: _getCrossAxisCount(context),
@@ -127,7 +169,6 @@ class _ShereheHomeState extends State<ShereheHome>
                     }, childCount: events.length),
                   );
                 } else if (state is EventError) {
-                  final colorScheme = Theme.of(context).colorScheme;
                   return SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -137,7 +178,7 @@ class _ShereheHomeState extends State<ShereheHome>
                       child: Center(
                         child: Card(
                           elevation: 2,
-                          color: colorScheme.errorContainer,
+                          color: Theme.of(context).colorScheme.errorContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -149,14 +190,18 @@ class _ShereheHomeState extends State<ShereheHome>
                                 Icon(
                                   Icons.error_outline,
                                   size: 48,
-                                  color: colorScheme.onErrorContainer,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onErrorContainer,
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   state.message,
                                   style: Theme.of(context).textTheme.titleMedium
                                       ?.copyWith(
-                                        color: colorScheme.onErrorContainer,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onErrorContainer,
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
@@ -166,7 +211,9 @@ class _ShereheHomeState extends State<ShereheHome>
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                        color: colorScheme.onErrorContainer
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onErrorContainer
                                             .withValues(alpha: 0.9),
                                       ),
                                 ),
