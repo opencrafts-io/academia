@@ -1,6 +1,7 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
 import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
@@ -65,7 +66,13 @@ part 'database.g.dart';
     MagnetCourseInfo,
     MagnetFinancialTransaction,
     //Communities
-    CommunityTable
+    CommunityTable,
+
+    /**************************************************************
+    *           CHIRP
+    **************************************************************/
+    // Memberships
+    ChirpCommunityMembership,
   ],
 )
 class AppDataBase extends _$AppDataBase {

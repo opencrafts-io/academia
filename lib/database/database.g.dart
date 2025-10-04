@@ -19344,6 +19344,574 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
   }
 }
 
+class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
+    with
+        TableInfo<
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChirpCommunityMembershipTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _communityIDMeta = const VerificationMeta(
+    'communityID',
+  );
+  @override
+  late final GeneratedColumn<String> communityID = GeneratedColumn<String>(
+    'community_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedMeta = const VerificationMeta('banned');
+  @override
+  late final GeneratedColumn<bool> banned = GeneratedColumn<bool>(
+    'banned',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("banned" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _bannedByIDMeta = const VerificationMeta(
+    'bannedByID',
+  );
+  @override
+  late final GeneratedColumn<String> bannedByID = GeneratedColumn<String>(
+    'banned_by_i_d',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannedReasonMeta = const VerificationMeta(
+    'bannedReason',
+  );
+  @override
+  late final GeneratedColumn<String> bannedReason = GeneratedColumn<String>(
+    'banned_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannedAtMeta = const VerificationMeta(
+    'bannedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> bannedAt = GeneratedColumn<DateTime>(
+    'banned_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _joinedAtMeta = const VerificationMeta(
+    'joinedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> joinedAt = GeneratedColumn<DateTime>(
+    'joined_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    communityID,
+    userID,
+    role,
+    banned,
+    bannedByID,
+    bannedReason,
+    bannedAt,
+    joinedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'chirp_community_membership';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ChirpCommunityMembershipData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('community_i_d')) {
+      context.handle(
+        _communityIDMeta,
+        communityID.isAcceptableOrUnknown(
+          data['community_i_d']!,
+          _communityIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_communityIDMeta);
+    }
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
+    if (data.containsKey('banned')) {
+      context.handle(
+        _bannedMeta,
+        banned.isAcceptableOrUnknown(data['banned']!, _bannedMeta),
+      );
+    }
+    if (data.containsKey('banned_by_i_d')) {
+      context.handle(
+        _bannedByIDMeta,
+        bannedByID.isAcceptableOrUnknown(
+          data['banned_by_i_d']!,
+          _bannedByIDMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banned_reason')) {
+      context.handle(
+        _bannedReasonMeta,
+        bannedReason.isAcceptableOrUnknown(
+          data['banned_reason']!,
+          _bannedReasonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banned_at')) {
+      context.handle(
+        _bannedAtMeta,
+        bannedAt.isAcceptableOrUnknown(data['banned_at']!, _bannedAtMeta),
+      );
+    }
+    if (data.containsKey('joined_at')) {
+      context.handle(
+        _joinedAtMeta,
+        joinedAt.isAcceptableOrUnknown(data['joined_at']!, _joinedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ChirpCommunityMembershipData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChirpCommunityMembershipData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      communityID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}community_i_d'],
+      )!,
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
+      banned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}banned'],
+      )!,
+      bannedByID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_by_i_d'],
+      ),
+      bannedReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_reason'],
+      ),
+      bannedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}banned_at'],
+      ),
+      joinedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}joined_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ChirpCommunityMembershipTable createAlias(String alias) {
+    return $ChirpCommunityMembershipTable(attachedDatabase, alias);
+  }
+}
+
+class ChirpCommunityMembershipData extends DataClass
+    implements Insertable<ChirpCommunityMembershipData> {
+  final int id;
+  final String communityID;
+  final String userID;
+  final String role;
+  final bool banned;
+  final String? bannedByID;
+  final String? bannedReason;
+  final DateTime? bannedAt;
+  final DateTime joinedAt;
+  const ChirpCommunityMembershipData({
+    required this.id,
+    required this.communityID,
+    required this.userID,
+    required this.role,
+    required this.banned,
+    this.bannedByID,
+    this.bannedReason,
+    this.bannedAt,
+    required this.joinedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['community_i_d'] = Variable<String>(communityID);
+    map['user_i_d'] = Variable<String>(userID);
+    map['role'] = Variable<String>(role);
+    map['banned'] = Variable<bool>(banned);
+    if (!nullToAbsent || bannedByID != null) {
+      map['banned_by_i_d'] = Variable<String>(bannedByID);
+    }
+    if (!nullToAbsent || bannedReason != null) {
+      map['banned_reason'] = Variable<String>(bannedReason);
+    }
+    if (!nullToAbsent || bannedAt != null) {
+      map['banned_at'] = Variable<DateTime>(bannedAt);
+    }
+    map['joined_at'] = Variable<DateTime>(joinedAt);
+    return map;
+  }
+
+  ChirpCommunityMembershipCompanion toCompanion(bool nullToAbsent) {
+    return ChirpCommunityMembershipCompanion(
+      id: Value(id),
+      communityID: Value(communityID),
+      userID: Value(userID),
+      role: Value(role),
+      banned: Value(banned),
+      bannedByID: bannedByID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedByID),
+      bannedReason: bannedReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedReason),
+      bannedAt: bannedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedAt),
+      joinedAt: Value(joinedAt),
+    );
+  }
+
+  factory ChirpCommunityMembershipData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChirpCommunityMembershipData(
+      id: serializer.fromJson<int>(json['id']),
+      communityID: serializer.fromJson<String>(json['community_id']),
+      userID: serializer.fromJson<String>(json['user_id']),
+      role: serializer.fromJson<String>(json['role']),
+      banned: serializer.fromJson<bool>(json['banned']),
+      bannedByID: serializer.fromJson<String?>(json['banned_by_id']),
+      bannedReason: serializer.fromJson<String?>(json['banning_reason']),
+      bannedAt: serializer.fromJson<DateTime?>(json['banned_at']),
+      joinedAt: serializer.fromJson<DateTime>(json['joined_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'community_id': serializer.toJson<String>(communityID),
+      'user_id': serializer.toJson<String>(userID),
+      'role': serializer.toJson<String>(role),
+      'banned': serializer.toJson<bool>(banned),
+      'banned_by_id': serializer.toJson<String?>(bannedByID),
+      'banning_reason': serializer.toJson<String?>(bannedReason),
+      'banned_at': serializer.toJson<DateTime?>(bannedAt),
+      'joined_at': serializer.toJson<DateTime>(joinedAt),
+    };
+  }
+
+  ChirpCommunityMembershipData copyWith({
+    int? id,
+    String? communityID,
+    String? userID,
+    String? role,
+    bool? banned,
+    Value<String?> bannedByID = const Value.absent(),
+    Value<String?> bannedReason = const Value.absent(),
+    Value<DateTime?> bannedAt = const Value.absent(),
+    DateTime? joinedAt,
+  }) => ChirpCommunityMembershipData(
+    id: id ?? this.id,
+    communityID: communityID ?? this.communityID,
+    userID: userID ?? this.userID,
+    role: role ?? this.role,
+    banned: banned ?? this.banned,
+    bannedByID: bannedByID.present ? bannedByID.value : this.bannedByID,
+    bannedReason: bannedReason.present ? bannedReason.value : this.bannedReason,
+    bannedAt: bannedAt.present ? bannedAt.value : this.bannedAt,
+    joinedAt: joinedAt ?? this.joinedAt,
+  );
+  ChirpCommunityMembershipData copyWithCompanion(
+    ChirpCommunityMembershipCompanion data,
+  ) {
+    return ChirpCommunityMembershipData(
+      id: data.id.present ? data.id.value : this.id,
+      communityID: data.communityID.present
+          ? data.communityID.value
+          : this.communityID,
+      userID: data.userID.present ? data.userID.value : this.userID,
+      role: data.role.present ? data.role.value : this.role,
+      banned: data.banned.present ? data.banned.value : this.banned,
+      bannedByID: data.bannedByID.present
+          ? data.bannedByID.value
+          : this.bannedByID,
+      bannedReason: data.bannedReason.present
+          ? data.bannedReason.value
+          : this.bannedReason,
+      bannedAt: data.bannedAt.present ? data.bannedAt.value : this.bannedAt,
+      joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpCommunityMembershipData(')
+          ..write('id: $id, ')
+          ..write('communityID: $communityID, ')
+          ..write('userID: $userID, ')
+          ..write('role: $role, ')
+          ..write('banned: $banned, ')
+          ..write('bannedByID: $bannedByID, ')
+          ..write('bannedReason: $bannedReason, ')
+          ..write('bannedAt: $bannedAt, ')
+          ..write('joinedAt: $joinedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    communityID,
+    userID,
+    role,
+    banned,
+    bannedByID,
+    bannedReason,
+    bannedAt,
+    joinedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChirpCommunityMembershipData &&
+          other.id == this.id &&
+          other.communityID == this.communityID &&
+          other.userID == this.userID &&
+          other.role == this.role &&
+          other.banned == this.banned &&
+          other.bannedByID == this.bannedByID &&
+          other.bannedReason == this.bannedReason &&
+          other.bannedAt == this.bannedAt &&
+          other.joinedAt == this.joinedAt);
+}
+
+class ChirpCommunityMembershipCompanion
+    extends UpdateCompanion<ChirpCommunityMembershipData> {
+  final Value<int> id;
+  final Value<String> communityID;
+  final Value<String> userID;
+  final Value<String> role;
+  final Value<bool> banned;
+  final Value<String?> bannedByID;
+  final Value<String?> bannedReason;
+  final Value<DateTime?> bannedAt;
+  final Value<DateTime> joinedAt;
+  const ChirpCommunityMembershipCompanion({
+    this.id = const Value.absent(),
+    this.communityID = const Value.absent(),
+    this.userID = const Value.absent(),
+    this.role = const Value.absent(),
+    this.banned = const Value.absent(),
+    this.bannedByID = const Value.absent(),
+    this.bannedReason = const Value.absent(),
+    this.bannedAt = const Value.absent(),
+    this.joinedAt = const Value.absent(),
+  });
+  ChirpCommunityMembershipCompanion.insert({
+    this.id = const Value.absent(),
+    required String communityID,
+    required String userID,
+    required String role,
+    this.banned = const Value.absent(),
+    this.bannedByID = const Value.absent(),
+    this.bannedReason = const Value.absent(),
+    this.bannedAt = const Value.absent(),
+    this.joinedAt = const Value.absent(),
+  }) : communityID = Value(communityID),
+       userID = Value(userID),
+       role = Value(role);
+  static Insertable<ChirpCommunityMembershipData> custom({
+    Expression<int>? id,
+    Expression<String>? communityID,
+    Expression<String>? userID,
+    Expression<String>? role,
+    Expression<bool>? banned,
+    Expression<String>? bannedByID,
+    Expression<String>? bannedReason,
+    Expression<DateTime>? bannedAt,
+    Expression<DateTime>? joinedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (communityID != null) 'community_i_d': communityID,
+      if (userID != null) 'user_i_d': userID,
+      if (role != null) 'role': role,
+      if (banned != null) 'banned': banned,
+      if (bannedByID != null) 'banned_by_i_d': bannedByID,
+      if (bannedReason != null) 'banned_reason': bannedReason,
+      if (bannedAt != null) 'banned_at': bannedAt,
+      if (joinedAt != null) 'joined_at': joinedAt,
+    });
+  }
+
+  ChirpCommunityMembershipCompanion copyWith({
+    Value<int>? id,
+    Value<String>? communityID,
+    Value<String>? userID,
+    Value<String>? role,
+    Value<bool>? banned,
+    Value<String?>? bannedByID,
+    Value<String?>? bannedReason,
+    Value<DateTime?>? bannedAt,
+    Value<DateTime>? joinedAt,
+  }) {
+    return ChirpCommunityMembershipCompanion(
+      id: id ?? this.id,
+      communityID: communityID ?? this.communityID,
+      userID: userID ?? this.userID,
+      role: role ?? this.role,
+      banned: banned ?? this.banned,
+      bannedByID: bannedByID ?? this.bannedByID,
+      bannedReason: bannedReason ?? this.bannedReason,
+      bannedAt: bannedAt ?? this.bannedAt,
+      joinedAt: joinedAt ?? this.joinedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (communityID.present) {
+      map['community_i_d'] = Variable<String>(communityID.value);
+    }
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
+    }
+    if (banned.present) {
+      map['banned'] = Variable<bool>(banned.value);
+    }
+    if (bannedByID.present) {
+      map['banned_by_i_d'] = Variable<String>(bannedByID.value);
+    }
+    if (bannedReason.present) {
+      map['banned_reason'] = Variable<String>(bannedReason.value);
+    }
+    if (bannedAt.present) {
+      map['banned_at'] = Variable<DateTime>(bannedAt.value);
+    }
+    if (joinedAt.present) {
+      map['joined_at'] = Variable<DateTime>(joinedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpCommunityMembershipCompanion(')
+          ..write('id: $id, ')
+          ..write('communityID: $communityID, ')
+          ..write('userID: $userID, ')
+          ..write('role: $role, ')
+          ..write('banned: $banned, ')
+          ..write('bannedByID: $bannedByID, ')
+          ..write('bannedReason: $bannedReason, ')
+          ..write('bannedAt: $bannedAt, ')
+          ..write('joinedAt: $joinedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -19389,6 +19957,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $MagnetFinancialTransactionTable magnetFinancialTransaction =
       $MagnetFinancialTransactionTable(this);
   late final $CommunityTableTable communityTable = $CommunityTableTable(this);
+  late final $ChirpCommunityMembershipTable chirpCommunityMembership =
+      $ChirpCommunityMembershipTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -19421,6 +19991,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     magnetCourseInfo,
     magnetFinancialTransaction,
     communityTable,
+    chirpCommunityMembership,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -30972,6 +31543,301 @@ typedef $$CommunityTableTableProcessedTableManager =
       CommunityData,
       PrefetchHooks Function({bool creatorId})
     >;
+typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
+    ChirpCommunityMembershipCompanion Function({
+      Value<int> id,
+      required String communityID,
+      required String userID,
+      required String role,
+      Value<bool> banned,
+      Value<String?> bannedByID,
+      Value<String?> bannedReason,
+      Value<DateTime?> bannedAt,
+      Value<DateTime> joinedAt,
+    });
+typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
+    ChirpCommunityMembershipCompanion Function({
+      Value<int> id,
+      Value<String> communityID,
+      Value<String> userID,
+      Value<String> role,
+      Value<bool> banned,
+      Value<String?> bannedByID,
+      Value<String?> bannedReason,
+      Value<DateTime?> bannedAt,
+      Value<DateTime> joinedAt,
+    });
+
+class $$ChirpCommunityMembershipTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get banned => $composableBuilder(
+    column: $table.banned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get bannedAt => $composableBuilder(
+    column: $table.bannedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ChirpCommunityMembershipTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get banned => $composableBuilder(
+    column: $table.banned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get bannedAt => $composableBuilder(
+    column: $table.bannedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ChirpCommunityMembershipTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<bool> get banned =>
+      $composableBuilder(column: $table.banned, builder: (column) => column);
+
+  GeneratedColumn<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get bannedAt =>
+      $composableBuilder(column: $table.bannedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get joinedAt =>
+      $composableBuilder(column: $table.joinedAt, builder: (column) => column);
+}
+
+class $$ChirpCommunityMembershipTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData,
+          $$ChirpCommunityMembershipTableFilterComposer,
+          $$ChirpCommunityMembershipTableOrderingComposer,
+          $$ChirpCommunityMembershipTableAnnotationComposer,
+          $$ChirpCommunityMembershipTableCreateCompanionBuilder,
+          $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+          (
+            ChirpCommunityMembershipData,
+            BaseReferences<
+              _$AppDataBase,
+              $ChirpCommunityMembershipTable,
+              ChirpCommunityMembershipData
+            >,
+          ),
+          ChirpCommunityMembershipData,
+          PrefetchHooks Function()
+        > {
+  $$ChirpCommunityMembershipTableTableManager(
+    _$AppDataBase db,
+    $ChirpCommunityMembershipTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ChirpCommunityMembershipTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ChirpCommunityMembershipTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ChirpCommunityMembershipTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> communityID = const Value.absent(),
+                Value<String> userID = const Value.absent(),
+                Value<String> role = const Value.absent(),
+                Value<bool> banned = const Value.absent(),
+                Value<String?> bannedByID = const Value.absent(),
+                Value<String?> bannedReason = const Value.absent(),
+                Value<DateTime?> bannedAt = const Value.absent(),
+                Value<DateTime> joinedAt = const Value.absent(),
+              }) => ChirpCommunityMembershipCompanion(
+                id: id,
+                communityID: communityID,
+                userID: userID,
+                role: role,
+                banned: banned,
+                bannedByID: bannedByID,
+                bannedReason: bannedReason,
+                bannedAt: bannedAt,
+                joinedAt: joinedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String communityID,
+                required String userID,
+                required String role,
+                Value<bool> banned = const Value.absent(),
+                Value<String?> bannedByID = const Value.absent(),
+                Value<String?> bannedReason = const Value.absent(),
+                Value<DateTime?> bannedAt = const Value.absent(),
+                Value<DateTime> joinedAt = const Value.absent(),
+              }) => ChirpCommunityMembershipCompanion.insert(
+                id: id,
+                communityID: communityID,
+                userID: userID,
+                role: role,
+                banned: banned,
+                bannedByID: bannedByID,
+                bannedReason: bannedReason,
+                bannedAt: bannedAt,
+                joinedAt: joinedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ChirpCommunityMembershipTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ChirpCommunityMembershipTable,
+      ChirpCommunityMembershipData,
+      $$ChirpCommunityMembershipTableFilterComposer,
+      $$ChirpCommunityMembershipTableOrderingComposer,
+      $$ChirpCommunityMembershipTableAnnotationComposer,
+      $$ChirpCommunityMembershipTableCreateCompanionBuilder,
+      $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+      (
+        ChirpCommunityMembershipData,
+        BaseReferences<
+          _$AppDataBase,
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData
+        >,
+      ),
+      ChirpCommunityMembershipData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -31045,4 +31911,9 @@ class $AppDataBaseManager {
       );
   $$CommunityTableTableTableManager get communityTable =>
       $$CommunityTableTableTableManager(_db, _db.communityTable);
+  $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>
+      $$ChirpCommunityMembershipTableTableManager(
+        _db,
+        _db.chirpCommunityMembership,
+      );
 }
