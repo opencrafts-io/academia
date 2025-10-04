@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/domain/domain.dart';
+import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';

@@ -1,10 +1,10 @@
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/data/models/attachment_model_helper.dart';
-import 'package:academia/features/chirp/data/models/groups/group_model_helper.dart';
-import 'package:academia/features/chirp/data/models/reply_model_helper.dart';
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
-import 'package:academia/features/chirp/domain/entities/group.dart';
-import 'package:academia/features/chirp/domain/entities/post.dart';
+import 'package:academia/features/chirp/posts/data/models/attachment_model_helper.dart';
+import 'package:academia/features/chirp/posts/data/models/groups/group_model_helper.dart';
+import 'package:academia/features/chirp/posts/data/models/reply_model_helper.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/domain/entities/group.dart';
+import 'package:academia/features/chirp/posts/domain/entities/post.dart';
 
 extension PostEntityHelper on PostEntity {
   Post toEntity({

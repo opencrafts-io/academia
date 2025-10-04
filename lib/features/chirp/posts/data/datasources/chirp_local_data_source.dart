@@ -1,10 +1,8 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/data/data.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
+import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../domain/entities/post.dart';
 
 class ChirpLocalDataSource {
   final AppDataBase db;

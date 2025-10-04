@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/data/models/post_model.dart';
+import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('PostReplyEntity')

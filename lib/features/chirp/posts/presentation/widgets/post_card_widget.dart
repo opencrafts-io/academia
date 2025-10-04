@@ -1,5 +1,6 @@
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/presentation/presentation.dart';
+
+import 'package:academia/features/chirp/posts/posts.dart';
+import 'package:academia/features/chirp/presentation/widgets/chirp_user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_since/time_since.dart';

@@ -48,7 +48,7 @@ class UserSearchRemoteDatasourceImpl
 
       final responseData = response.data;
       final users = (responseData['users'] as List)
-          .map((json) => ChirpUserDataHelper.fromJson(json))
+          .map((json) => ChirpUserData.fromJson(json))
           .toList();
 
       return Right(users);

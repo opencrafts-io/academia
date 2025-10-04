@@ -1,7 +1,6 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/clippers/clippers.dart';
-import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
+import 'package:academia/features/chirp/posts/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

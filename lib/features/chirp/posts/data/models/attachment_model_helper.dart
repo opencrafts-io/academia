@@ -1,6 +1,6 @@
 
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 
 extension AttachmentEntityHelper on AttachmentEntity {
   Attachments toEntity() {

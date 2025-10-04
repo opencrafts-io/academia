@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/domain/entities/group.dart';
+import 'package:academia/features/chirp/posts/domain/entities/group.dart';
 
 extension GroupEntityHelper on GroupEntity {
   Group toEntity() {
