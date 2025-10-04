@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:academia/features/chirp/data/services/file_picker_service.dart';
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
-import 'package:academia/features/chirp/presentation/widgets/attachment_widget.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/presentation/widgets/attachment_widget.dart';
 
 class ChatInputWidget extends StatefulWidget {
   final Function(String message, List<Attachments> attachments) onSendMessage;

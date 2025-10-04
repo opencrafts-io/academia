@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:media_kit/media_kit.dart';

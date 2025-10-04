@@ -1,6 +1,6 @@
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
-import 'package:academia/features/chirp/domain/entities/group.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/domain/entities/group.dart';
+import 'package:academia/features/chirp/posts/domain/entities/post_replies.dart';
 import 'package:equatable/equatable.dart';
 
 class Post extends Equatable {

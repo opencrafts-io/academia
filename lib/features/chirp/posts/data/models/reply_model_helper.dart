@@ -1,5 +1,5 @@
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
+import 'package:academia/features/chirp/posts/domain/entities/post_replies.dart';
 
 extension PostReplyEntityHelper on PostReplyEntity {
   PostReply toEntity({List<PostReplyEntity> nestedReplies = const []}) {

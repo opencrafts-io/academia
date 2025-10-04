@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:academia/features/chirp/domain/entities/attachments.dart';
+import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 
 class FilePickerService {
   static Future<List<Attachments>> pickFiles({

@@ -1,6 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
+import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

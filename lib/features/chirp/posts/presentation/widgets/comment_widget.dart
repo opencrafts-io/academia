@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
+import 'package:academia/features/chirp/posts/domain/entities/post_replies.dart';
 
 class CommentWidget extends StatelessWidget {
   final PostReply reply;

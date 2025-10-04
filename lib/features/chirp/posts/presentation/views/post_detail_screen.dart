@@ -1,15 +1,9 @@
 import 'package:academia/core/clippers/clippers.dart';
-import 'package:academia/features/chirp/presentation/bloc/feed/feed_bloc.dart';
-import 'package:academia/features/chirp/presentation/widgets/comment_widget.dart';
+import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:academia/features/chirp/domain/entities/post.dart';
-import 'package:academia/features/chirp/domain/entities/post_replies.dart';
-import 'package:academia/features/chirp/presentation/widgets/post_card_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class PostDetailPage extends StatefulWidget {
   final Post post;
