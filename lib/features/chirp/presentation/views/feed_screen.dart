@@ -62,29 +62,15 @@ class FeedPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: "addPostBtn",
-            onPressed: () async {
-              final created = await context.push("/add-post");
-              if (created == true && context.mounted) {
-                context.read<FeedBloc>().add(CacheFeedEvent());
-              }
-            },
-            child: const Icon(Icons.post_add),
-          ),
-          const SizedBox(height: 12),
-          FloatingActionButton(
-            heroTag: "addCommunityBtn",
-            onPressed: () {
-              CreateCommunitiesRoute().push(context);
-            },
-            child: const Icon(Icons.group_add),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        heroTag: "addPostBtn",
+        onPressed: () async {
+          final created = await context.push("/add-post");
+          if (created == true && context.mounted) {
+            context.read<FeedBloc>().add(CacheFeedEvent());
+          }
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

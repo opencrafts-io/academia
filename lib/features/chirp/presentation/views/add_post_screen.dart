@@ -121,7 +121,7 @@ class _AddPostPageState extends State<AddPostPage> {
                         ),
                       ),
                       barBackgroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.tertiaryContainer,
+                        Theme.of(context).colorScheme.outlineVariant,
                       ),
                       barTextStyle: WidgetStatePropertyAll(
                         Theme.of(context).textTheme.headlineSmall,
@@ -193,7 +193,10 @@ class _AddPostPageState extends State<AddPostPage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                       decoration: InputDecoration(
                         prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         hintText: "Whats on your mind",
                         hintStyle: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(
@@ -203,14 +206,18 @@ class _AddPostPageState extends State<AddPostPage> {
                     ),
                     SizedBox(height: 16),
                     TextFormField(
+                      controller: _postDescriptionController,
                       maxLines: null,
                       minLines: 3,
                       textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         hintText: "Talk about the issue alittle more..",
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.outlineVariant,
                       ),
                     ),
                   ],

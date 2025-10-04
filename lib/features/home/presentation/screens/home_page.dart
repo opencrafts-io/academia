@@ -24,41 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: NavigationDrawer(
-      //   selectedIndex: selectedDrawerItem,
-      //   onDestinationSelected: (index) {
-      //     setState(() {
-      //       selectedDrawerItem = index;
-      //     });
-      //   },
-      //   header: Image.asset(
-      //     "assets/icons/academia-logo-variant-1.png",
-      //     width: 180,
-      //   ),
-      //   footer: Text("Made with ❤️ by Open Crafts Interactive."),
-      //   elevation: 0,
-      //
-      //   children: [
-      //     Padding(
-      //       padding: EdgeInsets.all(12),
-      //       child: Text(
-      //         "Chirp",
-      //         style: Theme.of(context).textTheme.titleMedium,
-      //       ),
-      //     ),
-      //     NavigationDrawerDestination(
-      //       icon: Icon(Icons.account_box),
-      //       label: Text("Community memberships"),
-      //       // enabled: selectedDrawerItem == 1,
-      //     ),
-      //     NavigationDrawerDestination(
-      //       icon: Icon(Icons.campaign),
-      //       label: Text("Posts"),
-      //     ),
-      //
-      //     Divider(),
-      //   ],
-      // ),
       body: DefaultTabController(
         initialIndex: 0,
         length: 3,
@@ -92,6 +57,9 @@ class _HomePageState extends State<HomePage> {
                           break;
                         case 2:
                           CommunityMembershipsRoute().push(context);
+                          break;
+                        case 4:
+                          CreateCommunitiesRoute().push(context);
                           break;
 
                         default:
@@ -127,6 +95,16 @@ class _HomePageState extends State<HomePage> {
                             Icon(Icons.campaign),
                             SizedBox(width: 4),
                             Text("Your posts"),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 4,
+                        child: Row(
+                          children: [
+                            Icon(Icons.add),
+                            SizedBox(width: 4),
+                            Text("Create a new community"),
                           ],
                         ),
                       ),
