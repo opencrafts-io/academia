@@ -6,9 +6,9 @@ import 'package:dartz/dartz.dart';
 class ChirpCommunityMembershipRepositoryImpl
     implements ChirpCommunityMembershipRepository {
   final ChirpCommunityMembershipRemoteDatasource
-      chirpCommunityMembershipRemoteDatasource;
+  chirpCommunityMembershipRemoteDatasource;
   final ChirpCommunityMembershipLocalDatasource
-      chirpCommunityMembershipLocalDatasource;
+  chirpCommunityMembershipLocalDatasource;
   final ProfileLocalDatasource profileLocalDatasource;
 
   ChirpCommunityMembershipRepositoryImpl({
@@ -18,17 +18,37 @@ class ChirpCommunityMembershipRepositoryImpl
   });
 
   @override
-  Stream<Either<Failure, List<ChirpCommunityMembership>>>
-      getAllCachedMemberships() {
-    // TODO: implement getAllCachedMemberships
-    throw UnimplementedError();
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
+  getAllCachedMemberships() async {
+    final result = await chirpCommunityMembershipLocalDatasource
+        .getAllCachedCommunityMemberships();
+
+    return result.fold(
+      (failure) => left(failure),
+      (cachedMemberships) => right(
+        cachedMemberships.map((membership) => membership.toEntity()).toList(),
+      ),
+    );
   }
 
   @override
   Future<Either<Failure, List<ChirpCommunityMembership>>>
-      getAndCachePersonalMemberships() {
-    // TODO: implement getAndCachePersonalMemberships
-    throw UnimplementedError();
+  getAndCachePersonalMemberships({int page = 1, int pageSize = 100}) async {
+    final remoteRes = await chirpCommunityMembershipRemoteDatasource
+        .getPersonalMemberships(page: page, pageSize: pageSize);
+
+    return remoteRes.fold((failure) async => await getAllCachedMemberships(), (
+      fetched,
+    ) async {
+      final res = await chirpCommunityMembershipLocalDatasource
+          .saveAllCommunityMemberships(fetched);
+      return res.fold(
+        (failure) => left(failure),
+        (rawMemberships) => right(
+          rawMemberships.map((membership) => membership.toEntity()).toList(),
+        ),
+      );
+    });
   }
 
   @override
@@ -51,38 +71,36 @@ class ChirpCommunityMembershipRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, void>> leaveCommunity({required String communityID}) async {
+  Future<Either<Failure, void>> leaveCommunity({
+    required int communityID,
+  }) async {
     final profileResult = await profileLocalDatasource.getCachedUserProfile();
-    return await profileResult.fold(
-      (failure) => Left(failure),
-      (userProfile) async {
-        final membershipResult = await chirpCommunityMembershipLocalDatasource.getMembership(
-          communityID: communityID,
-          userID: userProfile.id,
-        );
+    return await profileResult.fold((failure) => Left(failure), (
+      userProfile,
+    ) async {
+      final membershipResult = await chirpCommunityMembershipLocalDatasource
+          .getMembership(communityID: communityID, userID: userProfile.id);
 
-        return await membershipResult.fold(
-          (failure) => Left(failure),
-          (membership) async {
-            // Anticipatory local deletion
-            final deleteResult = await chirpCommunityMembershipLocalDatasource.deleteCached(membership);
-            if (deleteResult.isLeft()) {
-              return deleteResult.fold((l) => Left(l), (r) => const Right(null));
-            }
+      return await membershipResult.fold((failure) => Left(failure), (
+        membership,
+      ) async {
+        // Anticipatory local deletion
+        final deleteResult = await chirpCommunityMembershipLocalDatasource
+            .deleteCached(membership);
+        if (deleteResult.isLeft()) {
+          return deleteResult.fold((l) => Left(l), (r) => const Right(null));
+        }
 
-            final remoteResult = await chirpCommunityMembershipRemoteDatasource.leaveCommunity(membershipID: membership.id.toString());
+        final remoteResult = await chirpCommunityMembershipRemoteDatasource
+            .leaveCommunity(membershipID: membership.id.toString());
 
-            return remoteResult.fold(
-              (failure) async {
-                // Revert local change if remote call fails
-                await chirpCommunityMembershipLocalDatasource.createOrUpdateCommunityMembership(membership);
-                return Left(failure);
-              },
-              (_) => const Right(null),
-            );
-          },
-        );
-      },
-    );
+        return remoteResult.fold((failure) async {
+          // Revert local change if remote call fails
+          await chirpCommunityMembershipLocalDatasource
+              .createOrUpdateCommunityMembership(membership);
+          return Left(failure);
+        }, (_) => const Right(null));
+      });
+    });
   }
 }

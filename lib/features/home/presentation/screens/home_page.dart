@@ -90,6 +90,10 @@ class _HomePageState extends State<HomePage> {
                         case 1:
                           ProfileRoute().push(context);
                           break;
+                        case 2:
+                          CommunityMembershipsRoute().push(context);
+                          break;
+
                         default:
                       }
                     },

@@ -544,3 +544,12 @@ class TrimVideoRoute extends GoRouteData with _$TrimVideoRoute {
     return VideoTrimmerPage(videoPath: videoPath);
   }
 }
+
+@TypedGoRoute<CommunityMembershipsRoute>(path: "/community/memberships/mine")
+class CommunityMembershipsRoute extends GoRouteData
+    with _$CommunityMembershipsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityMembershipPage();
+  }
+}

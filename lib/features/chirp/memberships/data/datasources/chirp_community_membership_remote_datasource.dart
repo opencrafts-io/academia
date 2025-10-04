@@ -27,7 +27,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
   getPersonalMemberships({int pageSize = 0, int page = 1}) async {
     try {
       final response = await dioClient.dio.get(
-        "$servicePrefix/community/memberships/mine",
+        "/$servicePrefix/community/memberships/mine",
       );
 
       if (response.statusCode == 200) {
@@ -63,7 +63,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "$servicePrefix/community/$communityID/join/",
+        "/$servicePrefix/community/$communityID/join/",
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -94,7 +94,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     try {
       // API endpoint to leave a community (DELETE request)
       final response = await dioClient.dio.delete(
-        "$servicePrefix/community/$membershipID/leave/",
+        "/$servicePrefix/community/$membershipID/leave/",
       );
 
       if (response.statusCode == 204 || response.statusCode == 200) {

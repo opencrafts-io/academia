@@ -19367,11 +19367,11 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
     'communityID',
   );
   @override
-  late final GeneratedColumn<String> communityID = GeneratedColumn<String>(
+  late final GeneratedColumn<int> communityID = GeneratedColumn<int>(
     'community_i_d',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
@@ -19557,7 +19557,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
         data['${effectivePrefix}id'],
       )!,
       communityID: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}community_i_d'],
       )!,
       userID: attachedDatabase.typeMapping.read(
@@ -19600,7 +19600,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
 class ChirpCommunityMembershipData extends DataClass
     implements Insertable<ChirpCommunityMembershipData> {
   final int id;
-  final String communityID;
+  final int communityID;
   final String userID;
   final String role;
   final bool banned;
@@ -19623,7 +19623,7 @@ class ChirpCommunityMembershipData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['community_i_d'] = Variable<String>(communityID);
+    map['community_i_d'] = Variable<int>(communityID);
     map['user_i_d'] = Variable<String>(userID);
     map['role'] = Variable<String>(role);
     map['banned'] = Variable<bool>(banned);
@@ -19667,7 +19667,7 @@ class ChirpCommunityMembershipData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChirpCommunityMembershipData(
       id: serializer.fromJson<int>(json['id']),
-      communityID: serializer.fromJson<String>(json['community_id']),
+      communityID: serializer.fromJson<int>(json['community_id']),
       userID: serializer.fromJson<String>(json['user_id']),
       role: serializer.fromJson<String>(json['role']),
       banned: serializer.fromJson<bool>(json['banned']),
@@ -19682,7 +19682,7 @@ class ChirpCommunityMembershipData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'community_id': serializer.toJson<String>(communityID),
+      'community_id': serializer.toJson<int>(communityID),
       'user_id': serializer.toJson<String>(userID),
       'role': serializer.toJson<String>(role),
       'banned': serializer.toJson<bool>(banned),
@@ -19695,7 +19695,7 @@ class ChirpCommunityMembershipData extends DataClass
 
   ChirpCommunityMembershipData copyWith({
     int? id,
-    String? communityID,
+    int? communityID,
     String? userID,
     String? role,
     bool? banned,
@@ -19782,7 +19782,7 @@ class ChirpCommunityMembershipData extends DataClass
 class ChirpCommunityMembershipCompanion
     extends UpdateCompanion<ChirpCommunityMembershipData> {
   final Value<int> id;
-  final Value<String> communityID;
+  final Value<int> communityID;
   final Value<String> userID;
   final Value<String> role;
   final Value<bool> banned;
@@ -19803,7 +19803,7 @@ class ChirpCommunityMembershipCompanion
   });
   ChirpCommunityMembershipCompanion.insert({
     this.id = const Value.absent(),
-    required String communityID,
+    required int communityID,
     required String userID,
     required String role,
     this.banned = const Value.absent(),
@@ -19816,7 +19816,7 @@ class ChirpCommunityMembershipCompanion
        role = Value(role);
   static Insertable<ChirpCommunityMembershipData> custom({
     Expression<int>? id,
-    Expression<String>? communityID,
+    Expression<int>? communityID,
     Expression<String>? userID,
     Expression<String>? role,
     Expression<bool>? banned,
@@ -19840,7 +19840,7 @@ class ChirpCommunityMembershipCompanion
 
   ChirpCommunityMembershipCompanion copyWith({
     Value<int>? id,
-    Value<String>? communityID,
+    Value<int>? communityID,
     Value<String>? userID,
     Value<String>? role,
     Value<bool>? banned,
@@ -19869,7 +19869,7 @@ class ChirpCommunityMembershipCompanion
       map['id'] = Variable<int>(id.value);
     }
     if (communityID.present) {
-      map['community_i_d'] = Variable<String>(communityID.value);
+      map['community_i_d'] = Variable<int>(communityID.value);
     }
     if (userID.present) {
       map['user_i_d'] = Variable<String>(userID.value);
@@ -31546,7 +31546,7 @@ typedef $$CommunityTableTableProcessedTableManager =
 typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
     ChirpCommunityMembershipCompanion Function({
       Value<int> id,
-      required String communityID,
+      required int communityID,
       required String userID,
       required String role,
       Value<bool> banned,
@@ -31558,7 +31558,7 @@ typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
 typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
     ChirpCommunityMembershipCompanion Function({
       Value<int> id,
-      Value<String> communityID,
+      Value<int> communityID,
       Value<String> userID,
       Value<String> role,
       Value<bool> banned,
@@ -31582,7 +31582,7 @@ class $$ChirpCommunityMembershipTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get communityID => $composableBuilder(
+  ColumnFilters<int> get communityID => $composableBuilder(
     column: $table.communityID,
     builder: (column) => ColumnFilters(column),
   );
@@ -31637,7 +31637,7 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get communityID => $composableBuilder(
+  ColumnOrderings<int> get communityID => $composableBuilder(
     column: $table.communityID,
     builder: (column) => ColumnOrderings(column),
   );
@@ -31690,7 +31690,7 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get communityID => $composableBuilder(
+  GeneratedColumn<int> get communityID => $composableBuilder(
     column: $table.communityID,
     builder: (column) => column,
   );
@@ -31768,7 +31768,7 @@ class $$ChirpCommunityMembershipTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> communityID = const Value.absent(),
+                Value<int> communityID = const Value.absent(),
                 Value<String> userID = const Value.absent(),
                 Value<String> role = const Value.absent(),
                 Value<bool> banned = const Value.absent(),
@@ -31790,7 +31790,7 @@ class $$ChirpCommunityMembershipTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String communityID,
+                required int communityID,
                 required String userID,
                 required String role,
                 Value<bool> banned = const Value.absent(),

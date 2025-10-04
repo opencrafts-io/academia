@@ -14,15 +14,14 @@ abstract class ChirpCommunityMembershipRepository {
   /// Fetches the current user's personal memberships from the remote source,
   /// synchronizes (caches) the full list locally, and returns the list of Entities.
   Future<Either<Failure, List<ChirpCommunityMembership>>>
-  getAndCachePersonalMemberships();
+  getAndCachePersonalMemberships({int page = 1, int pageSize = 100});
 
-  /// Provides a real-time stream of all memberships currently cached locally.
-  /// This is used for keeping the UI updated instantly when the cache changes.
-  Stream<Either<Failure, List<ChirpCommunityMembership>>>
+  /// Provides a List of all memberships currently cached locally.
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
   getAllCachedMemberships();
 
   /// Handles the process of removing a user's membership (leaving or being kicked).
   ///
   /// Returns nothing on successful completion (Right(void)).
-  Future<Either<Failure, void>> leaveCommunity({required String communityID});
+  Future<Either<Failure, void>> leaveCommunity({required int communityID});
 }

@@ -1,6 +1,6 @@
 class ChirpCommunityMembership {
   final int id;
-  final String communityID;
+  final int communityID;
   final String userID;
   final String role;
   final bool banned;
@@ -23,7 +23,7 @@ class ChirpCommunityMembership {
 
   ChirpCommunityMembership copyWith({
     int? id,
-    String? communityID,
+    int? communityID,
     String? userID,
     String? role,
     bool? banned,

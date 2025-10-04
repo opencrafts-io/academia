@@ -2,7 +2,6 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
-import 'package:academia/core/error/error.dart';
 
 class ChirpCommunityMembershipLocalDatasource {
   final AppDataBase localDB;
@@ -12,9 +11,7 @@ class ChirpCommunityMembershipLocalDatasource {
   /// --- 1. Create or Update Single Membership ---
   /// Inserts a new membership or updates an existing one if a conflict occurs
   Future<Either<Failure, ChirpCommunityMembershipData>>
-  createOrUpdateCommunityMembership(
-    ChirpCommunityMembershipData data,
-  ) async {
+  createOrUpdateCommunityMembership(ChirpCommunityMembershipData data) async {
     try {
       final modified = await localDB
           .into(localDB.chirpCommunityMembership)
@@ -62,14 +59,14 @@ class ChirpCommunityMembershipLocalDatasource {
     }
   }
 
-  /// --- 3. Get All Cached Memberships (Stream) ---
-  /// Returns a stream of the entire table, allowing the Repository to
-  /// provide real-time updates to the BLoC layer.
-  Future<Either<Failure, Stream<List<ChirpCommunityMembershipData>>>>
+  /// --- 3. Returns a list of all cached community memberships
+  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
   getAllCachedCommunityMemberships() async {
     try {
-      final stream = localDB.select(localDB.chirpCommunityMembership).watch();
-      return right(stream);
+      final memberships = await localDB
+          .select(localDB.chirpCommunityMembership)
+          .get();
+      return right(memberships);
     } catch (e) {
       return left(
         CacheFailure(
@@ -98,23 +95,33 @@ class ChirpCommunityMembershipLocalDatasource {
   }
 
   Future<Either<Failure, ChirpCommunityMembershipData>> getMembership({
-    required String communityID,
+    required int communityID,
     required String userID,
   }) async {
     try {
       final query = localDB.select(localDB.chirpCommunityMembership)
-        ..where((tbl) =>
-            tbl.communityID.equals(communityID) & tbl.userID.equals(userID));
+        ..where(
+          (tbl) =>
+              tbl.communityID.equals(communityID) & tbl.userID.equals(userID),
+        );
       final result = await query.getSingleOrNull();
       if (result != null) {
         return right(result);
       } else {
-        return left(NoDataFoundFailure(
-            message: "Membership not found in local cache", error: userID));
+        return left(
+          NoDataFoundFailure(
+            message: "Membership not found in local cache",
+            error: userID,
+          ),
+        );
       }
     } catch (e) {
-      return left(CacheFailure(
-          message: "Failed to retrieve membership from cache", error: e));
+      return left(
+        CacheFailure(
+          message: "Failed to retrieve membership from cache",
+          error: e,
+        ),
+      );
     }
   }
 }
