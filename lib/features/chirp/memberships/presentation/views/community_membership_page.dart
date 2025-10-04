@@ -1,8 +1,10 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/chirp/memberships/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -76,7 +78,7 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
                           return Text("Empty data");
                         }
                         return ListView.separated(
-                        padding: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
@@ -115,25 +117,57 @@ class MembershipTile extends StatelessWidget {
 
     final isBanned = membership.banned;
 
-    return ListTile(
-      leading: Icon(
-        isBanned ? Icons.block : Icons.group,
-        color: isBanned ? Colors.red : Colors.green,
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: DrawerMotion(),
+        children: [
+          SlidableAction(
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
+            onPressed: (context) {},
+            icon: Icons.group_remove,
+            label: "Leave Community",
+          ),
+          SlidableAction(
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+            onPressed: (context) {
+              CommunitiesRoute(
+                communityId: membership.communityID.toString(),
+              ).push(context);
+            },
+            icon: Icons.open_in_new,
+            label: "View Community",
+          ),
+        ],
       ),
-      title: Text(membership.role.toUpperCase()),
-      isThreeLine: isBanned,
-      subtitle: Text(
-        "Joined on $joinedAtFormatted"
-        "${isBanned ? '\nBanned: ${membership.bannedReason ?? 'No reason given'}' : ''}",
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: isBanned ? Colors.redAccent : Colors.grey[700],
+      key: ValueKey(membership.id),
+
+      child: ListTile(
+        onTap: () {
+          CommunitiesRoute(
+            communityId: membership.communityID.toString(),
+          ).push(context);
+        },
+        leading: Icon(
+          isBanned ? Icons.block : Icons.group,
+          color: isBanned ? Colors.red : Colors.green,
         ),
-      ),
-      trailing: Icon(
-        isBanned ? Icons.warning_amber_rounded : Icons.verified_outlined,
-        color: isBanned
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
+        title: Text(membership.role.toUpperCase()),
+        isThreeLine: isBanned,
+        subtitle: Text(
+          "Joined on $joinedAtFormatted"
+          "${isBanned ? '\nBanned: ${membership.bannedReason ?? 'No reason given'}' : ''}",
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: isBanned ? Colors.redAccent : Colors.grey[700],
+          ),
+        ),
+        trailing: Icon(
+          isBanned ? Icons.warning_amber_rounded : Icons.verified_outlined,
+          color: isBanned
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
