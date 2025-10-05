@@ -107,6 +107,7 @@ dependencies:
   image_editor_plus: ^1.0.8
   video_thumbnail: ^0.5.6
   upgrader: ^12.1.0
+  connectivity_plus: ^7.0.0
 
 
 dev_dependencies:
