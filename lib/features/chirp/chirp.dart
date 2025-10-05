@@ -1,10 +1,5 @@
-export 'data/data.dart';
-export 'domain/domain.dart';
-export 'presentation/bloc/conversations/messaging_bloc.dart';
-export 'presentation/views/conversations/views.dart';
-export 'presentation/presentation.dart';
-
-
-// Memberships
+export 'posts/posts.dart';
+export 'common/common.dart';
 export 'memberships/memberships.dart';
+export 'communities/communities.dart';
 

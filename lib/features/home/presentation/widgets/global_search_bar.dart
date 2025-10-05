@@ -1,6 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/communities/communities.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

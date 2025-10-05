@@ -1,21 +1,8 @@
 import 'package:academia/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
 
-import 'package:academia/injection_container.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
-
-// Enhanced messaging imports
-import '../../features/chirp/presentation/views/conversations/conversation_list_screen.dart';
-import '../../features/chirp/presentation/views/conversations/chat_screen.dart';
-import '../../features/chirp/presentation/views/conversations/user_selection_screen.dart';
-import '../../features/chirp/presentation/blocs/conversations/conversation_list_bloc.dart';
-import '../../features/chirp/presentation/blocs/conversations/chat_bloc.dart';
-import '../../features/chirp/domain/entities/conversations/conversation.dart';
 
 part 'routes.g.dart';
 
@@ -138,55 +125,6 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
   }
 }
 
-// Enhanced Messaging Routes
-@TypedGoRoute<ConversationListRoute>(path: "/conversations")
-class ConversationListRoute extends GoRouteData with _$ConversationListRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<ConversationListBloc>(
-      create: (context) => sl<ConversationListBloc>(),
-      child: const ConversationListScreen(),
-    );
-  }
-}
-
-@TypedGoRoute<ChatRoute>(path: "/chat/:conversationId")
-class ChatRoute extends GoRouteData with _$ChatRoute {
-  final String conversationId;
-
-  const ChatRoute({required this.conversationId});
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    final conversation = state.extra as Conversation?;
-    debugPrint(
-      '🚀 ChatRoute: Building chat screen for conversation $conversationId',
-    );
-    debugPrint(
-      '🚀 ChatRoute: Conversation object: ${conversation != null ? 'present with ${conversation.participants.length} participants' : 'null'}',
-    );
-    if (conversation != null) {
-      debugPrint(
-        '🚀 ChatRoute: Participants: ${conversation.participants.map((p) => '${p.name} (${p.userId})').join(', ')}',
-      );
-    }
-    return BlocProvider<ChatBloc>(
-      create: (context) => sl<ChatBloc>(),
-      child: ChatScreen(
-        conversationId: conversationId,
-        conversation: conversation,
-      ),
-    );
-  }
-}
-
-@TypedGoRoute<UserSelectionRoute>(path: "/users/select")
-class UserSelectionRoute extends GoRouteData with _$UserSelectionRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const UserSelectionScreen();
-  }
-}
 
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
 class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
@@ -271,11 +209,7 @@ class ShereheRoute extends GoRouteData with _$ShereheRoute {
 class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<CreateEventBloc>(
-      create: (context) =>
-          CreateEventBloc(createEventUseCase: sl<CreateEventUseCase>()),
-      child: const CreateEventScreen(),
-    );
+    return const CreateEventScreen(); //TODO:(BARAKA) Add BlocProvider in Create Sherehe page
   }
 }
 
@@ -379,7 +313,6 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
   path: "/communities/:communityId",
   routes: [
     TypedGoRoute<CommunityUserListRoute>(path: "users"),
-    TypedGoRoute<AddMembersRoute>(path: "add-members"),
     TypedGoRoute<AddCommunityGuidelinesRoute>(path: "add-community-guidelines"),
   ],
 )
@@ -496,17 +429,6 @@ class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
   }
 }
 
-class AddMembersRoute extends GoRouteData with _$AddMembersRoute {
-  final String communityId;
-  final String userId;
-
-  AddMembersRoute({required this.communityId, required this.userId});
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return AddMembersScreen(communityId: communityId, userId: userId);
-  }
-}
 
 class AddCommunityGuidelinesRoute extends GoRouteData
     with _$AddCommunityGuidelinesRoute {

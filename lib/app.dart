@@ -1,5 +1,4 @@
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/chirp/presentation/bloc/conversations/messaging_event.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -106,10 +105,6 @@ class _AcademiaState extends State<Academia> {
           )..add(CacheFeedEvent()),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<MessagingBloc>()..add(LoadConversationsEvent()),
-        ),
-        BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
             refreshCurrentUserProfileUsecase: sl
@@ -136,12 +131,6 @@ class _AcademiaState extends State<Academia> {
           ),
         ),
         BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
-        BlocProvider(
-          create: (context) => AddMembersBloc(
-            searchUsers: sl<SearchVerisafeUsersUseCase>(),
-            moderateMembers: sl<ModerateMembersUseCase>(),
-          ),
-        ),
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
         BlocProvider(
           create: (context) =>
