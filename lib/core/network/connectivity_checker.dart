@@ -17,7 +17,7 @@ mixin ConnectivityChecker {
   // Function to check internet connectivity status
   Future<bool> isConnectedToInternet() async {
     var connectivityResult = await _connectivity.checkConnectivity();
-    return connectivityResult.contains(ConnectivityResult.other);
+    return !connectivityResult.contains(ConnectivityResult.none);
   }
 
   // Optionally, a method to handle no internet connection and return a failure message

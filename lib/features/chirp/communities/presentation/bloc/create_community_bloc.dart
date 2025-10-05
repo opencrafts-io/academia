@@ -1,6 +1,5 @@
 import 'package:academia/core/error/failures.dart';
-import 'package:academia/features/chirp/communities/domain/entities/community.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/create_community_use_case.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

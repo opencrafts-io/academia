@@ -7,6 +7,7 @@ import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_editor_plus/options.dart' as image_editor_options;
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +28,13 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
   bool _isNSFW = false;
   File? _bannerImage;
   File? _logoImage;
+
+  final String policyText =
+      "By creating this community, you agree to uphold our standards."
+      "Remember, you are responsible for the content and conduct within your space. "
+      "Please ensure all discussions remain respectful, inclusive, "
+      "and free of hate speech or harassment. Failure to moderate or adhere "
+      "to these guidelines may lead to the community's removal and account sanctions.";
 
   final ImagePicker _picker = ImagePicker();
 
@@ -224,16 +232,14 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                   title: Text("Create Community"),
                 ),
                 actions: [
-                  IconButton.filled(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
+                  IconButton(
                     onPressed: () => showAdaptiveDialog(
                       context: context,
                       builder: (context) => AlertDialog.adaptive(
                         title: Text("Clear form?"),
                         content: Text(
-                          "Are you sure you want to reset the form?",
+                          "Are you sure you want to reset the form?"
+                          "\nChanges you made to this form might be lost!",
                         ),
                         actions: [
                           FilledButton(
@@ -255,10 +261,8 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                         ],
                       ),
                     ),
-                    // {
-                    //
                     tooltip: "Reset the form",
-                    icon: Icon(Symbols.device_reset, color: Colors.white),
+                    icon: Icon(Symbols.ink_eraser),
                   ),
                 ],
               ),
@@ -402,11 +406,41 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                   style: FilledButton.styleFrom(
                                     padding: EdgeInsets.all(22),
                                   ),
-                                  onPressed: () => _onSubmit(context),
+                                  onPressed: () async {
+                                    final isAccepted = await showAdaptiveDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          AlertDialog.adaptive(
+                                            title: Text(
+                                              "Community Creation Policy",
+                                            ),
+                                            content: Text(policyText),
+                                            actions: [
+                                              FilledButton(
+                                                onPressed: () {
+                                                  context.pop(true);
+                                                },
+                                                child: Text("I agree"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  context.pop(false);
+                                                },
+                                                child: Text("Never mind"),
+                                              ),
+                                            ],
+                                          ),
+                                    );
+
+                                    if (isAccepted && context.mounted) {
+                                      _onSubmit(context);
+                                    }
+                                  },
+                                  icon: Icon(Icons.group_add),
                                   label: const Text("Create Community"),
                                 ),
                         ),
-                        SizedBox(width: 12),
+                        SizedBox(height: 12),
                       ],
                     ),
                   ),
