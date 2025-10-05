@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: DefaultTabController(
         initialIndex: 0,
-        length: 3,
+        length: 2,
         child: RefreshIndicator.adaptive(
           onRefresh: () async {},
           child: CustomScrollView(
@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> {
                   //   ],
                   // ),
                   PopupMenuButton(
-                    child: UserAvatar(scallopDepth: 2),
                     onSelected: (item) {
                       switch (item) {
                         case 1:
@@ -109,6 +108,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ],
+                    child: UserAvatar(scallopDepth: 2),
                   ),
                   // IconButton(
                   //   onPressed: () {
@@ -123,7 +123,6 @@ class _HomePageState extends State<HomePage> {
                   tabs: [
                     // Tab(child: Text("Leaderboard")),
                     Tab(child: Text("For you")),
-                    Tab(child: Text("Chats")),
                     Tab(child: Text("Sherehe")),
                   ],
                 ),
@@ -166,7 +165,6 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         // Center(child: Text("Leaderboard")),
                         FeedPage(),
-                        ConversationsPage(),
                         ShereheHome(),
                       ],
                     ),

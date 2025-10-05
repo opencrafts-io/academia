@@ -1,6 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/memberships/memberships.dart';
-import 'package:academia/features/communities/communities.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
