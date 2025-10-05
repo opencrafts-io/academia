@@ -9,9 +9,6 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $layoutShellRoute,
   $feedRoute,
-  $conversationListRoute,
-  $chatRoute,
-  $userSelectionRoute,
   $postDetailRoute,
   $addPostRoute,
   $authRoute,
@@ -23,6 +20,7 @@ List<RouteBase> get $appRoutes => [
   $communitiesRoute,
   $createCommunitiesRoute,
   $trimVideoRoute,
+  $communityMembershipsRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -183,91 +181,6 @@ mixin _$FeedRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/feed');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $conversationListRoute => GoRouteData.$route(
-  path: '/conversations',
-
-  factory: _$ConversationListRoute._fromState,
-);
-
-mixin _$ConversationListRoute on GoRouteData {
-  static ConversationListRoute _fromState(GoRouterState state) =>
-      ConversationListRoute();
-
-  @override
-  String get location => GoRouteData.$location('/conversations');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $chatRoute => GoRouteData.$route(
-  path: '/chat/:conversationId',
-
-  factory: _$ChatRoute._fromState,
-);
-
-mixin _$ChatRoute on GoRouteData {
-  static ChatRoute _fromState(GoRouterState state) =>
-      ChatRoute(conversationId: state.pathParameters['conversationId']!);
-
-  ChatRoute get _self => this as ChatRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/chat/${Uri.encodeComponent(_self.conversationId)}',
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $userSelectionRoute => GoRouteData.$route(
-  path: '/users/select',
-
-  factory: _$UserSelectionRoute._fromState,
-);
-
-mixin _$UserSelectionRoute on GoRouteData {
-  static UserSelectionRoute _fromState(GoRouterState state) =>
-      UserSelectionRoute();
-
-  @override
-  String get location => GoRouteData.$location('/users/select');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -706,11 +619,6 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
       factory: _$CommunityUserListRoute._fromState,
     ),
     GoRouteData.$route(
-      path: 'add-members',
-
-      factory: _$AddMembersRoute._fromState,
-    ),
-    GoRouteData.$route(
       path: 'add-community-guidelines',
 
       factory: _$AddCommunityGuidelinesRoute._fromState,
@@ -844,34 +752,6 @@ mixin _$CommunityUserListRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AddMembersRoute on GoRouteData {
-  static AddMembersRoute _fromState(GoRouterState state) => AddMembersRoute(
-    communityId: state.pathParameters['communityId']!,
-    userId: state.uri.queryParameters['user-id']!,
-  );
-
-  AddMembersRoute get _self => this as AddMembersRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/communities/${Uri.encodeComponent(_self.communityId)}/add-members',
-    queryParams: {'user-id': _self.userId},
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
 mixin _$AddCommunityGuidelinesRoute on GoRouteData {
   static AddCommunityGuidelinesRoute _fromState(GoRouterState state) =>
       AddCommunityGuidelinesRoute(
@@ -964,6 +844,33 @@ mixin _$TrimVideoRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/video-trimer/${Uri.encodeComponent(_self.videoPath)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $communityMembershipsRoute => GoRouteData.$route(
+  path: '/community/memberships/mine',
+
+  factory: _$CommunityMembershipsRoute._fromState,
+);
+
+mixin _$CommunityMembershipsRoute on GoRouteData {
+  static CommunityMembershipsRoute _fromState(GoRouterState state) =>
+      CommunityMembershipsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/community/memberships/mine');
 
   @override
   void go(BuildContext context) => context.go(location);

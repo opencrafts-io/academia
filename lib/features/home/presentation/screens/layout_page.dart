@@ -13,33 +13,11 @@ class LayoutPage extends StatefulWidget {
 }
 
 class _LayoutPageState extends State<LayoutPage> {
-  // int selectedIndex = 0;
-
   void _onNavigationSelected(int index) async {
     if (await Vibration.hasVibrator()) {
       Vibration.vibrate(duration: 50);
     }
     widget.navigationShell.goBranch(index);
-    //
-    // if (!mounted) return;
-    // switch (index) {
-    //   case 0:
-    //     HomeRoute().go(context);
-    //     break;
-    //   case 1:
-    //     CalendarRoute().go(context);
-    //     break;
-    //   // case 2:
-    //   //   MeteorRoute().go(context);
-    //   //   break;
-    //   case 2:
-    //     EssentialsRoute().go(context);
-    //     break;
-    //   // case 3:
-    //   //   FeedRoute().go(context);
-    //   //   break;
-    // }
-    // selectedIndex = index;
   }
 
   @override

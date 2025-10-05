@@ -2,22 +2,12 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-
-// Enhanced messaging imports
-import 'package:academia/features/chirp/data/datasources/conversations/enhanced_messaging_local_datasource.dart';
-import 'package:academia/features/chirp/data/datasources/conversations/enhanced_messaging_remote_datasource.dart';
-import 'package:academia/features/chirp/data/repositories/conversations/enhanced_conversation_repository_impl.dart';
-import 'package:academia/features/chirp/domain/repositories/conversations/enhanced_conversation_repository.dart';
-import 'package:academia/features/chirp/domain/usecases/conversations/enhanced_messaging_usecases.dart';
-import 'package:academia/features/chirp/presentation/blocs/conversations/conversation_list_bloc.dart';
-import 'package:academia/features/chirp/presentation/blocs/conversations/chat_bloc.dart';
-import 'package:academia/features/chirp/data/services/websocket_service.dart';
-import 'package:academia/features/chirp/data/services/messaging_notification_service.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get_it/get_it.dart';
@@ -318,12 +308,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
-  sl.registerFactory<SearchVerisafeUsersUseCase>(
-    () => SearchVerisafeUsersUseCase(
-      chirpUserRepository: sl.get<ChirpUserRepository>(),
-    ),
-  );
-
   sl.registerFactory<JoinCommunityUseCase>(
     () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
@@ -384,103 +368,50 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerFactory<AddMembersBloc>(
-    () => AddMembersBloc(
-      searchUsers: sl.get<SearchVerisafeUsersUseCase>(),
-      moderateMembers: sl.get<ModerateMembersUseCase>(),
-    ),
-  );
-
   sl.registerFactory<CommunityUsersBloc>(
     () => CommunityUsersBloc(
       getCommunityMembersUsecase: sl.get<GetCommunityMembersUsecase>(),
     ),
   );
 
-  // Add Chirp dependencies
-  sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(
-      dioClient: sl.get<DioClient>(),
+  /*************************************************************************
+                                    CHIRP
+  *************************************************************************/
+  // -- Memberships
+  sl.registerFactory<ChirpCommunityMembershipLocalDatasource>(
+    () => ChirpCommunityMembershipLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<ChirpCommunityMembershipRemoteDatasource>(
+    () => ChirpCommunityMembershipRemoteDatasource(
+      dioClient: sl(),
       flavor: flavor,
     ),
   );
-  sl.registerFactory<MessagingLocalDataSourceImpl>(
-    () => MessagingLocalDataSourceImpl(localDB: cacheDB),
-  );
-
-  sl.registerFactory<ConversationRepositoryImpl>(
-    () => ConversationRepositoryImpl(
-      remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
-      chirpUserRemoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
-    ),
-  );
-  sl.registerFactory<MessageRepositoryImpl>(
-    () => MessageRepositoryImpl(
-      remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
+  sl.registerFactory<ChirpCommunityMembershipRepository>(
+    () => ChirpCommunityMembershipRepositoryImpl(
+      profileLocalDatasource: sl(),
+      chirpCommunityMembershipLocalDatasource: sl(),
+      chirpCommunityMembershipRemoteDatasource: sl(),
     ),
   );
 
-  sl.registerFactory<GetConversations>(
-    () => GetConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<GetMessages>(
-    () => GetMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<SendMessage>(
-    () => SendMessage(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<GetCachedConversations>(
-    () => GetCachedConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<GetCachedMessages>(
-    () => GetCachedMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<RefreshConversations>(
-    () => RefreshConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<RefreshMessages>(
-    () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<CreateConversation>(
-    () => CreateConversation(sl.get<ConversationRepositoryImpl>()),
+  sl.registerFactory<GetCachedPersonalChirpCommunityMemberships>(
+    () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
   );
 
-  // Chirp User dependencies
-  sl.registerFactory<ChirpUserRemoteDatasource>(
-    () => ChirpUserRemoteDatasourceImpl(
-      dioClient: sl.get<DioClient>(),
-      flavor: flavor,
-    ),
-  );
-  sl.registerFactory<ChirpUserRepository>(
-    () => ChirpUserRepositoryImpl(
-      remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
-    ),
-  );
-  sl.registerFactory<SearchUsersUseCase>(
-    () => SearchUsersUseCase(sl.get<ChirpUserRepository>()),
+  sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
+    () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
   );
 
-  sl.registerFactory<MessagingBloc>(
-    () => MessagingBloc(
-      getConversations: sl.get<GetConversations>(),
-      getMessages: sl.get<GetMessages>(),
-      sendMessage: sl.get<SendMessage>(),
-      searchUsers: sl.get<SearchUsersUseCase>(),
-      getCachedConversations: sl.get<GetCachedConversations>(),
-      getCachedMessages: sl.get<GetCachedMessages>(),
-      refreshConversations: sl.get<RefreshConversations>(),
-      refreshMessages: sl.get<RefreshMessages>(),
-      createConversation: sl.get<CreateConversation>(),
-      getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
-      conversationRepository: sl.get<EnhancedConversationRepository>(),
+  sl.registerFactory<ChirpCommunityMembershipBloc>(
+    () => ChirpCommunityMembershipBloc(
+      getCachedPersonalChirpCommunityMemberships: sl(),
+      getRemotePersonalChirpMembershipsUsecase: sl(),
     ),
   );
-
-  // Notifications
+  /*************************************************************************
+                              // NOTIFICATIONS
+  *************************************************************************/
   sl.registerFactory<NotificationRemoteDatasource>(
     () => NotificationRemoteDatasource(),
   );
@@ -788,153 +719,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => PermissionCubit(
       checkPermissionUsecase: sl(),
       requestPermissionUsecase: sl(),
-    ),
-  );
-
-  // Enhanced Messaging System
-  // Services
-  sl.registerSingleton<MessagingNotificationService>(
-    MessagingNotificationService(),
-  );
-  sl.registerSingleton<WebSocketService>(
-    WebSocketService(
-      authLocalDatasource: sl.get<AuthLocalDatasource>(),
-      profileLocalDatasource: sl.get<ProfileLocalDatasource>(),
-      notificationService: sl.get<MessagingNotificationService>(),
-    ),
-  );
-
-  // Enhanced Data Sources
-  sl.registerFactory<EnhancedMessagingRemoteDataSource>(
-    () => EnhancedMessagingRemoteDataSourceImpl(
-      dioClient: sl.get<DioClient>(),
-      flavor: flavor,
-    ),
-  );
-  sl.registerFactory<EnhancedMessagingLocalDataSource>(
-    () => EnhancedMessagingLocalDataSourceImpl(localDB: sl.get<AppDataBase>()),
-  );
-
-  // Enhanced Repository
-  sl.registerFactory<EnhancedConversationRepository>(
-    () => EnhancedConversationRepositoryImpl(
-      remoteDataSource: sl.get<EnhancedMessagingRemoteDataSource>(),
-      localDataSource: sl.get<EnhancedMessagingLocalDataSource>(),
-      webSocketService: sl.get<WebSocketService>(),
-      chirpUserRepository: sl.get<ChirpUserRepository>(),
-      notificationService: sl.get<MessagingNotificationService>(),
-    ),
-  );
-
-  // Enhanced Use Cases
-  sl.registerFactory<GetConversationsUseCase>(
-    () => GetConversationsUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetConversationsStreamUseCase>(
-    () =>
-        GetConversationsStreamUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<CreateConversationUseCase>(
-    () => CreateConversationUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetMessagesUseCase>(
-    () => GetMessagesUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetMessagesStreamUseCase>(
-    () => GetMessagesStreamUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<SendMessageUseCase>(
-    () => SendMessageUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<MarkMessagesAsReadUseCase>(
-    () => MarkMessagesAsReadUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<EditMessageUseCase>(
-    () => EditMessageUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<DeleteMessageUseCase>(
-    () => DeleteMessageUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<StartTypingUseCase>(
-    () => StartTypingUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<StopTypingUseCase>(
-    () => StopTypingUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<JoinConversationUseCase>(
-    () => JoinConversationUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<LeaveConversationUseCase>(
-    () => LeaveConversationUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<ConnectToRealTimeUseCase>(
-    () => ConnectToRealTimeUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<DisconnectFromRealTimeUseCase>(
-    () =>
-        DisconnectFromRealTimeUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<SyncOfflineMessagesUseCase>(
-    () => SyncOfflineMessagesUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetDraftUseCase>(
-    () => GetDraftUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<SaveDraftUseCase>(
-    () => SaveDraftUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<DeleteDraftUseCase>(
-    () => DeleteDraftUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetNewMessagesStreamUseCase>(
-    () => GetNewMessagesStreamUseCase(sl.get<EnhancedConversationRepository>()),
-  );
-  sl.registerFactory<GetTypingIndicatorsStreamUseCase>(
-    () => GetTypingIndicatorsStreamUseCase(
-      sl.get<EnhancedConversationRepository>(),
-    ),
-  );
-  sl.registerFactory<GetConnectionStateStreamUseCase>(
-    () => GetConnectionStateStreamUseCase(
-      sl.get<EnhancedConversationRepository>(),
-    ),
-  );
-
-  // Enhanced BLoCs
-  sl.registerFactory<ConversationListBloc>(
-    () => ConversationListBloc(
-      getConversationsUseCase: sl.get<GetConversationsUseCase>(),
-      getConversationsStreamUseCase: sl.get<GetConversationsStreamUseCase>(),
-      createConversationUseCase: sl.get<CreateConversationUseCase>(),
-      connectToRealTimeUseCase: sl.get<ConnectToRealTimeUseCase>(),
-      disconnectFromRealTimeUseCase: sl.get<DisconnectFromRealTimeUseCase>(),
-      getConnectionStateStreamUseCase: sl
-          .get<GetConnectionStateStreamUseCase>(),
-      getNewMessagesStreamUseCase: sl.get<GetNewMessagesStreamUseCase>(),
-      syncOfflineMessagesUseCase: sl.get<SyncOfflineMessagesUseCase>(),
-    ),
-  );
-  sl.registerFactory<ChatBloc>(
-    () => ChatBloc(
-      getMessagesUseCase: sl.get<GetMessagesUseCase>(),
-      getMessagesStreamUseCase: sl.get<GetMessagesStreamUseCase>(),
-      sendMessageUseCase: sl.get<SendMessageUseCase>(),
-      editMessageUseCase: sl.get<EditMessageUseCase>(),
-      deleteMessageUseCase: sl.get<DeleteMessageUseCase>(),
-      markMessagesAsReadUseCase: sl.get<MarkMessagesAsReadUseCase>(),
-      startTypingUseCase: sl.get<StartTypingUseCase>(),
-      stopTypingUseCase: sl.get<StopTypingUseCase>(),
-      joinConversationUseCase: sl.get<JoinConversationUseCase>(),
-      leaveConversationUseCase: sl.get<LeaveConversationUseCase>(),
-      connectToRealTimeUseCase: sl.get<ConnectToRealTimeUseCase>(),
-      getDraftUseCase: sl.get<GetDraftUseCase>(),
-      saveDraftUseCase: sl.get<SaveDraftUseCase>(),
-      deleteDraftUseCase: sl.get<DeleteDraftUseCase>(),
-      getTypingIndicatorsStreamUseCase: sl
-          .get<GetTypingIndicatorsStreamUseCase>(),
-      getConnectionStateStreamUseCase: sl
-          .get<GetConnectionStateStreamUseCase>(),
-      getNewMessagesStreamUseCase: sl.get<GetNewMessagesStreamUseCase>(),
     ),
   );
 }
