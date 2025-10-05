@@ -5,7 +5,7 @@ class ChirpCommunityMembership extends Table {
   IntColumn get id => integer()();
 
   @JsonKey("community_id")
-  TextColumn get communityID => text()();
+  IntColumn get communityID => integer()();
 
   @JsonKey("user_id")
   TextColumn get userID => text()();

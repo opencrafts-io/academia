@@ -2,6 +2,7 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -480,7 +481,44 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // Notifications
+  /*************************************************************************
+                                    CHIRP
+  *************************************************************************/
+  // -- Memberships
+  sl.registerFactory<ChirpCommunityMembershipLocalDatasource>(
+    () => ChirpCommunityMembershipLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<ChirpCommunityMembershipRemoteDatasource>(
+    () => ChirpCommunityMembershipRemoteDatasource(
+      dioClient: sl(),
+      flavor: flavor,
+    ),
+  );
+  sl.registerFactory<ChirpCommunityMembershipRepository>(
+    () => ChirpCommunityMembershipRepositoryImpl(
+      profileLocalDatasource: sl(),
+      chirpCommunityMembershipLocalDatasource: sl(),
+      chirpCommunityMembershipRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<GetCachedPersonalChirpCommunityMemberships>(
+    () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
+  );
+
+  sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
+    () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<ChirpCommunityMembershipBloc>(
+    () => ChirpCommunityMembershipBloc(
+      getCachedPersonalChirpCommunityMemberships: sl(),
+      getRemotePersonalChirpMembershipsUsecase: sl(),
+    ),
+  );
+  /*************************************************************************
+                              // NOTIFICATIONS
+  *************************************************************************/
   sl.registerFactory<NotificationRemoteDatasource>(
     () => NotificationRemoteDatasource(),
   );

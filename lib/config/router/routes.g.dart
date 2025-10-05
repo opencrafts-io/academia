@@ -23,6 +23,7 @@ List<RouteBase> get $appRoutes => [
   $communitiesRoute,
   $createCommunitiesRoute,
   $trimVideoRoute,
+  $communityMembershipsRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -964,6 +965,33 @@ mixin _$TrimVideoRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/video-trimer/${Uri.encodeComponent(_self.videoPath)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $communityMembershipsRoute => GoRouteData.$route(
+  path: '/community/memberships/mine',
+
+  factory: _$CommunityMembershipsRoute._fromState,
+);
+
+mixin _$CommunityMembershipsRoute on GoRouteData {
+  static CommunityMembershipsRoute _fromState(GoRouterState state) =>
+      CommunityMembershipsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/community/memberships/mine');
 
   @override
   void go(BuildContext context) => context.go(location);
