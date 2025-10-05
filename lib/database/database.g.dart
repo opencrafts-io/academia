@@ -13178,6 +13178,18 @@ class $CommunityTableTable extends CommunityTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -13204,6 +13216,7 @@ class $CommunityTableTable extends CommunityTable
     guidelines,
     createdAt,
     updatedAt,
+    cachedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -13398,6 +13411,12 @@ class $CommunityTableTable extends CommunityTable
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -13505,6 +13524,10 @@ class $CommunityTableTable extends CommunityTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
     );
   }
 
@@ -13542,6 +13565,9 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
   final List<dynamic> guidelines;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// For storing the caching time that will be used in TTL
+  final DateTime? cachedAt;
   const CommunityData({
     required this.id,
     required this.name,
@@ -13567,6 +13593,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     required this.guidelines,
     required this.createdAt,
     required this.updatedAt,
+    this.cachedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -13609,6 +13636,9 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
     return map;
   }
 
@@ -13648,6 +13678,9 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       guidelines: Value(guidelines),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
     );
   }
 
@@ -13691,6 +13724,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       guidelines: serializer.fromJson<List<dynamic>>(json['guidelines']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
     );
   }
   @override
@@ -13721,6 +13755,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
       'guidelines': serializer.toJson<List<dynamic>>(guidelines),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
     };
   }
 
@@ -13749,6 +13784,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     List<dynamic>? guidelines,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
   }) => CommunityData(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -13778,6 +13814,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     guidelines: guidelines ?? this.guidelines,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
   CommunityData copyWithCompanion(CommunityTableCompanion data) {
     return CommunityData(
@@ -13833,6 +13870,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           : this.guidelines,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
     );
   }
 
@@ -13862,7 +13900,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           ..write('creatorId: $creatorId, ')
           ..write('guidelines: $guidelines, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -13893,6 +13932,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     guidelines,
     createdAt,
     updatedAt,
+    cachedAt,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -13921,7 +13961,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           other.creatorId == this.creatorId &&
           other.guidelines == this.guidelines &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
 }
 
 class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
@@ -13949,6 +13990,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
   final Value<List<dynamic>> guidelines;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> cachedAt;
   const CommunityTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -13974,6 +14016,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     this.guidelines = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
   });
   CommunityTableCompanion.insert({
     this.id = const Value.absent(),
@@ -14000,6 +14043,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     required List<dynamic> guidelines,
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.cachedAt = const Value.absent(),
   }) : name = Value(name),
        visibility = Value(visibility),
        creatorId = Value(creatorId),
@@ -14031,6 +14075,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     Expression<String>? guidelines,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -14061,6 +14106,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
       if (guidelines != null) 'guidelines': guidelines,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
     });
   }
 
@@ -14089,6 +14135,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     Value<List<dynamic>>? guidelines,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<DateTime?>? cachedAt,
   }) {
     return CommunityTableCompanion(
       id: id ?? this.id,
@@ -14115,6 +14162,7 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
       guidelines: guidelines ?? this.guidelines,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
     );
   }
 
@@ -14195,6 +14243,9 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
     return map;
   }
 
@@ -14224,7 +14275,8 @@ class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
           ..write('creatorId: $creatorId, ')
           ..write('guidelines: $guidelines, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -22361,6 +22413,7 @@ typedef $$CommunityTableTableCreateCompanionBuilder =
       required List<dynamic> guidelines,
       required DateTime createdAt,
       required DateTime updatedAt,
+      Value<DateTime?> cachedAt,
     });
 typedef $$CommunityTableTableUpdateCompanionBuilder =
     CommunityTableCompanion Function({
@@ -22388,6 +22441,7 @@ typedef $$CommunityTableTableUpdateCompanionBuilder =
       Value<List<dynamic>> guidelines,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
     });
 
 class $$CommunityTableTableFilterComposer
@@ -22517,6 +22571,11 @@ class $$CommunityTableTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -22649,6 +22708,11 @@ class $$CommunityTableTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CommunityTableTableAnnotationComposer
@@ -22760,6 +22824,9 @@ class $$CommunityTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
 class $$CommunityTableTableTableManager
@@ -22819,6 +22886,7 @@ class $$CommunityTableTableTableManager
                 Value<List<dynamic>> guidelines = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => CommunityTableCompanion(
                 id: id,
                 name: name,
@@ -22844,6 +22912,7 @@ class $$CommunityTableTableTableManager
                 guidelines: guidelines,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
               ),
           createCompanionCallback:
               ({
@@ -22871,6 +22940,7 @@ class $$CommunityTableTableTableManager
                 required List<dynamic> guidelines,
                 required DateTime createdAt,
                 required DateTime updatedAt,
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => CommunityTableCompanion.insert(
                 id: id,
                 name: name,
@@ -22896,6 +22966,7 @@ class $$CommunityTableTableTableManager
                 guidelines: guidelines,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
