@@ -61,7 +61,9 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
         emit(CommunityListingErrorState(message: failure.message));
       },
       (retrievedCommunities) {
-        emit(CommunityListingRetrievedState(retrieved: retrievedCommunities));
+        emit(
+          CommunityListingLoadedState(paginatedCommunity: retrievedCommunities),
+        );
       },
     );
   }

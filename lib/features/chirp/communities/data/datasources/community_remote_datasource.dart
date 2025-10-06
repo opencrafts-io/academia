@@ -396,8 +396,8 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         return handleNoConnection();
       }
 
-      final response = await dioClient.dio.post(
-        "/$servicePrefix/community/postable/",
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/postable",
         queryParameters: {"page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {

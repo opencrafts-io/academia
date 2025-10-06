@@ -1,12 +1,10 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class CommunityMembershipPage extends StatefulWidget {
   const CommunityMembershipPage({super.key});
@@ -17,86 +15,115 @@ class CommunityMembershipPage extends StatefulWidget {
 }
 
 class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
+  final List<Community> communities = [];
+  @override
+  void initState() {
+    context.read<CommunityListingCubit>().getPostableCommunities();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
-          context.read<ChirpCommunityMembershipBloc>().add(
-            GetRemotePersonalChirpCommunityMembershipEvent(
-              page: 1,
-              pageSize: 100,
-            ),
-          );
+          context.read<CommunityListingCubit>().getPostableCommunities();
           await Future.delayed(Duration(seconds: 2));
         },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar.large(
-              title: Text("Community memberships"),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    showAdaptiveDialog(
-                      context: context,
-                      builder: (context) => AlertDialog.adaptive(
-                        title: Text("Help"),
-                        content: Text(
-                          "Here you can see all the communities you're part of. "
-                          "To leave any community, just swipe it to the left. "
-                          "Stay connected and enjoy engaging with your groups!",
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => context.pop(),
-                            child: Text("Got It!"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.help_outline),
+        child: BlocListener<CommunityListingCubit, CommunityListingState>(
+          listener: (context, state) {
+            if (state is CommunityListingErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  behavior: SnackBarBehavior.floating,
                 ),
-              ],
-            ),
-
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              sliver: MultiSliver(
-                children: [
-                  BlocBuilder<
-                    ChirpCommunityMembershipBloc,
-                    ChirpCommunityMembershipState
-                  >(
-                    builder: (context, state) {
-                      if (state is ChirpCommunityMembershipStateLoadingState) {
-                        return Center(child: SpinningScallopIndicator());
-                      }
-                      if (state is ChirpCommunityMembershipStateLoadedState) {
-                        if (state.memberships.isEmpty) {
-                          return Text("Empty data");
-                        }
-                        return ListView.separated(
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
+              );
+            } else if (state is CommunityListingLoadedState) {
+              communities.addAll(state.paginatedCommunity.communities);
+              setState(() {});
+            }
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                centerTitle: true,
+                floating: true,
+                snap: true,
+                pinned: true,
+                title: Text("Your communities"),
+              ),
+              SliverPadding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                sliver:
+                    BlocBuilder<CommunityListingCubit, CommunityListingState>(
+                      builder: (context, state) {
+                        return SliverList.separated(
+                          itemCount: communities.length,
+                          separatorBuilder: (context, index) => Divider(),
                           itemBuilder: (context, index) {
-                            return MembershipTile(
-                              membership: state.memberships[index],
+                            final community = communities[index];
+                            return ListTile(
+                              isThreeLine: true,
+                              leading: Container(
+                                padding: EdgeInsets.all(16),
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  image: community.profilePicture == null
+                                      ? null
+                                      : DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            community.profilePicture!,
+                                          ),
+                                        ),
+                                ),
+                                child: Center(
+                                  child: community.profilePicture == null
+                                      ? Text(
+                                          community.name[0],
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleSmall,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              title: Text(community.name),
+                              subtitle: Text(
+                                community.description ??
+                                    "No description available",
+                              ),
+                              subtitleTextStyle: Theme.of(
+                                context,
+                              ).textTheme.bodySmall,
+                              contentPadding: EdgeInsets.zero,
+                              onTap: () => CommunitiesRoute(
+                                communityId: community.id.toString(),
+                              ).push(context),
+                              trailing: PopupMenuButton(
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text("View community"),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text("Leave community"),
+                                  ),
+                                ],
+                              ),
                             );
                           },
-                          separatorBuilder: (index, state) => Divider(),
-                          itemCount: state.memberships.length,
                         );
-                      }
-                      return Center(child: Text(state.runtimeType.toString()));
-                    },
-                  ),
-                ],
+                      },
+                    ),
               ),
-            ),
-            // SliverList.builder(),
-          ],
+            ],
+          ),
         ),
       ),
     );
