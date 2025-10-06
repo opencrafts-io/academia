@@ -147,10 +147,17 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities() async {
+  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities({
+    int page = 1,
+    int pageSize = 50,
+  }) async {
     final result = await remoteDatasource.getPostableCommunities();
     return await result.fold(
       (failure) async {
+        if (failure is! NetworkFailure) {
+          return left(failure);
+        }
+
         final cacheRes = await communityLocalDatasource.getCachedCommunities();
         if (cacheRes.isLeft()) {
           return left(failure);

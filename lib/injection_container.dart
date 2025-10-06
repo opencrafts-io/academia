@@ -345,7 +345,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(
-    () => CommunityBloc(
+    () => CommunityListingCubit(
       getPostableCommunitiesUsecase: sl(),
       searchForCommunityUsecase: sl(),
     ),

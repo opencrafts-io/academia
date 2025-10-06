@@ -23,14 +23,10 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
         debugPrint("Searching Posts for: $query");
         break;
       case 1:
-        context.read<CommunityBloc>().add(
-          SearchCommunityEvent(
-            paginationParam: CommunityPaginatedEventParameter(
-              pageSize: 100,
-              page: 1,
-            ),
-            searchTerm: query,
-          ),
+        context.read<CommunityListingCubit>().searchForCommunity(
+          query,
+          pageSize: 1,
+          page: 1,
         );
         break;
       case 2:
@@ -141,9 +137,9 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
   Widget _buildSearchCommunitiesSection() {
     return Padding(
       padding: EdgeInsetsGeometry.all(12),
-      child: BlocBuilder<CommunityBloc, CommunityState>(
+      child: BlocBuilder<CommunityListingCubit, CommunityListingState>(
         builder: (context, state) {
-          if (state is CommunitiesRetrievedState) {
+          if (state is CommunityListingRetrievedState) {
             if (state.retrieved.communities.isEmpty) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +161,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
                 ],
               ),
             );
-          } else if (state is CommunityLoadingState) {
+          } else if (state is CommunityListingLoadingState) {
             return Center(child: SpinningScallopIndicator());
           }
           return Column(
@@ -231,6 +227,10 @@ class CommunitySearchCard extends StatelessWidget {
                 ],
               ),
             );
+          } else {
+            CommunitiesRoute(
+              communityId: community.id.toString(),
+            ).push(context);
           }
         },
         child: Column(
@@ -264,13 +264,16 @@ class CommunitySearchCard extends StatelessWidget {
               title: Row(
                 children: [
                   Text(community.name),
-                  Card.filled(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    child: Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "😈",
-                        style: Theme.of(context).textTheme.bodySmall,
+                  Visibility(
+                    visible: community.nsfw,
+                    child: Card.filled(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                          "NSFW",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ),
                   ),

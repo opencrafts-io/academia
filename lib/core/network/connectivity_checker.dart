@@ -23,7 +23,7 @@ mixin ConnectivityChecker {
   // Optionally, a method to handle no internet connection and return a failure message
   Future<Either<Failure, T>> handleNoConnection<T>() async {
     return left(
-      ServerFailure(
+      NetworkFailure(
         message: "No internet connection. Please check your network.",
         error: Exception("No Internet Connection"),
       ),

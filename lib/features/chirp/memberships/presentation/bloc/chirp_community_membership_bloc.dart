@@ -1,6 +1,5 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/memberships/memberships.dart';
-import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,14 +47,14 @@ class ChirpCommunityMembershipBloc
         (failure) =>
             emit(ChirpCommunityMembershipErrorState(error: failure.message)),
         (memberships) {
-          if (state is CommunitiesLoadedState && memberships.isEmpty) {
-            return emit(
-              ChirpCommunityMembershipStateLoadedState(
-                memberships: memberships,
-                hasMore: false,
-              ),
-            );
-          }
+          // if (state is CommunitiesLoadedState && memberships.isEmpty) {
+          //   return emit(
+          //     ChirpCommunityMembershipStateLoadedState(
+          //       memberships: memberships,
+          //       hasMore: false,
+          //     ),
+          //   );
+          // }
           return emit(
             ChirpCommunityMembershipStateLoadedState(
               memberships: memberships,

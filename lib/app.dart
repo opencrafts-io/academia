@@ -124,7 +124,7 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
 
-        BlocProvider(create: (context) => sl<CommunityBloc>()),
+        BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
             createCommunityUseCase: sl<CreateCommunityUseCase>(),

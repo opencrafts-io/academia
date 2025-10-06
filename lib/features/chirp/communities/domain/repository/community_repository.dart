@@ -47,11 +47,14 @@ abstract class CommunityRepository {
     required String userId,
   });
 
-  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities();
+  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities({
+    int page = 1,
+    int pageSize = 50,
+  });
 
   Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
     String searchTerm, {
     int page = 1,
-    int pageSize = 100,
+    int pageSize = 50,
   });
 }

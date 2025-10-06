@@ -129,20 +129,26 @@ class _AddPostPageState extends State<AddPostPage> {
 
                       suggestionsBuilder: (context, controller) {
                         if (controller.text.trim().isNotEmpty) {
-                          context.read<CommunityBloc>().add(
-                            GetPostableCommunityEvent(
-                              searchTerm: controller.text.trim(),
-                            ),
-                          );
+                          context
+                              .read<CommunityListingCubit>()
+                              .getPostableCommunities(
+                                pageSize: 100,
+                                page: 1,
+
+                                // searchTerm: controller.text.trim(),
+                              );
                         }
                         return [
-                          BlocBuilder<CommunityBloc, CommunityState>(
+                          BlocBuilder<
+                            CommunityListingCubit,
+                            CommunityListingState
+                          >(
                             builder: (context, state) {
-                              if (state is CommunityLoadingState) {
+                              if (state is CommunityListingLoadingState) {
                                 return Column(
                                   children: [SpinningScallopIndicator()],
                                 );
-                              } else if (state is CommunitiesLoadedState) {
+                              } else if (state is CommunityListingLoadedState) {
                                 final communities = state.paginatedCommunity;
                                 if (communities.communities.isEmpty) {
                                   return const ListTile(

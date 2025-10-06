@@ -387,8 +387,10 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedCommunityResponse>>
-  getPostableCommunities() async {
+  Future<Either<Failure, PaginatedCommunityResponse>> getPostableCommunities({
+    int page = 1,
+    int pageSize = 50,
+  }) async {
     try {
       if (!await isConnectedToInternet()) {
         return handleNoConnection();
@@ -396,6 +398,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
 
       final response = await dioClient.dio.post(
         "/$servicePrefix/community/postable/",
+        queryParameters: {"page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
         return right(PaginatedCommunityResponse.fromJson(response.data));
@@ -426,7 +429,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
 
       final response = await dioClient.dio.get(
         "/$servicePrefix/community/search/",
-        queryParameters: {"q": searchTerm, "page": page, "pageSize": pageSize},
+        queryParameters: {"q": searchTerm, "page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
         return right(PaginatedCommunityResponse.fromJson(response.data));

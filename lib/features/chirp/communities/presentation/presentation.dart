@@ -5,4 +5,4 @@ export 'views/add_community_guidelines_screen.dart';
 export 'bloc/community_home_bloc.dart';
 export 'bloc/create_community_bloc.dart';
 export 'bloc/community_users/community_users_bloc.dart';
-export 'bloc/community_bloc.dart';
+export 'bloc/community_listing_cubit.dart';
