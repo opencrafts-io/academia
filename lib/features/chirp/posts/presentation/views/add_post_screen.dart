@@ -132,7 +132,6 @@ class _AddPostPageState extends State<AddPostPage> {
                           context
                               .read<CommunityListingCubit>()
                               .getPostableCommunities(
-                                pageSize: 100,
                                 page: 1,
 
                                 // searchTerm: controller.text.trim(),
@@ -149,8 +148,8 @@ class _AddPostPageState extends State<AddPostPage> {
                                   children: [SpinningScallopIndicator()],
                                 );
                               } else if (state is CommunityListingLoadedState) {
-                                final communities = state.paginatedCommunity;
-                                if (communities.communities.isEmpty) {
+                                final communities = state.communities;
+                                if (communities.isEmpty) {
                                   return const ListTile(
                                     leading: AnimatedEmoji(AnimatedEmojis.sad),
                                     title: Text(
@@ -159,7 +158,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   );
                                 }
                                 return Column(
-                                  children: communities.communities
+                                  children: communities
                                       .map(
                                         (community) => ListTile(
                                           onTap: () {

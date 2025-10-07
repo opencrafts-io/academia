@@ -25,7 +25,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
       case 1:
         context.read<CommunityListingCubit>().searchForCommunity(
           query,
-          pageSize: 1,
+          // pageSize: 1,
           page: 1,
         );
         break;
@@ -139,8 +139,8 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
       padding: EdgeInsetsGeometry.all(12),
       child: BlocBuilder<CommunityListingCubit, CommunityListingState>(
         builder: (context, state) {
-          if (state is CommunityListingRetrievedState) {
-            if (state.retrieved.communities.isEmpty) {
+          if (state is CommunityListingLoadedState) {
+            if (state.communities.isEmpty) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,7 +154,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  ...state.retrieved.communities.map(
+                  ...state.communities.map(
                     (community) => CommunitySearchCard(community: community),
                   ),
                   SizedBox(height: 80),

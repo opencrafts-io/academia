@@ -14,14 +14,17 @@ class GetPostableCommunitiesUsecaseParams {
 }
 
 class GetPostableCommunitiesUsecase
-    extends UseCase<PaginatedCommunity, GetPostableCommunitiesUsecaseParams> {
+    extends UseCase<List<Community>, GetPostableCommunitiesUsecaseParams> {
   final CommunityRepository communityRepository;
 
   GetPostableCommunitiesUsecase({required this.communityRepository});
   @override
-  Future<Either<Failure, PaginatedCommunity>> call(
+  Future<Either<Failure, List<Community>>> call(
     GetPostableCommunitiesUsecaseParams params,
   ) async {
-    return await communityRepository.getPostableCommunities();
+    return await communityRepository.getPostableCommunities(
+      page: params.page,
+      pageSize: params.pageSize,
+    );
   }
 }

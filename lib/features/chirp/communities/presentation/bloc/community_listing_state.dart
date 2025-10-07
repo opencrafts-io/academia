@@ -23,18 +23,33 @@ class CommunityListingErrorState extends CommunityListingState {
 }
 
 class CommunityListingLoadedState extends CommunityListingState {
-  final PaginatedCommunity paginatedCommunity;
-  CommunityListingLoadedState({required this.paginatedCommunity});
+  final List<Community> communities;
+  final bool hasReachedMax; // Indicates if all pages have been loaded
+  final bool isLoadingMore;
+  final String? searchTerm;
+
+  CommunityListingLoadedState({
+    required this.communities,
+    this.hasReachedMax = false,
+    this.isLoadingMore = false,
+    this.searchTerm,
+  });
+
+  CommunityListingLoadedState copyWith({
+    List<Community>? communities,
+    bool? hasReachedMax,
+    bool? isLoadingMore,
+    String? searchTerm,
+  }) {
+    return CommunityListingLoadedState(
+      communities: communities ?? this.communities,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      searchTerm: searchTerm ?? this.searchTerm,
+    );
+  }
 
   @override
-  List<Object?> get props => [paginatedCommunity];
+  List<Object?> get props => [communities, hasReachedMax, isLoadingMore];
 }
 
-// Fore representing a retrieval / search through the api
-class CommunityListingRetrievedState extends CommunityListingState {
-  final PaginatedCommunity retrieved;
-  CommunityListingRetrievedState({required this.retrieved});
-
-  @override
-  List<Object?> get props => [retrieved];
-}

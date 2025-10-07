@@ -147,11 +147,14 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities({
+  Future<Either<Failure, List<Community>>> getPostableCommunities({
     int page = 1,
     int pageSize = 50,
   }) async {
-    final result = await remoteDatasource.getPostableCommunities();
+    final result = await remoteDatasource.getPostableCommunities(
+      page: page,
+      pageSize: pageSize,
+    );
     return await result.fold(
       (failure) async {
         if (failure is! NetworkFailure) {
@@ -165,17 +168,11 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
         final rawCommunities = (cacheRes as Right).value as List<CommunityData>;
 
-        return right(
-          PaginatedCommunity(
-            count: rawCommunities.length,
-            hasMore: false,
-            communities: rawCommunities.map((e) => e.toEntity()).toList(),
-          ),
-        );
+        return right(rawCommunities.map((e) => e.toEntity()).toList());
       },
-      (paginatedCommunity) async {
+      (rawCommunities) async {
         final List<Community> communities = [];
-        for (final community in paginatedCommunity.communities) {
+        for (final community in rawCommunities) {
           final result = await communityLocalDatasource.createorUpdateCommunity(
             community,
           );
@@ -184,19 +181,13 @@ class CommunityRepositoryImpl implements CommunityRepository {
             communities.add(community.toEntity());
           }
         }
-        return right(
-          PaginatedCommunity(
-            communities: communities,
-            hasMore: paginatedCommunity.next != null,
-            count: communities.length,
-          ),
-        );
+        return right(communities);
       },
     );
   }
 
   @override
-  Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
+  Future<Either<Failure, List<Community>>> searchForCommunity(
     String searchTerm, {
     int page = 0,
     int pageSize = 100,
@@ -209,13 +200,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
     return await result.fold(
       (failure) => left(failure),
-      (searched) => right(
-        PaginatedCommunity(
-          communities: searched.communities.map((e) => e.toEntity()).toList(),
-          count: searched.count,
-          hasMore: searched.next != null,
-        ),
-      ),
+      (searched) => right(searched.map((e) => e.toEntity()).toList()),
     );
   }
 }

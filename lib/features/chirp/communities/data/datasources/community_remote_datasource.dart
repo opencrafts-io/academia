@@ -387,7 +387,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedCommunityResponse>> getPostableCommunities({
+  Future<Either<Failure, List<CommunityData>>> getPostableCommunities({
     int page = 1,
     int pageSize = 50,
   }) async {
@@ -401,7 +401,11 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         queryParameters: {"page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
-        return right(PaginatedCommunityResponse.fromJson(response.data));
+        final results = response.data["results"] as List;
+
+        return right(
+          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+        );
       }
       throw "Programming error";
     } on DioException catch (de) {
@@ -417,7 +421,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedCommunityResponse>> searchForCommunity(
+  Future<Either<Failure, List<CommunityData>>> searchForCommunity(
     String searchTerm, {
     int page = 1,
     int pageSize = 100,
@@ -432,8 +436,13 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         queryParameters: {"q": searchTerm, "page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
-        return right(PaginatedCommunityResponse.fromJson(response.data));
+        final results = response.data["results"] as List;
+
+        return right(
+          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+        );
       }
+
       throw "Programming error";
     } on DioException catch (de) {
       return handleDioError(de);
