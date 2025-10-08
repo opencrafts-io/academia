@@ -9,7 +9,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 
 class CommunityHome extends StatefulWidget {
-  final String communityId;
+  final int communityId;
 
   const CommunityHome({super.key, required this.communityId});
 
@@ -36,7 +36,6 @@ class _CommunityHomeState extends State<CommunityHome>
     context.read<CommunityHomeBloc>().add(
       FetchCommunityById(
         communityId: widget.communityId,
-        userId: currentUserId,
       ),
     );
   }

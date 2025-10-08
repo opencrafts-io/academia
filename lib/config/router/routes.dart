@@ -317,7 +317,7 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
   ],
 )
 class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
-  final String communityId;
+  final int communityId;
 
   CommunitiesRoute({required this.communityId});
   @override

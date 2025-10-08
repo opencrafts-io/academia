@@ -166,7 +166,7 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
                         contentPadding: EdgeInsets.zero,
                         // Assuming CommunitiesRoute is a valid GoRouter route or similar
                         onTap: () => CommunitiesRoute(
-                          communityId: community.id.toString(),
+                          communityId: community.id,
                         ).push(context),
                         trailing: PopupMenuButton(
                           itemBuilder: (context) => [

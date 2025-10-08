@@ -77,8 +77,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
   }
 
   Future<Either<Failure, CommunityData>> getCommunityById({
-    required String communityId,
-    required String userId,
+    required int communityId,
   }) async {
     try {
       if (!await isConnectedToInternet()) {
@@ -87,7 +86,6 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
 
       final response = await dioClient.dio.get(
         "/$servicePrefix/community/$communityId/details",
-        // data: {"user_id": userId},
       );
 
       if (response.statusCode == 200) {

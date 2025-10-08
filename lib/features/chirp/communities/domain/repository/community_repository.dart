@@ -5,9 +5,8 @@ import 'package:dartz/dartz.dart';
 abstract class CommunityRepository {
   Future<Either<Failure, Community>> createCommunity(Community community);
 
-  Future<Either<Failure, Community>> getCommunityById({
-    required String communityId,
-    required String userId,
+  Future<Either<Failure, Community>> getCommunityByID({
+    required int communityID,
   });
 
   Future<Either<Failure, Community>> moderateCommunity({

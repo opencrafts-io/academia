@@ -627,14 +627,15 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 );
 
 mixin _$CommunitiesRoute on GoRouteData {
-  static CommunitiesRoute _fromState(GoRouterState state) =>
-      CommunitiesRoute(communityId: state.pathParameters['communityId']!);
+  static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute(
+    communityId: int.parse(state.pathParameters['communityId']!)!,
+  );
 
   CommunitiesRoute get _self => this as CommunitiesRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/communities/${Uri.encodeComponent(_self.communityId)}',
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}',
   );
 
   @override

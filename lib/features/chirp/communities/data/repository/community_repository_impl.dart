@@ -27,16 +27,25 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, Community>> getCommunityById({
-    required String communityId,
-    required String userId,
+  Future<Either<Failure, Community>> getCommunityByID({
+    required int communityID,
   }) async {
-    final result = await remoteDatasource.getCommunityById(
-      communityId: communityId,
-      userId: userId,
+    // Check local cache first
+    final localResult = await communityLocalDatasource.getCachedCommunityByID(
+      communityID,
     );
 
-    return result.fold((failure) => left(failure), (community) {
+    if (localResult.isRight()) {
+      return right(((localResult as Right).value as CommunityData).toEntity());
+    }
+
+    // If not found locally, fetch from remote and cache
+    final result = await remoteDatasource.getCommunityById(
+      communityId: communityID,
+    );
+
+    return result.fold((failure) => left(failure), (community) async {
+      await communityLocalDatasource.createorUpdateCommunity(community);
       return right(community.toEntity());
     });
   }
@@ -92,7 +101,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
       userName: userName,
     );
 
-    return await result.fold((failure) => left(failure), (message) async {
+    return result.fold((failure) => left(failure), (message) {
       return right(message);
     });
   }
@@ -151,24 +160,39 @@ class CommunityRepositoryImpl implements CommunityRepository {
     int page = 1,
     int pageSize = 50,
   }) async {
+    // Check local cache first
+    final cachedResult = await communityLocalDatasource.getCachedCommunities();
+
+    if (cachedResult.isRight()) {
+      final cachedCommunities =
+          (cachedResult as Right).value as List<CommunityData>;
+      return right(
+        cachedCommunities.map((e) => e.toEntity()).toList(),
+      ); // Return cached list if available
+    }
+
+    // If not found locally, fetch from remote and cache
     final result = await remoteDatasource.getPostableCommunities(
       page: page,
       pageSize: pageSize,
     );
-    return await result.fold(
+
+    return result.fold(
       (failure) async {
-        if (failure is! NetworkFailure) {
-          return left(failure);
+        if (failure is NetworkFailure) {
+          final cacheRes = await communityLocalDatasource
+              .getCachedCommunities();
+          if (cacheRes.isRight()) {
+            final rawCommunities =
+                (cacheRes as Right).value as List<CommunityData>;
+            return right(
+              rawCommunities.map((e) => e.toEntity()).toList(),
+            ); // Return cache if available
+          }
         }
-
-        final cacheRes = await communityLocalDatasource.getCachedCommunities();
-        if (cacheRes.isLeft()) {
-          return left(failure);
-        }
-
-        final rawCommunities = (cacheRes as Right).value as List<CommunityData>;
-
-        return right(rawCommunities.map((e) => e.toEntity()).toList());
+        return left(
+          failure,
+        ); // If there's no cache or network failure, return error
       },
       (rawCommunities) async {
         final List<Community> communities = [];
@@ -176,7 +200,6 @@ class CommunityRepositoryImpl implements CommunityRepository {
           final result = await communityLocalDatasource.createorUpdateCommunity(
             community,
           );
-
           if (result.isRight()) {
             communities.add(community.toEntity());
           }
@@ -198,7 +221,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
       pageSize: pageSize,
     );
 
-    return await result.fold(
+    return result.fold(
       (failure) => left(failure),
       (searched) => right(searched.map((e) => e.toEntity()).toList()),
     );

@@ -219,7 +219,7 @@ class CommunitySearchCard extends StatelessWidget {
                     onPressed: () {
                       context.pop();
                       CommunitiesRoute(
-                        communityId: community.id.toString(),
+                        communityId: community.id,
                       ).push(context);
                     },
                     child: Text("Continue"),
@@ -229,7 +229,7 @@ class CommunitySearchCard extends StatelessWidget {
             );
           } else {
             CommunitiesRoute(
-              communityId: community.id.toString(),
+              communityId: community.id,
             ).push(context);
           }
         },

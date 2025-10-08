@@ -195,7 +195,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
             ),
           );
           CommunitiesRoute(
-            communityId: state.community.id.toString(),
+            communityId: state.community.id,
           ).pushReplacement(context);
         } else if (state is CreateCommunityFailure) {
           ScaffoldMessenger.of(context).showSnackBar(

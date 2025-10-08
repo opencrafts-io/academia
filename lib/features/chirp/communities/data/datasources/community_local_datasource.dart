@@ -60,13 +60,37 @@ class CommunityLocalDatasource {
     }
   }
 
+  /// getCachedCommunityByID
+  /// Returns a community by its id specified by [communityID].
+  /// Interally the function will invalidate cache that is older than the specified
+  /// [ttl] duration
+  Future<Either<Failure, CommunityData>> getCachedCommunityByID(
+    int communityID,
+  ) async {
+    try {
+      await _deleteAllExpiredCachedCommunities();
+      final community = await (localDB.select(
+        localDB.community,
+      )..where((community) => community.id.equals(communityID))).getSingle();
+
+      return right(community);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message:
+              "Failed to retrive community. "
+              "A quick restart or clearing your storage might fix the issue",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<CommunityData>>>
   deleteAllCachedCommunities() async {
     try {
       await _deleteAllExpiredCachedCommunities();
-      final deleted = await localDB
-          .delete(localDB.community)
-          .goAndReturn();
+      final deleted = await localDB.delete(localDB.community).goAndReturn();
 
       return right(deleted);
     } catch (e) {
