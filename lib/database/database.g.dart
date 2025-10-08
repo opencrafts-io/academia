@@ -12987,6 +12987,18 @@ class $ChirpUserTable extends ChirpUser
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     userID,
@@ -12997,6 +13009,7 @@ class $ChirpUserTable extends ChirpUser
     avatarUrl,
     createdAt,
     updatedAt,
+    cachedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -13060,6 +13073,12 @@ class $ChirpUserTable extends ChirpUser
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -13101,6 +13120,10 @@ class $ChirpUserTable extends ChirpUser
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
     );
   }
 
@@ -13119,6 +13142,9 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   final String? avatarUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// For storing the caching time that will be used in TTL
+  final DateTime? cachedAt;
   const ChirpUserData({
     required this.userID,
     this.email,
@@ -13128,6 +13154,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     this.avatarUrl,
     required this.createdAt,
     required this.updatedAt,
+    this.cachedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -13148,6 +13175,9 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
     return map;
   }
 
@@ -13169,6 +13199,9 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           : Value(avatarUrl),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
     );
   }
 
@@ -13186,6 +13219,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
     );
   }
   @override
@@ -13200,6 +13234,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       'avatar_url': serializer.toJson<String?>(avatarUrl),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
     };
   }
 
@@ -13212,6 +13247,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     Value<String?> avatarUrl = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
   }) => ChirpUserData(
     userID: userID ?? this.userID,
     email: email.present ? email.value : this.email,
@@ -13221,6 +13257,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
   ChirpUserData copyWithCompanion(ChirpUserCompanion data) {
     return ChirpUserData(
@@ -13234,6 +13271,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
     );
   }
 
@@ -13247,7 +13285,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           ..write('vibePoints: $vibePoints, ')
           ..write('avatarUrl: $avatarUrl, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -13262,6 +13301,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     avatarUrl,
     createdAt,
     updatedAt,
+    cachedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -13274,7 +13314,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           other.vibePoints == this.vibePoints &&
           other.avatarUrl == this.avatarUrl &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
 }
 
 class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
@@ -13286,6 +13327,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   final Value<String?> avatarUrl;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> cachedAt;
   final Value<int> rowid;
   const ChirpUserCompanion({
     this.userID = const Value.absent(),
@@ -13296,6 +13338,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.avatarUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ChirpUserCompanion.insert({
@@ -13307,6 +13350,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.avatarUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : userID = Value(userID);
   static Insertable<ChirpUserData> custom({
@@ -13318,6 +13362,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     Expression<String>? avatarUrl,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -13329,6 +13374,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
       if (avatarUrl != null) 'avatar_url': avatarUrl,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -13342,6 +13388,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     Value<String?>? avatarUrl,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<DateTime?>? cachedAt,
     Value<int>? rowid,
   }) {
     return ChirpUserCompanion(
@@ -13353,6 +13400,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
       avatarUrl: avatarUrl ?? this.avatarUrl,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -13384,6 +13432,9 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -13401,6 +13452,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
           ..write('avatarUrl: $avatarUrl, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -22913,6 +22965,7 @@ typedef $$ChirpUserTableCreateCompanionBuilder =
       Value<String?> avatarUrl,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
 typedef $$ChirpUserTableUpdateCompanionBuilder =
@@ -22925,6 +22978,7 @@ typedef $$ChirpUserTableUpdateCompanionBuilder =
       Value<String?> avatarUrl,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
 
@@ -23013,6 +23067,11 @@ class $$ChirpUserTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> chirpCommunityMembershipRefs(
     Expression<bool> Function($$ChirpCommunityMembershipTableFilterComposer f)
     f,
@@ -23089,6 +23148,11 @@ class $$ChirpUserTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ChirpUserTableAnnotationComposer
@@ -23125,6 +23189,9 @@ class $$ChirpUserTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
   Expression<T> chirpCommunityMembershipRefs<T extends Object>(
     Expression<T> Function($$ChirpCommunityMembershipTableAnnotationComposer a)
@@ -23190,6 +23257,7 @@ class $$ChirpUserTableTableManager
                 Value<String?> avatarUrl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ChirpUserCompanion(
                 userID: userID,
@@ -23200,6 +23268,7 @@ class $$ChirpUserTableTableManager
                 avatarUrl: avatarUrl,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -23212,6 +23281,7 @@ class $$ChirpUserTableTableManager
                 Value<String?> avatarUrl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ChirpUserCompanion.insert(
                 userID: userID,
@@ -23222,6 +23292,7 @@ class $$ChirpUserTableTableManager
                 avatarUrl: avatarUrl,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

@@ -26,6 +26,11 @@ class ChirpUser extends Table {
   DateTimeColumn get updatedAt =>
       dateTime().withDefault(Constant(DateTime.now()))();
 
+  /// For storing the caching time that will be used in TTL
+  @JsonKey("cached_at")
+  DateTimeColumn get cachedAt =>
+      dateTime().withDefault(Constant(DateTime.now())).nullable()();
+
   @override
   Set<Column<Object>>? get primaryKey => {userID};
 }
