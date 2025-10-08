@@ -2,6 +2,8 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_id_usecase.dart';
+import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_username_usecase.dart';
 import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
@@ -373,6 +375,31 @@ Future<void> init(FlavorConfig flavor) async {
   /*************************************************************************
                                     CHIRP
   *************************************************************************/
+  //                        --- Chirp Users ---
+  sl.registerFactory<ChirpUserLocalDataSource>(
+    () => ChirpUserLocalDataSource(localDB: sl()),
+  );
+  sl.registerFactory(
+    () => ChirpUserRemoteDataSource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<ChirpUserRepository>(
+    () => ChirpUserRepositoryImpl(
+      chirpRemoteDataSource: sl(),
+      chirpUserLocalDataSource: sl(),
+    ),
+  );
+
+  sl.registerFactory(() => GetChirpUserByIdUsecase(chirpUserRepository: sl()));
+  sl.registerFactory(
+    () => GetChirpUserByUsernameUsecase(chirpUserRepository: sl()),
+  );
+  sl.registerFactory<ChirpUserCubit>(
+    () => ChirpUserCubit(
+      getChirpUserByIdUsecase: sl(),
+      getChirpUserByUsernameUsecase: sl(),
+    ),
+  );
+
   // -- Memberships
   sl.registerFactory<ChirpCommunityMembershipLocalDatasource>(
     () => ChirpCommunityMembershipLocalDatasource(localDB: sl()),
@@ -398,6 +425,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
     () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
   );
+
   /*************************************************************************
                               // NOTIFICATIONS
   *************************************************************************/

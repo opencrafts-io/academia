@@ -160,18 +160,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
     int page = 1,
     int pageSize = 50,
   }) async {
-    // Check local cache first
-    final cachedResult = await communityLocalDatasource.getCachedCommunities();
 
-    if (cachedResult.isRight()) {
-      final cachedCommunities =
-          (cachedResult as Right).value as List<CommunityData>;
-      return right(
-        cachedCommunities.map((e) => e.toEntity()).toList(),
-      ); // Return cached list if available
-    }
-
-    // If not found locally, fetch from remote and cache
     final result = await remoteDatasource.getPostableCommunities(
       page: page,
       pageSize: pageSize,

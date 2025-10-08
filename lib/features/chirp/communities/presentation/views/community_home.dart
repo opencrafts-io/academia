@@ -34,9 +34,7 @@ class _CommunityHomeState extends State<CommunityHome>
     }
 
     context.read<CommunityHomeBloc>().add(
-      FetchCommunityById(
-        communityId: widget.communityId,
-      ),
+      FetchCommunityById(communityId: widget.communityId),
     );
   }
 
@@ -122,22 +120,39 @@ class _CommunityHomeState extends State<CommunityHome>
                         spacing: 4,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Chip(
-                            label: Text(
-                              "${NumberFormat.compact().format(state.community.memberCount)} members",
-                            ),
-                            avatar: AnimatedEmoji(
-                              AnimatedEmojis.clown,
-                              repeat: false,
+                          InkWell(
+                            onTap: () {
+                              CommunityMembersRoute(
+                                role: "member",
+                                communityId: state.community.id,
+                              ).push(context);
+                            },
+                            child: Chip(
+                              label: Text(
+                                "${NumberFormat.compact().format(state.community.memberCount)} members",
+                              ),
+                              avatar: AnimatedEmoji(
+                                AnimatedEmojis.clown,
+                                repeat: false,
+                              ),
                             ),
                           ),
-                          Chip(
-                            label: Text(
-                              "${NumberFormat.compact().format(state.community.moderatorCount)} moderators",
-                            ),
-                            avatar: AnimatedEmoji(
-                              AnimatedEmojis.wink,
-                              repeat: false,
+                          InkWell(
+                            onTap: () {
+                              CommunityMembersRoute(
+                                role: "mod",
+                                communityId: state.community.id,
+                              ).push(context);
+                            },
+
+                            child: Chip(
+                              label: Text(
+                                "${NumberFormat.compact().format(state.community.moderatorCount)} moderators",
+                              ),
+                              avatar: AnimatedEmoji(
+                                AnimatedEmojis.wink,
+                                repeat: false,
+                              ),
                             ),
                           ),
                           Chip(
