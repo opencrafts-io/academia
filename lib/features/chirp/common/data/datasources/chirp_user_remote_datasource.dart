@@ -5,12 +5,12 @@ import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-class ChirpUserRemoteRepository with DioErrorHandler, ConnectivityChecker {
+class ChirpUserRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   final DioClient dioClient;
   late String servicePrefix;
   final FlavorConfig flavor;
 
-  ChirpUserRemoteRepository({required this.dioClient, required this.flavor}) {
+  ChirpUserRemoteDataSource({required this.dioClient, required this.flavor}) {
     if (flavor.isProduction) {
       servicePrefix = "chirp";
     } else if (flavor.isStaging) {
