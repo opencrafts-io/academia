@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
+import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -128,58 +129,9 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
                       }
 
                       final community = communities[index];
-                      return ListTile(
-                        isThreeLine: true,
-                        leading: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            image: community.profilePicture == null
-                                ? null
-                                : DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                      community.profilePicture!,
-                                    ),
-                                  ),
-                          ),
-                          child: Center(
-                            child: community.profilePicture == null
-                                ? Text(
-                                    community.name[0],
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleSmall,
-                                  )
-                                : null,
-                          ),
-                        ),
-                        title: Text(community.name),
-                        subtitle: Text(
-                          community.description ?? "No description available",
-                        ),
-                        subtitleTextStyle: Theme.of(
-                          context,
-                        ).textTheme.bodySmall,
-                        contentPadding: EdgeInsets.zero,
-                        // Assuming CommunitiesRoute is a valid GoRouter route or similar
-                        onTap: () => CommunitiesRoute(
-                          communityId: community.id,
-                        ).push(context),
-                        trailing: PopupMenuButton(
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                              value: 0,
-                              child: Text("View community"),
-                            ),
-                            const PopupMenuItem(
-                              value: 1,
-                              child: Text("Leave community"),
-                            ),
-                          ],
-                        ),
+                      return BlocProvider(
+                        create: (context) => sl<ChirpUserCubit>(),
+                        child: CommunityCard(community: community),
                       );
                     },
                   ),
@@ -188,6 +140,62 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+// TODO: (erick) cleanup this 
+class CommunityCard extends StatelessWidget {
+  const CommunityCard({super.key, required this.community});
+  final Community community;
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<ChirpUserCubit>().getChirpUserByUsername("dicky");
+    return ListTile(
+      isThreeLine: true,
+      leading: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          image: community.profilePicture == null
+              ? null
+              : DecorationImage(
+                  image: CachedNetworkImageProvider(community.profilePicture!),
+                ),
+        ),
+        child: Center(
+          child: community.profilePicture == null
+              ? Text(
+                  community.name[0],
+                  style: Theme.of(context).textTheme.titleSmall,
+                )
+              : null,
+        ),
+      ),
+      title: Text(community.name),
+      subtitle: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+        builder: (context, state) {
+          if (state is! ChirpUserLoadedState) {
+            return Text("Hello");
+          }
+          return Text((state as ChirpUserLoadedState).user.username ?? 'Anon');
+        },
+      ),
+      // subtitle: Text(
+      //   community.description ?? "No description available",
+      // ),
+      subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+      contentPadding: EdgeInsets.zero,
+      // Assuming CommunitiesRoute is a valid GoRouter route or similar
+      onTap: () => CommunitiesRoute(communityId: community.id).push(context),
+      trailing: PopupMenuButton(
+        itemBuilder: (context) => [
+          const PopupMenuItem(value: 0, child: Text("View community")),
+          const PopupMenuItem(value: 1, child: Text("Leave community")),
+        ],
       ),
     );
   }
