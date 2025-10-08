@@ -23,14 +23,10 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
         debugPrint("Searching Posts for: $query");
         break;
       case 1:
-        context.read<CommunityBloc>().add(
-          SearchCommunityEvent(
-            paginationParam: CommunityPaginatedEventParameter(
-              pageSize: 100,
-              page: 1,
-            ),
-            searchTerm: query,
-          ),
+        context.read<CommunityListingCubit>().searchForCommunity(
+          query,
+          // pageSize: 1,
+          page: 1,
         );
         break;
       case 2:
@@ -141,10 +137,10 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
   Widget _buildSearchCommunitiesSection() {
     return Padding(
       padding: EdgeInsetsGeometry.all(12),
-      child: BlocBuilder<CommunityBloc, CommunityState>(
+      child: BlocBuilder<CommunityListingCubit, CommunityListingState>(
         builder: (context, state) {
-          if (state is CommunitiesRetrievedState) {
-            if (state.retrieved.communities.isEmpty) {
+          if (state is CommunityListingLoadedState) {
+            if (state.communities.isEmpty) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,14 +154,14 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  ...state.retrieved.communities.map(
+                  ...state.communities.map(
                     (community) => CommunitySearchCard(community: community),
                   ),
                   SizedBox(height: 80),
                 ],
               ),
             );
-          } else if (state is CommunityLoadingState) {
+          } else if (state is CommunityListingLoadingState) {
             return Center(child: SpinningScallopIndicator());
           }
           return Column(
@@ -223,7 +219,7 @@ class CommunitySearchCard extends StatelessWidget {
                     onPressed: () {
                       context.pop();
                       CommunitiesRoute(
-                        communityId: community.id.toString(),
+                        communityId: community.id,
                       ).push(context);
                     },
                     child: Text("Continue"),
@@ -231,6 +227,10 @@ class CommunitySearchCard extends StatelessWidget {
                 ],
               ),
             );
+          } else {
+            CommunitiesRoute(
+              communityId: community.id,
+            ).push(context);
           }
         },
         child: Column(
@@ -264,13 +264,16 @@ class CommunitySearchCard extends StatelessWidget {
               title: Row(
                 children: [
                   Text(community.name),
-                  Card.filled(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    child: Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "😈",
-                        style: Theme.of(context).textTheme.bodySmall,
+                  Visibility(
+                    visible: community.nsfw,
+                    child: Card.filled(
+                      color: Theme.of(context).colorScheme.errorContainer,
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                          "NSFW",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ),
                   ),

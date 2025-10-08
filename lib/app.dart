@@ -114,7 +114,7 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
 
-        BlocProvider(create: (context) => sl<CommunityBloc>()),
+        BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
             createCommunityUseCase: sl<CreateCommunityUseCase>(),
@@ -148,11 +148,6 @@ class _AcademiaState extends State<Academia> {
               sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
         ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
-        BlocProvider(
-          create: (context) =>
-              sl<ChirpCommunityMembershipBloc>()
-                ..add(GetCachedChirpCommunityMembershipEvent()),
-        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(

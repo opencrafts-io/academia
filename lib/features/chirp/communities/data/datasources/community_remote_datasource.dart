@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
+import 'package:academia/core/network/connectivity_checker.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
@@ -9,7 +10,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
-class CommunityRemoteDatasource with DioErrorHandler {
+class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
   final DioClient dioClient;
   late String servicePrefix;
   final Logger _logger = Logger();
@@ -29,6 +30,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required CommunityData community,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final requestData = community.toJson();
       requestData["id"] = null;
       requestData["creator"] = requestData["creator_id"];
@@ -72,13 +77,15 @@ class CommunityRemoteDatasource with DioErrorHandler {
   }
 
   Future<Either<Failure, CommunityData>> getCommunityById({
-    required String communityId,
-    required String userId,
+    required int communityId,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.get(
         "/$servicePrefix/community/$communityId/details",
-        // data: {"user_id": userId},
       );
 
       if (response.statusCode == 200) {
@@ -114,6 +121,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String memberName,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.post(
         "/$servicePrefix/groups/$groupId/moderate/",
         data: {
@@ -165,6 +176,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userName,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.post(
         "/$servicePrefix/groups/$groupId/join/",
         data: {"user_id": userId, "user_name": userName},
@@ -207,6 +222,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userName,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.post(
         "/$servicePrefix/groups/$groupId/leave/",
         data: {"user_id": userId, "user_name": userName},
@@ -243,6 +262,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userId,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.delete(
         "/$servicePrefix/groups/$groupId/delete/",
         queryParameters: {"user_id": userId},
@@ -279,6 +302,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userType,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.get(
         "/$servicePrefix/groups/$communityId/$userType",
         queryParameters: {"page": page},
@@ -322,6 +349,10 @@ class CommunityRemoteDatasource with DioErrorHandler {
     required String userId,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.post(
         "/$servicePrefix/groups/$communityId/rules/",
         data: {"rule": rule, "user_id": userId},
@@ -354,14 +385,25 @@ class CommunityRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, PaginatedCommunityResponse>>
-  getPostableCommunities() async {
+  Future<Either<Failure, List<CommunityData>>> getPostableCommunities({
+    int page = 1,
+    int pageSize = 50,
+  }) async {
     try {
-      final response = await dioClient.dio.post(
-        "/$servicePrefix/community/postable/",
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/postable",
+        queryParameters: {"page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
-        return right(PaginatedCommunityResponse.fromJson(response.data));
+        final results = response.data["results"] as List;
+
+        return right(
+          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+        );
       }
       throw "Programming error";
     } on DioException catch (de) {
@@ -377,19 +419,28 @@ class CommunityRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, PaginatedCommunityResponse>> searchForCommunity(
+  Future<Either<Failure, List<CommunityData>>> searchForCommunity(
     String searchTerm, {
     int page = 1,
     int pageSize = 100,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.get(
         "/$servicePrefix/community/search/",
-        queryParameters: {"q": searchTerm, "page": page, "pageSize": pageSize},
+        queryParameters: {"q": searchTerm, "page": page, "page_size": pageSize},
       );
       if (response.statusCode == 200) {
-        return right(PaginatedCommunityResponse.fromJson(response.data));
+        final results = response.data["results"] as List;
+
+        return right(
+          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+        );
       }
+
       throw "Programming error";
     } on DioException catch (de) {
       return handleDioError(de);

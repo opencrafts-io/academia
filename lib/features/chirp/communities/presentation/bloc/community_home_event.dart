@@ -8,10 +8,9 @@ abstract class CommunityHomeEvent extends Equatable {
 }
 
 class FetchCommunityById extends CommunityHomeEvent {
-  final String communityId;
-  final String userId;
+  final int communityId;
 
-  const FetchCommunityById({required this.communityId, required this.userId});
+  const FetchCommunityById({required this.communityId});
 
   @override
   List<Object?> get props => [communityId];

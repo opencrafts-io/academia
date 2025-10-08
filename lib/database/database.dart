@@ -1,6 +1,7 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
-import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
+import 'package:academia/features/chirp/communities/data/models/community_model.dart';
 import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/author_model.dart';
@@ -20,7 +21,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import '../features/chirp/communities/data/data.dart';
+import 'package:academia/core/core.dart';
 
 part 'database.g.dart';
 
@@ -37,7 +38,7 @@ part 'database.g.dart';
     AttachmentTable,
     PostTable,
     PostReplyTable, // to rename to comments
-    
+
     Todo,
     EventTable,
     AttendeeTable,
@@ -58,16 +59,18 @@ part 'database.g.dart';
     MagnetCredentials,
     MagnetCourseInfo,
     MagnetFinancialTransaction,
-    //Communities
-    CommunityTable,
-
-    /**************************************************************
+       /**************************************************************
     *           CHIRP
     **************************************************************/
+    // Users
+    ChirpUser,
+    //Communities
+    Community,
     // Memberships
     ChirpCommunityMembership,
   ],
 )
+
 class AppDataBase extends _$AppDataBase {
   final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter

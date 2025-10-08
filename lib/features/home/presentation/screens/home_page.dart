@@ -108,7 +108,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ],
-                    child: UserAvatar(scallopDepth: 2),
+                    child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
+                    ),
                   ),
                   // IconButton(
                   //   onPressed: () {

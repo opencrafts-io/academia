@@ -47,7 +47,6 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
 
     final Either<Failure, Community> result = await getCommunityByIdUseCase(
       event.communityId,
-      event.userId,
     );
 
     result.fold(

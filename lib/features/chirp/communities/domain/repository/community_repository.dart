@@ -5,9 +5,8 @@ import 'package:dartz/dartz.dart';
 abstract class CommunityRepository {
   Future<Either<Failure, Community>> createCommunity(Community community);
 
-  Future<Either<Failure, Community>> getCommunityById({
-    required String communityId,
-    required String userId,
+  Future<Either<Failure, Community>> getCommunityByID({
+    required int communityID,
   });
 
   Future<Either<Failure, Community>> moderateCommunity({
@@ -47,11 +46,14 @@ abstract class CommunityRepository {
     required String userId,
   });
 
-  Future<Either<Failure, PaginatedCommunity>> getPostableCommunities();
+  Future<Either<Failure, List<Community>>> getPostableCommunities({
+    int page = 1,
+    int pageSize = 50,
+  });
 
-  Future<Either<Failure, PaginatedCommunity>> searchForCommunity(
+  Future<Either<Failure, List<Community>>> searchForCommunity(
     String searchTerm, {
     int page = 1,
-    int pageSize = 100,
+    int pageSize = 50,
   });
 }

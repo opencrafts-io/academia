@@ -341,7 +341,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(
-    () => CommunityBloc(
+    () => CommunityListingCubit(
       getPostableCommunitiesUsecase: sl(),
       searchForCommunityUsecase: sl(),
     ),
@@ -397,13 +397,6 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
     () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
-  );
-
-  sl.registerFactory<ChirpCommunityMembershipBloc>(
-    () => ChirpCommunityMembershipBloc(
-      getCachedPersonalChirpCommunityMemberships: sl(),
-      getRemotePersonalChirpMembershipsUsecase: sl(),
-    ),
   );
   /*************************************************************************
                               // NOTIFICATIONS

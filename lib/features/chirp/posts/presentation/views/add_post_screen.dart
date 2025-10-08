@@ -129,22 +129,27 @@ class _AddPostPageState extends State<AddPostPage> {
 
                       suggestionsBuilder: (context, controller) {
                         if (controller.text.trim().isNotEmpty) {
-                          context.read<CommunityBloc>().add(
-                            GetPostableCommunityEvent(
-                              searchTerm: controller.text.trim(),
-                            ),
-                          );
+                          context
+                              .read<CommunityListingCubit>()
+                              .getPostableCommunities(
+                                page: 1,
+
+                                // searchTerm: controller.text.trim(),
+                              );
                         }
                         return [
-                          BlocBuilder<CommunityBloc, CommunityState>(
+                          BlocBuilder<
+                            CommunityListingCubit,
+                            CommunityListingState
+                          >(
                             builder: (context, state) {
-                              if (state is CommunityLoadingState) {
+                              if (state is CommunityListingLoadingState) {
                                 return Column(
                                   children: [SpinningScallopIndicator()],
                                 );
-                              } else if (state is CommunitiesLoadedState) {
-                                final communities = state.paginatedCommunity;
-                                if (communities.communities.isEmpty) {
+                              } else if (state is CommunityListingLoadedState) {
+                                final communities = state.communities;
+                                if (communities.isEmpty) {
                                   return const ListTile(
                                     leading: AnimatedEmoji(AnimatedEmojis.sad),
                                     title: Text(
@@ -153,7 +158,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   );
                                 }
                                 return Column(
-                                  children: communities.communities
+                                  children: communities
                                       .map(
                                         (community) => ListTile(
                                           onTap: () {
