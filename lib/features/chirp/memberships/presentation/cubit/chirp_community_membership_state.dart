@@ -1,4 +1,4 @@
-part of 'chirp_community_membership_bloc.dart';
+part of 'chirp_community_membership_cubit.dart';
 
 sealed class ChirpCommunityMembershipState extends Equatable {
   @override
@@ -6,6 +6,9 @@ sealed class ChirpCommunityMembershipState extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
+class ChirpCommunityMembershipInitialState
+    extends ChirpCommunityMembershipState {}
 
 class ChirpCommunityMembershipStateLoadingState
     extends ChirpCommunityMembershipState {
@@ -19,17 +22,17 @@ class ChirpCommunityMembershipStateLoadingState
 class ChirpCommunityMembershipStateLoadedState
     extends ChirpCommunityMembershipState {
   final bool hasMore;
-  final List<ChirpCommunityMembership> memberships;
+  // final List<ChirpCommunityMembership> memberships;
 
   ChirpCommunityMembershipStateLoadedState({
     this.hasMore = true,
-    required this.memberships,
+    // required this.memberships,
   });
   @override
   bool? get stringify => true;
 
-  @override
-  List<Object?> get props => [hasMore, memberships];
+  // @override
+  // List<Object?> get props => [hasMore, memberships];
 }
 
 class ChirpCommunityMembershipErrorState extends ChirpCommunityMembershipState {

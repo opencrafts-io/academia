@@ -17,7 +17,7 @@ class CommunityLocalDatasource {
     try {
       await _deleteAllExpiredCachedCommunities();
       final manipulated = await localDB
-          .into(localDB.communityTable)
+          .into(localDB.community)
           .insertReturning(
             community.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
@@ -45,7 +45,7 @@ class CommunityLocalDatasource {
   Future<Either<Failure, List<CommunityData>>> getCachedCommunities() async {
     try {
       await _deleteAllExpiredCachedCommunities();
-      final communities = await localDB.select(localDB.communityTable).get();
+      final communities = await localDB.select(localDB.community).get();
 
       return right(communities);
     } catch (e) {
@@ -65,7 +65,7 @@ class CommunityLocalDatasource {
     try {
       await _deleteAllExpiredCachedCommunities();
       final deleted = await localDB
-          .delete(localDB.communityTable)
+          .delete(localDB.community)
           .goAndReturn();
 
       return right(deleted);
@@ -86,7 +86,7 @@ class CommunityLocalDatasource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedCommunities() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (localDB.delete(localDB.communityTable)..where(
+      await (localDB.delete(localDB.community)..where(
             (community) =>
                 community.cachedAt.isSmallerThanValue(expirationThreshold),
           ))
@@ -110,7 +110,7 @@ class CommunityLocalDatasource {
   ) async {
     try {
       final deleted = await localDB
-          .delete(localDB.communityTable)
+          .delete(localDB.community)
           .deleteReturning(community);
 
       await _deleteAllExpiredCachedCommunities();

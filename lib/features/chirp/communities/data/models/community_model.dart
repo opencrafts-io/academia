@@ -1,8 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName("CommunityData")
-class CommunityTable extends Table {
+class Community extends Table {
   @JsonKey("id")
   IntColumn get id => integer().autoIncrement()();
 
