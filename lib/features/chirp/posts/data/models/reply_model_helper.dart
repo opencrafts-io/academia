@@ -14,7 +14,7 @@ extension PostReplyEntityHelper on PostReplyEntity {
     return PostReply(
       id: id,
       parentId: parentId,
-      postId: postId,
+      postId: postId.toString(),
       userId: userId,
       userName: userName,
       userAvatar: userAvatar,
@@ -32,7 +32,7 @@ extension ReplyHelper on PostReply {
     return PostReplyEntity(
       id: id,
       parentId: parentId,
-      postId: parentPostId,
+      postId: int.parse(parentPostId),
       userId: userId,
       userName: userName,
       userAvatar: userAvatar,

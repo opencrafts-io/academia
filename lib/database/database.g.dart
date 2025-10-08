@@ -1219,44 +1219,20 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
-class $GroupTableTable extends GroupTable
-    with TableInfo<$GroupTableTable, GroupEntity> {
+class $AuthorTableTable extends AuthorTable
+    with TableInfo<$AuthorTableTable, AuthorData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $GroupTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  $AuthorTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -1267,1403 +1243,30 @@ class $GroupTableTable extends GroupTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
-    'creatorId',
-  );
-  @override
-  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
-    'creator_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
-    'creatorName',
-  );
-  @override
-  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
-    'creator_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminsMeta = const VerificationMeta('admins');
-  @override
-  late final GeneratedColumn<String> admins = GeneratedColumn<String>(
-    'admins',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminNamesMeta = const VerificationMeta(
-    'adminNames',
-  );
-  @override
-  late final GeneratedColumn<String> adminNames = GeneratedColumn<String>(
-    'admin_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorsMeta = const VerificationMeta(
-    'moderators',
-  );
-  @override
-  late final GeneratedColumn<String> moderators = GeneratedColumn<String>(
-    'moderators',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorNamesMeta = const VerificationMeta(
-    'moderatorNames',
-  );
-  @override
-  late final GeneratedColumn<String> moderatorNames = GeneratedColumn<String>(
-    'moderator_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _membersMeta = const VerificationMeta(
-    'members',
-  );
-  @override
-  late final GeneratedColumn<String> members = GeneratedColumn<String>(
-    'members',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _memberNamesMeta = const VerificationMeta(
-    'memberNames',
-  );
-  @override
-  late final GeneratedColumn<String> memberNames = GeneratedColumn<String>(
-    'member_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUsersMeta = const VerificationMeta(
-    'bannedUsers',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUsers = GeneratedColumn<String>(
-    'banned_users',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUserNamesMeta = const VerificationMeta(
-    'bannedUserNames',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUserNames = GeneratedColumn<String>(
-    'banned_user_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
-    'isPrivate',
-  );
-  @override
-  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
-    'is_private',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_private" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _rulesMeta = const VerificationMeta('rules');
-  @override
-  late final GeneratedColumn<String> rules = GeneratedColumn<String>(
-    'rules',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _logoMeta = const VerificationMeta('logo');
-  @override
-  late final GeneratedColumn<String> logo = GeneratedColumn<String>(
-    'logo',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
-  @override
-  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
-    'banner',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
-    'logoUrl',
-  );
-  @override
-  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
-    'logo_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
-    'bannerUrl',
-  );
-  @override
-  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
-    'banner_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _userRoleMeta = const VerificationMeta(
-    'userRole',
-  );
-  @override
-  late final GeneratedColumn<String> userRole = GeneratedColumn<String>(
-    'user_role',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _canPostMeta = const VerificationMeta(
-    'canPost',
-  );
-  @override
-  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
-    'can_post',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_post" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canModerateMeta = const VerificationMeta(
-    'canModerate',
-  );
-  @override
-  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
-    'can_moderate',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_moderate" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canAdminMeta = const VerificationMeta(
-    'canAdmin',
-  );
-  @override
-  late final GeneratedColumn<bool> canAdmin = GeneratedColumn<bool>(
-    'can_admin',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_admin" IN (0, 1))',
-    ),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'group_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<GroupEntity> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
-    if (data.containsKey('creator_id')) {
-      context.handle(
-        _creatorIdMeta,
-        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorIdMeta);
-    }
-    if (data.containsKey('creator_name')) {
-      context.handle(
-        _creatorNameMeta,
-        creatorName.isAcceptableOrUnknown(
-          data['creator_name']!,
-          _creatorNameMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorNameMeta);
-    }
-    if (data.containsKey('admins')) {
-      context.handle(
-        _adminsMeta,
-        admins.isAcceptableOrUnknown(data['admins']!, _adminsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminsMeta);
-    }
-    if (data.containsKey('admin_names')) {
-      context.handle(
-        _adminNamesMeta,
-        adminNames.isAcceptableOrUnknown(data['admin_names']!, _adminNamesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminNamesMeta);
-    }
-    if (data.containsKey('moderators')) {
-      context.handle(
-        _moderatorsMeta,
-        moderators.isAcceptableOrUnknown(data['moderators']!, _moderatorsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorsMeta);
-    }
-    if (data.containsKey('moderator_names')) {
-      context.handle(
-        _moderatorNamesMeta,
-        moderatorNames.isAcceptableOrUnknown(
-          data['moderator_names']!,
-          _moderatorNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorNamesMeta);
-    }
-    if (data.containsKey('members')) {
-      context.handle(
-        _membersMeta,
-        members.isAcceptableOrUnknown(data['members']!, _membersMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_membersMeta);
-    }
-    if (data.containsKey('member_names')) {
-      context.handle(
-        _memberNamesMeta,
-        memberNames.isAcceptableOrUnknown(
-          data['member_names']!,
-          _memberNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_memberNamesMeta);
-    }
-    if (data.containsKey('banned_users')) {
-      context.handle(
-        _bannedUsersMeta,
-        bannedUsers.isAcceptableOrUnknown(
-          data['banned_users']!,
-          _bannedUsersMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUsersMeta);
-    }
-    if (data.containsKey('banned_user_names')) {
-      context.handle(
-        _bannedUserNamesMeta,
-        bannedUserNames.isAcceptableOrUnknown(
-          data['banned_user_names']!,
-          _bannedUserNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUserNamesMeta);
-    }
-    if (data.containsKey('is_private')) {
-      context.handle(
-        _isPrivateMeta,
-        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_isPrivateMeta);
-    }
-    if (data.containsKey('rules')) {
-      context.handle(
-        _rulesMeta,
-        rules.isAcceptableOrUnknown(data['rules']!, _rulesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_rulesMeta);
-    }
-    if (data.containsKey('logo')) {
-      context.handle(
-        _logoMeta,
-        logo.isAcceptableOrUnknown(data['logo']!, _logoMeta),
-      );
-    }
-    if (data.containsKey('banner')) {
-      context.handle(
-        _bannerMeta,
-        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
-      );
-    }
-    if (data.containsKey('logo_url')) {
-      context.handle(
-        _logoUrlMeta,
-        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
-      );
-    }
-    if (data.containsKey('banner_url')) {
-      context.handle(
-        _bannerUrlMeta,
-        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
-      );
-    }
-    if (data.containsKey('user_role')) {
-      context.handle(
-        _userRoleMeta,
-        userRole.isAcceptableOrUnknown(data['user_role']!, _userRoleMeta),
-      );
-    }
-    if (data.containsKey('can_post')) {
-      context.handle(
-        _canPostMeta,
-        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canPostMeta);
-    }
-    if (data.containsKey('can_moderate')) {
-      context.handle(
-        _canModerateMeta,
-        canModerate.isAcceptableOrUnknown(
-          data['can_moderate']!,
-          _canModerateMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_canModerateMeta);
-    }
-    if (data.containsKey('can_admin')) {
-      context.handle(
-        _canAdminMeta,
-        canAdmin.isAcceptableOrUnknown(data['can_admin']!, _canAdminMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canAdminMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  GroupEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return GroupEntity(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      )!,
-      creatorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_id'],
-      )!,
-      creatorName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_name'],
-      )!,
-      admins: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admins'],
-      )!,
-      adminNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admin_names'],
-      )!,
-      moderators: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderators'],
-      )!,
-      moderatorNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderator_names'],
-      )!,
-      members: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}members'],
-      )!,
-      memberNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}member_names'],
-      )!,
-      bannedUsers: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_users'],
-      )!,
-      bannedUserNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_user_names'],
-      )!,
-      isPrivate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_private'],
-      )!,
-      rules: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}rules'],
-      )!,
-      logo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo'],
-      ),
-      banner: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner'],
-      ),
-      logoUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo_url'],
-      ),
-      bannerUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner_url'],
-      ),
-      userRole: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_role'],
-      ),
-      canPost: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_post'],
-      )!,
-      canModerate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_moderate'],
-      )!,
-      canAdmin: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_admin'],
-      )!,
-    );
-  }
-
-  @override
-  $GroupTableTable createAlias(String alias) {
-    return $GroupTableTable(attachedDatabase, alias);
-  }
-}
-
-class GroupEntity extends DataClass implements Insertable<GroupEntity> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String name;
-  final String description;
-  final String creatorId;
-  final String creatorName;
-  final String admins;
-  final String adminNames;
-  final String moderators;
-  final String moderatorNames;
-  final String members;
-  final String memberNames;
-  final String bannedUsers;
-  final String bannedUserNames;
-  final bool isPrivate;
-  final String rules;
-  final String? logo;
-  final String? banner;
-  final String? logoUrl;
-  final String? bannerUrl;
-  final String? userRole;
-  final bool canPost;
-  final bool canModerate;
-  final bool canAdmin;
-  const GroupEntity({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.name,
-    required this.description,
-    required this.creatorId,
-    required this.creatorName,
-    required this.admins,
-    required this.adminNames,
-    required this.moderators,
-    required this.moderatorNames,
-    required this.members,
-    required this.memberNames,
-    required this.bannedUsers,
-    required this.bannedUserNames,
-    required this.isPrivate,
-    required this.rules,
-    this.logo,
-    this.banner,
-    this.logoUrl,
-    this.bannerUrl,
-    this.userRole,
-    required this.canPost,
-    required this.canModerate,
-    required this.canAdmin,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
-    map['creator_id'] = Variable<String>(creatorId);
-    map['creator_name'] = Variable<String>(creatorName);
-    map['admins'] = Variable<String>(admins);
-    map['admin_names'] = Variable<String>(adminNames);
-    map['moderators'] = Variable<String>(moderators);
-    map['moderator_names'] = Variable<String>(moderatorNames);
-    map['members'] = Variable<String>(members);
-    map['member_names'] = Variable<String>(memberNames);
-    map['banned_users'] = Variable<String>(bannedUsers);
-    map['banned_user_names'] = Variable<String>(bannedUserNames);
-    map['is_private'] = Variable<bool>(isPrivate);
-    map['rules'] = Variable<String>(rules);
-    if (!nullToAbsent || logo != null) {
-      map['logo'] = Variable<String>(logo);
-    }
-    if (!nullToAbsent || banner != null) {
-      map['banner'] = Variable<String>(banner);
-    }
-    if (!nullToAbsent || logoUrl != null) {
-      map['logo_url'] = Variable<String>(logoUrl);
-    }
-    if (!nullToAbsent || bannerUrl != null) {
-      map['banner_url'] = Variable<String>(bannerUrl);
-    }
-    if (!nullToAbsent || userRole != null) {
-      map['user_role'] = Variable<String>(userRole);
-    }
-    map['can_post'] = Variable<bool>(canPost);
-    map['can_moderate'] = Variable<bool>(canModerate);
-    map['can_admin'] = Variable<bool>(canAdmin);
-    return map;
-  }
-
-  GroupTableCompanion toCompanion(bool nullToAbsent) {
-    return GroupTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      name: Value(name),
-      description: Value(description),
-      creatorId: Value(creatorId),
-      creatorName: Value(creatorName),
-      admins: Value(admins),
-      adminNames: Value(adminNames),
-      moderators: Value(moderators),
-      moderatorNames: Value(moderatorNames),
-      members: Value(members),
-      memberNames: Value(memberNames),
-      bannedUsers: Value(bannedUsers),
-      bannedUserNames: Value(bannedUserNames),
-      isPrivate: Value(isPrivate),
-      rules: Value(rules),
-      logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
-      banner: banner == null && nullToAbsent
-          ? const Value.absent()
-          : Value(banner),
-      logoUrl: logoUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(logoUrl),
-      bannerUrl: bannerUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(bannerUrl),
-      userRole: userRole == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userRole),
-      canPost: Value(canPost),
-      canModerate: Value(canModerate),
-      canAdmin: Value(canAdmin),
-    );
-  }
-
-  factory GroupEntity.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GroupEntity(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
-      creatorId: serializer.fromJson<String>(json['creator_id']),
-      creatorName: serializer.fromJson<String>(json['creator_name']),
-      admins: serializer.fromJson<String>(json['admins']),
-      adminNames: serializer.fromJson<String>(json['admin_names']),
-      moderators: serializer.fromJson<String>(json['moderators']),
-      moderatorNames: serializer.fromJson<String>(json['moderator_names']),
-      members: serializer.fromJson<String>(json['members']),
-      memberNames: serializer.fromJson<String>(json['member_names']),
-      bannedUsers: serializer.fromJson<String>(json['banned_users']),
-      bannedUserNames: serializer.fromJson<String>(json['banned_user_names']),
-      isPrivate: serializer.fromJson<bool>(json['is_private']),
-      rules: serializer.fromJson<String>(json['rules']),
-      logo: serializer.fromJson<String?>(json['logo']),
-      banner: serializer.fromJson<String?>(json['banner']),
-      logoUrl: serializer.fromJson<String?>(json['logo_url']),
-      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
-      userRole: serializer.fromJson<String?>(json['user_role']),
-      canPost: serializer.fromJson<bool>(json['can_post']),
-      canModerate: serializer.fromJson<bool>(json['can_moderate']),
-      canAdmin: serializer.fromJson<bool>(json['can_admin']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
-      'creator_id': serializer.toJson<String>(creatorId),
-      'creator_name': serializer.toJson<String>(creatorName),
-      'admins': serializer.toJson<String>(admins),
-      'admin_names': serializer.toJson<String>(adminNames),
-      'moderators': serializer.toJson<String>(moderators),
-      'moderator_names': serializer.toJson<String>(moderatorNames),
-      'members': serializer.toJson<String>(members),
-      'member_names': serializer.toJson<String>(memberNames),
-      'banned_users': serializer.toJson<String>(bannedUsers),
-      'banned_user_names': serializer.toJson<String>(bannedUserNames),
-      'is_private': serializer.toJson<bool>(isPrivate),
-      'rules': serializer.toJson<String>(rules),
-      'logo': serializer.toJson<String?>(logo),
-      'banner': serializer.toJson<String?>(banner),
-      'logo_url': serializer.toJson<String?>(logoUrl),
-      'banner_url': serializer.toJson<String?>(bannerUrl),
-      'user_role': serializer.toJson<String?>(userRole),
-      'can_post': serializer.toJson<bool>(canPost),
-      'can_moderate': serializer.toJson<bool>(canModerate),
-      'can_admin': serializer.toJson<bool>(canAdmin),
-    };
-  }
-
-  GroupEntity copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? name,
-    String? description,
-    String? creatorId,
-    String? creatorName,
-    String? admins,
-    String? adminNames,
-    String? moderators,
-    String? moderatorNames,
-    String? members,
-    String? memberNames,
-    String? bannedUsers,
-    String? bannedUserNames,
-    bool? isPrivate,
-    String? rules,
-    Value<String?> logo = const Value.absent(),
-    Value<String?> banner = const Value.absent(),
-    Value<String?> logoUrl = const Value.absent(),
-    Value<String?> bannerUrl = const Value.absent(),
-    Value<String?> userRole = const Value.absent(),
-    bool? canPost,
-    bool? canModerate,
-    bool? canAdmin,
-  }) => GroupEntity(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    creatorId: creatorId ?? this.creatorId,
-    creatorName: creatorName ?? this.creatorName,
-    admins: admins ?? this.admins,
-    adminNames: adminNames ?? this.adminNames,
-    moderators: moderators ?? this.moderators,
-    moderatorNames: moderatorNames ?? this.moderatorNames,
-    members: members ?? this.members,
-    memberNames: memberNames ?? this.memberNames,
-    bannedUsers: bannedUsers ?? this.bannedUsers,
-    bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-    isPrivate: isPrivate ?? this.isPrivate,
-    rules: rules ?? this.rules,
-    logo: logo.present ? logo.value : this.logo,
-    banner: banner.present ? banner.value : this.banner,
-    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
-    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
-    userRole: userRole.present ? userRole.value : this.userRole,
-    canPost: canPost ?? this.canPost,
-    canModerate: canModerate ?? this.canModerate,
-    canAdmin: canAdmin ?? this.canAdmin,
-  );
-  GroupEntity copyWithCompanion(GroupTableCompanion data) {
-    return GroupEntity(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
-      creatorName: data.creatorName.present
-          ? data.creatorName.value
-          : this.creatorName,
-      admins: data.admins.present ? data.admins.value : this.admins,
-      adminNames: data.adminNames.present
-          ? data.adminNames.value
-          : this.adminNames,
-      moderators: data.moderators.present
-          ? data.moderators.value
-          : this.moderators,
-      moderatorNames: data.moderatorNames.present
-          ? data.moderatorNames.value
-          : this.moderatorNames,
-      members: data.members.present ? data.members.value : this.members,
-      memberNames: data.memberNames.present
-          ? data.memberNames.value
-          : this.memberNames,
-      bannedUsers: data.bannedUsers.present
-          ? data.bannedUsers.value
-          : this.bannedUsers,
-      bannedUserNames: data.bannedUserNames.present
-          ? data.bannedUserNames.value
-          : this.bannedUserNames,
-      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
-      rules: data.rules.present ? data.rules.value : this.rules,
-      logo: data.logo.present ? data.logo.value : this.logo,
-      banner: data.banner.present ? data.banner.value : this.banner,
-      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
-      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
-      userRole: data.userRole.present ? data.userRole.value : this.userRole,
-      canPost: data.canPost.present ? data.canPost.value : this.canPost,
-      canModerate: data.canModerate.present
-          ? data.canModerate.value
-          : this.canModerate,
-      canAdmin: data.canAdmin.present ? data.canAdmin.value : this.canAdmin,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GroupEntity(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    createdAt,
-    updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
-  ]);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is GroupEntity &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.description == this.description &&
-          other.creatorId == this.creatorId &&
-          other.creatorName == this.creatorName &&
-          other.admins == this.admins &&
-          other.adminNames == this.adminNames &&
-          other.moderators == this.moderators &&
-          other.moderatorNames == this.moderatorNames &&
-          other.members == this.members &&
-          other.memberNames == this.memberNames &&
-          other.bannedUsers == this.bannedUsers &&
-          other.bannedUserNames == this.bannedUserNames &&
-          other.isPrivate == this.isPrivate &&
-          other.rules == this.rules &&
-          other.logo == this.logo &&
-          other.banner == this.banner &&
-          other.logoUrl == this.logoUrl &&
-          other.bannerUrl == this.bannerUrl &&
-          other.userRole == this.userRole &&
-          other.canPost == this.canPost &&
-          other.canModerate == this.canModerate &&
-          other.canAdmin == this.canAdmin);
-}
-
-class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> description;
-  final Value<String> creatorId;
-  final Value<String> creatorName;
-  final Value<String> admins;
-  final Value<String> adminNames;
-  final Value<String> moderators;
-  final Value<String> moderatorNames;
-  final Value<String> members;
-  final Value<String> memberNames;
-  final Value<String> bannedUsers;
-  final Value<String> bannedUserNames;
-  final Value<bool> isPrivate;
-  final Value<String> rules;
-  final Value<String?> logo;
-  final Value<String?> banner;
-  final Value<String?> logoUrl;
-  final Value<String?> bannerUrl;
-  final Value<String?> userRole;
-  final Value<bool> canPost;
-  final Value<bool> canModerate;
-  final Value<bool> canAdmin;
-  final Value<int> rowid;
-  const GroupTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.creatorId = const Value.absent(),
-    this.creatorName = const Value.absent(),
-    this.admins = const Value.absent(),
-    this.adminNames = const Value.absent(),
-    this.moderators = const Value.absent(),
-    this.moderatorNames = const Value.absent(),
-    this.members = const Value.absent(),
-    this.memberNames = const Value.absent(),
-    this.bannedUsers = const Value.absent(),
-    this.bannedUserNames = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.rules = const Value.absent(),
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    this.canPost = const Value.absent(),
-    this.canModerate = const Value.absent(),
-    this.canAdmin = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  GroupTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String name,
-    required String description,
-    required String creatorId,
-    required String creatorName,
-    required String admins,
-    required String adminNames,
-    required String moderators,
-    required String moderatorNames,
-    required String members,
-    required String memberNames,
-    required String bannedUsers,
-    required String bannedUserNames,
-    required bool isPrivate,
-    required String rules,
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    required bool canPost,
-    required bool canModerate,
-    required bool canAdmin,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       name = Value(name),
-       description = Value(description),
-       creatorId = Value(creatorId),
-       creatorName = Value(creatorName),
-       admins = Value(admins),
-       adminNames = Value(adminNames),
-       moderators = Value(moderators),
-       moderatorNames = Value(moderatorNames),
-       members = Value(members),
-       memberNames = Value(memberNames),
-       bannedUsers = Value(bannedUsers),
-       bannedUserNames = Value(bannedUserNames),
-       isPrivate = Value(isPrivate),
-       rules = Value(rules),
-       canPost = Value(canPost),
-       canModerate = Value(canModerate),
-       canAdmin = Value(canAdmin);
-  static Insertable<GroupEntity> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? creatorId,
-    Expression<String>? creatorName,
-    Expression<String>? admins,
-    Expression<String>? adminNames,
-    Expression<String>? moderators,
-    Expression<String>? moderatorNames,
-    Expression<String>? members,
-    Expression<String>? memberNames,
-    Expression<String>? bannedUsers,
-    Expression<String>? bannedUserNames,
-    Expression<bool>? isPrivate,
-    Expression<String>? rules,
-    Expression<String>? logo,
-    Expression<String>? banner,
-    Expression<String>? logoUrl,
-    Expression<String>? bannerUrl,
-    Expression<String>? userRole,
-    Expression<bool>? canPost,
-    Expression<bool>? canModerate,
-    Expression<bool>? canAdmin,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (creatorId != null) 'creator_id': creatorId,
-      if (creatorName != null) 'creator_name': creatorName,
-      if (admins != null) 'admins': admins,
-      if (adminNames != null) 'admin_names': adminNames,
-      if (moderators != null) 'moderators': moderators,
-      if (moderatorNames != null) 'moderator_names': moderatorNames,
-      if (members != null) 'members': members,
-      if (memberNames != null) 'member_names': memberNames,
-      if (bannedUsers != null) 'banned_users': bannedUsers,
-      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
-      if (isPrivate != null) 'is_private': isPrivate,
-      if (rules != null) 'rules': rules,
-      if (logo != null) 'logo': logo,
-      if (banner != null) 'banner': banner,
-      if (logoUrl != null) 'logo_url': logoUrl,
-      if (bannerUrl != null) 'banner_url': bannerUrl,
-      if (userRole != null) 'user_role': userRole,
-      if (canPost != null) 'can_post': canPost,
-      if (canModerate != null) 'can_moderate': canModerate,
-      if (canAdmin != null) 'can_admin': canAdmin,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  GroupTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? description,
-    Value<String>? creatorId,
-    Value<String>? creatorName,
-    Value<String>? admins,
-    Value<String>? adminNames,
-    Value<String>? moderators,
-    Value<String>? moderatorNames,
-    Value<String>? members,
-    Value<String>? memberNames,
-    Value<String>? bannedUsers,
-    Value<String>? bannedUserNames,
-    Value<bool>? isPrivate,
-    Value<String>? rules,
-    Value<String?>? logo,
-    Value<String?>? banner,
-    Value<String?>? logoUrl,
-    Value<String?>? bannerUrl,
-    Value<String?>? userRole,
-    Value<bool>? canPost,
-    Value<bool>? canModerate,
-    Value<bool>? canAdmin,
-    Value<int>? rowid,
-  }) {
-    return GroupTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      creatorId: creatorId ?? this.creatorId,
-      creatorName: creatorName ?? this.creatorName,
-      admins: admins ?? this.admins,
-      adminNames: adminNames ?? this.adminNames,
-      moderators: moderators ?? this.moderators,
-      moderatorNames: moderatorNames ?? this.moderatorNames,
-      members: members ?? this.members,
-      memberNames: memberNames ?? this.memberNames,
-      bannedUsers: bannedUsers ?? this.bannedUsers,
-      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-      isPrivate: isPrivate ?? this.isPrivate,
-      rules: rules ?? this.rules,
-      logo: logo ?? this.logo,
-      banner: banner ?? this.banner,
-      logoUrl: logoUrl ?? this.logoUrl,
-      bannerUrl: bannerUrl ?? this.bannerUrl,
-      userRole: userRole ?? this.userRole,
-      canPost: canPost ?? this.canPost,
-      canModerate: canModerate ?? this.canModerate,
-      canAdmin: canAdmin ?? this.canAdmin,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (creatorId.present) {
-      map['creator_id'] = Variable<String>(creatorId.value);
-    }
-    if (creatorName.present) {
-      map['creator_name'] = Variable<String>(creatorName.value);
-    }
-    if (admins.present) {
-      map['admins'] = Variable<String>(admins.value);
-    }
-    if (adminNames.present) {
-      map['admin_names'] = Variable<String>(adminNames.value);
-    }
-    if (moderators.present) {
-      map['moderators'] = Variable<String>(moderators.value);
-    }
-    if (moderatorNames.present) {
-      map['moderator_names'] = Variable<String>(moderatorNames.value);
-    }
-    if (members.present) {
-      map['members'] = Variable<String>(members.value);
-    }
-    if (memberNames.present) {
-      map['member_names'] = Variable<String>(memberNames.value);
-    }
-    if (bannedUsers.present) {
-      map['banned_users'] = Variable<String>(bannedUsers.value);
-    }
-    if (bannedUserNames.present) {
-      map['banned_user_names'] = Variable<String>(bannedUserNames.value);
-    }
-    if (isPrivate.present) {
-      map['is_private'] = Variable<bool>(isPrivate.value);
-    }
-    if (rules.present) {
-      map['rules'] = Variable<String>(rules.value);
-    }
-    if (logo.present) {
-      map['logo'] = Variable<String>(logo.value);
-    }
-    if (banner.present) {
-      map['banner'] = Variable<String>(banner.value);
-    }
-    if (logoUrl.present) {
-      map['logo_url'] = Variable<String>(logoUrl.value);
-    }
-    if (bannerUrl.present) {
-      map['banner_url'] = Variable<String>(bannerUrl.value);
-    }
-    if (userRole.present) {
-      map['user_role'] = Variable<String>(userRole.value);
-    }
-    if (canPost.present) {
-      map['can_post'] = Variable<bool>(canPost.value);
-    }
-    if (canModerate.present) {
-      map['can_moderate'] = Variable<bool>(canModerate.value);
-    }
-    if (canAdmin.present) {
-      map['can_admin'] = Variable<bool>(canAdmin.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GroupTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $PostTableTable extends PostTable
-    with TableInfo<$PostTableTable, PostEntity> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $PostTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _groupIdMeta = const VerificationMeta(
-    'groupId',
-  );
-  @override
-  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
-    'group_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES group_table (id)',
-    ),
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _userNameMeta = const VerificationMeta(
-    'userName',
-  );
-  @override
-  late final GeneratedColumn<String> userName = GeneratedColumn<String>(
-    'user_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
     'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -2680,633 +1283,17 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _contentMeta = const VerificationMeta(
-    'content',
+  static const VerificationMeta _vibePointsMeta = const VerificationMeta(
+    'vibePoints',
   );
   @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-    'content',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _likeCountMeta = const VerificationMeta(
-    'likeCount',
-  );
-  @override
-  late final GeneratedColumn<int> likeCount = GeneratedColumn<int>(
-    'like_count',
+  late final GeneratedColumn<int> vibePoints = GeneratedColumn<int>(
+    'vibe_points',
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _commentCountMeta = const VerificationMeta(
-    'commentCount',
-  );
-  @override
-  late final GeneratedColumn<int> commentCount = GeneratedColumn<int>(
-    'comment_count',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isLikedMeta = const VerificationMeta(
-    'isLiked',
-  );
-  @override
-  late final GeneratedColumn<bool> isLiked = GeneratedColumn<bool>(
-    'is_liked',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_liked" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    groupId,
-    userId,
-    userName,
-    email,
-    avatarUrl,
-    content,
-    likeCount,
-    commentCount,
-    isLiked,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'post_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<PostEntity> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('group_id')) {
-      context.handle(
-        _groupIdMeta,
-        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_groupIdMeta);
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('user_name')) {
-      context.handle(
-        _userNameMeta,
-        userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userNameMeta);
-    }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emailMeta);
-    }
-    if (data.containsKey('avatar_url')) {
-      context.handle(
-        _avatarUrlMeta,
-        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
-      );
-    }
-    if (data.containsKey('content')) {
-      context.handle(
-        _contentMeta,
-        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('like_count')) {
-      context.handle(
-        _likeCountMeta,
-        likeCount.isAcceptableOrUnknown(data['like_count']!, _likeCountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_likeCountMeta);
-    }
-    if (data.containsKey('comment_count')) {
-      context.handle(
-        _commentCountMeta,
-        commentCount.isAcceptableOrUnknown(
-          data['comment_count']!,
-          _commentCountMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_commentCountMeta);
-    }
-    if (data.containsKey('is_liked')) {
-      context.handle(
-        _isLikedMeta,
-        isLiked.isAcceptableOrUnknown(data['is_liked']!, _isLikedMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  PostEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PostEntity(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      groupId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}group_id'],
-      )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      userName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_name'],
-      )!,
-      email: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email'],
-      )!,
-      avatarUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}avatar_url'],
-      ),
-      content: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content'],
-      )!,
-      likeCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}like_count'],
-      )!,
-      commentCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}comment_count'],
-      )!,
-      isLiked: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_liked'],
-      )!,
-    );
-  }
-
-  @override
-  $PostTableTable createAlias(String alias) {
-    return $PostTableTable(attachedDatabase, alias);
-  }
-}
-
-class PostEntity extends DataClass implements Insertable<PostEntity> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String groupId;
-  final String userId;
-  final String userName;
-  final String email;
-  final String? avatarUrl;
-  final String content;
-  final int likeCount;
-  final int commentCount;
-  final bool isLiked;
-  const PostEntity({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.groupId,
-    required this.userId,
-    required this.userName,
-    required this.email,
-    this.avatarUrl,
-    required this.content,
-    required this.likeCount,
-    required this.commentCount,
-    required this.isLiked,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['group_id'] = Variable<String>(groupId);
-    map['user_id'] = Variable<String>(userId);
-    map['user_name'] = Variable<String>(userName);
-    map['email'] = Variable<String>(email);
-    if (!nullToAbsent || avatarUrl != null) {
-      map['avatar_url'] = Variable<String>(avatarUrl);
-    }
-    map['content'] = Variable<String>(content);
-    map['like_count'] = Variable<int>(likeCount);
-    map['comment_count'] = Variable<int>(commentCount);
-    map['is_liked'] = Variable<bool>(isLiked);
-    return map;
-  }
-
-  PostTableCompanion toCompanion(bool nullToAbsent) {
-    return PostTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      groupId: Value(groupId),
-      userId: Value(userId),
-      userName: Value(userName),
-      email: Value(email),
-      avatarUrl: avatarUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(avatarUrl),
-      content: Value(content),
-      likeCount: Value(likeCount),
-      commentCount: Value(commentCount),
-      isLiked: Value(isLiked),
-    );
-  }
-
-  factory PostEntity.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PostEntity(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      groupId: serializer.fromJson<String>(json['groupId']),
-      userId: serializer.fromJson<String>(json['user_id']),
-      userName: serializer.fromJson<String>(json['user_name']),
-      email: serializer.fromJson<String>(json['email']),
-      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
-      content: serializer.fromJson<String>(json['content']),
-      likeCount: serializer.fromJson<int>(json['like_count']),
-      commentCount: serializer.fromJson<int>(json['comment_count']),
-      isLiked: serializer.fromJson<bool>(json['is_liked']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'groupId': serializer.toJson<String>(groupId),
-      'user_id': serializer.toJson<String>(userId),
-      'user_name': serializer.toJson<String>(userName),
-      'email': serializer.toJson<String>(email),
-      'avatar_url': serializer.toJson<String?>(avatarUrl),
-      'content': serializer.toJson<String>(content),
-      'like_count': serializer.toJson<int>(likeCount),
-      'comment_count': serializer.toJson<int>(commentCount),
-      'is_liked': serializer.toJson<bool>(isLiked),
-    };
-  }
-
-  PostEntity copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? groupId,
-    String? userId,
-    String? userName,
-    String? email,
-    Value<String?> avatarUrl = const Value.absent(),
-    String? content,
-    int? likeCount,
-    int? commentCount,
-    bool? isLiked,
-  }) => PostEntity(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    groupId: groupId ?? this.groupId,
-    userId: userId ?? this.userId,
-    userName: userName ?? this.userName,
-    email: email ?? this.email,
-    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
-    content: content ?? this.content,
-    likeCount: likeCount ?? this.likeCount,
-    commentCount: commentCount ?? this.commentCount,
-    isLiked: isLiked ?? this.isLiked,
-  );
-  PostEntity copyWithCompanion(PostTableCompanion data) {
-    return PostEntity(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      groupId: data.groupId.present ? data.groupId.value : this.groupId,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      userName: data.userName.present ? data.userName.value : this.userName,
-      email: data.email.present ? data.email.value : this.email,
-      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
-      content: data.content.present ? data.content.value : this.content,
-      likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
-      commentCount: data.commentCount.present
-          ? data.commentCount.value
-          : this.commentCount,
-      isLiked: data.isLiked.present ? data.isLiked.value : this.isLiked,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PostEntity(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('groupId: $groupId, ')
-          ..write('userId: $userId, ')
-          ..write('userName: $userName, ')
-          ..write('email: $email, ')
-          ..write('avatarUrl: $avatarUrl, ')
-          ..write('content: $content, ')
-          ..write('likeCount: $likeCount, ')
-          ..write('commentCount: $commentCount, ')
-          ..write('isLiked: $isLiked')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    createdAt,
-    updatedAt,
-    groupId,
-    userId,
-    userName,
-    email,
-    avatarUrl,
-    content,
-    likeCount,
-    commentCount,
-    isLiked,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is PostEntity &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.groupId == this.groupId &&
-          other.userId == this.userId &&
-          other.userName == this.userName &&
-          other.email == this.email &&
-          other.avatarUrl == this.avatarUrl &&
-          other.content == this.content &&
-          other.likeCount == this.likeCount &&
-          other.commentCount == this.commentCount &&
-          other.isLiked == this.isLiked);
-}
-
-class PostTableCompanion extends UpdateCompanion<PostEntity> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> groupId;
-  final Value<String> userId;
-  final Value<String> userName;
-  final Value<String> email;
-  final Value<String?> avatarUrl;
-  final Value<String> content;
-  final Value<int> likeCount;
-  final Value<int> commentCount;
-  final Value<bool> isLiked;
-  final Value<int> rowid;
-  const PostTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.groupId = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.userName = const Value.absent(),
-    this.email = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
-    this.content = const Value.absent(),
-    this.likeCount = const Value.absent(),
-    this.commentCount = const Value.absent(),
-    this.isLiked = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  PostTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String groupId,
-    required String userId,
-    required String userName,
-    required String email,
-    this.avatarUrl = const Value.absent(),
-    required String content,
-    required int likeCount,
-    required int commentCount,
-    this.isLiked = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       groupId = Value(groupId),
-       userId = Value(userId),
-       userName = Value(userName),
-       email = Value(email),
-       content = Value(content),
-       likeCount = Value(likeCount),
-       commentCount = Value(commentCount);
-  static Insertable<PostEntity> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? groupId,
-    Expression<String>? userId,
-    Expression<String>? userName,
-    Expression<String>? email,
-    Expression<String>? avatarUrl,
-    Expression<String>? content,
-    Expression<int>? likeCount,
-    Expression<int>? commentCount,
-    Expression<bool>? isLiked,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (groupId != null) 'group_id': groupId,
-      if (userId != null) 'user_id': userId,
-      if (userName != null) 'user_name': userName,
-      if (email != null) 'email': email,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
-      if (content != null) 'content': content,
-      if (likeCount != null) 'like_count': likeCount,
-      if (commentCount != null) 'comment_count': commentCount,
-      if (isLiked != null) 'is_liked': isLiked,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  PostTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? groupId,
-    Value<String>? userId,
-    Value<String>? userName,
-    Value<String>? email,
-    Value<String?>? avatarUrl,
-    Value<String>? content,
-    Value<int>? likeCount,
-    Value<int>? commentCount,
-    Value<bool>? isLiked,
-    Value<int>? rowid,
-  }) {
-    return PostTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      groupId: groupId ?? this.groupId,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      email: email ?? this.email,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      content: content ?? this.content,
-      likeCount: likeCount ?? this.likeCount,
-      commentCount: commentCount ?? this.commentCount,
-      isLiked: isLiked ?? this.isLiked,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (groupId.present) {
-      map['group_id'] = Variable<String>(groupId.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (userName.present) {
-      map['user_name'] = Variable<String>(userName.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
-    }
-    if (avatarUrl.present) {
-      map['avatar_url'] = Variable<String>(avatarUrl.value);
-    }
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (likeCount.present) {
-      map['like_count'] = Variable<int>(likeCount.value);
-    }
-    if (commentCount.present) {
-      map['comment_count'] = Variable<int>(commentCount.value);
-    }
-    if (isLiked.present) {
-      map['is_liked'] = Variable<bool>(isLiked.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PostTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('groupId: $groupId, ')
-          ..write('userId: $userId, ')
-          ..write('userName: $userName, ')
-          ..write('email: $email, ')
-          ..write('avatarUrl: $avatarUrl, ')
-          ..write('content: $content, ')
-          ..write('likeCount: $likeCount, ')
-          ..write('commentCount: $commentCount, ')
-          ..write('isLiked: $isLiked, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $AttachmentTableTable extends AttachmentTable
-    with TableInfo<$AttachmentTableTable, AttachmentEntity> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    defaultValue: const Constant(0),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -3328,87 +1315,83 @@ class $AttachmentTableTable extends AttachmentTable
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
-  @override
-  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
-    'post_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES post_table (id) ON DELETE CASCADE',
-    ),
-  );
-  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
-    'attachmentType',
-  );
-  @override
-  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
-    'attachment_type',
-    aliasedName,
-    false,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 10),
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _fileMeta = const VerificationMeta('file');
-  @override
-  late final GeneratedColumn<String> file = GeneratedColumn<String>(
-    'file',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _sizeMeta = const VerificationMeta('size');
-  @override
-  late final GeneratedColumn<double> size = GeneratedColumn<double>(
-    'size',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
+    userId,
+    name,
+    email,
+    phone,
+    username,
+    avatarUrl,
+    vibePoints,
     createdAt,
     updatedAt,
-    postId,
-    attachmentType,
-    file,
-    name,
-    size,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'attachment_table';
+  static const String $name = 'author_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AttachmentEntity> instance, {
+    Insertable<AuthorData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
-      context.missing(_idMeta);
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    }
+    if (data.containsKey('vibe_points')) {
+      context.handle(
+        _vibePointsMeta,
+        vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
+      );
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -3423,14 +1406,479 @@ class $AttachmentTableTable extends AttachmentTable
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    }
-    if (data.containsKey('post_id')) {
-      context.handle(
-        _postIdMeta,
-        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
-      );
     } else if (isInserting) {
-      context.missing(_postIdMeta);
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId};
+  @override
+  AuthorData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AuthorData(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
+      vibePoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibe_points'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $AuthorTableTable createAlias(String alias) {
+    return $AuthorTableTable(attachedDatabase, alias);
+  }
+}
+
+class AuthorData extends DataClass implements Insertable<AuthorData> {
+  final String userId;
+  final String name;
+  final String email;
+  final String phone;
+  final String username;
+  final String? avatarUrl;
+  final int vibePoints;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const AuthorData({
+    required this.userId,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.username,
+    this.avatarUrl,
+    required this.vibePoints,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['name'] = Variable<String>(name);
+    map['email'] = Variable<String>(email);
+    map['phone'] = Variable<String>(phone);
+    map['username'] = Variable<String>(username);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    map['vibe_points'] = Variable<int>(vibePoints);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  AuthorTableCompanion toCompanion(bool nullToAbsent) {
+    return AuthorTableCompanion(
+      userId: Value(userId),
+      name: Value(name),
+      email: Value(email),
+      phone: Value(phone),
+      username: Value(username),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+      vibePoints: Value(vibePoints),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory AuthorData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AuthorData(
+      userId: serializer.fromJson<String>(json['user_id']),
+      name: serializer.fromJson<String>(json['name']),
+      email: serializer.fromJson<String>(json['email']),
+      phone: serializer.fromJson<String>(json['phone']),
+      username: serializer.fromJson<String>(json['username']),
+      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
+      vibePoints: serializer.fromJson<int>(json['vibe_points']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userId),
+      'name': serializer.toJson<String>(name),
+      'email': serializer.toJson<String>(email),
+      'phone': serializer.toJson<String>(phone),
+      'username': serializer.toJson<String>(username),
+      'avatar_url': serializer.toJson<String?>(avatarUrl),
+      'vibe_points': serializer.toJson<int>(vibePoints),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  AuthorData copyWith({
+    String? userId,
+    String? name,
+    String? email,
+    String? phone,
+    String? username,
+    Value<String?> avatarUrl = const Value.absent(),
+    int? vibePoints,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => AuthorData(
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    email: email ?? this.email,
+    phone: phone ?? this.phone,
+    username: username ?? this.username,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+    vibePoints: vibePoints ?? this.vibePoints,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  AuthorData copyWithCompanion(AuthorTableCompanion data) {
+    return AuthorData(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      name: data.name.present ? data.name.value : this.name,
+      email: data.email.present ? data.email.value : this.email,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      username: data.username.present ? data.username.value : this.username,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      vibePoints: data.vibePoints.present
+          ? data.vibePoints.value
+          : this.vibePoints,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuthorData(')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('phone: $phone, ')
+          ..write('username: $username, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userId,
+    name,
+    email,
+    phone,
+    username,
+    avatarUrl,
+    vibePoints,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AuthorData &&
+          other.userId == this.userId &&
+          other.name == this.name &&
+          other.email == this.email &&
+          other.phone == this.phone &&
+          other.username == this.username &&
+          other.avatarUrl == this.avatarUrl &&
+          other.vibePoints == this.vibePoints &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class AuthorTableCompanion extends UpdateCompanion<AuthorData> {
+  final Value<String> userId;
+  final Value<String> name;
+  final Value<String> email;
+  final Value<String> phone;
+  final Value<String> username;
+  final Value<String?> avatarUrl;
+  final Value<int> vibePoints;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const AuthorTableCompanion({
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.email = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.username = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.vibePoints = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AuthorTableCompanion.insert({
+    required String userId,
+    required String name,
+    required String email,
+    required String phone,
+    required String username,
+    this.avatarUrl = const Value.absent(),
+    this.vibePoints = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       name = Value(name),
+       email = Value(email),
+       phone = Value(phone),
+       username = Value(username),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<AuthorData> custom({
+    Expression<String>? userId,
+    Expression<String>? name,
+    Expression<String>? email,
+    Expression<String>? phone,
+    Expression<String>? username,
+    Expression<String>? avatarUrl,
+    Expression<int>? vibePoints,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (phone != null) 'phone': phone,
+      if (username != null) 'username': username,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (vibePoints != null) 'vibe_points': vibePoints,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AuthorTableCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? name,
+    Value<String>? email,
+    Value<String>? phone,
+    Value<String>? username,
+    Value<String?>? avatarUrl,
+    Value<int>? vibePoints,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return AuthorTableCompanion(
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      username: username ?? this.username,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      vibePoints: vibePoints ?? this.vibePoints,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (vibePoints.present) {
+      map['vibe_points'] = Variable<int>(vibePoints.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuthorTableCompanion(')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('email: $email, ')
+          ..write('phone: $phone, ')
+          ..write('username: $username, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttachmentTableTable extends AttachmentTable
+    with TableInfo<$AttachmentTableTable, AttachmentData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _attachmentTypeMeta = const VerificationMeta(
+    'attachmentType',
+  );
+  @override
+  late final GeneratedColumn<String> attachmentType = GeneratedColumn<String>(
+    'attachment_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 20),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
+  @override
+  late final GeneratedColumn<String> file = GeneratedColumn<String>(
+    'file',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sizeMeta = const VerificationMeta('size');
+  @override
+  late final GeneratedColumn<int> size = GeneratedColumn<int>(
+    'size',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
+  @override
+  late final GeneratedColumn<int> postId = GeneratedColumn<int>(
+    'post_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    attachmentType,
+    file,
+    size,
+    name,
+    createdAt,
+    postId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'attachment_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AttachmentData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('attachment_type')) {
       context.handle(
@@ -3451,14 +1899,6 @@ class $AttachmentTableTable extends AttachmentTable
     } else if (isInserting) {
       context.missing(_fileMeta);
     }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
     if (data.containsKey('size')) {
       context.handle(
         _sizeMeta,
@@ -3467,30 +1907,42 @@ class $AttachmentTableTable extends AttachmentTable
     } else if (isInserting) {
       context.missing(_sizeMeta);
     }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('post_id')) {
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_postIdMeta);
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AttachmentEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+  AttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttachmentEntity(
+    return AttachmentData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      postId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}post_id'],
       )!,
       attachmentType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -3500,13 +1952,21 @@ class $AttachmentTableTable extends AttachmentTable
         DriftSqlType.string,
         data['${effectivePrefix}file'],
       )!,
+      size: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}size'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      size: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}size'],
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}post_id'],
       )!,
     );
   }
@@ -3517,241 +1977,206 @@ class $AttachmentTableTable extends AttachmentTable
   }
 }
 
-class AttachmentEntity extends DataClass
-    implements Insertable<AttachmentEntity> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String postId;
+class AttachmentData extends DataClass implements Insertable<AttachmentData> {
+  final int id;
   final String attachmentType;
   final String file;
+  final int size;
   final String name;
-  final double size;
-  const AttachmentEntity({
+  final DateTime createdAt;
+  final int postId;
+  const AttachmentData({
     required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.postId,
     required this.attachmentType,
     required this.file,
-    required this.name,
     required this.size,
+    required this.name,
+    required this.createdAt,
+    required this.postId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['post_id'] = Variable<String>(postId);
+    map['id'] = Variable<int>(id);
     map['attachment_type'] = Variable<String>(attachmentType);
     map['file'] = Variable<String>(file);
+    map['size'] = Variable<int>(size);
     map['name'] = Variable<String>(name);
-    map['size'] = Variable<double>(size);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['post_id'] = Variable<int>(postId);
     return map;
   }
 
   AttachmentTableCompanion toCompanion(bool nullToAbsent) {
     return AttachmentTableCompanion(
       id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      postId: Value(postId),
       attachmentType: Value(attachmentType),
       file: Value(file),
-      name: Value(name),
       size: Value(size),
+      name: Value(name),
+      createdAt: Value(createdAt),
+      postId: Value(postId),
     );
   }
 
-  factory AttachmentEntity.fromJson(
+  factory AttachmentData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttachmentEntity(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      postId: serializer.fromJson<String>(json['post_id']),
+    return AttachmentData(
+      id: serializer.fromJson<int>(json['id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
-      file: serializer.fromJson<String>(json['file_url']),
+      file: serializer.fromJson<String>(json['file']),
+      size: serializer.fromJson<int>(json['file_size']),
       name: serializer.fromJson<String>(json['original_filename']),
-      size: serializer.fromJson<double>(json['file_size_mb']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      postId: serializer.fromJson<int>(json['post']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'post_id': serializer.toJson<String>(postId),
+      'id': serializer.toJson<int>(id),
       'attachment_type': serializer.toJson<String>(attachmentType),
-      'file_url': serializer.toJson<String>(file),
+      'file': serializer.toJson<String>(file),
+      'file_size': serializer.toJson<int>(size),
       'original_filename': serializer.toJson<String>(name),
-      'file_size_mb': serializer.toJson<double>(size),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'post': serializer.toJson<int>(postId),
     };
   }
 
-  AttachmentEntity copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? postId,
+  AttachmentData copyWith({
+    int? id,
     String? attachmentType,
     String? file,
+    int? size,
     String? name,
-    double? size,
-  }) => AttachmentEntity(
+    DateTime? createdAt,
+    int? postId,
+  }) => AttachmentData(
     id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    postId: postId ?? this.postId,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
-    name: name ?? this.name,
     size: size ?? this.size,
+    name: name ?? this.name,
+    createdAt: createdAt ?? this.createdAt,
+    postId: postId ?? this.postId,
   );
-  AttachmentEntity copyWithCompanion(AttachmentTableCompanion data) {
-    return AttachmentEntity(
+  AttachmentData copyWithCompanion(AttachmentTableCompanion data) {
+    return AttachmentData(
       id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      postId: data.postId.present ? data.postId.value : this.postId,
       attachmentType: data.attachmentType.present
           ? data.attachmentType.value
           : this.attachmentType,
       file: data.file.present ? data.file.value : this.file,
-      name: data.name.present ? data.name.value : this.name,
       size: data.size.present ? data.size.value : this.size,
+      name: data.name.present ? data.name.value : this.name,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      postId: data.postId.present ? data.postId.value : this.postId,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentEntity(')
+    return (StringBuffer('AttachmentData(')
           ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
+          ..write('size: $size, ')
           ..write('name: $name, ')
-          ..write('size: $size')
+          ..write('createdAt: $createdAt, ')
+          ..write('postId: $postId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    createdAt,
-    updatedAt,
-    postId,
-    attachmentType,
-    file,
-    name,
-    size,
-  );
+  int get hashCode =>
+      Object.hash(id, attachmentType, file, size, name, createdAt, postId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AttachmentEntity &&
+      (other is AttachmentData &&
           other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.postId == this.postId &&
           other.attachmentType == this.attachmentType &&
           other.file == this.file &&
+          other.size == this.size &&
           other.name == this.name &&
-          other.size == this.size);
+          other.createdAt == this.createdAt &&
+          other.postId == this.postId);
 }
 
-class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> postId;
+class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
+  final Value<int> id;
   final Value<String> attachmentType;
   final Value<String> file;
+  final Value<int> size;
   final Value<String> name;
-  final Value<double> size;
-  final Value<int> rowid;
+  final Value<DateTime> createdAt;
+  final Value<int> postId;
   const AttachmentTableCompanion({
     this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.postId = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
-    this.name = const Value.absent(),
     this.size = const Value.absent(),
-    this.rowid = const Value.absent(),
+    this.name = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.postId = const Value.absent(),
   });
   AttachmentTableCompanion.insert({
-    required String id,
-    required DateTime createdAt,
-    this.updatedAt = const Value.absent(),
-    required String postId,
+    this.id = const Value.absent(),
     required String attachmentType,
     required String file,
+    required int size,
     required String name,
-    required double size,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       createdAt = Value(createdAt),
-       postId = Value(postId),
-       attachmentType = Value(attachmentType),
+    required DateTime createdAt,
+    required int postId,
+  }) : attachmentType = Value(attachmentType),
        file = Value(file),
+       size = Value(size),
        name = Value(name),
-       size = Value(size);
-  static Insertable<AttachmentEntity> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? postId,
+       createdAt = Value(createdAt),
+       postId = Value(postId);
+  static Insertable<AttachmentData> custom({
+    Expression<int>? id,
     Expression<String>? attachmentType,
     Expression<String>? file,
+    Expression<int>? size,
     Expression<String>? name,
-    Expression<double>? size,
-    Expression<int>? rowid,
+    Expression<DateTime>? createdAt,
+    Expression<int>? postId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (postId != null) 'post_id': postId,
       if (attachmentType != null) 'attachment_type': attachmentType,
       if (file != null) 'file': file,
-      if (name != null) 'name': name,
       if (size != null) 'size': size,
-      if (rowid != null) 'rowid': rowid,
+      if (name != null) 'name': name,
+      if (createdAt != null) 'created_at': createdAt,
+      if (postId != null) 'post_id': postId,
     });
   }
 
   AttachmentTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? postId,
+    Value<int>? id,
     Value<String>? attachmentType,
     Value<String>? file,
+    Value<int>? size,
     Value<String>? name,
-    Value<double>? size,
-    Value<int>? rowid,
+    Value<DateTime>? createdAt,
+    Value<int>? postId,
   }) {
     return AttachmentTableCompanion(
       id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      postId: postId ?? this.postId,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
-      name: name ?? this.name,
       size: size ?? this.size,
-      rowid: rowid ?? this.rowid,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      postId: postId ?? this.postId,
     );
   }
 
@@ -3759,16 +2184,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (postId.present) {
-      map['post_id'] = Variable<String>(postId.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (attachmentType.present) {
       map['attachment_type'] = Variable<String>(attachmentType.value);
@@ -3776,14 +2192,17 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
     if (file.present) {
       map['file'] = Variable<String>(file.value);
     }
+    if (size.present) {
+      map['size'] = Variable<int>(size.value);
+    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (size.present) {
-      map['size'] = Variable<double>(size.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
+    if (postId.present) {
+      map['post_id'] = Variable<int>(postId.value);
     }
     return map;
   }
@@ -3792,14 +2211,706 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentEntity> {
   String toString() {
     return (StringBuffer('AttachmentTableCompanion(')
           ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('postId: $postId, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
-          ..write('name: $name, ')
           ..write('size: $size, ')
-          ..write('rowid: $rowid')
+          ..write('name: $name, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('postId: $postId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PostTableTable extends PostTable
+    with TableInfo<$PostTableTable, PostData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PostTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  community = GeneratedColumn<String>(
+    'community',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<Map<String, dynamic>>($PostTableTable.$convertercommunity);
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  author = GeneratedColumn<String>(
+    'author',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<Map<String, dynamic>>($PostTableTable.$converterauthor);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _upvotesMeta = const VerificationMeta(
+    'upvotes',
+  );
+  @override
+  late final GeneratedColumn<int> upvotes = GeneratedColumn<int>(
+    'upvotes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _downvotesMeta = const VerificationMeta(
+    'downvotes',
+  );
+  @override
+  late final GeneratedColumn<int> downvotes = GeneratedColumn<int>(
+    'downvotes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String>
+  attachments = GeneratedColumn<String>(
+    'attachments',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<List<dynamic>>($PostTableTable.$converterattachments);
+  static const VerificationMeta _viewsCountMeta = const VerificationMeta(
+    'viewsCount',
+  );
+  @override
+  late final GeneratedColumn<int> viewsCount = GeneratedColumn<int>(
+    'views_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _commentCountMeta = const VerificationMeta(
+    'commentCount',
+  );
+  @override
+  late final GeneratedColumn<int> commentCount = GeneratedColumn<int>(
+    'comment_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    community,
+    author,
+    title,
+    content,
+    upvotes,
+    downvotes,
+    attachments,
+    viewsCount,
+    commentCount,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'post_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PostData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('upvotes')) {
+      context.handle(
+        _upvotesMeta,
+        upvotes.isAcceptableOrUnknown(data['upvotes']!, _upvotesMeta),
+      );
+    }
+    if (data.containsKey('downvotes')) {
+      context.handle(
+        _downvotesMeta,
+        downvotes.isAcceptableOrUnknown(data['downvotes']!, _downvotesMeta),
+      );
+    }
+    if (data.containsKey('views_count')) {
+      context.handle(
+        _viewsCountMeta,
+        viewsCount.isAcceptableOrUnknown(data['views_count']!, _viewsCountMeta),
+      );
+    }
+    if (data.containsKey('comment_count')) {
+      context.handle(
+        _commentCountMeta,
+        commentCount.isAcceptableOrUnknown(
+          data['comment_count']!,
+          _commentCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PostData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PostData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      community: $PostTableTable.$convertercommunity.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}community'],
+        )!,
+      ),
+      author: $PostTableTable.$converterauthor.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}author'],
+        )!,
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      upvotes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}upvotes'],
+      )!,
+      downvotes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}downvotes'],
+      )!,
+      attachments: $PostTableTable.$converterattachments.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}attachments'],
+        )!,
+      ),
+      viewsCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}views_count'],
+      )!,
+      commentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}comment_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PostTableTable createAlias(String alias) {
+    return $PostTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, dynamic>, String> $convertercommunity =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>, String> $converterauthor =
+      JsonConverter();
+  static TypeConverter<List<dynamic>, String> $converterattachments =
+      JsonListConverter();
+}
+
+class PostData extends DataClass implements Insertable<PostData> {
+  final int id;
+  final Map<String, dynamic> community;
+  final Map<String, dynamic> author;
+  final String title;
+  final String content;
+  final int upvotes;
+  final int downvotes;
+  final List<dynamic> attachments;
+  final int viewsCount;
+  final int commentCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const PostData({
+    required this.id,
+    required this.community,
+    required this.author,
+    required this.title,
+    required this.content,
+    required this.upvotes,
+    required this.downvotes,
+    required this.attachments,
+    required this.viewsCount,
+    required this.commentCount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['community'] = Variable<String>(
+        $PostTableTable.$convertercommunity.toSql(community),
+      );
+    }
+    {
+      map['author'] = Variable<String>(
+        $PostTableTable.$converterauthor.toSql(author),
+      );
+    }
+    map['title'] = Variable<String>(title);
+    map['content'] = Variable<String>(content);
+    map['upvotes'] = Variable<int>(upvotes);
+    map['downvotes'] = Variable<int>(downvotes);
+    {
+      map['attachments'] = Variable<String>(
+        $PostTableTable.$converterattachments.toSql(attachments),
+      );
+    }
+    map['views_count'] = Variable<int>(viewsCount);
+    map['comment_count'] = Variable<int>(commentCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  PostTableCompanion toCompanion(bool nullToAbsent) {
+    return PostTableCompanion(
+      id: Value(id),
+      community: Value(community),
+      author: Value(author),
+      title: Value(title),
+      content: Value(content),
+      upvotes: Value(upvotes),
+      downvotes: Value(downvotes),
+      attachments: Value(attachments),
+      viewsCount: Value(viewsCount),
+      commentCount: Value(commentCount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory PostData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PostData(
+      id: serializer.fromJson<int>(json['id']),
+      community: serializer.fromJson<Map<String, dynamic>>(json['community']),
+      author: serializer.fromJson<Map<String, dynamic>>(json['author']),
+      title: serializer.fromJson<String>(json['title']),
+      content: serializer.fromJson<String>(json['content']),
+      upvotes: serializer.fromJson<int>(json['upvotes']),
+      downvotes: serializer.fromJson<int>(json['downvotes']),
+      attachments: serializer.fromJson<List<dynamic>>(json['attachments']),
+      viewsCount: serializer.fromJson<int>(json['views_count']),
+      commentCount: serializer.fromJson<int>(json['comment_count']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'community': serializer.toJson<Map<String, dynamic>>(community),
+      'author': serializer.toJson<Map<String, dynamic>>(author),
+      'title': serializer.toJson<String>(title),
+      'content': serializer.toJson<String>(content),
+      'upvotes': serializer.toJson<int>(upvotes),
+      'downvotes': serializer.toJson<int>(downvotes),
+      'attachments': serializer.toJson<List<dynamic>>(attachments),
+      'views_count': serializer.toJson<int>(viewsCount),
+      'comment_count': serializer.toJson<int>(commentCount),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  PostData copyWith({
+    int? id,
+    Map<String, dynamic>? community,
+    Map<String, dynamic>? author,
+    String? title,
+    String? content,
+    int? upvotes,
+    int? downvotes,
+    List<dynamic>? attachments,
+    int? viewsCount,
+    int? commentCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => PostData(
+    id: id ?? this.id,
+    community: community ?? this.community,
+    author: author ?? this.author,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    upvotes: upvotes ?? this.upvotes,
+    downvotes: downvotes ?? this.downvotes,
+    attachments: attachments ?? this.attachments,
+    viewsCount: viewsCount ?? this.viewsCount,
+    commentCount: commentCount ?? this.commentCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  PostData copyWithCompanion(PostTableCompanion data) {
+    return PostData(
+      id: data.id.present ? data.id.value : this.id,
+      community: data.community.present ? data.community.value : this.community,
+      author: data.author.present ? data.author.value : this.author,
+      title: data.title.present ? data.title.value : this.title,
+      content: data.content.present ? data.content.value : this.content,
+      upvotes: data.upvotes.present ? data.upvotes.value : this.upvotes,
+      downvotes: data.downvotes.present ? data.downvotes.value : this.downvotes,
+      attachments: data.attachments.present
+          ? data.attachments.value
+          : this.attachments,
+      viewsCount: data.viewsCount.present
+          ? data.viewsCount.value
+          : this.viewsCount,
+      commentCount: data.commentCount.present
+          ? data.commentCount.value
+          : this.commentCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostData(')
+          ..write('id: $id, ')
+          ..write('community: $community, ')
+          ..write('author: $author, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('upvotes: $upvotes, ')
+          ..write('downvotes: $downvotes, ')
+          ..write('attachments: $attachments, ')
+          ..write('viewsCount: $viewsCount, ')
+          ..write('commentCount: $commentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    community,
+    author,
+    title,
+    content,
+    upvotes,
+    downvotes,
+    attachments,
+    viewsCount,
+    commentCount,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PostData &&
+          other.id == this.id &&
+          other.community == this.community &&
+          other.author == this.author &&
+          other.title == this.title &&
+          other.content == this.content &&
+          other.upvotes == this.upvotes &&
+          other.downvotes == this.downvotes &&
+          other.attachments == this.attachments &&
+          other.viewsCount == this.viewsCount &&
+          other.commentCount == this.commentCount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class PostTableCompanion extends UpdateCompanion<PostData> {
+  final Value<int> id;
+  final Value<Map<String, dynamic>> community;
+  final Value<Map<String, dynamic>> author;
+  final Value<String> title;
+  final Value<String> content;
+  final Value<int> upvotes;
+  final Value<int> downvotes;
+  final Value<List<dynamic>> attachments;
+  final Value<int> viewsCount;
+  final Value<int> commentCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const PostTableCompanion({
+    this.id = const Value.absent(),
+    this.community = const Value.absent(),
+    this.author = const Value.absent(),
+    this.title = const Value.absent(),
+    this.content = const Value.absent(),
+    this.upvotes = const Value.absent(),
+    this.downvotes = const Value.absent(),
+    this.attachments = const Value.absent(),
+    this.viewsCount = const Value.absent(),
+    this.commentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  PostTableCompanion.insert({
+    this.id = const Value.absent(),
+    required Map<String, dynamic> community,
+    required Map<String, dynamic> author,
+    required String title,
+    required String content,
+    this.upvotes = const Value.absent(),
+    this.downvotes = const Value.absent(),
+    required List<dynamic> attachments,
+    this.viewsCount = const Value.absent(),
+    this.commentCount = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : community = Value(community),
+       author = Value(author),
+       title = Value(title),
+       content = Value(content),
+       attachments = Value(attachments),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<PostData> custom({
+    Expression<int>? id,
+    Expression<String>? community,
+    Expression<String>? author,
+    Expression<String>? title,
+    Expression<String>? content,
+    Expression<int>? upvotes,
+    Expression<int>? downvotes,
+    Expression<String>? attachments,
+    Expression<int>? viewsCount,
+    Expression<int>? commentCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (community != null) 'community': community,
+      if (author != null) 'author': author,
+      if (title != null) 'title': title,
+      if (content != null) 'content': content,
+      if (upvotes != null) 'upvotes': upvotes,
+      if (downvotes != null) 'downvotes': downvotes,
+      if (attachments != null) 'attachments': attachments,
+      if (viewsCount != null) 'views_count': viewsCount,
+      if (commentCount != null) 'comment_count': commentCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  PostTableCompanion copyWith({
+    Value<int>? id,
+    Value<Map<String, dynamic>>? community,
+    Value<Map<String, dynamic>>? author,
+    Value<String>? title,
+    Value<String>? content,
+    Value<int>? upvotes,
+    Value<int>? downvotes,
+    Value<List<dynamic>>? attachments,
+    Value<int>? viewsCount,
+    Value<int>? commentCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return PostTableCompanion(
+      id: id ?? this.id,
+      community: community ?? this.community,
+      author: author ?? this.author,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      upvotes: upvotes ?? this.upvotes,
+      downvotes: downvotes ?? this.downvotes,
+      attachments: attachments ?? this.attachments,
+      viewsCount: viewsCount ?? this.viewsCount,
+      commentCount: commentCount ?? this.commentCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (community.present) {
+      map['community'] = Variable<String>(
+        $PostTableTable.$convertercommunity.toSql(community.value),
+      );
+    }
+    if (author.present) {
+      map['author'] = Variable<String>(
+        $PostTableTable.$converterauthor.toSql(author.value),
+      );
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (upvotes.present) {
+      map['upvotes'] = Variable<int>(upvotes.value);
+    }
+    if (downvotes.present) {
+      map['downvotes'] = Variable<int>(downvotes.value);
+    }
+    if (attachments.present) {
+      map['attachments'] = Variable<String>(
+        $PostTableTable.$converterattachments.toSql(attachments.value),
+      );
+    }
+    if (viewsCount.present) {
+      map['views_count'] = Variable<int>(viewsCount.value);
+    }
+    if (commentCount.present) {
+      map['comment_count'] = Variable<int>(commentCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PostTableCompanion(')
+          ..write('id: $id, ')
+          ..write('community: $community, ')
+          ..write('author: $author, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('upvotes: $upvotes, ')
+          ..write('downvotes: $downvotes, ')
+          ..write('attachments: $attachments, ')
+          ..write('viewsCount: $viewsCount, ')
+          ..write('commentCount: $commentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -3860,11 +2971,11 @@ class $PostReplyTableTable extends PostReplyTable
   );
   static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
   @override
-  late final GeneratedColumn<String> postId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> postId = GeneratedColumn<int>(
     'post_id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES post_table (id) ON DELETE CASCADE',
@@ -4041,7 +3152,7 @@ class $PostReplyTableTable extends PostReplyTable
         data['${effectivePrefix}parent_id'],
       ),
       postId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}post_id'],
       )!,
       userId: attachedDatabase.typeMapping.read(
@@ -4078,7 +3189,7 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? parentId;
-  final String postId;
+  final int postId;
   final String userId;
   final String userName;
   final String? userAvatar;
@@ -4105,7 +3216,7 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
     if (!nullToAbsent || parentId != null) {
       map['parent_id'] = Variable<String>(parentId);
     }
-    map['post_id'] = Variable<String>(postId);
+    map['post_id'] = Variable<int>(postId);
     map['user_id'] = Variable<String>(userId);
     map['user_name'] = Variable<String>(userName);
     if (!nullToAbsent || userAvatar != null) {
@@ -4145,7 +3256,7 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       parentId: serializer.fromJson<String?>(json['parent_id']),
-      postId: serializer.fromJson<String>(json['post_id']),
+      postId: serializer.fromJson<int>(json['post_id']),
       userId: serializer.fromJson<String>(json['user_id']),
       userName: serializer.fromJson<String>(json['user_name']),
       userAvatar: serializer.fromJson<String?>(json['user_avatar']),
@@ -4161,7 +3272,7 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'parent_id': serializer.toJson<String?>(parentId),
-      'post_id': serializer.toJson<String>(postId),
+      'post_id': serializer.toJson<int>(postId),
       'user_id': serializer.toJson<String>(userId),
       'user_name': serializer.toJson<String>(userName),
       'user_avatar': serializer.toJson<String?>(userAvatar),
@@ -4175,7 +3286,7 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<String?> parentId = const Value.absent(),
-    String? postId,
+    int? postId,
     String? userId,
     String? userName,
     Value<String?> userAvatar = const Value.absent(),
@@ -4261,7 +3372,7 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<String?> parentId;
-  final Value<String> postId;
+  final Value<int> postId;
   final Value<String> userId;
   final Value<String> userName;
   final Value<String?> userAvatar;
@@ -4286,7 +3397,7 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.parentId = const Value.absent(),
-    required String postId,
+    required int postId,
     required String userId,
     required String userName,
     this.userAvatar = const Value.absent(),
@@ -4304,7 +3415,7 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? parentId,
-    Expression<String>? postId,
+    Expression<int>? postId,
     Expression<String>? userId,
     Expression<String>? userName,
     Expression<String>? userAvatar,
@@ -4332,7 +3443,7 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<String?>? parentId,
-    Value<String>? postId,
+    Value<int>? postId,
     Value<String>? userId,
     Value<String>? userName,
     Value<String?>? userAvatar,
@@ -4371,7 +3482,7 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
       map['parent_id'] = Variable<String>(parentId.value);
     }
     if (postId.present) {
-      map['post_id'] = Variable<String>(postId.value);
+      map['post_id'] = Variable<int>(postId.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
@@ -7120,6 +6231,1374 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('attendeeId: $attendeeId, ')
           ..write('eventId: $eventId, ')
           ..write('paymentCode: $paymentCode, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $GroupTableTable extends GroupTable
+    with TableInfo<$GroupTableTable, GroupEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GroupTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
+    'creatorId',
+  );
+  @override
+  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
+    'creator_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
+    'creatorName',
+  );
+  @override
+  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
+    'creator_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _adminsMeta = const VerificationMeta('admins');
+  @override
+  late final GeneratedColumn<String> admins = GeneratedColumn<String>(
+    'admins',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _adminNamesMeta = const VerificationMeta(
+    'adminNames',
+  );
+  @override
+  late final GeneratedColumn<String> adminNames = GeneratedColumn<String>(
+    'admin_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _moderatorsMeta = const VerificationMeta(
+    'moderators',
+  );
+  @override
+  late final GeneratedColumn<String> moderators = GeneratedColumn<String>(
+    'moderators',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _moderatorNamesMeta = const VerificationMeta(
+    'moderatorNames',
+  );
+  @override
+  late final GeneratedColumn<String> moderatorNames = GeneratedColumn<String>(
+    'moderator_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _membersMeta = const VerificationMeta(
+    'members',
+  );
+  @override
+  late final GeneratedColumn<String> members = GeneratedColumn<String>(
+    'members',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _memberNamesMeta = const VerificationMeta(
+    'memberNames',
+  );
+  @override
+  late final GeneratedColumn<String> memberNames = GeneratedColumn<String>(
+    'member_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedUsersMeta = const VerificationMeta(
+    'bannedUsers',
+  );
+  @override
+  late final GeneratedColumn<String> bannedUsers = GeneratedColumn<String>(
+    'banned_users',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedUserNamesMeta = const VerificationMeta(
+    'bannedUserNames',
+  );
+  @override
+  late final GeneratedColumn<String> bannedUserNames = GeneratedColumn<String>(
+    'banned_user_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
+    'isPrivate',
+  );
+  @override
+  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
+    'is_private',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_private" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _rulesMeta = const VerificationMeta('rules');
+  @override
+  late final GeneratedColumn<String> rules = GeneratedColumn<String>(
+    'rules',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _logoMeta = const VerificationMeta('logo');
+  @override
+  late final GeneratedColumn<String> logo = GeneratedColumn<String>(
+    'logo',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
+    'logoUrl',
+  );
+  @override
+  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
+    'logo_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
+    'bannerUrl',
+  );
+  @override
+  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
+    'banner_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userRoleMeta = const VerificationMeta(
+    'userRole',
+  );
+  @override
+  late final GeneratedColumn<String> userRole = GeneratedColumn<String>(
+    'user_role',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _canPostMeta = const VerificationMeta(
+    'canPost',
+  );
+  @override
+  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
+    'can_post',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_post" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _canModerateMeta = const VerificationMeta(
+    'canModerate',
+  );
+  @override
+  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
+    'can_moderate',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_moderate" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _canAdminMeta = const VerificationMeta(
+    'canAdmin',
+  );
+  @override
+  late final GeneratedColumn<bool> canAdmin = GeneratedColumn<bool>(
+    'can_admin',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_admin" IN (0, 1))',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    description,
+    creatorId,
+    creatorName,
+    admins,
+    adminNames,
+    moderators,
+    moderatorNames,
+    members,
+    memberNames,
+    bannedUsers,
+    bannedUserNames,
+    isPrivate,
+    rules,
+    logo,
+    banner,
+    logoUrl,
+    bannerUrl,
+    userRole,
+    canPost,
+    canModerate,
+    canAdmin,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'group_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<GroupEntity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('creator_id')) {
+      context.handle(
+        _creatorIdMeta,
+        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorIdMeta);
+    }
+    if (data.containsKey('creator_name')) {
+      context.handle(
+        _creatorNameMeta,
+        creatorName.isAcceptableOrUnknown(
+          data['creator_name']!,
+          _creatorNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorNameMeta);
+    }
+    if (data.containsKey('admins')) {
+      context.handle(
+        _adminsMeta,
+        admins.isAcceptableOrUnknown(data['admins']!, _adminsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_adminsMeta);
+    }
+    if (data.containsKey('admin_names')) {
+      context.handle(
+        _adminNamesMeta,
+        adminNames.isAcceptableOrUnknown(data['admin_names']!, _adminNamesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_adminNamesMeta);
+    }
+    if (data.containsKey('moderators')) {
+      context.handle(
+        _moderatorsMeta,
+        moderators.isAcceptableOrUnknown(data['moderators']!, _moderatorsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_moderatorsMeta);
+    }
+    if (data.containsKey('moderator_names')) {
+      context.handle(
+        _moderatorNamesMeta,
+        moderatorNames.isAcceptableOrUnknown(
+          data['moderator_names']!,
+          _moderatorNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_moderatorNamesMeta);
+    }
+    if (data.containsKey('members')) {
+      context.handle(
+        _membersMeta,
+        members.isAcceptableOrUnknown(data['members']!, _membersMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_membersMeta);
+    }
+    if (data.containsKey('member_names')) {
+      context.handle(
+        _memberNamesMeta,
+        memberNames.isAcceptableOrUnknown(
+          data['member_names']!,
+          _memberNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_memberNamesMeta);
+    }
+    if (data.containsKey('banned_users')) {
+      context.handle(
+        _bannedUsersMeta,
+        bannedUsers.isAcceptableOrUnknown(
+          data['banned_users']!,
+          _bannedUsersMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_bannedUsersMeta);
+    }
+    if (data.containsKey('banned_user_names')) {
+      context.handle(
+        _bannedUserNamesMeta,
+        bannedUserNames.isAcceptableOrUnknown(
+          data['banned_user_names']!,
+          _bannedUserNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_bannedUserNamesMeta);
+    }
+    if (data.containsKey('is_private')) {
+      context.handle(
+        _isPrivateMeta,
+        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isPrivateMeta);
+    }
+    if (data.containsKey('rules')) {
+      context.handle(
+        _rulesMeta,
+        rules.isAcceptableOrUnknown(data['rules']!, _rulesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rulesMeta);
+    }
+    if (data.containsKey('logo')) {
+      context.handle(
+        _logoMeta,
+        logo.isAcceptableOrUnknown(data['logo']!, _logoMeta),
+      );
+    }
+    if (data.containsKey('banner')) {
+      context.handle(
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
+      );
+    }
+    if (data.containsKey('logo_url')) {
+      context.handle(
+        _logoUrlMeta,
+        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
+      );
+    }
+    if (data.containsKey('banner_url')) {
+      context.handle(
+        _bannerUrlMeta,
+        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
+      );
+    }
+    if (data.containsKey('user_role')) {
+      context.handle(
+        _userRoleMeta,
+        userRole.isAcceptableOrUnknown(data['user_role']!, _userRoleMeta),
+      );
+    }
+    if (data.containsKey('can_post')) {
+      context.handle(
+        _canPostMeta,
+        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_canPostMeta);
+    }
+    if (data.containsKey('can_moderate')) {
+      context.handle(
+        _canModerateMeta,
+        canModerate.isAcceptableOrUnknown(
+          data['can_moderate']!,
+          _canModerateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_canModerateMeta);
+    }
+    if (data.containsKey('can_admin')) {
+      context.handle(
+        _canAdminMeta,
+        canAdmin.isAcceptableOrUnknown(data['can_admin']!, _canAdminMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_canAdminMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  GroupEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GroupEntity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      )!,
+      creatorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}creator_id'],
+      )!,
+      creatorName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}creator_name'],
+      )!,
+      admins: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admins'],
+      )!,
+      adminNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admin_names'],
+      )!,
+      moderators: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}moderators'],
+      )!,
+      moderatorNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}moderator_names'],
+      )!,
+      members: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}members'],
+      )!,
+      memberNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}member_names'],
+      )!,
+      bannedUsers: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_users'],
+      )!,
+      bannedUserNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_user_names'],
+      )!,
+      isPrivate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_private'],
+      )!,
+      rules: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rules'],
+      )!,
+      logo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logo'],
+      ),
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
+      ),
+      logoUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logo_url'],
+      ),
+      bannerUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner_url'],
+      ),
+      userRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_role'],
+      ),
+      canPost: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_post'],
+      )!,
+      canModerate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_moderate'],
+      )!,
+      canAdmin: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_admin'],
+      )!,
+    );
+  }
+
+  @override
+  $GroupTableTable createAlias(String alias) {
+    return $GroupTableTable(attachedDatabase, alias);
+  }
+}
+
+class GroupEntity extends DataClass implements Insertable<GroupEntity> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String name;
+  final String description;
+  final String creatorId;
+  final String creatorName;
+  final String admins;
+  final String adminNames;
+  final String moderators;
+  final String moderatorNames;
+  final String members;
+  final String memberNames;
+  final String bannedUsers;
+  final String bannedUserNames;
+  final bool isPrivate;
+  final String rules;
+  final String? logo;
+  final String? banner;
+  final String? logoUrl;
+  final String? bannerUrl;
+  final String? userRole;
+  final bool canPost;
+  final bool canModerate;
+  final bool canAdmin;
+  const GroupEntity({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+    required this.description,
+    required this.creatorId,
+    required this.creatorName,
+    required this.admins,
+    required this.adminNames,
+    required this.moderators,
+    required this.moderatorNames,
+    required this.members,
+    required this.memberNames,
+    required this.bannedUsers,
+    required this.bannedUserNames,
+    required this.isPrivate,
+    required this.rules,
+    this.logo,
+    this.banner,
+    this.logoUrl,
+    this.bannerUrl,
+    this.userRole,
+    required this.canPost,
+    required this.canModerate,
+    required this.canAdmin,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    map['creator_id'] = Variable<String>(creatorId);
+    map['creator_name'] = Variable<String>(creatorName);
+    map['admins'] = Variable<String>(admins);
+    map['admin_names'] = Variable<String>(adminNames);
+    map['moderators'] = Variable<String>(moderators);
+    map['moderator_names'] = Variable<String>(moderatorNames);
+    map['members'] = Variable<String>(members);
+    map['member_names'] = Variable<String>(memberNames);
+    map['banned_users'] = Variable<String>(bannedUsers);
+    map['banned_user_names'] = Variable<String>(bannedUserNames);
+    map['is_private'] = Variable<bool>(isPrivate);
+    map['rules'] = Variable<String>(rules);
+    if (!nullToAbsent || logo != null) {
+      map['logo'] = Variable<String>(logo);
+    }
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
+    }
+    if (!nullToAbsent || logoUrl != null) {
+      map['logo_url'] = Variable<String>(logoUrl);
+    }
+    if (!nullToAbsent || bannerUrl != null) {
+      map['banner_url'] = Variable<String>(bannerUrl);
+    }
+    if (!nullToAbsent || userRole != null) {
+      map['user_role'] = Variable<String>(userRole);
+    }
+    map['can_post'] = Variable<bool>(canPost);
+    map['can_moderate'] = Variable<bool>(canModerate);
+    map['can_admin'] = Variable<bool>(canAdmin);
+    return map;
+  }
+
+  GroupTableCompanion toCompanion(bool nullToAbsent) {
+    return GroupTableCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      name: Value(name),
+      description: Value(description),
+      creatorId: Value(creatorId),
+      creatorName: Value(creatorName),
+      admins: Value(admins),
+      adminNames: Value(adminNames),
+      moderators: Value(moderators),
+      moderatorNames: Value(moderatorNames),
+      members: Value(members),
+      memberNames: Value(memberNames),
+      bannedUsers: Value(bannedUsers),
+      bannedUserNames: Value(bannedUserNames),
+      isPrivate: Value(isPrivate),
+      rules: Value(rules),
+      logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
+      banner: banner == null && nullToAbsent
+          ? const Value.absent()
+          : Value(banner),
+      logoUrl: logoUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(logoUrl),
+      bannerUrl: bannerUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannerUrl),
+      userRole: userRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userRole),
+      canPost: Value(canPost),
+      canModerate: Value(canModerate),
+      canAdmin: Value(canAdmin),
+    );
+  }
+
+  factory GroupEntity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GroupEntity(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+      creatorId: serializer.fromJson<String>(json['creator_id']),
+      creatorName: serializer.fromJson<String>(json['creator_name']),
+      admins: serializer.fromJson<String>(json['admins']),
+      adminNames: serializer.fromJson<String>(json['admin_names']),
+      moderators: serializer.fromJson<String>(json['moderators']),
+      moderatorNames: serializer.fromJson<String>(json['moderator_names']),
+      members: serializer.fromJson<String>(json['members']),
+      memberNames: serializer.fromJson<String>(json['member_names']),
+      bannedUsers: serializer.fromJson<String>(json['banned_users']),
+      bannedUserNames: serializer.fromJson<String>(json['banned_user_names']),
+      isPrivate: serializer.fromJson<bool>(json['is_private']),
+      rules: serializer.fromJson<String>(json['rules']),
+      logo: serializer.fromJson<String?>(json['logo']),
+      banner: serializer.fromJson<String?>(json['banner']),
+      logoUrl: serializer.fromJson<String?>(json['logo_url']),
+      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
+      userRole: serializer.fromJson<String?>(json['user_role']),
+      canPost: serializer.fromJson<bool>(json['can_post']),
+      canModerate: serializer.fromJson<bool>(json['can_moderate']),
+      canAdmin: serializer.fromJson<bool>(json['can_admin']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+      'creator_id': serializer.toJson<String>(creatorId),
+      'creator_name': serializer.toJson<String>(creatorName),
+      'admins': serializer.toJson<String>(admins),
+      'admin_names': serializer.toJson<String>(adminNames),
+      'moderators': serializer.toJson<String>(moderators),
+      'moderator_names': serializer.toJson<String>(moderatorNames),
+      'members': serializer.toJson<String>(members),
+      'member_names': serializer.toJson<String>(memberNames),
+      'banned_users': serializer.toJson<String>(bannedUsers),
+      'banned_user_names': serializer.toJson<String>(bannedUserNames),
+      'is_private': serializer.toJson<bool>(isPrivate),
+      'rules': serializer.toJson<String>(rules),
+      'logo': serializer.toJson<String?>(logo),
+      'banner': serializer.toJson<String?>(banner),
+      'logo_url': serializer.toJson<String?>(logoUrl),
+      'banner_url': serializer.toJson<String?>(bannerUrl),
+      'user_role': serializer.toJson<String?>(userRole),
+      'can_post': serializer.toJson<bool>(canPost),
+      'can_moderate': serializer.toJson<bool>(canModerate),
+      'can_admin': serializer.toJson<bool>(canAdmin),
+    };
+  }
+
+  GroupEntity copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+    String? description,
+    String? creatorId,
+    String? creatorName,
+    String? admins,
+    String? adminNames,
+    String? moderators,
+    String? moderatorNames,
+    String? members,
+    String? memberNames,
+    String? bannedUsers,
+    String? bannedUserNames,
+    bool? isPrivate,
+    String? rules,
+    Value<String?> logo = const Value.absent(),
+    Value<String?> banner = const Value.absent(),
+    Value<String?> logoUrl = const Value.absent(),
+    Value<String?> bannerUrl = const Value.absent(),
+    Value<String?> userRole = const Value.absent(),
+    bool? canPost,
+    bool? canModerate,
+    bool? canAdmin,
+  }) => GroupEntity(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    creatorId: creatorId ?? this.creatorId,
+    creatorName: creatorName ?? this.creatorName,
+    admins: admins ?? this.admins,
+    adminNames: adminNames ?? this.adminNames,
+    moderators: moderators ?? this.moderators,
+    moderatorNames: moderatorNames ?? this.moderatorNames,
+    members: members ?? this.members,
+    memberNames: memberNames ?? this.memberNames,
+    bannedUsers: bannedUsers ?? this.bannedUsers,
+    bannedUserNames: bannedUserNames ?? this.bannedUserNames,
+    isPrivate: isPrivate ?? this.isPrivate,
+    rules: rules ?? this.rules,
+    logo: logo.present ? logo.value : this.logo,
+    banner: banner.present ? banner.value : this.banner,
+    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
+    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
+    userRole: userRole.present ? userRole.value : this.userRole,
+    canPost: canPost ?? this.canPost,
+    canModerate: canModerate ?? this.canModerate,
+    canAdmin: canAdmin ?? this.canAdmin,
+  );
+  GroupEntity copyWithCompanion(GroupTableCompanion data) {
+    return GroupEntity(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
+      creatorName: data.creatorName.present
+          ? data.creatorName.value
+          : this.creatorName,
+      admins: data.admins.present ? data.admins.value : this.admins,
+      adminNames: data.adminNames.present
+          ? data.adminNames.value
+          : this.adminNames,
+      moderators: data.moderators.present
+          ? data.moderators.value
+          : this.moderators,
+      moderatorNames: data.moderatorNames.present
+          ? data.moderatorNames.value
+          : this.moderatorNames,
+      members: data.members.present ? data.members.value : this.members,
+      memberNames: data.memberNames.present
+          ? data.memberNames.value
+          : this.memberNames,
+      bannedUsers: data.bannedUsers.present
+          ? data.bannedUsers.value
+          : this.bannedUsers,
+      bannedUserNames: data.bannedUserNames.present
+          ? data.bannedUserNames.value
+          : this.bannedUserNames,
+      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
+      rules: data.rules.present ? data.rules.value : this.rules,
+      logo: data.logo.present ? data.logo.value : this.logo,
+      banner: data.banner.present ? data.banner.value : this.banner,
+      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
+      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
+      userRole: data.userRole.present ? data.userRole.value : this.userRole,
+      canPost: data.canPost.present ? data.canPost.value : this.canPost,
+      canModerate: data.canModerate.present
+          ? data.canModerate.value
+          : this.canModerate,
+      canAdmin: data.canAdmin.present ? data.canAdmin.value : this.canAdmin,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GroupEntity(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('creatorName: $creatorName, ')
+          ..write('admins: $admins, ')
+          ..write('adminNames: $adminNames, ')
+          ..write('moderators: $moderators, ')
+          ..write('moderatorNames: $moderatorNames, ')
+          ..write('members: $members, ')
+          ..write('memberNames: $memberNames, ')
+          ..write('bannedUsers: $bannedUsers, ')
+          ..write('bannedUserNames: $bannedUserNames, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('rules: $rules, ')
+          ..write('logo: $logo, ')
+          ..write('banner: $banner, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('userRole: $userRole, ')
+          ..write('canPost: $canPost, ')
+          ..write('canModerate: $canModerate, ')
+          ..write('canAdmin: $canAdmin')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    description,
+    creatorId,
+    creatorName,
+    admins,
+    adminNames,
+    moderators,
+    moderatorNames,
+    members,
+    memberNames,
+    bannedUsers,
+    bannedUserNames,
+    isPrivate,
+    rules,
+    logo,
+    banner,
+    logoUrl,
+    bannerUrl,
+    userRole,
+    canPost,
+    canModerate,
+    canAdmin,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GroupEntity &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.creatorId == this.creatorId &&
+          other.creatorName == this.creatorName &&
+          other.admins == this.admins &&
+          other.adminNames == this.adminNames &&
+          other.moderators == this.moderators &&
+          other.moderatorNames == this.moderatorNames &&
+          other.members == this.members &&
+          other.memberNames == this.memberNames &&
+          other.bannedUsers == this.bannedUsers &&
+          other.bannedUserNames == this.bannedUserNames &&
+          other.isPrivate == this.isPrivate &&
+          other.rules == this.rules &&
+          other.logo == this.logo &&
+          other.banner == this.banner &&
+          other.logoUrl == this.logoUrl &&
+          other.bannerUrl == this.bannerUrl &&
+          other.userRole == this.userRole &&
+          other.canPost == this.canPost &&
+          other.canModerate == this.canModerate &&
+          other.canAdmin == this.canAdmin);
+}
+
+class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> name;
+  final Value<String> description;
+  final Value<String> creatorId;
+  final Value<String> creatorName;
+  final Value<String> admins;
+  final Value<String> adminNames;
+  final Value<String> moderators;
+  final Value<String> moderatorNames;
+  final Value<String> members;
+  final Value<String> memberNames;
+  final Value<String> bannedUsers;
+  final Value<String> bannedUserNames;
+  final Value<bool> isPrivate;
+  final Value<String> rules;
+  final Value<String?> logo;
+  final Value<String?> banner;
+  final Value<String?> logoUrl;
+  final Value<String?> bannerUrl;
+  final Value<String?> userRole;
+  final Value<bool> canPost;
+  final Value<bool> canModerate;
+  final Value<bool> canAdmin;
+  final Value<int> rowid;
+  const GroupTableCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.creatorId = const Value.absent(),
+    this.creatorName = const Value.absent(),
+    this.admins = const Value.absent(),
+    this.adminNames = const Value.absent(),
+    this.moderators = const Value.absent(),
+    this.moderatorNames = const Value.absent(),
+    this.members = const Value.absent(),
+    this.memberNames = const Value.absent(),
+    this.bannedUsers = const Value.absent(),
+    this.bannedUserNames = const Value.absent(),
+    this.isPrivate = const Value.absent(),
+    this.rules = const Value.absent(),
+    this.logo = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.logoUrl = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.userRole = const Value.absent(),
+    this.canPost = const Value.absent(),
+    this.canModerate = const Value.absent(),
+    this.canAdmin = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  GroupTableCompanion.insert({
+    required String id,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String name,
+    required String description,
+    required String creatorId,
+    required String creatorName,
+    required String admins,
+    required String adminNames,
+    required String moderators,
+    required String moderatorNames,
+    required String members,
+    required String memberNames,
+    required String bannedUsers,
+    required String bannedUserNames,
+    required bool isPrivate,
+    required String rules,
+    this.logo = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.logoUrl = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.userRole = const Value.absent(),
+    required bool canPost,
+    required bool canModerate,
+    required bool canAdmin,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       description = Value(description),
+       creatorId = Value(creatorId),
+       creatorName = Value(creatorName),
+       admins = Value(admins),
+       adminNames = Value(adminNames),
+       moderators = Value(moderators),
+       moderatorNames = Value(moderatorNames),
+       members = Value(members),
+       memberNames = Value(memberNames),
+       bannedUsers = Value(bannedUsers),
+       bannedUserNames = Value(bannedUserNames),
+       isPrivate = Value(isPrivate),
+       rules = Value(rules),
+       canPost = Value(canPost),
+       canModerate = Value(canModerate),
+       canAdmin = Value(canAdmin);
+  static Insertable<GroupEntity> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? creatorId,
+    Expression<String>? creatorName,
+    Expression<String>? admins,
+    Expression<String>? adminNames,
+    Expression<String>? moderators,
+    Expression<String>? moderatorNames,
+    Expression<String>? members,
+    Expression<String>? memberNames,
+    Expression<String>? bannedUsers,
+    Expression<String>? bannedUserNames,
+    Expression<bool>? isPrivate,
+    Expression<String>? rules,
+    Expression<String>? logo,
+    Expression<String>? banner,
+    Expression<String>? logoUrl,
+    Expression<String>? bannerUrl,
+    Expression<String>? userRole,
+    Expression<bool>? canPost,
+    Expression<bool>? canModerate,
+    Expression<bool>? canAdmin,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (creatorId != null) 'creator_id': creatorId,
+      if (creatorName != null) 'creator_name': creatorName,
+      if (admins != null) 'admins': admins,
+      if (adminNames != null) 'admin_names': adminNames,
+      if (moderators != null) 'moderators': moderators,
+      if (moderatorNames != null) 'moderator_names': moderatorNames,
+      if (members != null) 'members': members,
+      if (memberNames != null) 'member_names': memberNames,
+      if (bannedUsers != null) 'banned_users': bannedUsers,
+      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
+      if (isPrivate != null) 'is_private': isPrivate,
+      if (rules != null) 'rules': rules,
+      if (logo != null) 'logo': logo,
+      if (banner != null) 'banner': banner,
+      if (logoUrl != null) 'logo_url': logoUrl,
+      if (bannerUrl != null) 'banner_url': bannerUrl,
+      if (userRole != null) 'user_role': userRole,
+      if (canPost != null) 'can_post': canPost,
+      if (canModerate != null) 'can_moderate': canModerate,
+      if (canAdmin != null) 'can_admin': canAdmin,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  GroupTableCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? name,
+    Value<String>? description,
+    Value<String>? creatorId,
+    Value<String>? creatorName,
+    Value<String>? admins,
+    Value<String>? adminNames,
+    Value<String>? moderators,
+    Value<String>? moderatorNames,
+    Value<String>? members,
+    Value<String>? memberNames,
+    Value<String>? bannedUsers,
+    Value<String>? bannedUserNames,
+    Value<bool>? isPrivate,
+    Value<String>? rules,
+    Value<String?>? logo,
+    Value<String?>? banner,
+    Value<String?>? logoUrl,
+    Value<String?>? bannerUrl,
+    Value<String?>? userRole,
+    Value<bool>? canPost,
+    Value<bool>? canModerate,
+    Value<bool>? canAdmin,
+    Value<int>? rowid,
+  }) {
+    return GroupTableCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      creatorId: creatorId ?? this.creatorId,
+      creatorName: creatorName ?? this.creatorName,
+      admins: admins ?? this.admins,
+      adminNames: adminNames ?? this.adminNames,
+      moderators: moderators ?? this.moderators,
+      moderatorNames: moderatorNames ?? this.moderatorNames,
+      members: members ?? this.members,
+      memberNames: memberNames ?? this.memberNames,
+      bannedUsers: bannedUsers ?? this.bannedUsers,
+      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
+      isPrivate: isPrivate ?? this.isPrivate,
+      rules: rules ?? this.rules,
+      logo: logo ?? this.logo,
+      banner: banner ?? this.banner,
+      logoUrl: logoUrl ?? this.logoUrl,
+      bannerUrl: bannerUrl ?? this.bannerUrl,
+      userRole: userRole ?? this.userRole,
+      canPost: canPost ?? this.canPost,
+      canModerate: canModerate ?? this.canModerate,
+      canAdmin: canAdmin ?? this.canAdmin,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (creatorId.present) {
+      map['creator_id'] = Variable<String>(creatorId.value);
+    }
+    if (creatorName.present) {
+      map['creator_name'] = Variable<String>(creatorName.value);
+    }
+    if (admins.present) {
+      map['admins'] = Variable<String>(admins.value);
+    }
+    if (adminNames.present) {
+      map['admin_names'] = Variable<String>(adminNames.value);
+    }
+    if (moderators.present) {
+      map['moderators'] = Variable<String>(moderators.value);
+    }
+    if (moderatorNames.present) {
+      map['moderator_names'] = Variable<String>(moderatorNames.value);
+    }
+    if (members.present) {
+      map['members'] = Variable<String>(members.value);
+    }
+    if (memberNames.present) {
+      map['member_names'] = Variable<String>(memberNames.value);
+    }
+    if (bannedUsers.present) {
+      map['banned_users'] = Variable<String>(bannedUsers.value);
+    }
+    if (bannedUserNames.present) {
+      map['banned_user_names'] = Variable<String>(bannedUserNames.value);
+    }
+    if (isPrivate.present) {
+      map['is_private'] = Variable<bool>(isPrivate.value);
+    }
+    if (rules.present) {
+      map['rules'] = Variable<String>(rules.value);
+    }
+    if (logo.present) {
+      map['logo'] = Variable<String>(logo.value);
+    }
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
+    }
+    if (logoUrl.present) {
+      map['logo_url'] = Variable<String>(logoUrl.value);
+    }
+    if (bannerUrl.present) {
+      map['banner_url'] = Variable<String>(bannerUrl.value);
+    }
+    if (userRole.present) {
+      map['user_role'] = Variable<String>(userRole.value);
+    }
+    if (canPost.present) {
+      map['can_post'] = Variable<bool>(canPost.value);
+    }
+    if (canModerate.present) {
+      map['can_moderate'] = Variable<bool>(canModerate.value);
+    }
+    if (canAdmin.present) {
+      map['can_admin'] = Variable<bool>(canAdmin.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GroupTableCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('creatorName: $creatorName, ')
+          ..write('admins: $admins, ')
+          ..write('adminNames: $adminNames, ')
+          ..write('moderators: $moderators, ')
+          ..write('moderatorNames: $moderatorNames, ')
+          ..write('members: $members, ')
+          ..write('memberNames: $memberNames, ')
+          ..write('bannedUsers: $bannedUsers, ')
+          ..write('bannedUserNames: $bannedUserNames, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('rules: $rules, ')
+          ..write('logo: $logo, ')
+          ..write('banner: $banner, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('userRole: $userRole, ')
+          ..write('canPost: $canPost, ')
+          ..write('canModerate: $canModerate, ')
+          ..write('canAdmin: $canAdmin, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -14803,16 +15282,17 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
   late final $TokenTable token = $TokenTable(this);
-  late final $GroupTableTable groupTable = $GroupTableTable(this);
-  late final $PostTableTable postTable = $PostTableTable(this);
+  late final $AuthorTableTable authorTable = $AuthorTableTable(this);
   late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
     this,
   );
+  late final $PostTableTable postTable = $PostTableTable(this);
   late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
+  late final $GroupTableTable groupTable = $GroupTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
@@ -14836,14 +15316,15 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
     token,
-    groupTable,
-    postTable,
+    authorTable,
     attachmentTable,
+    postTable,
     postReplyTable,
     todo,
     eventTable,
     attendeeTable,
     ticketTable,
+    groupTable,
     agendaEvent,
     notificationTable,
     institution,
@@ -14856,13 +15337,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'post_table',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('attachment_table', kind: UpdateKind.delete)],
-    ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'post_reply_table',
@@ -15467,99 +15941,74 @@ typedef $$TokenTableProcessedTableManager =
       TokenData,
       PrefetchHooks Function()
     >;
-typedef $$GroupTableTableCreateCompanionBuilder =
-    GroupTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+typedef $$AuthorTableTableCreateCompanionBuilder =
+    AuthorTableCompanion Function({
+      required String userId,
       required String name,
-      required String description,
-      required String creatorId,
-      required String creatorName,
-      required String admins,
-      required String adminNames,
-      required String moderators,
-      required String moderatorNames,
-      required String members,
-      required String memberNames,
-      required String bannedUsers,
-      required String bannedUserNames,
-      required bool isPrivate,
-      required String rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      required bool canPost,
-      required bool canModerate,
-      required bool canAdmin,
+      required String email,
+      required String phone,
+      required String username,
+      Value<String?> avatarUrl,
+      Value<int> vibePoints,
+      required DateTime createdAt,
+      required DateTime updatedAt,
       Value<int> rowid,
     });
-typedef $$GroupTableTableUpdateCompanionBuilder =
-    GroupTableCompanion Function({
-      Value<String> id,
+typedef $$AuthorTableTableUpdateCompanionBuilder =
+    AuthorTableCompanion Function({
+      Value<String> userId,
+      Value<String> name,
+      Value<String> email,
+      Value<String> phone,
+      Value<String> username,
+      Value<String?> avatarUrl,
+      Value<int> vibePoints,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> description,
-      Value<String> creatorId,
-      Value<String> creatorName,
-      Value<String> admins,
-      Value<String> adminNames,
-      Value<String> moderators,
-      Value<String> moderatorNames,
-      Value<String> members,
-      Value<String> memberNames,
-      Value<String> bannedUsers,
-      Value<String> bannedUserNames,
-      Value<bool> isPrivate,
-      Value<String> rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      Value<bool> canPost,
-      Value<bool> canModerate,
-      Value<bool> canAdmin,
       Value<int> rowid,
     });
 
-final class $$GroupTableTableReferences
-    extends BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity> {
-  $$GroupTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$PostTableTable, List<PostEntity>>
-  _postTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.postTable,
-    aliasName: $_aliasNameGenerator(db.groupTable.id, db.postTable.groupId),
-  );
-
-  $$PostTableTableProcessedTableManager get postTableRefs {
-    final manager = $$PostTableTableTableManager(
-      $_db,
-      $_db.postTable,
-    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_postTableRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$GroupTableTableFilterComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableFilterComposer({
+class $$AuthorTableTableFilterComposer
+    extends Composer<_$AppDataBase, $AuthorTableTable> {
+  $$AuthorTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15572,154 +16021,49 @@ class $$GroupTableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> postTableRefs(
-    Expression<bool> Function($$PostTableTableFilterComposer f) f,
-  ) {
-    final $$PostTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.groupId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableFilterComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
-class $$GroupTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableOrderingComposer({
+class $$AuthorTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $AuthorTableTable> {
+  $$AuthorTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -15732,515 +16076,423 @@ class $$GroupTableTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
-class $$GroupTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableAnnotationComposer({
+class $$AuthorTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AuthorTableTable> {
+  $$AuthorTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  GeneratedColumn<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get creatorId =>
-      $composableBuilder(column: $table.creatorId, builder: (column) => column);
-
-  GeneratedColumn<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get admins =>
-      $composableBuilder(column: $table.admins, builder: (column) => column);
-
-  GeneratedColumn<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get members =>
-      $composableBuilder(column: $table.members, builder: (column) => column);
-
-  GeneratedColumn<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get isPrivate =>
-      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
-
-  GeneratedColumn<String> get rules =>
-      $composableBuilder(column: $table.rules, builder: (column) => column);
-
-  GeneratedColumn<String> get logo =>
-      $composableBuilder(column: $table.logo, builder: (column) => column);
-
-  GeneratedColumn<String> get banner =>
-      $composableBuilder(column: $table.banner, builder: (column) => column);
-
-  GeneratedColumn<String> get logoUrl =>
-      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get bannerUrl =>
-      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get userRole =>
-      $composableBuilder(column: $table.userRole, builder: (column) => column);
-
-  GeneratedColumn<bool> get canPost =>
-      $composableBuilder(column: $table.canPost, builder: (column) => column);
-
-  GeneratedColumn<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get canAdmin =>
-      $composableBuilder(column: $table.canAdmin, builder: (column) => column);
-
-  Expression<T> postTableRefs<T extends Object>(
-    Expression<T> Function($$PostTableTableAnnotationComposer a) f,
-  ) {
-    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.groupId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
-class $$GroupTableTableTableManager
+class $$AuthorTableTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $GroupTableTable,
-          GroupEntity,
-          $$GroupTableTableFilterComposer,
-          $$GroupTableTableOrderingComposer,
-          $$GroupTableTableAnnotationComposer,
-          $$GroupTableTableCreateCompanionBuilder,
-          $$GroupTableTableUpdateCompanionBuilder,
-          (GroupEntity, $$GroupTableTableReferences),
-          GroupEntity,
-          PrefetchHooks Function({bool postTableRefs})
+          $AuthorTableTable,
+          AuthorData,
+          $$AuthorTableTableFilterComposer,
+          $$AuthorTableTableOrderingComposer,
+          $$AuthorTableTableAnnotationComposer,
+          $$AuthorTableTableCreateCompanionBuilder,
+          $$AuthorTableTableUpdateCompanionBuilder,
+          (
+            AuthorData,
+            BaseReferences<_$AppDataBase, $AuthorTableTable, AuthorData>,
+          ),
+          AuthorData,
+          PrefetchHooks Function()
         > {
-  $$GroupTableTableTableManager(_$AppDataBase db, $GroupTableTable table)
+  $$AuthorTableTableTableManager(_$AppDataBase db, $AuthorTableTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$GroupTableTableFilterComposer($db: db, $table: table),
+              $$AuthorTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$GroupTableTableOrderingComposer($db: db, $table: table),
+              $$AuthorTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$GroupTableTableAnnotationComposer($db: db, $table: table),
+              $$AuthorTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String> phone = const Value.absent(),
+                Value<String> username = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> creatorId = const Value.absent(),
-                Value<String> creatorName = const Value.absent(),
-                Value<String> admins = const Value.absent(),
-                Value<String> adminNames = const Value.absent(),
-                Value<String> moderators = const Value.absent(),
-                Value<String> moderatorNames = const Value.absent(),
-                Value<String> members = const Value.absent(),
-                Value<String> memberNames = const Value.absent(),
-                Value<String> bannedUsers = const Value.absent(),
-                Value<String> bannedUserNames = const Value.absent(),
-                Value<bool> isPrivate = const Value.absent(),
-                Value<String> rules = const Value.absent(),
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                Value<bool> canPost = const Value.absent(),
-                Value<bool> canModerate = const Value.absent(),
-                Value<bool> canAdmin = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion(
-                id: id,
+              }) => AuthorTableCompanion(
+                userId: userId,
+                name: name,
+                email: email,
+                phone: phone,
+                username: username,
+                avatarUrl: avatarUrl,
+                vibePoints: vibePoints,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                required String userId,
                 required String name,
-                required String description,
-                required String creatorId,
-                required String creatorName,
-                required String admins,
-                required String adminNames,
-                required String moderators,
-                required String moderatorNames,
-                required String members,
-                required String memberNames,
-                required String bannedUsers,
-                required String bannedUserNames,
-                required bool isPrivate,
-                required String rules,
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                required bool canPost,
-                required bool canModerate,
-                required bool canAdmin,
+                required String email,
+                required String phone,
+                required String username,
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion.insert(
-                id: id,
+              }) => AuthorTableCompanion.insert(
+                userId: userId,
+                name: name,
+                email: email,
+                phone: phone,
+                username: username,
+                avatarUrl: avatarUrl,
+                vibePoints: vibePoints,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$GroupTableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({postTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (postTableRefs) db.postTable],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (postTableRefs)
-                    await $_getPrefetchedData<
-                      GroupEntity,
-                      $GroupTableTable,
-                      PostEntity
-                    >(
-                      currentTable: table,
-                      referencedTable: $$GroupTableTableReferences
-                          ._postTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$GroupTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).postTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.groupId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
 
-typedef $$GroupTableTableProcessedTableManager =
+typedef $$AuthorTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $GroupTableTable,
-      GroupEntity,
-      $$GroupTableTableFilterComposer,
-      $$GroupTableTableOrderingComposer,
-      $$GroupTableTableAnnotationComposer,
-      $$GroupTableTableCreateCompanionBuilder,
-      $$GroupTableTableUpdateCompanionBuilder,
-      (GroupEntity, $$GroupTableTableReferences),
-      GroupEntity,
-      PrefetchHooks Function({bool postTableRefs})
+      $AuthorTableTable,
+      AuthorData,
+      $$AuthorTableTableFilterComposer,
+      $$AuthorTableTableOrderingComposer,
+      $$AuthorTableTableAnnotationComposer,
+      $$AuthorTableTableCreateCompanionBuilder,
+      $$AuthorTableTableUpdateCompanionBuilder,
+      (
+        AuthorData,
+        BaseReferences<_$AppDataBase, $AuthorTableTable, AuthorData>,
+      ),
+      AuthorData,
+      PrefetchHooks Function()
+    >;
+typedef $$AttachmentTableTableCreateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      Value<int> id,
+      required String attachmentType,
+      required String file,
+      required int size,
+      required String name,
+      required DateTime createdAt,
+      required int postId,
+    });
+typedef $$AttachmentTableTableUpdateCompanionBuilder =
+    AttachmentTableCompanion Function({
+      Value<int> id,
+      Value<String> attachmentType,
+      Value<String> file,
+      Value<int> size,
+      Value<String> name,
+      Value<DateTime> createdAt,
+      Value<int> postId,
+    });
+
+class $$AttachmentTableTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get postId => $composableBuilder(
+    column: $table.postId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AttachmentTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get file => $composableBuilder(
+    column: $table.file,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get size => $composableBuilder(
+    column: $table.size,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get postId => $composableBuilder(
+    column: $table.postId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AttachmentTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentTableTable> {
+  $$AttachmentTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get attachmentType => $composableBuilder(
+    column: $table.attachmentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get file =>
+      $composableBuilder(column: $table.file, builder: (column) => column);
+
+  GeneratedColumn<int> get size =>
+      $composableBuilder(column: $table.size, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get postId =>
+      $composableBuilder(column: $table.postId, builder: (column) => column);
+}
+
+class $$AttachmentTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $AttachmentTableTable,
+          AttachmentData,
+          $$AttachmentTableTableFilterComposer,
+          $$AttachmentTableTableOrderingComposer,
+          $$AttachmentTableTableAnnotationComposer,
+          $$AttachmentTableTableCreateCompanionBuilder,
+          $$AttachmentTableTableUpdateCompanionBuilder,
+          (
+            AttachmentData,
+            BaseReferences<
+              _$AppDataBase,
+              $AttachmentTableTable,
+              AttachmentData
+            >,
+          ),
+          AttachmentData,
+          PrefetchHooks Function()
+        > {
+  $$AttachmentTableTableTableManager(
+    _$AppDataBase db,
+    $AttachmentTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> attachmentType = const Value.absent(),
+                Value<String> file = const Value.absent(),
+                Value<int> size = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> postId = const Value.absent(),
+              }) => AttachmentTableCompanion(
+                id: id,
+                attachmentType: attachmentType,
+                file: file,
+                size: size,
+                name: name,
+                createdAt: createdAt,
+                postId: postId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String attachmentType,
+                required String file,
+                required int size,
+                required String name,
+                required DateTime createdAt,
+                required int postId,
+              }) => AttachmentTableCompanion.insert(
+                id: id,
+                attachmentType: attachmentType,
+                file: file,
+                size: size,
+                name: name,
+                createdAt: createdAt,
+                postId: postId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AttachmentTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $AttachmentTableTable,
+      AttachmentData,
+      $$AttachmentTableTableFilterComposer,
+      $$AttachmentTableTableOrderingComposer,
+      $$AttachmentTableTableAnnotationComposer,
+      $$AttachmentTableTableCreateCompanionBuilder,
+      $$AttachmentTableTableUpdateCompanionBuilder,
+      (
+        AttachmentData,
+        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentData>,
+      ),
+      AttachmentData,
+      PrefetchHooks Function()
     >;
 typedef $$PostTableTableCreateCompanionBuilder =
     PostTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String groupId,
-      required String userId,
-      required String userName,
-      required String email,
-      Value<String?> avatarUrl,
+      Value<int> id,
+      required Map<String, dynamic> community,
+      required Map<String, dynamic> author,
+      required String title,
       required String content,
-      required int likeCount,
-      required int commentCount,
-      Value<bool> isLiked,
-      Value<int> rowid,
+      Value<int> upvotes,
+      Value<int> downvotes,
+      required List<dynamic> attachments,
+      Value<int> viewsCount,
+      Value<int> commentCount,
+      required DateTime createdAt,
+      required DateTime updatedAt,
     });
 typedef $$PostTableTableUpdateCompanionBuilder =
     PostTableCompanion Function({
-      Value<String> id,
+      Value<int> id,
+      Value<Map<String, dynamic>> community,
+      Value<Map<String, dynamic>> author,
+      Value<String> title,
+      Value<String> content,
+      Value<int> upvotes,
+      Value<int> downvotes,
+      Value<List<dynamic>> attachments,
+      Value<int> viewsCount,
+      Value<int> commentCount,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<String> groupId,
-      Value<String> userId,
-      Value<String> userName,
-      Value<String> email,
-      Value<String?> avatarUrl,
-      Value<String> content,
-      Value<int> likeCount,
-      Value<int> commentCount,
-      Value<bool> isLiked,
-      Value<int> rowid,
     });
 
 final class $$PostTableTableReferences
-    extends BaseReferences<_$AppDataBase, $PostTableTable, PostEntity> {
+    extends BaseReferences<_$AppDataBase, $PostTableTable, PostData> {
   $$PostTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $GroupTableTable _groupIdTable(_$AppDataBase db) =>
-      db.groupTable.createAlias(
-        $_aliasNameGenerator(db.postTable.groupId, db.groupTable.id),
-      );
-
-  $$GroupTableTableProcessedTableManager get groupId {
-    final $_column = $_itemColumn<String>('group_id')!;
-
-    final manager = $$GroupTableTableTableManager(
-      $_db,
-      $_db.groupTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$AttachmentTableTable, List<AttachmentEntity>>
-  _attachmentTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.attachmentTable,
-    aliasName: $_aliasNameGenerator(db.postTable.id, db.attachmentTable.postId),
-  );
-
-  $$AttachmentTableTableProcessedTableManager get attachmentTableRefs {
-    final manager = $$AttachmentTableTableTableManager(
-      $_db,
-      $_db.attachmentTable,
-    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _attachmentTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
 
   static MultiTypedResultKey<$PostReplyTableTable, List<PostReplyEntity>>
   _postReplyTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
@@ -16252,7 +16504,7 @@ final class $$PostTableTableReferences
     final manager = $$PostReplyTableTableTableManager(
       $_db,
       $_db.postReplyTable,
-    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<String>('id')!));
+    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_postReplyTableRefsTable($_db));
     return ProcessedTableManager(
@@ -16270,8 +16522,64 @@ class $$PostTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
+  ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get community => $composableBuilder(
+    column: $table.community,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get author => $composableBuilder(
+    column: $table.author,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get upvotes => $composableBuilder(
+    column: $table.upvotes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get downvotes => $composableBuilder(
+    column: $table.downvotes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get attachments => $composableBuilder(
+    column: $table.attachments,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get viewsCount => $composableBuilder(
+    column: $table.viewsCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get commentCount => $composableBuilder(
+    column: $table.commentCount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16284,94 +16592,6 @@ class $$PostTableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userName => $composableBuilder(
-    column: $table.userName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get content => $composableBuilder(
-    column: $table.content,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get likeCount => $composableBuilder(
-    column: $table.likeCount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get commentCount => $composableBuilder(
-    column: $table.commentCount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isLiked => $composableBuilder(
-    column: $table.isLiked,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$GroupTableTableFilterComposer get groupId {
-    final $$GroupTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.groupId,
-      referencedTable: $db.groupTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$GroupTableTableFilterComposer(
-            $db: $db,
-            $table: $db.groupTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> attachmentTableRefs(
-    Expression<bool> Function($$AttachmentTableTableFilterComposer f) f,
-  ) {
-    final $$AttachmentTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.attachmentTable,
-      getReferencedColumn: (t) => t.postId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AttachmentTableTableFilterComposer(
-            $db: $db,
-            $table: $db.attachmentTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 
   Expression<bool> postReplyTableRefs(
     Expression<bool> Function($$PostReplyTableTableFilterComposer f) f,
@@ -16408,8 +16628,53 @@ class $$PostTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
+  ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get community => $composableBuilder(
+    column: $table.community,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get author => $composableBuilder(
+    column: $table.author,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get upvotes => $composableBuilder(
+    column: $table.upvotes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get downvotes => $composableBuilder(
+    column: $table.downvotes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attachments => $composableBuilder(
+    column: $table.attachments,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get viewsCount => $composableBuilder(
+    column: $table.viewsCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get commentCount => $composableBuilder(
+    column: $table.commentCount,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -16422,69 +16687,6 @@ class $$PostTableTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userName => $composableBuilder(
-    column: $table.userName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get content => $composableBuilder(
-    column: $table.content,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get likeCount => $composableBuilder(
-    column: $table.likeCount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get commentCount => $composableBuilder(
-    column: $table.commentCount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isLiked => $composableBuilder(
-    column: $table.isLiked,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$GroupTableTableOrderingComposer get groupId {
-    final $$GroupTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.groupId,
-      referencedTable: $db.groupTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$GroupTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.groupTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$PostTableTableAnnotationComposer
@@ -16496,88 +16698,49 @@ class $$PostTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
+  GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  get community =>
+      $composableBuilder(column: $table.community, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get author =>
+      $composableBuilder(column: $table.author, builder: (column) => column);
 
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
-  GeneratedColumn<String> get userName =>
-      $composableBuilder(column: $table.userName, builder: (column) => column);
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<String> get avatarUrl =>
-      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 
-  GeneratedColumn<int> get likeCount =>
-      $composableBuilder(column: $table.likeCount, builder: (column) => column);
+  GeneratedColumn<int> get upvotes =>
+      $composableBuilder(column: $table.upvotes, builder: (column) => column);
+
+  GeneratedColumn<int> get downvotes =>
+      $composableBuilder(column: $table.downvotes, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get attachments =>
+      $composableBuilder(
+        column: $table.attachments,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<int> get viewsCount => $composableBuilder(
+    column: $table.viewsCount,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get commentCount => $composableBuilder(
     column: $table.commentCount,
     builder: (column) => column,
   );
 
-  GeneratedColumn<bool> get isLiked =>
-      $composableBuilder(column: $table.isLiked, builder: (column) => column);
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$GroupTableTableAnnotationComposer get groupId {
-    final $$GroupTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.groupId,
-      referencedTable: $db.groupTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$GroupTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.groupTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> attachmentTableRefs<T extends Object>(
-    Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
-  ) {
-    final $$AttachmentTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.attachmentTable,
-      getReferencedColumn: (t) => t.postId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AttachmentTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.attachmentTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   Expression<T> postReplyTableRefs<T extends Object>(
     Expression<T> Function($$PostReplyTableTableAnnotationComposer a) f,
@@ -16610,19 +16773,15 @@ class $$PostTableTableTableManager
         RootTableManager<
           _$AppDataBase,
           $PostTableTable,
-          PostEntity,
+          PostData,
           $$PostTableTableFilterComposer,
           $$PostTableTableOrderingComposer,
           $$PostTableTableAnnotationComposer,
           $$PostTableTableCreateCompanionBuilder,
           $$PostTableTableUpdateCompanionBuilder,
-          (PostEntity, $$PostTableTableReferences),
-          PostEntity,
-          PrefetchHooks Function({
-            bool groupId,
-            bool attachmentTableRefs,
-            bool postReplyTableRefs,
-          })
+          (PostData, $$PostTableTableReferences),
+          PostData,
+          PrefetchHooks Function({bool postReplyTableRefs})
         > {
   $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
     : super(
@@ -16637,63 +16796,59 @@ class $$PostTableTableTableManager
               $$PostTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<Map<String, dynamic>> community = const Value.absent(),
+                Value<Map<String, dynamic>> author = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<int> upvotes = const Value.absent(),
+                Value<int> downvotes = const Value.absent(),
+                Value<List<dynamic>> attachments = const Value.absent(),
+                Value<int> viewsCount = const Value.absent(),
+                Value<int> commentCount = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> groupId = const Value.absent(),
-                Value<String> userId = const Value.absent(),
-                Value<String> userName = const Value.absent(),
-                Value<String> email = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
-                Value<String> content = const Value.absent(),
-                Value<int> likeCount = const Value.absent(),
-                Value<int> commentCount = const Value.absent(),
-                Value<bool> isLiked = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion(
                 id: id,
+                community: community,
+                author: author,
+                title: title,
+                content: content,
+                upvotes: upvotes,
+                downvotes: downvotes,
+                attachments: attachments,
+                viewsCount: viewsCount,
+                commentCount: commentCount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                groupId: groupId,
-                userId: userId,
-                userName: userName,
-                email: email,
-                avatarUrl: avatarUrl,
-                content: content,
-                likeCount: likeCount,
-                commentCount: commentCount,
-                isLiked: isLiked,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String groupId,
-                required String userId,
-                required String userName,
-                required String email,
-                Value<String?> avatarUrl = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                required Map<String, dynamic> community,
+                required Map<String, dynamic> author,
+                required String title,
                 required String content,
-                required int likeCount,
-                required int commentCount,
-                Value<bool> isLiked = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
+                Value<int> upvotes = const Value.absent(),
+                Value<int> downvotes = const Value.absent(),
+                required List<dynamic> attachments,
+                Value<int> viewsCount = const Value.absent(),
+                Value<int> commentCount = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
               }) => PostTableCompanion.insert(
                 id: id,
+                community: community,
+                author: author,
+                title: title,
+                content: content,
+                upvotes: upvotes,
+                downvotes: downvotes,
+                attachments: attachments,
+                viewsCount: viewsCount,
+                commentCount: commentCount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                groupId: groupId,
-                userId: userId,
-                userName: userName,
-                email: email,
-                avatarUrl: avatarUrl,
-                content: content,
-                likeCount: likeCount,
-                commentCount: commentCount,
-                isLiked: isLiked,
-                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -16703,98 +16858,38 @@ class $$PostTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({
-                groupId = false,
-                attachmentTableRefs = false,
-                postReplyTableRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (attachmentTableRefs) db.attachmentTable,
-                    if (postReplyTableRefs) db.postReplyTable,
-                  ],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (groupId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.groupId,
-                                    referencedTable: $$PostTableTableReferences
-                                        ._groupIdTable(db),
-                                    referencedColumn: $$PostTableTableReferences
-                                        ._groupIdTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (attachmentTableRefs)
-                        await $_getPrefetchedData<
-                          PostEntity,
-                          $PostTableTable,
-                          AttachmentEntity
-                        >(
-                          currentTable: table,
-                          referencedTable: $$PostTableTableReferences
-                              ._attachmentTableRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$PostTableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).attachmentTableRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.postId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (postReplyTableRefs)
-                        await $_getPrefetchedData<
-                          PostEntity,
-                          $PostTableTable,
-                          PostReplyEntity
-                        >(
-                          currentTable: table,
-                          referencedTable: $$PostTableTableReferences
-                              ._postReplyTableRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$PostTableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).postReplyTableRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.postId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
+          prefetchHooksCallback: ({postReplyTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (postReplyTableRefs) db.postReplyTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (postReplyTableRefs)
+                    await $_getPrefetchedData<
+                      PostData,
+                      $PostTableTable,
+                      PostReplyEntity
+                    >(
+                      currentTable: table,
+                      referencedTable: $$PostTableTableReferences
+                          ._postReplyTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PostTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).postReplyTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.postId == item.id),
+                      typedResults: items,
+                    ),
+                ];
               },
+            );
+          },
         ),
       );
 }
@@ -16803,406 +16898,15 @@ typedef $$PostTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
       $PostTableTable,
-      PostEntity,
+      PostData,
       $$PostTableTableFilterComposer,
       $$PostTableTableOrderingComposer,
       $$PostTableTableAnnotationComposer,
       $$PostTableTableCreateCompanionBuilder,
       $$PostTableTableUpdateCompanionBuilder,
-      (PostEntity, $$PostTableTableReferences),
-      PostEntity,
-      PrefetchHooks Function({
-        bool groupId,
-        bool attachmentTableRefs,
-        bool postReplyTableRefs,
-      })
-    >;
-typedef $$AttachmentTableTableCreateCompanionBuilder =
-    AttachmentTableCompanion Function({
-      required String id,
-      required DateTime createdAt,
-      Value<DateTime> updatedAt,
-      required String postId,
-      required String attachmentType,
-      required String file,
-      required String name,
-      required double size,
-      Value<int> rowid,
-    });
-typedef $$AttachmentTableTableUpdateCompanionBuilder =
-    AttachmentTableCompanion Function({
-      Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> postId,
-      Value<String> attachmentType,
-      Value<String> file,
-      Value<String> name,
-      Value<double> size,
-      Value<int> rowid,
-    });
-
-final class $$AttachmentTableTableReferences
-    extends
-        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentEntity> {
-  $$AttachmentTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $PostTableTable _postIdTable(_$AppDataBase db) =>
-      db.postTable.createAlias(
-        $_aliasNameGenerator(db.attachmentTable.postId, db.postTable.id),
-      );
-
-  $$PostTableTableProcessedTableManager get postId {
-    final $_column = $_itemColumn<String>('post_id')!;
-
-    final manager = $$PostTableTableTableManager(
-      $_db,
-      $_db.postTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$AttachmentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get attachmentType => $composableBuilder(
-    column: $table.attachmentType,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get file => $composableBuilder(
-    column: $table.file,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get size => $composableBuilder(
-    column: $table.size,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$PostTableTableFilterComposer get postId {
-    final $$PostTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableFilterComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$AttachmentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get attachmentType => $composableBuilder(
-    column: $table.attachmentType,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get file => $composableBuilder(
-    column: $table.file,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get size => $composableBuilder(
-    column: $table.size,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$PostTableTableOrderingComposer get postId {
-    final $$PostTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$AttachmentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get attachmentType => $composableBuilder(
-    column: $table.attachmentType,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get file =>
-      $composableBuilder(column: $table.file, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<double> get size =>
-      $composableBuilder(column: $table.size, builder: (column) => column);
-
-  $$PostTableTableAnnotationComposer get postId {
-    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$AttachmentTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $AttachmentTableTable,
-          AttachmentEntity,
-          $$AttachmentTableTableFilterComposer,
-          $$AttachmentTableTableOrderingComposer,
-          $$AttachmentTableTableAnnotationComposer,
-          $$AttachmentTableTableCreateCompanionBuilder,
-          $$AttachmentTableTableUpdateCompanionBuilder,
-          (AttachmentEntity, $$AttachmentTableTableReferences),
-          AttachmentEntity,
-          PrefetchHooks Function({bool postId})
-        > {
-  $$AttachmentTableTableTableManager(
-    _$AppDataBase db,
-    $AttachmentTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$AttachmentTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> postId = const Value.absent(),
-                Value<String> attachmentType = const Value.absent(),
-                Value<String> file = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<double> size = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AttachmentTableCompanion(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                postId: postId,
-                attachmentType: attachmentType,
-                file: file,
-                name: name,
-                size: size,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required DateTime createdAt,
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String postId,
-                required String attachmentType,
-                required String file,
-                required String name,
-                required double size,
-                Value<int> rowid = const Value.absent(),
-              }) => AttachmentTableCompanion.insert(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                postId: postId,
-                attachmentType: attachmentType,
-                file: file,
-                name: name,
-                size: size,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$AttachmentTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({postId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (postId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.postId,
-                                referencedTable:
-                                    $$AttachmentTableTableReferences
-                                        ._postIdTable(db),
-                                referencedColumn:
-                                    $$AttachmentTableTableReferences
-                                        ._postIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$AttachmentTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $AttachmentTableTable,
-      AttachmentEntity,
-      $$AttachmentTableTableFilterComposer,
-      $$AttachmentTableTableOrderingComposer,
-      $$AttachmentTableTableAnnotationComposer,
-      $$AttachmentTableTableCreateCompanionBuilder,
-      $$AttachmentTableTableUpdateCompanionBuilder,
-      (AttachmentEntity, $$AttachmentTableTableReferences),
-      AttachmentEntity,
-      PrefetchHooks Function({bool postId})
+      (PostData, $$PostTableTableReferences),
+      PostData,
+      PrefetchHooks Function({bool postReplyTableRefs})
     >;
 typedef $$PostReplyTableTableCreateCompanionBuilder =
     PostReplyTableCompanion Function({
@@ -17210,7 +16914,7 @@ typedef $$PostReplyTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String?> parentId,
-      required String postId,
+      required int postId,
       required String userId,
       required String userName,
       Value<String?> userAvatar,
@@ -17224,7 +16928,7 @@ typedef $$PostReplyTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String?> parentId,
-      Value<String> postId,
+      Value<int> postId,
       Value<String> userId,
       Value<String> userName,
       Value<String?> userAvatar,
@@ -17267,7 +16971,7 @@ final class $$PostReplyTableTableReferences
       );
 
   $$PostTableTableProcessedTableManager get postId {
-    final $_column = $_itemColumn<String>('post_id')!;
+    final $_column = $_itemColumn<int>('post_id')!;
 
     final manager = $$PostTableTableTableManager(
       $_db,
@@ -17589,7 +17293,7 @@ class $$PostReplyTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String?> parentId = const Value.absent(),
-                Value<String> postId = const Value.absent(),
+                Value<int> postId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> userName = const Value.absent(),
                 Value<String?> userAvatar = const Value.absent(),
@@ -17615,7 +17319,7 @@ class $$PostReplyTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String?> parentId = const Value.absent(),
-                required String postId,
+                required int postId,
                 required String userId,
                 required String userName,
                 Value<String?> userAvatar = const Value.absent(),
@@ -19631,6 +19335,604 @@ typedef $$TicketTableTableProcessedTableManager =
       (TicketData, $$TicketTableTableReferences),
       TicketData,
       PrefetchHooks Function({bool attendeeId, bool eventId})
+    >;
+typedef $$GroupTableTableCreateCompanionBuilder =
+    GroupTableCompanion Function({
+      required String id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      required String name,
+      required String description,
+      required String creatorId,
+      required String creatorName,
+      required String admins,
+      required String adminNames,
+      required String moderators,
+      required String moderatorNames,
+      required String members,
+      required String memberNames,
+      required String bannedUsers,
+      required String bannedUserNames,
+      required bool isPrivate,
+      required String rules,
+      Value<String?> logo,
+      Value<String?> banner,
+      Value<String?> logoUrl,
+      Value<String?> bannerUrl,
+      Value<String?> userRole,
+      required bool canPost,
+      required bool canModerate,
+      required bool canAdmin,
+      Value<int> rowid,
+    });
+typedef $$GroupTableTableUpdateCompanionBuilder =
+    GroupTableCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> name,
+      Value<String> description,
+      Value<String> creatorId,
+      Value<String> creatorName,
+      Value<String> admins,
+      Value<String> adminNames,
+      Value<String> moderators,
+      Value<String> moderatorNames,
+      Value<String> members,
+      Value<String> memberNames,
+      Value<String> bannedUsers,
+      Value<String> bannedUserNames,
+      Value<bool> isPrivate,
+      Value<String> rules,
+      Value<String?> logo,
+      Value<String?> banner,
+      Value<String?> logoUrl,
+      Value<String?> bannerUrl,
+      Value<String?> userRole,
+      Value<bool> canPost,
+      Value<bool> canModerate,
+      Value<bool> canAdmin,
+      Value<int> rowid,
+    });
+
+class $$GroupTableTableFilterComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get admins => $composableBuilder(
+    column: $table.admins,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get members => $composableBuilder(
+    column: $table.members,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPrivate => $composableBuilder(
+    column: $table.isPrivate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rules => $composableBuilder(
+    column: $table.rules,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get logo => $composableBuilder(
+    column: $table.logo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get logoUrl => $composableBuilder(
+    column: $table.logoUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userRole => $composableBuilder(
+    column: $table.userRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canPost => $composableBuilder(
+    column: $table.canPost,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canAdmin => $composableBuilder(
+    column: $table.canAdmin,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$GroupTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get admins => $composableBuilder(
+    column: $table.admins,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get members => $composableBuilder(
+    column: $table.members,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPrivate => $composableBuilder(
+    column: $table.isPrivate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rules => $composableBuilder(
+    column: $table.rules,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get logo => $composableBuilder(
+    column: $table.logo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get logoUrl => $composableBuilder(
+    column: $table.logoUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userRole => $composableBuilder(
+    column: $table.userRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canPost => $composableBuilder(
+    column: $table.canPost,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canAdmin => $composableBuilder(
+    column: $table.canAdmin,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$GroupTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get creatorId =>
+      $composableBuilder(column: $table.creatorId, builder: (column) => column);
+
+  GeneratedColumn<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get admins =>
+      $composableBuilder(column: $table.admins, builder: (column) => column);
+
+  GeneratedColumn<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get members =>
+      $composableBuilder(column: $table.members, builder: (column) => column);
+
+  GeneratedColumn<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPrivate =>
+      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
+
+  GeneratedColumn<String> get rules =>
+      $composableBuilder(column: $table.rules, builder: (column) => column);
+
+  GeneratedColumn<String> get logo =>
+      $composableBuilder(column: $table.logo, builder: (column) => column);
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
+
+  GeneratedColumn<String> get logoUrl =>
+      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get bannerUrl =>
+      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get userRole =>
+      $composableBuilder(column: $table.userRole, builder: (column) => column);
+
+  GeneratedColumn<bool> get canPost =>
+      $composableBuilder(column: $table.canPost, builder: (column) => column);
+
+  GeneratedColumn<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get canAdmin =>
+      $composableBuilder(column: $table.canAdmin, builder: (column) => column);
+}
+
+class $$GroupTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $GroupTableTable,
+          GroupEntity,
+          $$GroupTableTableFilterComposer,
+          $$GroupTableTableOrderingComposer,
+          $$GroupTableTableAnnotationComposer,
+          $$GroupTableTableCreateCompanionBuilder,
+          $$GroupTableTableUpdateCompanionBuilder,
+          (
+            GroupEntity,
+            BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
+          ),
+          GroupEntity,
+          PrefetchHooks Function()
+        > {
+  $$GroupTableTableTableManager(_$AppDataBase db, $GroupTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$GroupTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$GroupTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$GroupTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<String> creatorId = const Value.absent(),
+                Value<String> creatorName = const Value.absent(),
+                Value<String> admins = const Value.absent(),
+                Value<String> adminNames = const Value.absent(),
+                Value<String> moderators = const Value.absent(),
+                Value<String> moderatorNames = const Value.absent(),
+                Value<String> members = const Value.absent(),
+                Value<String> memberNames = const Value.absent(),
+                Value<String> bannedUsers = const Value.absent(),
+                Value<String> bannedUserNames = const Value.absent(),
+                Value<bool> isPrivate = const Value.absent(),
+                Value<String> rules = const Value.absent(),
+                Value<String?> logo = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<String?> logoUrl = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> userRole = const Value.absent(),
+                Value<bool> canPost = const Value.absent(),
+                Value<bool> canModerate = const Value.absent(),
+                Value<bool> canAdmin = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => GroupTableCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                description: description,
+                creatorId: creatorId,
+                creatorName: creatorName,
+                admins: admins,
+                adminNames: adminNames,
+                moderators: moderators,
+                moderatorNames: moderatorNames,
+                members: members,
+                memberNames: memberNames,
+                bannedUsers: bannedUsers,
+                bannedUserNames: bannedUserNames,
+                isPrivate: isPrivate,
+                rules: rules,
+                logo: logo,
+                banner: banner,
+                logoUrl: logoUrl,
+                bannerUrl: bannerUrl,
+                userRole: userRole,
+                canPost: canPost,
+                canModerate: canModerate,
+                canAdmin: canAdmin,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String name,
+                required String description,
+                required String creatorId,
+                required String creatorName,
+                required String admins,
+                required String adminNames,
+                required String moderators,
+                required String moderatorNames,
+                required String members,
+                required String memberNames,
+                required String bannedUsers,
+                required String bannedUserNames,
+                required bool isPrivate,
+                required String rules,
+                Value<String?> logo = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<String?> logoUrl = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> userRole = const Value.absent(),
+                required bool canPost,
+                required bool canModerate,
+                required bool canAdmin,
+                Value<int> rowid = const Value.absent(),
+              }) => GroupTableCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                name: name,
+                description: description,
+                creatorId: creatorId,
+                creatorName: creatorName,
+                admins: admins,
+                adminNames: adminNames,
+                moderators: moderators,
+                moderatorNames: moderatorNames,
+                members: members,
+                memberNames: memberNames,
+                bannedUsers: bannedUsers,
+                bannedUserNames: bannedUserNames,
+                isPrivate: isPrivate,
+                rules: rules,
+                logo: logo,
+                banner: banner,
+                logoUrl: logoUrl,
+                bannerUrl: bannerUrl,
+                userRole: userRole,
+                canPost: canPost,
+                canModerate: canModerate,
+                canAdmin: canAdmin,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$GroupTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $GroupTableTable,
+      GroupEntity,
+      $$GroupTableTableFilterComposer,
+      $$GroupTableTableOrderingComposer,
+      $$GroupTableTableAnnotationComposer,
+      $$GroupTableTableCreateCompanionBuilder,
+      $$GroupTableTableUpdateCompanionBuilder,
+      (
+        GroupEntity,
+        BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
+      ),
+      GroupEntity,
+      PrefetchHooks Function()
     >;
 typedef $$AgendaEventTableCreateCompanionBuilder =
     AgendaEventCompanion Function({
@@ -23225,12 +23527,12 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
-  $$GroupTableTableTableManager get groupTable =>
-      $$GroupTableTableTableManager(_db, _db.groupTable);
-  $$PostTableTableTableManager get postTable =>
-      $$PostTableTableTableManager(_db, _db.postTable);
+  $$AuthorTableTableTableManager get authorTable =>
+      $$AuthorTableTableTableManager(_db, _db.authorTable);
   $$AttachmentTableTableTableManager get attachmentTable =>
       $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
+  $$PostTableTableTableManager get postTable =>
+      $$PostTableTableTableManager(_db, _db.postTable);
   $$PostReplyTableTableTableManager get postReplyTable =>
       $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
@@ -23240,6 +23542,8 @@ class $AppDataBaseManager {
       $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
   $$TicketTableTableTableManager get ticketTable =>
       $$TicketTableTableTableManager(_db, _db.ticketTable);
+  $$GroupTableTableTableManager get groupTable =>
+      $$GroupTableTableTableManager(_db, _db.groupTable);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
   $$NotificationTableTableTableManager get notificationTable =>

@@ -1,35 +1,34 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName('PostEntity')
-class PostTable extends Table with TableMixin {
+@DataClassName('PostData')
+class PostTable extends Table {
+  @JsonKey("id")
+  IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get groupId => text().references(GroupTable, #id)();
+  TextColumn get community => text().map(JsonConverter())();
 
-  @JsonKey('user_id')
-  TextColumn get userId => text()();
+  TextColumn get author => text().map(JsonConverter())();
 
-  @JsonKey('user_name')
-  TextColumn get userName => text()();
-
-  TextColumn get email => text()();
-
-  @JsonKey('avatar_url')
-  TextColumn get avatarUrl => text().nullable()();
+  TextColumn get title => text()();
 
   TextColumn get content => text()();
 
-  @JsonKey('like_count')
-  IntColumn get likeCount => integer()();
+  IntColumn get upvotes => integer().withDefault(const Constant(0))();
 
-  @JsonKey('comment_count')
-  IntColumn get commentCount => integer()();
+  IntColumn get downvotes => integer().withDefault(const Constant(0))();
 
-  @JsonKey('is_liked')
-  BoolColumn get isLiked => boolean().withDefault(const Constant(false))();
+  TextColumn get attachments => text().map(JsonListConverter())();
 
-  @override
-  Set<Column<Object>>? get primaryKey => {id};
+  @JsonKey("views_count")
+  IntColumn get viewsCount => integer().withDefault(const Constant(0))();
 
+  @JsonKey("comment_count")
+  IntColumn get commentCount => integer().withDefault(const Constant(0))();
+
+  @JsonKey("created_at")
+  DateTimeColumn get createdAt => dateTime()();
+
+  @JsonKey("updated_at")
+  DateTimeColumn get updatedAt => dateTime()();
 }

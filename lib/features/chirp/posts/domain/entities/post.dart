@@ -1,70 +1,61 @@
-import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
-import 'package:academia/features/chirp/posts/domain/entities/group.dart';
-import 'package:academia/features/chirp/posts/domain/entities/post_replies.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
+import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
 class Post extends Equatable {
-  final String id;
-  final Group group;
-  final String userId;
-  final String userName;
-  final String email;
-  final String? avatarUrl;
+  final int id;
+  final Community community; 
+  final Author author;
+  final String title;
   final String content;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final int likeCount;
-  final int commentCount;
-  final bool isLiked;
+  final int upvotes;
+  final int downvotes;
   final List<Attachments> attachments;
-  final List<PostReply> replies;
+  final int viewsCount;
+  final int commentCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const Post({
     required this.id,
-    required this.group,
-    required this.userId,
-    required this.userName,
-    required this.email,
-    this.avatarUrl,
+    required this.community,
+    required this.author,
+    required this.title,
     required this.content,
-    required this.createdAt,
-    this.updatedAt,
-    required this.likeCount,
-    required this.commentCount,
-    required this.isLiked,
+    required this.upvotes,
+    required this.downvotes,
     this.attachments = const [],
-    this.replies = const [],
+    required this.viewsCount,
+    required this.commentCount,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Post copyWith({
-  String? id,
-  String? userId,
-  Group? group,
-  String? userName,
-  String? email,
-  String? avatarUrl,
-  String? content,
-  DateTime? createdAt,
-  DateTime? updatedAt,
-  int? likeCount,
-  int? commentCount,
-  bool? isLiked,
-  List<Attachments>? attachments,
-  List<PostReply>? replies,
+    int? id,
+    Community? community,
+    Author? author,
+    String? title,
+    String? content,
+    int? upvotes,
+    int? downvotes,
+    List<Attachments>? attachments,
+    int? viewsCount,
+    int? commentCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Post(
       id: id ?? this.id,
-      group: group ?? this.group,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      email: email ?? this.email,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      community: community ?? this.community,
+      author: author ?? this.author,
+      title: title ?? this.title,
       content: content ?? this.content,
-      likeCount: likeCount ?? this.likeCount,
-      commentCount: commentCount ?? this.commentCount,
-      isLiked: isLiked ?? this.isLiked,
+      upvotes: upvotes ?? this.upvotes,
+      downvotes: downvotes ?? this.downvotes,
       attachments: attachments ?? this.attachments,
-      replies: replies ?? this.replies,
+      viewsCount: viewsCount ?? this.viewsCount,
+      commentCount: commentCount ?? this.commentCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -73,13 +64,16 @@ class Post extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    userId,
+    community,
+    author,
+    title,
     content,
+    upvotes,
+    downvotes,
+    attachments,
+    viewsCount,
+    commentCount,
     createdAt,
     updatedAt,
-    likeCount,
-    isLiked,
-    attachments,
-    replies,
   ];
 }

@@ -6,4 +6,6 @@ export 'models/reply_model_helper.dart';
 export 'models/attachment_model.dart';
 export 'models/post_model.dart';
 export 'models/reply_model.dart';
+export 'models/author_model.dart';
+export 'models/author_model_helper.dart';
 export 'repository/chirp_repository_impl.dart';

@@ -11,7 +11,7 @@ class PostReplyTable extends Table with TableMixin {
     onDelete: KeyAction.cascade,
   )();
   @JsonKey('post_id')
-  TextColumn get postId => text().references(PostTable, #id, onDelete: KeyAction.cascade)();
+  IntColumn get postId => integer().references(PostTable, #id, onDelete: KeyAction.cascade)();
   @JsonKey('user_id')
   TextColumn get userId => text()();
   @JsonKey('user_name')

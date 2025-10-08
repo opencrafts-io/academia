@@ -49,7 +49,7 @@ class _PostCardState extends State<PostCard> {
               children: [
                 ChirpUserAvatar(
                   avatarUrl:
-                      widget.post.avatarUrl ??
+                      widget.post.author.avatarUrl ??
                       'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg',
                   numberOfScallops: 6,
                 ),
@@ -58,13 +58,13 @@ class _PostCardState extends State<PostCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'a/${widget.post.group.name}',
+                      'a/${widget.post.community.name}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "${widget.post.userName} • ${timeSince(widget.post.createdAt)}",
+                      "${widget.post.author.username} • ${timeSince(widget.post.createdAt)}",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         overflow: TextOverflow.ellipsis,
                         // fontWeight: FontWeight.bold,
@@ -131,11 +131,12 @@ class _PostCardState extends State<PostCard> {
             Row(
               children: [
                 SegmentedButton<Vote>(
+                  selected: {}, // TODO: To be Removed
                   segments: [
                     ButtonSegment(
                       value: Vote.up,
                       icon: Icon(Icons.thumb_up_outlined),
-                      label: Text(widget.post.likeCount.toString()),
+                      label: Text(widget.post.upvotes.toString()),
                     ),
                     ButtonSegment(
                       value: Vote.down,
@@ -144,20 +145,21 @@ class _PostCardState extends State<PostCard> {
                   ],
                   style: SegmentedButton.styleFrom(padding: EdgeInsets.all(2)),
                   emptySelectionAllowed: true,
-                  selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
-                  selectedIcon: widget.post.isLiked
-                      ? Icon(Icons.thumb_up)
-                      : Icon(Icons.thumb_down),
+                  //TODO: implement like functionality and uncomment the below
+                  // selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
+                  // selectedIcon: widget.post.isLiked
+                  //     ? Icon(Icons.thumb_up)
+                  //     : Icon(Icons.thumb_down),
                   onSelectionChanged: (vote) {
-                    final isTogglingOff = vote.isEmpty && widget.post.isLiked;
-                    context.read<FeedBloc>().add(
-                      ToggleLikePost(
-                        postId: widget.post.id,
-                        isCurrentlyLiked: isTogglingOff
-                            ? true
-                            : widget.post.isLiked,
-                      ),
-                    );
+                    // final isTogglingOff = vote.isEmpty && widget.post.isLiked;
+                    // context.read<FeedBloc>().add(
+                    //   ToggleLikePost(
+                    //     postId: widget.post.id.toString(),
+                    //     isCurrentlyLiked: isTogglingOff
+                    //         ? true
+                    //         : widget.post.isLiked,
+                    //   ),
+                    // );
                   },
                 ),
                 SizedBox(width: 16),

@@ -1,4 +1,3 @@
-import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/posts/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class FeedPage extends StatelessWidget {
         listener: (context, state) {},
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<FeedBloc>().add(CacheFeedEvent());
+            context.read<FeedBloc>().add(LoadFeedEvent());
             await Future.delayed(Duration(seconds: 2));
           },
           child: CustomScrollView(
@@ -33,7 +32,7 @@ class FeedPage extends StatelessWidget {
                           post: state.posts[index],
                           onTap: () {
                             context.push(
-                              '/post/${state.posts[index].id}',
+                              '/post/${state.posts[index].id}', //TODO: change to named route
                               extra: state.posts[index],
                             );
                           },
@@ -49,7 +48,8 @@ class FeedPage extends StatelessWidget {
                   }
                   if (state is FeedError) {
                     return SliverFillRemaining(
-                      child: Center(child: Text("Connection error")),
+                      // child: Center(child: Text("Connection error")),
+                      child: Center(child: Text(state.message)),
                     );
                   }
                   return const SliverFillRemaining(
