@@ -4,7 +4,6 @@ import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
 import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
-import 'package:academia/features/chirp/posts/data/models/author_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/reply_model.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
@@ -34,7 +33,6 @@ part 'database.g.dart';
     Token,
 
     // Posts
-    AuthorTable,
     AttachmentTable,
     PostTable,
     PostReplyTable, // to rename to comments

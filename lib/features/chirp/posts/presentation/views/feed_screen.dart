@@ -1,5 +1,7 @@
 import 'package:academia/core/clippers/clippers.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/chirp/posts/presentation/presentation.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -28,14 +30,17 @@ class FeedPage extends StatelessWidget {
                   if (state is FeedLoaded) {
                     return SliverList.builder(
                       itemBuilder: (context, index) {
-                        return PostCard(
-                          post: state.posts[index],
-                          onTap: () {
-                            context.push(
-                              '/post/${state.posts[index].id}', //TODO: change to named route
-                              extra: state.posts[index],
-                            );
-                          },
+                        return BlocProvider(
+                          create: (context) => sl<ChirpUserCubit>(),
+                          child: PostCard(
+                            post: state.posts[index],
+                            onTap: () {
+                              context.push(
+                                '/post/${state.posts[index].id}', //TODO: change to named route
+                                extra: state.posts[index],
+                              );
+                            },
+                          ),
                         );
                       },
                       itemCount: state.posts.length,

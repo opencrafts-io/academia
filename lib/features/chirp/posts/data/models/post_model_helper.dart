@@ -93,7 +93,7 @@ extension PostModelHelper on PostData {
   Post toEntity() => Post(
         id: id,
         community: CommunityData.fromJson(community).toEntity(),
-        author: AuthorData.fromJson(author).toEntity(),       
+        authorId: authorId,       
         title: title,
         content: content,
         upvotes: upvotes,
@@ -112,7 +112,7 @@ extension PostEntityHelper on Post {
   PostData toData() => PostData(
         id: id,
         community: community.toData().toJson(),
-        author: author.toData().toJson(),
+        authorId: authorId,
         title: title,
         content: content,
         upvotes: upvotes,

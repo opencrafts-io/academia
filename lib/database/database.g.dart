@@ -1219,564 +1219,6 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
-class $AuthorTableTable extends AuthorTable
-    with TableInfo<$AuthorTableTable, AuthorData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $AuthorTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
-  @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  @override
-  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
-    'phone',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _usernameMeta = const VerificationMeta(
-    'username',
-  );
-  @override
-  late final GeneratedColumn<String> username = GeneratedColumn<String>(
-    'username',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
-    'avatarUrl',
-  );
-  @override
-  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
-    'avatar_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _vibePointsMeta = const VerificationMeta(
-    'vibePoints',
-  );
-  @override
-  late final GeneratedColumn<int> vibePoints = GeneratedColumn<int>(
-    'vibe_points',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    userId,
-    name,
-    email,
-    phone,
-    username,
-    avatarUrl,
-    vibePoints,
-    createdAt,
-    updatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'author_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<AuthorData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emailMeta);
-    }
-    if (data.containsKey('phone')) {
-      context.handle(
-        _phoneMeta,
-        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
-    }
-    if (data.containsKey('username')) {
-      context.handle(
-        _usernameMeta,
-        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_usernameMeta);
-    }
-    if (data.containsKey('avatar_url')) {
-      context.handle(
-        _avatarUrlMeta,
-        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
-      );
-    }
-    if (data.containsKey('vibe_points')) {
-      context.handle(
-        _vibePointsMeta,
-        vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {userId};
-  @override
-  AuthorData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AuthorData(
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      email: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email'],
-      )!,
-      phone: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}phone'],
-      )!,
-      username: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}username'],
-      )!,
-      avatarUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}avatar_url'],
-      ),
-      vibePoints: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}vibe_points'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-    );
-  }
-
-  @override
-  $AuthorTableTable createAlias(String alias) {
-    return $AuthorTableTable(attachedDatabase, alias);
-  }
-}
-
-class AuthorData extends DataClass implements Insertable<AuthorData> {
-  final String userId;
-  final String name;
-  final String email;
-  final String phone;
-  final String username;
-  final String? avatarUrl;
-  final int vibePoints;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  const AuthorData({
-    required this.userId,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.username,
-    this.avatarUrl,
-    required this.vibePoints,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['user_id'] = Variable<String>(userId);
-    map['name'] = Variable<String>(name);
-    map['email'] = Variable<String>(email);
-    map['phone'] = Variable<String>(phone);
-    map['username'] = Variable<String>(username);
-    if (!nullToAbsent || avatarUrl != null) {
-      map['avatar_url'] = Variable<String>(avatarUrl);
-    }
-    map['vibe_points'] = Variable<int>(vibePoints);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  AuthorTableCompanion toCompanion(bool nullToAbsent) {
-    return AuthorTableCompanion(
-      userId: Value(userId),
-      name: Value(name),
-      email: Value(email),
-      phone: Value(phone),
-      username: Value(username),
-      avatarUrl: avatarUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(avatarUrl),
-      vibePoints: Value(vibePoints),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory AuthorData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AuthorData(
-      userId: serializer.fromJson<String>(json['user_id']),
-      name: serializer.fromJson<String>(json['name']),
-      email: serializer.fromJson<String>(json['email']),
-      phone: serializer.fromJson<String>(json['phone']),
-      username: serializer.fromJson<String>(json['username']),
-      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
-      vibePoints: serializer.fromJson<int>(json['vibe_points']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'user_id': serializer.toJson<String>(userId),
-      'name': serializer.toJson<String>(name),
-      'email': serializer.toJson<String>(email),
-      'phone': serializer.toJson<String>(phone),
-      'username': serializer.toJson<String>(username),
-      'avatar_url': serializer.toJson<String?>(avatarUrl),
-      'vibe_points': serializer.toJson<int>(vibePoints),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  AuthorData copyWith({
-    String? userId,
-    String? name,
-    String? email,
-    String? phone,
-    String? username,
-    Value<String?> avatarUrl = const Value.absent(),
-    int? vibePoints,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) => AuthorData(
-    userId: userId ?? this.userId,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    phone: phone ?? this.phone,
-    username: username ?? this.username,
-    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
-    vibePoints: vibePoints ?? this.vibePoints,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
-  AuthorData copyWithCompanion(AuthorTableCompanion data) {
-    return AuthorData(
-      userId: data.userId.present ? data.userId.value : this.userId,
-      name: data.name.present ? data.name.value : this.name,
-      email: data.email.present ? data.email.value : this.email,
-      phone: data.phone.present ? data.phone.value : this.phone,
-      username: data.username.present ? data.username.value : this.username,
-      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
-      vibePoints: data.vibePoints.present
-          ? data.vibePoints.value
-          : this.vibePoints,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AuthorData(')
-          ..write('userId: $userId, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('phone: $phone, ')
-          ..write('username: $username, ')
-          ..write('avatarUrl: $avatarUrl, ')
-          ..write('vibePoints: $vibePoints, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    userId,
-    name,
-    email,
-    phone,
-    username,
-    avatarUrl,
-    vibePoints,
-    createdAt,
-    updatedAt,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AuthorData &&
-          other.userId == this.userId &&
-          other.name == this.name &&
-          other.email == this.email &&
-          other.phone == this.phone &&
-          other.username == this.username &&
-          other.avatarUrl == this.avatarUrl &&
-          other.vibePoints == this.vibePoints &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class AuthorTableCompanion extends UpdateCompanion<AuthorData> {
-  final Value<String> userId;
-  final Value<String> name;
-  final Value<String> email;
-  final Value<String> phone;
-  final Value<String> username;
-  final Value<String?> avatarUrl;
-  final Value<int> vibePoints;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<int> rowid;
-  const AuthorTableCompanion({
-    this.userId = const Value.absent(),
-    this.name = const Value.absent(),
-    this.email = const Value.absent(),
-    this.phone = const Value.absent(),
-    this.username = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
-    this.vibePoints = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  AuthorTableCompanion.insert({
-    required String userId,
-    required String name,
-    required String email,
-    required String phone,
-    required String username,
-    this.avatarUrl = const Value.absent(),
-    this.vibePoints = const Value.absent(),
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    this.rowid = const Value.absent(),
-  }) : userId = Value(userId),
-       name = Value(name),
-       email = Value(email),
-       phone = Value(phone),
-       username = Value(username),
-       createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
-  static Insertable<AuthorData> custom({
-    Expression<String>? userId,
-    Expression<String>? name,
-    Expression<String>? email,
-    Expression<String>? phone,
-    Expression<String>? username,
-    Expression<String>? avatarUrl,
-    Expression<int>? vibePoints,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (userId != null) 'user_id': userId,
-      if (name != null) 'name': name,
-      if (email != null) 'email': email,
-      if (phone != null) 'phone': phone,
-      if (username != null) 'username': username,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
-      if (vibePoints != null) 'vibe_points': vibePoints,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  AuthorTableCompanion copyWith({
-    Value<String>? userId,
-    Value<String>? name,
-    Value<String>? email,
-    Value<String>? phone,
-    Value<String>? username,
-    Value<String?>? avatarUrl,
-    Value<int>? vibePoints,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<int>? rowid,
-  }) {
-    return AuthorTableCompanion(
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      username: username ?? this.username,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      vibePoints: vibePoints ?? this.vibePoints,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
-    }
-    if (phone.present) {
-      map['phone'] = Variable<String>(phone.value);
-    }
-    if (username.present) {
-      map['username'] = Variable<String>(username.value);
-    }
-    if (avatarUrl.present) {
-      map['avatar_url'] = Variable<String>(avatarUrl.value);
-    }
-    if (vibePoints.present) {
-      map['vibe_points'] = Variable<int>(vibePoints.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AuthorTableCompanion(')
-          ..write('userId: $userId, ')
-          ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('phone: $phone, ')
-          ..write('username: $username, ')
-          ..write('avatarUrl: $avatarUrl, ')
-          ..write('vibePoints: $vibePoints, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $AttachmentTableTable extends AttachmentTable
     with TableInfo<$AttachmentTableTable, AttachmentData> {
   @override
@@ -2250,15 +1692,17 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   ).withConverter<Map<String, dynamic>>($PostTableTable.$convertercommunity);
+  static const VerificationMeta _authorIdMeta = const VerificationMeta(
+    'authorId',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
-  author = GeneratedColumn<String>(
-    'author',
+  late final GeneratedColumn<String> authorId = GeneratedColumn<String>(
+    'author_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($PostTableTable.$converterauthor);
+  );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -2362,7 +1806,7 @@ class $PostTableTable extends PostTable
   List<GeneratedColumn> get $columns => [
     id,
     community,
-    author,
+    authorId,
     title,
     content,
     upvotes,
@@ -2387,6 +1831,14 @@ class $PostTableTable extends PostTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('author_id')) {
+      context.handle(
+        _authorIdMeta,
+        authorId.isAcceptableOrUnknown(data['author_id']!, _authorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_authorIdMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -2466,12 +1918,10 @@ class $PostTableTable extends PostTable
           data['${effectivePrefix}community'],
         )!,
       ),
-      author: $PostTableTable.$converterauthor.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}author'],
-        )!,
-      ),
+      authorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}author_id'],
+      )!,
       title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}title'],
@@ -2520,8 +1970,6 @@ class $PostTableTable extends PostTable
 
   static TypeConverter<Map<String, dynamic>, String> $convertercommunity =
       JsonConverter();
-  static TypeConverter<Map<String, dynamic>, String> $converterauthor =
-      JsonConverter();
   static TypeConverter<List<dynamic>, String> $converterattachments =
       JsonListConverter();
 }
@@ -2529,7 +1977,7 @@ class $PostTableTable extends PostTable
 class PostData extends DataClass implements Insertable<PostData> {
   final int id;
   final Map<String, dynamic> community;
-  final Map<String, dynamic> author;
+  final String authorId;
   final String title;
   final String content;
   final int upvotes;
@@ -2542,7 +1990,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   const PostData({
     required this.id,
     required this.community,
-    required this.author,
+    required this.authorId,
     required this.title,
     required this.content,
     required this.upvotes,
@@ -2562,11 +2010,7 @@ class PostData extends DataClass implements Insertable<PostData> {
         $PostTableTable.$convertercommunity.toSql(community),
       );
     }
-    {
-      map['author'] = Variable<String>(
-        $PostTableTable.$converterauthor.toSql(author),
-      );
-    }
+    map['author_id'] = Variable<String>(authorId);
     map['title'] = Variable<String>(title);
     map['content'] = Variable<String>(content);
     map['upvotes'] = Variable<int>(upvotes);
@@ -2587,7 +2031,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     return PostTableCompanion(
       id: Value(id),
       community: Value(community),
-      author: Value(author),
+      authorId: Value(authorId),
       title: Value(title),
       content: Value(content),
       upvotes: Value(upvotes),
@@ -2608,7 +2052,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     return PostData(
       id: serializer.fromJson<int>(json['id']),
       community: serializer.fromJson<Map<String, dynamic>>(json['community']),
-      author: serializer.fromJson<Map<String, dynamic>>(json['author']),
+      authorId: serializer.fromJson<String>(json['author_id']),
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
       upvotes: serializer.fromJson<int>(json['upvotes']),
@@ -2626,7 +2070,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'community': serializer.toJson<Map<String, dynamic>>(community),
-      'author': serializer.toJson<Map<String, dynamic>>(author),
+      'author_id': serializer.toJson<String>(authorId),
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
       'upvotes': serializer.toJson<int>(upvotes),
@@ -2642,7 +2086,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   PostData copyWith({
     int? id,
     Map<String, dynamic>? community,
-    Map<String, dynamic>? author,
+    String? authorId,
     String? title,
     String? content,
     int? upvotes,
@@ -2655,7 +2099,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   }) => PostData(
     id: id ?? this.id,
     community: community ?? this.community,
-    author: author ?? this.author,
+    authorId: authorId ?? this.authorId,
     title: title ?? this.title,
     content: content ?? this.content,
     upvotes: upvotes ?? this.upvotes,
@@ -2670,7 +2114,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     return PostData(
       id: data.id.present ? data.id.value : this.id,
       community: data.community.present ? data.community.value : this.community,
-      author: data.author.present ? data.author.value : this.author,
+      authorId: data.authorId.present ? data.authorId.value : this.authorId,
       title: data.title.present ? data.title.value : this.title,
       content: data.content.present ? data.content.value : this.content,
       upvotes: data.upvotes.present ? data.upvotes.value : this.upvotes,
@@ -2694,7 +2138,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     return (StringBuffer('PostData(')
           ..write('id: $id, ')
           ..write('community: $community, ')
-          ..write('author: $author, ')
+          ..write('authorId: $authorId, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('upvotes: $upvotes, ')
@@ -2712,7 +2156,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   int get hashCode => Object.hash(
     id,
     community,
-    author,
+    authorId,
     title,
     content,
     upvotes,
@@ -2729,7 +2173,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       (other is PostData &&
           other.id == this.id &&
           other.community == this.community &&
-          other.author == this.author &&
+          other.authorId == this.authorId &&
           other.title == this.title &&
           other.content == this.content &&
           other.upvotes == this.upvotes &&
@@ -2744,7 +2188,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<int> id;
   final Value<Map<String, dynamic>> community;
-  final Value<Map<String, dynamic>> author;
+  final Value<String> authorId;
   final Value<String> title;
   final Value<String> content;
   final Value<int> upvotes;
@@ -2757,7 +2201,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   const PostTableCompanion({
     this.id = const Value.absent(),
     this.community = const Value.absent(),
-    this.author = const Value.absent(),
+    this.authorId = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.upvotes = const Value.absent(),
@@ -2771,7 +2215,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   PostTableCompanion.insert({
     this.id = const Value.absent(),
     required Map<String, dynamic> community,
-    required Map<String, dynamic> author,
+    required String authorId,
     required String title,
     required String content,
     this.upvotes = const Value.absent(),
@@ -2782,7 +2226,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : community = Value(community),
-       author = Value(author),
+       authorId = Value(authorId),
        title = Value(title),
        content = Value(content),
        attachments = Value(attachments),
@@ -2791,7 +2235,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   static Insertable<PostData> custom({
     Expression<int>? id,
     Expression<String>? community,
-    Expression<String>? author,
+    Expression<String>? authorId,
     Expression<String>? title,
     Expression<String>? content,
     Expression<int>? upvotes,
@@ -2805,7 +2249,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (community != null) 'community': community,
-      if (author != null) 'author': author,
+      if (authorId != null) 'author_id': authorId,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       if (upvotes != null) 'upvotes': upvotes,
@@ -2821,7 +2265,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   PostTableCompanion copyWith({
     Value<int>? id,
     Value<Map<String, dynamic>>? community,
-    Value<Map<String, dynamic>>? author,
+    Value<String>? authorId,
     Value<String>? title,
     Value<String>? content,
     Value<int>? upvotes,
@@ -2835,7 +2279,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     return PostTableCompanion(
       id: id ?? this.id,
       community: community ?? this.community,
-      author: author ?? this.author,
+      authorId: authorId ?? this.authorId,
       title: title ?? this.title,
       content: content ?? this.content,
       upvotes: upvotes ?? this.upvotes,
@@ -2859,10 +2303,8 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
         $PostTableTable.$convertercommunity.toSql(community.value),
       );
     }
-    if (author.present) {
-      map['author'] = Variable<String>(
-        $PostTableTable.$converterauthor.toSql(author.value),
-      );
+    if (authorId.present) {
+      map['author_id'] = Variable<String>(authorId.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -2901,7 +2343,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     return (StringBuffer('PostTableCompanion(')
           ..write('id: $id, ')
           ..write('community: $community, ')
-          ..write('author: $author, ')
+          ..write('authorId: $authorId, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('upvotes: $upvotes, ')
@@ -15900,7 +15342,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
   late final $TokenTable token = $TokenTable(this);
-  late final $AuthorTableTable authorTable = $AuthorTableTable(this);
   late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
     this,
   );
@@ -15935,7 +15376,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
     token,
-    authorTable,
     attachmentTable,
     postTable,
     postReplyTable,
@@ -16561,284 +16001,6 @@ typedef $$TokenTableProcessedTableManager =
       TokenData,
       PrefetchHooks Function()
     >;
-typedef $$AuthorTableTableCreateCompanionBuilder =
-    AuthorTableCompanion Function({
-      required String userId,
-      required String name,
-      required String email,
-      required String phone,
-      required String username,
-      Value<String?> avatarUrl,
-      Value<int> vibePoints,
-      required DateTime createdAt,
-      required DateTime updatedAt,
-      Value<int> rowid,
-    });
-typedef $$AuthorTableTableUpdateCompanionBuilder =
-    AuthorTableCompanion Function({
-      Value<String> userId,
-      Value<String> name,
-      Value<String> email,
-      Value<String> phone,
-      Value<String> username,
-      Value<String?> avatarUrl,
-      Value<int> vibePoints,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-
-class $$AuthorTableTableFilterComposer
-    extends Composer<_$AppDataBase, $AuthorTableTable> {
-  $$AuthorTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get username => $composableBuilder(
-    column: $table.username,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get vibePoints => $composableBuilder(
-    column: $table.vibePoints,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$AuthorTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $AuthorTableTable> {
-  $$AuthorTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get username => $composableBuilder(
-    column: $table.username,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get vibePoints => $composableBuilder(
-    column: $table.vibePoints,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$AuthorTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $AuthorTableTable> {
-  $$AuthorTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<String> get phone =>
-      $composableBuilder(column: $table.phone, builder: (column) => column);
-
-  GeneratedColumn<String> get username =>
-      $composableBuilder(column: $table.username, builder: (column) => column);
-
-  GeneratedColumn<String> get avatarUrl =>
-      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
-
-  GeneratedColumn<int> get vibePoints => $composableBuilder(
-    column: $table.vibePoints,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-}
-
-class $$AuthorTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $AuthorTableTable,
-          AuthorData,
-          $$AuthorTableTableFilterComposer,
-          $$AuthorTableTableOrderingComposer,
-          $$AuthorTableTableAnnotationComposer,
-          $$AuthorTableTableCreateCompanionBuilder,
-          $$AuthorTableTableUpdateCompanionBuilder,
-          (
-            AuthorData,
-            BaseReferences<_$AppDataBase, $AuthorTableTable, AuthorData>,
-          ),
-          AuthorData,
-          PrefetchHooks Function()
-        > {
-  $$AuthorTableTableTableManager(_$AppDataBase db, $AuthorTableTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$AuthorTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$AuthorTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$AuthorTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> userId = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> email = const Value.absent(),
-                Value<String> phone = const Value.absent(),
-                Value<String> username = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
-                Value<int> vibePoints = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AuthorTableCompanion(
-                userId: userId,
-                name: name,
-                email: email,
-                phone: phone,
-                username: username,
-                avatarUrl: avatarUrl,
-                vibePoints: vibePoints,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String userId,
-                required String name,
-                required String email,
-                required String phone,
-                required String username,
-                Value<String?> avatarUrl = const Value.absent(),
-                Value<int> vibePoints = const Value.absent(),
-                required DateTime createdAt,
-                required DateTime updatedAt,
-                Value<int> rowid = const Value.absent(),
-              }) => AuthorTableCompanion.insert(
-                userId: userId,
-                name: name,
-                email: email,
-                phone: phone,
-                username: username,
-                avatarUrl: avatarUrl,
-                vibePoints: vibePoints,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$AuthorTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $AuthorTableTable,
-      AuthorData,
-      $$AuthorTableTableFilterComposer,
-      $$AuthorTableTableOrderingComposer,
-      $$AuthorTableTableAnnotationComposer,
-      $$AuthorTableTableCreateCompanionBuilder,
-      $$AuthorTableTableUpdateCompanionBuilder,
-      (
-        AuthorData,
-        BaseReferences<_$AppDataBase, $AuthorTableTable, AuthorData>,
-      ),
-      AuthorData,
-      PrefetchHooks Function()
-    >;
 typedef $$AttachmentTableTableCreateCompanionBuilder =
     AttachmentTableCompanion Function({
       Value<int> id,
@@ -17083,7 +16245,7 @@ typedef $$PostTableTableCreateCompanionBuilder =
     PostTableCompanion Function({
       Value<int> id,
       required Map<String, dynamic> community,
-      required Map<String, dynamic> author,
+      required String authorId,
       required String title,
       required String content,
       Value<int> upvotes,
@@ -17098,7 +16260,7 @@ typedef $$PostTableTableUpdateCompanionBuilder =
     PostTableCompanion Function({
       Value<int> id,
       Value<Map<String, dynamic>> community,
-      Value<Map<String, dynamic>> author,
+      Value<String> authorId,
       Value<String> title,
       Value<String> content,
       Value<int> upvotes,
@@ -17157,14 +16319,9 @@ class $$PostTableTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<
-    Map<String, dynamic>,
-    Map<String, dynamic>,
-    String
-  >
-  get author => $composableBuilder(
-    column: $table.author,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+  ColumnFilters<String> get authorId => $composableBuilder(
+    column: $table.authorId,
+    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get title => $composableBuilder(
@@ -17258,8 +16415,8 @@ class $$PostTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get author => $composableBuilder(
-    column: $table.author,
+  ColumnOrderings<String> get authorId => $composableBuilder(
+    column: $table.authorId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -17325,8 +16482,8 @@ class $$PostTableTableAnnotationComposer
   get community =>
       $composableBuilder(column: $table.community, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get author =>
-      $composableBuilder(column: $table.author, builder: (column) => column);
+  GeneratedColumn<String> get authorId =>
+      $composableBuilder(column: $table.authorId, builder: (column) => column);
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -17418,7 +16575,7 @@ class $$PostTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<Map<String, dynamic>> community = const Value.absent(),
-                Value<Map<String, dynamic>> author = const Value.absent(),
+                Value<String> authorId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> content = const Value.absent(),
                 Value<int> upvotes = const Value.absent(),
@@ -17431,7 +16588,7 @@ class $$PostTableTableTableManager
               }) => PostTableCompanion(
                 id: id,
                 community: community,
-                author: author,
+                authorId: authorId,
                 title: title,
                 content: content,
                 upvotes: upvotes,
@@ -17446,7 +16603,7 @@ class $$PostTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required Map<String, dynamic> community,
-                required Map<String, dynamic> author,
+                required String authorId,
                 required String title,
                 required String content,
                 Value<int> upvotes = const Value.absent(),
@@ -17459,7 +16616,7 @@ class $$PostTableTableTableManager
               }) => PostTableCompanion.insert(
                 id: id,
                 community: community,
-                author: author,
+                authorId: authorId,
                 title: title,
                 content: content,
                 upvotes: upvotes,
@@ -24690,8 +23847,6 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
-  $$AuthorTableTableTableManager get authorTable =>
-      $$AuthorTableTableTableManager(_db, _db.authorTable);
   $$AttachmentTableTableTableManager get attachmentTable =>
       $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
   $$PostTableTableTableManager get postTable =>

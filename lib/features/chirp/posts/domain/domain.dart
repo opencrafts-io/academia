@@ -1,5 +1,4 @@
 export 'entities/post.dart';
-export 'entities/author.dart';
 export 'repository/chirp_repository.dart';
 export 'usecases/get_feed_posts.dart';
 export 'usecases/cache_posts.dart';

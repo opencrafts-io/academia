@@ -1,6 +1,4 @@
-
-import 'package:academia/features/chirp/common/presentation/widgets/widgets.dart';
-import 'package:academia/features/chirp/posts/posts.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_since/time_since.dart';
@@ -28,6 +26,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ChirpUserCubit>().getChirpUserByID(widget.post.authorId);
     return InkWell(
       onTap: widget.onTap,
       child: Container(
@@ -44,35 +43,48 @@ class _PostCardState extends State<PostCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              spacing: 8,
-              children: [
-                ChirpUserAvatar(
-                  avatarUrl:
-                      widget.post.author.avatarUrl ??
-                      'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg',
-                  numberOfScallops: 6,
-                ),
-                Column(
-                  spacing: 2,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            BlocBuilder<ChirpUserCubit, ChirpUserState>(
+              builder: (context, state) {
+                String avatarUrl =
+                    'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                String username = 'Unknown User';
+
+                if (state is ChirpUserLoadedState) {
+                  avatarUrl =
+                      state.user.avatarUrl ??
+                      'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                  username = state.user.username ?? 'Unknown User';
+                }
+
+                return Row(
+                  spacing: 8,
                   children: [
-                    Text(
-                      'a/${widget.post.community.name}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    ChirpUserAvatar(
+                      avatarUrl: avatarUrl,
+                      numberOfScallops: 6,
                     ),
-                    Text(
-                      "${widget.post.author.username} • ${timeSince(widget.post.createdAt)}",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        overflow: TextOverflow.ellipsis,
-                        // fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      spacing: 2,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'a/${widget.post.community.name}',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "$username • ${timeSince(widget.post.createdAt)}",
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                overflow: TextOverflow.ellipsis,
+                                // fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
+                );
+              },
             ),
 
             SizedBox(height: 8),

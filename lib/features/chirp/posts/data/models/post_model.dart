@@ -8,7 +8,8 @@ class PostTable extends Table {
 
   TextColumn get community => text().map(JsonConverter())();
 
-  TextColumn get author => text().map(JsonConverter())();
+  @JsonKey("author_id")
+  TextColumn get authorId => text()();
 
   TextColumn get title => text()();
 

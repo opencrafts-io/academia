@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 class Post extends Equatable {
   final int id;
   final Community community; 
-  final Author author;
+  final String authorId;
   final String title;
   final String content;
   final int upvotes;
@@ -19,7 +19,7 @@ class Post extends Equatable {
   const Post({
     required this.id,
     required this.community,
-    required this.author,
+    required this.authorId,
     required this.title,
     required this.content,
     required this.upvotes,
@@ -34,7 +34,7 @@ class Post extends Equatable {
   Post copyWith({
     int? id,
     Community? community,
-    Author? author,
+    String? authorId,
     String? title,
     String? content,
     int? upvotes,
@@ -48,7 +48,7 @@ class Post extends Equatable {
     return Post(
       id: id ?? this.id,
       community: community ?? this.community,
-      author: author ?? this.author,
+      authorId: authorId ?? this.authorId,
       title: title ?? this.title,
       content: content ?? this.content,
       upvotes: upvotes ?? this.upvotes,
@@ -65,7 +65,7 @@ class Post extends Equatable {
   List<Object?> get props => [
     id,
     community,
-    author,
+    authorId,
     title,
     content,
     upvotes,
