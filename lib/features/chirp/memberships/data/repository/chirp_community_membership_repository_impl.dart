@@ -33,7 +33,7 @@ class ChirpCommunityMembershipRepositoryImpl
 
   @override
   Future<Either<Failure, List<ChirpCommunityMembership>>>
-  getAndCachePersonalMemberships({int page = 1, int pageSize = 100}) async {
+  getPersonalMemberships({int page = 1, int pageSize = 100}) async {
     final remoteRes = await chirpCommunityMembershipRemoteDatasource
         .getPersonalMemberships(page: page, pageSize: pageSize);
 
@@ -134,5 +134,11 @@ class ChirpCommunityMembershipRepositoryImpl
         });
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, ChirpCommunityMembership>>
+  getPersonalCommunityMemberShipForCommunity({required int communityID}) {
+    throw UnimplementedError();
   }
 }

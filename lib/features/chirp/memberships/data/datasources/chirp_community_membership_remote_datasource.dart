@@ -57,6 +57,31 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, ChirpCommunityMembershipData>>
+  getPersonalMembershipByCommunityID({required int communityID}) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/memberships/mine/for/$communityID",
+      );
+
+      if (response.statusCode == 200) {
+        return right(ChirpCommunityMembershipData.fromJson(response.data));
+      }
+      throw (
+        "Programming error expected response code 200 instead got ${response.statusCode}",
+      );
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "Something went wrong while trying to reach server",
+          error: e,
+        ),
+      );
+    }
+  }
+
   /// Sends a request to the server to join a community.
   Future<Either<Failure, ChirpCommunityMembershipData>> joinCommunity({
     required String communityID,

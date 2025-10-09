@@ -11,10 +11,9 @@ abstract class ChirpCommunityMembershipRepository {
     required String communityID,
   });
 
-  /// Fetches the current user's personal memberships from the remote source,
-  /// synchronizes (caches) the full list locally, and returns the list of Entities.
+  /// Retrieves all personal memberships for a user and caches them accordingly
   Future<Either<Failure, List<ChirpCommunityMembership>>>
-  getAndCachePersonalMemberships({int page = 1, int pageSize = 100});
+  getPersonalMemberships({int page = 1, int pageSize = 100});
 
   /// Provides a List of all memberships currently cached locally.
   Future<Either<Failure, List<ChirpCommunityMembership>>>
@@ -32,4 +31,8 @@ abstract class ChirpCommunityMembershipRepository {
     int page = 1,
     int pageSize = 50,
   });
+
+  /// Fetched personal communit membership for a given community
+  Future<Either<Failure, ChirpCommunityMembership>>
+  getPersonalCommunityMemberShipForCommunity({required int communityID});
 }
