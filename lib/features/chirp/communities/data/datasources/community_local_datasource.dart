@@ -150,4 +150,19 @@ class CommunityLocalDatasource {
       );
     }
   }
+
+  /// _deleteAllExpiredCachedCommunityMemberships
+  /// Deletes all expired cached community memberships
+  Future<void> _deleteAllExpiredCachedCommunityMemberships() async {
+    final expirationThreshold = DateTime.now().subtract(ttl);
+
+    try {
+      // Delete all memberships that are older than the TTL
+      await (localDB.delete(localDB.chirpCommunityMembership)
+        ..where((membership) => membership.cachedAt.isSmallerThanValue(expirationThreshold)))
+        .go();
+    } catch (e) {
+      /// Explicitly ignore the caching
+    }
+  }
 }
