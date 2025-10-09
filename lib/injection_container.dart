@@ -426,6 +426,10 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
   );
 
+  sl.registerFactory<GetCommunityMembershipsUsecase>(
+    () => GetCommunityMembershipsUsecase(communityMembershipRepository: sl()),
+  );
+
   sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
     () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
   );
