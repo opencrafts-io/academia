@@ -1,9 +1,10 @@
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/features/chirp/communities/presentation/bloc/community_home_bloc.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
@@ -79,97 +80,164 @@ class _CommunityHomeState extends State<CommunityHome>
         } else if (state is CommunityHomeLoaded) {
           return RefreshIndicator.adaptive(
             onRefresh: () async {
-              await Future.delayed(Duration(seconds: 2));
+              await Future.delayed(const Duration(seconds: 2));
             },
             child: Scaffold(
               // drawer: Drawer(),
               body: NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                  SliverAppBar.large(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text(state.community.name)],
+                  SliverAppBar.medium(
+                    centerTitle: false,
+                    titleSpacing: 0,
+                    title: InkWell(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Coming soon"),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                state.community.profilePictureUrl == null
+                                ? null
+                                : CachedNetworkImageProvider(
+                                    state.community.profilePictureUrl!,
+                                    errorListener: (error) {},
+                                  ),
+                            child: state.community.profilePictureUrl == null
+                                ? Text(state.community.name[0])
+                                : null,
+                          ),
+                          SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(state.community.name),
+                              Text(
+                                "${NumberFormat.compact().format(state.community.memberCount)} members",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     actions: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.person_add_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: CircleAvatar(
-                          backgroundImage:
-                              state.community.profilePictureUrl == null
-                              ? null
-                              : CachedNetworkImageProvider(
-                                  state.community.profilePictureUrl!,
-                                  errorListener: (error) {},
+                      Padding(
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
+                        child: FilledButton(
+                          onPressed: () {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (context) => AlertDialog.adaptive(
+                                title: Text("Are you sure you want to join?"),
+                                content: Text(
+                                  "Welcome to the community! "
+                                  "By joining, you'll be the first to know about exciting updates, "
+                                  "events, and everything happening here. "
+                                  "To ensure a smooth experience, please take a moment to review "
+                                  "the community guidelines set by our moderators. "
+                                  "Understanding and following these rules will help keep our space "
+                                  "welcoming and prevent any issues down the road. "
+                                  "Let's make this community thrive together!",
                                 ),
-                          child: state.community.profilePictureUrl == null
-                              ? Text(state.community.name[0])
-                              : null,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => context.pop(),
+                                    child: Text("Never mind"),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {},
+                                    child: Text("Join Now"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Text("Join"),
+                        ),
+                      ),
+                      Visibility(
+                        visible: false,
+                        child: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              showDragHandle: true,
+                              builder: (context) => Container(
+                                height: 320,
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "More community actions",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.headlineSmall,
+                                    ),
+                                    Divider(),
+                                    SizedBox(height: 12),
+                                    ListTile(
+                                      leading: Icon(Icons.edit),
+                                      title: Text("Edit community information"),
+                                    ),
+
+                                    ListTile(
+                                      leading: Icon(Icons.groups_2),
+                                      title: Text("View community members"),
+                                      onTap: () {
+                                        CommunityMembersRoute(
+                                          role: "user",
+                                          communityId: widget.communityId,
+                                        ).push(context);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.exit_to_app),
+                                      title: Text("Leave community"),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      title: Text("Delete community"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.more_vert),
                         ),
                       ),
                     ],
                   ),
 
-                  SliverPinnedHeader(
-                    child: Container(
-                      color: Theme.of(context).colorScheme.surface,
-                      child: Row(
-                        spacing: 4,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              CommunityMembersRoute(
-                                role: "member",
-                                communityId: state.community.id,
-                              ).push(context);
-                            },
-                            child: Chip(
-                              label: Text(
-                                "${NumberFormat.compact().format(state.community.memberCount)} members",
-                              ),
-                              avatar: AnimatedEmoji(
-                                AnimatedEmojis.clown,
-                                repeat: false,
-                              ),
-                            ),
+                  SliverPadding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                    sliver: MultiSliver(
+                      pushPinnedChildren: true,
+                      children: [
+                        SliverPinnedHeader(
+                          child: Text(
+                            state.community.description ??
+                                'No description available',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          InkWell(
-                            onTap: () {
-                              CommunityMembersRoute(
-                                role: "mod",
-                                communityId: state.community.id,
-                              ).push(context);
-                            },
-
-                            child: Chip(
-                              label: Text(
-                                "${NumberFormat.compact().format(state.community.moderatorCount)} moderators",
-                              ),
-                              avatar: AnimatedEmoji(
-                                AnimatedEmojis.wink,
-                                repeat: false,
-                              ),
-                            ),
-                          ),
-                          Chip(
-                            label: Text(
-                              "${NumberFormat.compact().format(state.community.weeklyVisitorCount)} visitors",
-                            ),
-                            avatar: AnimatedEmoji(
-                              AnimatedEmojis.nerdFace,
-                              repeat: false,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-                body: Center(child: Text("Community posts")),
+                body: const Center(child: Text("Community posts")),
               ),
             ),
           );

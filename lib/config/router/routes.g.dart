@@ -613,6 +613,7 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 
   factory: _$CommunitiesRoute._fromState,
   routes: [
+    GoRouteData.$route(path: 'info', factory: _$CommunityInfoRoute._fromState),
     GoRouteData.$route(
       path: 'members/:role',
 
@@ -636,6 +637,33 @@ mixin _$CommunitiesRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/communities/${Uri.encodeComponent(_self.communityId.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$CommunityInfoRoute on GoRouteData {
+  static CommunityInfoRoute _fromState(GoRouterState state) =>
+      CommunityInfoRoute(
+        communityId: int.parse(state.pathParameters['communityId']!)!,
+      );
+
+  CommunityInfoRoute get _self => this as CommunityInfoRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}/info',
   );
 
   @override

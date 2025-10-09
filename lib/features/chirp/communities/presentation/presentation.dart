@@ -1,6 +1,5 @@
 export 'views/community_home.dart';
 export 'views/create_community_screen.dart';
-export 'views/community_user_list_screen.dart';
 export 'views/add_community_guidelines_screen.dart';
 export 'views/community_members_page.dart';
 export 'bloc/community_home_bloc.dart';

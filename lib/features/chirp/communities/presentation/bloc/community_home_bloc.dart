@@ -1,12 +1,5 @@
-import 'package:academia/core/error/failures.dart';
-import 'package:academia/features/chirp/communities/domain/entities/community.dart';
-import 'package:academia/features/chirp/communities/domain/entities/community_moderation_enum.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/add_community_guidelines_usecase.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/delete_community_use_case.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/get_community_by_id_use_case.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/join_community_use_case.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/leave_community_use_case.dart';
-import 'package:academia/features/chirp/communities/domain/usecases/moderate_members_use_case.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +24,6 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     required this.addCommunityGuidelinesUsecase,
   }) : super(CommunityHomeInitial()) {
     on<FetchCommunityById>(_onFetchCommunityById);
-    on<ModerateMembers>(_onModerateCommunityMember);
     on<JoinCommunity>(_onJoiningGroup);
     on<LeaveCommunity>(_onLeavingGroup);
     on<DeleteCommunity>(_onDeletingGroup);
@@ -43,29 +35,8 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     FetchCommunityById event,
     Emitter<CommunityHomeState> emit,
   ) async {
-    emit(CommunityHomeLoading());
-
     final Either<Failure, Community> result = await getCommunityByIdUseCase(
       event.communityId,
-    );
-
-    result.fold(
-      (failure) => emit(CommunityHomeFailure(failure.message)),
-      (community) => emit(CommunityHomeLoaded(community)),
-    );
-  }
-
-  Future<void> _onModerateCommunityMember(
-    ModerateMembers event,
-    Emitter<CommunityHomeState> emit,
-  ) async {
-    emit(CommunityHomeLoading());
-    final result = await moderateMembers(
-      groupId: event.communityId,
-      action: event.action.asApiString,
-      userId: event.userId,
-      memberId: event.memberId,
-      memberName: event.memberName,
     );
 
     result.fold(

@@ -1,5 +1,6 @@
 part of 'community_home_bloc.dart';
 
+
 abstract class CommunityHomeEvent extends Equatable {
   const CommunityHomeEvent();
 
@@ -11,6 +12,15 @@ class FetchCommunityById extends CommunityHomeEvent {
   final int communityId;
 
   const FetchCommunityById({required this.communityId});
+
+  @override
+  List<Object?> get props => [communityId];
+}
+
+class FetchCachedCommunityById extends CommunityHomeEvent {
+  final int communityId;
+
+  const FetchCachedCommunityById({required this.communityId});
 
   @override
   List<Object?> get props => [communityId];
@@ -65,30 +75,30 @@ class DeleteCommunity extends CommunityHomeEvent {
   List<Object?> get props => [communityId];
 }
 
-class ModerateMembers extends CommunityHomeEvent {
-  final String communityId;
-  final CommunityModerationAction action;
-  final String userId;
-  final String memberId;
-  final String memberName;
-
-  const ModerateMembers({
-    required this.communityId,
-    required this.action,
-    required this.userId,
-    required this.memberId,
-    required this.memberName,
-  });
-
-  @override
-  List<Object?> get props => [
-    communityId,
-    action,
-    userId,
-    memberId,
-    memberName,
-  ];
-}
+// class ModerateMembers extends CommunityHomeEvent {
+//   final String communityId;
+//   final CommunityModerationAction action;
+//   final String userId;
+//   final String memberId;
+//   final String memberName;
+//
+//   const ModerateMembers({
+//     required this.communityId,
+//     required this.action,
+//     required this.userId,
+//     required this.memberId,
+//     required this.memberName,
+//   });
+//
+//   @override
+//   List<Object?> get props => [
+//     communityId,
+//     action,
+//     userId,
+//     memberId,
+//     memberName,
+//   ];
+// }
 
 class AddCommunityGuidelines extends CommunityHomeEvent {
   final List<String> rule;
