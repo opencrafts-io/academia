@@ -20,6 +20,30 @@ class CommunityMembersPage extends StatefulWidget {
 }
 
 class _CommunityMembersPageState extends State<CommunityMembersPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final cubit = context.read<ChirpCommunityMembershipListingCubit>();
+    final state = cubit.state;
+
+    // Check if the user has scrolled near the bottom (85% down)
+    final isNearEnd =
+        _scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.85;
+
+    if (isNearEnd && state is ChirpCommunityMembershipListingLoadedState) {
+      if (!state.hasReachedMax && !state.isLoading) {
+        cubit.getCommunityMembers(communityID: widget.communityID);
+      }
+    }
+  }
+
   String getTitle() {
     if (widget.role == "member") {
       return "Community Members";
@@ -39,6 +63,7 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
       )..getCommunityMembers(communityID: widget.communityID),
       child: Scaffold(
         body: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverAppBar.large(
               snap: true,
