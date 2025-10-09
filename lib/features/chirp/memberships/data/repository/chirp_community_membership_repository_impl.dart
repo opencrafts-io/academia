@@ -103,4 +103,36 @@ class ChirpCommunityMembershipRepositoryImpl
       });
     });
   }
+
+  @override
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
+  getCommunityMemberships({
+    required int communityID,
+    int page = 1,
+    int pageSize = 50,
+  }) async {
+    final remoteResult = await chirpCommunityMembershipRemoteDatasource
+        .getCommunityMemberships(communityID, page: page, pageSize: pageSize);
+
+    return remoteResult.fold(
+      (failure) async {
+        final cachedResult = await chirpCommunityMembershipLocalDatasource
+            .getCommunityMembershipByCommunityID(communityID);
+        return cachedResult.fold((cacheFailure) => Left(cacheFailure), (
+          cachedMemberships,
+        ) {
+          return Right(cachedMemberships.map((e) => e.toEntity()).toList());
+        });
+      },
+      (fetchedMemberships) async {
+        final saveResult = await chirpCommunityMembershipLocalDatasource
+            .saveAllCommunityMemberships(fetchedMemberships);
+        return saveResult.fold((cacheFailure) => Left(cacheFailure), (
+          savedMemberships,
+        ) {
+          return Right(savedMemberships.map((e) => e.toEntity()).toList());
+        });
+      },
+    );
+  }
 }

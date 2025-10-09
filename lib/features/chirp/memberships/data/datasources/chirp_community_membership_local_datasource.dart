@@ -77,7 +77,25 @@ class ChirpCommunityMembershipLocalDatasource {
     }
   }
 
-  /// --- 4. Delete Single Cached Membership ---
+  /// --- 4. Returns a list of all cached community memberships
+  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  getCommunityMembershipByCommunityID(int communityID) async {
+    try {
+      final memberships = await (localDB.select(
+        localDB.chirpCommunityMembership,
+      )..where((membership) => membership.communityID.equals(communityID))).get();
+      return right(memberships);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: "Failed to fetch cached memberships.",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  /// --- 5. Delete Single Cached Membership ---
   Future<Either<Failure, ChirpCommunityMembershipData?>> deleteCached(
     ChirpCommunityMembershipData communityMembership,
   ) async {

@@ -24,4 +24,12 @@ abstract class ChirpCommunityMembershipRepository {
   ///
   /// Returns nothing on successful completion (Right(void)).
   Future<Either<Failure, void>> leaveCommunity({required int communityID});
+
+  /// Fetches memberships for a community
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
+  getCommunityMemberships({
+    required int communityID,
+    int page = 1,
+    int pageSize = 50,
+  });
 }

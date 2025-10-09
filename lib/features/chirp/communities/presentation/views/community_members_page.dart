@@ -29,7 +29,17 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(slivers: [SliverAppBar(title: Text(getTitle()))]),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.large(
+            snap: true,
+            pinned: true,
+            floating: true,
+            title: Text(getTitle()),
+          ),
+
+        ],
+      ),
     );
   }
 }
