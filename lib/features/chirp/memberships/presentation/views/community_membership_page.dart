@@ -150,7 +150,7 @@ class CommunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ChirpUserCubit>().getChirpUserByUsername("dicky");
+    context.read<ChirpUserCubit>().getChirpUserByID(community.creatorId);
     return Card.outlined(
       color: Theme.of(context).colorScheme.surfaceDim,
       clipBehavior: Clip.hardEdge,
@@ -204,7 +204,7 @@ class CommunityCard extends StatelessWidget {
               SizedBox(height: 8),
               Container(
                 clipBehavior: Clip.hardEdge,
-                height: 160,
+                height: 180,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
@@ -225,7 +225,7 @@ class CommunityCard extends StatelessWidget {
                 children: [
                   Icon(Icons.group),
                   SizedBox(width: 4),
-                  Text("${community.memberCount} Members"),
+                  Text("${community.memberCount} members"),
                   Spacer(),
                   FilledButton(
                     onPressed: () {
