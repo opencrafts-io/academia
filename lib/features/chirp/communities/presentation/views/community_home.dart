@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
@@ -67,10 +68,25 @@ class _CommunityHomeState extends State<CommunityHome>
           );
         } else if (state is CommunityHomeFailure) {
           return Scaffold(
+            appBar: AppBar(title: Text("Community")),
             body: Center(
-              child: Text(
-                state.message,
-                style: Theme.of(context).textTheme.bodyLarge,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    "assets/lotties/under-maintenance.json",
+                    height: 300,
+                  ),
+                  Text(
+                    "Ooops!",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
               ),
             ),
           );
