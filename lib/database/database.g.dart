@@ -1780,6 +1780,15 @@ class $PostTableTable extends PostTable
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String> comments =
+      GeneratedColumn<String>(
+        'comments',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<List<dynamic>>($PostTableTable.$convertercomments);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1814,6 +1823,7 @@ class $PostTableTable extends PostTable
     attachments,
     viewsCount,
     commentCount,
+    comments,
     createdAt,
     updatedAt,
   ];
@@ -1952,6 +1962,12 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}comment_count'],
       )!,
+      comments: $PostTableTable.$convertercomments.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}comments'],
+        )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1972,6 +1988,8 @@ class $PostTableTable extends PostTable
       JsonConverter();
   static TypeConverter<List<dynamic>, String> $converterattachments =
       JsonListConverter();
+  static TypeConverter<List<dynamic>, String> $convertercomments =
+      JsonListConverter();
 }
 
 class PostData extends DataClass implements Insertable<PostData> {
@@ -1985,6 +2003,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   final List<dynamic> attachments;
   final int viewsCount;
   final int commentCount;
+  final List<dynamic> comments;
   final DateTime createdAt;
   final DateTime updatedAt;
   const PostData({
@@ -1998,6 +2017,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     required this.attachments,
     required this.viewsCount,
     required this.commentCount,
+    required this.comments,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -2022,6 +2042,11 @@ class PostData extends DataClass implements Insertable<PostData> {
     }
     map['views_count'] = Variable<int>(viewsCount);
     map['comment_count'] = Variable<int>(commentCount);
+    {
+      map['comments'] = Variable<String>(
+        $PostTableTable.$convertercomments.toSql(comments),
+      );
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -2039,6 +2064,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       attachments: Value(attachments),
       viewsCount: Value(viewsCount),
       commentCount: Value(commentCount),
+      comments: Value(comments),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -2060,6 +2086,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       attachments: serializer.fromJson<List<dynamic>>(json['attachments']),
       viewsCount: serializer.fromJson<int>(json['views_count']),
       commentCount: serializer.fromJson<int>(json['comment_count']),
+      comments: serializer.fromJson<List<dynamic>>(json['comments']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
     );
@@ -2078,6 +2105,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       'attachments': serializer.toJson<List<dynamic>>(attachments),
       'views_count': serializer.toJson<int>(viewsCount),
       'comment_count': serializer.toJson<int>(commentCount),
+      'comments': serializer.toJson<List<dynamic>>(comments),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
     };
@@ -2094,6 +2122,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     List<dynamic>? attachments,
     int? viewsCount,
     int? commentCount,
+    List<dynamic>? comments,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => PostData(
@@ -2107,6 +2136,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     attachments: attachments ?? this.attachments,
     viewsCount: viewsCount ?? this.viewsCount,
     commentCount: commentCount ?? this.commentCount,
+    comments: comments ?? this.comments,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -2128,6 +2158,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       commentCount: data.commentCount.present
           ? data.commentCount.value
           : this.commentCount,
+      comments: data.comments.present ? data.comments.value : this.comments,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -2146,6 +2177,7 @@ class PostData extends DataClass implements Insertable<PostData> {
           ..write('attachments: $attachments, ')
           ..write('viewsCount: $viewsCount, ')
           ..write('commentCount: $commentCount, ')
+          ..write('comments: $comments, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2164,6 +2196,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     attachments,
     viewsCount,
     commentCount,
+    comments,
     createdAt,
     updatedAt,
   );
@@ -2181,6 +2214,7 @@ class PostData extends DataClass implements Insertable<PostData> {
           other.attachments == this.attachments &&
           other.viewsCount == this.viewsCount &&
           other.commentCount == this.commentCount &&
+          other.comments == this.comments &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -2196,6 +2230,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<List<dynamic>> attachments;
   final Value<int> viewsCount;
   final Value<int> commentCount;
+  final Value<List<dynamic>> comments;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const PostTableCompanion({
@@ -2209,6 +2244,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     this.attachments = const Value.absent(),
     this.viewsCount = const Value.absent(),
     this.commentCount = const Value.absent(),
+    this.comments = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -2223,6 +2259,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     required List<dynamic> attachments,
     this.viewsCount = const Value.absent(),
     this.commentCount = const Value.absent(),
+    required List<dynamic> comments,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : community = Value(community),
@@ -2230,6 +2267,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
        title = Value(title),
        content = Value(content),
        attachments = Value(attachments),
+       comments = Value(comments),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
   static Insertable<PostData> custom({
@@ -2243,6 +2281,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Expression<String>? attachments,
     Expression<int>? viewsCount,
     Expression<int>? commentCount,
+    Expression<String>? comments,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -2257,6 +2296,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
       if (attachments != null) 'attachments': attachments,
       if (viewsCount != null) 'views_count': viewsCount,
       if (commentCount != null) 'comment_count': commentCount,
+      if (comments != null) 'comments': comments,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -2273,6 +2313,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Value<List<dynamic>>? attachments,
     Value<int>? viewsCount,
     Value<int>? commentCount,
+    Value<List<dynamic>>? comments,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -2287,6 +2328,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
       attachments: attachments ?? this.attachments,
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
+      comments: comments ?? this.comments,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -2329,6 +2371,11 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     if (commentCount.present) {
       map['comment_count'] = Variable<int>(commentCount.value);
     }
+    if (comments.present) {
+      map['comments'] = Variable<String>(
+        $PostTableTable.$convertercomments.toSql(comments.value),
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -2351,6 +2398,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
           ..write('attachments: $attachments, ')
           ..write('viewsCount: $viewsCount, ')
           ..write('commentCount: $commentCount, ')
+          ..write('comments: $comments, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -16230,6 +16278,7 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required List<dynamic> attachments,
       Value<int> viewsCount,
       Value<int> commentCount,
+      required List<dynamic> comments,
       required DateTime createdAt,
       required DateTime updatedAt,
     });
@@ -16245,6 +16294,7 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<List<dynamic>> attachments,
       Value<int> viewsCount,
       Value<int> commentCount,
+      Value<List<dynamic>> comments,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -16312,6 +16362,12 @@ class $$PostTableTableFilterComposer
   ColumnFilters<int> get commentCount => $composableBuilder(
     column: $table.commentCount,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get comments => $composableBuilder(
+    column: $table.comments,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
@@ -16384,6 +16440,11 @@ class $$PostTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get comments => $composableBuilder(
+    column: $table.comments,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -16442,6 +16503,9 @@ class $$PostTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get comments =>
+      $composableBuilder(column: $table.comments, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -16487,6 +16551,7 @@ class $$PostTableTableTableManager
                 Value<List<dynamic>> attachments = const Value.absent(),
                 Value<int> viewsCount = const Value.absent(),
                 Value<int> commentCount = const Value.absent(),
+                Value<List<dynamic>> comments = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => PostTableCompanion(
@@ -16500,6 +16565,7 @@ class $$PostTableTableTableManager
                 attachments: attachments,
                 viewsCount: viewsCount,
                 commentCount: commentCount,
+                comments: comments,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -16515,6 +16581,7 @@ class $$PostTableTableTableManager
                 required List<dynamic> attachments,
                 Value<int> viewsCount = const Value.absent(),
                 Value<int> commentCount = const Value.absent(),
+                required List<dynamic> comments,
                 required DateTime createdAt,
                 required DateTime updatedAt,
               }) => PostTableCompanion.insert(
@@ -16528,6 +16595,7 @@ class $$PostTableTableTableManager
                 attachments: attachments,
                 viewsCount: viewsCount,
                 commentCount: commentCount,
+                comments: comments,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

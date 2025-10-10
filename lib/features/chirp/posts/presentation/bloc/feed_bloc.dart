@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/domain/domain.dart';
+import 'package:academia/features/chirp/posts/domain/usecases/mark_post_as_viewed_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,8 @@ part 'feed_state.dart';
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final GetFeedPosts getFeedPosts;
   final CreatePostUsecase createPost;
+  final GetPostDetailUseCase getPostDetail;
+  final MarkPostAsViewedUsecase markPostAsViewed;
   // final CachePostsUsecase cachePosts;
   // final LikePostUsecase likePost;
   // final CommentUsecase addComment;
@@ -20,75 +23,18 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   FeedBloc({
     required this.getFeedPosts,
     required this.createPost,
+    required this.getPostDetail,
+    required this.markPostAsViewed,
     // required this.cachePosts,
     // required this.likePost,
     // required this.addComment,
     // required this.cachePostReplies,
     // required this.getPostReplies,
   }) : super(FeedInitial()) {
-    on<LoadFeedEvent>((event, emit) async {
-      emit(FeedLoading());
-
-      final result = await getFeedPosts(NoParams());
-
-      result.fold(
-        (failure) => emit(FeedError(message: failure.message)),
-        (posts) => emit(FeedLoaded(posts: posts)),
-      );
-    });
-
-    //   on<CacheFeedEvent>((event, emit) async {
-    //     // Show loading only if no data exists
-    //     if (state is! FeedLoaded) {
-    //       emit(FeedLoading());
-    //     }
-
-    //     final result = await cachePosts(NoParams());
-
-    //     result.fold(
-    //       (failure) {
-    //         if (state is FeedLoaded) {
-    //         } else {
-    //           emit(FeedError(message: failure.message));
-    //         }
-    //       },
-    //       (posts) {
-    //         emit(FeedLoaded(posts: posts));
-    //       },
-    //     );
-    //   });
-
-    on<CreatePostEvent>((event, emit) async {
-      final previousState = state;
-
-      emit(PostCreating());
-
-      final attachments = await Future.wait(
-        event.files.map((xfile) async {
-          final bytes = await xfile.readAsBytes();
-          return MultipartFile.fromBytes(bytes, filename: xfile.name);
-        }),
-      );
-
-      final result = await createPost(
-        attachments: attachments.isEmpty ? null : attachments,
-        title: event.title,
-        authorId: event.authorId,
-        communityId: event.communityId,
-        content: event.content,
-      );
-
-      result.fold((failure) => emit(PostCreateError(failure.message)), (post) {
-        if (previousState is FeedLoaded) {
-          final updatedPosts = [post, ...previousState.posts];
-          emit(PostCreated(posts: updatedPosts));
-          emit(FeedLoaded(posts: updatedPosts));
-        } else {
-          emit(PostCreated(posts: [post]));
-          emit(FeedLoaded(posts: [post]));
-        }
-      });
-    });
+    on<LoadFeedEvent>(_onLoadFeed);
+    on<CreatePostEvent>(_onCreatePost);
+    on<GetPostDetailEvent>(_onFetchPostDetail);
+    on<MarkPostAsViewed>(_onMarkPostAsViewed);
 
     //   // Helper method to recursively find parent comment and add reply
     //   List<PostReply>? addReplyToParent(
@@ -236,5 +182,78 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     //       },
     //     );
     //   });
+  }
+
+  Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) async {
+    emit(FeedLoading());
+
+    final result = await getFeedPosts(NoParams());
+
+    result.fold(
+      (failure) => emit(FeedError(message: failure.message)),
+      (posts) => emit(FeedLoaded(posts: posts)),
+    );
+  }
+
+  Future<void> _onCreatePost(
+    CreatePostEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final previousState = state;
+
+    emit(PostCreating());
+
+    // Convert XFile attachments to MultipartFile
+    final attachments = await Future.wait(
+      event.files.map((xfile) async {
+        final bytes = await xfile.readAsBytes();
+        return MultipartFile.fromBytes(bytes, filename: xfile.name);
+      }),
+    );
+
+    final result = await createPost(
+      attachments: attachments.isEmpty ? null : attachments,
+      title: event.title,
+      authorId: event.authorId,
+      communityId: event.communityId,
+      content: event.content,
+    );
+
+    result.fold((failure) => emit(PostCreateError(failure.message)), (post) {
+      if (previousState is FeedLoaded) {
+        final updatedPosts = [post, ...previousState.posts];
+        emit(PostCreated(posts: updatedPosts));
+        emit(FeedLoaded(posts: updatedPosts));
+      } else {
+        emit(PostCreated(posts: [post]));
+        emit(FeedLoaded(posts: [post]));
+      }
+    });
+  }
+
+  Future<void> _onFetchPostDetail(
+    GetPostDetailEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    emit(PostDetailLoading());
+
+    final result = await getPostDetail(postId: event.postId);
+
+    result.fold(
+      (failure) => emit(PostDetailError(message: failure.message)),
+      (post) => emit(PostDetailLoaded(post: post)),
+    );
+  }
+
+  Future<void> _onMarkPostAsViewed(
+    MarkPostAsViewed event,
+    Emitter<FeedState> emit,
+  ) async {
+    // Since you said you don't need to handle state or error propagation,
+    // we’ll just call the method and not change the state.
+    await markPostAsViewed(
+      postId: event.postId,
+      viewerId: event.viewerId,
+    );
   }
 }

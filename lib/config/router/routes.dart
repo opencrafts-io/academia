@@ -126,14 +126,13 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
 
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
 class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
-  final String postId;
+  final int postId;
 
   const PostDetailRoute({required this.postId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final post = state.extra as Post;
-    return PostDetailPage(post: post);
+    return PostDetailPage(postId: postId);
   }
 }
 

@@ -1,6 +1,6 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/chirp/posts/presentation/presentation.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,10 +35,16 @@ class FeedPage extends StatelessWidget {
                           child: PostCard(
                             post: state.posts[index],
                             onTap: () {
-                              context.push(
-                                '/post/${state.posts[index].id}', //TODO: change to named route
-                                extra: state.posts[index],
+                              // marking the post as viewed
+                              context.read<FeedBloc>().add(
+                                MarkPostAsViewed(
+                                  postId: state.posts[index].id,
+                                  viewerId: state.posts[index].authorId,
+                                ),
                               );
+                              PostDetailRoute(
+                                postId: state.posts[index].id,
+                              ).push(context);
                             },
                           ),
                         );
@@ -69,10 +75,7 @@ class FeedPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: "addPostBtn",
         onPressed: () async {
-          final created = await context.push("/add-post");
-          if (created == true && context.mounted) {
-            context.read<FeedBloc>().add(CacheFeedEvent());
-          }
+          AddPostRoute().push(context);
         },
         child: const Icon(Icons.add),
       ),

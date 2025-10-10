@@ -15,7 +15,7 @@ class CreatePostEvent extends FeedEvent {
   final int communityId;
   final String content;
   final List<XFile> files;
-  
+
   CreatePostEvent({
     required this.title,
     required this.authorId,
@@ -23,6 +23,19 @@ class CreatePostEvent extends FeedEvent {
     required this.content,
     required this.files,
   });
+}
+
+class GetPostDetailEvent extends FeedEvent {
+  final int postId;
+
+  GetPostDetailEvent({required this.postId});
+}
+
+class MarkPostAsViewed extends FeedEvent {
+  final int postId;
+  final String viewerId;
+
+  MarkPostAsViewed({required this.postId, required this.viewerId});
 }
 
 class AddComment extends FeedEvent {

@@ -17,6 +17,9 @@ extension PostModelHelper on PostData {
         : const [],
     viewsCount: viewsCount,
     commentCount: commentCount,
+    comments: (comments.isNotEmpty)
+        ? comments.map((item) => CommentData.fromJson(item).toEntity()).toList()
+        : const [],
     createdAt: createdAt,
     updatedAt: updatedAt,
   );
@@ -38,6 +41,9 @@ extension PostEntityHelper on Post {
         : const [],
     viewsCount: viewsCount,
     commentCount: commentCount,
+    comments: comments.isNotEmpty
+        ? comments.map((e) => e.toData().toJson()).toList()
+        : const [],
     createdAt: createdAt,
     updatedAt: updatedAt,
   );

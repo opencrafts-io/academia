@@ -19,6 +19,23 @@ class ChirpRepositoryImpl implements ChirpRepository {
   }
 
   @override
+  Future<Either<Failure, Post>> getPostDetails({required int postId}) async {
+    final result = await remoteDataSource.getPostDetails(postId: postId);
+    return result.fold(
+      (failure) => left(failure),
+      (post) => right(post.toEntity()),
+    );
+  }
+
+  @override
+  Future<void> markPostAsViewed({
+    required int postId,
+    required String viewerId,
+  }) async {
+    await remoteDataSource.markPostAsViewed(postId: postId, viewerId: viewerId);
+  }
+
+  @override
   Future<Either<Failure, Post>> createPost({
     List<MultipartFile>? attachments,
     required String title,

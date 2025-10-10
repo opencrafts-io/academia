@@ -27,6 +27,8 @@ class PostTable extends Table {
   @JsonKey("comment_count")
   IntColumn get commentCount => integer().withDefault(const Constant(0))();
 
+  TextColumn get comments => text().map(JsonListConverter())();
+
   @JsonKey("created_at")
   DateTimeColumn get createdAt => dateTime()();
 

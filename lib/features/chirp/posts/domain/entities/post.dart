@@ -13,6 +13,7 @@ class Post extends Equatable {
   final List<Attachments> attachments;
   final int viewsCount;
   final int commentCount;
+  final List<Comment> comments;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -27,6 +28,7 @@ class Post extends Equatable {
     this.attachments = const [],
     required this.viewsCount,
     required this.commentCount,
+    this.comments = const [],
     required this.createdAt,
     required this.updatedAt,
   });
@@ -42,6 +44,7 @@ class Post extends Equatable {
     List<Attachments>? attachments,
     int? viewsCount,
     int? commentCount,
+    List<Comment>? comments,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -56,6 +59,7 @@ class Post extends Equatable {
       attachments: attachments ?? this.attachments,
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
+      comments: comments ?? this.comments,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -73,6 +77,7 @@ class Post extends Equatable {
     attachments,
     viewsCount,
     commentCount,
+    comments,
     createdAt,
     updatedAt,
   ];

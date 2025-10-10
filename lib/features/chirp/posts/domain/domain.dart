@@ -1,6 +1,6 @@
 export 'entities/post.dart';
 export 'repository/chirp_repository.dart';
-export 'usecases/get_feed_posts.dart';
+export 'usecases/get_feed_posts_usecase.dart';
 export 'usecases/cache_posts.dart';
 export 'entities/attachments.dart';
 export 'entities/comment.dart';
@@ -9,3 +9,5 @@ export 'usecases/create_post_usecase.dart';
 export 'usecases/like_post_usecase.dart';
 export 'usecases/cache_post_replies.dart';
 export 'usecases/get_post_replies.dart';
+export 'usecases/get_post_detail_usecase.dart';
+export 'usecases/mark_post_as_viewed_usecase.dart';

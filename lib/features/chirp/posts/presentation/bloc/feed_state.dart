@@ -25,6 +25,26 @@ class FeedError extends FeedState {
   List<Object?> get props => [message];
 }
 
+class PostDetailLoading extends FeedState {}
+
+class PostDetailLoaded extends FeedState {
+  final Post post;
+
+  PostDetailLoaded({required this.post});
+
+  @override
+  List<Object?> get props => [post];
+}
+
+class PostDetailError extends FeedState {
+  final String message;
+  
+  PostDetailError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class PostCreating extends FeedState {}
 
 class PostCreated extends FeedState {
@@ -81,4 +101,3 @@ class CommentError extends FeedState {
   @override
   List<Object?> get props => [message];
 }
-

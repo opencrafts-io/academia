@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_since/time_since.dart';
 
 class PostCard extends StatefulWidget {
-  const PostCard({super.key, required this.post, this.onTap});
   final Post post;
   final VoidCallback? onTap;
+
+  const PostCard({super.key, required this.post, this.onTap});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -59,10 +60,7 @@ class _PostCardState extends State<PostCard> {
                 return Row(
                   spacing: 8,
                   children: [
-                    ChirpUserAvatar(
-                      avatarUrl: avatarUrl,
-                      numberOfScallops: 6,
-                    ),
+                    ChirpUserAvatar(avatarUrl: avatarUrl, numberOfScallops: 6),
                     Column(
                       spacing: 2,
                       crossAxisAlignment: CrossAxisAlignment.start,

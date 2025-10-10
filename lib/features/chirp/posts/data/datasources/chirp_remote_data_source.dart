@@ -47,7 +47,57 @@ class ChirpRemoteDataSource with DioErrorHandler {
       return handleDioError(e);
     } catch (e) {
       _logger.e("Error fetching posts: $e");
-      return Left(ServerFailure(message: e.toString(), error: e));
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while getting posts",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PostData>> getPostDetails({
+    required int postId,
+  }) async {
+    try {
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/$postId/details/',
+      );
+
+      if (res.statusCode == 200) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return right(PostData.fromJson(json));
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while getting post",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<void> markPostAsViewed({
+    required int postId,
+    required String viewerId,
+  }) async {
+    try {
+      await dioClient.dio.post(
+        '/$servicePrefix/posts/$postId/viewed/',
+        data: {'post_id': postId, 'viewer_id': viewerId},
+      );
+      _logger.i("Successfully marked post $postId as viewed by $viewerId");
+    } on DioException catch (e) {
+      _logger.e("Failed to mark post as viewed: ${e.message}");
+    } catch (e) {
+      _logger.e("Unexpected error marking post as viewed: $e");
     }
   }
 
@@ -76,7 +126,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
   // }
 
   Future<Either<Failure, PostData>> createPost({
-    List<MultipartFile>? attachments, 
+    List<MultipartFile>? attachments,
     required String title,
     required String authorId,
     required int communityId,
@@ -99,9 +149,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
 
       final res = await dioClient.dio.post(
         '/$servicePrefix/posts/create/',
-        queryParameters: {
-          'community_id': communityId,
-        }, 
+        queryParameters: {'community_id': communityId},
         data: formData,
         options: Options(contentType: "multipart/form-data"),
       );
@@ -117,7 +165,12 @@ class ChirpRemoteDataSource with DioErrorHandler {
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
-      return left(ServerFailure(message: e.toString(), error: e));
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating post",
+          error: e,
+        ),
+      );
     }
   }
 
