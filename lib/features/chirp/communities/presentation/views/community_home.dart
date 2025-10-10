@@ -287,6 +287,11 @@ class _CommunityActionSection extends StatelessWidget {
                             state.membership.role == "super-mod" ||
                             state.membership.role == "mod",
                         child: ListTile(
+                          onTap: () {
+                            EditCommunityInfoRoute(
+                              communityId: communityID,
+                            ).push(context);
+                          },
                           leading: Icon(Icons.edit),
                           title: Text("Edit community information"),
                         ),
