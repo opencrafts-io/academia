@@ -1,14 +1,13 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
-// import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 
 class ChirpRepositoryImpl implements ChirpRepository {
   final ChirpRemoteDataSource remoteDataSource;
 
-  ChirpRepositoryImpl({
-    required this.remoteDataSource,
-  });
+  ChirpRepositoryImpl({required this.remoteDataSource});
+
   @override
   Future<Either<Failure, List<Post>>> getFeedPosts() async {
     final postResult = await remoteDataSource.getPosts();
@@ -16,6 +15,27 @@ class ChirpRepositoryImpl implements ChirpRepository {
     return await postResult.fold(
       (failure) => left(failure),
       (posts) => right(posts.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Post>> createPost({
+    List<MultipartFile>? attachments,
+    required String title,
+    required String authorId,
+    required int communityId,
+    required String content,
+  }) async {
+    final result = await remoteDataSource.createPost(
+      attachments: attachments,
+      title: title,
+      authorId: authorId,
+      communityId: communityId,
+      content: content,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (created) => right(created.toEntity()),
     );
   }
 
@@ -61,24 +81,6 @@ class ChirpRepositoryImpl implements ChirpRepository {
   //     (failure) => left(failure),
   //     (postData) => right(postData),
   //   );
-  // }
-
-  // @override
-  // Future<Either<Failure, Post>> createPost(
-  //   String content,
-  //   List<MultipartFile> attachments, {
-  //   required String userName,
-  //   required String email,
-  //   required String groupId,
-  // }) async {
-  //   final result = await remoteDataSource.createPost(
-  //     content,
-  //     attachments,
-  //     userName: userName,
-  //     email: email,
-  //     groupId: groupId,
-  //   );
-  //   return result.fold((failure) => left(failure), (created) => right(created));
   // }
 
   // @override

@@ -5,7 +5,7 @@ import 'package:academia/features/chirp/communities/data/models/community_model.
 import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
-import 'package:academia/features/chirp/posts/data/models/reply_model.dart';
+import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
 import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
@@ -22,6 +22,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/core/core.dart';
 
+
 part 'database.g.dart';
 
 @DriftDatabase(
@@ -35,7 +36,7 @@ part 'database.g.dart';
     // Posts
     AttachmentTable,
     PostTable,
-    PostReplyTable, // to rename to comments
+    CommentTable,
 
     Todo,
     EventTable,

@@ -3,7 +3,7 @@ export 'repository/chirp_repository.dart';
 export 'usecases/get_feed_posts.dart';
 export 'usecases/cache_posts.dart';
 export 'entities/attachments.dart';
-export 'entities/post_replies.dart';
+export 'entities/comment.dart';
 export 'usecases/comment_usecase.dart';
 export 'usecases/create_post_usecase.dart';
 export 'usecases/like_post_usecase.dart';

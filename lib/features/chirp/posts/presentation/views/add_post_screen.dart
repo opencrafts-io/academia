@@ -3,6 +3,7 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -24,6 +25,7 @@ class _AddPostPageState extends State<AddPostPage> {
   XFile? file;
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
+  String? authorId;
 
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
@@ -93,9 +95,61 @@ class _AddPostPageState extends State<AddPostPage> {
     );
   }
 
+  Future<void> _submitPost() async {
+    final title = _postTitleController.text.trim();
+    final content = _postDescriptionController.text.trim();
+
+    if (title.isEmpty || content.isEmpty) {
+      _showSnackBar("Please enter both a title and content before posting.");
+      Vibration.vibrate(duration: 80);
+      return;
+    }
+
+    // if (_selectedCommunity == null) {
+    //   _showSnackBar("Please select a community to post in.");
+    //   Vibration.vibrate(duration: 80);
+    //   return;
+    // }
+
+    print("Files: $attachments");
+
+    if (!mounted) return;
+
+    context.read<FeedBloc>().add(
+      CreatePostEvent(
+        title: title,
+        authorId: authorId ?? '',
+        // communityId: _selectedCommunity!.id,
+        communityId: 3,
+        content: content,
+        files: attachments,
+      ),
+    );
+
+    _showSnackBar("Submitting post...");
+    Vibration.vibrate(duration: 50);
+
+    setState(() {
+      _postTitleController.clear();
+      _postDescriptionController.clear();
+      attachments.clear();
+      _selectedCommunity = null;
+    });
+
+    context.pop();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    final userState = context.read<ProfileBloc>().state;
+
+    if (userState is ProfileLoadedState) {
+      authorId = userState.profile.id;
+    } else {
+      authorId = null;
+    }
   }
 
   @override
@@ -419,7 +473,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   alignment: Alignment.center,
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
-                    onPressed: () {},
+                    onPressed: () => _submitPost(),
                     label: Text("Create post"),
                     icon: Icon(Icons.add),
                   ),

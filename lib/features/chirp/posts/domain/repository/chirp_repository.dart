@@ -1,10 +1,19 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 // import 'package:dio/dio.dart';
 
 abstract class ChirpRepository {
   Future<Either<Failure, List<Post>>> getFeedPosts();
+
+  Future<Either<Failure, Post>> createPost({
+    List<MultipartFile>? attachments, 
+    required String title,
+    required String authorId,
+    required int communityId,
+    required String content,
+  });
 
   // Future<Either<Failure, List<PostReply>>> getPostReplies(String postId);
 
@@ -12,13 +21,6 @@ abstract class ChirpRepository {
 
   // Future<Either<Failure, List<Post>>> addFeedPosts();
 
-  // Future<Either<Failure, Post>> createPost(
-  //   String content,
-  //   List<MultipartFile> attachments, {
-  //   required String userName,
-  //   required String email,
-  //   required String groupId,
-  // });
 
   // Future<Either<Failure, PostReply>> addComment({
   //   required String postId,

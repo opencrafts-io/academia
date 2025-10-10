@@ -27,7 +27,9 @@ class ChirpRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, List<PostData>>> getPosts() async {
     try {
       // final res = await dioClient.dio.get("/$servicePrefix/posts/feed"); //TODO: Update API endpoint
-      final res = await dioClient.dio.get("https://qachirp.opencrafts.io/posts/feed");
+      final res = await dioClient.dio.get(
+        "https://qachirp.opencrafts.io/posts/feed",
+      );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
         return Left(
@@ -73,38 +75,51 @@ class ChirpRemoteDataSource with DioErrorHandler {
   //   }
   // }
 
-  // Future<Either<Failure, Post>> createPost(
-  //   String content,
-  //   List<MultipartFile> attachments, {
-  //   required String userName,
-  //   required String email,
-  //   required String groupId,
-  // }) async {
-  //   try {
-  //     final formData = FormData.fromMap({
-  //       if (content.isNotEmpty) 'content': content,
-  //       if (attachments.isNotEmpty) 'attachments': attachments,
-  //       'user_name': userName,
-  //       'email': email,
-  //     });
+  Future<Either<Failure, PostData>> createPost({
+    List<MultipartFile>? attachments, 
+    required String title,
+    required String authorId,
+    required int communityId,
+    required String content,
+  }) async {
+    try {
+      // Build form data dynamically
+      final Map<String, dynamic> formMap = {
+        'title': title,
+        'author_id': authorId,
+        'community_id': communityId,
+        'content': content,
+      };
 
-  //     final res = await dioClient.dio.post(
-  //       '/$servicePrefix/groups/$groupId/posts/create/',
-  //       data: formData,
-  //       options: Options(contentType: "multipart/form-data"),
-  //     );
+      if (attachments != null && attachments.isNotEmpty) {
+        formMap['attachments'] = attachments;
+      }
 
-  //     if (res.statusCode == 201) {
-  //       final Post post = PostHelper.fromApiJson(res.data);
-  //       return Right(post);
-  //     }
-  //     return Left(
-  //       NetworkFailure(message: "Unexpected response", error: res.data),
-  //     );
-  //   } on DioException catch (e) {
-  //     return handleDioError(e);
-  //   }
-  // }
+      final formData = FormData.fromMap(formMap);
+
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/posts/create/',
+        queryParameters: {
+          'community_id': communityId,
+        }, 
+        data: formData,
+        options: Options(contentType: "multipart/form-data"),
+      );
+
+      if (res.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return right(PostData.fromJson(json));
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString(), error: e));
+    }
+  }
 
   // Future<Either<Failure, PostReply>> addComment({
   //   required String postId,

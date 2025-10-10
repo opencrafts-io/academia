@@ -1,17 +1,17 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/domain/domain.dart';
-// import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 part 'feed_event.dart';
 part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final GetFeedPosts getFeedPosts;
+  final CreatePostUsecase createPost;
   // final CachePostsUsecase cachePosts;
-  // final CreatePostUsecase createPost;
   // final LikePostUsecase likePost;
   // final CommentUsecase addComment;
   // final GetPostRepliesUsecase getPostReplies;
@@ -19,8 +19,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   FeedBloc({
     required this.getFeedPosts,
+    required this.createPost,
     // required this.cachePosts,
-    // required this.createPost,
     // required this.likePost,
     // required this.addComment,
     // required this.cachePostReplies,
@@ -58,36 +58,37 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     //     );
     //   });
 
-    //   on<CreatePostEvent>((event, emit) async {
-    //     final previousState = state;
+    on<CreatePostEvent>((event, emit) async {
+      final previousState = state;
 
-    //     emit(PostCreating());
+      emit(PostCreating());
 
-    //     final attachments = await Future.wait(
-    //       event.files.map((file) async {
-    //         return MultipartFile.fromFile(file.path!, filename: file.name);
-    //       }),
-    //     );
+      final attachments = await Future.wait(
+        event.files.map((xfile) async {
+          final bytes = await xfile.readAsBytes();
+          return MultipartFile.fromBytes(bytes, filename: xfile.name);
+        }),
+      );
 
-    //     final result = await createPost(
-    //       userName: event.userName,
-    //       email: event.email,
-    //       content: event.content,
-    //       attachments: attachments,
-    //       groupId: event.groupId,
-    //     );
+      final result = await createPost(
+        attachments: attachments.isEmpty ? null : attachments,
+        title: event.title,
+        authorId: event.authorId,
+        communityId: event.communityId,
+        content: event.content,
+      );
 
-    //     result.fold((failure) => emit(PostCreateError(failure.message)), (post) {
-    //       if (previousState is FeedLoaded) {
-    //         final updatedPosts = [post, ...previousState.posts];
-    //         emit(PostCreated(posts: updatedPosts));
-    //         emit(FeedLoaded(posts: updatedPosts));
-    //       } else {
-    //         emit(PostCreated(posts: [post]));
-    //         emit(FeedLoaded(posts: [post]));
-    //       }
-    //     });
-    //   });
+      result.fold((failure) => emit(PostCreateError(failure.message)), (post) {
+        if (previousState is FeedLoaded) {
+          final updatedPosts = [post, ...previousState.posts];
+          emit(PostCreated(posts: updatedPosts));
+          emit(FeedLoaded(posts: updatedPosts));
+        } else {
+          emit(PostCreated(posts: [post]));
+          emit(FeedLoaded(posts: [post]));
+        }
+      });
+    });
 
     //   // Helper method to recursively find parent comment and add reply
     //   List<PostReply>? addReplyToParent(

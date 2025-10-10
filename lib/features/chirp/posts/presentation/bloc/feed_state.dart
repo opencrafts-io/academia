@@ -68,7 +68,7 @@ class RepliesError extends FeedState {
 class CommentAdding extends FeedState {}
 
 class CommentAdded extends FeedState {
-  final PostReply comment;
+  final Comment comment;
   CommentAdded({required this.comment});
   @override
   List<Object> get props => [comment];

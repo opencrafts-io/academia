@@ -2358,16 +2358,47 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   }
 }
 
-class $PostReplyTableTable extends PostReplyTable
-    with TableInfo<$PostReplyTableTable, PostReplyEntity> {
+class $CommentTableTable extends CommentTable
+    with TableInfo<$CommentTableTable, CommentData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PostReplyTableTable(this.attachedDatabase, [this._alias]);
+  $CommentTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _postMeta = const VerificationMeta('post');
+  @override
+  late final GeneratedColumn<int> post = GeneratedColumn<int>(
+    'post',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _authorIdMeta = const VerificationMeta(
+    'authorId',
+  );
+  @override
+  late final GeneratedColumn<String> authorId = GeneratedColumn<String>(
+    'author_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -2382,8 +2413,7 @@ class $PostReplyTableTable extends PostReplyTable
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -2394,107 +2424,71 @@ class $PostReplyTableTable extends PostReplyTable
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
+    requiredDuringInsert: true,
   );
-  static const VerificationMeta _parentIdMeta = const VerificationMeta(
-    'parentId',
+  static const VerificationMeta _upvotesMeta = const VerificationMeta(
+    'upvotes',
   );
   @override
-  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
-    'parent_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES post_reply_table (id) ON DELETE CASCADE',
-    ),
-  );
-  static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
-  @override
-  late final GeneratedColumn<int> postId = GeneratedColumn<int>(
-    'post_id',
+  late final GeneratedColumn<int> upvotes = GeneratedColumn<int>(
+    'upvotes',
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES post_table (id) ON DELETE CASCADE',
-    ),
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _userNameMeta = const VerificationMeta(
-    'userName',
-  );
-  @override
-  late final GeneratedColumn<String> userName = GeneratedColumn<String>(
-    'user_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _userAvatarMeta = const VerificationMeta(
-    'userAvatar',
-  );
-  @override
-  late final GeneratedColumn<String> userAvatar = GeneratedColumn<String>(
-    'user_avatar',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
     requiredDuringInsert: false,
+    defaultValue: const Constant(0),
   );
-  static const VerificationMeta _contentMeta = const VerificationMeta(
-    'content',
+  static const VerificationMeta _downvotesMeta = const VerificationMeta(
+    'downvotes',
   );
   @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-    'content',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _depthMeta = const VerificationMeta('depth');
-  @override
-  late final GeneratedColumn<int> depth = GeneratedColumn<int>(
-    'depth',
+  late final GeneratedColumn<int> downvotes = GeneratedColumn<int>(
+    'downvotes',
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String> replies =
+      GeneratedColumn<String>(
+        'replies',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<List<dynamic>>($CommentTableTable.$converterreplies);
+  static const VerificationMeta _parentMeta = const VerificationMeta('parent');
+  @override
+  late final GeneratedColumn<int> parent = GeneratedColumn<int>(
+    'parent',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    post,
+    authorId,
+    content,
     createdAt,
     updatedAt,
-    parentId,
-    postId,
-    userId,
-    userName,
-    userAvatar,
-    content,
-    depth,
+    upvotes,
+    downvotes,
+    replies,
+    parent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'post_reply_table';
+  static const String $name = 'comment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PostReplyEntity> instance, {
+    Insertable<CommentData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2504,53 +2498,21 @@ class $PostReplyTableTable extends PostReplyTable
     } else if (isInserting) {
       context.missing(_idMeta);
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('post')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('parent_id')) {
-      context.handle(
-        _parentIdMeta,
-        parentId.isAcceptableOrUnknown(data['parent_id']!, _parentIdMeta),
-      );
-    }
-    if (data.containsKey('post_id')) {
-      context.handle(
-        _postIdMeta,
-        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+        _postMeta,
+        post.isAcceptableOrUnknown(data['post']!, _postMeta),
       );
     } else if (isInserting) {
-      context.missing(_postIdMeta);
+      context.missing(_postMeta);
     }
-    if (data.containsKey('user_id')) {
+    if (data.containsKey('author_id')) {
       context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+        _authorIdMeta,
+        authorId.isAcceptableOrUnknown(data['author_id']!, _authorIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('user_name')) {
-      context.handle(
-        _userNameMeta,
-        userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userNameMeta);
-    }
-    if (data.containsKey('user_avatar')) {
-      context.handle(
-        _userAvatarMeta,
-        userAvatar.isAcceptableOrUnknown(data['user_avatar']!, _userAvatarMeta),
-      );
+      context.missing(_authorIdMeta);
     }
     if (data.containsKey('content')) {
       context.handle(
@@ -2560,26 +2522,64 @@ class $PostReplyTableTable extends PostReplyTable
     } else if (isInserting) {
       context.missing(_contentMeta);
     }
-    if (data.containsKey('depth')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _depthMeta,
-        depth.isAcceptableOrUnknown(data['depth']!, _depthMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     } else if (isInserting) {
-      context.missing(_depthMeta);
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('upvotes')) {
+      context.handle(
+        _upvotesMeta,
+        upvotes.isAcceptableOrUnknown(data['upvotes']!, _upvotesMeta),
+      );
+    }
+    if (data.containsKey('downvotes')) {
+      context.handle(
+        _downvotesMeta,
+        downvotes.isAcceptableOrUnknown(data['downvotes']!, _downvotesMeta),
+      );
+    }
+    if (data.containsKey('parent')) {
+      context.handle(
+        _parentMeta,
+        parent.isAcceptableOrUnknown(data['parent']!, _parentMeta),
+      );
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  PostReplyEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CommentData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PostReplyEntity(
+    return CommentData(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}id'],
+      )!,
+      post: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}post'],
+      )!,
+      authorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}author_id'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
       )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -2589,193 +2589,184 @@ class $PostReplyTableTable extends PostReplyTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
-      parentId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}parent_id'],
-      ),
-      postId: attachedDatabase.typeMapping.read(
+      upvotes: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}post_id'],
+        data['${effectivePrefix}upvotes'],
       )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      userName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_name'],
-      )!,
-      userAvatar: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_avatar'],
-      ),
-      content: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content'],
-      )!,
-      depth: attachedDatabase.typeMapping.read(
+      downvotes: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}depth'],
+        data['${effectivePrefix}downvotes'],
       )!,
+      replies: $CommentTableTable.$converterreplies.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}replies'],
+        )!,
+      ),
+      parent: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}parent'],
+      ),
     );
   }
 
   @override
-  $PostReplyTableTable createAlias(String alias) {
-    return $PostReplyTableTable(attachedDatabase, alias);
+  $CommentTableTable createAlias(String alias) {
+    return $CommentTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<dynamic>, String> $converterreplies =
+      JsonListConverter();
 }
 
-class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
-  final String id;
+class CommentData extends DataClass implements Insertable<CommentData> {
+  final int id;
+  final int post;
+  final String authorId;
+  final String content;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? parentId;
-  final int postId;
-  final String userId;
-  final String userName;
-  final String? userAvatar;
-  final String content;
-  final int depth;
-  const PostReplyEntity({
+  final int upvotes;
+  final int downvotes;
+  final List<dynamic> replies;
+  final int? parent;
+  const CommentData({
     required this.id,
+    required this.post,
+    required this.authorId,
+    required this.content,
     required this.createdAt,
     required this.updatedAt,
-    this.parentId,
-    required this.postId,
-    required this.userId,
-    required this.userName,
-    this.userAvatar,
-    required this.content,
-    required this.depth,
+    required this.upvotes,
+    required this.downvotes,
+    required this.replies,
+    this.parent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
+    map['post'] = Variable<int>(post);
+    map['author_id'] = Variable<String>(authorId);
+    map['content'] = Variable<String>(content);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    if (!nullToAbsent || parentId != null) {
-      map['parent_id'] = Variable<String>(parentId);
+    map['upvotes'] = Variable<int>(upvotes);
+    map['downvotes'] = Variable<int>(downvotes);
+    {
+      map['replies'] = Variable<String>(
+        $CommentTableTable.$converterreplies.toSql(replies),
+      );
     }
-    map['post_id'] = Variable<int>(postId);
-    map['user_id'] = Variable<String>(userId);
-    map['user_name'] = Variable<String>(userName);
-    if (!nullToAbsent || userAvatar != null) {
-      map['user_avatar'] = Variable<String>(userAvatar);
+    if (!nullToAbsent || parent != null) {
+      map['parent'] = Variable<int>(parent);
     }
-    map['content'] = Variable<String>(content);
-    map['depth'] = Variable<int>(depth);
     return map;
   }
 
-  PostReplyTableCompanion toCompanion(bool nullToAbsent) {
-    return PostReplyTableCompanion(
+  CommentTableCompanion toCompanion(bool nullToAbsent) {
+    return CommentTableCompanion(
       id: Value(id),
+      post: Value(post),
+      authorId: Value(authorId),
+      content: Value(content),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      parentId: parentId == null && nullToAbsent
+      upvotes: Value(upvotes),
+      downvotes: Value(downvotes),
+      replies: Value(replies),
+      parent: parent == null && nullToAbsent
           ? const Value.absent()
-          : Value(parentId),
-      postId: Value(postId),
-      userId: Value(userId),
-      userName: Value(userName),
-      userAvatar: userAvatar == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userAvatar),
-      content: Value(content),
-      depth: Value(depth),
+          : Value(parent),
     );
   }
 
-  factory PostReplyEntity.fromJson(
+  factory CommentData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PostReplyEntity(
-      id: serializer.fromJson<String>(json['id']),
+    return CommentData(
+      id: serializer.fromJson<int>(json['id']),
+      post: serializer.fromJson<int>(json['post']),
+      authorId: serializer.fromJson<String>(json['author_id']),
+      content: serializer.fromJson<String>(json['content']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      parentId: serializer.fromJson<String?>(json['parent_id']),
-      postId: serializer.fromJson<int>(json['post_id']),
-      userId: serializer.fromJson<String>(json['user_id']),
-      userName: serializer.fromJson<String>(json['user_name']),
-      userAvatar: serializer.fromJson<String?>(json['user_avatar']),
-      content: serializer.fromJson<String>(json['content']),
-      depth: serializer.fromJson<int>(json['depth']),
+      upvotes: serializer.fromJson<int>(json['upvotes']),
+      downvotes: serializer.fromJson<int>(json['downvotes']),
+      replies: serializer.fromJson<List<dynamic>>(json['replies']),
+      parent: serializer.fromJson<int?>(json['parent']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
+      'post': serializer.toJson<int>(post),
+      'author_id': serializer.toJson<String>(authorId),
+      'content': serializer.toJson<String>(content),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'parent_id': serializer.toJson<String?>(parentId),
-      'post_id': serializer.toJson<int>(postId),
-      'user_id': serializer.toJson<String>(userId),
-      'user_name': serializer.toJson<String>(userName),
-      'user_avatar': serializer.toJson<String?>(userAvatar),
-      'content': serializer.toJson<String>(content),
-      'depth': serializer.toJson<int>(depth),
+      'upvotes': serializer.toJson<int>(upvotes),
+      'downvotes': serializer.toJson<int>(downvotes),
+      'replies': serializer.toJson<List<dynamic>>(replies),
+      'parent': serializer.toJson<int?>(parent),
     };
   }
 
-  PostReplyEntity copyWith({
-    String? id,
+  CommentData copyWith({
+    int? id,
+    int? post,
+    String? authorId,
+    String? content,
     DateTime? createdAt,
     DateTime? updatedAt,
-    Value<String?> parentId = const Value.absent(),
-    int? postId,
-    String? userId,
-    String? userName,
-    Value<String?> userAvatar = const Value.absent(),
-    String? content,
-    int? depth,
-  }) => PostReplyEntity(
+    int? upvotes,
+    int? downvotes,
+    List<dynamic>? replies,
+    Value<int?> parent = const Value.absent(),
+  }) => CommentData(
     id: id ?? this.id,
+    post: post ?? this.post,
+    authorId: authorId ?? this.authorId,
+    content: content ?? this.content,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    parentId: parentId.present ? parentId.value : this.parentId,
-    postId: postId ?? this.postId,
-    userId: userId ?? this.userId,
-    userName: userName ?? this.userName,
-    userAvatar: userAvatar.present ? userAvatar.value : this.userAvatar,
-    content: content ?? this.content,
-    depth: depth ?? this.depth,
+    upvotes: upvotes ?? this.upvotes,
+    downvotes: downvotes ?? this.downvotes,
+    replies: replies ?? this.replies,
+    parent: parent.present ? parent.value : this.parent,
   );
-  PostReplyEntity copyWithCompanion(PostReplyTableCompanion data) {
-    return PostReplyEntity(
+  CommentData copyWithCompanion(CommentTableCompanion data) {
+    return CommentData(
       id: data.id.present ? data.id.value : this.id,
+      post: data.post.present ? data.post.value : this.post,
+      authorId: data.authorId.present ? data.authorId.value : this.authorId,
+      content: data.content.present ? data.content.value : this.content,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      parentId: data.parentId.present ? data.parentId.value : this.parentId,
-      postId: data.postId.present ? data.postId.value : this.postId,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      userName: data.userName.present ? data.userName.value : this.userName,
-      userAvatar: data.userAvatar.present
-          ? data.userAvatar.value
-          : this.userAvatar,
-      content: data.content.present ? data.content.value : this.content,
-      depth: data.depth.present ? data.depth.value : this.depth,
+      upvotes: data.upvotes.present ? data.upvotes.value : this.upvotes,
+      downvotes: data.downvotes.present ? data.downvotes.value : this.downvotes,
+      replies: data.replies.present ? data.replies.value : this.replies,
+      parent: data.parent.present ? data.parent.value : this.parent,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('PostReplyEntity(')
+    return (StringBuffer('CommentData(')
           ..write('id: $id, ')
+          ..write('post: $post, ')
+          ..write('authorId: $authorId, ')
+          ..write('content: $content, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('parentId: $parentId, ')
-          ..write('postId: $postId, ')
-          ..write('userId: $userId, ')
-          ..write('userName: $userName, ')
-          ..write('userAvatar: $userAvatar, ')
-          ..write('content: $content, ')
-          ..write('depth: $depth')
+          ..write('upvotes: $upvotes, ')
+          ..write('downvotes: $downvotes, ')
+          ..write('replies: $replies, ')
+          ..write('parent: $parent')
           ..write(')'))
         .toString();
   }
@@ -2783,127 +2774,128 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
   @override
   int get hashCode => Object.hash(
     id,
+    post,
+    authorId,
+    content,
     createdAt,
     updatedAt,
-    parentId,
-    postId,
-    userId,
-    userName,
-    userAvatar,
-    content,
-    depth,
+    upvotes,
+    downvotes,
+    replies,
+    parent,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PostReplyEntity &&
+      (other is CommentData &&
           other.id == this.id &&
+          other.post == this.post &&
+          other.authorId == this.authorId &&
+          other.content == this.content &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.parentId == this.parentId &&
-          other.postId == this.postId &&
-          other.userId == this.userId &&
-          other.userName == this.userName &&
-          other.userAvatar == this.userAvatar &&
-          other.content == this.content &&
-          other.depth == this.depth);
+          other.upvotes == this.upvotes &&
+          other.downvotes == this.downvotes &&
+          other.replies == this.replies &&
+          other.parent == this.parent);
 }
 
-class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
-  final Value<String> id;
+class CommentTableCompanion extends UpdateCompanion<CommentData> {
+  final Value<int> id;
+  final Value<int> post;
+  final Value<String> authorId;
+  final Value<String> content;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  final Value<String?> parentId;
-  final Value<int> postId;
-  final Value<String> userId;
-  final Value<String> userName;
-  final Value<String?> userAvatar;
-  final Value<String> content;
-  final Value<int> depth;
+  final Value<int> upvotes;
+  final Value<int> downvotes;
+  final Value<List<dynamic>> replies;
+  final Value<int?> parent;
   final Value<int> rowid;
-  const PostReplyTableCompanion({
+  const CommentTableCompanion({
     this.id = const Value.absent(),
+    this.post = const Value.absent(),
+    this.authorId = const Value.absent(),
+    this.content = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.parentId = const Value.absent(),
-    this.postId = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.userName = const Value.absent(),
-    this.userAvatar = const Value.absent(),
-    this.content = const Value.absent(),
-    this.depth = const Value.absent(),
+    this.upvotes = const Value.absent(),
+    this.downvotes = const Value.absent(),
+    this.replies = const Value.absent(),
+    this.parent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  PostReplyTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.parentId = const Value.absent(),
-    required int postId,
-    required String userId,
-    required String userName,
-    this.userAvatar = const Value.absent(),
+  CommentTableCompanion.insert({
+    required int id,
+    required int post,
+    required String authorId,
     required String content,
-    required int depth,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.upvotes = const Value.absent(),
+    this.downvotes = const Value.absent(),
+    required List<dynamic> replies,
+    this.parent = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       postId = Value(postId),
-       userId = Value(userId),
-       userName = Value(userName),
+       post = Value(post),
+       authorId = Value(authorId),
        content = Value(content),
-       depth = Value(depth);
-  static Insertable<PostReplyEntity> custom({
-    Expression<String>? id,
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       replies = Value(replies);
+  static Insertable<CommentData> custom({
+    Expression<int>? id,
+    Expression<int>? post,
+    Expression<String>? authorId,
+    Expression<String>? content,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
-    Expression<String>? parentId,
-    Expression<int>? postId,
-    Expression<String>? userId,
-    Expression<String>? userName,
-    Expression<String>? userAvatar,
-    Expression<String>? content,
-    Expression<int>? depth,
+    Expression<int>? upvotes,
+    Expression<int>? downvotes,
+    Expression<String>? replies,
+    Expression<int>? parent,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (post != null) 'post': post,
+      if (authorId != null) 'author_id': authorId,
+      if (content != null) 'content': content,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (parentId != null) 'parent_id': parentId,
-      if (postId != null) 'post_id': postId,
-      if (userId != null) 'user_id': userId,
-      if (userName != null) 'user_name': userName,
-      if (userAvatar != null) 'user_avatar': userAvatar,
-      if (content != null) 'content': content,
-      if (depth != null) 'depth': depth,
+      if (upvotes != null) 'upvotes': upvotes,
+      if (downvotes != null) 'downvotes': downvotes,
+      if (replies != null) 'replies': replies,
+      if (parent != null) 'parent': parent,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  PostReplyTableCompanion copyWith({
-    Value<String>? id,
+  CommentTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? post,
+    Value<String>? authorId,
+    Value<String>? content,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
-    Value<String?>? parentId,
-    Value<int>? postId,
-    Value<String>? userId,
-    Value<String>? userName,
-    Value<String?>? userAvatar,
-    Value<String>? content,
-    Value<int>? depth,
+    Value<int>? upvotes,
+    Value<int>? downvotes,
+    Value<List<dynamic>>? replies,
+    Value<int?>? parent,
     Value<int>? rowid,
   }) {
-    return PostReplyTableCompanion(
+    return CommentTableCompanion(
       id: id ?? this.id,
+      post: post ?? this.post,
+      authorId: authorId ?? this.authorId,
+      content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      parentId: parentId ?? this.parentId,
-      postId: postId ?? this.postId,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      userAvatar: userAvatar ?? this.userAvatar,
-      content: content ?? this.content,
-      depth: depth ?? this.depth,
+      upvotes: upvotes ?? this.upvotes,
+      downvotes: downvotes ?? this.downvotes,
+      replies: replies ?? this.replies,
+      parent: parent ?? this.parent,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2912,7 +2904,16 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
+    }
+    if (post.present) {
+      map['post'] = Variable<int>(post.value);
+    }
+    if (authorId.present) {
+      map['author_id'] = Variable<String>(authorId.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -2920,26 +2921,19 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
-    if (parentId.present) {
-      map['parent_id'] = Variable<String>(parentId.value);
+    if (upvotes.present) {
+      map['upvotes'] = Variable<int>(upvotes.value);
     }
-    if (postId.present) {
-      map['post_id'] = Variable<int>(postId.value);
+    if (downvotes.present) {
+      map['downvotes'] = Variable<int>(downvotes.value);
     }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
+    if (replies.present) {
+      map['replies'] = Variable<String>(
+        $CommentTableTable.$converterreplies.toSql(replies.value),
+      );
     }
-    if (userName.present) {
-      map['user_name'] = Variable<String>(userName.value);
-    }
-    if (userAvatar.present) {
-      map['user_avatar'] = Variable<String>(userAvatar.value);
-    }
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (depth.present) {
-      map['depth'] = Variable<int>(depth.value);
+    if (parent.present) {
+      map['parent'] = Variable<int>(parent.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -2949,17 +2943,17 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('PostReplyTableCompanion(')
+    return (StringBuffer('CommentTableCompanion(')
           ..write('id: $id, ')
+          ..write('post: $post, ')
+          ..write('authorId: $authorId, ')
+          ..write('content: $content, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('parentId: $parentId, ')
-          ..write('postId: $postId, ')
-          ..write('userId: $userId, ')
-          ..write('userName: $userName, ')
-          ..write('userAvatar: $userAvatar, ')
-          ..write('content: $content, ')
-          ..write('depth: $depth, ')
+          ..write('upvotes: $upvotes, ')
+          ..write('downvotes: $downvotes, ')
+          ..write('replies: $replies, ')
+          ..write('parent: $parent, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -15346,7 +15340,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $PostTableTable postTable = $PostTableTable(this);
-  late final $PostReplyTableTable postReplyTable = $PostReplyTableTable(this);
+  late final $CommentTableTable commentTable = $CommentTableTable(this);
   late final $TodoTable todo = $TodoTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
@@ -15378,7 +15372,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     token,
     attachmentTable,
     postTable,
-    postReplyTable,
+    commentTable,
     todo,
     eventTable,
     attendeeTable,
@@ -15395,23 +15389,6 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     community,
     chirpCommunityMembership,
   ];
-  @override
-  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'post_reply_table',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('post_reply_table', kind: UpdateKind.delete)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'post_table',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('post_reply_table', kind: UpdateKind.delete)],
-    ),
-  ]);
 }
 
 typedef $$UserProfileTableCreateCompanionBuilder =
@@ -16272,29 +16249,6 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
-final class $$PostTableTableReferences
-    extends BaseReferences<_$AppDataBase, $PostTableTable, PostData> {
-  $$PostTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$PostReplyTableTable, List<PostReplyEntity>>
-  _postReplyTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.postReplyTable,
-    aliasName: $_aliasNameGenerator(db.postTable.id, db.postReplyTable.postId),
-  );
-
-  $$PostReplyTableTableProcessedTableManager get postReplyTableRefs {
-    final manager = $$PostReplyTableTableTableManager(
-      $_db,
-      $_db.postReplyTable,
-    ).filter((f) => f.postId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_postReplyTableRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$PostTableTableFilterComposer
     extends Composer<_$AppDataBase, $PostTableTable> {
   $$PostTableTableFilterComposer({
@@ -16369,31 +16323,6 @@ class $$PostTableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> postReplyTableRefs(
-    Expression<bool> Function($$PostReplyTableTableFilterComposer f) f,
-  ) {
-    final $$PostReplyTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.postReplyTable,
-      getReferencedColumn: (t) => t.postId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostReplyTableTableFilterComposer(
-            $db: $db,
-            $table: $db.postReplyTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$PostTableTableOrderingComposer
@@ -16518,31 +16447,6 @@ class $$PostTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  Expression<T> postReplyTableRefs<T extends Object>(
-    Expression<T> Function($$PostReplyTableTableAnnotationComposer a) f,
-  ) {
-    final $$PostReplyTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.postReplyTable,
-      getReferencedColumn: (t) => t.postId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostReplyTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.postReplyTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$PostTableTableTableManager
@@ -16556,9 +16460,9 @@ class $$PostTableTableTableManager
           $$PostTableTableAnnotationComposer,
           $$PostTableTableCreateCompanionBuilder,
           $$PostTableTableUpdateCompanionBuilder,
-          (PostData, $$PostTableTableReferences),
+          (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
           PostData,
-          PrefetchHooks Function({bool postReplyTableRefs})
+          PrefetchHooks Function()
         > {
   $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
     : super(
@@ -16628,45 +16532,9 @@ class $$PostTableTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$PostTableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({postReplyTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (postReplyTableRefs) db.postReplyTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (postReplyTableRefs)
-                    await $_getPrefetchedData<
-                      PostData,
-                      $PostTableTable,
-                      PostReplyEntity
-                    >(
-                      currentTable: table,
-                      referencedTable: $$PostTableTableReferences
-                          ._postReplyTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$PostTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).postReplyTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.postId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -16681,98 +16549,65 @@ typedef $$PostTableTableProcessedTableManager =
       $$PostTableTableAnnotationComposer,
       $$PostTableTableCreateCompanionBuilder,
       $$PostTableTableUpdateCompanionBuilder,
-      (PostData, $$PostTableTableReferences),
+      (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
       PostData,
-      PrefetchHooks Function({bool postReplyTableRefs})
+      PrefetchHooks Function()
     >;
-typedef $$PostReplyTableTableCreateCompanionBuilder =
-    PostReplyTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String?> parentId,
-      required int postId,
-      required String userId,
-      required String userName,
-      Value<String?> userAvatar,
+typedef $$CommentTableTableCreateCompanionBuilder =
+    CommentTableCompanion Function({
+      required int id,
+      required int post,
+      required String authorId,
       required String content,
-      required int depth,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> upvotes,
+      Value<int> downvotes,
+      required List<dynamic> replies,
+      Value<int?> parent,
       Value<int> rowid,
     });
-typedef $$PostReplyTableTableUpdateCompanionBuilder =
-    PostReplyTableCompanion Function({
-      Value<String> id,
+typedef $$CommentTableTableUpdateCompanionBuilder =
+    CommentTableCompanion Function({
+      Value<int> id,
+      Value<int> post,
+      Value<String> authorId,
+      Value<String> content,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<String?> parentId,
-      Value<int> postId,
-      Value<String> userId,
-      Value<String> userName,
-      Value<String?> userAvatar,
-      Value<String> content,
-      Value<int> depth,
+      Value<int> upvotes,
+      Value<int> downvotes,
+      Value<List<dynamic>> replies,
+      Value<int?> parent,
       Value<int> rowid,
     });
 
-final class $$PostReplyTableTableReferences
-    extends
-        BaseReferences<_$AppDataBase, $PostReplyTableTable, PostReplyEntity> {
-  $$PostReplyTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $PostReplyTableTable _parentIdTable(_$AppDataBase db) =>
-      db.postReplyTable.createAlias(
-        $_aliasNameGenerator(db.postReplyTable.parentId, db.postReplyTable.id),
-      );
-
-  $$PostReplyTableTableProcessedTableManager? get parentId {
-    final $_column = $_itemColumn<String>('parent_id');
-    if ($_column == null) return null;
-    final manager = $$PostReplyTableTableTableManager(
-      $_db,
-      $_db.postReplyTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_parentIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $PostTableTable _postIdTable(_$AppDataBase db) =>
-      db.postTable.createAlias(
-        $_aliasNameGenerator(db.postReplyTable.postId, db.postTable.id),
-      );
-
-  $$PostTableTableProcessedTableManager get postId {
-    final $_column = $_itemColumn<int>('post_id')!;
-
-    final manager = $$PostTableTableTableManager(
-      $_db,
-      $_db.postTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_postIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$PostReplyTableTableFilterComposer
-    extends Composer<_$AppDataBase, $PostReplyTableTable> {
-  $$PostReplyTableTableFilterComposer({
+class $$CommentTableTableFilterComposer
+    extends Composer<_$AppDataBase, $CommentTableTable> {
+  $$CommentTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id => $composableBuilder(
+  ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get post => $composableBuilder(
+    column: $table.post,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get authorId => $composableBuilder(
+    column: $table.authorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16786,89 +16621,54 @@ class $$PostReplyTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get userId => $composableBuilder(
-    column: $table.userId,
+  ColumnFilters<int> get upvotes => $composableBuilder(
+    column: $table.upvotes,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get userName => $composableBuilder(
-    column: $table.userName,
+  ColumnFilters<int> get downvotes => $composableBuilder(
+    column: $table.downvotes,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get userAvatar => $composableBuilder(
-    column: $table.userAvatar,
-    builder: (column) => ColumnFilters(column),
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get replies => $composableBuilder(
+    column: $table.replies,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get content => $composableBuilder(
-    column: $table.content,
+  ColumnFilters<int> get parent => $composableBuilder(
+    column: $table.parent,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<int> get depth => $composableBuilder(
-    column: $table.depth,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$PostReplyTableTableFilterComposer get parentId {
-    final $$PostReplyTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.parentId,
-      referencedTable: $db.postReplyTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostReplyTableTableFilterComposer(
-            $db: $db,
-            $table: $db.postReplyTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$PostTableTableFilterComposer get postId {
-    final $$PostTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableFilterComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$PostReplyTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $PostReplyTableTable> {
-  $$PostReplyTableTableOrderingComposer({
+class $$CommentTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommentTableTable> {
+  $$CommentTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id => $composableBuilder(
+  ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get post => $composableBuilder(
+    column: $table.post,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get authorId => $composableBuilder(
+    column: $table.authorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -16882,89 +16682,47 @@ class $$PostReplyTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get userId => $composableBuilder(
-    column: $table.userId,
+  ColumnOrderings<int> get upvotes => $composableBuilder(
+    column: $table.upvotes,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get userName => $composableBuilder(
-    column: $table.userName,
+  ColumnOrderings<int> get downvotes => $composableBuilder(
+    column: $table.downvotes,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get userAvatar => $composableBuilder(
-    column: $table.userAvatar,
+  ColumnOrderings<String> get replies => $composableBuilder(
+    column: $table.replies,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get content => $composableBuilder(
-    column: $table.content,
+  ColumnOrderings<int> get parent => $composableBuilder(
+    column: $table.parent,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<int> get depth => $composableBuilder(
-    column: $table.depth,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$PostReplyTableTableOrderingComposer get parentId {
-    final $$PostReplyTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.parentId,
-      referencedTable: $db.postReplyTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostReplyTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.postReplyTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$PostTableTableOrderingComposer get postId {
-    final $$PostTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$PostReplyTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $PostReplyTableTable> {
-  $$PostReplyTableTableAnnotationComposer({
+class $$CommentTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommentTableTable> {
+  $$CommentTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id =>
+  GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get post =>
+      $composableBuilder(column: $table.post, builder: (column) => column);
+
+  GeneratedColumn<String> get authorId =>
+      $composableBuilder(column: $table.authorId, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -16972,231 +16730,124 @@ class $$PostReplyTableTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
+  GeneratedColumn<int> get upvotes =>
+      $composableBuilder(column: $table.upvotes, builder: (column) => column);
 
-  GeneratedColumn<String> get userName =>
-      $composableBuilder(column: $table.userName, builder: (column) => column);
+  GeneratedColumn<int> get downvotes =>
+      $composableBuilder(column: $table.downvotes, builder: (column) => column);
 
-  GeneratedColumn<String> get userAvatar => $composableBuilder(
-    column: $table.userAvatar,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get replies =>
+      $composableBuilder(column: $table.replies, builder: (column) => column);
 
-  GeneratedColumn<String> get content =>
-      $composableBuilder(column: $table.content, builder: (column) => column);
-
-  GeneratedColumn<int> get depth =>
-      $composableBuilder(column: $table.depth, builder: (column) => column);
-
-  $$PostReplyTableTableAnnotationComposer get parentId {
-    final $$PostReplyTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.parentId,
-      referencedTable: $db.postReplyTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostReplyTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.postReplyTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$PostTableTableAnnotationComposer get postId {
-    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.postId,
-      referencedTable: $db.postTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PostTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.postTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  GeneratedColumn<int> get parent =>
+      $composableBuilder(column: $table.parent, builder: (column) => column);
 }
 
-class $$PostReplyTableTableTableManager
+class $$CommentTableTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $PostReplyTableTable,
-          PostReplyEntity,
-          $$PostReplyTableTableFilterComposer,
-          $$PostReplyTableTableOrderingComposer,
-          $$PostReplyTableTableAnnotationComposer,
-          $$PostReplyTableTableCreateCompanionBuilder,
-          $$PostReplyTableTableUpdateCompanionBuilder,
-          (PostReplyEntity, $$PostReplyTableTableReferences),
-          PostReplyEntity,
-          PrefetchHooks Function({bool parentId, bool postId})
+          $CommentTableTable,
+          CommentData,
+          $$CommentTableTableFilterComposer,
+          $$CommentTableTableOrderingComposer,
+          $$CommentTableTableAnnotationComposer,
+          $$CommentTableTableCreateCompanionBuilder,
+          $$CommentTableTableUpdateCompanionBuilder,
+          (
+            CommentData,
+            BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
+          ),
+          CommentData,
+          PrefetchHooks Function()
         > {
-  $$PostReplyTableTableTableManager(
-    _$AppDataBase db,
-    $PostReplyTableTable table,
-  ) : super(
+  $$CommentTableTableTableManager(_$AppDataBase db, $CommentTableTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PostReplyTableTableFilterComposer($db: db, $table: table),
+              $$CommentTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PostReplyTableTableOrderingComposer($db: db, $table: table),
+              $$CommentTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PostReplyTableTableAnnotationComposer($db: db, $table: table),
+              $$CommentTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<int> post = const Value.absent(),
+                Value<String> authorId = const Value.absent(),
+                Value<String> content = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<String?> parentId = const Value.absent(),
-                Value<int> postId = const Value.absent(),
-                Value<String> userId = const Value.absent(),
-                Value<String> userName = const Value.absent(),
-                Value<String?> userAvatar = const Value.absent(),
-                Value<String> content = const Value.absent(),
-                Value<int> depth = const Value.absent(),
+                Value<int> upvotes = const Value.absent(),
+                Value<int> downvotes = const Value.absent(),
+                Value<List<dynamic>> replies = const Value.absent(),
+                Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => PostReplyTableCompanion(
+              }) => CommentTableCompanion(
                 id: id,
+                post: post,
+                authorId: authorId,
+                content: content,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                parentId: parentId,
-                postId: postId,
-                userId: userId,
-                userName: userName,
-                userAvatar: userAvatar,
-                content: content,
-                depth: depth,
+                upvotes: upvotes,
+                downvotes: downvotes,
+                replies: replies,
+                parent: parent,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String?> parentId = const Value.absent(),
-                required int postId,
-                required String userId,
-                required String userName,
-                Value<String?> userAvatar = const Value.absent(),
+                required int id,
+                required int post,
+                required String authorId,
                 required String content,
-                required int depth,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> upvotes = const Value.absent(),
+                Value<int> downvotes = const Value.absent(),
+                required List<dynamic> replies,
+                Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => PostReplyTableCompanion.insert(
+              }) => CommentTableCompanion.insert(
                 id: id,
+                post: post,
+                authorId: authorId,
+                content: content,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                parentId: parentId,
-                postId: postId,
-                userId: userId,
-                userName: userName,
-                userAvatar: userAvatar,
-                content: content,
-                depth: depth,
+                upvotes: upvotes,
+                downvotes: downvotes,
+                replies: replies,
+                parent: parent,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$PostReplyTableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({parentId = false, postId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (parentId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.parentId,
-                                referencedTable: $$PostReplyTableTableReferences
-                                    ._parentIdTable(db),
-                                referencedColumn:
-                                    $$PostReplyTableTableReferences
-                                        ._parentIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (postId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.postId,
-                                referencedTable: $$PostReplyTableTableReferences
-                                    ._postIdTable(db),
-                                referencedColumn:
-                                    $$PostReplyTableTableReferences
-                                        ._postIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
 
-typedef $$PostReplyTableTableProcessedTableManager =
+typedef $$CommentTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $PostReplyTableTable,
-      PostReplyEntity,
-      $$PostReplyTableTableFilterComposer,
-      $$PostReplyTableTableOrderingComposer,
-      $$PostReplyTableTableAnnotationComposer,
-      $$PostReplyTableTableCreateCompanionBuilder,
-      $$PostReplyTableTableUpdateCompanionBuilder,
-      (PostReplyEntity, $$PostReplyTableTableReferences),
-      PostReplyEntity,
-      PrefetchHooks Function({bool parentId, bool postId})
+      $CommentTableTable,
+      CommentData,
+      $$CommentTableTableFilterComposer,
+      $$CommentTableTableOrderingComposer,
+      $$CommentTableTableAnnotationComposer,
+      $$CommentTableTableCreateCompanionBuilder,
+      $$CommentTableTableUpdateCompanionBuilder,
+      (
+        CommentData,
+        BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
+      ),
+      CommentData,
+      PrefetchHooks Function()
     >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
@@ -23851,8 +23502,8 @@ class $AppDataBaseManager {
       $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
   $$PostTableTableTableManager get postTable =>
       $$PostTableTableTableManager(_db, _db.postTable);
-  $$PostReplyTableTableTableManager get postReplyTable =>
-      $$PostReplyTableTableTableManager(_db, _db.postReplyTable);
+  $$CommentTableTableTableManager get commentTable =>
+      $$CommentTableTableTableManager(_db, _db.commentTable);
   $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
