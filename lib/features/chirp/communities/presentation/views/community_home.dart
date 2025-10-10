@@ -186,7 +186,16 @@ class _CommunityActionSection extends StatelessWidget {
       ChirpCommunityMembershipCubit,
       ChirpCommunityMembershipState
     >(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is ChirpCommunityMembershipCommunityLeftState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("You've successfully left the community."),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         if (state is ChirpCommunityMembershipStateLoadingState ||
             state is ChirpCommunityMembershipInitialState) {
@@ -201,6 +210,8 @@ class _CommunityActionSection extends StatelessWidget {
         } else if (state is ChirpCommunityMembershipLoadedState) {
           return IconButton(
             onPressed: () {
+              final cubit = context.read<ChirpCommunityMembershipCubit>();
+
               showModalBottomSheet(
                 context: context,
                 showDragHandle: true,
@@ -239,6 +250,36 @@ class _CommunityActionSection extends StatelessWidget {
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
                         title: Text("Leave community"),
+                        onTap: () {
+                          context.pop();
+                          showAdaptiveDialog(
+                            context: context,
+                            builder: (context) => AlertDialog.adaptive(
+                              title: Text("Are you sure you want to leave? "),
+                              content: Text(
+                                "By leaving you will no longer recieve"
+                                "updates from this community nor see posts"
+                                " from this community",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                    cubit.leaveCommunity(
+                                      communityID: communityID,
+                                    );
+                                  },
+                                  child: Text("Im sure"),
+                                ),
+
+                                FilledButton(
+                                  onPressed: () => context.pop(),
+                                  child: Text("Cancel"),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                       Visibility(
                         visible: state.membership.role == "super-mod",
@@ -282,6 +323,7 @@ class _CommunityActionSection extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         cubit.joinCommunity(communityID: communityID);
+                        context.pop();
                       },
                       child: Text("Join Now"),
                     ),
