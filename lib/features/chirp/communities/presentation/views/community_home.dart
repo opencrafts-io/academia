@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/features/chirp/memberships/memberships.dart';
@@ -111,12 +113,53 @@ class _CommunityHomeState extends State<CommunityHome>
                     SliverAppBar.medium(
                       centerTitle: false,
                       titleSpacing: 0,
-                      title: InkWell(
+                      title: GestureDetector(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Coming soon"),
-                              behavior: SnackBarBehavior.floating,
+                          showModalBottomSheet(
+                            showDragHandle: true,
+                            context: context,
+                            builder: (context) => Container(
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Community guidelines",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.headlineSmall,
+                                  ),
+
+                                  Divider(),
+                                  state.community.guidelines.isNotEmpty
+                                      ? Expanded(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: state
+                                                .community
+                                                .guidelines
+                                                .length,
+                                            itemBuilder: (context, index) =>
+                                                ListTile(
+                                                  leading: Text(
+                                                    (index + 1).toString(),
+                                                  ),
+                                                  title: Text(
+                                                    state
+                                                        .community
+                                                        .guidelines[index],
+                                                  ),
+                                                ),
+                                          ),
+                                        )
+                                      : Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "No community guidelines"
+                                            " were provided by the mods",
+                                          ),
+                                        ),
+                                ],
+                              ),
                             ),
                           );
                         },
