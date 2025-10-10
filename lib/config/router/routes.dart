@@ -209,7 +209,7 @@ class ShereheRoute extends GoRouteData with _$ShereheRoute {
 class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const CreateEventScreen(); //TODO:(BARAKA) Add BlocProvider in Create Sherehe page
+    return const CreateEventScreen();
   }
 }
 

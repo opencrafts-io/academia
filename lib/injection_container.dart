@@ -104,6 +104,12 @@ Future<void> init(FlavorConfig flavor) async {
       getCachedUserProfileUseCase: sl(),
     ),
   );
+
+  sl.registerFactory(
+    () => CreateEventBloc(
+      createEventUseCase: sl(),
+    ),
+  );
   // Chirp
   sl.registerFactory<ChirpRemoteDataSource>(
     () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
