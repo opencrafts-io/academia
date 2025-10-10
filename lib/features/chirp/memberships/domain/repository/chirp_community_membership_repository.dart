@@ -8,7 +8,7 @@ abstract class ChirpCommunityMembershipRepository {
   ///
   /// Returns the newly created or updated [CommunityMembership] Entity on success.
   Future<Either<Failure, ChirpCommunityMembership>> joinCommunity({
-    required String communityID,
+    required int communityID,
   });
 
   /// Retrieves all personal memberships for a user and caches them accordingly
@@ -19,7 +19,7 @@ abstract class ChirpCommunityMembershipRepository {
   Future<Either<Failure, List<ChirpCommunityMembership>>>
   getAllCachedMemberships();
 
-  /// Handles the process of removing a user's membership (leaving or being kicked).
+  /// Handles the process leaving a community.
   ///
   /// Returns nothing on successful completion (Right(void)).
   Future<Either<Failure, void>> leaveCommunity({required int communityID});

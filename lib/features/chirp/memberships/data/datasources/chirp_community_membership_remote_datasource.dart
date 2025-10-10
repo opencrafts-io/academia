@@ -84,7 +84,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
 
   /// Sends a request to the server to join a community.
   Future<Either<Failure, ChirpCommunityMembershipData>> joinCommunity({
-    required String communityID,
+    required int communityID,
   }) async {
     try {
       final response = await dioClient.dio.post(
@@ -114,12 +114,11 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
 
   /// Sends a request to the server to leave a community.
   Future<Either<Failure, void>> leaveCommunity({
-    required String membershipID,
+    required int communityID,
   }) async {
     try {
-      // API endpoint to leave a community (DELETE request)
       final response = await dioClient.dio.delete(
-        "/$servicePrefix/community/$membershipID/leave/",
+        "/$servicePrefix/community/$communityID/leave/",
       );
 
       if (response.statusCode == 204 || response.statusCode == 200) {

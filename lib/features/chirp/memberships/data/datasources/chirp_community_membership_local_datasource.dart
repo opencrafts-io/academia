@@ -100,16 +100,14 @@ class ChirpCommunityMembershipLocalDatasource {
   }
 
   /// --- 5. Delete Single Cached Membership ---
-  Future<Either<Failure, ChirpCommunityMembershipData?>> deleteCached(
-    ChirpCommunityMembershipData communityMembership,
-  ) async {
+  Future<Either<Failure, void>> deleteCached(int communityID) async {
     await _deleteAllExpiredCachedCommunityMemberships();
     try {
-      final deleted = await localDB
-          .delete(localDB.chirpCommunityMembership)
-          .deleteReturning(communityMembership);
+      await (localDB.delete(
+        localDB.chirpCommunityMembership,
+      )..where((community) => community.id.equals(communityID))).go();
 
-      return right(deleted);
+      return right(null);
     } catch (e) {
       return left(
         CacheFailure(message: "Failed to delete cached membership.", error: e),

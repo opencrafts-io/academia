@@ -5,7 +5,6 @@ export 'entities/paginated_response.dart';
 export 'usecases/create_community_use_case.dart';
 export 'usecases/get_community_by_id_use_case.dart';
 export 'usecases/moderate_members_use_case.dart';
-export 'usecases/join_community_use_case.dart';
 export 'usecases/leave_community_use_case.dart';
 export 'usecases/delete_community_use_case.dart';
 export 'usecases/get_community_members_usecase.dart';
