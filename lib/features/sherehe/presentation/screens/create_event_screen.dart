@@ -274,15 +274,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final imageData = await originalImage.readAsBytes();
       if (!mounted) return;
 
-      // Crop the image, locked to 4:5
+      // Crop the image
       final Uint8List? croppedBytes = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ImageCropper(
             image: imageData,
-            availableRatios: [
-              image_editor_options.AspectRatio(title: "4:5", ratio: 4 / 5),
-            ],
           ),
         ),
       );
