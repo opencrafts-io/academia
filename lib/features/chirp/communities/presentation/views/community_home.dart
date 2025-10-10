@@ -139,8 +139,10 @@ class _CommunityHomeState extends State<CommunityHome>
                         ),
                       ),
                       actions: [
-                        _CommunityActionSection(
-                          communityID: widget.communityId,
+                        Builder(
+                          builder: (context) => _CommunityActionSection(
+                            communityID: widget.communityId,
+                          ),
                         ),
                       ],
                     ),
@@ -180,10 +182,11 @@ class _CommunityActionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<
+    return BlocConsumer<
       ChirpCommunityMembershipCubit,
       ChirpCommunityMembershipState
     >(
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is ChirpCommunityMembershipStateLoadingState ||
             state is ChirpCommunityMembershipInitialState) {
@@ -256,6 +259,7 @@ class _CommunityActionSection extends StatelessWidget {
           padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
           child: FilledButton(
             onPressed: () {
+              final cubit = context.read<ChirpCommunityMembershipCubit>();
               showAdaptiveDialog(
                 context: context,
                 builder: (context) => AlertDialog.adaptive(
@@ -275,7 +279,12 @@ class _CommunityActionSection extends StatelessWidget {
                       onPressed: () => context.pop(),
                       child: Text("Never mind"),
                     ),
-                    FilledButton(onPressed: () {}, child: Text("Join Now")),
+                    FilledButton(
+                      onPressed: () {
+                        cubit.joinCommunity(communityID: communityID);
+                      },
+                      child: Text("Join Now"),
+                    ),
                   ],
                 ),
               );
