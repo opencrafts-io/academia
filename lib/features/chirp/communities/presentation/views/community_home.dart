@@ -1,13 +1,14 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/chirp/communities/communities.dart';
+import 'package:academia/features/chirp/memberships/memberships.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:animated_emoji/animated_emoji.dart';
 
 class CommunityHome extends StatefulWidget {
   final int communityId;
@@ -20,7 +21,7 @@ class CommunityHome extends StatefulWidget {
 
 class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
-  late String currentUserId;
+  late String currentUserID;
   late String currentUserName;
 
   @override
@@ -30,7 +31,7 @@ class _CommunityHomeState extends State<CommunityHome>
     final profileState = context.read<ProfileBloc>().state;
 
     if (profileState is ProfileLoadedState) {
-      currentUserId = profileState.profile.id;
+      currentUserID = profileState.profile.id;
       currentUserName = profileState.profile.name;
     }
 
@@ -82,168 +83,206 @@ class _CommunityHomeState extends State<CommunityHome>
             onRefresh: () async {
               await Future.delayed(const Duration(seconds: 2));
             },
-            child: Scaffold(
-              // drawer: Drawer(),
-              body: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                  SliverAppBar.medium(
-                    centerTitle: false,
-                    titleSpacing: 0,
-                    title: InkWell(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Coming soon"),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child: BlocProvider(
+              create: (context) =>
+                  ChirpCommunityMembershipCubit(
+                    joinCommunityUsecase: sl(),
+                    leaveCommunityUsecase: sl(),
+                    getPersonalCommunityMembershipForCommunityUsecase: sl(),
+                  )..getPersonalCommunityMembershipForCommunity(
+                    communityID: widget.communityId,
+                    userID: currentUserID,
+                  ),
+              child: Scaffold(
+                body: NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    SliverAppBar.medium(
+                      centerTitle: false,
+                      titleSpacing: 0,
+                      title: InkWell(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Coming soon"),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  state.community.profilePictureUrl == null
+                                  ? null
+                                  : CachedNetworkImageProvider(
+                                      state.community.profilePictureUrl!,
+                                      errorListener: (error) {},
+                                    ),
+                              child: state.community.profilePictureUrl == null
+                                  ? Text(state.community.name[0])
+                                  : null,
+                            ),
+                            SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(state.community.name),
+                                Text(
+                                  "${NumberFormat.compact().format(state.community.memberCount)} members",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        _CommunityActionSection(
+                          communityID: widget.communityId,
+                        ),
+                      ],
+                    ),
+
+                    SliverPadding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                      sliver: MultiSliver(
+                        pushPinnedChildren: true,
                         children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                state.community.profilePictureUrl == null
-                                ? null
-                                : CachedNetworkImageProvider(
-                                    state.community.profilePictureUrl!,
-                                    errorListener: (error) {},
-                                  ),
-                            child: state.community.profilePictureUrl == null
-                                ? Text(state.community.name[0])
-                                : null,
-                          ),
-                          SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(state.community.name),
-                              Text(
-                                "${NumberFormat.compact().format(state.community.memberCount)} members",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
+                          SliverPinnedHeader(
+                            child: Text(
+                              state.community.description ??
+                                  'No description available',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
-                        child: FilledButton(
-                          onPressed: () {
-                            showAdaptiveDialog(
-                              context: context,
-                              builder: (context) => AlertDialog.adaptive(
-                                title: Text("Are you sure you want to join?"),
-                                content: Text(
-                                  "Welcome to the community! "
-                                  "By joining, you'll be the first to know about exciting updates, "
-                                  "events, and everything happening here. "
-                                  "To ensure a smooth experience, please take a moment to review "
-                                  "the community guidelines set by our moderators. "
-                                  "Understanding and following these rules will help keep our space "
-                                  "welcoming and prevent any issues down the road. "
-                                  "Let's make this community thrive together!",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => context.pop(),
-                                    child: Text("Never mind"),
-                                  ),
-                                  FilledButton(
-                                    onPressed: () {},
-                                    child: Text("Join Now"),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: Text("Join"),
-                        ),
-                      ),
-                      Visibility(
-                        visible: false,
-                        child: IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              showDragHandle: true,
-                              builder: (context) => Container(
-                                height: 320,
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "More community actions",
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.headlineSmall,
-                                    ),
-                                    Divider(),
-                                    SizedBox(height: 12),
-                                    ListTile(
-                                      leading: Icon(Icons.edit),
-                                      title: Text("Edit community information"),
-                                    ),
-
-                                    ListTile(
-                                      leading: Icon(Icons.groups_2),
-                                      title: Text("View community members"),
-                                      onTap: () {
-                                        CommunityMembersRoute(
-                                          role: "user",
-                                          communityId: widget.communityId,
-                                        ).push(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.exit_to_app),
-                                      title: Text("Leave community"),
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      title: Text("Delete community"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.more_vert),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SliverPadding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
-                    sliver: MultiSliver(
-                      pushPinnedChildren: true,
-                      children: [
-                        SliverPinnedHeader(
-                          child: Text(
-                            state.community.description ??
-                                'No description available',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                body: const Center(child: Text("Community posts")),
+                  ],
+                  body: const Center(child: Text("Community posts")),
+                ),
               ),
             ),
           );
         }
 
         return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class _CommunityActionSection extends StatelessWidget {
+  const _CommunityActionSection({super.key, required this.communityID});
+  final int communityID;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<
+      ChirpCommunityMembershipCubit,
+      ChirpCommunityMembershipState
+    >(
+      builder: (context, state) {
+        if (state is ChirpCommunityMembershipStateLoadingState ||
+            state is ChirpCommunityMembershipInitialState) {
+          return Padding(
+            padding: EdgeInsets.all(12),
+            child: SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        } else if (state is ChirpCommunityMembershipLoadedState) {
+          return IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                showDragHandle: true,
+                builder: (context) => Container(
+                  height: 320,
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "More community actions",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      Divider(),
+                      SizedBox(height: 12),
+                      Visibility(
+                        visible:
+                            state.membership.role == "super-mod" ||
+                            state.membership.role == "mod",
+                        child: ListTile(
+                          leading: Icon(Icons.edit),
+                          title: Text("Edit community information"),
+                        ),
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.groups_2),
+                        title: Text("View community members"),
+                        onTap: () {
+                          CommunityMembersRoute(
+                            role: "user",
+                            communityId: communityID,
+                          ).push(context);
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.exit_to_app),
+                        title: Text("Leave community"),
+                      ),
+                      Visibility(
+                        visible: state.membership.role == "super-mod",
+                        child: ListTile(
+                          leading: Icon(Icons.delete, color: Colors.red),
+                          title: Text("Delete community"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.more_vert),
+          );
+        }
+        return Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
+          child: FilledButton(
+            onPressed: () {
+              showAdaptiveDialog(
+                context: context,
+                builder: (context) => AlertDialog.adaptive(
+                  title: Text("Are you sure you want to join?"),
+                  content: Text(
+                    "Welcome to the community! "
+                    "By joining, you'll be the first to know about exciting updates, "
+                    "events, and everything happening here. "
+                    "To ensure a smooth experience, please take a moment to review "
+                    "the community guidelines set by our moderators. "
+                    "Understanding and following these rules will help keep our space "
+                    "welcoming and prevent any issues down the road. "
+                    "Let's make this community thrive together!",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => context.pop(),
+                      child: Text("Never mind"),
+                    ),
+                    FilledButton(onPressed: () {}, child: Text("Join Now")),
+                  ],
+                ),
+              );
+            },
+            child: Text("Join"),
+          ),
+        );
       },
     );
   }
