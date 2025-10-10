@@ -34,5 +34,8 @@ abstract class ChirpCommunityMembershipRepository {
 
   /// Fetched personal communit membership for a given community
   Future<Either<Failure, ChirpCommunityMembership>>
-  getPersonalCommunityMemberShipForCommunity({required int communityID});
+  getPersonalCommunityMemberShipForCommunity({
+    required int communityID,
+    required String userID,
+  });
 }

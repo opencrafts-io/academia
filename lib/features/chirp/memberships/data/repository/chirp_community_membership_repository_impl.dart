@@ -115,7 +115,33 @@ class ChirpCommunityMembershipRepositoryImpl
 
   @override
   Future<Either<Failure, ChirpCommunityMembership>>
-  getPersonalCommunityMemberShipForCommunity({required int communityID}) {
-    throw UnimplementedError();
+  getPersonalCommunityMemberShipForCommunity({
+    required int communityID,
+    required String userID,
+  }) async {
+    final localRes = await chirpCommunityMembershipLocalDatasource
+        .getMembership(communityID: communityID, userID: userID);
+
+    return localRes.fold(
+      (failure) async {
+        /// Try syncing with the remote repo
+        final remoteRes = await chirpCommunityMembershipRemoteDatasource
+            .getPersonalMembershipByCommunityID(communityID: communityID);
+
+        return remoteRes.fold(
+          (failure) {
+            return left(failure);
+          },
+          (membershipData) async {
+            await chirpCommunityMembershipLocalDatasource
+                .createOrUpdateCommunityMembership(membershipData);
+            return right(membershipData.toEntity());
+          },
+        );
+      },
+      (membershipData) {
+        return right(membershipData.toEntity());
+      },
+    );
   }
 }

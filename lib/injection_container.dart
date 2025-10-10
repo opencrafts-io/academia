@@ -307,10 +307,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
-  sl.registerFactory<LeaveCommunityUseCase>(
-    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
-  );
-
   sl.registerFactory<DeleteCommunityUseCase>(
     () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
@@ -428,6 +424,10 @@ Future<void> init(FlavorConfig flavor) async {
   );
   sl.registerFactory<LeaveCommunityUsecase>(
     () => LeaveCommunityUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<GetPersonalCommunityMembershipForCommunityUsecase>(
+    () => GetPersonalCommunityMembershipForCommunityUsecase(repository: sl()),
   );
 
   /*************************************************************************

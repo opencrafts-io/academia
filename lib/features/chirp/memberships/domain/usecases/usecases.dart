@@ -3,3 +3,4 @@ export 'get_remote_personal_chirp_memberships_usecase.dart';
 export 'get_community_memberships_usecase.dart';
 export 'join_community_usecase.dart';
 export 'leave_community_usecase.dart';
+export 'get_personal_community_membership_for_community_usecase.dart';

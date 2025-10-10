@@ -9,11 +9,35 @@ class ChirpCommunityMembershipCubit
   // Usecases
   JoinCommunityUsecase joinCommunityUsecase;
   LeaveCommunityUsecase leaveCommunityUsecase;
+  GetPersonalCommunityMembershipForCommunityUsecase
+  getPersonalCommunityMembershipForCommunityUsecase;
 
   ChirpCommunityMembershipCubit({
     required this.joinCommunityUsecase,
     required this.leaveCommunityUsecase,
+    required this.getPersonalCommunityMembershipForCommunityUsecase,
   }) : super(ChirpCommunityMembershipInitialState());
+
+  Future<void> getPersonalCommunityMembershipForCommunity({
+    required int communityID,
+    required String userID,
+  }) async {
+    final result = await getPersonalCommunityMembershipForCommunityUsecase(
+      GetPersonalCommunityMembershipForCommunityUsecaseParams(
+        communityID: communityID,
+        userID: userID,
+      ),
+    );
+
+    result.fold(
+      (failure) {
+        emit(ChirpCommunityMembershipErrorState(error: failure.message));
+      },
+      (membership) {
+        emit(ChirpCommunityMembershipLoadedState(membership: membership));
+      },
+    );
+  }
 
   Future<void> joinCommunity({required int communityID}) async {
     final result = await joinCommunityUsecase(communityID);
