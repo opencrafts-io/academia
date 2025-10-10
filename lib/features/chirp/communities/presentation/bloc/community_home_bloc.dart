@@ -43,8 +43,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
   ) async {
     emit(CommunityHomeLoading());
     final result = await deleteCommunityUseCase(
-      event.communityId,
-      event.userId,
+      event.communityID,
     );
 
     result.fold(

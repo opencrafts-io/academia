@@ -9,6 +9,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class CommunityHome extends StatefulWidget {
   final int communityId;
@@ -43,25 +45,19 @@ class _CommunityHomeState extends State<CommunityHome>
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CommunityHomeBloc, CommunityHomeState>(
-      listener: (context, state) {
-        if (state is CommunityLeft) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("You left the community")),
-          );
-          HomeRoute().go(context);
-        }
-
+      listener: (context, state) async {
         if (state is CommunityDeleted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Community deleted")));
-          HomeRoute().go(context);
-        }
-
-        if (state is CommunityCriticalActionFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          if (await Vibration.hasVibrator()) {
+            Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
+          }
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Community deleted"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          context.pop();
         }
       },
       builder: (context, state) {
@@ -284,6 +280,58 @@ class _CommunityActionSection extends StatelessWidget {
                       Visibility(
                         visible: state.membership.role == "super-mod",
                         child: ListTile(
+                          onTap: () async {
+                            if (await Vibration.hasVibrator()) {
+                              await Vibration.vibrate(
+                                preset: VibrationPreset.dramaticNotification,
+                              );
+                            }
+
+                            if (!context.mounted) return;
+
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (context) => AlertDialog.adaptive(
+                                title: Text("Delete this community"),
+                                content: Text(
+                                  "Are yout absolutely sure you want to delete "
+                                  "this community? "
+                                  "This is a permanent irreversible action. "
+                                  "All associated content, including all posts,"
+                                  "chats, images and membership data will be "
+                                  "instantly and permanently removed."
+                                  "This community cannot be resored. \n\n"
+                                  "Proceed only if you understand and accept the"
+                                  " outcome.",
+                                ),
+                                actions: [
+                                  TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                    onPressed: () async {
+                                      context.pop();
+                                      BlocProvider.of<CommunityHomeBloc>(
+                                        context,
+                                      ).add(
+                                        DeleteCommunity(
+                                          communityID: communityID,
+                                        ),
+                                      );
+                                      context.pop();
+                                    },
+                                    label: Text("Im sure delete it"),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () => context.pop(),
+                                    child: Text("Cancel"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           leading: Icon(Icons.delete, color: Colors.red),
                           title: Text("Delete community"),
                         ),

@@ -1,6 +1,5 @@
 part of 'community_home_bloc.dart';
 
-
 abstract class CommunityHomeEvent extends Equatable {
   const CommunityHomeEvent();
 
@@ -66,13 +65,12 @@ class LeaveCommunity extends CommunityHomeEvent {
 }
 
 class DeleteCommunity extends CommunityHomeEvent {
-  final String communityId;
-  final String userId;
+  final int communityID;
 
-  const DeleteCommunity({required this.communityId, required this.userId});
+  const DeleteCommunity({required this.communityID});
 
   @override
-  List<Object?> get props => [communityId];
+  List<Object?> get props => [communityID];
 }
 
 // class ModerateMembers extends CommunityHomeEvent {
@@ -112,9 +110,5 @@ class AddCommunityGuidelines extends CommunityHomeEvent {
   });
 
   @override
-  List<Object?> get props => [
-    rule,
-    communityId,
-    userId,
-  ];
+  List<Object?> get props => [rule, communityId, userId];
 }

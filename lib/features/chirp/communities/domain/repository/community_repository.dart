@@ -29,9 +29,8 @@ abstract class CommunityRepository {
     required String userName,
   });
 
-  Future<Either<Failure, String>> deleteCommunity({
-    required String groupId,
-    required String userId,
+  Future<Either<Failure, void>> deleteCommunity({
+    required int communityID,
   });
 
   Future<Either<Failure, PaginatedResponse>> getCommunityMembers({
