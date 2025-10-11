@@ -1,7 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 
 class CreatePostUsecase {
   final ChirpRepository chirpRepository;
@@ -9,7 +8,6 @@ class CreatePostUsecase {
   CreatePostUsecase({required this.chirpRepository});
 
   Future<Either<Failure, Post>> call({
-    List<MultipartFile>? attachments,
     required String title,
     required String authorId,
     required int communityId,

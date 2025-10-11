@@ -37,14 +37,12 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
   @override
   Future<Either<Failure, Post>> createPost({
-    List<MultipartFile>? attachments,
     required String title,
     required String authorId,
     required int communityId,
     required String content,
   }) async {
     final result = await remoteDataSource.createPost(
-      attachments: attachments,
       title: title,
       authorId: authorId,
       communityId: communityId,

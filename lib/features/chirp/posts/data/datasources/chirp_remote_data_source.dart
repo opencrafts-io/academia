@@ -134,14 +134,12 @@ class ChirpRemoteDataSource with DioErrorHandler {
   }
 
   Future<Either<Failure, PostData>> createPost({
-    List<MultipartFile>? attachments,
     required String title,
     required String authorId,
     required int communityId,
     required String content,
   }) async {
     try {
-      // Build form data dynamically
       final Map<String, dynamic> formMap = {
         'title': title,
         'author_id': authorId,
@@ -149,17 +147,11 @@ class ChirpRemoteDataSource with DioErrorHandler {
         'content': content,
       };
 
-      if (attachments != null && attachments.isNotEmpty) {
-        formMap['attachments'] = attachments;
-      }
-
-      final formData = FormData.fromMap(formMap);
 
       final res = await dioClient.dio.post(
         '/$servicePrefix/posts/create/',
         queryParameters: {'community_id': communityId},
-        data: formData,
-        options: Options(contentType: "multipart/form-data"),
+        data: formMap,
       );
 
       if (res.statusCode == 201) {

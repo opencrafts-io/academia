@@ -1,11 +1,7 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/posts/domain/domain.dart';
-import 'package:academia/features/chirp/posts/domain/usecases/mark_post_as_viewed_usecase.dart';
 import 'package:academia/features/features.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 part 'feed_event.dart';
 part 'feed_state.dart';
@@ -204,15 +200,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     emit(PostCreating());
 
     // Convert XFile attachments to MultipartFile
-    final attachments = await Future.wait(
-      event.files.map((xfile) async {
-        final bytes = await xfile.readAsBytes();
-        return MultipartFile.fromBytes(bytes, filename: xfile.name);
-      }),
-    );
+    // final attachments = await Future.wait(
+    //   event.files.map((xfile) async {
+    //     final bytes = await xfile.readAsBytes();
+    //     return MultipartFile.fromBytes(bytes, filename: xfile.name);
+    //   }),
+    // );
 
     final result = await createPost(
-      attachments: attachments.isEmpty ? null : attachments,
       title: event.title,
       authorId: event.authorId,
       communityId: event.communityId,

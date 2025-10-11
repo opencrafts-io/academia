@@ -10,7 +10,6 @@ abstract class ChirpRepository {
   Future<Either<Failure, Post>> getPostDetails({required int postId});
 
   Future<Either<Failure, Post>> createPost({
-    List<MultipartFile>? attachments,
     required String title,
     required String authorId,
     required int communityId,

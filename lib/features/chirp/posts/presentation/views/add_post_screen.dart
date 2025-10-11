@@ -121,7 +121,6 @@ class _AddPostPageState extends State<AddPostPage> {
         // communityId: _selectedCommunity!.id,
         communityId: 3,
         content: content,
-        files: attachments,
       ),
     );
 
