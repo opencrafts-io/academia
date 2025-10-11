@@ -1,6 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:academia/features/chirp/posts/domain/usecases/mark_post_as_viewed_usecase.dart';
+import 'package:academia/features/features.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -234,8 +235,44 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     GetPostDetailEvent event,
     Emitter<FeedState> emit,
   ) async {
-    emit(PostDetailLoading());
+    // If posts already loaded, find it locally
+    if (state is FeedLoaded) {
+      final feedState = state as FeedLoaded;
+      final existingPost = feedState.posts.firstWhere(
+        (p) => p.id == event.postId,
+        orElse: () => Post(
+          id: 0,
+          title: '',
+          content: '',
+          authorId: '',
+          comments: [],
+          community: Community(
+            id: 0,
+            name: '',
+            visibility: '',
+            guidelines: [],
+            creatorId: '',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          upvotes: 0,
+          downvotes: 0,
+          commentCount: 0,
+          viewsCount: 0,
+        ),
+      );
 
+      if (existingPost.id != 0) {
+        // Emit PostDetailLoaded directly - no API call
+        emit(PostDetailLoaded(post: existingPost));
+        return;
+      }
+    }
+
+    //  Step 2: Fallback — fetch from API if not found locally
+    emit(PostDetailLoading());
     final result = await getPostDetail(postId: event.postId);
 
     result.fold(
@@ -248,8 +285,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     MarkPostAsViewed event,
     Emitter<FeedState> emit,
   ) async {
-    // Since you said you don't need to handle state or error propagation,
-    // we’ll just call the method and not change the state.
     await markPostAsViewed(postId: event.postId, viewerId: event.viewerId);
   }
 
