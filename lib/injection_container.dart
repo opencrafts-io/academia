@@ -124,17 +124,17 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(
     () => MarkPostAsViewedUsecase(repository: sl.get<ChirpRepository>()),
   );
+  sl.registerFactory(
+    () => GetPostCommentsUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => AddCommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
   // sl.registerFactory(
   //   () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
   // );
   // sl.registerFactory(
-  //   () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
-  // sl.registerFactory(
   //   () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
-  // sl.registerFactory(
-  //   () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
   // );
 
   // sl.registerFactory(
@@ -146,6 +146,8 @@ Future<void> init(FlavorConfig flavor) async {
       createPost: sl.get<CreatePostUsecase>(),
       getPostDetail: sl.get<GetPostDetailUseCase>(),
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
+      getPostComments: sl.get<GetPostCommentsUsecase>(),
+      addComment: sl.get<AddCommentUsecase>(),
       // cachePosts: sl.get<CachePostsUsecase>(),
       // likePost: sl.get<LikePostUsecase>(),
       // addComment: sl.get<CommentUsecase>(),
@@ -153,6 +155,9 @@ Future<void> init(FlavorConfig flavor) async {
       // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
+  // sl.registerFactory(
+  //   () => CommentBloc(addComment: sl.get<AddCommentUsecase>()),
+  // );
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

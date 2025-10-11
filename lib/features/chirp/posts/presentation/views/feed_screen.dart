@@ -4,7 +4,6 @@ import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
@@ -31,7 +30,9 @@ class FeedPage extends StatelessWidget {
                     return SliverList.builder(
                       itemBuilder: (context, index) {
                         return BlocProvider(
-                          create: (context) => sl<ChirpUserCubit>(),
+                          create: (context) =>
+                              sl<ChirpUserCubit>()
+                                ..getChirpUserByID(state.posts[index].authorId),
                           child: PostCard(
                             post: state.posts[index],
                             onTap: () {
@@ -44,6 +45,7 @@ class FeedPage extends StatelessWidget {
                               );
                               PostDetailRoute(
                                 postId: state.posts[index].id,
+                                authorId: state.posts[index].authorId,
                               ).push(context);
                             },
                           ),

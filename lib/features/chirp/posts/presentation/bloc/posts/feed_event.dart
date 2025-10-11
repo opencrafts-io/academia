@@ -39,16 +39,15 @@ class MarkPostAsViewed extends FeedEvent {
 }
 
 class AddComment extends FeedEvent {
-  final String postId;
+  final int postId;
+  final String authorId;
   final String content;
-  final String userName;
-  final String userId;
-  final String? parentId;
+  final int? parentId;
+
   AddComment({
     required this.postId,
+    required this.authorId,
     required this.content,
-    required this.userName,
-    required this.userId,
     this.parentId,
   });
 }
@@ -59,7 +58,8 @@ class ToggleLikePost extends FeedEvent {
   ToggleLikePost({required this.postId, required this.isCurrentlyLiked});
 }
 
-class GetPostRepliesEvent extends FeedEvent {
-  final String postId;
-  GetPostRepliesEvent({required this.postId});
+class GetPostCommentsEvent extends FeedEvent {
+  final int postId;
+
+  GetPostCommentsEvent({required this.postId});
 }

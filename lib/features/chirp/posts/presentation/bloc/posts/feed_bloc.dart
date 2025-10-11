@@ -14,27 +14,26 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final CreatePostUsecase createPost;
   final GetPostDetailUseCase getPostDetail;
   final MarkPostAsViewedUsecase markPostAsViewed;
+  final GetPostCommentsUsecase getPostComments;
+  final AddCommentUsecase addComment;
   // final CachePostsUsecase cachePosts;
   // final LikePostUsecase likePost;
-  // final CommentUsecase addComment;
-  // final GetPostRepliesUsecase getPostReplies;
-  // final CachePostRepliesUsecase cachePostReplies;
 
   FeedBloc({
     required this.getFeedPosts,
     required this.createPost,
     required this.getPostDetail,
     required this.markPostAsViewed,
+    required this.getPostComments,
+    required this.addComment,
     // required this.cachePosts,
     // required this.likePost,
-    // required this.addComment,
-    // required this.cachePostReplies,
-    // required this.getPostReplies,
   }) : super(FeedInitial()) {
     on<LoadFeedEvent>(_onLoadFeed);
     on<CreatePostEvent>(_onCreatePost);
     on<GetPostDetailEvent>(_onFetchPostDetail);
     on<MarkPostAsViewed>(_onMarkPostAsViewed);
+    on<AddComment>(_onAddComment);
 
     //   // Helper method to recursively find parent comment and add reply
     //   List<PostReply>? addReplyToParent(
@@ -251,9 +250,82 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   ) async {
     // Since you said you don't need to handle state or error propagation,
     // we’ll just call the method and not change the state.
-    await markPostAsViewed(
+    await markPostAsViewed(postId: event.postId, viewerId: event.viewerId);
+  }
+
+  // Future<void> _onFetchPostComments(
+  //   GetPostCommentsEvent event,
+  //   Emitter<FeedState> emit,
+  // ) async {
+  //   emit(CommentsLoading());
+
+  //   final result = await getPostComments(postId: event.postId);
+
+  //   result.fold(
+  //     (failure) => emit(CommentsError(message: failure.message)),
+  //     (post) => emit(CommentsLoaded(post: post)),
+  //   );
+  // }
+
+  Future<void> _onAddComment(AddComment event, Emitter<FeedState> emit) async {
+    final result = await addComment(
       postId: event.postId,
-      viewerId: event.viewerId,
+      authorId: event.authorId,
+      content: event.content,
+      parentId: event.parentId,
     );
+
+    result.fold((failure) => emit(CommentAddError(failure.message)), (
+      newComment,
+    ) {
+      if (state is PostDetailLoaded) {
+        final currentState = state as PostDetailLoaded;
+
+        List<Comment> updatedComments;
+
+        if (newComment.parent != null) {
+          // Recursively update the tree to add this reply under its parent
+          updatedComments = _addReplyToParent(
+            currentState.post.comments,
+            newComment.parent!,
+            newComment,
+          );
+        } else {
+          // It's a top-level comment
+          updatedComments = [...currentState.post.comments, newComment];
+        }
+
+        final updatedPost = currentState.post.copyWith(
+          comments: updatedComments,
+          commentCount: currentState.post.commentCount + 1,
+        );
+
+        emit(CommentAdded(comment: newComment));
+        emit(PostDetailLoaded(post: updatedPost));
+      } else {
+        emit(CommentAddError("Post details not loaded"));
+      }
+    });
+  }
+
+  /// Helper function to recursively find the parent and add the reply
+  List<Comment> _addReplyToParent(
+    List<Comment> comments,
+    int parentId,
+    Comment reply,
+  ) {
+    return comments.map((comment) {
+      if (comment.id == parentId) {
+        // Found the parent → append the reply
+        return comment.copyWith(replies: [...comment.replies, reply]);
+      } else if (comment.replies.isNotEmpty) {
+        // Search deeper in the tree
+        return comment.copyWith(
+          replies: _addReplyToParent(comment.replies, parentId, reply),
+        );
+      } else {
+        return comment;
+      }
+    }).toList();
   }
 }

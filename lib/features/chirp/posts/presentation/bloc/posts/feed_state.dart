@@ -38,7 +38,7 @@ class PostDetailLoaded extends FeedState {
 
 class PostDetailError extends FeedState {
   final String message;
-  
+
   PostDetailError({required this.message});
 
   @override
@@ -63,23 +63,28 @@ class PostCreateError extends FeedState {
   List<Object?> get props => [message];
 }
 
-class RepliesLoading extends FeedState {
+// class CommentsLoading extends FeedState {
+//   final Post post;
+
+//   CommentsLoading({required this.post});
+//   @override
+//   List<Object> get props => [post];
+// }
+
+class CommentsLoading extends FeedState {}
+
+class CommentsLoaded extends FeedState {
   final Post post;
-  RepliesLoading({required this.post});
+
+  CommentsLoaded({required this.post});
   @override
   List<Object> get props => [post];
 }
 
-class RepliesLoaded extends FeedState {
-  final Post post;
-  RepliesLoaded({required this.post});
-  @override
-  List<Object> get props => [post];
-}
-
-class RepliesError extends FeedState {
+class CommentsError extends FeedState {
   final String message;
-  RepliesError(this.message);
+
+  CommentsError({required this.message});
 
   @override
   List<Object?> get props => [message];
@@ -89,14 +94,16 @@ class CommentAdding extends FeedState {}
 
 class CommentAdded extends FeedState {
   final Comment comment;
+  
   CommentAdded({required this.comment});
   @override
   List<Object> get props => [comment];
 }
 
-class CommentError extends FeedState {
+class CommentAddError extends FeedState {
   final String message;
-  CommentError(this.message);
+
+  CommentAddError(this.message);
 
   @override
   List<Object?> get props => [message];

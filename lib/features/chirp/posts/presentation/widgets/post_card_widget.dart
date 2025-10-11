@@ -27,7 +27,6 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ChirpUserCubit>().getChirpUserByID(widget.post.authorId);
     return InkWell(
       onTap: widget.onTap,
       child: Container(

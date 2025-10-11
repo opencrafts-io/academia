@@ -3,7 +3,6 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

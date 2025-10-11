@@ -56,15 +56,35 @@ class ChirpRepositoryImpl implements ChirpRepository {
     );
   }
 
-  // @override
-  // Future<Either<Failure, List<PostReply>>> getPostReplies(String postId) async {
-  //   final cacheResult = await localDataSource.getCachedPostReplies(postId);
+  @override
+  Future<Either<Failure, List<Comment>>> getPostComments({
+    required int postId,
+  }) async {
+    final result = await remoteDataSource.getPostComments(postId: postId);
+    return result.fold(
+      (failure) => left(failure),
+      (comments) => right(comments.map((e) => e.toEntity()).toList()),
+    );
+  }
 
-  //   return await cacheResult.fold(
-  //     (failure) => left(failure),
-  //     (replies) => right(replies),
-  //   );
-  // }
+  @override
+  Future<Either<Failure, Comment>> createComment({
+    required int postId,
+    required String authorId,
+    required String content,
+    int? parent,
+  }) async {
+    final result = await remoteDataSource.createComment(
+      postId: postId,
+      authorId: authorId,
+      content: content,
+      parent: parent,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (created) => right(created.toEntity()),
+    );
+  }
 
   // @override
   // Future<Either<Failure, List<Post>>> addFeedPosts() async {
@@ -98,15 +118,6 @@ class ChirpRepositoryImpl implements ChirpRepository {
   //     (failure) => left(failure),
   //     (postData) => right(postData),
   //   );
-  // }
-
-  // @override
-  // Future<Either<Failure, PostReply>> addComment(
-  //   {required String postId, required String userId,
-  //   required String content,required String userName, String? parentId}
-  // ) async {
-  //   final result = await remoteDataSource.addComment(postId: postId, content: content, userName: userName, parentId: parentId, userId: userId );
-  //   return result.fold((failure) => left(failure), (created) => right(created));
   // }
 
   // @override

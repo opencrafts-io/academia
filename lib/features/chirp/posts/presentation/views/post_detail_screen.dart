@@ -1,11 +1,8 @@
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class PostDetailPage extends StatefulWidget {
   final int postId;
@@ -48,7 +45,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
     final profileState = BlocProvider.of<ProfileBloc>(context).state;
     if (profileState is ProfileLoadedState) {
-      final userName = profileState.profile.name;
       final userId = profileState.profile.id;
 
       setState(() {
@@ -57,11 +53,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
       context.read<FeedBloc>().add(
         AddComment(
-          postId: widget.postId.toString(),
+          postId: widget.postId,
+          authorId: userId,
           content: text,
-          userName: userName,
-          userId: userId,
-          parentId: _replyingTo?.id.toString(),
+          parentId: _replyingTo?.id,
         ),
       );
     } else {
@@ -97,7 +92,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<FeedBloc, FeedState>(
+      body: BlocListener<FeedBloc, FeedState>(
         listener: (context, state) {
           if (state is CommentAdded) {
             _controller.clear();
@@ -114,7 +109,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 behavior: SnackBarBehavior.floating,
               ),
             );
-          } else if (state is CommentError) {
+          } else if (state is CommentAddError) {
             setState(() {
               isAddingComment = false;
             });
@@ -129,22 +124,26 @@ class _PostDetailPageState extends State<PostDetailPage> {
             );
           }
         },
-        builder: (context, state) {
-          if (state is PostDetailLoaded) {
-            return _buildPostContent(context, state.post, state);
-          } else if (state is PostDetailLoading) {
-            return const SliverFillRemaining(
-              child: Center(child: SpinningScallopIndicator()),
-            );
-          } else if (state is PostDetailError) {
-            return SliverFillRemaining(
-              child: Center(child: Text(state.message)),
-            );
-          } else if (state is RepliesLoading) {
-            return _buildPostContent(context, state.post, state);
-          }
-          return const SizedBox.shrink();
-        },
+        child: BlocBuilder<FeedBloc, FeedState>(
+          builder: (context, state) {
+            if (state is PostDetailLoaded) {
+              return PostContentWidget(
+                post: state.post,
+                onReplyTo: _onReplyTo,
+                onVote: _onVoteComment,
+              );
+            } else if (state is PostDetailLoading) {
+              return const SliverFillRemaining(
+                child: Center(child: SpinningScallopIndicator()),
+              );
+            } else if (state is PostDetailError) {
+              return SliverFillRemaining(
+                child: Center(child: Text(state.message)),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
       bottomSheet: SafeArea(
         child: Container(
@@ -160,45 +159,54 @@ class _PostDetailPageState extends State<PostDetailPage> {
             children: [
               // Reply indicator
               if (_replyingTo != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.secondaryContainer.withAlpha(120),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.reply,
-                        size: 16,
+                BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                  builder: (context, state) {
+                    String username = 'Unknown User';
+
+                    if (state is ChirpUserLoadedState) {
+                      username = state.user.username ?? 'Unknown User';
+                    }
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSecondaryContainer,
+                        ).colorScheme.secondaryContainer.withAlpha(120),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Replying to @${_replyingTo!.authorId}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSecondaryContainer,
-                              ),
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.reply,
+                            size: 16,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Replying to @$username',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer,
+                                  ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, size: 16),
+                            onPressed: _cancelReply,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.close, size: 16),
-                        onPressed: _cancelReply,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
 
               // Input row
@@ -248,137 +256,5 @@ class _PostDetailPageState extends State<PostDetailPage> {
         ),
       ),
     );
-  }
-
-  Widget _buildPostContent(BuildContext context, Post post, FeedState state) {
-    final bool isLoadingReplies = state is RepliesLoading;
-    final bool hasComments = post.comments.isNotEmpty;
-
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          floating: true,
-          pinned: true,
-          actions: [
-            IconButton.filled(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Openning Community"),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              },
-              icon: Icon(Icons.groups, color: Colors.white),
-            ),
-          ],
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              BlocProvider(
-                create: (context) => sl<ChirpUserCubit>(),
-                child: PostCard(post: post),
-              ),
-              const SizedBox(height: 16),
-
-              // Comments header with loading indicator
-              Row(
-                children: [
-                  Icon(Icons.comment_outlined, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    "${post.commentCount} ${post.commentCount == 1 ? 'Comment' : 'Comments'}",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Comments section
-              if (isLoadingReplies && post.comments.isEmpty)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: SpinningScallopIndicator(),
-                  ),
-                ),
-
-              if (!isLoadingReplies && !hasComments)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      spacing: 8,
-                      children: [
-                        Lottie.asset(
-                          "assets/lotties/promotional-staff.json",
-                          height: 240,
-                        ),
-                        Text(
-                          "No comments yet",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          "Be the first to share your thoughts!",
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withAlpha(100),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-              // Render comments in proper hierarchical order
-              if (hasComments) ..._buildCommentsTree(post.comments),
-
-              const SizedBox(height: 120),
-            ]),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Helper method to build comments in proper tree structure
-  List<Widget> _buildCommentsTree(List<Comment> replies) {
-    // Sort replies by creation date
-    final sortedReplies = List<Comment>.from(replies);
-    sortedReplies.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-    return sortedReplies
-        .map(
-          (reply) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            // child: CommentWidget( // TODO: Implement CommentWidget
-            //   reply: reply,
-            //   onReplyTo: _onReplyTo,
-            //   formatTime: _formatTime,
-            //   onVote: _onVoteComment,
-            // ),
-          ),
-        )
-        .toList();
-  }
-
-  String _formatTime(DateTime time) {
-    final now = DateTime.now();
-    final diff = now.difference(time);
-
-    if (diff.inMinutes < 1) return 'now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m';
-    if (diff.inHours < 24) return '${diff.inHours}h';
-    if (diff.inDays < 7) return '${diff.inDays}d';
-    if (diff.inDays < 365) return '${(diff.inDays / 7).floor()}w';
-
-    return '${(diff.inDays / 365).floor()}y';
   }
 }
