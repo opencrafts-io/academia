@@ -133,14 +133,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 onVote: _onVoteComment,
               );
             } else if (state is PostDetailLoading) {
-              return const SliverFillRemaining(
-                child: Center(child: SpinningScallopIndicator()),
-              );
+              return const Center(child: SpinningScallopIndicator());
             } else if (state is PostDetailError) {
-              return SliverFillRemaining(
-                child: Center(child: Text(state.message)),
-              );
+              return Center(child: Text(state.message));
             }
+
             return const SizedBox.shrink();
           },
         ),
