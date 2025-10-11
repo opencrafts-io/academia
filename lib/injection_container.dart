@@ -151,10 +151,10 @@ Future<void> init(FlavorConfig flavor) async {
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
       getPostComments: sl.get<GetPostCommentsUsecase>(),
       addComment: sl.get<AddCommentUsecase>(),
-      // cachePosts: sl.get<CachePostsUsecase>(),
+      createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
+      deletePost: sl.get<DeletePostUsecase>(),
       // likePost: sl.get<LikePostUsecase>(),
       // addComment: sl.get<CommentUsecase>(),
-      // cachePostReplies: sl.get<CachePostRepliesUsecase>(),
       // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );

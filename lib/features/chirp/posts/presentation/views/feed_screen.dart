@@ -12,7 +12,23 @@ class FeedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<FeedBloc, FeedState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is PostCreated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Post created successfully!"),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } else if (state is PostCreateError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error creating post"),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        },
         child: RefreshIndicator(
           onRefresh: () async {
             context.read<FeedBloc>().add(LoadFeedEvent());

@@ -14,12 +14,14 @@ class CreatePostEvent extends FeedEvent {
   final String authorId;
   final int communityId;
   final String content;
+  final List<XFile> attachments;
 
   CreatePostEvent({
     required this.title,
     required this.authorId,
     required this.communityId,
     required this.content,
+    this.attachments = const [],
   });
 }
 

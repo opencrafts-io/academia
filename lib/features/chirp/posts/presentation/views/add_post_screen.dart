@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:vibration/vibration.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -44,7 +46,17 @@ class _AddPostPageState extends State<AddPostPage> {
       );
 
       if (editedImage != null) {
-        setState(() => attachments.add(XFile.fromData(editedImage)));
+        final tempDir = await getTemporaryDirectory();
+        final filePath =
+            '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final file = File(filePath);
+        await file.writeAsBytes(editedImage);
+
+        setState(() {
+          attachments.add(XFile(file.path));
+        });
+
+        print("Saved attachment at: ${file.path}");
       }
     } catch (e) {
       _showSnackBar("Failed to pick or edit image: $e");
@@ -110,7 +122,8 @@ class _AddPostPageState extends State<AddPostPage> {
     //   return;
     // }
 
-    print("Files: $attachments");
+    print("Sending ${attachments.length} attachments to bloc");
+    print('Attachments files: ${attachments.map((e) => e.path).toList()}');
 
     if (!mounted) return;
 
@@ -121,6 +134,7 @@ class _AddPostPageState extends State<AddPostPage> {
         // communityId: _selectedCommunity!.id,
         communityId: 3,
         content: content,
+        attachments: List<XFile>.from(attachments),
       ),
     );
 
@@ -152,6 +166,10 @@ class _AddPostPageState extends State<AddPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Rebuilding AddPostPage — attachments count: ${attachments.length}');
+    print(
+      'Rebuilding AddPostPage — attachments files: ${attachments.map((e) => e.path).toList()}',
+    );
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(

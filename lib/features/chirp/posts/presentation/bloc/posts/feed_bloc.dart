@@ -1,7 +1,10 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:logger/logger.dart';
 
 part 'feed_event.dart';
 part 'feed_state.dart';
@@ -13,6 +16,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final MarkPostAsViewedUsecase markPostAsViewed;
   final GetPostCommentsUsecase getPostComments;
   final AddCommentUsecase addComment;
+  final CreatePostAttachmentUsecase createPostAttachment;
+  final DeletePostUsecase deletePost;
+  final Logger _logger = Logger();
   // final CachePostsUsecase cachePosts;
   // final LikePostUsecase likePost;
 
@@ -23,6 +29,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.markPostAsViewed,
     required this.getPostComments,
     required this.addComment,
+    required this.createPostAttachment,
+    required this.deletePost,
     // required this.cachePosts,
     // required this.likePost,
   }) : super(FeedInitial()) {
@@ -196,16 +204,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     Emitter<FeedState> emit,
   ) async {
     final previousState = state;
-
     emit(PostCreating());
-
-    // Convert XFile attachments to MultipartFile
-    // final attachments = await Future.wait(
-    //   event.files.map((xfile) async {
-    //     final bytes = await xfile.readAsBytes();
-    //     return MultipartFile.fromBytes(bytes, filename: xfile.name);
-    //   }),
-    // );
 
     final result = await createPost(
       title: event.title,
@@ -214,16 +213,89 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       content: event.content,
     );
 
-    result.fold((failure) => emit(PostCreateError(failure.message)), (post) {
-      if (previousState is FeedLoaded) {
-        final updatedPosts = [post, ...previousState.posts];
-        emit(PostCreated(posts: updatedPosts));
-        emit(FeedLoaded(posts: updatedPosts));
-      } else {
-        emit(PostCreated(posts: [post]));
-        emit(FeedLoaded(posts: [post]));
-      }
-    });
+    _logger.i("Post created, result: $result");
+
+    await result.fold(
+      (failure) async {
+        emit(PostCreateError(failure.message));
+      },
+      (post) async {
+        _logger.i("Getting into attachment section");
+        _logger.i("Attachments to process: ${event.attachments.length}");
+        _logger.i("Attachments: ${event.attachments}");
+
+        bool attachmentFailed = false;
+
+        // Upload attachments if any
+        if (event.attachments.isNotEmpty) {
+          _logger.i("Attachments found: ${event.attachments.length}");
+
+          for (final xfile in event.attachments) {
+            try {
+              final bytes = await xfile.readAsBytes();
+              final multipartFile = MultipartFile.fromBytes(
+                bytes,
+                filename: xfile.name,
+              );
+
+              final attachResult = await createPostAttachment.call(
+                postId: post.id,
+                file: multipartFile,
+              );
+
+              attachResult.fold(
+                (failure) {
+                  _logger.e("Attachment upload failed: ${failure.message}");
+                  attachmentFailed = true;
+                },
+                (attachment) =>
+                    _logger.i("Attachment uploaded: ${attachment.id}"),
+              );
+
+              // Stop further uploads if one fails
+              if (attachmentFailed) break;
+            } catch (e) {
+              _logger.e("Error preparing attachment: $e");
+              attachmentFailed = true;
+              break;
+            }
+          }
+
+          // If any attachment failed, delete the post and emit error
+          if (attachmentFailed) {
+            _logger.w(
+              "Deleting post ${post.id} due to failed attachment upload",
+            );
+
+            final deleteResult = await deletePost.call(postId: post.id);
+
+            deleteResult.fold(
+              (failure) => _logger.e(
+                "Failed to delete post after attachment error: ${failure.message}",
+              ),
+              (_) => _logger.i(
+                "Post ${post.id} deleted successfully after rollback",
+              ),
+            );
+
+            emit(
+              PostCreateError("Failed to upload attachments. Post deleted."),
+            );
+            return;
+          }
+        }
+
+        // If everything succeeded, update the feed
+        if (previousState is FeedLoaded) {
+          final updatedPosts = [post, ...previousState.posts];
+          emit(PostCreated(posts: updatedPosts));
+          emit(FeedLoaded(posts: updatedPosts));
+        } else {
+          emit(PostCreated(posts: [post]));
+          emit(FeedLoaded(posts: [post]));
+        }
+      },
+    );
   }
 
   Future<void> _onFetchPostDetail(
