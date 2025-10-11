@@ -127,8 +127,21 @@ class AuthRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, TokenData>> signInWithSpotify() async {
     try {
+      String authUrl;
+
+      switch (flavor.flavor) {
+        case Flavor.staging:
+          authUrl = "https://qaverisafe.opencrafts.io/auth/google";
+          break;
+        case Flavor.production:
+          authUrl = "https://verisafe.opencrafts.io/auth/google";
+          break;
+        default:
+          authUrl = "http://127.0.0.1:8080/auth/google";
+      }
+
       final result = await FlutterWebAuth2.authenticate(
-        url: "https://qaverisafe.opencrafts.io/auth/google",
+        url: authUrl,
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
