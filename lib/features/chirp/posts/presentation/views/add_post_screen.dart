@@ -6,6 +6,7 @@ import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,21 +46,45 @@ class _AddPostPageState extends State<AddPostPage> {
         MaterialPageRoute(builder: (context) => ImageEditor(image: imageData)),
       );
 
+      final tempDir = await getTemporaryDirectory();
+      final filePath =
+          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      Uint8List finalImageBytes;
+
       if (editedImage != null) {
-        final tempDir = await getTemporaryDirectory();
-        final filePath =
-            '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final file = File(filePath);
-        await file.writeAsBytes(editedImage);
-
-        setState(() {
-          attachments.add(XFile(file.path));
-        });
-
-        print("Saved attachment at: ${file.path}");
+        finalImageBytes = await FlutterImageCompress.compressWithList(
+          editedImage,
+          quality: 75,
+          minWidth: 1080,
+          minHeight: 1080,
+        );
+        print(
+          "Compressed user-edited image: ${finalImageBytes.lengthInBytes / 1024} KB",
+        );
+      } else {
+        finalImageBytes = await FlutterImageCompress.compressWithList(
+          imageData,
+          quality: 70,
+          minWidth: 1080,
+          minHeight: 1080,
+        );
+        print(
+          "Compressed original image: ${finalImageBytes.lengthInBytes / 1024} KB",
+        );
       }
+
+      final file = File(filePath);
+      await file.writeAsBytes(finalImageBytes);
+
+      setState(() {
+        attachments.add(XFile(file.path));
+      });
+
+      print("Saved compressed image at: ${file.path}");
     } catch (e) {
       _showSnackBar("Failed to pick or edit image: $e");
+      debugPrint("Error in _pickImage: $e");
     }
   }
 

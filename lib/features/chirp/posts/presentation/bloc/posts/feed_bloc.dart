@@ -213,23 +213,19 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       content: event.content,
     );
 
-    _logger.i("Post created, result: $result");
-
     await result.fold(
       (failure) async {
         emit(PostCreateError(failure.message));
       },
       (post) async {
-        _logger.i("Getting into attachment section");
+        _logger.i("Post created successfully: ${post.id}");
         _logger.i("Attachments to process: ${event.attachments.length}");
-        _logger.i("Attachments: ${event.attachments}");
 
         bool attachmentFailed = false;
+        final uploadedAttachments =
+            <Attachments>[]; 
 
-        // Upload attachments if any
         if (event.attachments.isNotEmpty) {
-          _logger.i("Attachments found: ${event.attachments.length}");
-
           for (final xfile in event.attachments) {
             try {
               final bytes = await xfile.readAsBytes();
@@ -248,11 +244,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
                   _logger.e("Attachment upload failed: ${failure.message}");
                   attachmentFailed = true;
                 },
-                (attachment) =>
-                    _logger.i("Attachment uploaded: ${attachment.id}"),
+                (attachment) {
+                  _logger.i(
+                    "Attachment uploaded successfully: ${attachment.id}",
+                  );
+                  uploadedAttachments.add(attachment);
+                },
               );
 
-              // Stop further uploads if one fails
               if (attachmentFailed) break;
             } catch (e) {
               _logger.e("Error preparing attachment: $e");
@@ -261,7 +260,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             }
           }
 
-          // If any attachment failed, delete the post and emit error
           if (attachmentFailed) {
             _logger.w(
               "Deleting post ${post.id} due to failed attachment upload",
@@ -285,14 +283,19 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           }
         }
 
-        // If everything succeeded, update the feed
+        // If everything succeeded, build an updated post with attachments
+        final postWithAttachments = post.copyWith(
+          attachments: uploadedAttachments,
+        );
+
+        // Emit updated post to UI
         if (previousState is FeedLoaded) {
-          final updatedPosts = [post, ...previousState.posts];
+          final updatedPosts = [postWithAttachments, ...previousState.posts];
           emit(PostCreated(posts: updatedPosts));
           emit(FeedLoaded(posts: updatedPosts));
         } else {
-          emit(PostCreated(posts: [post]));
-          emit(FeedLoaded(posts: [post]));
+          emit(PostCreated(posts: [postWithAttachments]));
+          emit(FeedLoaded(posts: [postWithAttachments]));
         }
       },
     );
