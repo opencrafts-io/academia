@@ -23,7 +23,7 @@ class CommentsListWidget extends StatelessWidget {
 
     // Sort replies by creation date before building
     final sortedComments = List<Comment>.from(comments)
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

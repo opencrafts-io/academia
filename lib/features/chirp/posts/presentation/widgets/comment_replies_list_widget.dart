@@ -16,7 +16,8 @@ class CommentRepliesListWidget extends StatefulWidget {
   });
 
   @override
-  State<CommentRepliesListWidget> createState() => _CommentRepliesListWidgetState();
+  State<CommentRepliesListWidget> createState() =>
+      _CommentRepliesListWidgetState();
 }
 
 class _CommentRepliesListWidgetState extends State<CommentRepliesListWidget> {
@@ -25,8 +26,13 @@ class _CommentRepliesListWidgetState extends State<CommentRepliesListWidget> {
   @override
   Widget build(BuildContext context) {
     final replies = widget.replies;
-    final visibleReplies =
-        _showAllReplies ? replies : [replies.first];
+    // Sort replies by newest first
+    final sortedReplies = List<Comment>.from(widget.replies)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    final visibleReplies = _showAllReplies
+        ? sortedReplies
+        : [sortedReplies.first];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,9 +53,9 @@ class _CommentRepliesListWidgetState extends State<CommentRepliesListWidget> {
               child: Text(
                 'Show ${replies.length - 1} more ${replies.length - 1 == 1 ? 'reply' : 'replies'}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
