@@ -119,6 +119,9 @@ Future<void> init(FlavorConfig flavor) async {
     () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => CreatePostAttachmentUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => GetPostDetailUseCase(repository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -130,12 +133,12 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(
     () => AddCommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
-  // sl.registerFactory(
-  //   () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
-  // sl.registerFactory(
-  //   () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
+  sl.registerFactory(
+    () => DeletePostUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
+  );
 
   // sl.registerFactory(
   //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),

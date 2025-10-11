@@ -225,6 +225,100 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, AttachmentData>> createPostAttachment({
+    required int postId,
+    required MultipartFile file,
+  }) async {
+    try {
+      final formData = FormData.fromMap({'post': postId, 'file': file});
+
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/posts/attachment/create/',
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+
+      if (res.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return Right(AttachmentData.fromJson(json));
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while creating attachment",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating attachment",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, Unit>> deletePost({required int postId}) async {
+    try {
+      final res = await dioClient.dio.delete(
+        '/$servicePrefix/posts/$postId/delete/',
+      );
+
+      if (res.statusCode == 204) {
+        return const Right(unit);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while deleting post",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting post",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, Unit>> deletePostComment({
+    required int commentId,
+  }) async {
+    try {
+      final res = await dioClient.dio.delete(
+        '/$servicePrefix/posts/comments/$commentId/delete/',
+      );
+
+      if (res.statusCode == 204) {
+        return const Right(unit);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while deleting comment",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting comment",
+          error: e,
+        ),
+      );
+    }
+  }
+
   // Future<Either<Failure, Map<String, dynamic>>> likePost(
   //   String postId,
   //   bool isLiked,

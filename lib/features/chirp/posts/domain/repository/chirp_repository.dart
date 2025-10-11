@@ -22,9 +22,12 @@ abstract class ChirpRepository {
     required String viewerId,
   });
 
-  Future<Either<Failure, List<Comment>>> getPostComments({
+  Future<Either<Failure, Attachments>> createPostAttachment({
     required int postId,
+    required MultipartFile file,
   });
+
+  Future<Either<Failure, List<Comment>>> getPostComments({required int postId});
 
   Future<Either<Failure, Comment>> createComment({
     required int postId,
@@ -32,6 +35,10 @@ abstract class ChirpRepository {
     required String content,
     int? parent,
   });
+
+  Future<Either<Failure, Unit>> deletePost({required int postId});
+
+  Future<Either<Failure, Unit>> deletePostComment({required int commentId});
 
   // Future<Either<Failure, List<PostReply>>> cachePostReplies(String postId);
 

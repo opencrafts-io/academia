@@ -86,39 +86,36 @@ class ChirpRepositoryImpl implements ChirpRepository {
     );
   }
 
-  // @override
-  // Future<Either<Failure, List<Post>>> addFeedPosts() async {
-  //   final remoteResult = await remoteDataSource.getPosts();
-  //   if (remoteResult.isLeft()) {
-  //     return left((remoteResult as Left).value);
-  //   }
+  @override
+  Future<Either<Failure, Attachments>> createPostAttachment({
+    required int postId,
+    required MultipartFile file,
+  }) async {
+    final result = await remoteDataSource.createPostAttachment(
+      postId: postId,
+      file: file,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (attachment) => right(attachment.toEntity()),
+    );
+  }
 
-  //   final result = await localDataSource.cachePosts(
-  //     (remoteResult as Right).value,
-  //   );
+  @override
+  Future<Either<Failure, Unit>> deletePost({required int postId}) async {
+    final result = await remoteDataSource.deletePost(postId: postId);
+    return result.fold((failure) => left(failure), (res) => right(res));
+  }
 
-  //   return result.fold(
-  //     (failure) => left(failure),
-  //     (postData) => right(postData),
-  //   );
-  // }
-
-  // @override
-  // Future<Either<Failure, List<PostReply>>> cachePostReplies(String postId) async {
-  //   final remoteResult = await remoteDataSource.getPostReplies(postId);
-  //   if (remoteResult.isLeft()) {
-  //     return left((remoteResult as Left).value);
-  //   }
-
-  //   final result = await localDataSource.cachePostReplies(
-  //     (remoteResult as Right).value,
-  //   );
-
-  //   return result.fold(
-  //     (failure) => left(failure),
-  //     (postData) => right(postData),
-  //   );
-  // }
+  @override
+  Future<Either<Failure, Unit>> deletePostComment({
+    required int commentId,
+  }) async {
+    final result = await remoteDataSource.deletePostComment(
+      commentId: commentId,
+    );
+    return result.fold((failure) => left(failure), (res) => right(res));
+  }
 
   // @override
   // Future<Either<Failure, Map<String, dynamic>>> toggleLike(String postId, bool isLiked) async {
