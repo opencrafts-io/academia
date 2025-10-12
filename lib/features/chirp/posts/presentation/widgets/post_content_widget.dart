@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
-class PostContentWidget extends StatelessWidget {
+class PostContentWidget extends StatefulWidget {
   final Post post;
   final Function(Comment) onReplyTo;
   final Function(Comment, bool)? onVote;
@@ -18,10 +18,44 @@ class PostContentWidget extends StatelessWidget {
   });
 
   @override
+  State<PostContentWidget> createState() => _PostContentWidgetState();
+}
+
+class _PostContentWidgetState extends State<PostContentWidget> {
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<CommentBloc>().state;
+      if (state is CommentsLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<CommentBloc>().add(
+          GetPostComments(postId: widget.post.id, page: _currentPage),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<CommentBloc, CommentState>(
       builder: (context, state) {
         return CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverAppBar(
               floating: true,
@@ -53,8 +87,9 @@ class PostContentWidget extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   BlocProvider(
                     create: (context) =>
-                        sl<ChirpUserCubit>()..getChirpUserByID(post.authorId),
-                    child: PostCard(post: post),
+                        sl<ChirpUserCubit>()
+                          ..getChirpUserByID(widget.post.authorId),
+                    child: PostCard(post: widget.post),
                   ),
                   const SizedBox(height: 16),
 
@@ -64,7 +99,7 @@ class PostContentWidget extends StatelessWidget {
                       Icon(Icons.comment_outlined, size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        "${post.commentCount} ${post.commentCount == 1 ? 'Comment' : 'Comments'}",
+                        "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
@@ -114,8 +149,51 @@ class PostContentWidget extends StatelessWidget {
                   if (state is CommentsLoaded && state.comments.isNotEmpty)
                     CommentsListWidget(
                       comments: state.comments,
-                      onReplyTo: onReplyTo,
-                      onVote: onVote,
+                      onReplyTo: widget.onReplyTo,
+                      onVote: widget.onVote,
+                    ),
+
+                  if (state is CommentsPaginationLoading)
+                    Column(
+                      children: [
+                        CommentsListWidget(
+                          comments: state.existingComments,
+                          onReplyTo: widget.onReplyTo,
+                          onVote: widget.onVote,
+                        ),
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: SpinningScallopIndicator(),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                  if (state is CommentsPaginationError)
+                    Column(
+                      children: [
+                        CommentsListWidget(
+                          comments: state.existingComments,
+                          onReplyTo: widget.onReplyTo,
+                          onVote: widget.onVote,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: TextButton.icon(
+                            onPressed: () {
+                              context.read<CommentBloc>().add(
+                                GetPostComments(
+                                  postId: widget.post.id,
+                                  page: _currentPage,
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: Text("Retry loading more comments"),
+                          ),
+                        ),
+                      ],
                     ),
 
                   if (state is CommentsError)

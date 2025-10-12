@@ -103,11 +103,17 @@ class ChirpRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, PaginatedData<CommentData>>> getPostComments({
     required int postId,
+    required int page,
+    required int pageSize,
   }) async {
     try {
       final res = await dioClient.dio.get(
         // '/$servicePrefix/posts/$postId/comments',
-        "https://qachirp.opencrafts.io/posts/$postId/comments"
+        "https://qachirp.opencrafts.io/posts/$postId/comments",
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize,
+        },
       );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {

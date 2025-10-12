@@ -28,6 +28,8 @@ abstract class ChirpRepository {
 
   Future<Either<Failure, PaginatedData<Comment>>> getPostComments({
     required int postId,
+    required int page,
+    required int pageSize,
   });
 
   Future<Either<Failure, Comment>> createComment({

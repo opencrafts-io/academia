@@ -22,6 +22,8 @@ class AddComment extends CommentEvent {
 
 class GetPostComments extends CommentEvent {
   final int postId;
+  final int page;
+  final int pageSize;
 
-  GetPostComments({required this.postId});
+  GetPostComments({required this.postId, this.page = 1, this.pageSize = 20});
 }

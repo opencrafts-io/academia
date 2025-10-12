@@ -28,6 +28,19 @@ class CommentAddError extends CommentState {
 
 class CommentsLoading extends CommentState {}
 
+class CommentsPaginationLoading extends CommentState {
+  final List<Comment> existingComments;
+  final bool hasMore;
+
+  CommentsPaginationLoading({
+    required this.existingComments,
+    required this.hasMore,
+  });
+
+  @override
+  List<Object?> get props => [existingComments, hasMore];
+}
+
 class CommentsLoaded extends CommentState {
   final List<Comment> comments;
   final String? next;
@@ -45,6 +58,21 @@ class CommentsLoaded extends CommentState {
 
   @override
   List<Object?> get props => [comments, next, previous, count, hasMore];
+}
+
+class CommentsPaginationError extends CommentState {
+  final List<Comment> existingComments;
+  final String message;
+  final bool hasMore;
+
+  CommentsPaginationError({
+    required this.existingComments,
+    required this.message,
+    required this.hasMore,
+  });
+
+  @override
+  List<Object?> get props => [existingComments, message, hasMore];
 }
 
 class CommentsError extends CommentState {

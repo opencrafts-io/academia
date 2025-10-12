@@ -57,8 +57,14 @@ class ChirpRepositoryImpl implements ChirpRepository {
   @override
   Future<Either<Failure, PaginatedData<Comment>>> getPostComments({
     required int postId,
+    required int page,
+    required int pageSize,
   }) async {
-    final result = await remoteDataSource.getPostComments(postId: postId);
+    final result = await remoteDataSource.getPostComments(
+      postId: postId,
+      page: page,
+      pageSize: pageSize,
+    );
     return result.fold(
       (failure) => left(failure),
       (comments) => right(

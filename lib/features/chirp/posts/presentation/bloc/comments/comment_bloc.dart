@@ -88,21 +88,84 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     GetPostComments event,
     Emitter<CommentState> emit,
   ) async {
-    emit(CommentsLoading());
+    final currentState = state;
 
-    final result = await getPostComments(postId: event.postId);
+    // Only show loading if it's the first page
+    if (event.page == 1) {
+      emit(CommentsLoading());
+    } // Show pagination loader if fetching next pages
+    else if (currentState is CommentsLoaded && event.page > 1) {
+      emit(
+        CommentsPaginationLoading(
+          existingComments: currentState.comments,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    } else if (currentState is CommentsPaginationError && event.page > 1) {
+      emit(
+        CommentsPaginationLoading(
+          existingComments: currentState.existingComments,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    }
+
+    final result = await getPostComments(
+      postId: event.postId,
+      page: event.page,
+      pageSize: event.pageSize,
+    );
 
     result.fold(
-      (failure) => emit(CommentsError(message: failure.message)),
-      (paginatedData) => emit(
-        CommentsLoaded(
-          comments: paginatedData.results,
-          next: paginatedData.next,
-          previous: paginatedData.previous,
-          count: paginatedData.count,
-          hasMore: paginatedData.hasMore,
-        ),
-      ),
+      (failure) {
+        // Pagination failed but we already had comments
+        if (currentState is CommentsLoaded && event.page > 1) {
+          emit(
+            CommentsPaginationError(
+              existingComments: currentState.comments,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else if (currentState is CommentsPaginationError && event.page > 1) {
+          // Retry after pagination error also failed
+          emit(
+            CommentsPaginationError(
+              existingComments: currentState.existingComments,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else {
+          // First load failed
+          emit(CommentsError(message: failure.message));
+        }
+      },
+      (paginatedData) {
+        // If this is a pagination request and we already have comments
+        if (currentState is CommentsLoaded && event.page > 1) {
+          emit(
+            CommentsLoaded(
+              comments: [...currentState.comments, ...paginatedData.results],
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        } else {
+          // First page or no previous comments loaded
+          emit(
+            CommentsLoaded(
+              comments: paginatedData.results,
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        }
+      },
     );
   }
 }
