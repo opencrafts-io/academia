@@ -14917,6 +14917,18 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -14928,6 +14940,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
     bannedReason,
     bannedAt,
     joinedAt,
+    cachedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -15007,6 +15020,12 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
         joinedAt.isAcceptableOrUnknown(data['joined_at']!, _joinedAtMeta),
       );
     }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -15055,6 +15074,10 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
         DriftSqlType.dateTime,
         data['${effectivePrefix}joined_at'],
       )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
     );
   }
 
@@ -15075,6 +15098,7 @@ class ChirpCommunityMembershipData extends DataClass
   final String? bannedReason;
   final DateTime? bannedAt;
   final DateTime joinedAt;
+  final DateTime? cachedAt;
   const ChirpCommunityMembershipData({
     required this.id,
     required this.communityID,
@@ -15085,6 +15109,7 @@ class ChirpCommunityMembershipData extends DataClass
     this.bannedReason,
     this.bannedAt,
     required this.joinedAt,
+    this.cachedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -15104,6 +15129,9 @@ class ChirpCommunityMembershipData extends DataClass
       map['banned_at'] = Variable<DateTime>(bannedAt);
     }
     map['joined_at'] = Variable<DateTime>(joinedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
     return map;
   }
 
@@ -15124,6 +15152,9 @@ class ChirpCommunityMembershipData extends DataClass
           ? const Value.absent()
           : Value(bannedAt),
       joinedAt: Value(joinedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
     );
   }
 
@@ -15142,6 +15173,7 @@ class ChirpCommunityMembershipData extends DataClass
       bannedReason: serializer.fromJson<String?>(json['banning_reason']),
       bannedAt: serializer.fromJson<DateTime?>(json['banned_at']),
       joinedAt: serializer.fromJson<DateTime>(json['joined_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
     );
   }
   @override
@@ -15157,6 +15189,7 @@ class ChirpCommunityMembershipData extends DataClass
       'banning_reason': serializer.toJson<String?>(bannedReason),
       'banned_at': serializer.toJson<DateTime?>(bannedAt),
       'joined_at': serializer.toJson<DateTime>(joinedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
     };
   }
 
@@ -15170,6 +15203,7 @@ class ChirpCommunityMembershipData extends DataClass
     Value<String?> bannedReason = const Value.absent(),
     Value<DateTime?> bannedAt = const Value.absent(),
     DateTime? joinedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
   }) => ChirpCommunityMembershipData(
     id: id ?? this.id,
     communityID: communityID ?? this.communityID,
@@ -15180,6 +15214,7 @@ class ChirpCommunityMembershipData extends DataClass
     bannedReason: bannedReason.present ? bannedReason.value : this.bannedReason,
     bannedAt: bannedAt.present ? bannedAt.value : this.bannedAt,
     joinedAt: joinedAt ?? this.joinedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
   ChirpCommunityMembershipData copyWithCompanion(
     ChirpCommunityMembershipCompanion data,
@@ -15200,6 +15235,7 @@ class ChirpCommunityMembershipData extends DataClass
           : this.bannedReason,
       bannedAt: data.bannedAt.present ? data.bannedAt.value : this.bannedAt,
       joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
     );
   }
 
@@ -15214,7 +15250,8 @@ class ChirpCommunityMembershipData extends DataClass
           ..write('bannedByID: $bannedByID, ')
           ..write('bannedReason: $bannedReason, ')
           ..write('bannedAt: $bannedAt, ')
-          ..write('joinedAt: $joinedAt')
+          ..write('joinedAt: $joinedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -15230,6 +15267,7 @@ class ChirpCommunityMembershipData extends DataClass
     bannedReason,
     bannedAt,
     joinedAt,
+    cachedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -15243,7 +15281,8 @@ class ChirpCommunityMembershipData extends DataClass
           other.bannedByID == this.bannedByID &&
           other.bannedReason == this.bannedReason &&
           other.bannedAt == this.bannedAt &&
-          other.joinedAt == this.joinedAt);
+          other.joinedAt == this.joinedAt &&
+          other.cachedAt == this.cachedAt);
 }
 
 class ChirpCommunityMembershipCompanion
@@ -15257,6 +15296,7 @@ class ChirpCommunityMembershipCompanion
   final Value<String?> bannedReason;
   final Value<DateTime?> bannedAt;
   final Value<DateTime> joinedAt;
+  final Value<DateTime?> cachedAt;
   const ChirpCommunityMembershipCompanion({
     this.id = const Value.absent(),
     this.communityID = const Value.absent(),
@@ -15267,6 +15307,7 @@ class ChirpCommunityMembershipCompanion
     this.bannedReason = const Value.absent(),
     this.bannedAt = const Value.absent(),
     this.joinedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
   });
   ChirpCommunityMembershipCompanion.insert({
     this.id = const Value.absent(),
@@ -15278,6 +15319,7 @@ class ChirpCommunityMembershipCompanion
     this.bannedReason = const Value.absent(),
     this.bannedAt = const Value.absent(),
     this.joinedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
   }) : communityID = Value(communityID),
        userID = Value(userID),
        role = Value(role);
@@ -15291,6 +15333,7 @@ class ChirpCommunityMembershipCompanion
     Expression<String>? bannedReason,
     Expression<DateTime>? bannedAt,
     Expression<DateTime>? joinedAt,
+    Expression<DateTime>? cachedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -15302,6 +15345,7 @@ class ChirpCommunityMembershipCompanion
       if (bannedReason != null) 'banned_reason': bannedReason,
       if (bannedAt != null) 'banned_at': bannedAt,
       if (joinedAt != null) 'joined_at': joinedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
     });
   }
 
@@ -15315,6 +15359,7 @@ class ChirpCommunityMembershipCompanion
     Value<String?>? bannedReason,
     Value<DateTime?>? bannedAt,
     Value<DateTime>? joinedAt,
+    Value<DateTime?>? cachedAt,
   }) {
     return ChirpCommunityMembershipCompanion(
       id: id ?? this.id,
@@ -15326,6 +15371,7 @@ class ChirpCommunityMembershipCompanion
       bannedReason: bannedReason ?? this.bannedReason,
       bannedAt: bannedAt ?? this.bannedAt,
       joinedAt: joinedAt ?? this.joinedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
     );
   }
 
@@ -15359,6 +15405,9 @@ class ChirpCommunityMembershipCompanion
     if (joinedAt.present) {
       map['joined_at'] = Variable<DateTime>(joinedAt.value);
     }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
     return map;
   }
 
@@ -15373,7 +15422,8 @@ class ChirpCommunityMembershipCompanion
           ..write('bannedByID: $bannedByID, ')
           ..write('bannedReason: $bannedReason, ')
           ..write('bannedAt: $bannedAt, ')
-          ..write('joinedAt: $joinedAt')
+          ..write('joinedAt: $joinedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -23146,6 +23196,7 @@ typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
       Value<String?> bannedReason,
       Value<DateTime?> bannedAt,
       Value<DateTime> joinedAt,
+      Value<DateTime?> cachedAt,
     });
 typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
     ChirpCommunityMembershipCompanion Function({
@@ -23158,6 +23209,7 @@ typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
       Value<String?> bannedReason,
       Value<DateTime?> bannedAt,
       Value<DateTime> joinedAt,
+      Value<DateTime?> cachedAt,
     });
 
 final class $$ChirpCommunityMembershipTableReferences
@@ -23245,6 +23297,11 @@ class $$ChirpCommunityMembershipTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$ChirpUserTableFilterComposer get userID {
     final $$ChirpUserTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -23318,6 +23375,11 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ChirpUserTableOrderingComposer get userID {
     final $$ChirpUserTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -23380,6 +23442,9 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
 
   GeneratedColumn<DateTime> get joinedAt =>
       $composableBuilder(column: $table.joinedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
   $$ChirpUserTableAnnotationComposer get userID {
     final $$ChirpUserTableAnnotationComposer composer = $composerBuilder(
@@ -23456,6 +23521,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<String?> bannedReason = const Value.absent(),
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => ChirpCommunityMembershipCompanion(
                 id: id,
                 communityID: communityID,
@@ -23466,6 +23532,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 bannedReason: bannedReason,
                 bannedAt: bannedAt,
                 joinedAt: joinedAt,
+                cachedAt: cachedAt,
               ),
           createCompanionCallback:
               ({
@@ -23478,6 +23545,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<String?> bannedReason = const Value.absent(),
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => ChirpCommunityMembershipCompanion.insert(
                 id: id,
                 communityID: communityID,
@@ -23488,6 +23556,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 bannedReason: bannedReason,
                 bannedAt: bannedAt,
                 joinedAt: joinedAt,
+                cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

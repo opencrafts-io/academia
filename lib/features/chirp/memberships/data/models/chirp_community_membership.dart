@@ -31,6 +31,10 @@ class ChirpCommunityMembership extends Table {
   DateTimeColumn get joinedAt =>
       dateTime().withDefault(Constant(DateTime.now()))();
 
+  @JsonKey('cached_at')
+  DateTimeColumn get cachedAt =>
+      dateTime().withDefault(Constant(DateTime.now())).nullable()();
+
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }

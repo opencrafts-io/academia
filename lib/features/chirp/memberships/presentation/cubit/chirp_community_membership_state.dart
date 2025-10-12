@@ -10,6 +10,16 @@ sealed class ChirpCommunityMembershipState extends Equatable {
 class ChirpCommunityMembershipInitialState
     extends ChirpCommunityMembershipState {}
 
+class ChirpCommunityMembershipCommunityLeftState
+    extends ChirpCommunityMembershipState {
+  final int communityID;
+
+  ChirpCommunityMembershipCommunityLeftState({required this.communityID});
+
+  @override
+  List<Object?> get props => [communityID];
+}
+
 class ChirpCommunityMembershipStateLoadingState
     extends ChirpCommunityMembershipState {
   @override
@@ -19,20 +29,16 @@ class ChirpCommunityMembershipStateLoadingState
   List<Object?> get props => [];
 }
 
-class ChirpCommunityMembershipStateLoadedState
+class ChirpCommunityMembershipLoadedState
     extends ChirpCommunityMembershipState {
-  final bool hasMore;
-  // final List<ChirpCommunityMembership> memberships;
+  final ChirpCommunityMembership membership;
 
-  ChirpCommunityMembershipStateLoadedState({
-    this.hasMore = true,
-    // required this.memberships,
-  });
+  ChirpCommunityMembershipLoadedState({required this.membership});
   @override
   bool? get stringify => true;
 
-  // @override
-  // List<Object?> get props => [hasMore, memberships];
+  @override
+  List<Object?> get props => [membership];
 }
 
 class ChirpCommunityMembershipErrorState extends ChirpCommunityMembershipState {

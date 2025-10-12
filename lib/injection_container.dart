@@ -2,9 +2,6 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
-import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_id_usecase.dart';
-import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_username_usecase.dart';
-import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -323,14 +320,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
-  sl.registerFactory<JoinCommunityUseCase>(
-    () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
-  );
-
-  sl.registerFactory<LeaveCommunityUseCase>(
-    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
-  );
-
   sl.registerFactory<DeleteCommunityUseCase>(
     () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
@@ -369,9 +358,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(
       getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
-      moderateMembers: sl.get<ModerateMembersUseCase>(),
-      joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
-      leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
       deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
       addCommunityGuidelinesUsecase: sl.get<AddCommunityGuidelinesUsecase>(),
     ),
@@ -429,7 +415,6 @@ Future<void> init(FlavorConfig flavor) async {
   );
   sl.registerFactory<ChirpCommunityMembershipRepository>(
     () => ChirpCommunityMembershipRepositoryImpl(
-      profileLocalDatasource: sl(),
       chirpCommunityMembershipLocalDatasource: sl(),
       chirpCommunityMembershipRemoteDatasource: sl(),
     ),
@@ -439,8 +424,23 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
   );
 
+  sl.registerFactory<GetCommunityMembershipsUsecase>(
+    () => GetCommunityMembershipsUsecase(communityMembershipRepository: sl()),
+  );
+
   sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
     () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<JoinCommunityUsecase>(
+    () => JoinCommunityUsecase(chirpCommunityMembershipRepository: sl()),
+  );
+  sl.registerFactory<LeaveCommunityUsecase>(
+    () => LeaveCommunityUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<GetPersonalCommunityMembershipForCommunityUsecase>(
+    () => GetPersonalCommunityMembershipForCommunityUsecase(repository: sl()),
   );
 
   /*************************************************************************

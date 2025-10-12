@@ -16,6 +16,15 @@ class FetchCommunityById extends CommunityHomeEvent {
   List<Object?> get props => [communityId];
 }
 
+class FetchCachedCommunityById extends CommunityHomeEvent {
+  final int communityId;
+
+  const FetchCachedCommunityById({required this.communityId});
+
+  @override
+  List<Object?> get props => [communityId];
+}
+
 class UpdateCommunity extends CommunityHomeEvent {
   final Community community;
 
@@ -56,39 +65,38 @@ class LeaveCommunity extends CommunityHomeEvent {
 }
 
 class DeleteCommunity extends CommunityHomeEvent {
-  final String communityId;
-  final String userId;
+  final int communityID;
 
-  const DeleteCommunity({required this.communityId, required this.userId});
-
-  @override
-  List<Object?> get props => [communityId];
-}
-
-class ModerateMembers extends CommunityHomeEvent {
-  final String communityId;
-  final CommunityModerationAction action;
-  final String userId;
-  final String memberId;
-  final String memberName;
-
-  const ModerateMembers({
-    required this.communityId,
-    required this.action,
-    required this.userId,
-    required this.memberId,
-    required this.memberName,
-  });
+  const DeleteCommunity({required this.communityID});
 
   @override
-  List<Object?> get props => [
-    communityId,
-    action,
-    userId,
-    memberId,
-    memberName,
-  ];
+  List<Object?> get props => [communityID];
 }
+
+// class ModerateMembers extends CommunityHomeEvent {
+//   final String communityId;
+//   final CommunityModerationAction action;
+//   final String userId;
+//   final String memberId;
+//   final String memberName;
+//
+//   const ModerateMembers({
+//     required this.communityId,
+//     required this.action,
+//     required this.userId,
+//     required this.memberId,
+//     required this.memberName,
+//   });
+//
+//   @override
+//   List<Object?> get props => [
+//     communityId,
+//     action,
+//     userId,
+//     memberId,
+//     memberName,
+//   ];
+// }
 
 class AddCommunityGuidelines extends CommunityHomeEvent {
   final List<String> rule;
@@ -102,9 +110,5 @@ class AddCommunityGuidelines extends CommunityHomeEvent {
   });
 
   @override
-  List<Object?> get props => [
-    rule,
-    communityId,
-    userId,
-  ];
+  List<Object?> get props => [rule, communityId, userId];
 }

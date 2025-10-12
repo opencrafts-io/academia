@@ -84,7 +84,7 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
             return CustomScrollView(
               controller: _scrollController,
               slivers: [
-                const SliverAppBar(
+                const SliverAppBar.large(
                   centerTitle: true,
                   floating: true,
                   snap: true,
@@ -100,42 +100,41 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
                   ),
 
                 // // Handle initial empty state or error with no communities
-                // if (communities.isEmpty)
-                //   SliverFillRemaining(
-                //     child: Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           state is CommunityListingErrorState
-                //               ? "Failed to load communities: ${state.message}"
-                //               : "You are not enrolled to any communities at the moment",
-                //         ),
-                //       ],
-                //     ),
-                //   )
-                // else
-                // Display the list of communities
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList.separated(
-                    // +1 for the bottom loader widget
-                    itemCount: communities.length + 1,
-                    separatorBuilder: (context, index) => const Divider(),
-                    itemBuilder: (context, index) {
-                      // The last item is the loading indicator
-                      if (index == communities.length) {
-                        return _buildBottomLoader(state);
-                      }
+                if (communities.isEmpty)
+                  SliverFillRemaining(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          state is CommunityListingErrorState
+                              ? "Failed to load communities: ${state.message}"
+                              : "You are not enrolled to any communities at the moment",
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  // Display the list of communities
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverList.builder(
+                      // +1 for the bottom loader widget
+                      itemCount: communities.length + 1,
+                      itemBuilder: (context, index) {
+                        // The last item is the loading indicator
+                        if (index == communities.length) {
+                          return _buildBottomLoader(state);
+                        }
 
-                      final community = communities[index];
-                      return BlocProvider(
-                        create: (context) => sl<ChirpUserCubit>(),
-                        child: CommunityCard(community: community),
-                      );
-                    },
+                        final community = communities[index];
+                        return BlocProvider(
+                          create: (context) => sl<ChirpUserCubit>(),
+                          child: CommunityCard(community: community),
+                        );
+                      },
+                    ),
                   ),
-                ),
               ],
             );
           },
@@ -145,57 +144,100 @@ class _CommunityMembershipPageState extends State<CommunityMembershipPage> {
   }
 }
 
-// TODO: (erick) cleanup this 
 class CommunityCard extends StatelessWidget {
   const CommunityCard({super.key, required this.community});
   final Community community;
 
   @override
   Widget build(BuildContext context) {
-    context.read<ChirpUserCubit>().getChirpUserByUsername("dicky");
-    return ListTile(
-      isThreeLine: true,
-      leading: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          image: community.profilePicture == null
-              ? null
-              : DecorationImage(
-                  image: CachedNetworkImageProvider(community.profilePicture!),
+    context.read<ChirpUserCubit>().getChirpUserByID(community.creatorId);
+    return Card.outlined(
+      color: Theme.of(context).colorScheme.surfaceDim,
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: () => CommunitiesRoute(communityId: community.id).push(context),
+        child: Padding(
+          padding: EdgeInsetsGeometry.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: community.profilePictureUrl == null
+                        ? null
+                        : CachedNetworkImageProvider(
+                            community.profilePictureUrl!,
+                            errorListener: (error) {},
+                          ),
+                    child: community.profilePictureUrl == null
+                        ? Text(community.name[0])
+                        : null,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    community.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 4),
+              BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                builder: (context, state) {
+                  if (state is ChirpUserLoadedState) {
+                    return Text(
+                      "Created by @${state.user.username ?? 'Anonymous'}",
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }
+                  return Text("Created by ...");
+                },
+              ),
+              SizedBox(height: 4),
+              Text(
+                community.description ??
+                    'No community description at the moment.',
+              ),
+              SizedBox(height: 8),
+              Container(
+                clipBehavior: Clip.hardEdge,
+                height: 180,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
                 ),
+                child: CachedNetworkImage(
+                  imageUrl: community.banner ?? '',
+                  errorWidget: (context, error, child) => Image.asset(
+                    "assets/illustrations/community.jpg",
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  // height: 200,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(Icons.group),
+                  SizedBox(width: 4),
+                  Text("${community.memberCount} members"),
+                  Spacer(),
+                  FilledButton(
+                    onPressed: () {
+                      CommunitiesRoute(communityId: community.id).push(context);
+                    },
+                    child: Text("View"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        child: Center(
-          child: community.profilePicture == null
-              ? Text(
-                  community.name[0],
-                  style: Theme.of(context).textTheme.titleSmall,
-                )
-              : null,
-        ),
-      ),
-      title: Text(community.name),
-      subtitle: BlocBuilder<ChirpUserCubit, ChirpUserState>(
-        builder: (context, state) {
-          if (state is! ChirpUserLoadedState) {
-            return Text("Hello");
-          }
-          return Text((state as ChirpUserLoadedState).user.username ?? 'Anon');
-        },
-      ),
-      // subtitle: Text(
-      //   community.description ?? "No description available",
-      // ),
-      subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-      contentPadding: EdgeInsets.zero,
-      // Assuming CommunitiesRoute is a valid GoRouter route or similar
-      onTap: () => CommunitiesRoute(communityId: community.id).push(context),
-      trailing: PopupMenuButton(
-        itemBuilder: (context) => [
-          const PopupMenuItem(value: 0, child: Text("View community")),
-          const PopupMenuItem(value: 1, child: Text("Leave community")),
-        ],
       ),
     );
   }

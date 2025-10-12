@@ -4,7 +4,6 @@ import 'package:academia/core/network/connectivity_checker.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/features/chirp/communities/data/models/paginated_user_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -237,14 +236,9 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
           response.data,
         );
         return right(json["message"] as String);
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected response while leaving community.",
-            error: response,
-          ),
-        );
       }
+
+      throw "Programming error expected server code 204 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -257,9 +251,8 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, String>> deleteCommunity({
-    required String groupId,
-    required String userId,
+  Future<Either<Failure, void>> deleteCommunity({
+    required int communityID,
   }) async {
     try {
       if (!await isConnectedToInternet()) {
@@ -267,23 +260,13 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
       }
 
       final response = await dioClient.dio.delete(
-        "/$servicePrefix/groups/$groupId/delete/",
-        queryParameters: {"user_id": userId},
+        "/$servicePrefix/community/$communityID/delete",
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final Map<String, dynamic> json = Map<String, dynamic>.from(
-          response.data,
-        );
-        return right(json["message"] as String);
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected response while deleting community.",
-            error: response,
-          ),
-        );
+      if (response.statusCode == 204) {
+        return right(null);
       }
+      throw "Programming error expected server code 204 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -323,14 +306,9 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         );
         final paginatedResponse = PaginatedUserResponse.fromJson(json);
         return right(paginatedResponse);
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected response while fetching users.",
-            error: response,
-          ),
-        );
       }
+
+      throw "Programming error expected server code 200 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -364,14 +342,9 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
           response.data,
         );
         return right(CommunityData.fromJson(json['group']));
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected response while adding community guidelines.",
-            error: response,
-          ),
-        );
       }
+
+      throw "Programming error expected server code 200 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -405,7 +378,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
           results.map((raw) => CommunityData.fromJson(raw)).toList(),
         );
       }
-      throw "Programming error";
+      throw "Programming error expected server code 200 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -441,7 +414,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         );
       }
 
-      throw "Programming error";
+      throw "Programming error expected server code 200 got ${response.statusCode}";
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {

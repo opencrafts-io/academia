@@ -322,8 +322,9 @@ class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
 @TypedGoRoute<CommunitiesRoute>(
   path: "/communities/:communityId",
   routes: [
+    TypedGoRoute<CommunityInfoRoute>(path: 'info'),
     TypedGoRoute<CommunityMembersRoute>(path: "members/:role"),
-    TypedGoRoute<AddCommunityGuidelinesRoute>(path: "add-community-guidelines"),
+    TypedGoRoute<EditCommunityInfoRoute>(path: "edit"),
   ],
 )
 class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
@@ -336,6 +337,16 @@ class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
   }
 }
 
+class CommunityInfoRoute extends GoRouteData with _$CommunityInfoRoute {
+  final int communityId;
+  CommunityInfoRoute({required this.communityId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityInfoPage(communityId: communityId);
+  }
+}
+
 class CommunityMembersRoute extends GoRouteData with _$CommunityMembersRoute {
   final int communityId;
   final String role;
@@ -345,6 +356,24 @@ class CommunityMembersRoute extends GoRouteData with _$CommunityMembersRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CommunityMembersPage(communityID: communityId, role: role);
+  }
+}
+
+class EditCommunityInfoRoute extends GoRouteData with _$EditCommunityInfoRoute {
+  final int communityId;
+  EditCommunityInfoRoute({required this.communityId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EditCommunityInformation(communityID: communityId);
+  }
+}
+
+@TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
+class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateCommunityScreen();
   }
 }
 
@@ -403,33 +432,6 @@ class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
             return SlideTransition(position: offsetAnimation, child: child);
           },
     );
-  }
-}
-
-class AddCommunityGuidelinesRoute extends GoRouteData
-    with _$AddCommunityGuidelinesRoute {
-  final String communityId;
-  final String userId;
-
-  AddCommunityGuidelinesRoute({
-    required this.communityId,
-    required this.userId,
-  });
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return AddCommunityGuidelinesScreen(
-      communityId: communityId,
-      userId: userId,
-    );
-  }
-}
-
-@TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
-class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return CreateCommunityScreen();
   }
 }
 

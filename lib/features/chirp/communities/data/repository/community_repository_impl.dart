@@ -107,17 +107,16 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteCommunity({
-    required String groupId,
-    required String userId,
+  Future<Either<Failure, void>> deleteCommunity({
+    required int communityID,
   }) async {
     final result = await remoteDatasource.deleteCommunity(
-      groupId: groupId,
-      userId: userId,
+      communityID: communityID,
     );
 
-    return result.fold((failure) => left(failure), (message) {
-      return right(message);
+    return result.fold((failure) => left(failure), (ok) async{
+      await communityLocalDatasource.deleteCachedCommunity(communityID);
+      return right(null);
     });
   }
 
@@ -160,7 +159,6 @@ class CommunityRepositoryImpl implements CommunityRepository {
     int page = 1,
     int pageSize = 50,
   }) async {
-
     final result = await remoteDatasource.getPostableCommunities(
       page: page,
       pageSize: pageSize,
