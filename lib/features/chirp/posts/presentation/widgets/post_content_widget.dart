@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/injection_container.dart';
@@ -70,6 +71,10 @@ class _PostContentWidgetState extends State<PostContentWidget> {
               actions: [
                 IconButton.filled(
                   onPressed: () {
+                    CommunitiesRoute(
+                      communityId: widget.post.community.id,
+                    ).push(context);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Openning Community"),

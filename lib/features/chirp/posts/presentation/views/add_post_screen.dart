@@ -141,11 +141,11 @@ class _AddPostPageState extends State<AddPostPage> {
       return;
     }
 
-    // if (_selectedCommunity == null) {
-    //   _showSnackBar("Please select a community to post in.");
-    //   Vibration.vibrate(duration: 80);
-    //   return;
-    // }
+    if (_selectedCommunity == null) {
+      _showSnackBar("Please select a community to post in.");
+      Vibration.vibrate(duration: 80);
+      return;
+    }
 
     print("Sending ${attachments.length} attachments to bloc");
     print('Attachments files: ${attachments.map((e) => e.path).toList()}');
@@ -156,8 +156,7 @@ class _AddPostPageState extends State<AddPostPage> {
       CreatePostEvent(
         title: title,
         authorId: authorId ?? '',
-        // communityId: _selectedCommunity!.id,
-        communityId: 3,
+        communityId: _selectedCommunity!.id,
         content: content,
         attachments: List<XFile>.from(attachments),
       ),
