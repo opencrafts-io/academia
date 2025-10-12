@@ -46,7 +46,9 @@ abstract class ChirpRepository {
 
   Future<Either<Failure, Unit>> deletePostComment({required int commentId});
 
-  Future<Either<Failure, List<Post>>> getPostsFromCommunity({
+  Future<Either<Failure, PaginatedData<Post>>> getPostsFromCommunity({
     required int communityId,
+    required int page,
+    required int pageSize,
   });
 }

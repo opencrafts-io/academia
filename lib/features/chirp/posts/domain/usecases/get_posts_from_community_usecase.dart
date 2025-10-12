@@ -7,7 +7,15 @@ class GetPostsFromCommunityUsecase {
 
   GetPostsFromCommunityUsecase({required this.repository});
 
-  Future<Either<Failure, List<Post>>> call({required int communityId}) async {
-    return await repository.getPostsFromCommunity(communityId: communityId);
+  Future<Either<Failure, PaginatedData<Post>>> call({
+    required int communityId,
+    required int page,
+    required pageSize,
+  }) async {
+    return await repository.getPostsFromCommunity(
+      communityId: communityId,
+      page: page,
+      pageSize: pageSize,
+    );
   }
 }

@@ -142,15 +142,26 @@ class ChirpRepositoryImpl implements ChirpRepository {
   }
 
   @override
-  Future<Either<Failure, List<Post>>> getPostsFromCommunity({
+  Future<Either<Failure, PaginatedData<Post>>> getPostsFromCommunity({
     required int communityId,
+    required int page,
+    required int pageSize,
   }) async {
     final result = await remoteDataSource.getPostsFromCommunity(
       communityId: communityId,
+      page: page,
+      pageSize: pageSize,
     );
     return result.fold(
       (failure) => left(failure),
-      (posts) => right(posts.map((e) => e.toEntity()).toList()),
+      (posts) => right(
+        PaginatedData(
+          results: posts.results.map((e) => e.toEntity()).toList(),
+          count: posts.count,
+          next: posts.next,
+          previous: posts.previous,
+        ),
+      ),
     );
   }
 }

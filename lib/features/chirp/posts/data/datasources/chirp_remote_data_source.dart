@@ -326,20 +326,28 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<PostData>>> getPostsFromCommunity({
+  Future<Either<Failure, PaginatedData<PostData>>> getPostsFromCommunity({
     required int communityId,
+    required int page,
+    required int pageSize,
   }) async {
     try {
       final res = await dioClient.dio.get(
         '/$servicePrefix/posts/from/$communityId',
+        queryParameters: {'page': page, 'page_size': pageSize},
       );
 
       if (res.statusCode == 200) {
-        final List<PostData> posts = res.data
-            .map((json) => PostData.fromJson(Map<String, dynamic>.from(json)))
-            .toList();
-
-        return right(posts);
+        return right(
+          PaginatedData(
+            results: (res.data['results'] as List)
+                .map((json) => PostData.fromJson(json))
+                .toList(),
+            count: res.data['count'],
+            next: res.data['next'],
+            previous: res.data['previous'],
+          ),
+        );
       }
 
       return left(
