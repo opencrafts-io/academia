@@ -40,13 +40,14 @@ class ImageUploadPage extends StatelessWidget {
           Text(
             "Event Images",
             style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           const SizedBox(height: 32),
           EventImagePickerWidget(
             selectedImage: selectedCardImage,
             onTap: onPickCardImage,
             label: 'Card Image (1:1) *',
+            height: 350,
           ),
           const SizedBox(height: 20),
           EventImagePickerWidget(
@@ -59,6 +60,7 @@ class ImageUploadPage extends StatelessWidget {
             selectedImage: selectedPosterImage,
             onTap: onPickPosterImage,
             label: 'Poster Image *',
+            height: 500,
           ),
           const SizedBox(height: 40),
           if (selectedCardImage == null ||

@@ -35,7 +35,7 @@ class EventDescriptionPage extends StatelessWidget {
             Text(
               "Description & Genre",
               style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
             const SizedBox(height: 32),
             GenreSelectorWidget(
@@ -59,10 +59,14 @@ class EventDescriptionPage extends StatelessWidget {
               controller: aboutController,
               maxLines: 4,
               minLines: 2,
-              decoration: buildModernInputDecoration(
-                context: context,
-                labelText: 'About Event *',
-                hintText: 'Tell us more about your event...',
+              decoration: InputDecoration(
+                hintText: "Tell us more about the event you're hosting",
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.outlineVariant,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {

@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:academia/features/profile/domain/domain.dart';
 import 'package:academia/injection_container.dart';
 import 'package:confetti/confetti.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/domain.dart';
@@ -144,31 +145,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.dispose();
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    final date =
-        "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
-    final time =
-        "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
-    return '$date $time';
-  }
-
   Future<void> _selectDateAndTime(BuildContext context) async {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
-      builder: (BuildContext dialogContext, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(),
-            dialogTheme: Theme.of(context).dialogTheme.copyWith(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
     if (!context.mounted) return;
     if (pickedDate != null) {
@@ -177,17 +159,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         initialTime: TimeOfDay.fromDateTime(
           _selectedDateTime ?? DateTime.now(),
         ),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(),
-              dialogTheme: Theme.of(context).dialogTheme.copyWith(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
-            child: child!,
-          );
-        },
       );
       if (pickedTime != null) {
         setState(() {
@@ -198,7 +169,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          _dateTimeController.text = _formatDateTime(_selectedDateTime!);
+          _dateTimeController.text = DateFormat.yMMMMEEEEd().add_jm().format(
+            _selectedDateTime!,
+          );
         });
       }
     }
@@ -277,11 +250,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       // Crop the image
       final Uint8List? croppedBytes = await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => ImageCropper(
-            image: imageData,
-          ),
-        ),
+        MaterialPageRoute(builder: (context) => ImageCropper(image: imageData)),
       );
 
       if (croppedBytes == null) return;
@@ -378,7 +347,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
-
   void _showGenreSelectionDialog() {
     List<String> tempSelectedGenres = List.from(_selectedGenres);
     showDialog(
@@ -386,7 +354,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (context, StateSetter setStateDialog) {
-            return AlertDialog(
+            return AlertDialog.adaptive(
               title: const Text('Select Genres'),
               content: SingleChildScrollView(
                 child: ListBody(
@@ -414,7 +382,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     Navigator.of(dialogContext).pop();
                   },
                 ),
-                TextButton(
+                FilledButton(
                   child: const Text('Done'),
                   onPressed: () {
                     setState(() {
@@ -432,88 +400,86 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   void _submitForm() {
-      if (_selectedDateTime == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a date and time")),
-        );
-        return;
-      }
-      // Validate ALL required images
-      if (_selectedPosterImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a poster image")),
-        );
-        return;
-      }
-      if (_selectedBannerImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a banner image (16:9)")),
-        );
-        return;
-      }
-      if (_selectedCardImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a card image (1:1)")),
-        );
-        return;
-      }
-      if (_selectedGenres.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select at least one genre")),
-        );
-        return;
-      }
-      if (_isLoadingProfile) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Still loading profile data, please wait."),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
-      }
-      if (_userProfile == null) {
-        final errorMessage =
-            _profileLoadError ??
-            "Profile data not loaded. Please try again or create your profile.";
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-        );
-        return;
-      }
-
-      final parts = _dateTimeController.text.split(' ');
-      final datePart = parts[0];
-      final timePart = parts[1];
-      final defaultUrl =
-          'https://academia.opencrafts.io/${_userProfile!.email}';
-      final event = Event(
-        id: '',
-        name: _nameController.text.trim(),
-        description: _aboutController.text.trim(),
-        url: defaultUrl,
-        location: _locationController.text.trim(),
-        time: timePart,
-        date: datePart,
-        organizer: _userProfile!.name,
-        imageUrl: '',
-        organizerId: _userProfile!.id.hashCode.toString(),
-        numberOfAttendees: 1,
-        genre: _selectedGenres,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        bannerImageUrl: '',
-        posterImageUrl: '',
+    if (_selectedDateTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a date and time")),
       );
-      context.read<CreateEventBloc>().add(
-        SubmitNewEvent(
-          event: event,
-          imageFile: _selectedPosterImage!,
-          bannerImageFile: _selectedBannerImage!,
-          cardImageFile: _selectedCardImage!,
+      return;
+    }
+    // Validate ALL required images
+    if (_selectedPosterImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a poster image")),
+      );
+      return;
+    }
+    if (_selectedBannerImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a banner image (16:9)")),
+      );
+      return;
+    }
+    if (_selectedCardImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a card image (1:1)")),
+      );
+      return;
+    }
+    if (_selectedGenres.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select at least one genre")),
+      );
+      return;
+    }
+    if (_isLoadingProfile) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Still loading profile data, please wait."),
+          backgroundColor: Colors.orange,
         ),
       );
-    
+      return;
+    }
+    if (_userProfile == null) {
+      final errorMessage =
+          _profileLoadError ??
+          "Profile data not loaded. Please try again or create your profile.";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    // final parts = _dateTimeController.text.split(' ');
+    // final datePart = parts[0];
+    // final timePart = parts[1];
+    final defaultUrl = 'https://academia.opencrafts.io/${_userProfile!.email}';
+    final event = Event(
+      id: '',
+      name: _nameController.text.trim(),
+      description: _aboutController.text.trim(),
+      url: defaultUrl,
+      location: _locationController.text.trim(),
+      time: DateFormat("HH:mm").format(_selectedDateTime!),
+      date: DateFormat("yyyy-MM-dd").format(_selectedDateTime!),
+      organizer: _userProfile!.name,
+      imageUrl: '',
+      organizerId: _userProfile!.id.hashCode.toString(),
+      numberOfAttendees: 1,
+      genre: _selectedGenres,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      bannerImageUrl: '',
+      posterImageUrl: '',
+    );
+    context.read<CreateEventBloc>().add(
+      SubmitNewEvent(
+        event: event,
+        imageFile: _selectedPosterImage!,
+        bannerImageFile: _selectedBannerImage!,
+        cardImageFile: _selectedCardImage!,
+      ),
+    );
   }
 
   // Update progress based on the current page index
@@ -558,6 +524,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Please select a date and time"),
+                    behavior: SnackBarBehavior.floating,
                   ),
                 );
                 return;
@@ -585,6 +552,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Please select at least one genre"),
+                    behavior: SnackBarBehavior.floating,
                   ),
                 );
                 return;
@@ -596,7 +564,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         );
       case 2:
         return ImageUploadPage(
-          controller: _stage3ScrollController, 
+          controller: _stage3ScrollController,
           selectedCardImage: _selectedCardImage,
           onPickCardImage: _pickCardImage,
           selectedBannerImage: _selectedBannerImage,
@@ -611,6 +579,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text("Please select all required images"),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
               return;
@@ -634,7 +603,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         return const Center(child: Text("Page Not Found"));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -699,8 +667,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: PageView.builder(
-                      physics:
-                          const NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       controller: _pageController,
                       onPageChanged: _updateProgress,
                       itemBuilder: (context, index) => Padding(
@@ -710,8 +677,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         ),
                         child: _buildPage(index),
                       ),
-                      itemCount:
-                          _numberOfStages + 1
+                      itemCount: _numberOfStages + 1,
                     ),
                   ),
                 ),

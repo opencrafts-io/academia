@@ -30,20 +30,22 @@ class BasicEventDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Basic Details",
+              "Tell us about your event.",
               style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
             const SizedBox(height: 32),
             TextFormField(
               controller: nameController,
               decoration: buildModernInputDecoration(
                 context: context,
-                labelText: 'Event Name *',
-                hintText: 'Enter the name of your event',
+                labelText: 'Event Name',
+                hintText: 'Fun day',
               ),
+
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
-                if (value == null || value.trim().isEmpty) {
+                if (value == null || value.trim().isEmpty || value.length < 3) {
                   return 'Please enter an event name';
                 }
                 return null;
@@ -55,7 +57,7 @@ class BasicEventDetailsPage extends StatelessWidget {
               controller: dateTimeController,
               decoration: buildModernInputDecoration(
                 context: context,
-                labelText: 'Date & Time *',
+                labelText: 'Date & Time',
                 hintText: 'Select date and time',
                 suffixIcon: Icon(
                   Icons.calendar_today_outlined,
@@ -63,6 +65,7 @@ class BasicEventDetailsPage extends StatelessWidget {
                 ),
               ),
               onTap: onSelectDateAndTime,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please select a date and time';
@@ -75,9 +78,10 @@ class BasicEventDetailsPage extends StatelessWidget {
               controller: locationController,
               decoration: buildModernInputDecoration(
                 context: context,
-                labelText: 'Location *',
+                labelText: 'Location',
                 hintText: 'e.g., Conference Hall A, Online via Zoom',
               ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter a location';
@@ -86,10 +90,7 @@ class BasicEventDetailsPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 40),
-            FilledButton.icon(
-              onPressed: onNext,
-              label: const Text('Next'),
-            ),
+            FilledButton.icon(onPressed: onNext, label: const Text('Next')),
           ],
         ),
       ),
