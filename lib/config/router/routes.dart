@@ -1,5 +1,7 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
 
@@ -126,14 +128,24 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
 
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
 class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
-  final String postId;
+  final int postId;
 
   const PostDetailRoute({required this.postId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final post = state.extra as Post;
-    return PostDetailPage(post: post);
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => PostCubit(post)),
+        BlocProvider(
+          create: (context) =>
+              sl.get<ChirpUserCubit>()..getChirpUserByID(post.authorId),
+        ),
+      ],
+      child: PostDetailPage(post: post),
+    );
   }
 }
 

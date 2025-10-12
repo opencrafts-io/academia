@@ -93,17 +93,8 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(
-          create: (context) => FeedBloc(
-            getFeedPosts: sl.get<GetFeedPosts>(),
-            cachePosts: sl.get<CachePostsUsecase>(),
-            likePost: sl.get<LikePostUsecase>(),
-            createPost: sl.get<CreatePostUsecase>(),
-            addComment: sl.get<CommentUsecase>(),
-            cachePostReplies: sl.get<CachePostRepliesUsecase>(),
-            getPostReplies: sl.get<GetPostRepliesUsecase>(),
-          )..add(CacheFeedEvent()),
-        ),
+        BlocProvider(create: (context) => sl<FeedBloc>()),
+        BlocProvider(create: (context) => sl<CommentBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),

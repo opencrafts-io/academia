@@ -204,13 +204,14 @@ RouteBase get $postDetailRoute => GoRouteData.$route(
 
 mixin _$PostDetailRoute on GoRouteData {
   static PostDetailRoute _fromState(GoRouterState state) =>
-      PostDetailRoute(postId: state.pathParameters['postId']!);
+      PostDetailRoute(postId: int.parse(state.pathParameters['postId']!)!);
 
   PostDetailRoute get _self => this as PostDetailRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
+  String get location => GoRouteData.$location(
+    '/post/${Uri.encodeComponent(_self.postId.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

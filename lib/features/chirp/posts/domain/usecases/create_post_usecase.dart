@@ -1,7 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 
 class CreatePostUsecase {
   final ChirpRepository chirpRepository;
@@ -9,13 +8,16 @@ class CreatePostUsecase {
   CreatePostUsecase({required this.chirpRepository});
 
   Future<Either<Failure, Post>> call({
-    required String userName,
-    required String email,
+    required String title,
+    required String authorId,
+    required int communityId,
     required String content,
-    required List<MultipartFile> attachments,
-    required String groupId,
   }) async {
-    return chirpRepository.createPost(content, attachments, userName: userName, email: email, groupId: groupId);
+    return chirpRepository.createPost(
+      title: title,
+      authorId: authorId,
+      communityId: communityId,
+      content: content,
+    );
   }
 }
-
