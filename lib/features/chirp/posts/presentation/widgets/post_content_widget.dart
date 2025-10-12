@@ -71,16 +71,16 @@ class _PostContentWidgetState extends State<PostContentWidget> {
               actions: [
                 IconButton.filled(
                   onPressed: () {
-                    CommunitiesRoute(
-                      communityId: widget.post.community.id,
-                    ).push(context);
-
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Openning Community"),
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
+
+                    CommunitiesRoute(
+                      communityId: widget.post.community.id,
+                    ).push(context);
                   },
                   icon: Icon(Icons.groups, color: Colors.white),
                 ),
