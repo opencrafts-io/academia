@@ -25,3 +25,4 @@ class UserProfile extends Table with TableMixin {
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
+

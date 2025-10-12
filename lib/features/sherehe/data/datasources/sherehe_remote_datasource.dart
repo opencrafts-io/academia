@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:academia/config/config.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/sherehe/data/models/paginated_events_data_model.dart';
 import 'package:dartz/dartz.dart';
@@ -12,13 +13,19 @@ import 'dart:math';
 
 class ShereheRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
-  final String servicePrefix;
+  late String servicePrefix;
   final Logger _logger = Logger();
+  final FlavorConfig flavor;
 
-  ShereheRemoteDataSource({
-    required this.dioClient,
-    this.servicePrefix = "qa-sherehe",
-  });
+  ShereheRemoteDataSource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePrefix = "sherehe";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-sherehe';
+    } else {
+      servicePrefix = "dev-sherehe";
+    }
+  }
 
   Future<Either<Failure, PaginatedEventsData>> getAllEvents({
     required int page,
@@ -26,8 +33,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/events/getAllEvents",
-        // "/$servicePrefix/events/getAllEvents",
+        // "https://qasherehe.opencrafts.io/events/getAllEvents",
+        "/$servicePrefix/events/getAllEvents",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -65,8 +72,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/attendees/event/$eventId",
-        // "/$servicePrefix/attendees/event/$eventId",
+        // "https://qasherehe.opencrafts.io/attendees/event/$eventId",
+        "/$servicePrefix/attendees/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -107,9 +114,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, EventData>> getSpecificEvent(String id) async {
     try {
       final response = await dioClient.dio.get(
-        'https://qasherehe.opencrafts.io/events/getEventById/$id',
-
-        // "/$servicePrefix/events/getEventById/$id",
+        // 'https://qasherehe.opencrafts.io/events/getEventById/$id',
+        "/$servicePrefix/events/getEventById/$id",
       );
 
       if (response.statusCode == 200) {
@@ -151,8 +157,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getSpecificAttendee(String id) async {
     try {
       final response = await dioClient.dio.get(
-        'https://qasherehe.opencrafts.io/attendees/$id',
-        // "/$servicePrefix//attendees/$id",
+        // 'https://qasherehe.opencrafts.io/attendees/$id',
+        "/$servicePrefix/attendees/$id",
       );
 
       if (response.statusCode == 200) {
@@ -197,7 +203,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'email': attendee.email,
       };
 
-      final String endpointUrl = "https://qasherehe.opencrafts.io/attendees/";
+      // final String endpointUrl = "https://qasherehe.opencrafts.io/attendees/";
+      final String endpointUrl = "/$servicePrefix/attendees/";
       _logger.i("Sending attendee creation request to: $endpointUrl");
       _logger.d("Attendee data: $attendeeData");
 
@@ -426,8 +433,11 @@ class ShereheRemoteDataSource with DioErrorHandler {
         ),
       );
 
-      final String endpointUrl =
-          "https://qasherehe.opencrafts.io/events/createEvent";
+      // final String endpointUrl =
+      //     "https://qasherehe.opencrafts.io/events/createEvent";
+      //
+      final String endpointUrl = "/$servicePrefix/events/createEvent";
+
       _logger.i("Sending event creation request to: $endpointUrl");
       _logger.d("Event data (non-file): $eventDataMap");
       final response = await dioClient.dio.post(endpointUrl, data: formData);

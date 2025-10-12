@@ -1,3 +1,4 @@
+import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
@@ -6,12 +7,18 @@ import 'package:dio/dio.dart';
 
 class TodoRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
-  final String servicePath;
+  final FlavorConfig flavor;
+  late String servicePath;
 
-  TodoRemoteDatasource({
-    required this.dioClient,
-    this.servicePath = "qa-keepup",
-  });
+  TodoRemoteDatasource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePath = "keepup";
+    } else if (flavor.isStaging) {
+      servicePath = 'qa-keepup';
+    } else {
+      servicePath = "dev-keepup";
+    }
+  }
 
   Future<Either<Failure, PaginatedResult<TodoData>>> refreshTodos({
     int page = 0,

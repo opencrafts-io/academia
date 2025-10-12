@@ -12,9 +12,6 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
   final GetDoubleUsecase getDoubleUsecase;
   final GetJsonUsecase getJsonUsecase;
   final GetAllParametersUsecase getAllParametersUsecase;
-  final SetDefaultsUsecase setDefaultsUsecase;
-  final GetSettingsUsecase getSettingsUsecase;
-  final SetSettingsUsecase setSettingsUsecase;
   final Logger _logger = Logger();
 
   RemoteConfigBloc({
@@ -26,9 +23,6 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     required this.getDoubleUsecase,
     required this.getJsonUsecase,
     required this.getAllParametersUsecase,
-    required this.setDefaultsUsecase,
-    required this.getSettingsUsecase,
-    required this.setSettingsUsecase,
   }) : super(const RemoteConfigInitialState()) {
     on<InitializeRemoteConfigEvent>(_onInitializeRemoteConfig);
     on<FetchAndActivateEvent>(_onFetchAndActivate);
@@ -38,9 +32,6 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     on<GetDoubleEvent>(_onGetDouble);
     on<GetJsonEvent>(_onGetJson);
     on<GetAllParametersEvent>(_onGetAllParameters);
-    on<SetDefaultsEvent>(_onSetDefaults);
-    on<GetSettingsEvent>(_onGetSettings);
-    on<SetSettingsEvent>(_onSetSettings);
   }
 
   Future<void> _onInitializeRemoteConfig(
@@ -59,6 +50,7 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
         },
         (_) {
           emit(const RemoteConfigInitializedState());
+          add(FetchAndActivateEvent());
         },
       );
     } catch (e) {
@@ -97,11 +89,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
   ) async {
     try {
       emit(const RemoteConfigLoadingState());
-
-      final result = await getStringUsecase(GetStringParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getStringUsecase(
+        GetStringParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -125,10 +115,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getBoolUsecase(GetBoolParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getBoolUsecase(
+        GetBoolParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -152,10 +141,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getIntUsecase(GetIntParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getIntUsecase(
+        GetIntParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -179,10 +167,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getDoubleUsecase(GetDoubleParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getDoubleUsecase(
+        GetDoubleParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -206,10 +193,9 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
     try {
       emit(const RemoteConfigLoadingState());
 
-      final result = await getJsonUsecase(GetJsonParams(
-        key: event.key,
-        defaultValue: event.defaultValue,
-      ));
+      final result = await getJsonUsecase(
+        GetJsonParams(key: event.key, defaultValue: event.defaultValue),
+      );
 
       result.fold(
         (failure) {
@@ -246,82 +232,6 @@ class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
       );
     } catch (e) {
       _logger.e('Error getting all parameters', error: e);
-      emit(RemoteConfigErrorState(message: e.toString()));
-    }
-  }
-
-  Future<void> _onSetDefaults(
-    SetDefaultsEvent event,
-    Emitter<RemoteConfigState> emit,
-  ) async {
-    try {
-      emit(const RemoteConfigLoadingState());
-
-      final result = await setDefaultsUsecase(SetDefaultsParams(
-        defaults: event.defaults,
-      ));
-
-      result.fold(
-        (failure) {
-          _logger.e('Failed to set defaults: ${failure.message}');
-          emit(RemoteConfigErrorState(message: failure.message));
-        },
-        (_) {
-          emit(const DefaultsSetState());
-        },
-      );
-    } catch (e) {
-      _logger.e('Error setting defaults', error: e);
-      emit(RemoteConfigErrorState(message: e.toString()));
-    }
-  }
-
-  Future<void> _onGetSettings(
-    GetSettingsEvent event,
-    Emitter<RemoteConfigState> emit,
-  ) async {
-    try {
-      emit(const RemoteConfigLoadingState());
-
-      final result = await getSettingsUsecase(NoParams());
-
-      result.fold(
-        (failure) {
-          _logger.e('Failed to get settings: ${failure.message}');
-          emit(RemoteConfigErrorState(message: failure.message));
-        },
-        (settings) {
-          emit(SettingsLoadedState(settings: settings));
-        },
-      );
-    } catch (e) {
-      _logger.e('Error getting settings', error: e);
-      emit(RemoteConfigErrorState(message: e.toString()));
-    }
-  }
-
-  Future<void> _onSetSettings(
-    SetSettingsEvent event,
-    Emitter<RemoteConfigState> emit,
-  ) async {
-    try {
-      emit(const RemoteConfigLoadingState());
-
-      final result = await setSettingsUsecase(SetSettingsParams(
-        settings: event.settings,
-      ));
-
-      result.fold(
-        (failure) {
-          _logger.e('Failed to set settings: ${failure.message}');
-          emit(RemoteConfigErrorState(message: failure.message));
-        },
-        (_) {
-          emit(const SettingsSetState());
-        },
-      );
-    } catch (e) {
-      _logger.e('Error setting settings', error: e);
       emit(RemoteConfigErrorState(message: e.toString()));
     }
   }

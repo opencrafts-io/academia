@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
+import 'package:animated_emoji/animated_emoji.dart';
 
 class SchoolEditPage extends StatefulWidget {
   const SchoolEditPage({
@@ -58,6 +59,11 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
         spacing: 12,
         children: [
           SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedEmoji(AnimatedEmojis.owl, size: 120),
+          ),
+          // SizedBox(height: 12),
           Text(
             "Which school are you from?",
             style: Theme.of(context).textTheme.headlineSmall,

@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return CircularProgressIndicator.adaptive();
+                            return Center(child: SpinningScallopIndicator());
                           }
                           if (snapshot.hasError) {
                             return Text("OOps! ${snapshot.error}");
@@ -157,7 +158,15 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                 final event = todayEvents[index];
                                 return AgendaEventCard(
                                   event: event,
-                                  onEdit: () {
+                                  onEdit: () async {
+                                    if (await Vibration.hasVibrator()) {
+                                      Vibration.vibrate(
+                                        pattern: [0, 50, 100, 50],
+                                        intensities: [0, 128, 0, 128],
+                                      );
+                                    }
+                                    if (!context.mounted) return;
+
                                     // Navigate to edit mode
                                     AgendaItemViewRoute(
                                       id: event.id,
@@ -231,10 +240,12 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
           if (await Vibration.hasVibrator()) {
             Vibration.vibrate(preset: VibrationPreset.gentleReminder);
           }
-          
+
           if (!context.mounted) return;
           showModalBottomSheet(
             context: context,
+            showDragHandle: true,
+            enableDrag: true,
             constraints: BoxConstraints(
               minWidth: ResponsiveBreakPoints.tablet,
               maxWidth: ResponsiveBreakPoints.tablet,
@@ -244,7 +255,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
               borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
             ),
             builder: (context) => Container(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -256,36 +267,18 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                     Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondaryContainer,
+                        // borderRadius: BorderRadius.circular(28),
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(28),
                         ),
-                      ),
-                      child: ListTile(
-                        onTap: () {},
-                        leading: CircleAvatar(
-                          child: Icon(Symbols.article_shortcut),
-                        ),
-
-                        title: Text("Import your classes information"),
-                        subtitle: Text(
-                          "May not work for all universities",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ),
-                    Divider(height: 0.5),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        // borderRadius: BorderRadius.circular(28),
                       ),
                       child: ListTile(
                         onTap: () {
                           Navigator.pop(context);
                           TodosRoute().push(context);
                         },
-                        leading: CircleAvatar(child: Icon(Symbols.list)),
-                        title: Text("Manage your tasks"),
+                        leading: CircleAvatar(child: Icon(Icons.task_alt)),
+                        title: Text("Manage your todos"),
                         subtitle: Text(
                           "Keep track of your tasks and assignments",
                           style: Theme.of(context).textTheme.bodySmall,

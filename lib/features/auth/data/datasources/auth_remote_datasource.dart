@@ -11,16 +11,20 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
 
 class AuthRemoteDatasource with DioErrorHandler {
-  final FlavorConfig flavorConfig;
+  final FlavorConfig flavor;
   final Logger _logger = Logger();
-  final String servicePrefix;
+  late String servicePrefix;
   final DioClient dioClient;
 
-  AuthRemoteDatasource({
-    required this.flavorConfig,
-    required this.dioClient,
-    this.servicePrefix = "qa-verisafe",
-  });
+  AuthRemoteDatasource({required this.flavor, required this.dioClient}) {
+    if (flavor.isProduction) {
+      servicePrefix = "verisafe";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-verisafe';
+    } else {
+      servicePrefix = "dev-verisafe";
+    }
+  }
 
   // Helper to get the current host URL
   String? getHostBaseUrl() {
@@ -37,7 +41,7 @@ class AuthRemoteDatasource with DioErrorHandler {
       String platform;
       String authUrl;
 
-      switch (flavorConfig.flavor) {
+      switch (flavor.flavor) {
         case Flavor.staging:
           authUrl = "https://qaverisafe.opencrafts.io/auth/google";
           break;
@@ -66,7 +70,6 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final result = await FlutterWebAuth2.authenticate(
         url:
-            // "https://qaverisafe.opencrafts.io/auth/google?platform=$platform&redirect=$callback",
             "$authUrl"
             "?platform=$platform&redirect_uri=$callback",
         callbackUrlScheme: "academia",
@@ -123,8 +126,38 @@ class AuthRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, TokenData>> signInWithSpotify() async {
     try {
+      String callback;
+      String platform;
+      String authUrl;
+
+      switch (flavor.flavor) {
+        case Flavor.staging:
+          authUrl = "https://qaverisafe.opencrafts.io/auth/spotify";
+          break;
+        case Flavor.production:
+          authUrl = "https://verisafe.opencrafts.io/auth/spotify";
+          break;
+        default:
+          authUrl = "http://127.0.0.1:8080/auth/spotify";
+      }
+
+      if (kIsWeb) {
+        callback = "${getHostBaseUrl()}/auth.html";
+        platform = "web";
+      } else {
+        callback = "academia://callback";
+        platform = "mobile";
+      }
+
+      _logger.d(
+        "Authenticating with "
+        "$authUrl"
+        "?platform=$platform&redirect_uri=$callback",
+      );
+
+
       final result = await FlutterWebAuth2.authenticate(
-        url: "https://qaverisafe.opencrafts.io/auth/google",
+        url: "$authUrl?platform=$platform&redirect_uri=$callback",
         callbackUrlScheme: "academia",
         options: FlutterWebAuth2Options(
           windowName: "Academia | Authentication",
@@ -136,6 +169,16 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
+
+      FirebaseAnalytics.instance.logLogin(
+        loginMethod: "Spotify",
+        parameters: {
+          "platform": platform,
+          "auth_url": authUrl,
+          "successful": 1,
+        },
+      );
+
       return right(
         TokenData(
           id: 1,
@@ -156,7 +199,7 @@ class AuthRemoteDatasource with DioErrorHandler {
         ),
       );
     } catch (e) {
-      _logger.e("Failed to authenticate with google", error: e);
+      _logger.e("Failed to authenticate with spotify", error: e);
       return left(
         AuthenticationFailure(
           message: "Something went wrong while trying to authenticate you",

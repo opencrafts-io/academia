@@ -1,40 +1,42 @@
+import 'package:academia/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // Added import for Bloc
 import 'package:academia/features/features.dart';
 
-import 'package:academia/injection_container.dart';
-
-import '../../features/sherehe/domain/usecases/create_event_use_case.dart'; // Assuming your service locator (sl) is here
 
 part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
-// Main pages
-@TypedShellRoute<MainLayoutShellRoute>(
-  routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<HomeRoute>(path: '/'),
-    TypedGoRoute<CalendarRoute>(
-      path: '/calendar',
+@TypedStatefulShellRoute<LayoutShellRoute>(
+  branches: [
+    TypedStatefulShellBranch(routes: [TypedGoRoute<HomeRoute>(path: '/')]),
+    TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<CreateAgendaEventRoute>(path: "create"),
-        TypedGoRoute<AgendaItemViewRoute>(path: "item/:id"),
+        TypedGoRoute<CalendarRoute>(
+          path: '/calendar',
+          routes: [
+            TypedGoRoute<CreateAgendaEventRoute>(path: 'create'),
+            TypedGoRoute<AgendaItemViewRoute>(path: 'item/:id'),
+          ],
+        ),
       ],
     ),
-    TypedGoRoute<EssentialsRoute>(path: '/essentials'),
-    TypedGoRoute<MeteorRoute>(path: '/meteor'),
+    TypedStatefulShellBranch(
+      routes: [TypedGoRoute<EssentialsRoute>(path: '/essentials')],
+    ),
   ],
 )
-class MainLayoutShellRoute extends ShellRouteData {
-  const MainLayoutShellRoute();
-
-  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorKey;
+class LayoutShellRoute extends StatefulShellRouteData {
+  const LayoutShellRoute();
 
   @override
-  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    // In the navigator, we get the current tab widget.
-    return LayoutPage(child: navigator);
+  Widget builder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return LayoutPage(navigationShell: navigationShell);
   }
 }
 
@@ -48,7 +50,7 @@ class HomeRoute extends GoRouteData with _$HomeRoute {
 class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Essentials")));
+    return EssentialsPage();
   }
 }
 
@@ -108,12 +110,12 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
   }
 }
 
-class MeteorRoute extends GoRouteData with _$MeteorRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("MeteorRoute")));
-  }
-}
+// class MeteorRoute extends GoRouteData with _$MeteorRoute {
+//   @override
+//   Widget build(BuildContext context, GoRouterState state) {
+//     return Scaffold(body: Center(child: Text("MeteorRoute")));
+//   }
+// }
 
 @TypedGoRoute<FeedRoute>(path: "/feed")
 class FeedRoute extends GoRouteData with _$FeedRoute {
@@ -123,17 +125,6 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
   }
 }
 
-@TypedGoRoute<ChatRoute>(path: "/chat/:conversationId")
-class ChatRoute extends GoRouteData with _$ChatRoute {
-  final String conversationId;
-
-  const ChatRoute({required this.conversationId});
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return ChatPage(conversationId: conversationId);
-  }
-}
 
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
 class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
@@ -218,11 +209,7 @@ class ShereheRoute extends GoRouteData with _$ShereheRoute {
 class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<CreateEventBloc>(
-      create: (context) =>
-          CreateEventBloc(createEventUseCase: sl<CreateEventUseCase>()),
-      child: const CreateEventScreen(),
-    );
+    return const CreateEventScreen(); //TODO:(BARAKA) Add BlocProvider in Create Sherehe page
   }
 }
 
@@ -267,5 +254,224 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TodoHomeScreen();
+  }
+}
+
+@TypedGoRoute<MagnetRoute>(
+  path: "/magnet",
+  routes: [
+    TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID"),
+    TypedGoRoute<MagnetHomeRoute>(
+      path: ":institutionID",
+      routes: [
+        TypedGoRoute<MagnetProfileRoute>(path: "profile"),
+        TypedGoRoute<MagnetCoursesRoute>(path: "courses"),
+        TypedGoRoute<MagnetFeesRoute>(path: "fees"),
+      ],
+    ),
+  ],
+)
+class MagnetRoute extends GoRouteData with _$MagnetRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return Scaffold(body: Center(child: Text("Magnet route")));
+  }
+}
+
+class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
+  final int institutionID;
+  MagnetAuthRoute({required this.institutionID});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: MagnetAuthScreen(institutionID: institutionID),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+@TypedGoRoute<CommunitiesRoute>(
+  path: "/communities/:communityId",
+  routes: [
+    TypedGoRoute<CommunityUserListRoute>(path: "users"),
+    TypedGoRoute<AddCommunityGuidelinesRoute>(path: "add-community-guidelines"),
+  ],
+)
+class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
+  final String communityId;
+
+  CommunitiesRoute({required this.communityId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityHome(communityId: communityId);
+  }
+}
+
+class CommunityUserListRoute extends GoRouteData with _$CommunityUserListRoute {
+  final String communityId;
+  final String userId;
+  final String title;
+  final bool isTargetModerator;
+  final bool isTargetBannedUsers;
+  final bool isTargetMember;
+  final bool isCreator;
+  final bool isModerator;
+  final bool isMember;
+  final bool isBanned;
+  final bool isPrivate;
+
+  const CommunityUserListRoute({
+    required this.communityId,
+    required this.userId,
+    required this.title,
+    this.isTargetModerator = false,
+    this.isTargetBannedUsers = false,
+    this.isTargetMember = false,
+    this.isCreator = false,
+    this.isModerator = false,
+    this.isMember = false,
+    this.isBanned = false,
+    this.isPrivate = false,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityUserListScreen(
+      communityId: communityId,
+      userId: userId,
+      title: title,
+      isTargetModerator: isTargetModerator,
+      isTargetBannedUsers: isTargetBannedUsers,
+      isTargetMembers: isTargetMember,
+      isCreator: isCreator,
+      isModerator: isModerator,
+      isMember: isMember,
+      isBanned: isBanned,
+      isPrivate: isPrivate,
+    );
+  }
+}
+
+class MagnetProfileRoute extends GoRouteData with _$MagnetProfileRoute {
+  final int institutionID;
+  MagnetProfileRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetProfilePage(institutionID: institutionID);
+  }
+}
+
+class MagnetCoursesRoute extends GoRouteData with _$MagnetCoursesRoute {
+  final int institutionID;
+  MagnetCoursesRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetCoursesScreen(institutionID: institutionID);
+  }
+}
+
+class MagnetFeesRoute extends GoRouteData with _$MagnetFeesRoute {
+  final int institutionID;
+  MagnetFeesRoute({required this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MagnetFeesTransactionsPage(institutionID: institutionID);
+  }
+}
+
+class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
+  final int institutionID;
+  MagnetHomeRoute({required this.institutionID});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: MagnetHomeScreen(institutionID: institutionID),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+
+class AddCommunityGuidelinesRoute extends GoRouteData
+    with _$AddCommunityGuidelinesRoute {
+  final String communityId;
+  final String userId;
+
+  AddCommunityGuidelinesRoute({
+    required this.communityId,
+    required this.userId,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddCommunityGuidelinesScreen(
+      communityId: communityId,
+      userId: userId,
+    );
+  }
+}
+
+@TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
+class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateCommunityScreen();
+  }
+}
+
+@TypedGoRoute<TrimVideoRoute>(path: "/video-trimer/:videoPath")
+class TrimVideoRoute extends GoRouteData with _$TrimVideoRoute {
+  TrimVideoRoute({required this.videoPath});
+  final String videoPath;
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return VideoTrimmerPage(videoPath: videoPath);
+  }
+}
+
+@TypedGoRoute<CommunityMembershipsRoute>(path: "/community/memberships/mine")
+class CommunityMembershipsRoute extends GoRouteData
+    with _$CommunityMembershipsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CommunityMembershipPage();
   }
 }

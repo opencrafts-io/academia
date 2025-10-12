@@ -1,7 +1,16 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/data/json_converter.dart';
+import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
+import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
+import 'package:academia/features/chirp/posts/data/models/post_model.dart';
+import 'package:academia/features/chirp/posts/data/models/reply_model.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
+import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
+import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
+import 'package:academia/features/magnet/data/models/magnet_student_profile.dart';
+import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
@@ -10,33 +19,51 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import '../features/chirp/data/data.dart';
+import '../features/chirp/communities/data/data.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
   tables: [
+    // Profile
     UserProfile,
+
+    // Auth
     Token,
-    ConversationTable,
-    MessageTable,
+
+    // Chirp
     AttachmentTable,
     PostTable,
-    PostReplyTable,
-    ChirpUserTable,
+    PostReplyTable, // to rename to comments
+    
     Todo,
     EventTable,
     AttendeeTable,
     TicketTable,
+    GroupTable,
 
     // Agenda
     AgendaEvent,
-    
+
     // Notifications
     NotificationTable,
 
     // Institution
-    Institution
+    Institution,
+
+    // Magnet
+    MagnetStudentProfile,
+    MagnetCredentials,
+    MagnetCourseInfo,
+    MagnetFinancialTransaction,
+    //Communities
+    CommunityTable,
+
+    /**************************************************************
+    *           CHIRP
+    **************************************************************/
+    // Memberships
+    ChirpCommunityMembership,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -47,7 +74,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -57,16 +84,6 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
-        if (from == 6 && to == 7) {
-          // Handle the foreign key change from UserProfile to ChirpUserTable
-          // First, drop the old foreign key constraint
-          await m.deleteTable('conversation_table');
-          // Then recreate the table with the new foreign key
-          await m.createTable(conversationTable);
-        } else if (to > from) {
-          m.createAll();
-          _logger.i("Migrated from version $from to version $to");
-        }
       },
       beforeOpen: (details) async {
         _logger.i(

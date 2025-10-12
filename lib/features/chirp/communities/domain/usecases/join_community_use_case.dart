@@ -1,0 +1,22 @@
+import 'package:academia/core/error/failures.dart';
+import 'package:academia/features/chirp/communities/domain/entities/community.dart';
+import 'package:academia/features/chirp/communities/domain/repository/community_repository.dart';
+import 'package:dartz/dartz.dart';
+
+class JoinCommunityUseCase {
+  final CommunityRepository repository;
+
+  JoinCommunityUseCase({required this.repository});
+
+  Future<Either<Failure, Community>> call(
+    String groupId,
+    String userId,
+    String userName,
+  ) {
+    return repository.joinCommunity(
+      groupId: groupId,
+      userId: userId,
+      userName: userName,
+    );
+  }
+}

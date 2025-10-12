@@ -20,31 +20,41 @@ class AgendaEventRepositoryImpl implements AgendaEventRepository {
   Stream<List<AgendaEvent>> getCachedAgendaEvents() {
     // Return cached agenda events as a stream, converting from data model to entity
     return agendaEventLocalDataSource.getAgendaEventStream().map(
-      (rawAgendaEvents) => rawAgendaEvents.map((rawEvent) => rawEvent.toEntity()).toList(),
+      (rawAgendaEvents) =>
+          rawAgendaEvents.map((rawEvent) => rawEvent.toEntity()).toList(),
     );
   }
 
   @override
-  Future<Either<Failure, AgendaEvent>> deleteAgendaEvent(AgendaEvent event) async {
+  Future<Either<Failure, AgendaEvent>> deleteAgendaEvent(
+    AgendaEvent event,
+  ) async {
+    // Anticipate that the agenda event will be deleted ok remotely
+    final localRes = await agendaEventLocalDataSource.deleteAgendaEvent(
+      event.toModel(),
+    );
+
     // First attempt to delete from remote source
-    final remoteRes = await agendaEventRemoteDatasource.deleteAgendaEventData(event.toModel());
+    final remoteRes = await agendaEventRemoteDatasource.deleteAgendaEventData(
+      event.toModel(),
+    );
 
     // If remote deletion fails, return the failure
     if (remoteRes.isLeft()) {
       return Left((remoteRes as Left).value);
     }
-
-    // If remote deletion succeeds, delete from local cache
-    final localRes = await agendaEventLocalDataSource.deleteAgendaEvent(event.toModel());
-    
     // Return the original event if local deletion succeeds, or the failure if it fails
     return localRes.fold((failure) => left(failure), (t) => right(event));
   }
 
   @override
-  Future<Either<Failure, AgendaEvent>> updateAgendaEvent(AgendaEvent event) async {
+  Future<Either<Failure, AgendaEvent>> updateAgendaEvent(
+    AgendaEvent event,
+  ) async {
     // First attempt to update on remote source
-    final remoteRes = await agendaEventRemoteDatasource.updateAgendaEvent(event.toModel());
+    final remoteRes = await agendaEventRemoteDatasource.updateAgendaEvent(
+      event.toModel(),
+    );
 
     // If remote update fails, return the failure
     if (remoteRes.isLeft()) {
@@ -55,7 +65,7 @@ class AgendaEventRepositoryImpl implements AgendaEventRepository {
     final localRes = await agendaEventLocalDataSource.createOrUpdateAgendaEvent(
       (remoteRes as Right).value,
     );
-    
+
     // Return the updated entity or the failure
     return localRes.fold(
       (failure) => left(failure),
@@ -64,9 +74,13 @@ class AgendaEventRepositoryImpl implements AgendaEventRepository {
   }
 
   @override
-  Future<Either<Failure, AgendaEvent>> createAgendaEvent(AgendaEvent event) async {
+  Future<Either<Failure, AgendaEvent>> createAgendaEvent(
+    AgendaEvent event,
+  ) async {
     // First attempt to create on remote source
-    final remoteRes = await agendaEventRemoteDatasource.createAgendaEvent(event.toModel());
+    final remoteRes = await agendaEventRemoteDatasource.createAgendaEvent(
+      event.toModel(),
+    );
 
     // If remote creation fails, return the failure
     if (remoteRes.isLeft()) {
@@ -77,7 +91,7 @@ class AgendaEventRepositoryImpl implements AgendaEventRepository {
     final localRes = await agendaEventLocalDataSource.createOrUpdateAgendaEvent(
       (remoteRes as Right).value,
     );
-    
+
     // Return the created entity or the failure
     return localRes.fold(
       (failure) => left(failure),
@@ -106,12 +120,13 @@ class AgendaEventRepositoryImpl implements AgendaEventRepository {
 
     // Update local cache with all fetched events
     for (final agendaEvent in data.results) {
-      final localRes = await agendaEventLocalDataSource.createOrUpdateAgendaEvent(agendaEvent);
+      final localRes = await agendaEventLocalDataSource
+          .createOrUpdateAgendaEvent(agendaEvent);
       if (localRes.isLeft()) {
         return left((localRes as Left).value);
       }
     }
-    
+
     // Return the stream of cached events converted to entities
     return Right(
       agendaEventLocalDataSource.getAgendaEventStream().map(

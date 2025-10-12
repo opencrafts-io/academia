@@ -1,3 +1,4 @@
+import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
@@ -6,12 +7,18 @@ import 'package:dio/dio.dart';
 
 class ProfileRemoteDatasource with DioErrorHandler {
   final DioClient dioClient;
-  final String servicePrefix;
+  final FlavorConfig flavor;
+  late String servicePrefix;
 
-  ProfileRemoteDatasource({
-    required this.dioClient,
-    this.servicePrefix = "qa-verisafe",
-  });
+  ProfileRemoteDatasource({required this.dioClient, required this.flavor}) {
+    if (flavor.isProduction) {
+      servicePrefix = "verisafe";
+    } else if (flavor.isStaging) {
+      servicePrefix = 'qa-verisafe';
+    } else {
+      servicePrefix = "dev-verisafe";
+    }
+  }
 
   Future<Either<Failure, UserProfileData>> refreshCurrentUserProfile() async {
     try {

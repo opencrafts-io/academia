@@ -1219,12 +1219,12 @@ class TokenCompanion extends UpdateCompanion<TokenData> {
   }
 }
 
-class $ChirpUserTableTable extends ChirpUserTable
-    with TableInfo<$ChirpUserTableTable, ChirpUserData> {
+class $GroupTableTable extends GroupTable
+    with TableInfo<$GroupTableTable, GroupEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpUserTableTable(this.attachedDatabase, [this._alias]);
+  $GroupTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -1267,37 +1267,240 @@ class $ChirpUserTableTable extends ChirpUserTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
   @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _vibepointsMeta = const VerificationMeta(
-    'vibepoints',
+  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
+    'creatorId',
   );
   @override
-  late final GeneratedColumn<int> vibepoints = GeneratedColumn<int>(
-    'vibepoints',
+  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
+    'creator_id',
     aliasedName,
     false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: Constant(0),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
-  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
-    'avatarUrl',
+  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
+    'creatorName',
   );
   @override
-  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
-    'avatar_url',
+  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
+    'creator_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _adminsMeta = const VerificationMeta('admins');
+  @override
+  late final GeneratedColumn<String> admins = GeneratedColumn<String>(
+    'admins',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _adminNamesMeta = const VerificationMeta(
+    'adminNames',
+  );
+  @override
+  late final GeneratedColumn<String> adminNames = GeneratedColumn<String>(
+    'admin_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _moderatorsMeta = const VerificationMeta(
+    'moderators',
+  );
+  @override
+  late final GeneratedColumn<String> moderators = GeneratedColumn<String>(
+    'moderators',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _moderatorNamesMeta = const VerificationMeta(
+    'moderatorNames',
+  );
+  @override
+  late final GeneratedColumn<String> moderatorNames = GeneratedColumn<String>(
+    'moderator_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _membersMeta = const VerificationMeta(
+    'members',
+  );
+  @override
+  late final GeneratedColumn<String> members = GeneratedColumn<String>(
+    'members',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _memberNamesMeta = const VerificationMeta(
+    'memberNames',
+  );
+  @override
+  late final GeneratedColumn<String> memberNames = GeneratedColumn<String>(
+    'member_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedUsersMeta = const VerificationMeta(
+    'bannedUsers',
+  );
+  @override
+  late final GeneratedColumn<String> bannedUsers = GeneratedColumn<String>(
+    'banned_users',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedUserNamesMeta = const VerificationMeta(
+    'bannedUserNames',
+  );
+  @override
+  late final GeneratedColumn<String> bannedUserNames = GeneratedColumn<String>(
+    'banned_user_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
+    'isPrivate',
+  );
+  @override
+  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
+    'is_private',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_private" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _rulesMeta = const VerificationMeta('rules');
+  @override
+  late final GeneratedColumn<String> rules = GeneratedColumn<String>(
+    'rules',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _logoMeta = const VerificationMeta('logo');
+  @override
+  late final GeneratedColumn<String> logo = GeneratedColumn<String>(
+    'logo',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
+    'logoUrl',
+  );
+  @override
+  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
+    'logo_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
+    'bannerUrl',
+  );
+  @override
+  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
+    'banner_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userRoleMeta = const VerificationMeta(
+    'userRole',
+  );
+  @override
+  late final GeneratedColumn<String> userRole = GeneratedColumn<String>(
+    'user_role',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _canPostMeta = const VerificationMeta(
+    'canPost',
+  );
+  @override
+  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
+    'can_post',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_post" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _canModerateMeta = const VerificationMeta(
+    'canModerate',
+  );
+  @override
+  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
+    'can_moderate',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_moderate" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _canAdminMeta = const VerificationMeta(
+    'canAdmin',
+  );
+  @override
+  late final GeneratedColumn<bool> canAdmin = GeneratedColumn<bool>(
+    'can_admin',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_admin" IN (0, 1))',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -1305,18 +1508,36 @@ class $ChirpUserTableTable extends ChirpUserTable
     createdAt,
     updatedAt,
     name,
-    email,
-    vibepoints,
-    avatarUrl,
+    description,
+    creatorId,
+    creatorName,
+    admins,
+    adminNames,
+    moderators,
+    moderatorNames,
+    members,
+    memberNames,
+    bannedUsers,
+    bannedUserNames,
+    isPrivate,
+    rules,
+    logo,
+    banner,
+    logoUrl,
+    bannerUrl,
+    userRole,
+    canPost,
+    canModerate,
+    canAdmin,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'chirp_user_table';
+  static const String $name = 'group_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpUserData> instance, {
+    Insertable<GroupEntity> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1346,25 +1567,184 @@ class $ChirpUserTableTable extends ChirpUserTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('email')) {
+    if (data.containsKey('description')) {
       context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_emailMeta);
+      context.missing(_descriptionMeta);
     }
-    if (data.containsKey('vibepoints')) {
+    if (data.containsKey('creator_id')) {
       context.handle(
-        _vibepointsMeta,
-        vibepoints.isAcceptableOrUnknown(data['vibepoints']!, _vibepointsMeta),
+        _creatorIdMeta,
+        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorIdMeta);
+    }
+    if (data.containsKey('creator_name')) {
+      context.handle(
+        _creatorNameMeta,
+        creatorName.isAcceptableOrUnknown(
+          data['creator_name']!,
+          _creatorNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorNameMeta);
+    }
+    if (data.containsKey('admins')) {
+      context.handle(
+        _adminsMeta,
+        admins.isAcceptableOrUnknown(data['admins']!, _adminsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_adminsMeta);
+    }
+    if (data.containsKey('admin_names')) {
+      context.handle(
+        _adminNamesMeta,
+        adminNames.isAcceptableOrUnknown(data['admin_names']!, _adminNamesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_adminNamesMeta);
+    }
+    if (data.containsKey('moderators')) {
+      context.handle(
+        _moderatorsMeta,
+        moderators.isAcceptableOrUnknown(data['moderators']!, _moderatorsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_moderatorsMeta);
+    }
+    if (data.containsKey('moderator_names')) {
+      context.handle(
+        _moderatorNamesMeta,
+        moderatorNames.isAcceptableOrUnknown(
+          data['moderator_names']!,
+          _moderatorNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_moderatorNamesMeta);
+    }
+    if (data.containsKey('members')) {
+      context.handle(
+        _membersMeta,
+        members.isAcceptableOrUnknown(data['members']!, _membersMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_membersMeta);
+    }
+    if (data.containsKey('member_names')) {
+      context.handle(
+        _memberNamesMeta,
+        memberNames.isAcceptableOrUnknown(
+          data['member_names']!,
+          _memberNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_memberNamesMeta);
+    }
+    if (data.containsKey('banned_users')) {
+      context.handle(
+        _bannedUsersMeta,
+        bannedUsers.isAcceptableOrUnknown(
+          data['banned_users']!,
+          _bannedUsersMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_bannedUsersMeta);
+    }
+    if (data.containsKey('banned_user_names')) {
+      context.handle(
+        _bannedUserNamesMeta,
+        bannedUserNames.isAcceptableOrUnknown(
+          data['banned_user_names']!,
+          _bannedUserNamesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_bannedUserNamesMeta);
+    }
+    if (data.containsKey('is_private')) {
+      context.handle(
+        _isPrivateMeta,
+        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isPrivateMeta);
+    }
+    if (data.containsKey('rules')) {
+      context.handle(
+        _rulesMeta,
+        rules.isAcceptableOrUnknown(data['rules']!, _rulesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rulesMeta);
+    }
+    if (data.containsKey('logo')) {
+      context.handle(
+        _logoMeta,
+        logo.isAcceptableOrUnknown(data['logo']!, _logoMeta),
       );
     }
-    if (data.containsKey('avatar_url')) {
+    if (data.containsKey('banner')) {
       context.handle(
-        _avatarUrlMeta,
-        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
       );
+    }
+    if (data.containsKey('logo_url')) {
+      context.handle(
+        _logoUrlMeta,
+        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
+      );
+    }
+    if (data.containsKey('banner_url')) {
+      context.handle(
+        _bannerUrlMeta,
+        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
+      );
+    }
+    if (data.containsKey('user_role')) {
+      context.handle(
+        _userRoleMeta,
+        userRole.isAcceptableOrUnknown(data['user_role']!, _userRoleMeta),
+      );
+    }
+    if (data.containsKey('can_post')) {
+      context.handle(
+        _canPostMeta,
+        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_canPostMeta);
+    }
+    if (data.containsKey('can_moderate')) {
+      context.handle(
+        _canModerateMeta,
+        canModerate.isAcceptableOrUnknown(
+          data['can_moderate']!,
+          _canModerateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_canModerateMeta);
+    }
+    if (data.containsKey('can_admin')) {
+      context.handle(
+        _canAdminMeta,
+        canAdmin.isAcceptableOrUnknown(data['can_admin']!, _canAdminMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_canAdminMeta);
     }
     return context;
   }
@@ -1372,9 +1752,9 @@ class $ChirpUserTableTable extends ChirpUserTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  GroupEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpUserData(
+    return GroupEntity(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -1391,43 +1771,151 @@ class $ChirpUserTableTable extends ChirpUserTable
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      email: attachedDatabase.typeMapping.read(
+      description: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}email'],
+        data['${effectivePrefix}description'],
       )!,
-      vibepoints: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}vibepoints'],
-      )!,
-      avatarUrl: attachedDatabase.typeMapping.read(
+      creatorId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}avatar_url'],
+        data['${effectivePrefix}creator_id'],
+      )!,
+      creatorName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}creator_name'],
+      )!,
+      admins: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admins'],
+      )!,
+      adminNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admin_names'],
+      )!,
+      moderators: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}moderators'],
+      )!,
+      moderatorNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}moderator_names'],
+      )!,
+      members: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}members'],
+      )!,
+      memberNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}member_names'],
+      )!,
+      bannedUsers: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_users'],
+      )!,
+      bannedUserNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_user_names'],
+      )!,
+      isPrivate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_private'],
+      )!,
+      rules: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rules'],
+      )!,
+      logo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logo'],
       ),
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
+      ),
+      logoUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logo_url'],
+      ),
+      bannerUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner_url'],
+      ),
+      userRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_role'],
+      ),
+      canPost: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_post'],
+      )!,
+      canModerate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_moderate'],
+      )!,
+      canAdmin: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_admin'],
+      )!,
     );
   }
 
   @override
-  $ChirpUserTableTable createAlias(String alias) {
-    return $ChirpUserTableTable(attachedDatabase, alias);
+  $GroupTableTable createAlias(String alias) {
+    return $GroupTableTable(attachedDatabase, alias);
   }
 }
 
-class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+class GroupEntity extends DataClass implements Insertable<GroupEntity> {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String name;
-  final String email;
-  final int vibepoints;
-  final String? avatarUrl;
-  const ChirpUserData({
+  final String description;
+  final String creatorId;
+  final String creatorName;
+  final String admins;
+  final String adminNames;
+  final String moderators;
+  final String moderatorNames;
+  final String members;
+  final String memberNames;
+  final String bannedUsers;
+  final String bannedUserNames;
+  final bool isPrivate;
+  final String rules;
+  final String? logo;
+  final String? banner;
+  final String? logoUrl;
+  final String? bannerUrl;
+  final String? userRole;
+  final bool canPost;
+  final bool canModerate;
+  final bool canAdmin;
+  const GroupEntity({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
     required this.name,
-    required this.email,
-    required this.vibepoints,
-    this.avatarUrl,
+    required this.description,
+    required this.creatorId,
+    required this.creatorName,
+    required this.admins,
+    required this.adminNames,
+    required this.moderators,
+    required this.moderatorNames,
+    required this.members,
+    required this.memberNames,
+    required this.bannedUsers,
+    required this.bannedUserNames,
+    required this.isPrivate,
+    required this.rules,
+    this.logo,
+    this.banner,
+    this.logoUrl,
+    this.bannerUrl,
+    this.userRole,
+    required this.canPost,
+    required this.canModerate,
+    required this.canAdmin,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1436,41 +1924,109 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['name'] = Variable<String>(name);
-    map['email'] = Variable<String>(email);
-    map['vibepoints'] = Variable<int>(vibepoints);
-    if (!nullToAbsent || avatarUrl != null) {
-      map['avatar_url'] = Variable<String>(avatarUrl);
+    map['description'] = Variable<String>(description);
+    map['creator_id'] = Variable<String>(creatorId);
+    map['creator_name'] = Variable<String>(creatorName);
+    map['admins'] = Variable<String>(admins);
+    map['admin_names'] = Variable<String>(adminNames);
+    map['moderators'] = Variable<String>(moderators);
+    map['moderator_names'] = Variable<String>(moderatorNames);
+    map['members'] = Variable<String>(members);
+    map['member_names'] = Variable<String>(memberNames);
+    map['banned_users'] = Variable<String>(bannedUsers);
+    map['banned_user_names'] = Variable<String>(bannedUserNames);
+    map['is_private'] = Variable<bool>(isPrivate);
+    map['rules'] = Variable<String>(rules);
+    if (!nullToAbsent || logo != null) {
+      map['logo'] = Variable<String>(logo);
     }
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
+    }
+    if (!nullToAbsent || logoUrl != null) {
+      map['logo_url'] = Variable<String>(logoUrl);
+    }
+    if (!nullToAbsent || bannerUrl != null) {
+      map['banner_url'] = Variable<String>(bannerUrl);
+    }
+    if (!nullToAbsent || userRole != null) {
+      map['user_role'] = Variable<String>(userRole);
+    }
+    map['can_post'] = Variable<bool>(canPost);
+    map['can_moderate'] = Variable<bool>(canModerate);
+    map['can_admin'] = Variable<bool>(canAdmin);
     return map;
   }
 
-  ChirpUserTableCompanion toCompanion(bool nullToAbsent) {
-    return ChirpUserTableCompanion(
+  GroupTableCompanion toCompanion(bool nullToAbsent) {
+    return GroupTableCompanion(
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       name: Value(name),
-      email: Value(email),
-      vibepoints: Value(vibepoints),
-      avatarUrl: avatarUrl == null && nullToAbsent
+      description: Value(description),
+      creatorId: Value(creatorId),
+      creatorName: Value(creatorName),
+      admins: Value(admins),
+      adminNames: Value(adminNames),
+      moderators: Value(moderators),
+      moderatorNames: Value(moderatorNames),
+      members: Value(members),
+      memberNames: Value(memberNames),
+      bannedUsers: Value(bannedUsers),
+      bannedUserNames: Value(bannedUserNames),
+      isPrivate: Value(isPrivate),
+      rules: Value(rules),
+      logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
+      banner: banner == null && nullToAbsent
           ? const Value.absent()
-          : Value(avatarUrl),
+          : Value(banner),
+      logoUrl: logoUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(logoUrl),
+      bannerUrl: bannerUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannerUrl),
+      userRole: userRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userRole),
+      canPost: Value(canPost),
+      canModerate: Value(canModerate),
+      canAdmin: Value(canAdmin),
     );
   }
 
-  factory ChirpUserData.fromJson(
+  factory GroupEntity.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpUserData(
+    return GroupEntity(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       name: serializer.fromJson<String>(json['name']),
-      email: serializer.fromJson<String>(json['email']),
-      vibepoints: serializer.fromJson<int>(json['vibepoints']),
-      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+      description: serializer.fromJson<String>(json['description']),
+      creatorId: serializer.fromJson<String>(json['creator_id']),
+      creatorName: serializer.fromJson<String>(json['creator_name']),
+      admins: serializer.fromJson<String>(json['admins']),
+      adminNames: serializer.fromJson<String>(json['admin_names']),
+      moderators: serializer.fromJson<String>(json['moderators']),
+      moderatorNames: serializer.fromJson<String>(json['moderator_names']),
+      members: serializer.fromJson<String>(json['members']),
+      memberNames: serializer.fromJson<String>(json['member_names']),
+      bannedUsers: serializer.fromJson<String>(json['banned_users']),
+      bannedUserNames: serializer.fromJson<String>(json['banned_user_names']),
+      isPrivate: serializer.fromJson<bool>(json['is_private']),
+      rules: serializer.fromJson<String>(json['rules']),
+      logo: serializer.fromJson<String?>(json['logo']),
+      banner: serializer.fromJson<String?>(json['banner']),
+      logoUrl: serializer.fromJson<String?>(json['logo_url']),
+      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
+      userRole: serializer.fromJson<String?>(json['user_role']),
+      canPost: serializer.fromJson<bool>(json['can_post']),
+      canModerate: serializer.fromJson<bool>(json['can_moderate']),
+      canAdmin: serializer.fromJson<bool>(json['can_admin']),
     );
   }
   @override
@@ -1481,112 +2037,348 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'name': serializer.toJson<String>(name),
-      'email': serializer.toJson<String>(email),
-      'vibepoints': serializer.toJson<int>(vibepoints),
-      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+      'description': serializer.toJson<String>(description),
+      'creator_id': serializer.toJson<String>(creatorId),
+      'creator_name': serializer.toJson<String>(creatorName),
+      'admins': serializer.toJson<String>(admins),
+      'admin_names': serializer.toJson<String>(adminNames),
+      'moderators': serializer.toJson<String>(moderators),
+      'moderator_names': serializer.toJson<String>(moderatorNames),
+      'members': serializer.toJson<String>(members),
+      'member_names': serializer.toJson<String>(memberNames),
+      'banned_users': serializer.toJson<String>(bannedUsers),
+      'banned_user_names': serializer.toJson<String>(bannedUserNames),
+      'is_private': serializer.toJson<bool>(isPrivate),
+      'rules': serializer.toJson<String>(rules),
+      'logo': serializer.toJson<String?>(logo),
+      'banner': serializer.toJson<String?>(banner),
+      'logo_url': serializer.toJson<String?>(logoUrl),
+      'banner_url': serializer.toJson<String?>(bannerUrl),
+      'user_role': serializer.toJson<String?>(userRole),
+      'can_post': serializer.toJson<bool>(canPost),
+      'can_moderate': serializer.toJson<bool>(canModerate),
+      'can_admin': serializer.toJson<bool>(canAdmin),
     };
   }
 
-  ChirpUserData copyWith({
+  GroupEntity copyWith({
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? name,
-    String? email,
-    int? vibepoints,
-    Value<String?> avatarUrl = const Value.absent(),
-  }) => ChirpUserData(
+    String? description,
+    String? creatorId,
+    String? creatorName,
+    String? admins,
+    String? adminNames,
+    String? moderators,
+    String? moderatorNames,
+    String? members,
+    String? memberNames,
+    String? bannedUsers,
+    String? bannedUserNames,
+    bool? isPrivate,
+    String? rules,
+    Value<String?> logo = const Value.absent(),
+    Value<String?> banner = const Value.absent(),
+    Value<String?> logoUrl = const Value.absent(),
+    Value<String?> bannerUrl = const Value.absent(),
+    Value<String?> userRole = const Value.absent(),
+    bool? canPost,
+    bool? canModerate,
+    bool? canAdmin,
+  }) => GroupEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     name: name ?? this.name,
-    email: email ?? this.email,
-    vibepoints: vibepoints ?? this.vibepoints,
-    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+    description: description ?? this.description,
+    creatorId: creatorId ?? this.creatorId,
+    creatorName: creatorName ?? this.creatorName,
+    admins: admins ?? this.admins,
+    adminNames: adminNames ?? this.adminNames,
+    moderators: moderators ?? this.moderators,
+    moderatorNames: moderatorNames ?? this.moderatorNames,
+    members: members ?? this.members,
+    memberNames: memberNames ?? this.memberNames,
+    bannedUsers: bannedUsers ?? this.bannedUsers,
+    bannedUserNames: bannedUserNames ?? this.bannedUserNames,
+    isPrivate: isPrivate ?? this.isPrivate,
+    rules: rules ?? this.rules,
+    logo: logo.present ? logo.value : this.logo,
+    banner: banner.present ? banner.value : this.banner,
+    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
+    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
+    userRole: userRole.present ? userRole.value : this.userRole,
+    canPost: canPost ?? this.canPost,
+    canModerate: canModerate ?? this.canModerate,
+    canAdmin: canAdmin ?? this.canAdmin,
   );
-  ChirpUserData copyWithCompanion(ChirpUserTableCompanion data) {
-    return ChirpUserData(
+  GroupEntity copyWithCompanion(GroupTableCompanion data) {
+    return GroupEntity(
       id: data.id.present ? data.id.value : this.id,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       name: data.name.present ? data.name.value : this.name,
-      email: data.email.present ? data.email.value : this.email,
-      vibepoints: data.vibepoints.present
-          ? data.vibepoints.value
-          : this.vibepoints,
-      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
+      creatorName: data.creatorName.present
+          ? data.creatorName.value
+          : this.creatorName,
+      admins: data.admins.present ? data.admins.value : this.admins,
+      adminNames: data.adminNames.present
+          ? data.adminNames.value
+          : this.adminNames,
+      moderators: data.moderators.present
+          ? data.moderators.value
+          : this.moderators,
+      moderatorNames: data.moderatorNames.present
+          ? data.moderatorNames.value
+          : this.moderatorNames,
+      members: data.members.present ? data.members.value : this.members,
+      memberNames: data.memberNames.present
+          ? data.memberNames.value
+          : this.memberNames,
+      bannedUsers: data.bannedUsers.present
+          ? data.bannedUsers.value
+          : this.bannedUsers,
+      bannedUserNames: data.bannedUserNames.present
+          ? data.bannedUserNames.value
+          : this.bannedUserNames,
+      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
+      rules: data.rules.present ? data.rules.value : this.rules,
+      logo: data.logo.present ? data.logo.value : this.logo,
+      banner: data.banner.present ? data.banner.value : this.banner,
+      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
+      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
+      userRole: data.userRole.present ? data.userRole.value : this.userRole,
+      canPost: data.canPost.present ? data.canPost.value : this.canPost,
+      canModerate: data.canModerate.present
+          ? data.canModerate.value
+          : this.canModerate,
+      canAdmin: data.canAdmin.present ? data.canAdmin.value : this.canAdmin,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserData(')
+    return (StringBuffer('GroupEntity(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('vibepoints: $vibepoints, ')
-          ..write('avatarUrl: $avatarUrl')
+          ..write('description: $description, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('creatorName: $creatorName, ')
+          ..write('admins: $admins, ')
+          ..write('adminNames: $adminNames, ')
+          ..write('moderators: $moderators, ')
+          ..write('moderatorNames: $moderatorNames, ')
+          ..write('members: $members, ')
+          ..write('memberNames: $memberNames, ')
+          ..write('bannedUsers: $bannedUsers, ')
+          ..write('bannedUserNames: $bannedUserNames, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('rules: $rules, ')
+          ..write('logo: $logo, ')
+          ..write('banner: $banner, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('userRole: $userRole, ')
+          ..write('canPost: $canPost, ')
+          ..write('canModerate: $canModerate, ')
+          ..write('canAdmin: $canAdmin')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, name, email, vibepoints, avatarUrl);
+  int get hashCode => Object.hashAll([
+    id,
+    createdAt,
+    updatedAt,
+    name,
+    description,
+    creatorId,
+    creatorName,
+    admins,
+    adminNames,
+    moderators,
+    moderatorNames,
+    members,
+    memberNames,
+    bannedUsers,
+    bannedUserNames,
+    isPrivate,
+    rules,
+    logo,
+    banner,
+    logoUrl,
+    bannerUrl,
+    userRole,
+    canPost,
+    canModerate,
+    canAdmin,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpUserData &&
+      (other is GroupEntity &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.name == this.name &&
-          other.email == this.email &&
-          other.vibepoints == this.vibepoints &&
-          other.avatarUrl == this.avatarUrl);
+          other.description == this.description &&
+          other.creatorId == this.creatorId &&
+          other.creatorName == this.creatorName &&
+          other.admins == this.admins &&
+          other.adminNames == this.adminNames &&
+          other.moderators == this.moderators &&
+          other.moderatorNames == this.moderatorNames &&
+          other.members == this.members &&
+          other.memberNames == this.memberNames &&
+          other.bannedUsers == this.bannedUsers &&
+          other.bannedUserNames == this.bannedUserNames &&
+          other.isPrivate == this.isPrivate &&
+          other.rules == this.rules &&
+          other.logo == this.logo &&
+          other.banner == this.banner &&
+          other.logoUrl == this.logoUrl &&
+          other.bannerUrl == this.bannerUrl &&
+          other.userRole == this.userRole &&
+          other.canPost == this.canPost &&
+          other.canModerate == this.canModerate &&
+          other.canAdmin == this.canAdmin);
 }
 
-class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
+class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<String> name;
-  final Value<String> email;
-  final Value<int> vibepoints;
-  final Value<String?> avatarUrl;
+  final Value<String> description;
+  final Value<String> creatorId;
+  final Value<String> creatorName;
+  final Value<String> admins;
+  final Value<String> adminNames;
+  final Value<String> moderators;
+  final Value<String> moderatorNames;
+  final Value<String> members;
+  final Value<String> memberNames;
+  final Value<String> bannedUsers;
+  final Value<String> bannedUserNames;
+  final Value<bool> isPrivate;
+  final Value<String> rules;
+  final Value<String?> logo;
+  final Value<String?> banner;
+  final Value<String?> logoUrl;
+  final Value<String?> bannerUrl;
+  final Value<String?> userRole;
+  final Value<bool> canPost;
+  final Value<bool> canModerate;
+  final Value<bool> canAdmin;
   final Value<int> rowid;
-  const ChirpUserTableCompanion({
+  const GroupTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.name = const Value.absent(),
-    this.email = const Value.absent(),
-    this.vibepoints = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
+    this.description = const Value.absent(),
+    this.creatorId = const Value.absent(),
+    this.creatorName = const Value.absent(),
+    this.admins = const Value.absent(),
+    this.adminNames = const Value.absent(),
+    this.moderators = const Value.absent(),
+    this.moderatorNames = const Value.absent(),
+    this.members = const Value.absent(),
+    this.memberNames = const Value.absent(),
+    this.bannedUsers = const Value.absent(),
+    this.bannedUserNames = const Value.absent(),
+    this.isPrivate = const Value.absent(),
+    this.rules = const Value.absent(),
+    this.logo = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.logoUrl = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.userRole = const Value.absent(),
+    this.canPost = const Value.absent(),
+    this.canModerate = const Value.absent(),
+    this.canAdmin = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChirpUserTableCompanion.insert({
+  GroupTableCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     required String name,
-    required String email,
-    this.vibepoints = const Value.absent(),
-    this.avatarUrl = const Value.absent(),
+    required String description,
+    required String creatorId,
+    required String creatorName,
+    required String admins,
+    required String adminNames,
+    required String moderators,
+    required String moderatorNames,
+    required String members,
+    required String memberNames,
+    required String bannedUsers,
+    required String bannedUserNames,
+    required bool isPrivate,
+    required String rules,
+    this.logo = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.logoUrl = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.userRole = const Value.absent(),
+    required bool canPost,
+    required bool canModerate,
+    required bool canAdmin,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
-       email = Value(email);
-  static Insertable<ChirpUserData> custom({
+       description = Value(description),
+       creatorId = Value(creatorId),
+       creatorName = Value(creatorName),
+       admins = Value(admins),
+       adminNames = Value(adminNames),
+       moderators = Value(moderators),
+       moderatorNames = Value(moderatorNames),
+       members = Value(members),
+       memberNames = Value(memberNames),
+       bannedUsers = Value(bannedUsers),
+       bannedUserNames = Value(bannedUserNames),
+       isPrivate = Value(isPrivate),
+       rules = Value(rules),
+       canPost = Value(canPost),
+       canModerate = Value(canModerate),
+       canAdmin = Value(canAdmin);
+  static Insertable<GroupEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? name,
-    Expression<String>? email,
-    Expression<int>? vibepoints,
-    Expression<String>? avatarUrl,
+    Expression<String>? description,
+    Expression<String>? creatorId,
+    Expression<String>? creatorName,
+    Expression<String>? admins,
+    Expression<String>? adminNames,
+    Expression<String>? moderators,
+    Expression<String>? moderatorNames,
+    Expression<String>? members,
+    Expression<String>? memberNames,
+    Expression<String>? bannedUsers,
+    Expression<String>? bannedUserNames,
+    Expression<bool>? isPrivate,
+    Expression<String>? rules,
+    Expression<String>? logo,
+    Expression<String>? banner,
+    Expression<String>? logoUrl,
+    Expression<String>? bannerUrl,
+    Expression<String>? userRole,
+    Expression<bool>? canPost,
+    Expression<bool>? canModerate,
+    Expression<bool>? canAdmin,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1594,31 +2386,85 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (name != null) 'name': name,
-      if (email != null) 'email': email,
-      if (vibepoints != null) 'vibepoints': vibepoints,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (description != null) 'description': description,
+      if (creatorId != null) 'creator_id': creatorId,
+      if (creatorName != null) 'creator_name': creatorName,
+      if (admins != null) 'admins': admins,
+      if (adminNames != null) 'admin_names': adminNames,
+      if (moderators != null) 'moderators': moderators,
+      if (moderatorNames != null) 'moderator_names': moderatorNames,
+      if (members != null) 'members': members,
+      if (memberNames != null) 'member_names': memberNames,
+      if (bannedUsers != null) 'banned_users': bannedUsers,
+      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
+      if (isPrivate != null) 'is_private': isPrivate,
+      if (rules != null) 'rules': rules,
+      if (logo != null) 'logo': logo,
+      if (banner != null) 'banner': banner,
+      if (logoUrl != null) 'logo_url': logoUrl,
+      if (bannerUrl != null) 'banner_url': bannerUrl,
+      if (userRole != null) 'user_role': userRole,
+      if (canPost != null) 'can_post': canPost,
+      if (canModerate != null) 'can_moderate': canModerate,
+      if (canAdmin != null) 'can_admin': canAdmin,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ChirpUserTableCompanion copyWith({
+  GroupTableCompanion copyWith({
     Value<String>? id,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<String>? name,
-    Value<String>? email,
-    Value<int>? vibepoints,
-    Value<String?>? avatarUrl,
+    Value<String>? description,
+    Value<String>? creatorId,
+    Value<String>? creatorName,
+    Value<String>? admins,
+    Value<String>? adminNames,
+    Value<String>? moderators,
+    Value<String>? moderatorNames,
+    Value<String>? members,
+    Value<String>? memberNames,
+    Value<String>? bannedUsers,
+    Value<String>? bannedUserNames,
+    Value<bool>? isPrivate,
+    Value<String>? rules,
+    Value<String?>? logo,
+    Value<String?>? banner,
+    Value<String?>? logoUrl,
+    Value<String?>? bannerUrl,
+    Value<String?>? userRole,
+    Value<bool>? canPost,
+    Value<bool>? canModerate,
+    Value<bool>? canAdmin,
     Value<int>? rowid,
   }) {
-    return ChirpUserTableCompanion(
+    return GroupTableCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       name: name ?? this.name,
-      email: email ?? this.email,
-      vibepoints: vibepoints ?? this.vibepoints,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      description: description ?? this.description,
+      creatorId: creatorId ?? this.creatorId,
+      creatorName: creatorName ?? this.creatorName,
+      admins: admins ?? this.admins,
+      adminNames: adminNames ?? this.adminNames,
+      moderators: moderators ?? this.moderators,
+      moderatorNames: moderatorNames ?? this.moderatorNames,
+      members: members ?? this.members,
+      memberNames: memberNames ?? this.memberNames,
+      bannedUsers: bannedUsers ?? this.bannedUsers,
+      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
+      isPrivate: isPrivate ?? this.isPrivate,
+      rules: rules ?? this.rules,
+      logo: logo ?? this.logo,
+      banner: banner ?? this.banner,
+      logoUrl: logoUrl ?? this.logoUrl,
+      bannerUrl: bannerUrl ?? this.bannerUrl,
+      userRole: userRole ?? this.userRole,
+      canPost: canPost ?? this.canPost,
+      canModerate: canModerate ?? this.canModerate,
+      canAdmin: canAdmin ?? this.canAdmin,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1638,14 +2484,68 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
     }
-    if (vibepoints.present) {
-      map['vibepoints'] = Variable<int>(vibepoints.value);
+    if (creatorId.present) {
+      map['creator_id'] = Variable<String>(creatorId.value);
     }
-    if (avatarUrl.present) {
-      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    if (creatorName.present) {
+      map['creator_name'] = Variable<String>(creatorName.value);
+    }
+    if (admins.present) {
+      map['admins'] = Variable<String>(admins.value);
+    }
+    if (adminNames.present) {
+      map['admin_names'] = Variable<String>(adminNames.value);
+    }
+    if (moderators.present) {
+      map['moderators'] = Variable<String>(moderators.value);
+    }
+    if (moderatorNames.present) {
+      map['moderator_names'] = Variable<String>(moderatorNames.value);
+    }
+    if (members.present) {
+      map['members'] = Variable<String>(members.value);
+    }
+    if (memberNames.present) {
+      map['member_names'] = Variable<String>(memberNames.value);
+    }
+    if (bannedUsers.present) {
+      map['banned_users'] = Variable<String>(bannedUsers.value);
+    }
+    if (bannedUserNames.present) {
+      map['banned_user_names'] = Variable<String>(bannedUserNames.value);
+    }
+    if (isPrivate.present) {
+      map['is_private'] = Variable<bool>(isPrivate.value);
+    }
+    if (rules.present) {
+      map['rules'] = Variable<String>(rules.value);
+    }
+    if (logo.present) {
+      map['logo'] = Variable<String>(logo.value);
+    }
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
+    }
+    if (logoUrl.present) {
+      map['logo_url'] = Variable<String>(logoUrl.value);
+    }
+    if (bannerUrl.present) {
+      map['banner_url'] = Variable<String>(bannerUrl.value);
+    }
+    if (userRole.present) {
+      map['user_role'] = Variable<String>(userRole.value);
+    }
+    if (canPost.present) {
+      map['can_post'] = Variable<bool>(canPost.value);
+    }
+    if (canModerate.present) {
+      map['can_moderate'] = Variable<bool>(canModerate.value);
+    }
+    if (canAdmin.present) {
+      map['can_admin'] = Variable<bool>(canAdmin.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1655,1064 +2555,32 @@ class ChirpUserTableCompanion extends UpdateCompanion<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserTableCompanion(')
+    return (StringBuffer('GroupTableCompanion(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('name: $name, ')
-          ..write('email: $email, ')
-          ..write('vibepoints: $vibepoints, ')
-          ..write('avatarUrl: $avatarUrl, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $MessageTableTable extends MessageTable
-    with TableInfo<$MessageTableTable, MessageData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MessageTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _contentMeta = const VerificationMeta(
-    'content',
-  );
-  @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-    'content',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _senderIdMeta = const VerificationMeta(
-    'senderId',
-  );
-  @override
-  late final GeneratedColumn<String> senderId = GeneratedColumn<String>(
-    'sender_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chirp_user_table (id)',
-    ),
-  );
-  static const VerificationMeta _recipientIdMeta = const VerificationMeta(
-    'recipientId',
-  );
-  @override
-  late final GeneratedColumn<String> recipientId = GeneratedColumn<String>(
-    'recipient_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chirp_user_table (id)',
-    ),
-  );
-  static const VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
-  @override
-  late final GeneratedColumn<DateTime> sentAt = GeneratedColumn<DateTime>(
-    'sent_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
-  @override
-  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
-    'is_read',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_read" IN (0, 1))',
-    ),
-    defaultValue: Constant(false),
-  );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
-  );
-  @override
-  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
-    'image_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    content,
-    senderId,
-    recipientId,
-    sentAt,
-    isRead,
-    imageUrl,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'message_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<MessageData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('content')) {
-      context.handle(
-        _contentMeta,
-        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('sender_id')) {
-      context.handle(
-        _senderIdMeta,
-        senderId.isAcceptableOrUnknown(data['sender_id']!, _senderIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_senderIdMeta);
-    }
-    if (data.containsKey('recipient_id')) {
-      context.handle(
-        _recipientIdMeta,
-        recipientId.isAcceptableOrUnknown(
-          data['recipient_id']!,
-          _recipientIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_recipientIdMeta);
-    }
-    if (data.containsKey('sent_at')) {
-      context.handle(
-        _sentAtMeta,
-        sentAt.isAcceptableOrUnknown(data['sent_at']!, _sentAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_sentAtMeta);
-    }
-    if (data.containsKey('is_read')) {
-      context.handle(
-        _isReadMeta,
-        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
-      );
-    }
-    if (data.containsKey('image_url')) {
-      context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  MessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MessageData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      content: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content'],
-      )!,
-      senderId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sender_id'],
-      )!,
-      recipientId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}recipient_id'],
-      )!,
-      sentAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}sent_at'],
-      )!,
-      isRead: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_read'],
-      )!,
-      imageUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}image_url'],
-      ),
-    );
-  }
-
-  @override
-  $MessageTableTable createAlias(String alias) {
-    return $MessageTableTable(attachedDatabase, alias);
-  }
-}
-
-class MessageData extends DataClass implements Insertable<MessageData> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String content;
-  final String senderId;
-  final String recipientId;
-  final DateTime sentAt;
-  final bool isRead;
-  final String? imageUrl;
-  const MessageData({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.content,
-    required this.senderId,
-    required this.recipientId,
-    required this.sentAt,
-    required this.isRead,
-    this.imageUrl,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['content'] = Variable<String>(content);
-    map['sender_id'] = Variable<String>(senderId);
-    map['recipient_id'] = Variable<String>(recipientId);
-    map['sent_at'] = Variable<DateTime>(sentAt);
-    map['is_read'] = Variable<bool>(isRead);
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<String>(imageUrl);
-    }
-    return map;
-  }
-
-  MessageTableCompanion toCompanion(bool nullToAbsent) {
-    return MessageTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      content: Value(content),
-      senderId: Value(senderId),
-      recipientId: Value(recipientId),
-      sentAt: Value(sentAt),
-      isRead: Value(isRead),
-      imageUrl: imageUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(imageUrl),
-    );
-  }
-
-  factory MessageData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MessageData(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      content: serializer.fromJson<String>(json['content']),
-      senderId: serializer.fromJson<String>(json['senderId']),
-      recipientId: serializer.fromJson<String>(json['recipientId']),
-      sentAt: serializer.fromJson<DateTime>(json['sentAt']),
-      isRead: serializer.fromJson<bool>(json['isRead']),
-      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'content': serializer.toJson<String>(content),
-      'senderId': serializer.toJson<String>(senderId),
-      'recipientId': serializer.toJson<String>(recipientId),
-      'sentAt': serializer.toJson<DateTime>(sentAt),
-      'isRead': serializer.toJson<bool>(isRead),
-      'imageUrl': serializer.toJson<String?>(imageUrl),
-    };
-  }
-
-  MessageData copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? content,
-    String? senderId,
-    String? recipientId,
-    DateTime? sentAt,
-    bool? isRead,
-    Value<String?> imageUrl = const Value.absent(),
-  }) => MessageData(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    content: content ?? this.content,
-    senderId: senderId ?? this.senderId,
-    recipientId: recipientId ?? this.recipientId,
-    sentAt: sentAt ?? this.sentAt,
-    isRead: isRead ?? this.isRead,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-  );
-  MessageData copyWithCompanion(MessageTableCompanion data) {
-    return MessageData(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      content: data.content.present ? data.content.value : this.content,
-      senderId: data.senderId.present ? data.senderId.value : this.senderId,
-      recipientId: data.recipientId.present
-          ? data.recipientId.value
-          : this.recipientId,
-      sentAt: data.sentAt.present ? data.sentAt.value : this.sentAt,
-      isRead: data.isRead.present ? data.isRead.value : this.isRead,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MessageData(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('content: $content, ')
-          ..write('senderId: $senderId, ')
-          ..write('recipientId: $recipientId, ')
-          ..write('sentAt: $sentAt, ')
-          ..write('isRead: $isRead, ')
-          ..write('imageUrl: $imageUrl')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    createdAt,
-    updatedAt,
-    content,
-    senderId,
-    recipientId,
-    sentAt,
-    isRead,
-    imageUrl,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MessageData &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.content == this.content &&
-          other.senderId == this.senderId &&
-          other.recipientId == this.recipientId &&
-          other.sentAt == this.sentAt &&
-          other.isRead == this.isRead &&
-          other.imageUrl == this.imageUrl);
-}
-
-class MessageTableCompanion extends UpdateCompanion<MessageData> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> content;
-  final Value<String> senderId;
-  final Value<String> recipientId;
-  final Value<DateTime> sentAt;
-  final Value<bool> isRead;
-  final Value<String?> imageUrl;
-  final Value<int> rowid;
-  const MessageTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.content = const Value.absent(),
-    this.senderId = const Value.absent(),
-    this.recipientId = const Value.absent(),
-    this.sentAt = const Value.absent(),
-    this.isRead = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  MessageTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String content,
-    required String senderId,
-    required String recipientId,
-    required DateTime sentAt,
-    this.isRead = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       content = Value(content),
-       senderId = Value(senderId),
-       recipientId = Value(recipientId),
-       sentAt = Value(sentAt);
-  static Insertable<MessageData> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? content,
-    Expression<String>? senderId,
-    Expression<String>? recipientId,
-    Expression<DateTime>? sentAt,
-    Expression<bool>? isRead,
-    Expression<String>? imageUrl,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (content != null) 'content': content,
-      if (senderId != null) 'sender_id': senderId,
-      if (recipientId != null) 'recipient_id': recipientId,
-      if (sentAt != null) 'sent_at': sentAt,
-      if (isRead != null) 'is_read': isRead,
-      if (imageUrl != null) 'image_url': imageUrl,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  MessageTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? content,
-    Value<String>? senderId,
-    Value<String>? recipientId,
-    Value<DateTime>? sentAt,
-    Value<bool>? isRead,
-    Value<String?>? imageUrl,
-    Value<int>? rowid,
-  }) {
-    return MessageTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      content: content ?? this.content,
-      senderId: senderId ?? this.senderId,
-      recipientId: recipientId ?? this.recipientId,
-      sentAt: sentAt ?? this.sentAt,
-      isRead: isRead ?? this.isRead,
-      imageUrl: imageUrl ?? this.imageUrl,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (content.present) {
-      map['content'] = Variable<String>(content.value);
-    }
-    if (senderId.present) {
-      map['sender_id'] = Variable<String>(senderId.value);
-    }
-    if (recipientId.present) {
-      map['recipient_id'] = Variable<String>(recipientId.value);
-    }
-    if (sentAt.present) {
-      map['sent_at'] = Variable<DateTime>(sentAt.value);
-    }
-    if (isRead.present) {
-      map['is_read'] = Variable<bool>(isRead.value);
-    }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<String>(imageUrl.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MessageTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('content: $content, ')
-          ..write('senderId: $senderId, ')
-          ..write('recipientId: $recipientId, ')
-          ..write('sentAt: $sentAt, ')
-          ..write('isRead: $isRead, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $ConversationTableTable extends ConversationTable
-    with TableInfo<$ConversationTableTable, ConversationData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ConversationTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chirp_user_table (id)',
-    ),
-  );
-  static const VerificationMeta _lastMessageIdMeta = const VerificationMeta(
-    'lastMessageId',
-  );
-  @override
-  late final GeneratedColumn<String> lastMessageId = GeneratedColumn<String>(
-    'last_message_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES message_table (id)',
-    ),
-  );
-  static const VerificationMeta _lastMessageAtMeta = const VerificationMeta(
-    'lastMessageAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastMessageAt =
-      GeneratedColumn<DateTime>(
-        'last_message_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _unreadCountMeta = const VerificationMeta(
-    'unreadCount',
-  );
-  @override
-  late final GeneratedColumn<int> unreadCount = GeneratedColumn<int>(
-    'unread_count',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: Constant(0),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    userId,
-    lastMessageId,
-    lastMessageAt,
-    unreadCount,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'conversation_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<ConversationData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
-    }
-    if (data.containsKey('last_message_id')) {
-      context.handle(
-        _lastMessageIdMeta,
-        lastMessageId.isAcceptableOrUnknown(
-          data['last_message_id']!,
-          _lastMessageIdMeta,
-        ),
-      );
-    }
-    if (data.containsKey('last_message_at')) {
-      context.handle(
-        _lastMessageAtMeta,
-        lastMessageAt.isAcceptableOrUnknown(
-          data['last_message_at']!,
-          _lastMessageAtMeta,
-        ),
-      );
-    }
-    if (data.containsKey('unread_count')) {
-      context.handle(
-        _unreadCountMeta,
-        unreadCount.isAcceptableOrUnknown(
-          data['unread_count']!,
-          _unreadCountMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  ConversationData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ConversationData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      lastMessageId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_message_id'],
-      ),
-      lastMessageAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_message_at'],
-      ),
-      unreadCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}unread_count'],
-      )!,
-    );
-  }
-
-  @override
-  $ConversationTableTable createAlias(String alias) {
-    return $ConversationTableTable(attachedDatabase, alias);
-  }
-}
-
-class ConversationData extends DataClass
-    implements Insertable<ConversationData> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String userId;
-  final String? lastMessageId;
-  final DateTime? lastMessageAt;
-  final int unreadCount;
-  const ConversationData({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.userId,
-    this.lastMessageId,
-    this.lastMessageAt,
-    required this.unreadCount,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['user_id'] = Variable<String>(userId);
-    if (!nullToAbsent || lastMessageId != null) {
-      map['last_message_id'] = Variable<String>(lastMessageId);
-    }
-    if (!nullToAbsent || lastMessageAt != null) {
-      map['last_message_at'] = Variable<DateTime>(lastMessageAt);
-    }
-    map['unread_count'] = Variable<int>(unreadCount);
-    return map;
-  }
-
-  ConversationTableCompanion toCompanion(bool nullToAbsent) {
-    return ConversationTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      userId: Value(userId),
-      lastMessageId: lastMessageId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastMessageId),
-      lastMessageAt: lastMessageAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastMessageAt),
-      unreadCount: Value(unreadCount),
-    );
-  }
-
-  factory ConversationData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ConversationData(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      userId: serializer.fromJson<String>(json['userId']),
-      lastMessageId: serializer.fromJson<String?>(json['lastMessageId']),
-      lastMessageAt: serializer.fromJson<DateTime?>(json['lastMessageAt']),
-      unreadCount: serializer.fromJson<int>(json['unreadCount']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'userId': serializer.toJson<String>(userId),
-      'lastMessageId': serializer.toJson<String?>(lastMessageId),
-      'lastMessageAt': serializer.toJson<DateTime?>(lastMessageAt),
-      'unreadCount': serializer.toJson<int>(unreadCount),
-    };
-  }
-
-  ConversationData copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? userId,
-    Value<String?> lastMessageId = const Value.absent(),
-    Value<DateTime?> lastMessageAt = const Value.absent(),
-    int? unreadCount,
-  }) => ConversationData(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    userId: userId ?? this.userId,
-    lastMessageId: lastMessageId.present
-        ? lastMessageId.value
-        : this.lastMessageId,
-    lastMessageAt: lastMessageAt.present
-        ? lastMessageAt.value
-        : this.lastMessageAt,
-    unreadCount: unreadCount ?? this.unreadCount,
-  );
-  ConversationData copyWithCompanion(ConversationTableCompanion data) {
-    return ConversationData(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      lastMessageId: data.lastMessageId.present
-          ? data.lastMessageId.value
-          : this.lastMessageId,
-      lastMessageAt: data.lastMessageAt.present
-          ? data.lastMessageAt.value
-          : this.lastMessageAt,
-      unreadCount: data.unreadCount.present
-          ? data.unreadCount.value
-          : this.unreadCount,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ConversationData(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('userId: $userId, ')
-          ..write('lastMessageId: $lastMessageId, ')
-          ..write('lastMessageAt: $lastMessageAt, ')
-          ..write('unreadCount: $unreadCount')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    createdAt,
-    updatedAt,
-    userId,
-    lastMessageId,
-    lastMessageAt,
-    unreadCount,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ConversationData &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.userId == this.userId &&
-          other.lastMessageId == this.lastMessageId &&
-          other.lastMessageAt == this.lastMessageAt &&
-          other.unreadCount == this.unreadCount);
-}
-
-class ConversationTableCompanion extends UpdateCompanion<ConversationData> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> userId;
-  final Value<String?> lastMessageId;
-  final Value<DateTime?> lastMessageAt;
-  final Value<int> unreadCount;
-  final Value<int> rowid;
-  const ConversationTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.lastMessageId = const Value.absent(),
-    this.lastMessageAt = const Value.absent(),
-    this.unreadCount = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  ConversationTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String userId,
-    this.lastMessageId = const Value.absent(),
-    this.lastMessageAt = const Value.absent(),
-    this.unreadCount = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       userId = Value(userId);
-  static Insertable<ConversationData> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? userId,
-    Expression<String>? lastMessageId,
-    Expression<DateTime>? lastMessageAt,
-    Expression<int>? unreadCount,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (userId != null) 'user_id': userId,
-      if (lastMessageId != null) 'last_message_id': lastMessageId,
-      if (lastMessageAt != null) 'last_message_at': lastMessageAt,
-      if (unreadCount != null) 'unread_count': unreadCount,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  ConversationTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? userId,
-    Value<String?>? lastMessageId,
-    Value<DateTime?>? lastMessageAt,
-    Value<int>? unreadCount,
-    Value<int>? rowid,
-  }) {
-    return ConversationTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      userId: userId ?? this.userId,
-      lastMessageId: lastMessageId ?? this.lastMessageId,
-      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
-      unreadCount: unreadCount ?? this.unreadCount,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (lastMessageId.present) {
-      map['last_message_id'] = Variable<String>(lastMessageId.value);
-    }
-    if (lastMessageAt.present) {
-      map['last_message_at'] = Variable<DateTime>(lastMessageAt.value);
-    }
-    if (unreadCount.present) {
-      map['unread_count'] = Variable<int>(unreadCount.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ConversationTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('userId: $userId, ')
-          ..write('lastMessageId: $lastMessageId, ')
-          ..write('lastMessageAt: $lastMessageAt, ')
-          ..write('unreadCount: $unreadCount, ')
+          ..write('description: $description, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('creatorName: $creatorName, ')
+          ..write('admins: $admins, ')
+          ..write('adminNames: $adminNames, ')
+          ..write('moderators: $moderators, ')
+          ..write('moderatorNames: $moderatorNames, ')
+          ..write('members: $members, ')
+          ..write('memberNames: $memberNames, ')
+          ..write('bannedUsers: $bannedUsers, ')
+          ..write('bannedUserNames: $bannedUserNames, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('rules: $rules, ')
+          ..write('logo: $logo, ')
+          ..write('banner: $banner, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('userRole: $userRole, ')
+          ..write('canPost: $canPost, ')
+          ..write('canModerate: $canModerate, ')
+          ..write('canAdmin: $canAdmin, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2758,6 +2626,20 @@ class $PostTableTable extends PostTable
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
+    'group_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES group_table (id)',
+    ),
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
@@ -2766,6 +2648,37 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userNameMeta = const VerificationMeta(
+    'userName',
+  );
+  @override
+  late final GeneratedColumn<String> userName = GeneratedColumn<String>(
+    'user_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _contentMeta = const VerificationMeta(
     'content',
@@ -2789,6 +2702,17 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _commentCountMeta = const VerificationMeta(
+    'commentCount',
+  );
+  @override
+  late final GeneratedColumn<int> commentCount = GeneratedColumn<int>(
+    'comment_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _isLikedMeta = const VerificationMeta(
     'isLiked',
   );
@@ -2798,19 +2722,25 @@ class $PostTableTable extends PostTable
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_liked" IN (0, 1))',
     ),
+    defaultValue: const Constant(false),
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
     updatedAt,
+    groupId,
     userId,
+    userName,
+    email,
+    avatarUrl,
     content,
     likeCount,
+    commentCount,
     isLiked,
   ];
   @override
@@ -2842,6 +2772,14 @@ class $PostTableTable extends PostTable
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_groupIdMeta);
+    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIdMeta,
@@ -2849,6 +2787,28 @@ class $PostTableTable extends PostTable
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
+    }
+    if (data.containsKey('user_name')) {
+      context.handle(
+        _userNameMeta,
+        userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userNameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
     }
     if (data.containsKey('content')) {
       context.handle(
@@ -2866,13 +2826,22 @@ class $PostTableTable extends PostTable
     } else if (isInserting) {
       context.missing(_likeCountMeta);
     }
+    if (data.containsKey('comment_count')) {
+      context.handle(
+        _commentCountMeta,
+        commentCount.isAcceptableOrUnknown(
+          data['comment_count']!,
+          _commentCountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_commentCountMeta);
+    }
     if (data.containsKey('is_liked')) {
       context.handle(
         _isLikedMeta,
         isLiked.isAcceptableOrUnknown(data['is_liked']!, _isLikedMeta),
       );
-    } else if (isInserting) {
-      context.missing(_isLikedMeta);
     }
     return context;
   }
@@ -2895,10 +2864,26 @@ class $PostTableTable extends PostTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_id'],
+      )!,
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      userName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_name'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
       content: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}content'],
@@ -2906,6 +2891,10 @@ class $PostTableTable extends PostTable
       likeCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}like_count'],
+      )!,
+      commentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}comment_count'],
       )!,
       isLiked: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -2924,17 +2913,27 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String groupId;
   final String userId;
+  final String userName;
+  final String email;
+  final String? avatarUrl;
   final String content;
   final int likeCount;
+  final int commentCount;
   final bool isLiked;
   const PostEntity({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    required this.groupId,
     required this.userId,
+    required this.userName,
+    required this.email,
+    this.avatarUrl,
     required this.content,
     required this.likeCount,
+    required this.commentCount,
     required this.isLiked,
   });
   @override
@@ -2943,9 +2942,16 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['group_id'] = Variable<String>(groupId);
     map['user_id'] = Variable<String>(userId);
+    map['user_name'] = Variable<String>(userName);
+    map['email'] = Variable<String>(email);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
     map['content'] = Variable<String>(content);
     map['like_count'] = Variable<int>(likeCount);
+    map['comment_count'] = Variable<int>(commentCount);
     map['is_liked'] = Variable<bool>(isLiked);
     return map;
   }
@@ -2955,9 +2961,16 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      groupId: Value(groupId),
       userId: Value(userId),
+      userName: Value(userName),
+      email: Value(email),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
       content: Value(content),
       likeCount: Value(likeCount),
+      commentCount: Value(commentCount),
       isLiked: Value(isLiked),
     );
   }
@@ -2971,9 +2984,14 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      groupId: serializer.fromJson<String>(json['groupId']),
       userId: serializer.fromJson<String>(json['user_id']),
+      userName: serializer.fromJson<String>(json['user_name']),
+      email: serializer.fromJson<String>(json['email']),
+      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
       content: serializer.fromJson<String>(json['content']),
       likeCount: serializer.fromJson<int>(json['like_count']),
+      commentCount: serializer.fromJson<int>(json['comment_count']),
       isLiked: serializer.fromJson<bool>(json['is_liked']),
     );
   }
@@ -2984,9 +3002,14 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       'id': serializer.toJson<String>(id),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'groupId': serializer.toJson<String>(groupId),
       'user_id': serializer.toJson<String>(userId),
+      'user_name': serializer.toJson<String>(userName),
+      'email': serializer.toJson<String>(email),
+      'avatar_url': serializer.toJson<String?>(avatarUrl),
       'content': serializer.toJson<String>(content),
       'like_count': serializer.toJson<int>(likeCount),
+      'comment_count': serializer.toJson<int>(commentCount),
       'is_liked': serializer.toJson<bool>(isLiked),
     };
   }
@@ -2995,17 +3018,27 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? groupId,
     String? userId,
+    String? userName,
+    String? email,
+    Value<String?> avatarUrl = const Value.absent(),
     String? content,
     int? likeCount,
+    int? commentCount,
     bool? isLiked,
   }) => PostEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    groupId: groupId ?? this.groupId,
     userId: userId ?? this.userId,
+    userName: userName ?? this.userName,
+    email: email ?? this.email,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
     content: content ?? this.content,
     likeCount: likeCount ?? this.likeCount,
+    commentCount: commentCount ?? this.commentCount,
     isLiked: isLiked ?? this.isLiked,
   );
   PostEntity copyWithCompanion(PostTableCompanion data) {
@@ -3013,9 +3046,16 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
       id: data.id.present ? data.id.value : this.id,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
       userId: data.userId.present ? data.userId.value : this.userId,
+      userName: data.userName.present ? data.userName.value : this.userName,
+      email: data.email.present ? data.email.value : this.email,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
       content: data.content.present ? data.content.value : this.content,
       likeCount: data.likeCount.present ? data.likeCount.value : this.likeCount,
+      commentCount: data.commentCount.present
+          ? data.commentCount.value
+          : this.commentCount,
       isLiked: data.isLiked.present ? data.isLiked.value : this.isLiked,
     );
   }
@@ -3026,9 +3066,14 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('groupId: $groupId, ')
           ..write('userId: $userId, ')
+          ..write('userName: $userName, ')
+          ..write('email: $email, ')
+          ..write('avatarUrl: $avatarUrl, ')
           ..write('content: $content, ')
           ..write('likeCount: $likeCount, ')
+          ..write('commentCount: $commentCount, ')
           ..write('isLiked: $isLiked')
           ..write(')'))
         .toString();
@@ -3039,9 +3084,14 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
     id,
     createdAt,
     updatedAt,
+    groupId,
     userId,
+    userName,
+    email,
+    avatarUrl,
     content,
     likeCount,
+    commentCount,
     isLiked,
   );
   @override
@@ -3051,9 +3101,14 @@ class PostEntity extends DataClass implements Insertable<PostEntity> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.groupId == this.groupId &&
           other.userId == this.userId &&
+          other.userName == this.userName &&
+          other.email == this.email &&
+          other.avatarUrl == this.avatarUrl &&
           other.content == this.content &&
           other.likeCount == this.likeCount &&
+          other.commentCount == this.commentCount &&
           other.isLiked == this.isLiked);
 }
 
@@ -3061,18 +3116,28 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String> groupId;
   final Value<String> userId;
+  final Value<String> userName;
+  final Value<String> email;
+  final Value<String?> avatarUrl;
   final Value<String> content;
   final Value<int> likeCount;
+  final Value<int> commentCount;
   final Value<bool> isLiked;
   final Value<int> rowid;
   const PostTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.groupId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.userName = const Value.absent(),
+    this.email = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
     this.content = const Value.absent(),
     this.likeCount = const Value.absent(),
+    this.commentCount = const Value.absent(),
     this.isLiked = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -3080,23 +3145,36 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    required String groupId,
     required String userId,
+    required String userName,
+    required String email,
+    this.avatarUrl = const Value.absent(),
     required String content,
     required int likeCount,
-    required bool isLiked,
+    required int commentCount,
+    this.isLiked = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
+       groupId = Value(groupId),
        userId = Value(userId),
+       userName = Value(userName),
+       email = Value(email),
        content = Value(content),
        likeCount = Value(likeCount),
-       isLiked = Value(isLiked);
+       commentCount = Value(commentCount);
   static Insertable<PostEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? groupId,
     Expression<String>? userId,
+    Expression<String>? userName,
+    Expression<String>? email,
+    Expression<String>? avatarUrl,
     Expression<String>? content,
     Expression<int>? likeCount,
+    Expression<int>? commentCount,
     Expression<bool>? isLiked,
     Expression<int>? rowid,
   }) {
@@ -3104,9 +3182,14 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (groupId != null) 'group_id': groupId,
       if (userId != null) 'user_id': userId,
+      if (userName != null) 'user_name': userName,
+      if (email != null) 'email': email,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
       if (content != null) 'content': content,
       if (likeCount != null) 'like_count': likeCount,
+      if (commentCount != null) 'comment_count': commentCount,
       if (isLiked != null) 'is_liked': isLiked,
       if (rowid != null) 'rowid': rowid,
     });
@@ -3116,9 +3199,14 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     Value<String>? id,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<String>? groupId,
     Value<String>? userId,
+    Value<String>? userName,
+    Value<String>? email,
+    Value<String?>? avatarUrl,
     Value<String>? content,
     Value<int>? likeCount,
+    Value<int>? commentCount,
     Value<bool>? isLiked,
     Value<int>? rowid,
   }) {
@@ -3126,9 +3214,14 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      groupId: groupId ?? this.groupId,
       userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       content: content ?? this.content,
       likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
       isLiked: isLiked ?? this.isLiked,
       rowid: rowid ?? this.rowid,
     );
@@ -3146,14 +3239,29 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (groupId.present) {
+      map['group_id'] = Variable<String>(groupId.value);
+    }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (userName.present) {
+      map['user_name'] = Variable<String>(userName.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
     }
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
     if (likeCount.present) {
       map['like_count'] = Variable<int>(likeCount.value);
+    }
+    if (commentCount.present) {
+      map['comment_count'] = Variable<int>(commentCount.value);
     }
     if (isLiked.present) {
       map['is_liked'] = Variable<bool>(isLiked.value);
@@ -3170,9 +3278,14 @@ class PostTableCompanion extends UpdateCompanion<PostEntity> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('groupId: $groupId, ')
           ..write('userId: $userId, ')
+          ..write('userName: $userName, ')
+          ..write('email: $email, ')
+          ..write('avatarUrl: $avatarUrl, ')
           ..write('content: $content, ')
           ..write('likeCount: $likeCount, ')
+          ..write('commentCount: $commentCount, ')
           ..write('isLiked: $isLiked, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -3731,6 +3844,20 @@ class $PostReplyTableTable extends PostReplyTable
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
+  static const VerificationMeta _parentIdMeta = const VerificationMeta(
+    'parentId',
+  );
+  @override
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
+    'parent_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES post_reply_table (id) ON DELETE CASCADE',
+    ),
+  );
   static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
   @override
   late final GeneratedColumn<String> postId = GeneratedColumn<String>(
@@ -3752,6 +3879,28 @@ class $PostReplyTableTable extends PostReplyTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _userNameMeta = const VerificationMeta(
+    'userName',
+  );
+  @override
+  late final GeneratedColumn<String> userName = GeneratedColumn<String>(
+    'user_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userAvatarMeta = const VerificationMeta(
+    'userAvatar',
+  );
+  @override
+  late final GeneratedColumn<String> userAvatar = GeneratedColumn<String>(
+    'user_avatar',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _contentMeta = const VerificationMeta(
     'content',
   );
@@ -3763,14 +3912,27 @@ class $PostReplyTableTable extends PostReplyTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _depthMeta = const VerificationMeta('depth');
+  @override
+  late final GeneratedColumn<int> depth = GeneratedColumn<int>(
+    'depth',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
     updatedAt,
+    parentId,
     postId,
     userId,
+    userName,
+    userAvatar,
     content,
+    depth,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3801,6 +3963,12 @@ class $PostReplyTableTable extends PostReplyTable
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('parent_id')) {
+      context.handle(
+        _parentIdMeta,
+        parentId.isAcceptableOrUnknown(data['parent_id']!, _parentIdMeta),
+      );
+    }
     if (data.containsKey('post_id')) {
       context.handle(
         _postIdMeta,
@@ -3817,6 +3985,20 @@ class $PostReplyTableTable extends PostReplyTable
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
+    if (data.containsKey('user_name')) {
+      context.handle(
+        _userNameMeta,
+        userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userNameMeta);
+    }
+    if (data.containsKey('user_avatar')) {
+      context.handle(
+        _userAvatarMeta,
+        userAvatar.isAcceptableOrUnknown(data['user_avatar']!, _userAvatarMeta),
+      );
+    }
     if (data.containsKey('content')) {
       context.handle(
         _contentMeta,
@@ -3824,6 +4006,14 @@ class $PostReplyTableTable extends PostReplyTable
       );
     } else if (isInserting) {
       context.missing(_contentMeta);
+    }
+    if (data.containsKey('depth')) {
+      context.handle(
+        _depthMeta,
+        depth.isAcceptableOrUnknown(data['depth']!, _depthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_depthMeta);
     }
     return context;
   }
@@ -3846,6 +4036,10 @@ class $PostReplyTableTable extends PostReplyTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      parentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent_id'],
+      ),
       postId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}post_id'],
@@ -3854,9 +4048,21 @@ class $PostReplyTableTable extends PostReplyTable
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
+      userName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_name'],
+      )!,
+      userAvatar: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_avatar'],
+      ),
       content: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}content'],
+      )!,
+      depth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}depth'],
       )!,
     );
   }
@@ -3871,16 +4077,24 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? parentId;
   final String postId;
   final String userId;
+  final String userName;
+  final String? userAvatar;
   final String content;
+  final int depth;
   const PostReplyEntity({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    this.parentId,
     required this.postId,
     required this.userId,
+    required this.userName,
+    this.userAvatar,
     required this.content,
+    required this.depth,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3888,9 +4102,17 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
     map['id'] = Variable<String>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || parentId != null) {
+      map['parent_id'] = Variable<String>(parentId);
+    }
     map['post_id'] = Variable<String>(postId);
     map['user_id'] = Variable<String>(userId);
+    map['user_name'] = Variable<String>(userName);
+    if (!nullToAbsent || userAvatar != null) {
+      map['user_avatar'] = Variable<String>(userAvatar);
+    }
     map['content'] = Variable<String>(content);
+    map['depth'] = Variable<int>(depth);
     return map;
   }
 
@@ -3899,9 +4121,17 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      parentId: parentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentId),
       postId: Value(postId),
       userId: Value(userId),
+      userName: Value(userName),
+      userAvatar: userAvatar == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userAvatar),
       content: Value(content),
+      depth: Value(depth),
     );
   }
 
@@ -3914,9 +4144,13 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      parentId: serializer.fromJson<String?>(json['parent_id']),
       postId: serializer.fromJson<String>(json['post_id']),
       userId: serializer.fromJson<String>(json['user_id']),
+      userName: serializer.fromJson<String>(json['user_name']),
+      userAvatar: serializer.fromJson<String?>(json['user_avatar']),
       content: serializer.fromJson<String>(json['content']),
+      depth: serializer.fromJson<int>(json['depth']),
     );
   }
   @override
@@ -3926,9 +4160,13 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
       'id': serializer.toJson<String>(id),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'parent_id': serializer.toJson<String?>(parentId),
       'post_id': serializer.toJson<String>(postId),
       'user_id': serializer.toJson<String>(userId),
+      'user_name': serializer.toJson<String>(userName),
+      'user_avatar': serializer.toJson<String?>(userAvatar),
       'content': serializer.toJson<String>(content),
+      'depth': serializer.toJson<int>(depth),
     };
   }
 
@@ -3936,25 +4174,39 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<String?> parentId = const Value.absent(),
     String? postId,
     String? userId,
+    String? userName,
+    Value<String?> userAvatar = const Value.absent(),
     String? content,
+    int? depth,
   }) => PostReplyEntity(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    parentId: parentId.present ? parentId.value : this.parentId,
     postId: postId ?? this.postId,
     userId: userId ?? this.userId,
+    userName: userName ?? this.userName,
+    userAvatar: userAvatar.present ? userAvatar.value : this.userAvatar,
     content: content ?? this.content,
+    depth: depth ?? this.depth,
   );
   PostReplyEntity copyWithCompanion(PostReplyTableCompanion data) {
     return PostReplyEntity(
       id: data.id.present ? data.id.value : this.id,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      parentId: data.parentId.present ? data.parentId.value : this.parentId,
       postId: data.postId.present ? data.postId.value : this.postId,
       userId: data.userId.present ? data.userId.value : this.userId,
+      userName: data.userName.present ? data.userName.value : this.userName,
+      userAvatar: data.userAvatar.present
+          ? data.userAvatar.value
+          : this.userAvatar,
       content: data.content.present ? data.content.value : this.content,
+      depth: data.depth.present ? data.depth.value : this.depth,
     );
   }
 
@@ -3964,16 +4216,30 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('parentId: $parentId, ')
           ..write('postId: $postId, ')
           ..write('userId: $userId, ')
-          ..write('content: $content')
+          ..write('userName: $userName, ')
+          ..write('userAvatar: $userAvatar, ')
+          ..write('content: $content, ')
+          ..write('depth: $depth')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, createdAt, updatedAt, postId, userId, content);
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    parentId,
+    postId,
+    userId,
+    userName,
+    userAvatar,
+    content,
+    depth,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3981,56 +4247,82 @@ class PostReplyEntity extends DataClass implements Insertable<PostReplyEntity> {
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.parentId == this.parentId &&
           other.postId == this.postId &&
           other.userId == this.userId &&
-          other.content == this.content);
+          other.userName == this.userName &&
+          other.userAvatar == this.userAvatar &&
+          other.content == this.content &&
+          other.depth == this.depth);
 }
 
 class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String?> parentId;
   final Value<String> postId;
   final Value<String> userId;
+  final Value<String> userName;
+  final Value<String?> userAvatar;
   final Value<String> content;
+  final Value<int> depth;
   final Value<int> rowid;
   const PostReplyTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.parentId = const Value.absent(),
     this.postId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.userName = const Value.absent(),
+    this.userAvatar = const Value.absent(),
     this.content = const Value.absent(),
+    this.depth = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PostReplyTableCompanion.insert({
     required String id,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.parentId = const Value.absent(),
     required String postId,
     required String userId,
+    required String userName,
+    this.userAvatar = const Value.absent(),
     required String content,
+    required int depth,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        postId = Value(postId),
        userId = Value(userId),
-       content = Value(content);
+       userName = Value(userName),
+       content = Value(content),
+       depth = Value(depth);
   static Insertable<PostReplyEntity> custom({
     Expression<String>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? parentId,
     Expression<String>? postId,
     Expression<String>? userId,
+    Expression<String>? userName,
+    Expression<String>? userAvatar,
     Expression<String>? content,
+    Expression<int>? depth,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (parentId != null) 'parent_id': parentId,
       if (postId != null) 'post_id': postId,
       if (userId != null) 'user_id': userId,
+      if (userName != null) 'user_name': userName,
+      if (userAvatar != null) 'user_avatar': userAvatar,
       if (content != null) 'content': content,
+      if (depth != null) 'depth': depth,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4039,18 +4331,26 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     Value<String>? id,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<String?>? parentId,
     Value<String>? postId,
     Value<String>? userId,
+    Value<String>? userName,
+    Value<String?>? userAvatar,
     Value<String>? content,
+    Value<int>? depth,
     Value<int>? rowid,
   }) {
     return PostReplyTableCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      parentId: parentId ?? this.parentId,
       postId: postId ?? this.postId,
       userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userAvatar: userAvatar ?? this.userAvatar,
       content: content ?? this.content,
+      depth: depth ?? this.depth,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4067,14 +4367,26 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (parentId.present) {
+      map['parent_id'] = Variable<String>(parentId.value);
+    }
     if (postId.present) {
       map['post_id'] = Variable<String>(postId.value);
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
     }
+    if (userName.present) {
+      map['user_name'] = Variable<String>(userName.value);
+    }
+    if (userAvatar.present) {
+      map['user_avatar'] = Variable<String>(userAvatar.value);
+    }
     if (content.present) {
       map['content'] = Variable<String>(content.value);
+    }
+    if (depth.present) {
+      map['depth'] = Variable<int>(depth.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -4088,9 +4400,13 @@ class PostReplyTableCompanion extends UpdateCompanion<PostReplyEntity> {
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('parentId: $parentId, ')
           ..write('postId: $postId, ')
           ..write('userId: $userId, ')
+          ..write('userName: $userName, ')
+          ..write('userAvatar: $userAvatar, ')
           ..write('content: $content, ')
+          ..write('depth: $depth, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8929,15 +9245,5565 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
+class $MagnetStudentProfileTable extends MagnetStudentProfile
+    with TableInfo<$MagnetStudentProfileTable, MagnetStudentProfileData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetStudentProfileTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _admissionNumberMeta = const VerificationMeta(
+    'admissionNumber',
+  );
+  @override
+  late final GeneratedColumn<String> admissionNumber = GeneratedColumn<String>(
+    'admission_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstNameMeta = const VerificationMeta(
+    'firstName',
+  );
+  @override
+  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
+    'first_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _otherNamesMeta = const VerificationMeta(
+    'otherNames',
+  );
+  @override
+  late final GeneratedColumn<String> otherNames = GeneratedColumn<String>(
+    'other_names',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
+    'nationalId',
+  );
+  @override
+  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+    'national_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneNumberMeta = const VerificationMeta(
+    'phoneNumber',
+  );
+  @override
+  late final GeneratedColumn<String> phoneNumber = GeneratedColumn<String>(
+    'phone_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profilePictureUrlMeta = const VerificationMeta(
+    'profilePictureUrl',
+  );
+  @override
+  late final GeneratedColumn<String> profilePictureUrl =
+      GeneratedColumn<String>(
+        'profile_picture_url',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _schoolMeta = const VerificationMeta('school');
+  @override
+  late final GeneratedColumn<String> school = GeneratedColumn<String>(
+    'school',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
+  @override
+  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
+    'campus',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _enrollmentStatusMeta = const VerificationMeta(
+    'enrollmentStatus',
+  );
+  @override
+  late final GeneratedColumn<String> enrollmentStatus = GeneratedColumn<String>(
+    'enrollment_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _programmeMeta = const VerificationMeta(
+    'programme',
+  );
+  @override
+  late final GeneratedColumn<String> programme = GeneratedColumn<String>(
+    'programme',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _degreeMeta = const VerificationMeta('degree');
+  @override
+  late final GeneratedColumn<String> degree = GeneratedColumn<String>(
+    'degree',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _academicYearMeta = const VerificationMeta(
+    'academicYear',
+  );
+  @override
+  late final GeneratedColumn<int> academicYear = GeneratedColumn<int>(
+    'academic_year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _gpaMeta = const VerificationMeta('gpa');
+  @override
+  late final GeneratedColumn<double> gpa = GeneratedColumn<double>(
+    'gpa',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emergencyContactMeta = const VerificationMeta(
+    'emergencyContact',
+  );
+  @override
+  late final GeneratedColumn<String> emergencyContact = GeneratedColumn<String>(
+    'emergency_contact',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _parentNameMeta = const VerificationMeta(
+    'parentName',
+  );
+  @override
+  late final GeneratedColumn<String> parentName = GeneratedColumn<String>(
+    'parent_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateOfAdmissionMeta = const VerificationMeta(
+    'dateOfAdmission',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfAdmission =
+      GeneratedColumn<DateTime>(
+        'date_of_admission',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _graduationDateMeta = const VerificationMeta(
+    'graduationDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> graduationDate =
+      GeneratedColumn<DateTime>(
+        'graduation_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _disabilityStatusMeta = const VerificationMeta(
+    'disabilityStatus',
+  );
+  @override
+  late final GeneratedColumn<String> disabilityStatus = GeneratedColumn<String>(
+    'disability_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isInternationalStudentMeta =
+      const VerificationMeta('isInternationalStudent');
+  @override
+  late final GeneratedColumn<bool> isInternationalStudent =
+      GeneratedColumn<bool>(
+        'is_international_student',
+        aliasedName,
+        true,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_international_student" IN (0, 1))',
+        ),
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    admissionNumber,
+    firstName,
+    otherNames,
+    nationalId,
+    gender,
+    address,
+    email,
+    phoneNumber,
+    profilePictureUrl,
+    dateOfBirth,
+    school,
+    campus,
+    enrollmentStatus,
+    programme,
+    degree,
+    academicYear,
+    gpa,
+    emergencyContact,
+    parentName,
+    dateOfAdmission,
+    graduationDate,
+    disabilityStatus,
+    isInternationalStudent,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_student_profile';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetStudentProfileData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_i_d')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_i_d']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('admission_number')) {
+      context.handle(
+        _admissionNumberMeta,
+        admissionNumber.isAcceptableOrUnknown(
+          data['admission_number']!,
+          _admissionNumberMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_admissionNumberMeta);
+    }
+    if (data.containsKey('first_name')) {
+      context.handle(
+        _firstNameMeta,
+        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_firstNameMeta);
+    }
+    if (data.containsKey('other_names')) {
+      context.handle(
+        _otherNamesMeta,
+        otherNames.isAcceptableOrUnknown(data['other_names']!, _otherNamesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_otherNamesMeta);
+    }
+    if (data.containsKey('national_id')) {
+      context.handle(
+        _nationalIdMeta,
+        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
+      );
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('phone_number')) {
+      context.handle(
+        _phoneNumberMeta,
+        phoneNumber.isAcceptableOrUnknown(
+          data['phone_number']!,
+          _phoneNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_url')) {
+      context.handle(
+        _profilePictureUrlMeta,
+        profilePictureUrl.isAcceptableOrUnknown(
+          data['profile_picture_url']!,
+          _profilePictureUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('school')) {
+      context.handle(
+        _schoolMeta,
+        school.isAcceptableOrUnknown(data['school']!, _schoolMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_schoolMeta);
+    }
+    if (data.containsKey('campus')) {
+      context.handle(
+        _campusMeta,
+        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
+      );
+    }
+    if (data.containsKey('enrollment_status')) {
+      context.handle(
+        _enrollmentStatusMeta,
+        enrollmentStatus.isAcceptableOrUnknown(
+          data['enrollment_status']!,
+          _enrollmentStatusMeta,
+        ),
+      );
+    }
+    if (data.containsKey('programme')) {
+      context.handle(
+        _programmeMeta,
+        programme.isAcceptableOrUnknown(data['programme']!, _programmeMeta),
+      );
+    }
+    if (data.containsKey('degree')) {
+      context.handle(
+        _degreeMeta,
+        degree.isAcceptableOrUnknown(data['degree']!, _degreeMeta),
+      );
+    }
+    if (data.containsKey('academic_year')) {
+      context.handle(
+        _academicYearMeta,
+        academicYear.isAcceptableOrUnknown(
+          data['academic_year']!,
+          _academicYearMeta,
+        ),
+      );
+    }
+    if (data.containsKey('gpa')) {
+      context.handle(
+        _gpaMeta,
+        gpa.isAcceptableOrUnknown(data['gpa']!, _gpaMeta),
+      );
+    }
+    if (data.containsKey('emergency_contact')) {
+      context.handle(
+        _emergencyContactMeta,
+        emergencyContact.isAcceptableOrUnknown(
+          data['emergency_contact']!,
+          _emergencyContactMeta,
+        ),
+      );
+    }
+    if (data.containsKey('parent_name')) {
+      context.handle(
+        _parentNameMeta,
+        parentName.isAcceptableOrUnknown(data['parent_name']!, _parentNameMeta),
+      );
+    }
+    if (data.containsKey('date_of_admission')) {
+      context.handle(
+        _dateOfAdmissionMeta,
+        dateOfAdmission.isAcceptableOrUnknown(
+          data['date_of_admission']!,
+          _dateOfAdmissionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('graduation_date')) {
+      context.handle(
+        _graduationDateMeta,
+        graduationDate.isAcceptableOrUnknown(
+          data['graduation_date']!,
+          _graduationDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('disability_status')) {
+      context.handle(
+        _disabilityStatusMeta,
+        disabilityStatus.isAcceptableOrUnknown(
+          data['disability_status']!,
+          _disabilityStatusMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_international_student')) {
+      context.handle(
+        _isInternationalStudentMeta,
+        isInternationalStudent.isAcceptableOrUnknown(
+          data['is_international_student']!,
+          _isInternationalStudentMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    admissionNumber,
+    institutionID,
+    userID,
+  };
+  @override
+  MagnetStudentProfileData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetStudentProfileData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_i_d'],
+      )!,
+      admissionNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}admission_number'],
+      )!,
+      firstName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name'],
+      )!,
+      otherNames: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}other_names'],
+      )!,
+      nationalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_id'],
+      ),
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      phoneNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone_number'],
+      ),
+      profilePictureUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture_url'],
+      ),
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      ),
+      school: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school'],
+      )!,
+      campus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}campus'],
+      ),
+      enrollmentStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}enrollment_status'],
+      ),
+      programme: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}programme'],
+      ),
+      degree: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}degree'],
+      ),
+      academicYear: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}academic_year'],
+      ),
+      gpa: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}gpa'],
+      ),
+      emergencyContact: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emergency_contact'],
+      ),
+      parentName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent_name'],
+      ),
+      dateOfAdmission: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_admission'],
+      ),
+      graduationDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}graduation_date'],
+      ),
+      disabilityStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}disability_status'],
+      ),
+      isInternationalStudent: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_international_student'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetStudentProfileTable createAlias(String alias) {
+    return $MagnetStudentProfileTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetStudentProfileData extends DataClass
+    implements Insertable<MagnetStudentProfileData> {
+  final String userID;
+  final int institutionID;
+  final String admissionNumber;
+  final String firstName;
+  final String otherNames;
+  final String? nationalId;
+  final String? gender;
+  final String? address;
+  final String? email;
+  final String? phoneNumber;
+  final String? profilePictureUrl;
+  final DateTime? dateOfBirth;
+  final String school;
+  final String? campus;
+  final String? enrollmentStatus;
+  final String? programme;
+  final String? degree;
+  final int? academicYear;
+  final double? gpa;
+  final String? emergencyContact;
+  final String? parentName;
+  final DateTime? dateOfAdmission;
+  final DateTime? graduationDate;
+  final String? disabilityStatus;
+  final bool? isInternationalStudent;
+  const MagnetStudentProfileData({
+    required this.userID,
+    required this.institutionID,
+    required this.admissionNumber,
+    required this.firstName,
+    required this.otherNames,
+    this.nationalId,
+    this.gender,
+    this.address,
+    this.email,
+    this.phoneNumber,
+    this.profilePictureUrl,
+    this.dateOfBirth,
+    required this.school,
+    this.campus,
+    this.enrollmentStatus,
+    this.programme,
+    this.degree,
+    this.academicYear,
+    this.gpa,
+    this.emergencyContact,
+    this.parentName,
+    this.dateOfAdmission,
+    this.graduationDate,
+    this.disabilityStatus,
+    this.isInternationalStudent,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_i_d'] = Variable<String>(userID);
+    map['institution_i_d'] = Variable<int>(institutionID);
+    map['admission_number'] = Variable<String>(admissionNumber);
+    map['first_name'] = Variable<String>(firstName);
+    map['other_names'] = Variable<String>(otherNames);
+    if (!nullToAbsent || nationalId != null) {
+      map['national_id'] = Variable<String>(nationalId);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || phoneNumber != null) {
+      map['phone_number'] = Variable<String>(phoneNumber);
+    }
+    if (!nullToAbsent || profilePictureUrl != null) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl);
+    }
+    if (!nullToAbsent || dateOfBirth != null) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    }
+    map['school'] = Variable<String>(school);
+    if (!nullToAbsent || campus != null) {
+      map['campus'] = Variable<String>(campus);
+    }
+    if (!nullToAbsent || enrollmentStatus != null) {
+      map['enrollment_status'] = Variable<String>(enrollmentStatus);
+    }
+    if (!nullToAbsent || programme != null) {
+      map['programme'] = Variable<String>(programme);
+    }
+    if (!nullToAbsent || degree != null) {
+      map['degree'] = Variable<String>(degree);
+    }
+    if (!nullToAbsent || academicYear != null) {
+      map['academic_year'] = Variable<int>(academicYear);
+    }
+    if (!nullToAbsent || gpa != null) {
+      map['gpa'] = Variable<double>(gpa);
+    }
+    if (!nullToAbsent || emergencyContact != null) {
+      map['emergency_contact'] = Variable<String>(emergencyContact);
+    }
+    if (!nullToAbsent || parentName != null) {
+      map['parent_name'] = Variable<String>(parentName);
+    }
+    if (!nullToAbsent || dateOfAdmission != null) {
+      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission);
+    }
+    if (!nullToAbsent || graduationDate != null) {
+      map['graduation_date'] = Variable<DateTime>(graduationDate);
+    }
+    if (!nullToAbsent || disabilityStatus != null) {
+      map['disability_status'] = Variable<String>(disabilityStatus);
+    }
+    if (!nullToAbsent || isInternationalStudent != null) {
+      map['is_international_student'] = Variable<bool>(isInternationalStudent);
+    }
+    return map;
+  }
+
+  MagnetStudentProfileCompanion toCompanion(bool nullToAbsent) {
+    return MagnetStudentProfileCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      admissionNumber: Value(admissionNumber),
+      firstName: Value(firstName),
+      otherNames: Value(otherNames),
+      nationalId: nationalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationalId),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      address: address == null && nullToAbsent
+          ? const Value.absent()
+          : Value(address),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
+      phoneNumber: phoneNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phoneNumber),
+      profilePictureUrl: profilePictureUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePictureUrl),
+      dateOfBirth: dateOfBirth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfBirth),
+      school: Value(school),
+      campus: campus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campus),
+      enrollmentStatus: enrollmentStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentStatus),
+      programme: programme == null && nullToAbsent
+          ? const Value.absent()
+          : Value(programme),
+      degree: degree == null && nullToAbsent
+          ? const Value.absent()
+          : Value(degree),
+      academicYear: academicYear == null && nullToAbsent
+          ? const Value.absent()
+          : Value(academicYear),
+      gpa: gpa == null && nullToAbsent ? const Value.absent() : Value(gpa),
+      emergencyContact: emergencyContact == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emergencyContact),
+      parentName: parentName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentName),
+      dateOfAdmission: dateOfAdmission == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfAdmission),
+      graduationDate: graduationDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(graduationDate),
+      disabilityStatus: disabilityStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(disabilityStatus),
+      isInternationalStudent: isInternationalStudent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isInternationalStudent),
+    );
+  }
+
+  factory MagnetStudentProfileData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetStudentProfileData(
+      userID: serializer.fromJson<String>(json['user_id']),
+      institutionID: serializer.fromJson<int>(json['institution_id']),
+      admissionNumber: serializer.fromJson<String>(json['admission_number']),
+      firstName: serializer.fromJson<String>(json['first_name']),
+      otherNames: serializer.fromJson<String>(json['other_names']),
+      nationalId: serializer.fromJson<String?>(json['national_id']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      address: serializer.fromJson<String?>(json['address']),
+      email: serializer.fromJson<String?>(json['email']),
+      phoneNumber: serializer.fromJson<String?>(json['phone_number']),
+      profilePictureUrl: serializer.fromJson<String?>(
+        json['profile_picture_url'],
+      ),
+      dateOfBirth: serializer.fromJson<DateTime?>(json['date_of_birth']),
+      school: serializer.fromJson<String>(json['school']),
+      campus: serializer.fromJson<String?>(json['campus']),
+      enrollmentStatus: serializer.fromJson<String?>(json['enrollment_status']),
+      programme: serializer.fromJson<String?>(json['programme']),
+      degree: serializer.fromJson<String?>(json['degree']),
+      academicYear: serializer.fromJson<int?>(json['academicYear']),
+      gpa: serializer.fromJson<double?>(json['gpa']),
+      emergencyContact: serializer.fromJson<String?>(json['emergency_contact']),
+      parentName: serializer.fromJson<String?>(json['parent_name']),
+      dateOfAdmission: serializer.fromJson<DateTime?>(
+        json['date_of_admission'],
+      ),
+      graduationDate: serializer.fromJson<DateTime?>(json['graduation_date']),
+      disabilityStatus: serializer.fromJson<String?>(json['disability_status']),
+      isInternationalStudent: serializer.fromJson<bool?>(
+        json['is_international_student'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userID),
+      'institution_id': serializer.toJson<int>(institutionID),
+      'admission_number': serializer.toJson<String>(admissionNumber),
+      'first_name': serializer.toJson<String>(firstName),
+      'other_names': serializer.toJson<String>(otherNames),
+      'national_id': serializer.toJson<String?>(nationalId),
+      'gender': serializer.toJson<String?>(gender),
+      'address': serializer.toJson<String?>(address),
+      'email': serializer.toJson<String?>(email),
+      'phone_number': serializer.toJson<String?>(phoneNumber),
+      'profile_picture_url': serializer.toJson<String?>(profilePictureUrl),
+      'date_of_birth': serializer.toJson<DateTime?>(dateOfBirth),
+      'school': serializer.toJson<String>(school),
+      'campus': serializer.toJson<String?>(campus),
+      'enrollment_status': serializer.toJson<String?>(enrollmentStatus),
+      'programme': serializer.toJson<String?>(programme),
+      'degree': serializer.toJson<String?>(degree),
+      'academicYear': serializer.toJson<int?>(academicYear),
+      'gpa': serializer.toJson<double?>(gpa),
+      'emergency_contact': serializer.toJson<String?>(emergencyContact),
+      'parent_name': serializer.toJson<String?>(parentName),
+      'date_of_admission': serializer.toJson<DateTime?>(dateOfAdmission),
+      'graduation_date': serializer.toJson<DateTime?>(graduationDate),
+      'disability_status': serializer.toJson<String?>(disabilityStatus),
+      'is_international_student': serializer.toJson<bool?>(
+        isInternationalStudent,
+      ),
+    };
+  }
+
+  MagnetStudentProfileData copyWith({
+    String? userID,
+    int? institutionID,
+    String? admissionNumber,
+    String? firstName,
+    String? otherNames,
+    Value<String?> nationalId = const Value.absent(),
+    Value<String?> gender = const Value.absent(),
+    Value<String?> address = const Value.absent(),
+    Value<String?> email = const Value.absent(),
+    Value<String?> phoneNumber = const Value.absent(),
+    Value<String?> profilePictureUrl = const Value.absent(),
+    Value<DateTime?> dateOfBirth = const Value.absent(),
+    String? school,
+    Value<String?> campus = const Value.absent(),
+    Value<String?> enrollmentStatus = const Value.absent(),
+    Value<String?> programme = const Value.absent(),
+    Value<String?> degree = const Value.absent(),
+    Value<int?> academicYear = const Value.absent(),
+    Value<double?> gpa = const Value.absent(),
+    Value<String?> emergencyContact = const Value.absent(),
+    Value<String?> parentName = const Value.absent(),
+    Value<DateTime?> dateOfAdmission = const Value.absent(),
+    Value<DateTime?> graduationDate = const Value.absent(),
+    Value<String?> disabilityStatus = const Value.absent(),
+    Value<bool?> isInternationalStudent = const Value.absent(),
+  }) => MagnetStudentProfileData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    admissionNumber: admissionNumber ?? this.admissionNumber,
+    firstName: firstName ?? this.firstName,
+    otherNames: otherNames ?? this.otherNames,
+    nationalId: nationalId.present ? nationalId.value : this.nationalId,
+    gender: gender.present ? gender.value : this.gender,
+    address: address.present ? address.value : this.address,
+    email: email.present ? email.value : this.email,
+    phoneNumber: phoneNumber.present ? phoneNumber.value : this.phoneNumber,
+    profilePictureUrl: profilePictureUrl.present
+        ? profilePictureUrl.value
+        : this.profilePictureUrl,
+    dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
+    school: school ?? this.school,
+    campus: campus.present ? campus.value : this.campus,
+    enrollmentStatus: enrollmentStatus.present
+        ? enrollmentStatus.value
+        : this.enrollmentStatus,
+    programme: programme.present ? programme.value : this.programme,
+    degree: degree.present ? degree.value : this.degree,
+    academicYear: academicYear.present ? academicYear.value : this.academicYear,
+    gpa: gpa.present ? gpa.value : this.gpa,
+    emergencyContact: emergencyContact.present
+        ? emergencyContact.value
+        : this.emergencyContact,
+    parentName: parentName.present ? parentName.value : this.parentName,
+    dateOfAdmission: dateOfAdmission.present
+        ? dateOfAdmission.value
+        : this.dateOfAdmission,
+    graduationDate: graduationDate.present
+        ? graduationDate.value
+        : this.graduationDate,
+    disabilityStatus: disabilityStatus.present
+        ? disabilityStatus.value
+        : this.disabilityStatus,
+    isInternationalStudent: isInternationalStudent.present
+        ? isInternationalStudent.value
+        : this.isInternationalStudent,
+  );
+  MagnetStudentProfileData copyWithCompanion(
+    MagnetStudentProfileCompanion data,
+  ) {
+    return MagnetStudentProfileData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      admissionNumber: data.admissionNumber.present
+          ? data.admissionNumber.value
+          : this.admissionNumber,
+      firstName: data.firstName.present ? data.firstName.value : this.firstName,
+      otherNames: data.otherNames.present
+          ? data.otherNames.value
+          : this.otherNames,
+      nationalId: data.nationalId.present
+          ? data.nationalId.value
+          : this.nationalId,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      address: data.address.present ? data.address.value : this.address,
+      email: data.email.present ? data.email.value : this.email,
+      phoneNumber: data.phoneNumber.present
+          ? data.phoneNumber.value
+          : this.phoneNumber,
+      profilePictureUrl: data.profilePictureUrl.present
+          ? data.profilePictureUrl.value
+          : this.profilePictureUrl,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      school: data.school.present ? data.school.value : this.school,
+      campus: data.campus.present ? data.campus.value : this.campus,
+      enrollmentStatus: data.enrollmentStatus.present
+          ? data.enrollmentStatus.value
+          : this.enrollmentStatus,
+      programme: data.programme.present ? data.programme.value : this.programme,
+      degree: data.degree.present ? data.degree.value : this.degree,
+      academicYear: data.academicYear.present
+          ? data.academicYear.value
+          : this.academicYear,
+      gpa: data.gpa.present ? data.gpa.value : this.gpa,
+      emergencyContact: data.emergencyContact.present
+          ? data.emergencyContact.value
+          : this.emergencyContact,
+      parentName: data.parentName.present
+          ? data.parentName.value
+          : this.parentName,
+      dateOfAdmission: data.dateOfAdmission.present
+          ? data.dateOfAdmission.value
+          : this.dateOfAdmission,
+      graduationDate: data.graduationDate.present
+          ? data.graduationDate.value
+          : this.graduationDate,
+      disabilityStatus: data.disabilityStatus.present
+          ? data.disabilityStatus.value
+          : this.disabilityStatus,
+      isInternationalStudent: data.isInternationalStudent.present
+          ? data.isInternationalStudent.value
+          : this.isInternationalStudent,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetStudentProfileData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('admissionNumber: $admissionNumber, ')
+          ..write('firstName: $firstName, ')
+          ..write('otherNames: $otherNames, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('gender: $gender, ')
+          ..write('address: $address, ')
+          ..write('email: $email, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('school: $school, ')
+          ..write('campus: $campus, ')
+          ..write('enrollmentStatus: $enrollmentStatus, ')
+          ..write('programme: $programme, ')
+          ..write('degree: $degree, ')
+          ..write('academicYear: $academicYear, ')
+          ..write('gpa: $gpa, ')
+          ..write('emergencyContact: $emergencyContact, ')
+          ..write('parentName: $parentName, ')
+          ..write('dateOfAdmission: $dateOfAdmission, ')
+          ..write('graduationDate: $graduationDate, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('isInternationalStudent: $isInternationalStudent')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    userID,
+    institutionID,
+    admissionNumber,
+    firstName,
+    otherNames,
+    nationalId,
+    gender,
+    address,
+    email,
+    phoneNumber,
+    profilePictureUrl,
+    dateOfBirth,
+    school,
+    campus,
+    enrollmentStatus,
+    programme,
+    degree,
+    academicYear,
+    gpa,
+    emergencyContact,
+    parentName,
+    dateOfAdmission,
+    graduationDate,
+    disabilityStatus,
+    isInternationalStudent,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetStudentProfileData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.admissionNumber == this.admissionNumber &&
+          other.firstName == this.firstName &&
+          other.otherNames == this.otherNames &&
+          other.nationalId == this.nationalId &&
+          other.gender == this.gender &&
+          other.address == this.address &&
+          other.email == this.email &&
+          other.phoneNumber == this.phoneNumber &&
+          other.profilePictureUrl == this.profilePictureUrl &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.school == this.school &&
+          other.campus == this.campus &&
+          other.enrollmentStatus == this.enrollmentStatus &&
+          other.programme == this.programme &&
+          other.degree == this.degree &&
+          other.academicYear == this.academicYear &&
+          other.gpa == this.gpa &&
+          other.emergencyContact == this.emergencyContact &&
+          other.parentName == this.parentName &&
+          other.dateOfAdmission == this.dateOfAdmission &&
+          other.graduationDate == this.graduationDate &&
+          other.disabilityStatus == this.disabilityStatus &&
+          other.isInternationalStudent == this.isInternationalStudent);
+}
+
+class MagnetStudentProfileCompanion
+    extends UpdateCompanion<MagnetStudentProfileData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> admissionNumber;
+  final Value<String> firstName;
+  final Value<String> otherNames;
+  final Value<String?> nationalId;
+  final Value<String?> gender;
+  final Value<String?> address;
+  final Value<String?> email;
+  final Value<String?> phoneNumber;
+  final Value<String?> profilePictureUrl;
+  final Value<DateTime?> dateOfBirth;
+  final Value<String> school;
+  final Value<String?> campus;
+  final Value<String?> enrollmentStatus;
+  final Value<String?> programme;
+  final Value<String?> degree;
+  final Value<int?> academicYear;
+  final Value<double?> gpa;
+  final Value<String?> emergencyContact;
+  final Value<String?> parentName;
+  final Value<DateTime?> dateOfAdmission;
+  final Value<DateTime?> graduationDate;
+  final Value<String?> disabilityStatus;
+  final Value<bool?> isInternationalStudent;
+  final Value<int> rowid;
+  const MagnetStudentProfileCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.admissionNumber = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.otherNames = const Value.absent(),
+    this.nationalId = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.address = const Value.absent(),
+    this.email = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.school = const Value.absent(),
+    this.campus = const Value.absent(),
+    this.enrollmentStatus = const Value.absent(),
+    this.programme = const Value.absent(),
+    this.degree = const Value.absent(),
+    this.academicYear = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.emergencyContact = const Value.absent(),
+    this.parentName = const Value.absent(),
+    this.dateOfAdmission = const Value.absent(),
+    this.graduationDate = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.isInternationalStudent = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetStudentProfileCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String admissionNumber,
+    required String firstName,
+    required String otherNames,
+    this.nationalId = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.address = const Value.absent(),
+    this.email = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    required String school,
+    this.campus = const Value.absent(),
+    this.enrollmentStatus = const Value.absent(),
+    this.programme = const Value.absent(),
+    this.degree = const Value.absent(),
+    this.academicYear = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.emergencyContact = const Value.absent(),
+    this.parentName = const Value.absent(),
+    this.dateOfAdmission = const Value.absent(),
+    this.graduationDate = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.isInternationalStudent = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       admissionNumber = Value(admissionNumber),
+       firstName = Value(firstName),
+       otherNames = Value(otherNames),
+       school = Value(school);
+  static Insertable<MagnetStudentProfileData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? admissionNumber,
+    Expression<String>? firstName,
+    Expression<String>? otherNames,
+    Expression<String>? nationalId,
+    Expression<String>? gender,
+    Expression<String>? address,
+    Expression<String>? email,
+    Expression<String>? phoneNumber,
+    Expression<String>? profilePictureUrl,
+    Expression<DateTime>? dateOfBirth,
+    Expression<String>? school,
+    Expression<String>? campus,
+    Expression<String>? enrollmentStatus,
+    Expression<String>? programme,
+    Expression<String>? degree,
+    Expression<int>? academicYear,
+    Expression<double>? gpa,
+    Expression<String>? emergencyContact,
+    Expression<String>? parentName,
+    Expression<DateTime>? dateOfAdmission,
+    Expression<DateTime>? graduationDate,
+    Expression<String>? disabilityStatus,
+    Expression<bool>? isInternationalStudent,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_i_d': userID,
+      if (institutionID != null) 'institution_i_d': institutionID,
+      if (admissionNumber != null) 'admission_number': admissionNumber,
+      if (firstName != null) 'first_name': firstName,
+      if (otherNames != null) 'other_names': otherNames,
+      if (nationalId != null) 'national_id': nationalId,
+      if (gender != null) 'gender': gender,
+      if (address != null) 'address': address,
+      if (email != null) 'email': email,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
+      if (profilePictureUrl != null) 'profile_picture_url': profilePictureUrl,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (school != null) 'school': school,
+      if (campus != null) 'campus': campus,
+      if (enrollmentStatus != null) 'enrollment_status': enrollmentStatus,
+      if (programme != null) 'programme': programme,
+      if (degree != null) 'degree': degree,
+      if (academicYear != null) 'academic_year': academicYear,
+      if (gpa != null) 'gpa': gpa,
+      if (emergencyContact != null) 'emergency_contact': emergencyContact,
+      if (parentName != null) 'parent_name': parentName,
+      if (dateOfAdmission != null) 'date_of_admission': dateOfAdmission,
+      if (graduationDate != null) 'graduation_date': graduationDate,
+      if (disabilityStatus != null) 'disability_status': disabilityStatus,
+      if (isInternationalStudent != null)
+        'is_international_student': isInternationalStudent,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetStudentProfileCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? admissionNumber,
+    Value<String>? firstName,
+    Value<String>? otherNames,
+    Value<String?>? nationalId,
+    Value<String?>? gender,
+    Value<String?>? address,
+    Value<String?>? email,
+    Value<String?>? phoneNumber,
+    Value<String?>? profilePictureUrl,
+    Value<DateTime?>? dateOfBirth,
+    Value<String>? school,
+    Value<String?>? campus,
+    Value<String?>? enrollmentStatus,
+    Value<String?>? programme,
+    Value<String?>? degree,
+    Value<int?>? academicYear,
+    Value<double?>? gpa,
+    Value<String?>? emergencyContact,
+    Value<String?>? parentName,
+    Value<DateTime?>? dateOfAdmission,
+    Value<DateTime?>? graduationDate,
+    Value<String?>? disabilityStatus,
+    Value<bool?>? isInternationalStudent,
+    Value<int>? rowid,
+  }) {
+    return MagnetStudentProfileCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      admissionNumber: admissionNumber ?? this.admissionNumber,
+      firstName: firstName ?? this.firstName,
+      otherNames: otherNames ?? this.otherNames,
+      nationalId: nationalId ?? this.nationalId,
+      gender: gender ?? this.gender,
+      address: address ?? this.address,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      school: school ?? this.school,
+      campus: campus ?? this.campus,
+      enrollmentStatus: enrollmentStatus ?? this.enrollmentStatus,
+      programme: programme ?? this.programme,
+      degree: degree ?? this.degree,
+      academicYear: academicYear ?? this.academicYear,
+      gpa: gpa ?? this.gpa,
+      emergencyContact: emergencyContact ?? this.emergencyContact,
+      parentName: parentName ?? this.parentName,
+      dateOfAdmission: dateOfAdmission ?? this.dateOfAdmission,
+      graduationDate: graduationDate ?? this.graduationDate,
+      disabilityStatus: disabilityStatus ?? this.disabilityStatus,
+      isInternationalStudent:
+          isInternationalStudent ?? this.isInternationalStudent,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_i_d'] = Variable<int>(institutionID.value);
+    }
+    if (admissionNumber.present) {
+      map['admission_number'] = Variable<String>(admissionNumber.value);
+    }
+    if (firstName.present) {
+      map['first_name'] = Variable<String>(firstName.value);
+    }
+    if (otherNames.present) {
+      map['other_names'] = Variable<String>(otherNames.value);
+    }
+    if (nationalId.present) {
+      map['national_id'] = Variable<String>(nationalId.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (phoneNumber.present) {
+      map['phone_number'] = Variable<String>(phoneNumber.value);
+    }
+    if (profilePictureUrl.present) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (school.present) {
+      map['school'] = Variable<String>(school.value);
+    }
+    if (campus.present) {
+      map['campus'] = Variable<String>(campus.value);
+    }
+    if (enrollmentStatus.present) {
+      map['enrollment_status'] = Variable<String>(enrollmentStatus.value);
+    }
+    if (programme.present) {
+      map['programme'] = Variable<String>(programme.value);
+    }
+    if (degree.present) {
+      map['degree'] = Variable<String>(degree.value);
+    }
+    if (academicYear.present) {
+      map['academic_year'] = Variable<int>(academicYear.value);
+    }
+    if (gpa.present) {
+      map['gpa'] = Variable<double>(gpa.value);
+    }
+    if (emergencyContact.present) {
+      map['emergency_contact'] = Variable<String>(emergencyContact.value);
+    }
+    if (parentName.present) {
+      map['parent_name'] = Variable<String>(parentName.value);
+    }
+    if (dateOfAdmission.present) {
+      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission.value);
+    }
+    if (graduationDate.present) {
+      map['graduation_date'] = Variable<DateTime>(graduationDate.value);
+    }
+    if (disabilityStatus.present) {
+      map['disability_status'] = Variable<String>(disabilityStatus.value);
+    }
+    if (isInternationalStudent.present) {
+      map['is_international_student'] = Variable<bool>(
+        isInternationalStudent.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetStudentProfileCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('admissionNumber: $admissionNumber, ')
+          ..write('firstName: $firstName, ')
+          ..write('otherNames: $otherNames, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('gender: $gender, ')
+          ..write('address: $address, ')
+          ..write('email: $email, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('school: $school, ')
+          ..write('campus: $campus, ')
+          ..write('enrollmentStatus: $enrollmentStatus, ')
+          ..write('programme: $programme, ')
+          ..write('degree: $degree, ')
+          ..write('academicYear: $academicYear, ')
+          ..write('gpa: $gpa, ')
+          ..write('emergencyContact: $emergencyContact, ')
+          ..write('parentName: $parentName, ')
+          ..write('dateOfAdmission: $dateOfAdmission, ')
+          ..write('graduationDate: $graduationDate, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('isInternationalStudent: $isInternationalStudent, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetCredentialsTable extends MagnetCredentials
+    with TableInfo<$MagnetCredentialsTable, MagnetCredential> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetCredentialsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _passwordMeta = const VerificationMeta(
+    'password',
+  );
+  @override
+  late final GeneratedColumn<String> password = GeneratedColumn<String>(
+    'password',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _extraMeta = const VerificationMeta('extra');
+  @override
+  late final GeneratedColumn<String> extra = GeneratedColumn<String>(
+    'extra',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    username,
+    password,
+    extra,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_credentials';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetCredential> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_i_d')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_i_d']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('password')) {
+      context.handle(
+        _passwordMeta,
+        password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_passwordMeta);
+    }
+    if (data.containsKey('extra')) {
+      context.handle(
+        _extraMeta,
+        extra.isAcceptableOrUnknown(data['extra']!, _extraMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {username, institutionID, userID};
+  @override
+  MagnetCredential map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetCredential(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_i_d'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
+      password: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}password'],
+      )!,
+      extra: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}extra'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetCredentialsTable createAlias(String alias) {
+    return $MagnetCredentialsTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetCredential extends DataClass
+    implements Insertable<MagnetCredential> {
+  final String userID;
+  final int institutionID;
+  final String username;
+  final String password;
+
+  /// Store the extra Map`<String, dynamic>` as a JSON string
+  final String? extra;
+  const MagnetCredential({
+    required this.userID,
+    required this.institutionID,
+    required this.username,
+    required this.password,
+    this.extra,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_i_d'] = Variable<String>(userID);
+    map['institution_i_d'] = Variable<int>(institutionID);
+    map['username'] = Variable<String>(username);
+    map['password'] = Variable<String>(password);
+    if (!nullToAbsent || extra != null) {
+      map['extra'] = Variable<String>(extra);
+    }
+    return map;
+  }
+
+  MagnetCredentialsCompanion toCompanion(bool nullToAbsent) {
+    return MagnetCredentialsCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      username: Value(username),
+      password: Value(password),
+      extra: extra == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extra),
+    );
+  }
+
+  factory MagnetCredential.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetCredential(
+      userID: serializer.fromJson<String>(json['user_id']),
+      institutionID: serializer.fromJson<int>(json['institution_id']),
+      username: serializer.fromJson<String>(json['username']),
+      password: serializer.fromJson<String>(json['password']),
+      extra: serializer.fromJson<String?>(json['extra']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userID),
+      'institution_id': serializer.toJson<int>(institutionID),
+      'username': serializer.toJson<String>(username),
+      'password': serializer.toJson<String>(password),
+      'extra': serializer.toJson<String?>(extra),
+    };
+  }
+
+  MagnetCredential copyWith({
+    String? userID,
+    int? institutionID,
+    String? username,
+    String? password,
+    Value<String?> extra = const Value.absent(),
+  }) => MagnetCredential(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    username: username ?? this.username,
+    password: password ?? this.password,
+    extra: extra.present ? extra.value : this.extra,
+  );
+  MagnetCredential copyWithCompanion(MagnetCredentialsCompanion data) {
+    return MagnetCredential(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      username: data.username.present ? data.username.value : this.username,
+      password: data.password.present ? data.password.value : this.password,
+      extra: data.extra.present ? data.extra.value : this.extra,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCredential(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
+          ..write('extra: $extra')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(userID, institutionID, username, password, extra);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetCredential &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.username == this.username &&
+          other.password == this.password &&
+          other.extra == this.extra);
+}
+
+class MagnetCredentialsCompanion extends UpdateCompanion<MagnetCredential> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> username;
+  final Value<String> password;
+  final Value<String?> extra;
+  final Value<int> rowid;
+  const MagnetCredentialsCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.username = const Value.absent(),
+    this.password = const Value.absent(),
+    this.extra = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetCredentialsCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String username,
+    required String password,
+    this.extra = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       username = Value(username),
+       password = Value(password);
+  static Insertable<MagnetCredential> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? username,
+    Expression<String>? password,
+    Expression<String>? extra,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_i_d': userID,
+      if (institutionID != null) 'institution_i_d': institutionID,
+      if (username != null) 'username': username,
+      if (password != null) 'password': password,
+      if (extra != null) 'extra': extra,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetCredentialsCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? username,
+    Value<String>? password,
+    Value<String?>? extra,
+    Value<int>? rowid,
+  }) {
+    return MagnetCredentialsCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      extra: extra ?? this.extra,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_i_d'] = Variable<int>(institutionID.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (password.present) {
+      map['password'] = Variable<String>(password.value);
+    }
+    if (extra.present) {
+      map['extra'] = Variable<String>(extra.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCredentialsCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('username: $username, ')
+          ..write('password: $password, ')
+          ..write('extra: $extra, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetCourseInfoTable extends MagnetCourseInfo
+    with TableInfo<$MagnetCourseInfoTable, MagnetCourseInfoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetCourseInfoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
+    'courseCode',
+  );
+  @override
+  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
+    'course_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseTitleMeta = const VerificationMeta(
+    'courseTitle',
+  );
+  @override
+  late final GeneratedColumn<String> courseTitle = GeneratedColumn<String>(
+    'course_title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseDescriptionMeta = const VerificationMeta(
+    'courseDescription',
+  );
+  @override
+  late final GeneratedColumn<String> courseDescription =
+      GeneratedColumn<String>(
+        'course_description',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _creditsMeta = const VerificationMeta(
+    'credits',
+  );
+  @override
+  late final GeneratedColumn<int> credits = GeneratedColumn<int>(
+    'credits',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _instructorMeta = const VerificationMeta(
+    'instructor',
+  );
+  @override
+  late final GeneratedColumn<String> instructor = GeneratedColumn<String>(
+    'instructor',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _semesterMeta = const VerificationMeta(
+    'semester',
+  );
+  @override
+  late final GeneratedColumn<String> semester = GeneratedColumn<String>(
+    'semester',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _scheduleMeta = const VerificationMeta(
+    'schedule',
+  );
+  @override
+  late final GeneratedColumn<DateTime> schedule = GeneratedColumn<DateTime>(
+    'schedule',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationInSecondsMeta = const VerificationMeta(
+    'durationInSeconds',
+  );
+  @override
+  late final GeneratedColumn<int> durationInSeconds = GeneratedColumn<int>(
+    'duration_in_seconds',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _prerequisitesMeta = const VerificationMeta(
+    'prerequisites',
+  );
+  @override
+  late final GeneratedColumn<String> prerequisites = GeneratedColumn<String>(
+    'prerequisites',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseTypeMeta = const VerificationMeta(
+    'courseType',
+  );
+  @override
+  late final GeneratedColumn<String> courseType = GeneratedColumn<String>(
+    'course_type',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseLevelMeta = const VerificationMeta(
+    'courseLevel',
+  );
+  @override
+  late final GeneratedColumn<String> courseLevel = GeneratedColumn<String>(
+    'course_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _enrollmentLimitMeta = const VerificationMeta(
+    'enrollmentLimit',
+  );
+  @override
+  late final GeneratedColumn<int> enrollmentLimit = GeneratedColumn<int>(
+    'enrollment_limit',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _currentEnrollmentMeta = const VerificationMeta(
+    'currentEnrollment',
+  );
+  @override
+  late final GeneratedColumn<int> currentEnrollment = GeneratedColumn<int>(
+    'current_enrollment',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _courseMaterialsMeta = const VerificationMeta(
+    'courseMaterials',
+  );
+  @override
+  late final GeneratedColumn<String> courseMaterials = GeneratedColumn<String>(
+    'course_materials',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    courseCode,
+    courseTitle,
+    courseDescription,
+    credits,
+    instructor,
+    semester,
+    schedule,
+    durationInSeconds,
+    prerequisites,
+    courseType,
+    courseLevel,
+    location,
+    enrollmentLimit,
+    currentEnrollment,
+    courseMaterials,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'courses';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetCourseInfoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('course_code')) {
+      context.handle(
+        _courseCodeMeta,
+        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseCodeMeta);
+    }
+    if (data.containsKey('course_title')) {
+      context.handle(
+        _courseTitleMeta,
+        courseTitle.isAcceptableOrUnknown(
+          data['course_title']!,
+          _courseTitleMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_courseTitleMeta);
+    }
+    if (data.containsKey('course_description')) {
+      context.handle(
+        _courseDescriptionMeta,
+        courseDescription.isAcceptableOrUnknown(
+          data['course_description']!,
+          _courseDescriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('credits')) {
+      context.handle(
+        _creditsMeta,
+        credits.isAcceptableOrUnknown(data['credits']!, _creditsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creditsMeta);
+    }
+    if (data.containsKey('instructor')) {
+      context.handle(
+        _instructorMeta,
+        instructor.isAcceptableOrUnknown(data['instructor']!, _instructorMeta),
+      );
+    }
+    if (data.containsKey('semester')) {
+      context.handle(
+        _semesterMeta,
+        semester.isAcceptableOrUnknown(data['semester']!, _semesterMeta),
+      );
+    }
+    if (data.containsKey('schedule')) {
+      context.handle(
+        _scheduleMeta,
+        schedule.isAcceptableOrUnknown(data['schedule']!, _scheduleMeta),
+      );
+    }
+    if (data.containsKey('duration_in_seconds')) {
+      context.handle(
+        _durationInSecondsMeta,
+        durationInSeconds.isAcceptableOrUnknown(
+          data['duration_in_seconds']!,
+          _durationInSecondsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('prerequisites')) {
+      context.handle(
+        _prerequisitesMeta,
+        prerequisites.isAcceptableOrUnknown(
+          data['prerequisites']!,
+          _prerequisitesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('course_type')) {
+      context.handle(
+        _courseTypeMeta,
+        courseType.isAcceptableOrUnknown(data['course_type']!, _courseTypeMeta),
+      );
+    }
+    if (data.containsKey('course_level')) {
+      context.handle(
+        _courseLevelMeta,
+        courseLevel.isAcceptableOrUnknown(
+          data['course_level']!,
+          _courseLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('enrollment_limit')) {
+      context.handle(
+        _enrollmentLimitMeta,
+        enrollmentLimit.isAcceptableOrUnknown(
+          data['enrollment_limit']!,
+          _enrollmentLimitMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_enrollment')) {
+      context.handle(
+        _currentEnrollmentMeta,
+        currentEnrollment.isAcceptableOrUnknown(
+          data['current_enrollment']!,
+          _currentEnrollmentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('course_materials')) {
+      context.handle(
+        _courseMaterialsMeta,
+        courseMaterials.isAcceptableOrUnknown(
+          data['course_materials']!,
+          _courseMaterialsMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userID, institutionID, courseCode};
+  @override
+  MagnetCourseInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetCourseInfoData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      courseCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_code'],
+      )!,
+      courseTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_title'],
+      )!,
+      courseDescription: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_description'],
+      ),
+      credits: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}credits'],
+      )!,
+      instructor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructor'],
+      ),
+      semester: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}semester'],
+      ),
+      schedule: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}schedule'],
+      ),
+      durationInSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_in_seconds'],
+      ),
+      prerequisites: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}prerequisites'],
+      ),
+      courseType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_type'],
+      ),
+      courseLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_level'],
+      ),
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      enrollmentLimit: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}enrollment_limit'],
+      ),
+      currentEnrollment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_enrollment'],
+      ),
+      courseMaterials: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_materials'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetCourseInfoTable createAlias(String alias) {
+    return $MagnetCourseInfoTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetCourseInfoData extends DataClass
+    implements Insertable<MagnetCourseInfoData> {
+  final String userID;
+  final int institutionID;
+  final String courseCode;
+  final String courseTitle;
+  final String? courseDescription;
+  final int credits;
+  final String? instructor;
+  final String? semester;
+  final DateTime? schedule;
+  final int? durationInSeconds;
+  final String? prerequisites;
+  final String? courseType;
+  final String? courseLevel;
+  final String? location;
+  final int? enrollmentLimit;
+  final int? currentEnrollment;
+  final String? courseMaterials;
+  const MagnetCourseInfoData({
+    required this.userID,
+    required this.institutionID,
+    required this.courseCode,
+    required this.courseTitle,
+    this.courseDescription,
+    required this.credits,
+    this.instructor,
+    this.semester,
+    this.schedule,
+    this.durationInSeconds,
+    this.prerequisites,
+    this.courseType,
+    this.courseLevel,
+    this.location,
+    this.enrollmentLimit,
+    this.currentEnrollment,
+    this.courseMaterials,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userID);
+    map['institution_id'] = Variable<int>(institutionID);
+    map['course_code'] = Variable<String>(courseCode);
+    map['course_title'] = Variable<String>(courseTitle);
+    if (!nullToAbsent || courseDescription != null) {
+      map['course_description'] = Variable<String>(courseDescription);
+    }
+    map['credits'] = Variable<int>(credits);
+    if (!nullToAbsent || instructor != null) {
+      map['instructor'] = Variable<String>(instructor);
+    }
+    if (!nullToAbsent || semester != null) {
+      map['semester'] = Variable<String>(semester);
+    }
+    if (!nullToAbsent || schedule != null) {
+      map['schedule'] = Variable<DateTime>(schedule);
+    }
+    if (!nullToAbsent || durationInSeconds != null) {
+      map['duration_in_seconds'] = Variable<int>(durationInSeconds);
+    }
+    if (!nullToAbsent || prerequisites != null) {
+      map['prerequisites'] = Variable<String>(prerequisites);
+    }
+    if (!nullToAbsent || courseType != null) {
+      map['course_type'] = Variable<String>(courseType);
+    }
+    if (!nullToAbsent || courseLevel != null) {
+      map['course_level'] = Variable<String>(courseLevel);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || enrollmentLimit != null) {
+      map['enrollment_limit'] = Variable<int>(enrollmentLimit);
+    }
+    if (!nullToAbsent || currentEnrollment != null) {
+      map['current_enrollment'] = Variable<int>(currentEnrollment);
+    }
+    if (!nullToAbsent || courseMaterials != null) {
+      map['course_materials'] = Variable<String>(courseMaterials);
+    }
+    return map;
+  }
+
+  MagnetCourseInfoCompanion toCompanion(bool nullToAbsent) {
+    return MagnetCourseInfoCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      courseCode: Value(courseCode),
+      courseTitle: Value(courseTitle),
+      courseDescription: courseDescription == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseDescription),
+      credits: Value(credits),
+      instructor: instructor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(instructor),
+      semester: semester == null && nullToAbsent
+          ? const Value.absent()
+          : Value(semester),
+      schedule: schedule == null && nullToAbsent
+          ? const Value.absent()
+          : Value(schedule),
+      durationInSeconds: durationInSeconds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationInSeconds),
+      prerequisites: prerequisites == null && nullToAbsent
+          ? const Value.absent()
+          : Value(prerequisites),
+      courseType: courseType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseType),
+      courseLevel: courseLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseLevel),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      enrollmentLimit: enrollmentLimit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentLimit),
+      currentEnrollment: currentEnrollment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currentEnrollment),
+      courseMaterials: courseMaterials == null && nullToAbsent
+          ? const Value.absent()
+          : Value(courseMaterials),
+    );
+  }
+
+  factory MagnetCourseInfoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetCourseInfoData(
+      userID: serializer.fromJson<String>(json['userID']),
+      institutionID: serializer.fromJson<int>(json['institutionID']),
+      courseCode: serializer.fromJson<String>(json['courseCode']),
+      courseTitle: serializer.fromJson<String>(json['courseTitle']),
+      courseDescription: serializer.fromJson<String?>(
+        json['courseDescription'],
+      ),
+      credits: serializer.fromJson<int>(json['credits']),
+      instructor: serializer.fromJson<String?>(json['instructor']),
+      semester: serializer.fromJson<String?>(json['semester']),
+      schedule: serializer.fromJson<DateTime?>(json['schedule']),
+      durationInSeconds: serializer.fromJson<int?>(json['durationInSeconds']),
+      prerequisites: serializer.fromJson<String?>(json['prerequisites']),
+      courseType: serializer.fromJson<String?>(json['courseType']),
+      courseLevel: serializer.fromJson<String?>(json['courseLevel']),
+      location: serializer.fromJson<String?>(json['location']),
+      enrollmentLimit: serializer.fromJson<int?>(json['enrollmentLimit']),
+      currentEnrollment: serializer.fromJson<int?>(json['currentEnrollment']),
+      courseMaterials: serializer.fromJson<String?>(json['courseMaterials']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userID': serializer.toJson<String>(userID),
+      'institutionID': serializer.toJson<int>(institutionID),
+      'courseCode': serializer.toJson<String>(courseCode),
+      'courseTitle': serializer.toJson<String>(courseTitle),
+      'courseDescription': serializer.toJson<String?>(courseDescription),
+      'credits': serializer.toJson<int>(credits),
+      'instructor': serializer.toJson<String?>(instructor),
+      'semester': serializer.toJson<String?>(semester),
+      'schedule': serializer.toJson<DateTime?>(schedule),
+      'durationInSeconds': serializer.toJson<int?>(durationInSeconds),
+      'prerequisites': serializer.toJson<String?>(prerequisites),
+      'courseType': serializer.toJson<String?>(courseType),
+      'courseLevel': serializer.toJson<String?>(courseLevel),
+      'location': serializer.toJson<String?>(location),
+      'enrollmentLimit': serializer.toJson<int?>(enrollmentLimit),
+      'currentEnrollment': serializer.toJson<int?>(currentEnrollment),
+      'courseMaterials': serializer.toJson<String?>(courseMaterials),
+    };
+  }
+
+  MagnetCourseInfoData copyWith({
+    String? userID,
+    int? institutionID,
+    String? courseCode,
+    String? courseTitle,
+    Value<String?> courseDescription = const Value.absent(),
+    int? credits,
+    Value<String?> instructor = const Value.absent(),
+    Value<String?> semester = const Value.absent(),
+    Value<DateTime?> schedule = const Value.absent(),
+    Value<int?> durationInSeconds = const Value.absent(),
+    Value<String?> prerequisites = const Value.absent(),
+    Value<String?> courseType = const Value.absent(),
+    Value<String?> courseLevel = const Value.absent(),
+    Value<String?> location = const Value.absent(),
+    Value<int?> enrollmentLimit = const Value.absent(),
+    Value<int?> currentEnrollment = const Value.absent(),
+    Value<String?> courseMaterials = const Value.absent(),
+  }) => MagnetCourseInfoData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    courseCode: courseCode ?? this.courseCode,
+    courseTitle: courseTitle ?? this.courseTitle,
+    courseDescription: courseDescription.present
+        ? courseDescription.value
+        : this.courseDescription,
+    credits: credits ?? this.credits,
+    instructor: instructor.present ? instructor.value : this.instructor,
+    semester: semester.present ? semester.value : this.semester,
+    schedule: schedule.present ? schedule.value : this.schedule,
+    durationInSeconds: durationInSeconds.present
+        ? durationInSeconds.value
+        : this.durationInSeconds,
+    prerequisites: prerequisites.present
+        ? prerequisites.value
+        : this.prerequisites,
+    courseType: courseType.present ? courseType.value : this.courseType,
+    courseLevel: courseLevel.present ? courseLevel.value : this.courseLevel,
+    location: location.present ? location.value : this.location,
+    enrollmentLimit: enrollmentLimit.present
+        ? enrollmentLimit.value
+        : this.enrollmentLimit,
+    currentEnrollment: currentEnrollment.present
+        ? currentEnrollment.value
+        : this.currentEnrollment,
+    courseMaterials: courseMaterials.present
+        ? courseMaterials.value
+        : this.courseMaterials,
+  );
+  MagnetCourseInfoData copyWithCompanion(MagnetCourseInfoCompanion data) {
+    return MagnetCourseInfoData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      courseCode: data.courseCode.present
+          ? data.courseCode.value
+          : this.courseCode,
+      courseTitle: data.courseTitle.present
+          ? data.courseTitle.value
+          : this.courseTitle,
+      courseDescription: data.courseDescription.present
+          ? data.courseDescription.value
+          : this.courseDescription,
+      credits: data.credits.present ? data.credits.value : this.credits,
+      instructor: data.instructor.present
+          ? data.instructor.value
+          : this.instructor,
+      semester: data.semester.present ? data.semester.value : this.semester,
+      schedule: data.schedule.present ? data.schedule.value : this.schedule,
+      durationInSeconds: data.durationInSeconds.present
+          ? data.durationInSeconds.value
+          : this.durationInSeconds,
+      prerequisites: data.prerequisites.present
+          ? data.prerequisites.value
+          : this.prerequisites,
+      courseType: data.courseType.present
+          ? data.courseType.value
+          : this.courseType,
+      courseLevel: data.courseLevel.present
+          ? data.courseLevel.value
+          : this.courseLevel,
+      location: data.location.present ? data.location.value : this.location,
+      enrollmentLimit: data.enrollmentLimit.present
+          ? data.enrollmentLimit.value
+          : this.enrollmentLimit,
+      currentEnrollment: data.currentEnrollment.present
+          ? data.currentEnrollment.value
+          : this.currentEnrollment,
+      courseMaterials: data.courseMaterials.present
+          ? data.courseMaterials.value
+          : this.courseMaterials,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCourseInfoData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseTitle: $courseTitle, ')
+          ..write('courseDescription: $courseDescription, ')
+          ..write('credits: $credits, ')
+          ..write('instructor: $instructor, ')
+          ..write('semester: $semester, ')
+          ..write('schedule: $schedule, ')
+          ..write('durationInSeconds: $durationInSeconds, ')
+          ..write('prerequisites: $prerequisites, ')
+          ..write('courseType: $courseType, ')
+          ..write('courseLevel: $courseLevel, ')
+          ..write('location: $location, ')
+          ..write('enrollmentLimit: $enrollmentLimit, ')
+          ..write('currentEnrollment: $currentEnrollment, ')
+          ..write('courseMaterials: $courseMaterials')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userID,
+    institutionID,
+    courseCode,
+    courseTitle,
+    courseDescription,
+    credits,
+    instructor,
+    semester,
+    schedule,
+    durationInSeconds,
+    prerequisites,
+    courseType,
+    courseLevel,
+    location,
+    enrollmentLimit,
+    currentEnrollment,
+    courseMaterials,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetCourseInfoData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.courseCode == this.courseCode &&
+          other.courseTitle == this.courseTitle &&
+          other.courseDescription == this.courseDescription &&
+          other.credits == this.credits &&
+          other.instructor == this.instructor &&
+          other.semester == this.semester &&
+          other.schedule == this.schedule &&
+          other.durationInSeconds == this.durationInSeconds &&
+          other.prerequisites == this.prerequisites &&
+          other.courseType == this.courseType &&
+          other.courseLevel == this.courseLevel &&
+          other.location == this.location &&
+          other.enrollmentLimit == this.enrollmentLimit &&
+          other.currentEnrollment == this.currentEnrollment &&
+          other.courseMaterials == this.courseMaterials);
+}
+
+class MagnetCourseInfoCompanion extends UpdateCompanion<MagnetCourseInfoData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> courseCode;
+  final Value<String> courseTitle;
+  final Value<String?> courseDescription;
+  final Value<int> credits;
+  final Value<String?> instructor;
+  final Value<String?> semester;
+  final Value<DateTime?> schedule;
+  final Value<int?> durationInSeconds;
+  final Value<String?> prerequisites;
+  final Value<String?> courseType;
+  final Value<String?> courseLevel;
+  final Value<String?> location;
+  final Value<int?> enrollmentLimit;
+  final Value<int?> currentEnrollment;
+  final Value<String?> courseMaterials;
+  final Value<int> rowid;
+  const MagnetCourseInfoCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.courseCode = const Value.absent(),
+    this.courseTitle = const Value.absent(),
+    this.courseDescription = const Value.absent(),
+    this.credits = const Value.absent(),
+    this.instructor = const Value.absent(),
+    this.semester = const Value.absent(),
+    this.schedule = const Value.absent(),
+    this.durationInSeconds = const Value.absent(),
+    this.prerequisites = const Value.absent(),
+    this.courseType = const Value.absent(),
+    this.courseLevel = const Value.absent(),
+    this.location = const Value.absent(),
+    this.enrollmentLimit = const Value.absent(),
+    this.currentEnrollment = const Value.absent(),
+    this.courseMaterials = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetCourseInfoCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String courseCode,
+    required String courseTitle,
+    this.courseDescription = const Value.absent(),
+    required int credits,
+    this.instructor = const Value.absent(),
+    this.semester = const Value.absent(),
+    this.schedule = const Value.absent(),
+    this.durationInSeconds = const Value.absent(),
+    this.prerequisites = const Value.absent(),
+    this.courseType = const Value.absent(),
+    this.courseLevel = const Value.absent(),
+    this.location = const Value.absent(),
+    this.enrollmentLimit = const Value.absent(),
+    this.currentEnrollment = const Value.absent(),
+    this.courseMaterials = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       courseCode = Value(courseCode),
+       courseTitle = Value(courseTitle),
+       credits = Value(credits);
+  static Insertable<MagnetCourseInfoData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? courseCode,
+    Expression<String>? courseTitle,
+    Expression<String>? courseDescription,
+    Expression<int>? credits,
+    Expression<String>? instructor,
+    Expression<String>? semester,
+    Expression<DateTime>? schedule,
+    Expression<int>? durationInSeconds,
+    Expression<String>? prerequisites,
+    Expression<String>? courseType,
+    Expression<String>? courseLevel,
+    Expression<String>? location,
+    Expression<int>? enrollmentLimit,
+    Expression<int>? currentEnrollment,
+    Expression<String>? courseMaterials,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_id': userID,
+      if (institutionID != null) 'institution_id': institutionID,
+      if (courseCode != null) 'course_code': courseCode,
+      if (courseTitle != null) 'course_title': courseTitle,
+      if (courseDescription != null) 'course_description': courseDescription,
+      if (credits != null) 'credits': credits,
+      if (instructor != null) 'instructor': instructor,
+      if (semester != null) 'semester': semester,
+      if (schedule != null) 'schedule': schedule,
+      if (durationInSeconds != null) 'duration_in_seconds': durationInSeconds,
+      if (prerequisites != null) 'prerequisites': prerequisites,
+      if (courseType != null) 'course_type': courseType,
+      if (courseLevel != null) 'course_level': courseLevel,
+      if (location != null) 'location': location,
+      if (enrollmentLimit != null) 'enrollment_limit': enrollmentLimit,
+      if (currentEnrollment != null) 'current_enrollment': currentEnrollment,
+      if (courseMaterials != null) 'course_materials': courseMaterials,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetCourseInfoCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? courseCode,
+    Value<String>? courseTitle,
+    Value<String?>? courseDescription,
+    Value<int>? credits,
+    Value<String?>? instructor,
+    Value<String?>? semester,
+    Value<DateTime?>? schedule,
+    Value<int?>? durationInSeconds,
+    Value<String?>? prerequisites,
+    Value<String?>? courseType,
+    Value<String?>? courseLevel,
+    Value<String?>? location,
+    Value<int?>? enrollmentLimit,
+    Value<int?>? currentEnrollment,
+    Value<String?>? courseMaterials,
+    Value<int>? rowid,
+  }) {
+    return MagnetCourseInfoCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      courseCode: courseCode ?? this.courseCode,
+      courseTitle: courseTitle ?? this.courseTitle,
+      courseDescription: courseDescription ?? this.courseDescription,
+      credits: credits ?? this.credits,
+      instructor: instructor ?? this.instructor,
+      semester: semester ?? this.semester,
+      schedule: schedule ?? this.schedule,
+      durationInSeconds: durationInSeconds ?? this.durationInSeconds,
+      prerequisites: prerequisites ?? this.prerequisites,
+      courseType: courseType ?? this.courseType,
+      courseLevel: courseLevel ?? this.courseLevel,
+      location: location ?? this.location,
+      enrollmentLimit: enrollmentLimit ?? this.enrollmentLimit,
+      currentEnrollment: currentEnrollment ?? this.currentEnrollment,
+      courseMaterials: courseMaterials ?? this.courseMaterials,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_id'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
+    }
+    if (courseCode.present) {
+      map['course_code'] = Variable<String>(courseCode.value);
+    }
+    if (courseTitle.present) {
+      map['course_title'] = Variable<String>(courseTitle.value);
+    }
+    if (courseDescription.present) {
+      map['course_description'] = Variable<String>(courseDescription.value);
+    }
+    if (credits.present) {
+      map['credits'] = Variable<int>(credits.value);
+    }
+    if (instructor.present) {
+      map['instructor'] = Variable<String>(instructor.value);
+    }
+    if (semester.present) {
+      map['semester'] = Variable<String>(semester.value);
+    }
+    if (schedule.present) {
+      map['schedule'] = Variable<DateTime>(schedule.value);
+    }
+    if (durationInSeconds.present) {
+      map['duration_in_seconds'] = Variable<int>(durationInSeconds.value);
+    }
+    if (prerequisites.present) {
+      map['prerequisites'] = Variable<String>(prerequisites.value);
+    }
+    if (courseType.present) {
+      map['course_type'] = Variable<String>(courseType.value);
+    }
+    if (courseLevel.present) {
+      map['course_level'] = Variable<String>(courseLevel.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (enrollmentLimit.present) {
+      map['enrollment_limit'] = Variable<int>(enrollmentLimit.value);
+    }
+    if (currentEnrollment.present) {
+      map['current_enrollment'] = Variable<int>(currentEnrollment.value);
+    }
+    if (courseMaterials.present) {
+      map['course_materials'] = Variable<String>(courseMaterials.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetCourseInfoCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseTitle: $courseTitle, ')
+          ..write('courseDescription: $courseDescription, ')
+          ..write('credits: $credits, ')
+          ..write('instructor: $instructor, ')
+          ..write('semester: $semester, ')
+          ..write('schedule: $schedule, ')
+          ..write('durationInSeconds: $durationInSeconds, ')
+          ..write('prerequisites: $prerequisites, ')
+          ..write('courseType: $courseType, ')
+          ..write('courseLevel: $courseLevel, ')
+          ..write('location: $location, ')
+          ..write('enrollmentLimit: $enrollmentLimit, ')
+          ..write('currentEnrollment: $currentEnrollment, ')
+          ..write('courseMaterials: $courseMaterials, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
+    with
+        TableInfo<
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MagnetFinancialTransactionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionIdMeta = const VerificationMeta(
+    'transactionId',
+  );
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentMethodMeta = const VerificationMeta(
+    'paymentMethod',
+  );
+  @override
+  late final GeneratedColumn<String> paymentMethod = GeneratedColumn<String>(
+    'payment_method',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _studentIdMeta = const VerificationMeta(
+    'studentId',
+  );
+  @override
+  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
+    'student_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _balanceAfterTransactionMeta =
+      const VerificationMeta('balanceAfterTransaction');
+  @override
+  late final GeneratedColumn<double> balanceAfterTransaction =
+      GeneratedColumn<double>(
+        'balance_after_transaction',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
+    'referenceNumber',
+  );
+  @override
+  late final GeneratedColumn<String> referenceNumber = GeneratedColumn<String>(
+    'reference_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userID,
+    institutionID,
+    transactionId,
+    amount,
+    date,
+    type,
+    paymentMethod,
+    studentId,
+    balanceAfterTransaction,
+    status,
+    currency,
+    description,
+    referenceNumber,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'magnet_financial_transaction';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MagnetFinancialTransactionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _transactionIdMeta,
+        transactionId.isAcceptableOrUnknown(
+          data['transaction_id']!,
+          _transactionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('payment_method')) {
+      context.handle(
+        _paymentMethodMeta,
+        paymentMethod.isAcceptableOrUnknown(
+          data['payment_method']!,
+          _paymentMethodMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentMethodMeta);
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIdMeta,
+        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('balance_after_transaction')) {
+      context.handle(
+        _balanceAfterTransactionMeta,
+        balanceAfterTransaction.isAcceptableOrUnknown(
+          data['balance_after_transaction']!,
+          _balanceAfterTransactionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_balanceAfterTransactionMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reference_number')) {
+      context.handle(
+        _referenceNumberMeta,
+        referenceNumber.isAcceptableOrUnknown(
+          data['reference_number']!,
+          _referenceNumberMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    userID,
+    institutionID,
+    transactionId,
+  };
+  @override
+  MagnetFinancialTransactionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MagnetFinancialTransactionData(
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      transactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      paymentMethod: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_method'],
+      )!,
+      studentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_id'],
+      )!,
+      balanceAfterTransaction: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}balance_after_transaction'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      referenceNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference_number'],
+      ),
+    );
+  }
+
+  @override
+  $MagnetFinancialTransactionTable createAlias(String alias) {
+    return $MagnetFinancialTransactionTable(attachedDatabase, alias);
+  }
+}
+
+class MagnetFinancialTransactionData extends DataClass
+    implements Insertable<MagnetFinancialTransactionData> {
+  final String userID;
+  final int institutionID;
+  final String transactionId;
+  final double amount;
+  final DateTime date;
+  final String type;
+  final String paymentMethod;
+  final String studentId;
+  final double balanceAfterTransaction;
+  final String status;
+  final String currency;
+  final String? description;
+  final String? referenceNumber;
+  const MagnetFinancialTransactionData({
+    required this.userID,
+    required this.institutionID,
+    required this.transactionId,
+    required this.amount,
+    required this.date,
+    required this.type,
+    required this.paymentMethod,
+    required this.studentId,
+    required this.balanceAfterTransaction,
+    required this.status,
+    required this.currency,
+    this.description,
+    this.referenceNumber,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userID);
+    map['institution_id'] = Variable<int>(institutionID);
+    map['transaction_id'] = Variable<String>(transactionId);
+    map['amount'] = Variable<double>(amount);
+    map['date'] = Variable<DateTime>(date);
+    map['type'] = Variable<String>(type);
+    map['payment_method'] = Variable<String>(paymentMethod);
+    map['student_id'] = Variable<String>(studentId);
+    map['balance_after_transaction'] = Variable<double>(
+      balanceAfterTransaction,
+    );
+    map['status'] = Variable<String>(status);
+    map['currency'] = Variable<String>(currency);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || referenceNumber != null) {
+      map['reference_number'] = Variable<String>(referenceNumber);
+    }
+    return map;
+  }
+
+  MagnetFinancialTransactionCompanion toCompanion(bool nullToAbsent) {
+    return MagnetFinancialTransactionCompanion(
+      userID: Value(userID),
+      institutionID: Value(institutionID),
+      transactionId: Value(transactionId),
+      amount: Value(amount),
+      date: Value(date),
+      type: Value(type),
+      paymentMethod: Value(paymentMethod),
+      studentId: Value(studentId),
+      balanceAfterTransaction: Value(balanceAfterTransaction),
+      status: Value(status),
+      currency: Value(currency),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      referenceNumber: referenceNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(referenceNumber),
+    );
+  }
+
+  factory MagnetFinancialTransactionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MagnetFinancialTransactionData(
+      userID: serializer.fromJson<String>(json['userID']),
+      institutionID: serializer.fromJson<int>(json['institutionID']),
+      transactionId: serializer.fromJson<String>(json['transactionId']),
+      amount: serializer.fromJson<double>(json['amount']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      type: serializer.fromJson<String>(json['type']),
+      paymentMethod: serializer.fromJson<String>(json['paymentMethod']),
+      studentId: serializer.fromJson<String>(json['studentId']),
+      balanceAfterTransaction: serializer.fromJson<double>(
+        json['balanceAfterTransaction'],
+      ),
+      status: serializer.fromJson<String>(json['status']),
+      currency: serializer.fromJson<String>(json['currency']),
+      description: serializer.fromJson<String?>(json['description']),
+      referenceNumber: serializer.fromJson<String?>(json['referenceNumber']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userID': serializer.toJson<String>(userID),
+      'institutionID': serializer.toJson<int>(institutionID),
+      'transactionId': serializer.toJson<String>(transactionId),
+      'amount': serializer.toJson<double>(amount),
+      'date': serializer.toJson<DateTime>(date),
+      'type': serializer.toJson<String>(type),
+      'paymentMethod': serializer.toJson<String>(paymentMethod),
+      'studentId': serializer.toJson<String>(studentId),
+      'balanceAfterTransaction': serializer.toJson<double>(
+        balanceAfterTransaction,
+      ),
+      'status': serializer.toJson<String>(status),
+      'currency': serializer.toJson<String>(currency),
+      'description': serializer.toJson<String?>(description),
+      'referenceNumber': serializer.toJson<String?>(referenceNumber),
+    };
+  }
+
+  MagnetFinancialTransactionData copyWith({
+    String? userID,
+    int? institutionID,
+    String? transactionId,
+    double? amount,
+    DateTime? date,
+    String? type,
+    String? paymentMethod,
+    String? studentId,
+    double? balanceAfterTransaction,
+    String? status,
+    String? currency,
+    Value<String?> description = const Value.absent(),
+    Value<String?> referenceNumber = const Value.absent(),
+  }) => MagnetFinancialTransactionData(
+    userID: userID ?? this.userID,
+    institutionID: institutionID ?? this.institutionID,
+    transactionId: transactionId ?? this.transactionId,
+    amount: amount ?? this.amount,
+    date: date ?? this.date,
+    type: type ?? this.type,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    studentId: studentId ?? this.studentId,
+    balanceAfterTransaction:
+        balanceAfterTransaction ?? this.balanceAfterTransaction,
+    status: status ?? this.status,
+    currency: currency ?? this.currency,
+    description: description.present ? description.value : this.description,
+    referenceNumber: referenceNumber.present
+        ? referenceNumber.value
+        : this.referenceNumber,
+  );
+  MagnetFinancialTransactionData copyWithCompanion(
+    MagnetFinancialTransactionCompanion data,
+  ) {
+    return MagnetFinancialTransactionData(
+      userID: data.userID.present ? data.userID.value : this.userID,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      transactionId: data.transactionId.present
+          ? data.transactionId.value
+          : this.transactionId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      date: data.date.present ? data.date.value : this.date,
+      type: data.type.present ? data.type.value : this.type,
+      paymentMethod: data.paymentMethod.present
+          ? data.paymentMethod.value
+          : this.paymentMethod,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      balanceAfterTransaction: data.balanceAfterTransaction.present
+          ? data.balanceAfterTransaction.value
+          : this.balanceAfterTransaction,
+      status: data.status.present ? data.status.value : this.status,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      referenceNumber: data.referenceNumber.present
+          ? data.referenceNumber.value
+          : this.referenceNumber,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetFinancialTransactionData(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('type: $type, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('studentId: $studentId, ')
+          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
+          ..write('status: $status, ')
+          ..write('currency: $currency, ')
+          ..write('description: $description, ')
+          ..write('referenceNumber: $referenceNumber')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userID,
+    institutionID,
+    transactionId,
+    amount,
+    date,
+    type,
+    paymentMethod,
+    studentId,
+    balanceAfterTransaction,
+    status,
+    currency,
+    description,
+    referenceNumber,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MagnetFinancialTransactionData &&
+          other.userID == this.userID &&
+          other.institutionID == this.institutionID &&
+          other.transactionId == this.transactionId &&
+          other.amount == this.amount &&
+          other.date == this.date &&
+          other.type == this.type &&
+          other.paymentMethod == this.paymentMethod &&
+          other.studentId == this.studentId &&
+          other.balanceAfterTransaction == this.balanceAfterTransaction &&
+          other.status == this.status &&
+          other.currency == this.currency &&
+          other.description == this.description &&
+          other.referenceNumber == this.referenceNumber);
+}
+
+class MagnetFinancialTransactionCompanion
+    extends UpdateCompanion<MagnetFinancialTransactionData> {
+  final Value<String> userID;
+  final Value<int> institutionID;
+  final Value<String> transactionId;
+  final Value<double> amount;
+  final Value<DateTime> date;
+  final Value<String> type;
+  final Value<String> paymentMethod;
+  final Value<String> studentId;
+  final Value<double> balanceAfterTransaction;
+  final Value<String> status;
+  final Value<String> currency;
+  final Value<String?> description;
+  final Value<String?> referenceNumber;
+  final Value<int> rowid;
+  const MagnetFinancialTransactionCompanion({
+    this.userID = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.transactionId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.date = const Value.absent(),
+    this.type = const Value.absent(),
+    this.paymentMethod = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.balanceAfterTransaction = const Value.absent(),
+    this.status = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.description = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MagnetFinancialTransactionCompanion.insert({
+    required String userID,
+    required int institutionID,
+    required String transactionId,
+    required double amount,
+    required DateTime date,
+    required String type,
+    required String paymentMethod,
+    required String studentId,
+    required double balanceAfterTransaction,
+    required String status,
+    required String currency,
+    this.description = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userID = Value(userID),
+       institutionID = Value(institutionID),
+       transactionId = Value(transactionId),
+       amount = Value(amount),
+       date = Value(date),
+       type = Value(type),
+       paymentMethod = Value(paymentMethod),
+       studentId = Value(studentId),
+       balanceAfterTransaction = Value(balanceAfterTransaction),
+       status = Value(status),
+       currency = Value(currency);
+  static Insertable<MagnetFinancialTransactionData> custom({
+    Expression<String>? userID,
+    Expression<int>? institutionID,
+    Expression<String>? transactionId,
+    Expression<double>? amount,
+    Expression<DateTime>? date,
+    Expression<String>? type,
+    Expression<String>? paymentMethod,
+    Expression<String>? studentId,
+    Expression<double>? balanceAfterTransaction,
+    Expression<String>? status,
+    Expression<String>? currency,
+    Expression<String>? description,
+    Expression<String>? referenceNumber,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userID != null) 'user_id': userID,
+      if (institutionID != null) 'institution_id': institutionID,
+      if (transactionId != null) 'transaction_id': transactionId,
+      if (amount != null) 'amount': amount,
+      if (date != null) 'date': date,
+      if (type != null) 'type': type,
+      if (paymentMethod != null) 'payment_method': paymentMethod,
+      if (studentId != null) 'student_id': studentId,
+      if (balanceAfterTransaction != null)
+        'balance_after_transaction': balanceAfterTransaction,
+      if (status != null) 'status': status,
+      if (currency != null) 'currency': currency,
+      if (description != null) 'description': description,
+      if (referenceNumber != null) 'reference_number': referenceNumber,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MagnetFinancialTransactionCompanion copyWith({
+    Value<String>? userID,
+    Value<int>? institutionID,
+    Value<String>? transactionId,
+    Value<double>? amount,
+    Value<DateTime>? date,
+    Value<String>? type,
+    Value<String>? paymentMethod,
+    Value<String>? studentId,
+    Value<double>? balanceAfterTransaction,
+    Value<String>? status,
+    Value<String>? currency,
+    Value<String?>? description,
+    Value<String?>? referenceNumber,
+    Value<int>? rowid,
+  }) {
+    return MagnetFinancialTransactionCompanion(
+      userID: userID ?? this.userID,
+      institutionID: institutionID ?? this.institutionID,
+      transactionId: transactionId ?? this.transactionId,
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      type: type ?? this.type,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      studentId: studentId ?? this.studentId,
+      balanceAfterTransaction:
+          balanceAfterTransaction ?? this.balanceAfterTransaction,
+      status: status ?? this.status,
+      currency: currency ?? this.currency,
+      description: description ?? this.description,
+      referenceNumber: referenceNumber ?? this.referenceNumber,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userID.present) {
+      map['user_id'] = Variable<String>(userID.value);
+    }
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
+    }
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (paymentMethod.present) {
+      map['payment_method'] = Variable<String>(paymentMethod.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<String>(studentId.value);
+    }
+    if (balanceAfterTransaction.present) {
+      map['balance_after_transaction'] = Variable<double>(
+        balanceAfterTransaction.value,
+      );
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (referenceNumber.present) {
+      map['reference_number'] = Variable<String>(referenceNumber.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MagnetFinancialTransactionCompanion(')
+          ..write('userID: $userID, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('type: $type, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('studentId: $studentId, ')
+          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
+          ..write('status: $status, ')
+          ..write('currency: $currency, ')
+          ..write('description: $description, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CommunityTableTable extends CommunityTable
+    with TableInfo<$CommunityTableTable, CommunityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CommunityTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nsfwMeta = const VerificationMeta('nsfw');
+  @override
+  late final GeneratedColumn<bool> nsfw = GeneratedColumn<bool>(
+    'nsfw',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("nsfw" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _privateMeta = const VerificationMeta(
+    'private',
+  );
+  @override
+  late final GeneratedColumn<bool> private = GeneratedColumn<bool>(
+    'private',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("private" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _verifiedMeta = const VerificationMeta(
+    'verified',
+  );
+  @override
+  late final GeneratedColumn<bool> verified = GeneratedColumn<bool>(
+    'verified',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("verified" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _visibilityMeta = const VerificationMeta(
+    'visibility',
+  );
+  @override
+  late final GeneratedColumn<String> visibility = GeneratedColumn<String>(
+    'visibility',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _memberCountMeta = const VerificationMeta(
+    'memberCount',
+  );
+  @override
+  late final GeneratedColumn<int> memberCount = GeneratedColumn<int>(
+    'member_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _moderatorCountMeta = const VerificationMeta(
+    'moderatorCount',
+  );
+  @override
+  late final GeneratedColumn<int> moderatorCount = GeneratedColumn<int>(
+    'moderator_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannedUsersCountMeta = const VerificationMeta(
+    'bannedUsersCount',
+  );
+  @override
+  late final GeneratedColumn<int> bannedUsersCount = GeneratedColumn<int>(
+    'banned_users_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _monthlyVisitorCountMeta =
+      const VerificationMeta('monthlyVisitorCount');
+  @override
+  late final GeneratedColumn<int> monthlyVisitorCount = GeneratedColumn<int>(
+    'monthly_visitor_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _weeklyVisitorCountMeta =
+      const VerificationMeta('weeklyVisitorCount');
+  @override
+  late final GeneratedColumn<int> weeklyVisitorCount = GeneratedColumn<int>(
+    'weekly_visitor_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
+  @override
+  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
+    'banner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannerHeightMeta = const VerificationMeta(
+    'bannerHeight',
+  );
+  @override
+  late final GeneratedColumn<int> bannerHeight = GeneratedColumn<int>(
+    'banner_height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannerWidthMeta = const VerificationMeta(
+    'bannerWidth',
+  );
+  @override
+  late final GeneratedColumn<int> bannerWidth = GeneratedColumn<int>(
+    'banner_width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
+    'bannerUrl',
+  );
+  @override
+  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
+    'banner_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profilePictureMeta = const VerificationMeta(
+    'profilePicture',
+  );
+  @override
+  late final GeneratedColumn<String> profilePicture = GeneratedColumn<String>(
+    'profile_picture',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profilePictureHeightMeta =
+      const VerificationMeta('profilePictureHeight');
+  @override
+  late final GeneratedColumn<int> profilePictureHeight = GeneratedColumn<int>(
+    'profile_picture_height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _profilePictureWidthMeta =
+      const VerificationMeta('profilePictureWidth');
+  @override
+  late final GeneratedColumn<int> profilePictureWidth = GeneratedColumn<int>(
+    'profile_picture_width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _profilePictureUrlMeta = const VerificationMeta(
+    'profilePictureUrl',
+  );
+  @override
+  late final GeneratedColumn<String> profilePictureUrl =
+      GeneratedColumn<String>(
+        'profile_picture_url',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
+    'creatorId',
+  );
+  @override
+  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
+    'creator_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String>
+  guidelines = GeneratedColumn<String>(
+    'guidelines',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<List<dynamic>>($CommunityTableTable.$converterguidelines);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    description,
+    nsfw,
+    private,
+    verified,
+    visibility,
+    memberCount,
+    moderatorCount,
+    bannedUsersCount,
+    monthlyVisitorCount,
+    weeklyVisitorCount,
+    banner,
+    bannerHeight,
+    bannerWidth,
+    bannerUrl,
+    profilePicture,
+    profilePictureHeight,
+    profilePictureWidth,
+    profilePictureUrl,
+    creatorId,
+    guidelines,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'community_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CommunityData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('nsfw')) {
+      context.handle(
+        _nsfwMeta,
+        nsfw.isAcceptableOrUnknown(data['nsfw']!, _nsfwMeta),
+      );
+    }
+    if (data.containsKey('private')) {
+      context.handle(
+        _privateMeta,
+        private.isAcceptableOrUnknown(data['private']!, _privateMeta),
+      );
+    }
+    if (data.containsKey('verified')) {
+      context.handle(
+        _verifiedMeta,
+        verified.isAcceptableOrUnknown(data['verified']!, _verifiedMeta),
+      );
+    }
+    if (data.containsKey('visibility')) {
+      context.handle(
+        _visibilityMeta,
+        visibility.isAcceptableOrUnknown(data['visibility']!, _visibilityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_visibilityMeta);
+    }
+    if (data.containsKey('member_count')) {
+      context.handle(
+        _memberCountMeta,
+        memberCount.isAcceptableOrUnknown(
+          data['member_count']!,
+          _memberCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('moderator_count')) {
+      context.handle(
+        _moderatorCountMeta,
+        moderatorCount.isAcceptableOrUnknown(
+          data['moderator_count']!,
+          _moderatorCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banned_users_count')) {
+      context.handle(
+        _bannedUsersCountMeta,
+        bannedUsersCount.isAcceptableOrUnknown(
+          data['banned_users_count']!,
+          _bannedUsersCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('monthly_visitor_count')) {
+      context.handle(
+        _monthlyVisitorCountMeta,
+        monthlyVisitorCount.isAcceptableOrUnknown(
+          data['monthly_visitor_count']!,
+          _monthlyVisitorCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weekly_visitor_count')) {
+      context.handle(
+        _weeklyVisitorCountMeta,
+        weeklyVisitorCount.isAcceptableOrUnknown(
+          data['weekly_visitor_count']!,
+          _weeklyVisitorCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banner')) {
+      context.handle(
+        _bannerMeta,
+        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
+      );
+    }
+    if (data.containsKey('banner_height')) {
+      context.handle(
+        _bannerHeightMeta,
+        bannerHeight.isAcceptableOrUnknown(
+          data['banner_height']!,
+          _bannerHeightMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banner_width')) {
+      context.handle(
+        _bannerWidthMeta,
+        bannerWidth.isAcceptableOrUnknown(
+          data['banner_width']!,
+          _bannerWidthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banner_url')) {
+      context.handle(
+        _bannerUrlMeta,
+        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
+      );
+    }
+    if (data.containsKey('profile_picture')) {
+      context.handle(
+        _profilePictureMeta,
+        profilePicture.isAcceptableOrUnknown(
+          data['profile_picture']!,
+          _profilePictureMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_height')) {
+      context.handle(
+        _profilePictureHeightMeta,
+        profilePictureHeight.isAcceptableOrUnknown(
+          data['profile_picture_height']!,
+          _profilePictureHeightMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_width')) {
+      context.handle(
+        _profilePictureWidthMeta,
+        profilePictureWidth.isAcceptableOrUnknown(
+          data['profile_picture_width']!,
+          _profilePictureWidthMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_picture_url')) {
+      context.handle(
+        _profilePictureUrlMeta,
+        profilePictureUrl.isAcceptableOrUnknown(
+          data['profile_picture_url']!,
+          _profilePictureUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('creator_id')) {
+      context.handle(
+        _creatorIdMeta,
+        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_creatorIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CommunityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CommunityData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      nsfw: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}nsfw'],
+      )!,
+      private: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}private'],
+      )!,
+      verified: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}verified'],
+      )!,
+      visibility: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}visibility'],
+      )!,
+      memberCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}member_count'],
+      )!,
+      moderatorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}moderator_count'],
+      )!,
+      bannedUsersCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banned_users_count'],
+      )!,
+      monthlyVisitorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}monthly_visitor_count'],
+      )!,
+      weeklyVisitorCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_visitor_count'],
+      )!,
+      banner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner'],
+      ),
+      bannerHeight: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banner_height'],
+      )!,
+      bannerWidth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}banner_width'],
+      )!,
+      bannerUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banner_url'],
+      ),
+      profilePicture: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture'],
+      ),
+      profilePictureHeight: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_picture_height'],
+      )!,
+      profilePictureWidth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_picture_width'],
+      )!,
+      profilePictureUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture_url'],
+      ),
+      creatorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}creator_id'],
+      )!,
+      guidelines: $CommunityTableTable.$converterguidelines.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}guidelines'],
+        )!,
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CommunityTableTable createAlias(String alias) {
+    return $CommunityTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<dynamic>, String> $converterguidelines =
+      JsonListConverter();
+}
+
+class CommunityData extends DataClass implements Insertable<CommunityData> {
+  final int id;
+  final String name;
+  final String? description;
+  final bool nsfw;
+  final bool private;
+  final bool verified;
+  final String visibility;
+  final int memberCount;
+  final int moderatorCount;
+  final int bannedUsersCount;
+  final int monthlyVisitorCount;
+  final int weeklyVisitorCount;
+  final String? banner;
+  final int bannerHeight;
+  final int bannerWidth;
+  final String? bannerUrl;
+  final String? profilePicture;
+  final int profilePictureHeight;
+  final int profilePictureWidth;
+  final String? profilePictureUrl;
+  final String creatorId;
+  final List<dynamic> guidelines;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CommunityData({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.nsfw,
+    required this.private,
+    required this.verified,
+    required this.visibility,
+    required this.memberCount,
+    required this.moderatorCount,
+    required this.bannedUsersCount,
+    required this.monthlyVisitorCount,
+    required this.weeklyVisitorCount,
+    this.banner,
+    required this.bannerHeight,
+    required this.bannerWidth,
+    this.bannerUrl,
+    this.profilePicture,
+    required this.profilePictureHeight,
+    required this.profilePictureWidth,
+    this.profilePictureUrl,
+    required this.creatorId,
+    required this.guidelines,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['nsfw'] = Variable<bool>(nsfw);
+    map['private'] = Variable<bool>(private);
+    map['verified'] = Variable<bool>(verified);
+    map['visibility'] = Variable<String>(visibility);
+    map['member_count'] = Variable<int>(memberCount);
+    map['moderator_count'] = Variable<int>(moderatorCount);
+    map['banned_users_count'] = Variable<int>(bannedUsersCount);
+    map['monthly_visitor_count'] = Variable<int>(monthlyVisitorCount);
+    map['weekly_visitor_count'] = Variable<int>(weeklyVisitorCount);
+    if (!nullToAbsent || banner != null) {
+      map['banner'] = Variable<String>(banner);
+    }
+    map['banner_height'] = Variable<int>(bannerHeight);
+    map['banner_width'] = Variable<int>(bannerWidth);
+    if (!nullToAbsent || bannerUrl != null) {
+      map['banner_url'] = Variable<String>(bannerUrl);
+    }
+    if (!nullToAbsent || profilePicture != null) {
+      map['profile_picture'] = Variable<String>(profilePicture);
+    }
+    map['profile_picture_height'] = Variable<int>(profilePictureHeight);
+    map['profile_picture_width'] = Variable<int>(profilePictureWidth);
+    if (!nullToAbsent || profilePictureUrl != null) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl);
+    }
+    map['creator_id'] = Variable<String>(creatorId);
+    {
+      map['guidelines'] = Variable<String>(
+        $CommunityTableTable.$converterguidelines.toSql(guidelines),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CommunityTableCompanion toCompanion(bool nullToAbsent) {
+    return CommunityTableCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      nsfw: Value(nsfw),
+      private: Value(private),
+      verified: Value(verified),
+      visibility: Value(visibility),
+      memberCount: Value(memberCount),
+      moderatorCount: Value(moderatorCount),
+      bannedUsersCount: Value(bannedUsersCount),
+      monthlyVisitorCount: Value(monthlyVisitorCount),
+      weeklyVisitorCount: Value(weeklyVisitorCount),
+      banner: banner == null && nullToAbsent
+          ? const Value.absent()
+          : Value(banner),
+      bannerHeight: Value(bannerHeight),
+      bannerWidth: Value(bannerWidth),
+      bannerUrl: bannerUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannerUrl),
+      profilePicture: profilePicture == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePicture),
+      profilePictureHeight: Value(profilePictureHeight),
+      profilePictureWidth: Value(profilePictureWidth),
+      profilePictureUrl: profilePictureUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePictureUrl),
+      creatorId: Value(creatorId),
+      guidelines: Value(guidelines),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CommunityData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CommunityData(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      nsfw: serializer.fromJson<bool>(json['nsfw']),
+      private: serializer.fromJson<bool>(json['private']),
+      verified: serializer.fromJson<bool>(json['verified']),
+      visibility: serializer.fromJson<String>(json['visibility']),
+      memberCount: serializer.fromJson<int>(json['member_count']),
+      moderatorCount: serializer.fromJson<int>(json['moderator_count']),
+      bannedUsersCount: serializer.fromJson<int>(json['banned_users_count']),
+      monthlyVisitorCount: serializer.fromJson<int>(
+        json['monthly_visitor_count'],
+      ),
+      weeklyVisitorCount: serializer.fromJson<int>(
+        json['weekly_visitor_count'],
+      ),
+      banner: serializer.fromJson<String?>(json['banner']),
+      bannerHeight: serializer.fromJson<int>(json['banner_height']),
+      bannerWidth: serializer.fromJson<int>(json['banner_width']),
+      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
+      profilePicture: serializer.fromJson<String?>(json['profile_picture']),
+      profilePictureHeight: serializer.fromJson<int>(
+        json['profile_picture_height'],
+      ),
+      profilePictureWidth: serializer.fromJson<int>(
+        json['profile_picture_width'],
+      ),
+      profilePictureUrl: serializer.fromJson<String?>(
+        json['profile_picture_url'],
+      ),
+      creatorId: serializer.fromJson<String>(json['creator_id']),
+      guidelines: serializer.fromJson<List<dynamic>>(json['guidelines']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'nsfw': serializer.toJson<bool>(nsfw),
+      'private': serializer.toJson<bool>(private),
+      'verified': serializer.toJson<bool>(verified),
+      'visibility': serializer.toJson<String>(visibility),
+      'member_count': serializer.toJson<int>(memberCount),
+      'moderator_count': serializer.toJson<int>(moderatorCount),
+      'banned_users_count': serializer.toJson<int>(bannedUsersCount),
+      'monthly_visitor_count': serializer.toJson<int>(monthlyVisitorCount),
+      'weekly_visitor_count': serializer.toJson<int>(weeklyVisitorCount),
+      'banner': serializer.toJson<String?>(banner),
+      'banner_height': serializer.toJson<int>(bannerHeight),
+      'banner_width': serializer.toJson<int>(bannerWidth),
+      'banner_url': serializer.toJson<String?>(bannerUrl),
+      'profile_picture': serializer.toJson<String?>(profilePicture),
+      'profile_picture_height': serializer.toJson<int>(profilePictureHeight),
+      'profile_picture_width': serializer.toJson<int>(profilePictureWidth),
+      'profile_picture_url': serializer.toJson<String?>(profilePictureUrl),
+      'creator_id': serializer.toJson<String>(creatorId),
+      'guidelines': serializer.toJson<List<dynamic>>(guidelines),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CommunityData copyWith({
+    int? id,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    bool? nsfw,
+    bool? private,
+    bool? verified,
+    String? visibility,
+    int? memberCount,
+    int? moderatorCount,
+    int? bannedUsersCount,
+    int? monthlyVisitorCount,
+    int? weeklyVisitorCount,
+    Value<String?> banner = const Value.absent(),
+    int? bannerHeight,
+    int? bannerWidth,
+    Value<String?> bannerUrl = const Value.absent(),
+    Value<String?> profilePicture = const Value.absent(),
+    int? profilePictureHeight,
+    int? profilePictureWidth,
+    Value<String?> profilePictureUrl = const Value.absent(),
+    String? creatorId,
+    List<dynamic>? guidelines,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CommunityData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    nsfw: nsfw ?? this.nsfw,
+    private: private ?? this.private,
+    verified: verified ?? this.verified,
+    visibility: visibility ?? this.visibility,
+    memberCount: memberCount ?? this.memberCount,
+    moderatorCount: moderatorCount ?? this.moderatorCount,
+    bannedUsersCount: bannedUsersCount ?? this.bannedUsersCount,
+    monthlyVisitorCount: monthlyVisitorCount ?? this.monthlyVisitorCount,
+    weeklyVisitorCount: weeklyVisitorCount ?? this.weeklyVisitorCount,
+    banner: banner.present ? banner.value : this.banner,
+    bannerHeight: bannerHeight ?? this.bannerHeight,
+    bannerWidth: bannerWidth ?? this.bannerWidth,
+    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
+    profilePicture: profilePicture.present
+        ? profilePicture.value
+        : this.profilePicture,
+    profilePictureHeight: profilePictureHeight ?? this.profilePictureHeight,
+    profilePictureWidth: profilePictureWidth ?? this.profilePictureWidth,
+    profilePictureUrl: profilePictureUrl.present
+        ? profilePictureUrl.value
+        : this.profilePictureUrl,
+    creatorId: creatorId ?? this.creatorId,
+    guidelines: guidelines ?? this.guidelines,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CommunityData copyWithCompanion(CommunityTableCompanion data) {
+    return CommunityData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      nsfw: data.nsfw.present ? data.nsfw.value : this.nsfw,
+      private: data.private.present ? data.private.value : this.private,
+      verified: data.verified.present ? data.verified.value : this.verified,
+      visibility: data.visibility.present
+          ? data.visibility.value
+          : this.visibility,
+      memberCount: data.memberCount.present
+          ? data.memberCount.value
+          : this.memberCount,
+      moderatorCount: data.moderatorCount.present
+          ? data.moderatorCount.value
+          : this.moderatorCount,
+      bannedUsersCount: data.bannedUsersCount.present
+          ? data.bannedUsersCount.value
+          : this.bannedUsersCount,
+      monthlyVisitorCount: data.monthlyVisitorCount.present
+          ? data.monthlyVisitorCount.value
+          : this.monthlyVisitorCount,
+      weeklyVisitorCount: data.weeklyVisitorCount.present
+          ? data.weeklyVisitorCount.value
+          : this.weeklyVisitorCount,
+      banner: data.banner.present ? data.banner.value : this.banner,
+      bannerHeight: data.bannerHeight.present
+          ? data.bannerHeight.value
+          : this.bannerHeight,
+      bannerWidth: data.bannerWidth.present
+          ? data.bannerWidth.value
+          : this.bannerWidth,
+      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
+      profilePicture: data.profilePicture.present
+          ? data.profilePicture.value
+          : this.profilePicture,
+      profilePictureHeight: data.profilePictureHeight.present
+          ? data.profilePictureHeight.value
+          : this.profilePictureHeight,
+      profilePictureWidth: data.profilePictureWidth.present
+          ? data.profilePictureWidth.value
+          : this.profilePictureWidth,
+      profilePictureUrl: data.profilePictureUrl.present
+          ? data.profilePictureUrl.value
+          : this.profilePictureUrl,
+      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
+      guidelines: data.guidelines.present
+          ? data.guidelines.value
+          : this.guidelines,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CommunityData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('nsfw: $nsfw, ')
+          ..write('private: $private, ')
+          ..write('verified: $verified, ')
+          ..write('visibility: $visibility, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('moderatorCount: $moderatorCount, ')
+          ..write('bannedUsersCount: $bannedUsersCount, ')
+          ..write('monthlyVisitorCount: $monthlyVisitorCount, ')
+          ..write('weeklyVisitorCount: $weeklyVisitorCount, ')
+          ..write('banner: $banner, ')
+          ..write('bannerHeight: $bannerHeight, ')
+          ..write('bannerWidth: $bannerWidth, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('profilePictureHeight: $profilePictureHeight, ')
+          ..write('profilePictureWidth: $profilePictureWidth, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('guidelines: $guidelines, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    name,
+    description,
+    nsfw,
+    private,
+    verified,
+    visibility,
+    memberCount,
+    moderatorCount,
+    bannedUsersCount,
+    monthlyVisitorCount,
+    weeklyVisitorCount,
+    banner,
+    bannerHeight,
+    bannerWidth,
+    bannerUrl,
+    profilePicture,
+    profilePictureHeight,
+    profilePictureWidth,
+    profilePictureUrl,
+    creatorId,
+    guidelines,
+    createdAt,
+    updatedAt,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CommunityData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.nsfw == this.nsfw &&
+          other.private == this.private &&
+          other.verified == this.verified &&
+          other.visibility == this.visibility &&
+          other.memberCount == this.memberCount &&
+          other.moderatorCount == this.moderatorCount &&
+          other.bannedUsersCount == this.bannedUsersCount &&
+          other.monthlyVisitorCount == this.monthlyVisitorCount &&
+          other.weeklyVisitorCount == this.weeklyVisitorCount &&
+          other.banner == this.banner &&
+          other.bannerHeight == this.bannerHeight &&
+          other.bannerWidth == this.bannerWidth &&
+          other.bannerUrl == this.bannerUrl &&
+          other.profilePicture == this.profilePicture &&
+          other.profilePictureHeight == this.profilePictureHeight &&
+          other.profilePictureWidth == this.profilePictureWidth &&
+          other.profilePictureUrl == this.profilePictureUrl &&
+          other.creatorId == this.creatorId &&
+          other.guidelines == this.guidelines &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CommunityTableCompanion extends UpdateCompanion<CommunityData> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<bool> nsfw;
+  final Value<bool> private;
+  final Value<bool> verified;
+  final Value<String> visibility;
+  final Value<int> memberCount;
+  final Value<int> moderatorCount;
+  final Value<int> bannedUsersCount;
+  final Value<int> monthlyVisitorCount;
+  final Value<int> weeklyVisitorCount;
+  final Value<String?> banner;
+  final Value<int> bannerHeight;
+  final Value<int> bannerWidth;
+  final Value<String?> bannerUrl;
+  final Value<String?> profilePicture;
+  final Value<int> profilePictureHeight;
+  final Value<int> profilePictureWidth;
+  final Value<String?> profilePictureUrl;
+  final Value<String> creatorId;
+  final Value<List<dynamic>> guidelines;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const CommunityTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.nsfw = const Value.absent(),
+    this.private = const Value.absent(),
+    this.verified = const Value.absent(),
+    this.visibility = const Value.absent(),
+    this.memberCount = const Value.absent(),
+    this.moderatorCount = const Value.absent(),
+    this.bannedUsersCount = const Value.absent(),
+    this.monthlyVisitorCount = const Value.absent(),
+    this.weeklyVisitorCount = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.bannerHeight = const Value.absent(),
+    this.bannerWidth = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.profilePictureHeight = const Value.absent(),
+    this.profilePictureWidth = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    this.creatorId = const Value.absent(),
+    this.guidelines = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  CommunityTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.description = const Value.absent(),
+    this.nsfw = const Value.absent(),
+    this.private = const Value.absent(),
+    this.verified = const Value.absent(),
+    required String visibility,
+    this.memberCount = const Value.absent(),
+    this.moderatorCount = const Value.absent(),
+    this.bannedUsersCount = const Value.absent(),
+    this.monthlyVisitorCount = const Value.absent(),
+    this.weeklyVisitorCount = const Value.absent(),
+    this.banner = const Value.absent(),
+    this.bannerHeight = const Value.absent(),
+    this.bannerWidth = const Value.absent(),
+    this.bannerUrl = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.profilePictureHeight = const Value.absent(),
+    this.profilePictureWidth = const Value.absent(),
+    this.profilePictureUrl = const Value.absent(),
+    required String creatorId,
+    required List<dynamic> guidelines,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : name = Value(name),
+       visibility = Value(visibility),
+       creatorId = Value(creatorId),
+       guidelines = Value(guidelines),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<CommunityData> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<bool>? nsfw,
+    Expression<bool>? private,
+    Expression<bool>? verified,
+    Expression<String>? visibility,
+    Expression<int>? memberCount,
+    Expression<int>? moderatorCount,
+    Expression<int>? bannedUsersCount,
+    Expression<int>? monthlyVisitorCount,
+    Expression<int>? weeklyVisitorCount,
+    Expression<String>? banner,
+    Expression<int>? bannerHeight,
+    Expression<int>? bannerWidth,
+    Expression<String>? bannerUrl,
+    Expression<String>? profilePicture,
+    Expression<int>? profilePictureHeight,
+    Expression<int>? profilePictureWidth,
+    Expression<String>? profilePictureUrl,
+    Expression<String>? creatorId,
+    Expression<String>? guidelines,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (nsfw != null) 'nsfw': nsfw,
+      if (private != null) 'private': private,
+      if (verified != null) 'verified': verified,
+      if (visibility != null) 'visibility': visibility,
+      if (memberCount != null) 'member_count': memberCount,
+      if (moderatorCount != null) 'moderator_count': moderatorCount,
+      if (bannedUsersCount != null) 'banned_users_count': bannedUsersCount,
+      if (monthlyVisitorCount != null)
+        'monthly_visitor_count': monthlyVisitorCount,
+      if (weeklyVisitorCount != null)
+        'weekly_visitor_count': weeklyVisitorCount,
+      if (banner != null) 'banner': banner,
+      if (bannerHeight != null) 'banner_height': bannerHeight,
+      if (bannerWidth != null) 'banner_width': bannerWidth,
+      if (bannerUrl != null) 'banner_url': bannerUrl,
+      if (profilePicture != null) 'profile_picture': profilePicture,
+      if (profilePictureHeight != null)
+        'profile_picture_height': profilePictureHeight,
+      if (profilePictureWidth != null)
+        'profile_picture_width': profilePictureWidth,
+      if (profilePictureUrl != null) 'profile_picture_url': profilePictureUrl,
+      if (creatorId != null) 'creator_id': creatorId,
+      if (guidelines != null) 'guidelines': guidelines,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  CommunityTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<bool>? nsfw,
+    Value<bool>? private,
+    Value<bool>? verified,
+    Value<String>? visibility,
+    Value<int>? memberCount,
+    Value<int>? moderatorCount,
+    Value<int>? bannedUsersCount,
+    Value<int>? monthlyVisitorCount,
+    Value<int>? weeklyVisitorCount,
+    Value<String?>? banner,
+    Value<int>? bannerHeight,
+    Value<int>? bannerWidth,
+    Value<String?>? bannerUrl,
+    Value<String?>? profilePicture,
+    Value<int>? profilePictureHeight,
+    Value<int>? profilePictureWidth,
+    Value<String?>? profilePictureUrl,
+    Value<String>? creatorId,
+    Value<List<dynamic>>? guidelines,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return CommunityTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      nsfw: nsfw ?? this.nsfw,
+      private: private ?? this.private,
+      verified: verified ?? this.verified,
+      visibility: visibility ?? this.visibility,
+      memberCount: memberCount ?? this.memberCount,
+      moderatorCount: moderatorCount ?? this.moderatorCount,
+      bannedUsersCount: bannedUsersCount ?? this.bannedUsersCount,
+      monthlyVisitorCount: monthlyVisitorCount ?? this.monthlyVisitorCount,
+      weeklyVisitorCount: weeklyVisitorCount ?? this.weeklyVisitorCount,
+      banner: banner ?? this.banner,
+      bannerHeight: bannerHeight ?? this.bannerHeight,
+      bannerWidth: bannerWidth ?? this.bannerWidth,
+      bannerUrl: bannerUrl ?? this.bannerUrl,
+      profilePicture: profilePicture ?? this.profilePicture,
+      profilePictureHeight: profilePictureHeight ?? this.profilePictureHeight,
+      profilePictureWidth: profilePictureWidth ?? this.profilePictureWidth,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      creatorId: creatorId ?? this.creatorId,
+      guidelines: guidelines ?? this.guidelines,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (nsfw.present) {
+      map['nsfw'] = Variable<bool>(nsfw.value);
+    }
+    if (private.present) {
+      map['private'] = Variable<bool>(private.value);
+    }
+    if (verified.present) {
+      map['verified'] = Variable<bool>(verified.value);
+    }
+    if (visibility.present) {
+      map['visibility'] = Variable<String>(visibility.value);
+    }
+    if (memberCount.present) {
+      map['member_count'] = Variable<int>(memberCount.value);
+    }
+    if (moderatorCount.present) {
+      map['moderator_count'] = Variable<int>(moderatorCount.value);
+    }
+    if (bannedUsersCount.present) {
+      map['banned_users_count'] = Variable<int>(bannedUsersCount.value);
+    }
+    if (monthlyVisitorCount.present) {
+      map['monthly_visitor_count'] = Variable<int>(monthlyVisitorCount.value);
+    }
+    if (weeklyVisitorCount.present) {
+      map['weekly_visitor_count'] = Variable<int>(weeklyVisitorCount.value);
+    }
+    if (banner.present) {
+      map['banner'] = Variable<String>(banner.value);
+    }
+    if (bannerHeight.present) {
+      map['banner_height'] = Variable<int>(bannerHeight.value);
+    }
+    if (bannerWidth.present) {
+      map['banner_width'] = Variable<int>(bannerWidth.value);
+    }
+    if (bannerUrl.present) {
+      map['banner_url'] = Variable<String>(bannerUrl.value);
+    }
+    if (profilePicture.present) {
+      map['profile_picture'] = Variable<String>(profilePicture.value);
+    }
+    if (profilePictureHeight.present) {
+      map['profile_picture_height'] = Variable<int>(profilePictureHeight.value);
+    }
+    if (profilePictureWidth.present) {
+      map['profile_picture_width'] = Variable<int>(profilePictureWidth.value);
+    }
+    if (profilePictureUrl.present) {
+      map['profile_picture_url'] = Variable<String>(profilePictureUrl.value);
+    }
+    if (creatorId.present) {
+      map['creator_id'] = Variable<String>(creatorId.value);
+    }
+    if (guidelines.present) {
+      map['guidelines'] = Variable<String>(
+        $CommunityTableTable.$converterguidelines.toSql(guidelines.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CommunityTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('nsfw: $nsfw, ')
+          ..write('private: $private, ')
+          ..write('verified: $verified, ')
+          ..write('visibility: $visibility, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('moderatorCount: $moderatorCount, ')
+          ..write('bannedUsersCount: $bannedUsersCount, ')
+          ..write('monthlyVisitorCount: $monthlyVisitorCount, ')
+          ..write('weeklyVisitorCount: $weeklyVisitorCount, ')
+          ..write('banner: $banner, ')
+          ..write('bannerHeight: $bannerHeight, ')
+          ..write('bannerWidth: $bannerWidth, ')
+          ..write('bannerUrl: $bannerUrl, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('profilePictureHeight: $profilePictureHeight, ')
+          ..write('profilePictureWidth: $profilePictureWidth, ')
+          ..write('profilePictureUrl: $profilePictureUrl, ')
+          ..write('creatorId: $creatorId, ')
+          ..write('guidelines: $guidelines, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
+    with
+        TableInfo<
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChirpCommunityMembershipTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _communityIDMeta = const VerificationMeta(
+    'communityID',
+  );
+  @override
+  late final GeneratedColumn<int> communityID = GeneratedColumn<int>(
+    'community_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bannedMeta = const VerificationMeta('banned');
+  @override
+  late final GeneratedColumn<bool> banned = GeneratedColumn<bool>(
+    'banned',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("banned" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _bannedByIDMeta = const VerificationMeta(
+    'bannedByID',
+  );
+  @override
+  late final GeneratedColumn<String> bannedByID = GeneratedColumn<String>(
+    'banned_by_i_d',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannedReasonMeta = const VerificationMeta(
+    'bannedReason',
+  );
+  @override
+  late final GeneratedColumn<String> bannedReason = GeneratedColumn<String>(
+    'banned_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bannedAtMeta = const VerificationMeta(
+    'bannedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> bannedAt = GeneratedColumn<DateTime>(
+    'banned_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _joinedAtMeta = const VerificationMeta(
+    'joinedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> joinedAt = GeneratedColumn<DateTime>(
+    'joined_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    communityID,
+    userID,
+    role,
+    banned,
+    bannedByID,
+    bannedReason,
+    bannedAt,
+    joinedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'chirp_community_membership';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ChirpCommunityMembershipData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('community_i_d')) {
+      context.handle(
+        _communityIDMeta,
+        communityID.isAcceptableOrUnknown(
+          data['community_i_d']!,
+          _communityIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_communityIDMeta);
+    }
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
+    if (data.containsKey('banned')) {
+      context.handle(
+        _bannedMeta,
+        banned.isAcceptableOrUnknown(data['banned']!, _bannedMeta),
+      );
+    }
+    if (data.containsKey('banned_by_i_d')) {
+      context.handle(
+        _bannedByIDMeta,
+        bannedByID.isAcceptableOrUnknown(
+          data['banned_by_i_d']!,
+          _bannedByIDMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banned_reason')) {
+      context.handle(
+        _bannedReasonMeta,
+        bannedReason.isAcceptableOrUnknown(
+          data['banned_reason']!,
+          _bannedReasonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('banned_at')) {
+      context.handle(
+        _bannedAtMeta,
+        bannedAt.isAcceptableOrUnknown(data['banned_at']!, _bannedAtMeta),
+      );
+    }
+    if (data.containsKey('joined_at')) {
+      context.handle(
+        _joinedAtMeta,
+        joinedAt.isAcceptableOrUnknown(data['joined_at']!, _joinedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ChirpCommunityMembershipData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChirpCommunityMembershipData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      communityID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}community_i_d'],
+      )!,
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
+      banned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}banned'],
+      )!,
+      bannedByID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_by_i_d'],
+      ),
+      bannedReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}banned_reason'],
+      ),
+      bannedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}banned_at'],
+      ),
+      joinedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}joined_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ChirpCommunityMembershipTable createAlias(String alias) {
+    return $ChirpCommunityMembershipTable(attachedDatabase, alias);
+  }
+}
+
+class ChirpCommunityMembershipData extends DataClass
+    implements Insertable<ChirpCommunityMembershipData> {
+  final int id;
+  final int communityID;
+  final String userID;
+  final String role;
+  final bool banned;
+  final String? bannedByID;
+  final String? bannedReason;
+  final DateTime? bannedAt;
+  final DateTime joinedAt;
+  const ChirpCommunityMembershipData({
+    required this.id,
+    required this.communityID,
+    required this.userID,
+    required this.role,
+    required this.banned,
+    this.bannedByID,
+    this.bannedReason,
+    this.bannedAt,
+    required this.joinedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['community_i_d'] = Variable<int>(communityID);
+    map['user_i_d'] = Variable<String>(userID);
+    map['role'] = Variable<String>(role);
+    map['banned'] = Variable<bool>(banned);
+    if (!nullToAbsent || bannedByID != null) {
+      map['banned_by_i_d'] = Variable<String>(bannedByID);
+    }
+    if (!nullToAbsent || bannedReason != null) {
+      map['banned_reason'] = Variable<String>(bannedReason);
+    }
+    if (!nullToAbsent || bannedAt != null) {
+      map['banned_at'] = Variable<DateTime>(bannedAt);
+    }
+    map['joined_at'] = Variable<DateTime>(joinedAt);
+    return map;
+  }
+
+  ChirpCommunityMembershipCompanion toCompanion(bool nullToAbsent) {
+    return ChirpCommunityMembershipCompanion(
+      id: Value(id),
+      communityID: Value(communityID),
+      userID: Value(userID),
+      role: Value(role),
+      banned: Value(banned),
+      bannedByID: bannedByID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedByID),
+      bannedReason: bannedReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedReason),
+      bannedAt: bannedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bannedAt),
+      joinedAt: Value(joinedAt),
+    );
+  }
+
+  factory ChirpCommunityMembershipData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChirpCommunityMembershipData(
+      id: serializer.fromJson<int>(json['id']),
+      communityID: serializer.fromJson<int>(json['community_id']),
+      userID: serializer.fromJson<String>(json['user_id']),
+      role: serializer.fromJson<String>(json['role']),
+      banned: serializer.fromJson<bool>(json['banned']),
+      bannedByID: serializer.fromJson<String?>(json['banned_by_id']),
+      bannedReason: serializer.fromJson<String?>(json['banning_reason']),
+      bannedAt: serializer.fromJson<DateTime?>(json['banned_at']),
+      joinedAt: serializer.fromJson<DateTime>(json['joined_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'community_id': serializer.toJson<int>(communityID),
+      'user_id': serializer.toJson<String>(userID),
+      'role': serializer.toJson<String>(role),
+      'banned': serializer.toJson<bool>(banned),
+      'banned_by_id': serializer.toJson<String?>(bannedByID),
+      'banning_reason': serializer.toJson<String?>(bannedReason),
+      'banned_at': serializer.toJson<DateTime?>(bannedAt),
+      'joined_at': serializer.toJson<DateTime>(joinedAt),
+    };
+  }
+
+  ChirpCommunityMembershipData copyWith({
+    int? id,
+    int? communityID,
+    String? userID,
+    String? role,
+    bool? banned,
+    Value<String?> bannedByID = const Value.absent(),
+    Value<String?> bannedReason = const Value.absent(),
+    Value<DateTime?> bannedAt = const Value.absent(),
+    DateTime? joinedAt,
+  }) => ChirpCommunityMembershipData(
+    id: id ?? this.id,
+    communityID: communityID ?? this.communityID,
+    userID: userID ?? this.userID,
+    role: role ?? this.role,
+    banned: banned ?? this.banned,
+    bannedByID: bannedByID.present ? bannedByID.value : this.bannedByID,
+    bannedReason: bannedReason.present ? bannedReason.value : this.bannedReason,
+    bannedAt: bannedAt.present ? bannedAt.value : this.bannedAt,
+    joinedAt: joinedAt ?? this.joinedAt,
+  );
+  ChirpCommunityMembershipData copyWithCompanion(
+    ChirpCommunityMembershipCompanion data,
+  ) {
+    return ChirpCommunityMembershipData(
+      id: data.id.present ? data.id.value : this.id,
+      communityID: data.communityID.present
+          ? data.communityID.value
+          : this.communityID,
+      userID: data.userID.present ? data.userID.value : this.userID,
+      role: data.role.present ? data.role.value : this.role,
+      banned: data.banned.present ? data.banned.value : this.banned,
+      bannedByID: data.bannedByID.present
+          ? data.bannedByID.value
+          : this.bannedByID,
+      bannedReason: data.bannedReason.present
+          ? data.bannedReason.value
+          : this.bannedReason,
+      bannedAt: data.bannedAt.present ? data.bannedAt.value : this.bannedAt,
+      joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpCommunityMembershipData(')
+          ..write('id: $id, ')
+          ..write('communityID: $communityID, ')
+          ..write('userID: $userID, ')
+          ..write('role: $role, ')
+          ..write('banned: $banned, ')
+          ..write('bannedByID: $bannedByID, ')
+          ..write('bannedReason: $bannedReason, ')
+          ..write('bannedAt: $bannedAt, ')
+          ..write('joinedAt: $joinedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    communityID,
+    userID,
+    role,
+    banned,
+    bannedByID,
+    bannedReason,
+    bannedAt,
+    joinedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChirpCommunityMembershipData &&
+          other.id == this.id &&
+          other.communityID == this.communityID &&
+          other.userID == this.userID &&
+          other.role == this.role &&
+          other.banned == this.banned &&
+          other.bannedByID == this.bannedByID &&
+          other.bannedReason == this.bannedReason &&
+          other.bannedAt == this.bannedAt &&
+          other.joinedAt == this.joinedAt);
+}
+
+class ChirpCommunityMembershipCompanion
+    extends UpdateCompanion<ChirpCommunityMembershipData> {
+  final Value<int> id;
+  final Value<int> communityID;
+  final Value<String> userID;
+  final Value<String> role;
+  final Value<bool> banned;
+  final Value<String?> bannedByID;
+  final Value<String?> bannedReason;
+  final Value<DateTime?> bannedAt;
+  final Value<DateTime> joinedAt;
+  const ChirpCommunityMembershipCompanion({
+    this.id = const Value.absent(),
+    this.communityID = const Value.absent(),
+    this.userID = const Value.absent(),
+    this.role = const Value.absent(),
+    this.banned = const Value.absent(),
+    this.bannedByID = const Value.absent(),
+    this.bannedReason = const Value.absent(),
+    this.bannedAt = const Value.absent(),
+    this.joinedAt = const Value.absent(),
+  });
+  ChirpCommunityMembershipCompanion.insert({
+    this.id = const Value.absent(),
+    required int communityID,
+    required String userID,
+    required String role,
+    this.banned = const Value.absent(),
+    this.bannedByID = const Value.absent(),
+    this.bannedReason = const Value.absent(),
+    this.bannedAt = const Value.absent(),
+    this.joinedAt = const Value.absent(),
+  }) : communityID = Value(communityID),
+       userID = Value(userID),
+       role = Value(role);
+  static Insertable<ChirpCommunityMembershipData> custom({
+    Expression<int>? id,
+    Expression<int>? communityID,
+    Expression<String>? userID,
+    Expression<String>? role,
+    Expression<bool>? banned,
+    Expression<String>? bannedByID,
+    Expression<String>? bannedReason,
+    Expression<DateTime>? bannedAt,
+    Expression<DateTime>? joinedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (communityID != null) 'community_i_d': communityID,
+      if (userID != null) 'user_i_d': userID,
+      if (role != null) 'role': role,
+      if (banned != null) 'banned': banned,
+      if (bannedByID != null) 'banned_by_i_d': bannedByID,
+      if (bannedReason != null) 'banned_reason': bannedReason,
+      if (bannedAt != null) 'banned_at': bannedAt,
+      if (joinedAt != null) 'joined_at': joinedAt,
+    });
+  }
+
+  ChirpCommunityMembershipCompanion copyWith({
+    Value<int>? id,
+    Value<int>? communityID,
+    Value<String>? userID,
+    Value<String>? role,
+    Value<bool>? banned,
+    Value<String?>? bannedByID,
+    Value<String?>? bannedReason,
+    Value<DateTime?>? bannedAt,
+    Value<DateTime>? joinedAt,
+  }) {
+    return ChirpCommunityMembershipCompanion(
+      id: id ?? this.id,
+      communityID: communityID ?? this.communityID,
+      userID: userID ?? this.userID,
+      role: role ?? this.role,
+      banned: banned ?? this.banned,
+      bannedByID: bannedByID ?? this.bannedByID,
+      bannedReason: bannedReason ?? this.bannedReason,
+      bannedAt: bannedAt ?? this.bannedAt,
+      joinedAt: joinedAt ?? this.joinedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (communityID.present) {
+      map['community_i_d'] = Variable<int>(communityID.value);
+    }
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
+    }
+    if (banned.present) {
+      map['banned'] = Variable<bool>(banned.value);
+    }
+    if (bannedByID.present) {
+      map['banned_by_i_d'] = Variable<String>(bannedByID.value);
+    }
+    if (bannedReason.present) {
+      map['banned_reason'] = Variable<String>(bannedReason.value);
+    }
+    if (bannedAt.present) {
+      map['banned_at'] = Variable<DateTime>(bannedAt.value);
+    }
+    if (joinedAt.present) {
+      map['joined_at'] = Variable<DateTime>(joinedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChirpCommunityMembershipCompanion(')
+          ..write('id: $id, ')
+          ..write('communityID: $communityID, ')
+          ..write('userID: $userID, ')
+          ..write('role: $role, ')
+          ..write('banned: $banned, ')
+          ..write('bannedByID: $bannedByID, ')
+          ..write('bannedReason: $bannedReason, ')
+          ..write('bannedAt: $bannedAt, ')
+          ..write('joinedAt: $joinedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
   late final $TokenTable token = $TokenTable(this);
-  late final $ChirpUserTableTable chirpUserTable = $ChirpUserTableTable(this);
-  late final $MessageTableTable messageTable = $MessageTableTable(this);
-  late final $ConversationTableTable conversationTable =
-      $ConversationTableTable(this);
+  late final $GroupTableTable groupTable = $GroupTableTable(this);
   late final $PostTableTable postTable = $PostTableTable(this);
   late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
     this,
@@ -8951,6 +14817,18 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
   late final $InstitutionTable institution = $InstitutionTable(this);
+  late final $MagnetStudentProfileTable magnetStudentProfile =
+      $MagnetStudentProfileTable(this);
+  late final $MagnetCredentialsTable magnetCredentials =
+      $MagnetCredentialsTable(this);
+  late final $MagnetCourseInfoTable magnetCourseInfo = $MagnetCourseInfoTable(
+    this,
+  );
+  late final $MagnetFinancialTransactionTable magnetFinancialTransaction =
+      $MagnetFinancialTransactionTable(this);
+  late final $CommunityTableTable communityTable = $CommunityTableTable(this);
+  late final $ChirpCommunityMembershipTable chirpCommunityMembership =
+      $ChirpCommunityMembershipTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8958,9 +14836,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
     token,
-    chirpUserTable,
-    messageTable,
-    conversationTable,
+    groupTable,
     postTable,
     attachmentTable,
     postReplyTable,
@@ -8971,6 +14847,12 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     agendaEvent,
     notificationTable,
     institution,
+    magnetStudentProfile,
+    magnetCredentials,
+    magnetCourseInfo,
+    magnetFinancialTransaction,
+    communityTable,
+    chirpCommunityMembership,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -8980,6 +14862,13 @@ abstract class _$AppDataBase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('attachment_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'post_reply_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('post_reply_table', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -9578,65 +15467,91 @@ typedef $$TokenTableProcessedTableManager =
       TokenData,
       PrefetchHooks Function()
     >;
-typedef $$ChirpUserTableTableCreateCompanionBuilder =
-    ChirpUserTableCompanion Function({
+typedef $$GroupTableTableCreateCompanionBuilder =
+    GroupTableCompanion Function({
       required String id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       required String name,
-      required String email,
-      Value<int> vibepoints,
-      Value<String?> avatarUrl,
+      required String description,
+      required String creatorId,
+      required String creatorName,
+      required String admins,
+      required String adminNames,
+      required String moderators,
+      required String moderatorNames,
+      required String members,
+      required String memberNames,
+      required String bannedUsers,
+      required String bannedUserNames,
+      required bool isPrivate,
+      required String rules,
+      Value<String?> logo,
+      Value<String?> banner,
+      Value<String?> logoUrl,
+      Value<String?> bannerUrl,
+      Value<String?> userRole,
+      required bool canPost,
+      required bool canModerate,
+      required bool canAdmin,
       Value<int> rowid,
     });
-typedef $$ChirpUserTableTableUpdateCompanionBuilder =
-    ChirpUserTableCompanion Function({
+typedef $$GroupTableTableUpdateCompanionBuilder =
+    GroupTableCompanion Function({
       Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> name,
-      Value<String> email,
-      Value<int> vibepoints,
-      Value<String?> avatarUrl,
+      Value<String> description,
+      Value<String> creatorId,
+      Value<String> creatorName,
+      Value<String> admins,
+      Value<String> adminNames,
+      Value<String> moderators,
+      Value<String> moderatorNames,
+      Value<String> members,
+      Value<String> memberNames,
+      Value<String> bannedUsers,
+      Value<String> bannedUserNames,
+      Value<bool> isPrivate,
+      Value<String> rules,
+      Value<String?> logo,
+      Value<String?> banner,
+      Value<String?> logoUrl,
+      Value<String?> bannerUrl,
+      Value<String?> userRole,
+      Value<bool> canPost,
+      Value<bool> canModerate,
+      Value<bool> canAdmin,
       Value<int> rowid,
     });
 
-final class $$ChirpUserTableTableReferences
-    extends BaseReferences<_$AppDataBase, $ChirpUserTableTable, ChirpUserData> {
-  $$ChirpUserTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
+final class $$GroupTableTableReferences
+    extends BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity> {
+  $$GroupTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$PostTableTable, List<PostEntity>>
+  _postTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.postTable,
+    aliasName: $_aliasNameGenerator(db.groupTable.id, db.postTable.groupId),
   );
 
-  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
-  _conversationTableRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.conversationTable,
-        aliasName: $_aliasNameGenerator(
-          db.chirpUserTable.id,
-          db.conversationTable.userId,
-        ),
-      );
-
-  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
-    final manager = $$ConversationTableTableTableManager(
+  $$PostTableTableProcessedTableManager get postTableRefs {
+    final manager = $$PostTableTableTableManager(
       $_db,
-      $_db.conversationTable,
-    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+      $_db.postTable,
+    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<String>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _conversationTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_postTableRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$ChirpUserTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableFilterComposer({
+class $$GroupTableTableFilterComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9663,37 +15578,127 @@ class $$ChirpUserTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
+  ColumnFilters<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
+  ColumnFilters<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> conversationTableRefs(
-    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
+  ColumnFilters<String> get admins => $composableBuilder(
+    column: $table.admins,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get members => $composableBuilder(
+    column: $table.members,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPrivate => $composableBuilder(
+    column: $table.isPrivate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rules => $composableBuilder(
+    column: $table.rules,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get logo => $composableBuilder(
+    column: $table.logo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get logoUrl => $composableBuilder(
+    column: $table.logoUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userRole => $composableBuilder(
+    column: $table.userRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canPost => $composableBuilder(
+    column: $table.canPost,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canAdmin => $composableBuilder(
+    column: $table.canAdmin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> postTableRefs(
+    Expression<bool> Function($$PostTableTableFilterComposer f) f,
   ) {
-    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
+    final $$PostTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.conversationTable,
-      getReferencedColumn: (t) => t.userId,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.groupId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ConversationTableTableFilterComposer(
+          }) => $$PostTableTableFilterComposer(
             $db: $db,
-            $table: $db.conversationTable,
+            $table: $db.postTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9704,9 +15709,9 @@ class $$ChirpUserTableTableFilterComposer
   }
 }
 
-class $$ChirpUserTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableOrderingComposer({
+class $$GroupTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9733,25 +15738,115 @@ class $$ChirpUserTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
+  ColumnOrderings<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get avatarUrl => $composableBuilder(
-    column: $table.avatarUrl,
+  ColumnOrderings<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get admins => $composableBuilder(
+    column: $table.admins,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get members => $composableBuilder(
+    column: $table.members,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPrivate => $composableBuilder(
+    column: $table.isPrivate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rules => $composableBuilder(
+    column: $table.rules,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get logo => $composableBuilder(
+    column: $table.logo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get logoUrl => $composableBuilder(
+    column: $table.logoUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userRole => $composableBuilder(
+    column: $table.userRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canPost => $composableBuilder(
+    column: $table.canPost,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canAdmin => $composableBuilder(
+    column: $table.canAdmin,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$ChirpUserTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpUserTableTable> {
-  $$ChirpUserTableTableAnnotationComposer({
+class $$GroupTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $GroupTableTable> {
+  $$GroupTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9770,90 +15865,193 @@ class $$ChirpUserTableTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<int> get vibepoints => $composableBuilder(
-    column: $table.vibepoints,
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get avatarUrl =>
-      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+  GeneratedColumn<String> get creatorId =>
+      $composableBuilder(column: $table.creatorId, builder: (column) => column);
 
-  Expression<T> conversationTableRefs<T extends Object>(
-    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
+  GeneratedColumn<String> get creatorName => $composableBuilder(
+    column: $table.creatorName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get admins =>
+      $composableBuilder(column: $table.admins, builder: (column) => column);
+
+  GeneratedColumn<String> get adminNames => $composableBuilder(
+    column: $table.adminNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get moderators => $composableBuilder(
+    column: $table.moderators,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get moderatorNames => $composableBuilder(
+    column: $table.moderatorNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get members =>
+      $composableBuilder(column: $table.members, builder: (column) => column);
+
+  GeneratedColumn<String> get memberNames => $composableBuilder(
+    column: $table.memberNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedUsers => $composableBuilder(
+    column: $table.bannedUsers,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedUserNames => $composableBuilder(
+    column: $table.bannedUserNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPrivate =>
+      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
+
+  GeneratedColumn<String> get rules =>
+      $composableBuilder(column: $table.rules, builder: (column) => column);
+
+  GeneratedColumn<String> get logo =>
+      $composableBuilder(column: $table.logo, builder: (column) => column);
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
+
+  GeneratedColumn<String> get logoUrl =>
+      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get bannerUrl =>
+      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get userRole =>
+      $composableBuilder(column: $table.userRole, builder: (column) => column);
+
+  GeneratedColumn<bool> get canPost =>
+      $composableBuilder(column: $table.canPost, builder: (column) => column);
+
+  GeneratedColumn<bool> get canModerate => $composableBuilder(
+    column: $table.canModerate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get canAdmin =>
+      $composableBuilder(column: $table.canAdmin, builder: (column) => column);
+
+  Expression<T> postTableRefs<T extends Object>(
+    Expression<T> Function($$PostTableTableAnnotationComposer a) f,
   ) {
-    final $$ConversationTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.conversationTable,
-          getReferencedColumn: (t) => t.userId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$PostTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.postTable,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ConversationTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.conversationTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 }
 
-class $$ChirpUserTableTableTableManager
+class $$GroupTableTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpUserTableTable,
-          ChirpUserData,
-          $$ChirpUserTableTableFilterComposer,
-          $$ChirpUserTableTableOrderingComposer,
-          $$ChirpUserTableTableAnnotationComposer,
-          $$ChirpUserTableTableCreateCompanionBuilder,
-          $$ChirpUserTableTableUpdateCompanionBuilder,
-          (ChirpUserData, $$ChirpUserTableTableReferences),
-          ChirpUserData,
-          PrefetchHooks Function({bool conversationTableRefs})
+          $GroupTableTable,
+          GroupEntity,
+          $$GroupTableTableFilterComposer,
+          $$GroupTableTableOrderingComposer,
+          $$GroupTableTableAnnotationComposer,
+          $$GroupTableTableCreateCompanionBuilder,
+          $$GroupTableTableUpdateCompanionBuilder,
+          (GroupEntity, $$GroupTableTableReferences),
+          GroupEntity,
+          PrefetchHooks Function({bool postTableRefs})
         > {
-  $$ChirpUserTableTableTableManager(
-    _$AppDataBase db,
-    $ChirpUserTableTable table,
-  ) : super(
+  $$GroupTableTableTableManager(_$AppDataBase db, $GroupTableTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpUserTableTableFilterComposer($db: db, $table: table),
+              $$GroupTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChirpUserTableTableOrderingComposer($db: db, $table: table),
+              $$GroupTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChirpUserTableTableAnnotationComposer($db: db, $table: table),
+              $$GroupTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> email = const Value.absent(),
-                Value<int> vibepoints = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<String> creatorId = const Value.absent(),
+                Value<String> creatorName = const Value.absent(),
+                Value<String> admins = const Value.absent(),
+                Value<String> adminNames = const Value.absent(),
+                Value<String> moderators = const Value.absent(),
+                Value<String> moderatorNames = const Value.absent(),
+                Value<String> members = const Value.absent(),
+                Value<String> memberNames = const Value.absent(),
+                Value<String> bannedUsers = const Value.absent(),
+                Value<String> bannedUserNames = const Value.absent(),
+                Value<bool> isPrivate = const Value.absent(),
+                Value<String> rules = const Value.absent(),
+                Value<String?> logo = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<String?> logoUrl = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> userRole = const Value.absent(),
+                Value<bool> canPost = const Value.absent(),
+                Value<bool> canModerate = const Value.absent(),
+                Value<bool> canAdmin = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserTableCompanion(
+              }) => GroupTableCompanion(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 name: name,
-                email: email,
-                vibepoints: vibepoints,
-                avatarUrl: avatarUrl,
+                description: description,
+                creatorId: creatorId,
+                creatorName: creatorName,
+                admins: admins,
+                adminNames: adminNames,
+                moderators: moderators,
+                moderatorNames: moderatorNames,
+                members: members,
+                memberNames: memberNames,
+                bannedUsers: bannedUsers,
+                bannedUserNames: bannedUserNames,
+                isPrivate: isPrivate,
+                rules: rules,
+                logo: logo,
+                banner: banner,
+                logoUrl: logoUrl,
+                bannerUrl: bannerUrl,
+                userRole: userRole,
+                canPost: canPost,
+                canModerate: canModerate,
+                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -9862,54 +16060,88 @@ class $$ChirpUserTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 required String name,
-                required String email,
-                Value<int> vibepoints = const Value.absent(),
-                Value<String?> avatarUrl = const Value.absent(),
+                required String description,
+                required String creatorId,
+                required String creatorName,
+                required String admins,
+                required String adminNames,
+                required String moderators,
+                required String moderatorNames,
+                required String members,
+                required String memberNames,
+                required String bannedUsers,
+                required String bannedUserNames,
+                required bool isPrivate,
+                required String rules,
+                Value<String?> logo = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<String?> logoUrl = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> userRole = const Value.absent(),
+                required bool canPost,
+                required bool canModerate,
+                required bool canAdmin,
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserTableCompanion.insert(
+              }) => GroupTableCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 name: name,
-                email: email,
-                vibepoints: vibepoints,
-                avatarUrl: avatarUrl,
+                description: description,
+                creatorId: creatorId,
+                creatorName: creatorName,
+                admins: admins,
+                adminNames: adminNames,
+                moderators: moderators,
+                moderatorNames: moderatorNames,
+                members: members,
+                memberNames: memberNames,
+                bannedUsers: bannedUsers,
+                bannedUserNames: bannedUserNames,
+                isPrivate: isPrivate,
+                rules: rules,
+                logo: logo,
+                banner: banner,
+                logoUrl: logoUrl,
+                bannerUrl: bannerUrl,
+                userRole: userRole,
+                canPost: canPost,
+                canModerate: canModerate,
+                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpUserTableTableReferences(db, table, e),
+                  $$GroupTableTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({conversationTableRefs = false}) {
+          prefetchHooksCallback: ({postTableRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [
-                if (conversationTableRefs) db.conversationTable,
-              ],
+              explicitlyWatchedTables: [if (postTableRefs) db.postTable],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (conversationTableRefs)
+                  if (postTableRefs)
                     await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTableTable,
-                      ConversationData
+                      GroupEntity,
+                      $GroupTableTable,
+                      PostEntity
                     >(
                       currentTable: table,
-                      referencedTable: $$ChirpUserTableTableReferences
-                          ._conversationTableRefsTable(db),
+                      referencedTable: $$GroupTableTableReferences
+                          ._postTableRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableTableReferences(
+                          $$GroupTableTableReferences(
                             db,
                             table,
                             p0,
-                          ).conversationTableRefs,
+                          ).postTableRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userId == item.id),
+                          referencedItems.where((e) => e.groupId == item.id),
                       typedResults: items,
                     ),
                 ];
@@ -9920,1098 +16152,34 @@ class $$ChirpUserTableTableTableManager
       );
 }
 
-typedef $$ChirpUserTableTableProcessedTableManager =
+typedef $$GroupTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpUserTableTable,
-      ChirpUserData,
-      $$ChirpUserTableTableFilterComposer,
-      $$ChirpUserTableTableOrderingComposer,
-      $$ChirpUserTableTableAnnotationComposer,
-      $$ChirpUserTableTableCreateCompanionBuilder,
-      $$ChirpUserTableTableUpdateCompanionBuilder,
-      (ChirpUserData, $$ChirpUserTableTableReferences),
-      ChirpUserData,
-      PrefetchHooks Function({bool conversationTableRefs})
-    >;
-typedef $$MessageTableTableCreateCompanionBuilder =
-    MessageTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String content,
-      required String senderId,
-      required String recipientId,
-      required DateTime sentAt,
-      Value<bool> isRead,
-      Value<String?> imageUrl,
-      Value<int> rowid,
-    });
-typedef $$MessageTableTableUpdateCompanionBuilder =
-    MessageTableCompanion Function({
-      Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> content,
-      Value<String> senderId,
-      Value<String> recipientId,
-      Value<DateTime> sentAt,
-      Value<bool> isRead,
-      Value<String?> imageUrl,
-      Value<int> rowid,
-    });
-
-final class $$MessageTableTableReferences
-    extends BaseReferences<_$AppDataBase, $MessageTableTable, MessageData> {
-  $$MessageTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $ChirpUserTableTable _senderIdTable(_$AppDataBase db) =>
-      db.chirpUserTable.createAlias(
-        $_aliasNameGenerator(db.messageTable.senderId, db.chirpUserTable.id),
-      );
-
-  $$ChirpUserTableTableProcessedTableManager get senderId {
-    final $_column = $_itemColumn<String>('sender_id')!;
-
-    final manager = $$ChirpUserTableTableTableManager(
-      $_db,
-      $_db.chirpUserTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_senderIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $ChirpUserTableTable _recipientIdTable(_$AppDataBase db) =>
-      db.chirpUserTable.createAlias(
-        $_aliasNameGenerator(db.messageTable.recipientId, db.chirpUserTable.id),
-      );
-
-  $$ChirpUserTableTableProcessedTableManager get recipientId {
-    final $_column = $_itemColumn<String>('recipient_id')!;
-
-    final manager = $$ChirpUserTableTableTableManager(
-      $_db,
-      $_db.chirpUserTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_recipientIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$ConversationTableTable, List<ConversationData>>
-  _conversationTableRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.conversationTable,
-        aliasName: $_aliasNameGenerator(
-          db.messageTable.id,
-          db.conversationTable.lastMessageId,
-        ),
-      );
-
-  $$ConversationTableTableProcessedTableManager get conversationTableRefs {
-    final manager = $$ConversationTableTableTableManager(
-      $_db,
-      $_db.conversationTable,
-    ).filter((f) => f.lastMessageId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _conversationTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$MessageTableTableFilterComposer
-    extends Composer<_$AppDataBase, $MessageTableTable> {
-  $$MessageTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get content => $composableBuilder(
-    column: $table.content,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get sentAt => $composableBuilder(
-    column: $table.sentAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isRead => $composableBuilder(
-    column: $table.isRead,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$ChirpUserTableTableFilterComposer get senderId {
-    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableFilterComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ChirpUserTableTableFilterComposer get recipientId {
-    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableFilterComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> conversationTableRefs(
-    Expression<bool> Function($$ConversationTableTableFilterComposer f) f,
-  ) {
-    final $$ConversationTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.conversationTable,
-      getReferencedColumn: (t) => t.lastMessageId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ConversationTableTableFilterComposer(
-            $db: $db,
-            $table: $db.conversationTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$MessageTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $MessageTableTable> {
-  $$MessageTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get content => $composableBuilder(
-    column: $table.content,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get sentAt => $composableBuilder(
-    column: $table.sentAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isRead => $composableBuilder(
-    column: $table.isRead,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$ChirpUserTableTableOrderingComposer get senderId {
-    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ChirpUserTableTableOrderingComposer get recipientId {
-    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$MessageTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $MessageTableTable> {
-  $$MessageTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get content =>
-      $composableBuilder(column: $table.content, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get sentAt =>
-      $composableBuilder(column: $table.sentAt, builder: (column) => column);
-
-  GeneratedColumn<bool> get isRead =>
-      $composableBuilder(column: $table.isRead, builder: (column) => column);
-
-  GeneratedColumn<String> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  $$ChirpUserTableTableAnnotationComposer get senderId {
-    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.senderId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ChirpUserTableTableAnnotationComposer get recipientId {
-    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.recipientId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> conversationTableRefs<T extends Object>(
-    Expression<T> Function($$ConversationTableTableAnnotationComposer a) f,
-  ) {
-    final $$ConversationTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.conversationTable,
-          getReferencedColumn: (t) => t.lastMessageId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ConversationTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.conversationTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$MessageTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $MessageTableTable,
-          MessageData,
-          $$MessageTableTableFilterComposer,
-          $$MessageTableTableOrderingComposer,
-          $$MessageTableTableAnnotationComposer,
-          $$MessageTableTableCreateCompanionBuilder,
-          $$MessageTableTableUpdateCompanionBuilder,
-          (MessageData, $$MessageTableTableReferences),
-          MessageData,
-          PrefetchHooks Function({
-            bool senderId,
-            bool recipientId,
-            bool conversationTableRefs,
-          })
-        > {
-  $$MessageTableTableTableManager(_$AppDataBase db, $MessageTableTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$MessageTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$MessageTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$MessageTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> content = const Value.absent(),
-                Value<String> senderId = const Value.absent(),
-                Value<String> recipientId = const Value.absent(),
-                Value<DateTime> sentAt = const Value.absent(),
-                Value<bool> isRead = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MessageTableCompanion(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                content: content,
-                senderId: senderId,
-                recipientId: recipientId,
-                sentAt: sentAt,
-                isRead: isRead,
-                imageUrl: imageUrl,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String content,
-                required String senderId,
-                required String recipientId,
-                required DateTime sentAt,
-                Value<bool> isRead = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MessageTableCompanion.insert(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                content: content,
-                senderId: senderId,
-                recipientId: recipientId,
-                sentAt: sentAt,
-                isRead: isRead,
-                imageUrl: imageUrl,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$MessageTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback:
-              ({
-                senderId = false,
-                recipientId = false,
-                conversationTableRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (conversationTableRefs) db.conversationTable,
-                  ],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (senderId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.senderId,
-                                    referencedTable:
-                                        $$MessageTableTableReferences
-                                            ._senderIdTable(db),
-                                    referencedColumn:
-                                        $$MessageTableTableReferences
-                                            ._senderIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (recipientId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.recipientId,
-                                    referencedTable:
-                                        $$MessageTableTableReferences
-                                            ._recipientIdTable(db),
-                                    referencedColumn:
-                                        $$MessageTableTableReferences
-                                            ._recipientIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (conversationTableRefs)
-                        await $_getPrefetchedData<
-                          MessageData,
-                          $MessageTableTable,
-                          ConversationData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$MessageTableTableReferences
-                              ._conversationTableRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$MessageTableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).conversationTableRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.lastMessageId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
-        ),
-      );
-}
-
-typedef $$MessageTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $MessageTableTable,
-      MessageData,
-      $$MessageTableTableFilterComposer,
-      $$MessageTableTableOrderingComposer,
-      $$MessageTableTableAnnotationComposer,
-      $$MessageTableTableCreateCompanionBuilder,
-      $$MessageTableTableUpdateCompanionBuilder,
-      (MessageData, $$MessageTableTableReferences),
-      MessageData,
-      PrefetchHooks Function({
-        bool senderId,
-        bool recipientId,
-        bool conversationTableRefs,
-      })
-    >;
-typedef $$ConversationTableTableCreateCompanionBuilder =
-    ConversationTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String userId,
-      Value<String?> lastMessageId,
-      Value<DateTime?> lastMessageAt,
-      Value<int> unreadCount,
-      Value<int> rowid,
-    });
-typedef $$ConversationTableTableUpdateCompanionBuilder =
-    ConversationTableCompanion Function({
-      Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> userId,
-      Value<String?> lastMessageId,
-      Value<DateTime?> lastMessageAt,
-      Value<int> unreadCount,
-      Value<int> rowid,
-    });
-
-final class $$ConversationTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $ConversationTableTable,
-          ConversationData
-        > {
-  $$ConversationTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $ChirpUserTableTable _userIdTable(_$AppDataBase db) =>
-      db.chirpUserTable.createAlias(
-        $_aliasNameGenerator(db.conversationTable.userId, db.chirpUserTable.id),
-      );
-
-  $$ChirpUserTableTableProcessedTableManager get userId {
-    final $_column = $_itemColumn<String>('user_id')!;
-
-    final manager = $$ChirpUserTableTableTableManager(
-      $_db,
-      $_db.chirpUserTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $MessageTableTable _lastMessageIdTable(_$AppDataBase db) =>
-      db.messageTable.createAlias(
-        $_aliasNameGenerator(
-          db.conversationTable.lastMessageId,
-          db.messageTable.id,
-        ),
-      );
-
-  $$MessageTableTableProcessedTableManager? get lastMessageId {
-    final $_column = $_itemColumn<String>('last_message_id');
-    if ($_column == null) return null;
-    final manager = $$MessageTableTableTableManager(
-      $_db,
-      $_db.messageTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_lastMessageIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$ConversationTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ConversationTableTable> {
-  $$ConversationTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastMessageAt => $composableBuilder(
-    column: $table.lastMessageAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get unreadCount => $composableBuilder(
-    column: $table.unreadCount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$ChirpUserTableTableFilterComposer get userId {
-    final $$ChirpUserTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableFilterComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$MessageTableTableFilterComposer get lastMessageId {
-    final $$MessageTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.lastMessageId,
-      referencedTable: $db.messageTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MessageTableTableFilterComposer(
-            $db: $db,
-            $table: $db.messageTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ConversationTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ConversationTableTable> {
-  $$ConversationTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastMessageAt => $composableBuilder(
-    column: $table.lastMessageAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get unreadCount => $composableBuilder(
-    column: $table.unreadCount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$ChirpUserTableTableOrderingComposer get userId {
-    final $$ChirpUserTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$MessageTableTableOrderingComposer get lastMessageId {
-    final $$MessageTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.lastMessageId,
-      referencedTable: $db.messageTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MessageTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.messageTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ConversationTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ConversationTableTable> {
-  $$ConversationTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastMessageAt => $composableBuilder(
-    column: $table.lastMessageAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get unreadCount => $composableBuilder(
-    column: $table.unreadCount,
-    builder: (column) => column,
-  );
-
-  $$ChirpUserTableTableAnnotationComposer get userId {
-    final $$ChirpUserTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.chirpUserTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.chirpUserTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$MessageTableTableAnnotationComposer get lastMessageId {
-    final $$MessageTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.lastMessageId,
-      referencedTable: $db.messageTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$MessageTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.messageTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ConversationTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $ConversationTableTable,
-          ConversationData,
-          $$ConversationTableTableFilterComposer,
-          $$ConversationTableTableOrderingComposer,
-          $$ConversationTableTableAnnotationComposer,
-          $$ConversationTableTableCreateCompanionBuilder,
-          $$ConversationTableTableUpdateCompanionBuilder,
-          (ConversationData, $$ConversationTableTableReferences),
-          ConversationData,
-          PrefetchHooks Function({bool userId, bool lastMessageId})
-        > {
-  $$ConversationTableTableTableManager(
-    _$AppDataBase db,
-    $ConversationTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$ConversationTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ConversationTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ConversationTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> userId = const Value.absent(),
-                Value<String?> lastMessageId = const Value.absent(),
-                Value<DateTime?> lastMessageAt = const Value.absent(),
-                Value<int> unreadCount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => ConversationTableCompanion(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                userId: userId,
-                lastMessageId: lastMessageId,
-                lastMessageAt: lastMessageAt,
-                unreadCount: unreadCount,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String userId,
-                Value<String?> lastMessageId = const Value.absent(),
-                Value<DateTime?> lastMessageAt = const Value.absent(),
-                Value<int> unreadCount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => ConversationTableCompanion.insert(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                userId: userId,
-                lastMessageId: lastMessageId,
-                lastMessageAt: lastMessageAt,
-                unreadCount: unreadCount,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$ConversationTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({userId = false, lastMessageId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (userId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.userId,
-                                referencedTable:
-                                    $$ConversationTableTableReferences
-                                        ._userIdTable(db),
-                                referencedColumn:
-                                    $$ConversationTableTableReferences
-                                        ._userIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (lastMessageId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.lastMessageId,
-                                referencedTable:
-                                    $$ConversationTableTableReferences
-                                        ._lastMessageIdTable(db),
-                                referencedColumn:
-                                    $$ConversationTableTableReferences
-                                        ._lastMessageIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$ConversationTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $ConversationTableTable,
-      ConversationData,
-      $$ConversationTableTableFilterComposer,
-      $$ConversationTableTableOrderingComposer,
-      $$ConversationTableTableAnnotationComposer,
-      $$ConversationTableTableCreateCompanionBuilder,
-      $$ConversationTableTableUpdateCompanionBuilder,
-      (ConversationData, $$ConversationTableTableReferences),
-      ConversationData,
-      PrefetchHooks Function({bool userId, bool lastMessageId})
+      $GroupTableTable,
+      GroupEntity,
+      $$GroupTableTableFilterComposer,
+      $$GroupTableTableOrderingComposer,
+      $$GroupTableTableAnnotationComposer,
+      $$GroupTableTableCreateCompanionBuilder,
+      $$GroupTableTableUpdateCompanionBuilder,
+      (GroupEntity, $$GroupTableTableReferences),
+      GroupEntity,
+      PrefetchHooks Function({bool postTableRefs})
     >;
 typedef $$PostTableTableCreateCompanionBuilder =
     PostTableCompanion Function({
       required String id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      required String groupId,
       required String userId,
+      required String userName,
+      required String email,
+      Value<String?> avatarUrl,
       required String content,
       required int likeCount,
-      required bool isLiked,
+      required int commentCount,
+      Value<bool> isLiked,
       Value<int> rowid,
     });
 typedef $$PostTableTableUpdateCompanionBuilder =
@@ -11019,9 +16187,14 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String> groupId,
       Value<String> userId,
+      Value<String> userName,
+      Value<String> email,
+      Value<String?> avatarUrl,
       Value<String> content,
       Value<int> likeCount,
+      Value<int> commentCount,
       Value<bool> isLiked,
       Value<int> rowid,
     });
@@ -11029,6 +16202,25 @@ typedef $$PostTableTableUpdateCompanionBuilder =
 final class $$PostTableTableReferences
     extends BaseReferences<_$AppDataBase, $PostTableTable, PostEntity> {
   $$PostTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $GroupTableTable _groupIdTable(_$AppDataBase db) =>
+      db.groupTable.createAlias(
+        $_aliasNameGenerator(db.postTable.groupId, db.groupTable.id),
+      );
+
+  $$GroupTableTableProcessedTableManager get groupId {
+    final $_column = $_itemColumn<String>('group_id')!;
+
+    final manager = $$GroupTableTableTableManager(
+      $_db,
+      $_db.groupTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static MultiTypedResultKey<$AttachmentTableTable, List<AttachmentEntity>>
   _attachmentTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
@@ -11098,6 +16290,21 @@ class $$PostTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get userName => $composableBuilder(
+    column: $table.userName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnFilters(column),
@@ -11108,10 +16315,38 @@ class $$PostTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get commentCount => $composableBuilder(
+    column: $table.commentCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isLiked => $composableBuilder(
     column: $table.isLiked,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$GroupTableTableFilterComposer get groupId {
+    final $$GroupTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.groupTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GroupTableTableFilterComposer(
+            $db: $db,
+            $table: $db.groupTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<bool> attachmentTableRefs(
     Expression<bool> Function($$AttachmentTableTableFilterComposer f) f,
@@ -11193,6 +16428,21 @@ class $$PostTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userName => $composableBuilder(
+    column: $table.userName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnOrderings(column),
@@ -11203,10 +16453,38 @@ class $$PostTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get commentCount => $composableBuilder(
+    column: $table.commentCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isLiked => $composableBuilder(
     column: $table.isLiked,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$GroupTableTableOrderingComposer get groupId {
+    final $$GroupTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.groupTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GroupTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.groupTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PostTableTableAnnotationComposer
@@ -11230,14 +16508,51 @@ class $$PostTableTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<String> get userName =>
+      $composableBuilder(column: $table.userName, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 
   GeneratedColumn<int> get likeCount =>
       $composableBuilder(column: $table.likeCount, builder: (column) => column);
 
+  GeneratedColumn<int> get commentCount => $composableBuilder(
+    column: $table.commentCount,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isLiked =>
       $composableBuilder(column: $table.isLiked, builder: (column) => column);
+
+  $$GroupTableTableAnnotationComposer get groupId {
+    final $$GroupTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.groupTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GroupTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.groupTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<T> attachmentTableRefs<T extends Object>(
     Expression<T> Function($$AttachmentTableTableAnnotationComposer a) f,
@@ -11304,6 +16619,7 @@ class $$PostTableTableTableManager
           (PostEntity, $$PostTableTableReferences),
           PostEntity,
           PrefetchHooks Function({
+            bool groupId,
             bool attachmentTableRefs,
             bool postReplyTableRefs,
           })
@@ -11324,18 +16640,28 @@ class $$PostTableTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> groupId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<String> userName = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
                 Value<String> content = const Value.absent(),
                 Value<int> likeCount = const Value.absent(),
+                Value<int> commentCount = const Value.absent(),
                 Value<bool> isLiked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                groupId: groupId,
                 userId: userId,
+                userName: userName,
+                email: email,
+                avatarUrl: avatarUrl,
                 content: content,
                 likeCount: likeCount,
+                commentCount: commentCount,
                 isLiked: isLiked,
                 rowid: rowid,
               ),
@@ -11344,18 +16670,28 @@ class $$PostTableTableTableManager
                 required String id,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                required String groupId,
                 required String userId,
+                required String userName,
+                required String email,
+                Value<String?> avatarUrl = const Value.absent(),
                 required String content,
                 required int likeCount,
-                required bool isLiked,
+                required int commentCount,
+                Value<bool> isLiked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PostTableCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                groupId: groupId,
                 userId: userId,
+                userName: userName,
+                email: email,
+                avatarUrl: avatarUrl,
                 content: content,
                 likeCount: likeCount,
+                commentCount: commentCount,
                 isLiked: isLiked,
                 rowid: rowid,
               ),
@@ -11368,14 +16704,49 @@ class $$PostTableTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({attachmentTableRefs = false, postReplyTableRefs = false}) {
+              ({
+                groupId = false,
+                attachmentTableRefs = false,
+                postReplyTableRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (attachmentTableRefs) db.attachmentTable,
                     if (postReplyTableRefs) db.postReplyTable,
                   ],
-                  addJoins: null,
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (groupId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.groupId,
+                                    referencedTable: $$PostTableTableReferences
+                                        ._groupIdTable(db),
+                                    referencedColumn: $$PostTableTableReferences
+                                        ._groupIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (attachmentTableRefs)
@@ -11441,6 +16812,7 @@ typedef $$PostTableTableProcessedTableManager =
       (PostEntity, $$PostTableTableReferences),
       PostEntity,
       PrefetchHooks Function({
+        bool groupId,
         bool attachmentTableRefs,
         bool postReplyTableRefs,
       })
@@ -11837,9 +17209,13 @@ typedef $$PostReplyTableTableCreateCompanionBuilder =
       required String id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String?> parentId,
       required String postId,
       required String userId,
+      required String userName,
+      Value<String?> userAvatar,
       required String content,
+      required int depth,
       Value<int> rowid,
     });
 typedef $$PostReplyTableTableUpdateCompanionBuilder =
@@ -11847,9 +17223,13 @@ typedef $$PostReplyTableTableUpdateCompanionBuilder =
       Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String?> parentId,
       Value<String> postId,
       Value<String> userId,
+      Value<String> userName,
+      Value<String?> userAvatar,
       Value<String> content,
+      Value<int> depth,
       Value<int> rowid,
     });
 
@@ -11861,6 +17241,25 @@ final class $$PostReplyTableTableReferences
     super.$_table,
     super.$_typedResult,
   );
+
+  static $PostReplyTableTable _parentIdTable(_$AppDataBase db) =>
+      db.postReplyTable.createAlias(
+        $_aliasNameGenerator(db.postReplyTable.parentId, db.postReplyTable.id),
+      );
+
+  $$PostReplyTableTableProcessedTableManager? get parentId {
+    final $_column = $_itemColumn<String>('parent_id');
+    if ($_column == null) return null;
+    final manager = $$PostReplyTableTableTableManager(
+      $_db,
+      $_db.postReplyTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_parentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static $PostTableTable _postIdTable(_$AppDataBase db) =>
       db.postTable.createAlias(
@@ -11911,10 +17310,48 @@ class $$PostReplyTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get userName => $composableBuilder(
+    column: $table.userName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userAvatar => $composableBuilder(
+    column: $table.userAvatar,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<int> get depth => $composableBuilder(
+    column: $table.depth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PostReplyTableTableFilterComposer get parentId {
+    final $$PostReplyTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableFilterComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$PostTableTableFilterComposer get postId {
     final $$PostTableTableFilterComposer composer = $composerBuilder(
@@ -11969,10 +17406,48 @@ class $$PostReplyTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userName => $composableBuilder(
+    column: $table.userName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userAvatar => $composableBuilder(
+    column: $table.userAvatar,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get depth => $composableBuilder(
+    column: $table.depth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PostReplyTableTableOrderingComposer get parentId {
+    final $$PostReplyTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$PostTableTableOrderingComposer get postId {
     final $$PostTableTableOrderingComposer composer = $composerBuilder(
@@ -12019,8 +17494,42 @@ class $$PostReplyTableTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<String> get userName =>
+      $composableBuilder(column: $table.userName, builder: (column) => column);
+
+  GeneratedColumn<String> get userAvatar => $composableBuilder(
+    column: $table.userAvatar,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<int> get depth =>
+      $composableBuilder(column: $table.depth, builder: (column) => column);
+
+  $$PostReplyTableTableAnnotationComposer get parentId {
+    final $$PostReplyTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.postReplyTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PostReplyTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.postReplyTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$PostTableTableAnnotationComposer get postId {
     final $$PostTableTableAnnotationComposer composer = $composerBuilder(
@@ -12059,7 +17568,7 @@ class $$PostReplyTableTableTableManager
           $$PostReplyTableTableUpdateCompanionBuilder,
           (PostReplyEntity, $$PostReplyTableTableReferences),
           PostReplyEntity,
-          PrefetchHooks Function({bool postId})
+          PrefetchHooks Function({bool parentId, bool postId})
         > {
   $$PostReplyTableTableTableManager(
     _$AppDataBase db,
@@ -12079,17 +17588,25 @@ class $$PostReplyTableTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> parentId = const Value.absent(),
                 Value<String> postId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
+                Value<String> userName = const Value.absent(),
+                Value<String?> userAvatar = const Value.absent(),
                 Value<String> content = const Value.absent(),
+                Value<int> depth = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PostReplyTableCompanion(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                parentId: parentId,
                 postId: postId,
                 userId: userId,
+                userName: userName,
+                userAvatar: userAvatar,
                 content: content,
+                depth: depth,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -12097,17 +17614,25 @@ class $$PostReplyTableTableTableManager
                 required String id,
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> parentId = const Value.absent(),
                 required String postId,
                 required String userId,
+                required String userName,
+                Value<String?> userAvatar = const Value.absent(),
                 required String content,
+                required int depth,
                 Value<int> rowid = const Value.absent(),
               }) => PostReplyTableCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                parentId: parentId,
                 postId: postId,
                 userId: userId,
+                userName: userName,
+                userAvatar: userAvatar,
                 content: content,
+                depth: depth,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -12118,7 +17643,7 @@ class $$PostReplyTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({postId = false}) {
+          prefetchHooksCallback: ({parentId = false, postId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -12138,6 +17663,20 @@ class $$PostReplyTableTableTableManager
                       dynamic
                     >
                   >(state) {
+                    if (parentId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.parentId,
+                                referencedTable: $$PostReplyTableTableReferences
+                                    ._parentIdTable(db),
+                                referencedColumn:
+                                    $$PostReplyTableTableReferences
+                                        ._parentIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
                     if (postId) {
                       state =
                           state.withJoin(
@@ -12176,7 +17715,7 @@ typedef $$PostReplyTableTableProcessedTableManager =
       $$PostReplyTableTableUpdateCompanionBuilder,
       (PostReplyEntity, $$PostReplyTableTableReferences),
       PostReplyEntity,
-      PrefetchHooks Function({bool postId})
+      PrefetchHooks Function({bool parentId, bool postId})
     >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
@@ -15110,6 +20649,2574 @@ typedef $$InstitutionTableProcessedTableManager =
       InstitutionData,
       PrefetchHooks Function()
     >;
+typedef $$MagnetStudentProfileTableCreateCompanionBuilder =
+    MagnetStudentProfileCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String admissionNumber,
+      required String firstName,
+      required String otherNames,
+      Value<String?> nationalId,
+      Value<String?> gender,
+      Value<String?> address,
+      Value<String?> email,
+      Value<String?> phoneNumber,
+      Value<String?> profilePictureUrl,
+      Value<DateTime?> dateOfBirth,
+      required String school,
+      Value<String?> campus,
+      Value<String?> enrollmentStatus,
+      Value<String?> programme,
+      Value<String?> degree,
+      Value<int?> academicYear,
+      Value<double?> gpa,
+      Value<String?> emergencyContact,
+      Value<String?> parentName,
+      Value<DateTime?> dateOfAdmission,
+      Value<DateTime?> graduationDate,
+      Value<String?> disabilityStatus,
+      Value<bool?> isInternationalStudent,
+      Value<int> rowid,
+    });
+typedef $$MagnetStudentProfileTableUpdateCompanionBuilder =
+    MagnetStudentProfileCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> admissionNumber,
+      Value<String> firstName,
+      Value<String> otherNames,
+      Value<String?> nationalId,
+      Value<String?> gender,
+      Value<String?> address,
+      Value<String?> email,
+      Value<String?> phoneNumber,
+      Value<String?> profilePictureUrl,
+      Value<DateTime?> dateOfBirth,
+      Value<String> school,
+      Value<String?> campus,
+      Value<String?> enrollmentStatus,
+      Value<String?> programme,
+      Value<String?> degree,
+      Value<int?> academicYear,
+      Value<double?> gpa,
+      Value<String?> emergencyContact,
+      Value<String?> parentName,
+      Value<DateTime?> dateOfAdmission,
+      Value<DateTime?> graduationDate,
+      Value<String?> disabilityStatus,
+      Value<bool?> isInternationalStudent,
+      Value<int> rowid,
+    });
+
+class $$MagnetStudentProfileTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get programme => $composableBuilder(
+    column: $table.programme,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get degree => $composableBuilder(
+    column: $table.degree,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetStudentProfileTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstName => $composableBuilder(
+    column: $table.firstName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get programme => $composableBuilder(
+    column: $table.programme,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get degree => $composableBuilder(
+    column: $table.degree,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetStudentProfileTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
+  $$MagnetStudentProfileTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get admissionNumber => $composableBuilder(
+    column: $table.admissionNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get firstName =>
+      $composableBuilder(column: $table.firstName, builder: (column) => column);
+
+  GeneratedColumn<String> get otherNames => $composableBuilder(
+    column: $table.otherNames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get school =>
+      $composableBuilder(column: $table.school, builder: (column) => column);
+
+  GeneratedColumn<String> get campus =>
+      $composableBuilder(column: $table.campus, builder: (column) => column);
+
+  GeneratedColumn<String> get enrollmentStatus => $composableBuilder(
+    column: $table.enrollmentStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get programme =>
+      $composableBuilder(column: $table.programme, builder: (column) => column);
+
+  GeneratedColumn<String> get degree =>
+      $composableBuilder(column: $table.degree, builder: (column) => column);
+
+  GeneratedColumn<int> get academicYear => $composableBuilder(
+    column: $table.academicYear,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get gpa =>
+      $composableBuilder(column: $table.gpa, builder: (column) => column);
+
+  GeneratedColumn<String> get emergencyContact => $composableBuilder(
+    column: $table.emergencyContact,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get parentName => $composableBuilder(
+    column: $table.parentName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dateOfAdmission => $composableBuilder(
+    column: $table.dateOfAdmission,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get graduationDate => $composableBuilder(
+    column: $table.graduationDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isInternationalStudent => $composableBuilder(
+    column: $table.isInternationalStudent,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetStudentProfileTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetStudentProfileTable,
+          MagnetStudentProfileData,
+          $$MagnetStudentProfileTableFilterComposer,
+          $$MagnetStudentProfileTableOrderingComposer,
+          $$MagnetStudentProfileTableAnnotationComposer,
+          $$MagnetStudentProfileTableCreateCompanionBuilder,
+          $$MagnetStudentProfileTableUpdateCompanionBuilder,
+          (
+            MagnetStudentProfileData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetStudentProfileTable,
+              MagnetStudentProfileData
+            >,
+          ),
+          MagnetStudentProfileData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetStudentProfileTableTableManager(
+    _$AppDataBase db,
+    $MagnetStudentProfileTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetStudentProfileTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetStudentProfileTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MagnetStudentProfileTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> admissionNumber = const Value.absent(),
+                Value<String> firstName = const Value.absent(),
+                Value<String> otherNames = const Value.absent(),
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                Value<String> school = const Value.absent(),
+                Value<String?> campus = const Value.absent(),
+                Value<String?> enrollmentStatus = const Value.absent(),
+                Value<String?> programme = const Value.absent(),
+                Value<String?> degree = const Value.absent(),
+                Value<int?> academicYear = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> parentName = const Value.absent(),
+                Value<DateTime?> dateOfAdmission = const Value.absent(),
+                Value<DateTime?> graduationDate = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<bool?> isInternationalStudent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetStudentProfileCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                admissionNumber: admissionNumber,
+                firstName: firstName,
+                otherNames: otherNames,
+                nationalId: nationalId,
+                gender: gender,
+                address: address,
+                email: email,
+                phoneNumber: phoneNumber,
+                profilePictureUrl: profilePictureUrl,
+                dateOfBirth: dateOfBirth,
+                school: school,
+                campus: campus,
+                enrollmentStatus: enrollmentStatus,
+                programme: programme,
+                degree: degree,
+                academicYear: academicYear,
+                gpa: gpa,
+                emergencyContact: emergencyContact,
+                parentName: parentName,
+                dateOfAdmission: dateOfAdmission,
+                graduationDate: graduationDate,
+                disabilityStatus: disabilityStatus,
+                isInternationalStudent: isInternationalStudent,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String admissionNumber,
+                required String firstName,
+                required String otherNames,
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<DateTime?> dateOfBirth = const Value.absent(),
+                required String school,
+                Value<String?> campus = const Value.absent(),
+                Value<String?> enrollmentStatus = const Value.absent(),
+                Value<String?> programme = const Value.absent(),
+                Value<String?> degree = const Value.absent(),
+                Value<int?> academicYear = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> emergencyContact = const Value.absent(),
+                Value<String?> parentName = const Value.absent(),
+                Value<DateTime?> dateOfAdmission = const Value.absent(),
+                Value<DateTime?> graduationDate = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<bool?> isInternationalStudent = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetStudentProfileCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                admissionNumber: admissionNumber,
+                firstName: firstName,
+                otherNames: otherNames,
+                nationalId: nationalId,
+                gender: gender,
+                address: address,
+                email: email,
+                phoneNumber: phoneNumber,
+                profilePictureUrl: profilePictureUrl,
+                dateOfBirth: dateOfBirth,
+                school: school,
+                campus: campus,
+                enrollmentStatus: enrollmentStatus,
+                programme: programme,
+                degree: degree,
+                academicYear: academicYear,
+                gpa: gpa,
+                emergencyContact: emergencyContact,
+                parentName: parentName,
+                dateOfAdmission: dateOfAdmission,
+                graduationDate: graduationDate,
+                disabilityStatus: disabilityStatus,
+                isInternationalStudent: isInternationalStudent,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetStudentProfileTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetStudentProfileTable,
+      MagnetStudentProfileData,
+      $$MagnetStudentProfileTableFilterComposer,
+      $$MagnetStudentProfileTableOrderingComposer,
+      $$MagnetStudentProfileTableAnnotationComposer,
+      $$MagnetStudentProfileTableCreateCompanionBuilder,
+      $$MagnetStudentProfileTableUpdateCompanionBuilder,
+      (
+        MagnetStudentProfileData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetStudentProfileTable,
+          MagnetStudentProfileData
+        >,
+      ),
+      MagnetStudentProfileData,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetCredentialsTableCreateCompanionBuilder =
+    MagnetCredentialsCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String username,
+      required String password,
+      Value<String?> extra,
+      Value<int> rowid,
+    });
+typedef $$MagnetCredentialsTableUpdateCompanionBuilder =
+    MagnetCredentialsCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> username,
+      Value<String> password,
+      Value<String?> extra,
+      Value<int> rowid,
+    });
+
+class $$MagnetCredentialsTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get password => $composableBuilder(
+    column: $table.password,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get extra => $composableBuilder(
+    column: $table.extra,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetCredentialsTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get password => $composableBuilder(
+    column: $table.password,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get extra => $composableBuilder(
+    column: $table.extra,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetCredentialsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
+  $$MagnetCredentialsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get password =>
+      $composableBuilder(column: $table.password, builder: (column) => column);
+
+  GeneratedColumn<String> get extra =>
+      $composableBuilder(column: $table.extra, builder: (column) => column);
+}
+
+class $$MagnetCredentialsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetCredentialsTable,
+          MagnetCredential,
+          $$MagnetCredentialsTableFilterComposer,
+          $$MagnetCredentialsTableOrderingComposer,
+          $$MagnetCredentialsTableAnnotationComposer,
+          $$MagnetCredentialsTableCreateCompanionBuilder,
+          $$MagnetCredentialsTableUpdateCompanionBuilder,
+          (
+            MagnetCredential,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetCredentialsTable,
+              MagnetCredential
+            >,
+          ),
+          MagnetCredential,
+          PrefetchHooks Function()
+        > {
+  $$MagnetCredentialsTableTableManager(
+    _$AppDataBase db,
+    $MagnetCredentialsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetCredentialsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetCredentialsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MagnetCredentialsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> username = const Value.absent(),
+                Value<String> password = const Value.absent(),
+                Value<String?> extra = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCredentialsCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                username: username,
+                password: password,
+                extra: extra,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String username,
+                required String password,
+                Value<String?> extra = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCredentialsCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                username: username,
+                password: password,
+                extra: extra,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetCredentialsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetCredentialsTable,
+      MagnetCredential,
+      $$MagnetCredentialsTableFilterComposer,
+      $$MagnetCredentialsTableOrderingComposer,
+      $$MagnetCredentialsTableAnnotationComposer,
+      $$MagnetCredentialsTableCreateCompanionBuilder,
+      $$MagnetCredentialsTableUpdateCompanionBuilder,
+      (
+        MagnetCredential,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetCredentialsTable,
+          MagnetCredential
+        >,
+      ),
+      MagnetCredential,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetCourseInfoTableCreateCompanionBuilder =
+    MagnetCourseInfoCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String courseCode,
+      required String courseTitle,
+      Value<String?> courseDescription,
+      required int credits,
+      Value<String?> instructor,
+      Value<String?> semester,
+      Value<DateTime?> schedule,
+      Value<int?> durationInSeconds,
+      Value<String?> prerequisites,
+      Value<String?> courseType,
+      Value<String?> courseLevel,
+      Value<String?> location,
+      Value<int?> enrollmentLimit,
+      Value<int?> currentEnrollment,
+      Value<String?> courseMaterials,
+      Value<int> rowid,
+    });
+typedef $$MagnetCourseInfoTableUpdateCompanionBuilder =
+    MagnetCourseInfoCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> courseCode,
+      Value<String> courseTitle,
+      Value<String?> courseDescription,
+      Value<int> credits,
+      Value<String?> instructor,
+      Value<String?> semester,
+      Value<DateTime?> schedule,
+      Value<int?> durationInSeconds,
+      Value<String?> prerequisites,
+      Value<String?> courseType,
+      Value<String?> courseLevel,
+      Value<String?> location,
+      Value<int?> enrollmentLimit,
+      Value<int?> currentEnrollment,
+      Value<String?> courseMaterials,
+      Value<int> rowid,
+    });
+
+class $$MagnetCourseInfoTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get credits => $composableBuilder(
+    column: $table.credits,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get semester => $composableBuilder(
+    column: $table.semester,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get schedule => $composableBuilder(
+    column: $table.schedule,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetCourseInfoTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get credits => $composableBuilder(
+    column: $table.credits,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get semester => $composableBuilder(
+    column: $table.semester,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get schedule => $composableBuilder(
+    column: $table.schedule,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetCourseInfoTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
+  $$MagnetCourseInfoTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseTitle => $composableBuilder(
+    column: $table.courseTitle,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseDescription => $composableBuilder(
+    column: $table.courseDescription,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get credits =>
+      $composableBuilder(column: $table.credits, builder: (column) => column);
+
+  GeneratedColumn<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get semester =>
+      $composableBuilder(column: $table.semester, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get schedule =>
+      $composableBuilder(column: $table.schedule, builder: (column) => column);
+
+  GeneratedColumn<int> get durationInSeconds => $composableBuilder(
+    column: $table.durationInSeconds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get prerequisites => $composableBuilder(
+    column: $table.prerequisites,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseType => $composableBuilder(
+    column: $table.courseType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseLevel => $composableBuilder(
+    column: $table.courseLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<int> get enrollmentLimit => $composableBuilder(
+    column: $table.enrollmentLimit,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentEnrollment => $composableBuilder(
+    column: $table.currentEnrollment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseMaterials => $composableBuilder(
+    column: $table.courseMaterials,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetCourseInfoTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetCourseInfoTable,
+          MagnetCourseInfoData,
+          $$MagnetCourseInfoTableFilterComposer,
+          $$MagnetCourseInfoTableOrderingComposer,
+          $$MagnetCourseInfoTableAnnotationComposer,
+          $$MagnetCourseInfoTableCreateCompanionBuilder,
+          $$MagnetCourseInfoTableUpdateCompanionBuilder,
+          (
+            MagnetCourseInfoData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetCourseInfoTable,
+              MagnetCourseInfoData
+            >,
+          ),
+          MagnetCourseInfoData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetCourseInfoTableTableManager(
+    _$AppDataBase db,
+    $MagnetCourseInfoTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetCourseInfoTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MagnetCourseInfoTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MagnetCourseInfoTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> courseCode = const Value.absent(),
+                Value<String> courseTitle = const Value.absent(),
+                Value<String?> courseDescription = const Value.absent(),
+                Value<int> credits = const Value.absent(),
+                Value<String?> instructor = const Value.absent(),
+                Value<String?> semester = const Value.absent(),
+                Value<DateTime?> schedule = const Value.absent(),
+                Value<int?> durationInSeconds = const Value.absent(),
+                Value<String?> prerequisites = const Value.absent(),
+                Value<String?> courseType = const Value.absent(),
+                Value<String?> courseLevel = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<int?> enrollmentLimit = const Value.absent(),
+                Value<int?> currentEnrollment = const Value.absent(),
+                Value<String?> courseMaterials = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCourseInfoCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                courseCode: courseCode,
+                courseTitle: courseTitle,
+                courseDescription: courseDescription,
+                credits: credits,
+                instructor: instructor,
+                semester: semester,
+                schedule: schedule,
+                durationInSeconds: durationInSeconds,
+                prerequisites: prerequisites,
+                courseType: courseType,
+                courseLevel: courseLevel,
+                location: location,
+                enrollmentLimit: enrollmentLimit,
+                currentEnrollment: currentEnrollment,
+                courseMaterials: courseMaterials,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String courseCode,
+                required String courseTitle,
+                Value<String?> courseDescription = const Value.absent(),
+                required int credits,
+                Value<String?> instructor = const Value.absent(),
+                Value<String?> semester = const Value.absent(),
+                Value<DateTime?> schedule = const Value.absent(),
+                Value<int?> durationInSeconds = const Value.absent(),
+                Value<String?> prerequisites = const Value.absent(),
+                Value<String?> courseType = const Value.absent(),
+                Value<String?> courseLevel = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<int?> enrollmentLimit = const Value.absent(),
+                Value<int?> currentEnrollment = const Value.absent(),
+                Value<String?> courseMaterials = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetCourseInfoCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                courseCode: courseCode,
+                courseTitle: courseTitle,
+                courseDescription: courseDescription,
+                credits: credits,
+                instructor: instructor,
+                semester: semester,
+                schedule: schedule,
+                durationInSeconds: durationInSeconds,
+                prerequisites: prerequisites,
+                courseType: courseType,
+                courseLevel: courseLevel,
+                location: location,
+                enrollmentLimit: enrollmentLimit,
+                currentEnrollment: currentEnrollment,
+                courseMaterials: courseMaterials,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetCourseInfoTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetCourseInfoTable,
+      MagnetCourseInfoData,
+      $$MagnetCourseInfoTableFilterComposer,
+      $$MagnetCourseInfoTableOrderingComposer,
+      $$MagnetCourseInfoTableAnnotationComposer,
+      $$MagnetCourseInfoTableCreateCompanionBuilder,
+      $$MagnetCourseInfoTableUpdateCompanionBuilder,
+      (
+        MagnetCourseInfoData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetCourseInfoTable,
+          MagnetCourseInfoData
+        >,
+      ),
+      MagnetCourseInfoData,
+      PrefetchHooks Function()
+    >;
+typedef $$MagnetFinancialTransactionTableCreateCompanionBuilder =
+    MagnetFinancialTransactionCompanion Function({
+      required String userID,
+      required int institutionID,
+      required String transactionId,
+      required double amount,
+      required DateTime date,
+      required String type,
+      required String paymentMethod,
+      required String studentId,
+      required double balanceAfterTransaction,
+      required String status,
+      required String currency,
+      Value<String?> description,
+      Value<String?> referenceNumber,
+      Value<int> rowid,
+    });
+typedef $$MagnetFinancialTransactionTableUpdateCompanionBuilder =
+    MagnetFinancialTransactionCompanion Function({
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> transactionId,
+      Value<double> amount,
+      Value<DateTime> date,
+      Value<String> type,
+      Value<String> paymentMethod,
+      Value<String> studentId,
+      Value<double> balanceAfterTransaction,
+      Value<String> status,
+      Value<String> currency,
+      Value<String?> description,
+      Value<String?> referenceNumber,
+      Value<int> rowid,
+    });
+
+class $$MagnetFinancialTransactionTableFilterComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MagnetFinancialTransactionTableOrderingComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MagnetFinancialTransactionTableAnnotationComposer
+    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
+  $$MagnetFinancialTransactionTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentMethod => $composableBuilder(
+    column: $table.paymentMethod,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get studentId =>
+      $composableBuilder(column: $table.studentId, builder: (column) => column);
+
+  GeneratedColumn<double> get balanceAfterTransaction => $composableBuilder(
+    column: $table.balanceAfterTransaction,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => column,
+  );
+}
+
+class $$MagnetFinancialTransactionTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData,
+          $$MagnetFinancialTransactionTableFilterComposer,
+          $$MagnetFinancialTransactionTableOrderingComposer,
+          $$MagnetFinancialTransactionTableAnnotationComposer,
+          $$MagnetFinancialTransactionTableCreateCompanionBuilder,
+          $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+          (
+            MagnetFinancialTransactionData,
+            BaseReferences<
+              _$AppDataBase,
+              $MagnetFinancialTransactionTable,
+              MagnetFinancialTransactionData
+            >,
+          ),
+          MagnetFinancialTransactionData,
+          PrefetchHooks Function()
+        > {
+  $$MagnetFinancialTransactionTableTableManager(
+    _$AppDataBase db,
+    $MagnetFinancialTransactionTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MagnetFinancialTransactionTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$MagnetFinancialTransactionTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MagnetFinancialTransactionTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userID = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> transactionId = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<String> paymentMethod = const Value.absent(),
+                Value<String> studentId = const Value.absent(),
+                Value<double> balanceAfterTransaction = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetFinancialTransactionCompanion(
+                userID: userID,
+                institutionID: institutionID,
+                transactionId: transactionId,
+                amount: amount,
+                date: date,
+                type: type,
+                paymentMethod: paymentMethod,
+                studentId: studentId,
+                balanceAfterTransaction: balanceAfterTransaction,
+                status: status,
+                currency: currency,
+                description: description,
+                referenceNumber: referenceNumber,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userID,
+                required int institutionID,
+                required String transactionId,
+                required double amount,
+                required DateTime date,
+                required String type,
+                required String paymentMethod,
+                required String studentId,
+                required double balanceAfterTransaction,
+                required String status,
+                required String currency,
+                Value<String?> description = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MagnetFinancialTransactionCompanion.insert(
+                userID: userID,
+                institutionID: institutionID,
+                transactionId: transactionId,
+                amount: amount,
+                date: date,
+                type: type,
+                paymentMethod: paymentMethod,
+                studentId: studentId,
+                balanceAfterTransaction: balanceAfterTransaction,
+                status: status,
+                currency: currency,
+                description: description,
+                referenceNumber: referenceNumber,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MagnetFinancialTransactionTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $MagnetFinancialTransactionTable,
+      MagnetFinancialTransactionData,
+      $$MagnetFinancialTransactionTableFilterComposer,
+      $$MagnetFinancialTransactionTableOrderingComposer,
+      $$MagnetFinancialTransactionTableAnnotationComposer,
+      $$MagnetFinancialTransactionTableCreateCompanionBuilder,
+      $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+      (
+        MagnetFinancialTransactionData,
+        BaseReferences<
+          _$AppDataBase,
+          $MagnetFinancialTransactionTable,
+          MagnetFinancialTransactionData
+        >,
+      ),
+      MagnetFinancialTransactionData,
+      PrefetchHooks Function()
+    >;
+typedef $$CommunityTableTableCreateCompanionBuilder =
+    CommunityTableCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<String?> description,
+      Value<bool> nsfw,
+      Value<bool> private,
+      Value<bool> verified,
+      required String visibility,
+      Value<int> memberCount,
+      Value<int> moderatorCount,
+      Value<int> bannedUsersCount,
+      Value<int> monthlyVisitorCount,
+      Value<int> weeklyVisitorCount,
+      Value<String?> banner,
+      Value<int> bannerHeight,
+      Value<int> bannerWidth,
+      Value<String?> bannerUrl,
+      Value<String?> profilePicture,
+      Value<int> profilePictureHeight,
+      Value<int> profilePictureWidth,
+      Value<String?> profilePictureUrl,
+      required String creatorId,
+      required List<dynamic> guidelines,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$CommunityTableTableUpdateCompanionBuilder =
+    CommunityTableCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<bool> nsfw,
+      Value<bool> private,
+      Value<bool> verified,
+      Value<String> visibility,
+      Value<int> memberCount,
+      Value<int> moderatorCount,
+      Value<int> bannedUsersCount,
+      Value<int> monthlyVisitorCount,
+      Value<int> weeklyVisitorCount,
+      Value<String?> banner,
+      Value<int> bannerHeight,
+      Value<int> bannerWidth,
+      Value<String?> bannerUrl,
+      Value<String?> profilePicture,
+      Value<int> profilePictureHeight,
+      Value<int> profilePictureWidth,
+      Value<String?> profilePictureUrl,
+      Value<String> creatorId,
+      Value<List<dynamic>> guidelines,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$CommunityTableTableFilterComposer
+    extends Composer<_$AppDataBase, $CommunityTableTable> {
+  $$CommunityTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get nsfw => $composableBuilder(
+    column: $table.nsfw,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get private => $composableBuilder(
+    column: $table.private,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get verified => $composableBuilder(
+    column: $table.verified,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get guidelines => $composableBuilder(
+    column: $table.guidelines,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CommunityTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommunityTableTable> {
+  $$CommunityTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get nsfw => $composableBuilder(
+    column: $table.nsfw,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get private => $composableBuilder(
+    column: $table.private,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get verified => $composableBuilder(
+    column: $table.verified,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get banner => $composableBuilder(
+    column: $table.banner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannerUrl => $composableBuilder(
+    column: $table.bannerUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creatorId => $composableBuilder(
+    column: $table.creatorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get guidelines => $composableBuilder(
+    column: $table.guidelines,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CommunityTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommunityTableTable> {
+  $$CommunityTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get nsfw =>
+      $composableBuilder(column: $table.nsfw, builder: (column) => column);
+
+  GeneratedColumn<bool> get private =>
+      $composableBuilder(column: $table.private, builder: (column) => column);
+
+  GeneratedColumn<bool> get verified =>
+      $composableBuilder(column: $table.verified, builder: (column) => column);
+
+  GeneratedColumn<String> get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get memberCount => $composableBuilder(
+    column: $table.memberCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get moderatorCount => $composableBuilder(
+    column: $table.moderatorCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bannedUsersCount => $composableBuilder(
+    column: $table.bannedUsersCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get monthlyVisitorCount => $composableBuilder(
+    column: $table.monthlyVisitorCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weeklyVisitorCount => $composableBuilder(
+    column: $table.weeklyVisitorCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get banner =>
+      $composableBuilder(column: $table.banner, builder: (column) => column);
+
+  GeneratedColumn<int> get bannerHeight => $composableBuilder(
+    column: $table.bannerHeight,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bannerWidth => $composableBuilder(
+    column: $table.bannerWidth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannerUrl =>
+      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get profilePictureHeight => $composableBuilder(
+    column: $table.profilePictureHeight,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get profilePictureWidth => $composableBuilder(
+    column: $table.profilePictureWidth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get profilePictureUrl => $composableBuilder(
+    column: $table.profilePictureUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get creatorId =>
+      $composableBuilder(column: $table.creatorId, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get guidelines =>
+      $composableBuilder(
+        column: $table.guidelines,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CommunityTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $CommunityTableTable,
+          CommunityData,
+          $$CommunityTableTableFilterComposer,
+          $$CommunityTableTableOrderingComposer,
+          $$CommunityTableTableAnnotationComposer,
+          $$CommunityTableTableCreateCompanionBuilder,
+          $$CommunityTableTableUpdateCompanionBuilder,
+          (
+            CommunityData,
+            BaseReferences<_$AppDataBase, $CommunityTableTable, CommunityData>,
+          ),
+          CommunityData,
+          PrefetchHooks Function()
+        > {
+  $$CommunityTableTableTableManager(
+    _$AppDataBase db,
+    $CommunityTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CommunityTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CommunityTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CommunityTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<bool> nsfw = const Value.absent(),
+                Value<bool> private = const Value.absent(),
+                Value<bool> verified = const Value.absent(),
+                Value<String> visibility = const Value.absent(),
+                Value<int> memberCount = const Value.absent(),
+                Value<int> moderatorCount = const Value.absent(),
+                Value<int> bannedUsersCount = const Value.absent(),
+                Value<int> monthlyVisitorCount = const Value.absent(),
+                Value<int> weeklyVisitorCount = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<int> bannerHeight = const Value.absent(),
+                Value<int> bannerWidth = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<int> profilePictureHeight = const Value.absent(),
+                Value<int> profilePictureWidth = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                Value<String> creatorId = const Value.absent(),
+                Value<List<dynamic>> guidelines = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CommunityTableCompanion(
+                id: id,
+                name: name,
+                description: description,
+                nsfw: nsfw,
+                private: private,
+                verified: verified,
+                visibility: visibility,
+                memberCount: memberCount,
+                moderatorCount: moderatorCount,
+                bannedUsersCount: bannedUsersCount,
+                monthlyVisitorCount: monthlyVisitorCount,
+                weeklyVisitorCount: weeklyVisitorCount,
+                banner: banner,
+                bannerHeight: bannerHeight,
+                bannerWidth: bannerWidth,
+                bannerUrl: bannerUrl,
+                profilePicture: profilePicture,
+                profilePictureHeight: profilePictureHeight,
+                profilePictureWidth: profilePictureWidth,
+                profilePictureUrl: profilePictureUrl,
+                creatorId: creatorId,
+                guidelines: guidelines,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<bool> nsfw = const Value.absent(),
+                Value<bool> private = const Value.absent(),
+                Value<bool> verified = const Value.absent(),
+                required String visibility,
+                Value<int> memberCount = const Value.absent(),
+                Value<int> moderatorCount = const Value.absent(),
+                Value<int> bannedUsersCount = const Value.absent(),
+                Value<int> monthlyVisitorCount = const Value.absent(),
+                Value<int> weeklyVisitorCount = const Value.absent(),
+                Value<String?> banner = const Value.absent(),
+                Value<int> bannerHeight = const Value.absent(),
+                Value<int> bannerWidth = const Value.absent(),
+                Value<String?> bannerUrl = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<int> profilePictureHeight = const Value.absent(),
+                Value<int> profilePictureWidth = const Value.absent(),
+                Value<String?> profilePictureUrl = const Value.absent(),
+                required String creatorId,
+                required List<dynamic> guidelines,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => CommunityTableCompanion.insert(
+                id: id,
+                name: name,
+                description: description,
+                nsfw: nsfw,
+                private: private,
+                verified: verified,
+                visibility: visibility,
+                memberCount: memberCount,
+                moderatorCount: moderatorCount,
+                bannedUsersCount: bannedUsersCount,
+                monthlyVisitorCount: monthlyVisitorCount,
+                weeklyVisitorCount: weeklyVisitorCount,
+                banner: banner,
+                bannerHeight: bannerHeight,
+                bannerWidth: bannerWidth,
+                bannerUrl: bannerUrl,
+                profilePicture: profilePicture,
+                profilePictureHeight: profilePictureHeight,
+                profilePictureWidth: profilePictureWidth,
+                profilePictureUrl: profilePictureUrl,
+                creatorId: creatorId,
+                guidelines: guidelines,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CommunityTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $CommunityTableTable,
+      CommunityData,
+      $$CommunityTableTableFilterComposer,
+      $$CommunityTableTableOrderingComposer,
+      $$CommunityTableTableAnnotationComposer,
+      $$CommunityTableTableCreateCompanionBuilder,
+      $$CommunityTableTableUpdateCompanionBuilder,
+      (
+        CommunityData,
+        BaseReferences<_$AppDataBase, $CommunityTableTable, CommunityData>,
+      ),
+      CommunityData,
+      PrefetchHooks Function()
+    >;
+typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
+    ChirpCommunityMembershipCompanion Function({
+      Value<int> id,
+      required int communityID,
+      required String userID,
+      required String role,
+      Value<bool> banned,
+      Value<String?> bannedByID,
+      Value<String?> bannedReason,
+      Value<DateTime?> bannedAt,
+      Value<DateTime> joinedAt,
+    });
+typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
+    ChirpCommunityMembershipCompanion Function({
+      Value<int> id,
+      Value<int> communityID,
+      Value<String> userID,
+      Value<String> role,
+      Value<bool> banned,
+      Value<String?> bannedByID,
+      Value<String?> bannedReason,
+      Value<DateTime?> bannedAt,
+      Value<DateTime> joinedAt,
+    });
+
+class $$ChirpCommunityMembershipTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get banned => $composableBuilder(
+    column: $table.banned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get bannedAt => $composableBuilder(
+    column: $table.bannedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ChirpCommunityMembershipTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get banned => $composableBuilder(
+    column: $table.banned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get bannedAt => $composableBuilder(
+    column: $table.bannedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ChirpCommunityMembershipTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
+  $$ChirpCommunityMembershipTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get communityID => $composableBuilder(
+    column: $table.communityID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<bool> get banned =>
+      $composableBuilder(column: $table.banned, builder: (column) => column);
+
+  GeneratedColumn<String> get bannedByID => $composableBuilder(
+    column: $table.bannedByID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get bannedReason => $composableBuilder(
+    column: $table.bannedReason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get bannedAt =>
+      $composableBuilder(column: $table.bannedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get joinedAt =>
+      $composableBuilder(column: $table.joinedAt, builder: (column) => column);
+}
+
+class $$ChirpCommunityMembershipTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData,
+          $$ChirpCommunityMembershipTableFilterComposer,
+          $$ChirpCommunityMembershipTableOrderingComposer,
+          $$ChirpCommunityMembershipTableAnnotationComposer,
+          $$ChirpCommunityMembershipTableCreateCompanionBuilder,
+          $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+          (
+            ChirpCommunityMembershipData,
+            BaseReferences<
+              _$AppDataBase,
+              $ChirpCommunityMembershipTable,
+              ChirpCommunityMembershipData
+            >,
+          ),
+          ChirpCommunityMembershipData,
+          PrefetchHooks Function()
+        > {
+  $$ChirpCommunityMembershipTableTableManager(
+    _$AppDataBase db,
+    $ChirpCommunityMembershipTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ChirpCommunityMembershipTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ChirpCommunityMembershipTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ChirpCommunityMembershipTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> communityID = const Value.absent(),
+                Value<String> userID = const Value.absent(),
+                Value<String> role = const Value.absent(),
+                Value<bool> banned = const Value.absent(),
+                Value<String?> bannedByID = const Value.absent(),
+                Value<String?> bannedReason = const Value.absent(),
+                Value<DateTime?> bannedAt = const Value.absent(),
+                Value<DateTime> joinedAt = const Value.absent(),
+              }) => ChirpCommunityMembershipCompanion(
+                id: id,
+                communityID: communityID,
+                userID: userID,
+                role: role,
+                banned: banned,
+                bannedByID: bannedByID,
+                bannedReason: bannedReason,
+                bannedAt: bannedAt,
+                joinedAt: joinedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int communityID,
+                required String userID,
+                required String role,
+                Value<bool> banned = const Value.absent(),
+                Value<String?> bannedByID = const Value.absent(),
+                Value<String?> bannedReason = const Value.absent(),
+                Value<DateTime?> bannedAt = const Value.absent(),
+                Value<DateTime> joinedAt = const Value.absent(),
+              }) => ChirpCommunityMembershipCompanion.insert(
+                id: id,
+                communityID: communityID,
+                userID: userID,
+                role: role,
+                banned: banned,
+                bannedByID: bannedByID,
+                bannedReason: bannedReason,
+                bannedAt: bannedAt,
+                joinedAt: joinedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ChirpCommunityMembershipTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ChirpCommunityMembershipTable,
+      ChirpCommunityMembershipData,
+      $$ChirpCommunityMembershipTableFilterComposer,
+      $$ChirpCommunityMembershipTableOrderingComposer,
+      $$ChirpCommunityMembershipTableAnnotationComposer,
+      $$ChirpCommunityMembershipTableCreateCompanionBuilder,
+      $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+      (
+        ChirpCommunityMembershipData,
+        BaseReferences<
+          _$AppDataBase,
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData
+        >,
+      ),
+      ChirpCommunityMembershipData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -15118,12 +23225,8 @@ class $AppDataBaseManager {
       $$UserProfileTableTableManager(_db, _db.userProfile);
   $$TokenTableTableManager get token =>
       $$TokenTableTableManager(_db, _db.token);
-  $$ChirpUserTableTableTableManager get chirpUserTable =>
-      $$ChirpUserTableTableTableManager(_db, _db.chirpUserTable);
-  $$MessageTableTableTableManager get messageTable =>
-      $$MessageTableTableTableManager(_db, _db.messageTable);
-  $$ConversationTableTableTableManager get conversationTable =>
-      $$ConversationTableTableTableManager(_db, _db.conversationTable);
+  $$GroupTableTableTableManager get groupTable =>
+      $$GroupTableTableTableManager(_db, _db.groupTable);
   $$PostTableTableTableManager get postTable =>
       $$PostTableTableTableManager(_db, _db.postTable);
   $$AttachmentTableTableTableManager get attachmentTable =>
@@ -15143,4 +23246,23 @@ class $AppDataBaseManager {
       $$NotificationTableTableTableManager(_db, _db.notificationTable);
   $$InstitutionTableTableManager get institution =>
       $$InstitutionTableTableManager(_db, _db.institution);
+  $$MagnetStudentProfileTableTableManager get magnetStudentProfile =>
+      $$MagnetStudentProfileTableTableManager(_db, _db.magnetStudentProfile);
+  $$MagnetCredentialsTableTableManager get magnetCredentials =>
+      $$MagnetCredentialsTableTableManager(_db, _db.magnetCredentials);
+  $$MagnetCourseInfoTableTableManager get magnetCourseInfo =>
+      $$MagnetCourseInfoTableTableManager(_db, _db.magnetCourseInfo);
+  $$MagnetFinancialTransactionTableTableManager
+  get magnetFinancialTransaction =>
+      $$MagnetFinancialTransactionTableTableManager(
+        _db,
+        _db.magnetFinancialTransaction,
+      );
+  $$CommunityTableTableTableManager get communityTable =>
+      $$CommunityTableTableTableManager(_db, _db.communityTable);
+  $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>
+      $$ChirpCommunityMembershipTableTableManager(
+        _db,
+        _db.chirpCommunityMembership,
+      );
 }

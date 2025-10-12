@@ -65,3 +65,45 @@ class AuthenticationFailure extends Failure {
   /// Constructs a [AuthenticationFailure] with required [message] and [error] details.
   const AuthenticationFailure({required super.message, required super.error});
 }
+
+/// Represents a failure related to AdMob operations.
+/// This typically indicates issues like ad loading failures, initialization problems,
+/// or ad display errors.
+class AdMobFailure extends Failure {
+  /// Constructs a [AdMobFailure] with required [message] and [error] details.
+  const AdMobFailure({required super.message, required super.error});
+}
+
+class MagnetInstanceFailure extends Failure {
+  const MagnetInstanceFailure({required super.message, required super.error});
+}
+
+/// Represents a failure related to validation errors.
+/// This typically indicates that input data doesn't meet required criteria.
+class ValidationFailure extends Failure {
+  const ValidationFailure({required super.message, required super.error});
+}
+
+/// Represents a failure related to resource conflicts.
+/// This typically indicates that a resource already exists or conflicts with existing data.
+class ConflictFailure extends Failure {
+  const ConflictFailure({required super.message, required super.error});
+}
+
+/// Represents a failure related to rate limiting.
+/// This typically indicates that too many requests have been made in a short period.
+class RateLimitFailure extends Failure {
+  const RateLimitFailure({required super.message, required super.error});
+}
+
+/// Represents a failure related to authorization.
+/// This typically indicates that the user does not have permission to perform an action.
+class AuthorizationFailure extends Failure {
+  const AuthorizationFailure({required super.message, required super.error});
+}
+
+/// Represents a failure when a requested resource is not found.
+/// This typically indicates that the resource does not exist or has been deleted.
+class NotFoundFailure extends Failure {
+  const NotFoundFailure({required super.message, required super.error});
+}

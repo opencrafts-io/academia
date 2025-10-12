@@ -2,12 +2,14 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/institution/presentation/bloc/institution_bloc.dart';
+import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -38,7 +40,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(
-    () => AuthRemoteDatasource(flavorConfig: flavor, dioClient: sl()),
+    () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
   sl.registerFactory<AuthRepositoryImpl>(
     () => AuthRepositoryImpl(
@@ -64,7 +66,7 @@ Future<void> init(FlavorConfig flavor) async {
 
   //sherehe
   sl.registerLazySingleton<ShereheRemoteDataSource>(
-    () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>()),
+    () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
   );
   sl.registerLazySingleton(
     () => CreateEventUseCase(sl.get<ShereheRepository>()),
@@ -104,7 +106,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
   // Chirp
   sl.registerFactory<ChirpRemoteDataSource>(
-    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>()),
+    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
   sl.registerFactory<ChirpLocalDataSource>(
     () => ChirpLocalDataSource(db: cacheDB),
@@ -118,6 +120,12 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(() => GetFeedPosts(sl()));
   sl.registerFactory(
     () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
     () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
@@ -135,10 +143,13 @@ Future<void> init(FlavorConfig flavor) async {
       likePost: sl.get<LikePostUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
       addComment: sl.get<CommentUsecase>(),
+      cachePostReplies: sl.get<CachePostRepliesUsecase>(),
+      getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
-    () => ProfileRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () =>
+        ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
   sl.registerFactory<ProfileLocalDatasource>(
     () => ProfileLocalDatasource(localDB: cacheDB),
@@ -176,7 +187,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => TodoLocalDatasource(localDB: cacheDB),
   );
   sl.registerFactory<TodoRemoteDatasource>(
-    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
 
   sl.registerFactory<TodoRepository>(
@@ -212,7 +223,10 @@ Future<void> init(FlavorConfig flavor) async {
     () => AgendaEventLocalDataSource(localDB: cacheDB),
   );
   sl.registerFactory<AgendaEventRemoteDatasource>(
-    () => AgendaEventRemoteDatasource(dioClient: sl.get<DioClient>()),
+    () => AgendaEventRemoteDatasource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
   );
 
   sl.registerFactory<AgendaEventRepository>(
@@ -262,82 +276,142 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // Add Chirp dependencies
-  sl.registerFactory<MessagingRemoteDatasourceImpl>(
-    () => MessagingRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
-  );
-  sl.registerFactory<MessagingLocalDataSourceImpl>(
-    () => MessagingLocalDataSourceImpl(localDB: cacheDB),
-  );
-
-  sl.registerFactory<ConversationRepositoryImpl>(
-    () => ConversationRepositoryImpl(
-      remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
-      chirpUserRemoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
-    ),
-  );
-  sl.registerFactory<MessageRepositoryImpl>(
-    () => MessageRepositoryImpl(
-      remoteDataSource: sl.get<MessagingRemoteDatasourceImpl>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
+  // Communities
+  sl.registerFactory<CommunityRemoteDatasource>(
+    () => CommunityRemoteDatasource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
     ),
   );
 
-  sl.registerFactory<GetConversations>(
-    () => GetConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<GetMessages>(
-    () => GetMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<SendMessage>(
-    () => SendMessage(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<GetCachedConversations>(
-    () => GetCachedConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<GetCachedMessages>(
-    () => GetCachedMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<RefreshConversations>(
-    () => RefreshConversations(sl.get<ConversationRepositoryImpl>()),
-  );
-  sl.registerFactory<RefreshMessages>(
-    () => RefreshMessages(sl.get<MessageRepositoryImpl>()),
-  );
-  sl.registerFactory<CreateConversation>(
-    () => CreateConversation(sl.get<ConversationRepositoryImpl>()),
+  sl.registerFactory<CommunityLocalDatasource>(
+    () => CommunityLocalDatasource(localDB: sl()),
   );
 
-  // Chirp User dependencies
-  sl.registerFactory<ChirpUserRemoteDatasource>(
-    () => ChirpUserRemoteDatasourceImpl(dioClient: sl.get<DioClient>()),
-  );
-  sl.registerFactory<ChirpUserRepository>(
-    () => ChirpUserRepositoryImpl(
-      remoteDataSource: sl.get<ChirpUserRemoteDatasource>(),
-      localDataSource: sl.get<MessagingLocalDataSourceImpl>(),
-    ),
-  );
-  sl.registerFactory<SearchUsersUseCase>(
-    () => SearchUsersUseCase(sl.get<ChirpUserRepository>()),
-  );
-
-  sl.registerFactory<MessagingBloc>(
-    () => MessagingBloc(
-      getConversations: sl.get<GetConversations>(),
-      getMessages: sl.get<GetMessages>(),
-      sendMessage: sl.get<SendMessage>(),
-      searchUsers: sl.get<SearchUsersUseCase>(),
-      getCachedConversations: sl.get<GetCachedConversations>(),
-      getCachedMessages: sl.get<GetCachedMessages>(),
-      refreshConversations: sl.get<RefreshConversations>(),
-      refreshMessages: sl.get<RefreshMessages>(),
-      createConversation: sl.get<CreateConversation>(),
+  sl.registerFactory<CommunityRepositoryImpl>(
+    () => CommunityRepositoryImpl(
+      remoteDatasource: sl.get(),
+      communityLocalDatasource: sl.get(),
     ),
   );
 
-  // Notifications
+  sl.registerFactory<CreateCommunityUseCase>(
+    () => CreateCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCommunityByIdUseCase>(
+    () =>
+        GetCommunityByIdUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<ModerateMembersUseCase>(
+    () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<JoinCommunityUseCase>(
+    () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<LeaveCommunityUseCase>(
+    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<DeleteCommunityUseCase>(
+    () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
+  );
+
+  sl.registerFactory<GetCommunityMembersUsecase>(
+    () => GetCommunityMembersUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<AddCommunityGuidelinesUsecase>(
+    () => AddCommunityGuidelinesUsecase(
+      repository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<GetPostableCommunitiesUsecase>(
+    () => GetPostableCommunitiesUsecase(
+      communityRepository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => SearchForCommunityUsecase(
+      communityRepository: sl.get<CommunityRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => CommunityBloc(
+      getPostableCommunitiesUsecase: sl(),
+      searchForCommunityUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory<CommunityHomeBloc>(
+    () => CommunityHomeBloc(
+      getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
+      moderateMembers: sl.get<ModerateMembersUseCase>(),
+      joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
+      leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
+      deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
+      addCommunityGuidelinesUsecase: sl.get<AddCommunityGuidelinesUsecase>(),
+    ),
+  );
+
+  sl.registerFactory<CreateCommunityBloc>(
+    () => CreateCommunityBloc(
+      createCommunityUseCase: sl.get<CreateCommunityUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<CommunityUsersBloc>(
+    () => CommunityUsersBloc(
+      getCommunityMembersUsecase: sl.get<GetCommunityMembersUsecase>(),
+    ),
+  );
+
+  /*************************************************************************
+                                    CHIRP
+  *************************************************************************/
+  // -- Memberships
+  sl.registerFactory<ChirpCommunityMembershipLocalDatasource>(
+    () => ChirpCommunityMembershipLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<ChirpCommunityMembershipRemoteDatasource>(
+    () => ChirpCommunityMembershipRemoteDatasource(
+      dioClient: sl(),
+      flavor: flavor,
+    ),
+  );
+  sl.registerFactory<ChirpCommunityMembershipRepository>(
+    () => ChirpCommunityMembershipRepositoryImpl(
+      profileLocalDatasource: sl(),
+      chirpCommunityMembershipLocalDatasource: sl(),
+      chirpCommunityMembershipRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<GetCachedPersonalChirpCommunityMemberships>(
+    () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
+  );
+
+  sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
+    () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<ChirpCommunityMembershipBloc>(
+    () => ChirpCommunityMembershipBloc(
+      getCachedPersonalChirpCommunityMemberships: sl(),
+      getRemotePersonalChirpMembershipsUsecase: sl(),
+    ),
+  );
+  /*************************************************************************
+                              // NOTIFICATIONS
+  *************************************************************************/
   sl.registerFactory<NotificationRemoteDatasource>(
     () => NotificationRemoteDatasource(),
   );
@@ -410,17 +484,13 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // Firebase Remote Config
+  sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
   sl.registerFactory<RemoteConfigRemoteDatasource>(
-    () => RemoteConfigRemoteDatasource(),
+    () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
   );
-  sl.registerFactory<RemoteConfigLocalDatasource>(
-    () => RemoteConfigLocalDatasource(),
-  );
-
   sl.registerFactory<RemoteConfigRepository>(
     () => RemoteConfigRepositoryImpl(
       remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-      localDatasource: sl.get<RemoteConfigLocalDatasource>(),
     ),
   );
 
@@ -448,16 +518,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<GetAllParametersUsecase>(
     () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
   );
-  sl.registerFactory<SetDefaultsUsecase>(
-    () => SetDefaultsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetSettingsUsecase>(
-    () => GetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<SetSettingsUsecase>(
-    () => SetSettingsUsecase(sl.get<RemoteConfigRepository>()),
-  );
-
   sl.registerFactory<RemoteConfigBloc>(
     () => RemoteConfigBloc(
       initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
@@ -468,9 +528,6 @@ Future<void> init(FlavorConfig flavor) async {
       getDoubleUsecase: sl.get<GetDoubleUsecase>(),
       getJsonUsecase: sl.get<GetJsonUsecase>(),
       getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-      setDefaultsUsecase: sl.get<SetDefaultsUsecase>(),
-      getSettingsUsecase: sl.get<GetSettingsUsecase>(),
-      setSettingsUsecase: sl.get<SetSettingsUsecase>(),
     ),
   );
 
@@ -479,7 +536,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
   );
   sl.registerFactory<InstitutionRemoteDatasource>(
-    () => InstitutionRemoteDatasource(dioClient: sl()),
+    () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
 
   sl.registerFactory<InstitutionRepositoryImpl>(
@@ -519,6 +576,149 @@ Future<void> init(FlavorConfig flavor) async {
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
+    ),
+  );
+
+  // Magnet
+  sl.registerFactory<MagnetCredentialsLocalDatasource>(
+    () => MagnetCredentialsLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<MagnetStudentProfileLocalDatasource>(
+    () => MagnetStudentProfileLocalDatasource(localDB: sl()),
+  );
+  sl.registerFactory<MagnetCourseLocalDataSource>(
+    () => MagnetCourseLocalDataSource(localDB: sl()),
+  );
+
+  sl.registerFactory<MagnetRepositoryImpl>(
+    () => MagnetRepositoryImpl(
+      magnetCredentialsLocalDatasource: sl(),
+      magnetStudentProfileLocalDatasource: sl(),
+      magnetCourseLocalDataSource: sl(),
+    ),
+  );
+
+  // -- Usecases
+  sl.registerFactory<MagnetLoginUsecase>(
+    () => MagnetLoginUsecase(magnetRepository: sl<MagnetRepositoryImpl>()),
+  );
+  sl.registerFactory<GetCachedMagnetCredentialUsecase>(
+    () => GetCachedMagnetCredentialUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetMagnetAuthenticationStatusUsecase>(
+    () => GetMagnetAuthenticationStatusUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetCachedMagnetStudentProfileUsecase>(
+    () => GetCachedMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetStudentProfileUsecase>(
+    () => FetchMagnetStudentProfileUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetStudentTimetableUsecase>(
+    () => FetchMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<GetCachedMagnetStudentTimetableUsecase>(
+    () => GetCachedMagnetStudentTimetableUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerFactory<DeleteMagentCourseByCourseCodeUsecase>(
+    () => DeleteMagentCourseByCourseCodeUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<FetchMagnetFinancialFeesStatementsUsecase>(
+    () => FetchMagnetFinancialFeesStatementsUsecase(
+      magnetRepository: sl<MagnetRepositoryImpl>(),
+    ),
+  );
+
+  // -- Bloc
+  sl.registerFactory<MagnetBloc>(
+    () => MagnetBloc(
+      magnetLoginUsecase: sl(),
+      getCachedMagnetCredentialUsecase: sl(),
+      getMagnetAuthenticationStatusUsecase: sl(),
+      fetchMagnetStudentProfileUsecase: sl(),
+      getCachedMagnetStudentProfileUsecase: sl(),
+      fetchMagnetStudentTimetableUsecase: sl(),
+      deleteMagentCourseByCourseCodeUsecase: sl(),
+      getCachedMagnetStudentTimetableUsecase: sl(),
+      fetchMagnetFinancialFeesStatementsUsecase: sl(),
+    ),
+  );
+
+  // AdMob
+  sl.registerFactory<AdRemoteDataSource>(() => AdRemoteDataSourceImpl());
+
+  sl.registerFactory<AdRepository>(
+    () => AdRepositoryImpl(sl.get<AdRemoteDataSource>()),
+  );
+
+  sl.registerFactory<InitializeAdMobUsecase>(
+    () => InitializeAdMobUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadBannerAdUsecase>(
+    () => LoadBannerAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadInterstitialAdUsecase>(
+    () => LoadInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<LoadRewardedAdUsecase>(
+    () => LoadRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowInterstitialAdUsecase>(
+    () => ShowInterstitialAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<ShowRewardedAdUsecase>(
+    () => ShowRewardedAdUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<GetLoadedAdsUsecase>(
+    () => GetLoadedAdsUsecase(sl.get<AdRepository>()),
+  );
+  sl.registerFactory<SetTestModeUsecase>(
+    () => SetTestModeUsecase(sl.get<AdRepository>()),
+  );
+
+  sl.registerFactory<AdBloc>(
+    () => AdBloc(
+      initializeAdMobUsecase: sl.get<InitializeAdMobUsecase>(),
+      loadBannerAdUsecase: sl.get<LoadBannerAdUsecase>(),
+      loadInterstitialAdUsecase: sl.get<LoadInterstitialAdUsecase>(),
+      loadRewardedAdUsecase: sl.get<LoadRewardedAdUsecase>(),
+      showInterstitialAdUsecase: sl.get<ShowInterstitialAdUsecase>(),
+      showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
+      getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
+      setTestModeUsecase: sl.get<SetTestModeUsecase>(),
+    ),
+  );
+
+  // Permissions
+  sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
+  sl.registerFactory<PermissionRepository>(
+    () => PermissionRepositoryImpl(permissionDatasource: sl()),
+  );
+  sl.registerFactory<RequestPermissionUsecase>(
+    () => RequestPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<CheckPermissionUsecase>(
+    () => CheckPermissionUsecase(permissionRepository: sl()),
+  );
+  sl.registerFactory<PermissionCubit>(
+    () => PermissionCubit(
+      checkPermissionUsecase: sl(),
+      requestPermissionUsecase: sl(),
     ),
   );
 }
