@@ -46,12 +46,7 @@ abstract class ChirpRepository {
 
   Future<Either<Failure, Unit>> deletePostComment({required int commentId});
 
-  // Future<Either<Failure, List<PostReply>>> cachePostReplies(String postId);
-
-  // Future<Either<Failure, List<Post>>> addFeedPosts();
-
-  // Future<Either<Failure, Map<String, dynamic>>> toggleLike(
-  //   String postId,
-  //   bool isLiked,
-  // );
+  Future<Either<Failure, List<Post>>> getPostsFromCommunity({
+    required int communityId,
+  });
 }

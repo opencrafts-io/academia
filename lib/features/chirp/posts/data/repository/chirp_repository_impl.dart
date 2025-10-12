@@ -141,9 +141,16 @@ class ChirpRepositoryImpl implements ChirpRepository {
     return result.fold((failure) => left(failure), (res) => right(res));
   }
 
-  // @override
-  // Future<Either<Failure, Map<String, dynamic>>> toggleLike(String postId, bool isLiked) async {
-  //   final result = await remoteDataSource.likePost(postId, isLiked);
-  //   return result.fold((failure) => left(failure), (created) => right(created));
-  // }
+  @override
+  Future<Either<Failure, List<Post>>> getPostsFromCommunity({
+    required int communityId,
+  }) async {
+    final result = await remoteDataSource.getPostsFromCommunity(
+      communityId: communityId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (posts) => right(posts.map((e) => e.toEntity()).toList()),
+    );
+  }
 }

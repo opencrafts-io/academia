@@ -73,7 +73,7 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Openning Community"),
+                        content: Text("Opening Community"),
                         behavior: SnackBarBehavior.floating,
                       ),
                     );

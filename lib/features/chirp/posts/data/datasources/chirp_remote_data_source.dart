@@ -326,24 +326,35 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  // Future<Either<Failure, Map<String, dynamic>>> likePost(
-  //   String postId,
-  //   bool isLiked,
-  // ) async {
-  //   try {
-  //     final res = await dioClient.dio.post(
-  //       '/$servicePrefix/statuses/$postId/like/',
-  //     );
-  //     if (res.statusCode == 204 || res.statusCode == 201) {
-  //       return Right(res.data);
-  //     }
-  //     return Left(
-  //       NetworkFailure(message: "Unexpected response", error: res.data),
-  //     );
-  //   } on DioException catch (e) {
-  //     return handleDioError(e);
-  //   } catch (e) {
-  //     return Left(CacheFailure(message: e.toString(), error: e));
-  //   }
-  // }
+  Future<Either<Failure, List<PostData>>> getPostsFromCommunity({
+    required int communityId,
+  }) async {
+    try {
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/from/$communityId',
+      );
+
+      if (res.statusCode == 200) {
+        final List<PostData> posts = res.data
+            .map((json) => PostData.fromJson(Map<String, dynamic>.from(json)))
+            .toList();
+
+        return right(posts);
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred while fetching community posts",
+          error: e,
+        ),
+      );
+    }
+  }
 }
