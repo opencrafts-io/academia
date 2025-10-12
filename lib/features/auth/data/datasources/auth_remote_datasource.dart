@@ -149,6 +149,13 @@ class AuthRemoteDatasource with DioErrorHandler {
         platform = "mobile";
       }
 
+      _logger.d(
+        "Authenticating with "
+        "$authUrl"
+        "?platform=$platform&redirect_uri=$callback",
+      );
+
+
       final result = await FlutterWebAuth2.authenticate(
         url: "$authUrl?platform=$platform&redirect_uri=$callback",
         callbackUrlScheme: "academia",
@@ -162,6 +169,16 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
+
+      FirebaseAnalytics.instance.logLogin(
+        loginMethod: "Spotify",
+        parameters: {
+          "platform": platform,
+          "auth_url": authUrl,
+          "successful": 1,
+        },
+      );
+
       return right(
         TokenData(
           id: 1,
