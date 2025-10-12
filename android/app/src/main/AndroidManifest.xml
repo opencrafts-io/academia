@@ -30,11 +30,11 @@
       <!-- Deep linking: For a detailed guide checkout:
       https://codewithandrea.com/articles/flutter-deep-links/ -->
       <intent-filter android:autoVerify="true">
-              <action android:name="android.intent.action.VIEW" />
-              <category android:name="android.intent.category.DEFAULT" />
-              <category android:name="android.intent.category.BROWSABLE" />
-              <data android:scheme="https"
-                  android:host="academia.opencrafts.io"/>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="http" android:host="academia.opencrafts.io" />
+          <data android:scheme="https" />
       </intent-filter>
     </activity>
 
