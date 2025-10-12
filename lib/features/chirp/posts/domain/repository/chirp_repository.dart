@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/posts/domain/domain.dart';
+import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 // import 'package:dio/dio.dart';
@@ -26,7 +26,9 @@ abstract class ChirpRepository {
     required MultipartFile file,
   });
 
-  Future<Either<Failure, List<Comment>>> getPostComments({required int postId});
+  Future<Either<Failure, PaginatedData<Comment>>> getPostComments({
+    required int postId,
+  });
 
   Future<Either<Failure, Comment>> createComment({
     required int postId,

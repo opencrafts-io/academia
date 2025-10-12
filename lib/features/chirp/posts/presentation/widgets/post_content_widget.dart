@@ -19,13 +19,20 @@ class PostContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FeedBloc, FeedState>(
+    return BlocBuilder<CommentBloc, CommentState>(
       builder: (context, state) {
         return CustomScrollView(
           slivers: [
             SliverAppBar(
               floating: true,
               pinned: true,
+              leading: BackButton(
+                color: Theme.of(context).colorScheme.onSurface,
+                onPressed: () {
+                  final updatedPost = context.read<PostCubit>().state;
+                  Navigator.pop(context, updatedPost);
+                },
+              ),
               actions: [
                 IconButton.filled(
                   onPressed: () {
@@ -66,7 +73,7 @@ class PostContentWidget extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // Comments section
-                  if (state is CommentsLoading && post.comments.isEmpty)
+                  if (state is CommentsLoading)
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(32.0),
@@ -74,7 +81,7 @@ class PostContentWidget extends StatelessWidget {
                       ),
                     ),
 
-                  if (state is! CommentsLoading && post.comments.isEmpty)
+                  if (state is CommentsLoaded && state.comments.isEmpty)
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
@@ -104,11 +111,35 @@ class PostContentWidget extends StatelessWidget {
                       ),
                     ),
 
-                  if (post.comments.isNotEmpty)
+                  if (state is CommentsLoaded && state.comments.isNotEmpty)
                     CommentsListWidget(
-                      comments: post.comments,
+                      comments: state.comments,
                       onReplyTo: onReplyTo,
                       onVote: onVote,
+                    ),
+
+                  if (state is CommentsError)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.error,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "Failed to load comments",
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
 
                   const SizedBox(height: 120),

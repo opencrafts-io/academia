@@ -1,10 +1,10 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
 import 'package:academia/database/database.dart';
-// import 'package:academia/features/features.dart';
+import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
-import 'package:academia/core/error/failures.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
@@ -101,12 +101,13 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<CommentData>>> getPostComments({
+  Future<Either<Failure, PaginatedData<CommentData>>> getPostComments({
     required int postId,
   }) async {
     try {
       final res = await dioClient.dio.get(
-        '/$servicePrefix/posts/$postId/comments',
+        // '/$servicePrefix/posts/$postId/comments',
+        "https://qachirp.opencrafts.io/posts/$postId/comments"
       );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
@@ -114,12 +115,16 @@ class ChirpRemoteDataSource with DioErrorHandler {
           NetworkFailure(message: "Unexpected response", error: res.data),
         );
       }
-
-      final List<CommentData> comments = (res.data['results'] as List)
-          .map((json) => CommentData.fromJson(json))
-          .toList();
-
-      return Right(comments);
+      return Right(
+        PaginatedData(
+          results: (res.data['results'] as List)
+              .map((json) => CommentData.fromJson(json))
+              .toList(),
+          count: res.data['count'],
+          next: res.data['next'],
+          previous: res.data['previous'],
+        ),
+      );
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
@@ -146,7 +151,6 @@ class ChirpRemoteDataSource with DioErrorHandler {
         'community_id': communityId,
         'content': content,
       };
-
 
       final res = await dioClient.dio.post(
         '/$servicePrefix/posts/create/',

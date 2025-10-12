@@ -9,3 +9,4 @@ export 'views/add_post_screen.dart';
 export 'views/feed_screen.dart';
 export 'bloc/posts/feed_bloc.dart';
 export 'bloc/comments/comment_bloc.dart';
+export 'cubit/post_cubit.dart';

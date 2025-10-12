@@ -149,8 +149,6 @@ Future<void> init(FlavorConfig flavor) async {
       createPost: sl.get<CreatePostUsecase>(),
       getPostDetail: sl.get<GetPostDetailUseCase>(),
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
-      getPostComments: sl.get<GetPostCommentsUsecase>(),
-      addComment: sl.get<AddCommentUsecase>(),
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
       // likePost: sl.get<LikePostUsecase>(),
@@ -158,9 +156,12 @@ Future<void> init(FlavorConfig flavor) async {
       // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
-  // sl.registerFactory(
-  //   () => CommentBloc(addComment: sl.get<AddCommentUsecase>()),
-  // );
+  sl.registerFactory(
+    () => CommentBloc(
+      addComment: sl.get<AddCommentUsecase>(),
+      getPostComments: sl.get<GetPostCommentsUsecase>(),
+    ),
+  );
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

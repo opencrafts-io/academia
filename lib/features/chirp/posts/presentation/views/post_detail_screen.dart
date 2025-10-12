@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDetailPage extends StatefulWidget {
-  final int postId;
+  final Post post;
 
-  const PostDetailPage({super.key, required this.postId});
+  const PostDetailPage({super.key, required this.post});
 
   @override
   State<PostDetailPage> createState() => _PostDetailPageState();
@@ -51,9 +51,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
         isAddingComment = true;
       });
 
-      context.read<FeedBloc>().add(
+      context.read<CommentBloc>().add(
         AddComment(
-          postId: widget.postId,
+          postId: widget.post.id,
           authorId: userId,
           content: text,
           parentId: _replyingTo?.id,
@@ -80,19 +80,15 @@ class _PostDetailPageState extends State<PostDetailPage> {
   void initState() {
     super.initState();
 
-    context.read<FeedBloc>().add(GetPostDetailEvent(postId: widget.postId));
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<FeedBloc>().add(
-    //     GetPostRepliesEvent(postId: widget.postId.toString()),
-    //   );
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CommentBloc>().add(GetPostComments(postId: widget.post.id));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<FeedBloc, FeedState>(
+      body: BlocListener<CommentBloc, CommentState>(
         listener: (context, state) {
           if (state is CommentAdded) {
             _controller.clear();
@@ -100,6 +96,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
               _replyingTo = null;
               isAddingComment = false;
             });
+
+            context.read<PostCubit>().incrementCommentCount();
 
             // Show success message
             ScaffoldMessenger.of(context).showSnackBar(
@@ -124,21 +122,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
             );
           }
         },
-        child: BlocBuilder<FeedBloc, FeedState>(
-          builder: (context, state) {
-            if (state is PostDetailLoaded) {
-              return PostContentWidget(
-                post: state.post,
-                onReplyTo: _onReplyTo,
-                onVote: _onVoteComment,
-              );
-            } else if (state is PostDetailLoading) {
-              return const Center(child: SpinningScallopIndicator());
-            } else if (state is PostDetailError) {
-              return Center(child: Text(state.message));
-            }
-
-            return const SizedBox.shrink();
+        child: BlocBuilder<PostCubit, Post>(
+          builder: (context, updatedPost) {
+            return PostContentWidget(
+              post: updatedPost,
+              onReplyTo: _onReplyTo,
+              onVote: _onVoteComment,
+            );
           },
         ),
       ),

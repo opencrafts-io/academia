@@ -7,8 +7,6 @@ abstract class FeedEvent extends Equatable {
 
 class LoadFeedEvent extends FeedEvent {}
 
-class CacheFeedEvent extends FeedEvent {}
-
 class CreatePostEvent extends FeedEvent {
   final String title;
   final String authorId;
@@ -38,28 +36,17 @@ class MarkPostAsViewed extends FeedEvent {
   MarkPostAsViewed({required this.postId, required this.viewerId});
 }
 
-class AddComment extends FeedEvent {
-  final int postId;
-  final String authorId;
-  final String content;
-  final int? parentId;
-
-  AddComment({
-    required this.postId,
-    required this.authorId,
-    required this.content,
-    this.parentId,
-  });
-}
-
 class ToggleLikePost extends FeedEvent {
   final String postId;
   final bool isCurrentlyLiked;
   ToggleLikePost({required this.postId, required this.isCurrentlyLiked});
 }
 
-class GetPostCommentsEvent extends FeedEvent {
-  final int postId;
+class UpdatePostInFeed extends FeedEvent {
+  final Post updatedPost;
 
-  GetPostCommentsEvent({required this.postId});
+  UpdatePostInFeed(this.updatedPost);
+
+  @override
+  List<Object> get props => [updatedPost];
 }

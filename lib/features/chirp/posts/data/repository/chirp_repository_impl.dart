@@ -55,13 +55,20 @@ class ChirpRepositoryImpl implements ChirpRepository {
   }
 
   @override
-  Future<Either<Failure, List<Comment>>> getPostComments({
+  Future<Either<Failure, PaginatedData<Comment>>> getPostComments({
     required int postId,
   }) async {
     final result = await remoteDataSource.getPostComments(postId: postId);
     return result.fold(
       (failure) => left(failure),
-      (comments) => right(comments.map((e) => e.toEntity()).toList()),
+      (comments) => right(
+        PaginatedData(
+          results: comments.results.map((e) => e.toEntity()).toList(),
+          count: comments.count,
+          next: comments.next,
+          previous: comments.previous,
+        ),
+      ),
     );
   }
 

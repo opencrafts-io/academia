@@ -4,6 +4,7 @@ import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
@@ -51,7 +52,7 @@ class FeedPage extends StatelessWidget {
                                 ..getChirpUserByID(state.posts[index].authorId),
                           child: PostCard(
                             post: state.posts[index],
-                            onTap: () {
+                            onTap: () async {
                               // marking the post as viewed
                               context.read<FeedBloc>().add(
                                 MarkPostAsViewed(
@@ -59,10 +60,20 @@ class FeedPage extends StatelessWidget {
                                   viewerId: state.posts[index].authorId,
                                 ),
                               );
-                              PostDetailRoute(
-                                postId: state.posts[index].id,
-                                authorId: state.posts[index].authorId,
-                              ).push(context);
+                              final updatedPost = await context.push(
+                                PostDetailRoute(
+                                  postId: state.posts[index].id,
+                                ).location,
+                                extra: state.posts[index],
+                              );
+
+                              if (!context.mounted) return;
+
+                              if (updatedPost != null && updatedPost is Post) {
+                                context.read<FeedBloc>().add(
+                                  UpdatePostInFeed(updatedPost),
+                                );
+                              }
                             },
                           ),
                         );

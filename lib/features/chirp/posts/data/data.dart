@@ -6,4 +6,5 @@ export 'models/comment_model_helper.dart';
 export 'models/attachment_model.dart';
 export 'models/post_model.dart';
 export 'models/comment_model.dart';
+export 'models/paginated_data.dart';
 export 'repository/chirp_repository_impl.dart';

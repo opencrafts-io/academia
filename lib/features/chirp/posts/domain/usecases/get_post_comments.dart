@@ -7,7 +7,7 @@ class GetPostCommentsUsecase {
 
   GetPostCommentsUsecase({required this.chirpRepository});
 
-  Future<Either<Failure, List<Comment>>> call({required int postId}) async {
+  Future<Either<Failure, PaginatedData<Comment>>> call({required int postId}) async {
     return await chirpRepository.getPostComments(postId: postId);
   }
 }

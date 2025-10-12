@@ -129,15 +129,22 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
 class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
   final int postId;
-  final String authorId;
 
-  const PostDetailRoute({required this.postId, required this.authorId});
+  const PostDetailRoute({required this.postId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider(
-      create: (context) => sl.get<ChirpUserCubit>()..getChirpUserByID(authorId),
-      child: PostDetailPage(postId: postId),
+    final post = state.extra as Post;
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => PostCubit(post)),
+        BlocProvider(
+          create: (context) =>
+              sl.get<ChirpUserCubit>()..getChirpUserByID(post.authorId),
+        ),
+      ],
+      child: PostDetailPage(post: post),
     );
   }
 }
