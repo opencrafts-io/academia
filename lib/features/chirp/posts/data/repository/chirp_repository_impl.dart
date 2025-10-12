@@ -9,12 +9,25 @@ class ChirpRepositoryImpl implements ChirpRepository {
   ChirpRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Post>>> getFeedPosts() async {
-    final postResult = await remoteDataSource.getPosts();
+  Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
+    required int page,
+    required int pageSize,
+  }) async {
+    final postResult = await remoteDataSource.getPosts(
+      page: page,
+      pageSize: pageSize,
+    );
 
     return await postResult.fold(
       (failure) => left(failure),
-      (posts) => right(posts.map((e) => e.toEntity()).toList()),
+      (posts) => right(
+        PaginatedData(
+          results: posts.results.map((e) => e.toEntity()).toList(),
+          count: posts.count,
+          next: posts.next,
+          previous: posts.previous,
+        ),
+      ),
     );
   }
 

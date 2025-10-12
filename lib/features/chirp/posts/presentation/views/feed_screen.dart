@@ -6,8 +6,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class FeedPage extends StatelessWidget {
+class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
+
+  @override
+  State<FeedPage> createState() => _FeedPageState();
+}
+
+class _FeedPageState extends State<FeedPage> {
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    // context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<FeedBloc>().state;
+      if (state is FeedLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +64,15 @@ class FeedPage extends StatelessWidget {
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<FeedBloc>().add(LoadFeedEvent());
+            _currentPage = 1;
+            context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
             await Future.delayed(Duration(seconds: 2));
           },
           child: CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               BlocBuilder<FeedBloc, FeedState>(
-                buildWhen: (previous, current) =>
-                    (current is FeedLoading ||
-                    current is FeedLoaded ||
-                    current is FeedError),
                 builder: (context, state) {
                   if (state is FeedLoaded) {
                     return SliverList.builder(
@@ -84,6 +115,60 @@ class FeedPage extends StatelessWidget {
                   if (state is FeedLoading) {
                     return const SliverFillRemaining(
                       child: Center(child: SpinningScallopIndicator()),
+                    );
+                  }
+                  if (state is FeedPaginationLoading) {
+                    return SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          children: [
+                            ...state.existingPosts.map(
+                              (post) => BlocProvider(
+                                create: (context) =>
+                                    sl<ChirpUserCubit>()
+                                      ..getChirpUserByID(post.authorId),
+                                child: PostCard(post: post),
+                              ),
+                            ),
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: SpinningScallopIndicator(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  if (state is FeedPaginationError) {
+                    return SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          children: [
+                            ...state.existingPosts.map(
+                              (post) => BlocProvider(
+                                create: (context) =>
+                                    sl<ChirpUserCubit>()
+                                      ..getChirpUserByID(post.authorId),
+                                child: PostCard(post: post),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton.icon(
+                              onPressed: () {
+                                context.read<FeedBloc>().add(
+                                  LoadFeedEvent(page: _currentPage),
+                                );
+                              },
+                              icon: const Icon(Icons.refresh),
+                              label: const Text("Retry loading more posts"),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   }
                   if (state is FeedError) {

@@ -5,7 +5,10 @@ import 'package:dio/dio.dart';
 // import 'package:dio/dio.dart';
 
 abstract class ChirpRepository {
-  Future<Either<Failure, List<Post>>> getFeedPosts();
+  Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
+    required int page,
+    required int pageSize,
+  });
 
   Future<Either<Failure, Post>> getPostDetails({required int postId});
 

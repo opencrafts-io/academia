@@ -2,14 +2,16 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:dartz/dartz.dart';
 
-class GetFeedPosts extends UseCase<List<Post>, NoParams>{
+class GetFeedPostsUsecase{
   final ChirpRepository chirpRepository;
 
-  GetFeedPosts(this.chirpRepository);
+  GetFeedPostsUsecase(this.chirpRepository);
 
-  @override
-  Future<Either<Failure, List<Post>>> call(NoParams params) async {
-    return await chirpRepository.getFeedPosts();
+  Future<Either<Failure, PaginatedData<Post>>> call({
+    required int page,
+    required int pageSize,
+  }) async {
+    return await chirpRepository.getFeedPosts(page: page, pageSize: pageSize);
   }
 }
 

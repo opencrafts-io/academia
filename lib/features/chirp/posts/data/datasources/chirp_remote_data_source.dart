@@ -24,11 +24,15 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<PostData>>> getPosts() async {
+  Future<Either<Failure, PaginatedData<PostData>>> getPosts({
+    required int page,
+    required int pageSize,
+  }) async {
     try {
       // final res = await dioClient.dio.get("/$servicePrefix/posts/feed"); //TODO: Update API endpoint
       final res = await dioClient.dio.get(
         "https://qachirp.opencrafts.io/posts/feed",
+        queryParameters: {'page': page, 'page_size': pageSize},
       );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
@@ -37,12 +41,16 @@ class ChirpRemoteDataSource with DioErrorHandler {
         );
       }
 
-      final List<PostData> posts = (res.data['results'] as List)
-          .map((json) => PostData.fromJson(json))
-          .toList();
-
-      // Return the list of posts
-      return Right(posts);
+      return Right(
+        PaginatedData(
+          results: (res.data['results'] as List)
+              .map((json) => PostData.fromJson(json))
+              .toList(),
+          count: res.data['count'],
+          next: res.data['next'],
+          previous: res.data['previous'],
+        ),
+      );
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
@@ -110,10 +118,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
       final res = await dioClient.dio.get(
         // '/$servicePrefix/posts/$postId/comments',
         "https://qachirp.opencrafts.io/posts/$postId/comments",
-        queryParameters: {
-          'page': page,
-          'page_size': pageSize,
-        },
+        queryParameters: {'page': page, 'page_size': pageSize},
       );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {

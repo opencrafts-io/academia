@@ -114,7 +114,7 @@ Future<void> init(FlavorConfig flavor) async {
     () =>
         ChirpRepositoryImpl(remoteDataSource: sl.get<ChirpRemoteDataSource>()),
   );
-  sl.registerFactory(() => GetFeedPosts(sl()));
+  sl.registerFactory(() => GetFeedPostsUsecase(sl()));
   sl.registerFactory(
     () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
@@ -145,7 +145,7 @@ Future<void> init(FlavorConfig flavor) async {
   // );
   sl.registerFactory(
     () => FeedBloc(
-      getFeedPosts: sl.get<GetFeedPosts>(),
+      getFeedPosts: sl.get<GetFeedPostsUsecase>(),
       createPost: sl.get<CreatePostUsecase>(),
       getPostDetail: sl.get<GetPostDetailUseCase>(),
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),

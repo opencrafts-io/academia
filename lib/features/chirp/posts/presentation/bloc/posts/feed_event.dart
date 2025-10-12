@@ -5,7 +5,12 @@ abstract class FeedEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadFeedEvent extends FeedEvent {}
+class LoadFeedEvent extends FeedEvent {
+  final int page;
+  final int pageSize;
+
+  LoadFeedEvent({this.page = 1, this.pageSize = 20});
+}
 
 class CreatePostEvent extends FeedEvent {
   final String title;

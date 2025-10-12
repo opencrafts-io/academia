@@ -1,4 +1,3 @@
-import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -10,7 +9,7 @@ part 'feed_event.dart';
 part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
-  final GetFeedPosts getFeedPosts;
+  final GetFeedPostsUsecase getFeedPosts;
   final CreatePostUsecase createPost;
   final GetPostDetailUseCase getPostDetail;
   final MarkPostAsViewedUsecase markPostAsViewed;
@@ -185,13 +184,85 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   }
 
   Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) async {
-    emit(FeedLoading());
+    final currentState = state;
 
-    final result = await getFeedPosts(NoParams());
+    // Show full-screen loader for first page
+    if (event.page == 1) {
+      emit(FeedLoading());
+    }
+    // Show pagination loader when fetching more
+    else if (currentState is FeedLoaded && event.page > 1) {
+      emit(
+        FeedPaginationLoading(
+          existingPosts: currentState.posts,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    }
+    // Retry after pagination error
+    else if (currentState is FeedPaginationError && event.page > 1) {
+      emit(
+        FeedPaginationLoading(
+          existingPosts: currentState.existingPosts,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    }
+
+    final result = await getFeedPosts(
+      page: event.page,
+      pageSize: event.pageSize,
+    );
 
     result.fold(
-      (failure) => emit(FeedError(message: failure.message)),
-      (posts) => emit(FeedLoaded(posts: posts)),
+      (failure) {
+        // Pagination failed, keep previous posts visible
+        if (currentState is FeedLoaded && event.page > 1) {
+          emit(
+            FeedPaginationError(
+              existingPosts: currentState.posts,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else if (currentState is FeedPaginationError && event.page > 1) {
+          // Retry after pagination error failed again
+          emit(
+            FeedPaginationError(
+              existingPosts: currentState.existingPosts,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else {
+          // First load failed
+          emit(FeedError(message: failure.message));
+        }
+      },
+      (paginatedData) {
+        // Append or replace posts depending on the page
+        if (currentState is FeedLoaded && event.page > 1) {
+          emit(
+            FeedLoaded(
+              posts: [...currentState.posts, ...paginatedData.results],
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        } else {
+          emit(
+            FeedLoaded(
+              posts: paginatedData.results,
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -287,10 +358,34 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         if (previousState is FeedLoaded) {
           final updatedPosts = [postWithAttachments, ...previousState.posts];
           emit(PostCreated(posts: updatedPosts));
-          emit(FeedLoaded(posts: updatedPosts));
+          emit(FeedLoaded(posts: updatedPosts, count: previousState.count + 1));
+        } else if (previousState is FeedPaginationLoading) {
+          final updatedPosts = [
+            postWithAttachments,
+            ...previousState.existingPosts,
+          ];
+
+          emit(PostCreated(posts: updatedPosts));
+
+          // Fallback feed loaded if pagination was active
+          emit(
+            FeedLoaded(
+              posts: updatedPosts,
+              count: updatedPosts.length,
+              hasMore: true,
+            ),
+          );
         } else {
           emit(PostCreated(posts: [postWithAttachments]));
-          emit(FeedLoaded(posts: [postWithAttachments]));
+          emit(
+            FeedLoaded(
+              posts: [postWithAttachments],
+              next: null,
+              previous: null,
+              count: 1,
+              hasMore: false,
+            ),
+          );
         }
       },
     );
