@@ -44,12 +44,7 @@ class _CommunityAboutState extends State<CommunityAbout> {
                   ? Center(
                       child: FilledButton.icon(
                         icon: const Icon(Icons.add),
-                        onPressed: () {
-                          AddCommunityGuidelinesRoute(
-                            communityId: widget.communityId,
-                            userId: widget.userId,
-                          ).push(context);
-                        },
+                        onPressed: () {},
                         label: const Text("Add Community Guidelines"),
                       ),
                     )
@@ -64,17 +59,24 @@ class _CommunityAboutState extends State<CommunityAbout> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primaryContainer,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primaryContainer,
                               child: Text(
                                 index.toString(),
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
-                            title: Text(rule, style: Theme.of(context).textTheme.bodyLarge),
+                            title: Text(
+                              rule,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                           ),
                         );
                       }).toList(),
@@ -87,12 +89,7 @@ class _CommunityAboutState extends State<CommunityAbout> {
                 Center(
                   child: FilledButton.icon(
                     icon: const Icon(Icons.add),
-                    onPressed: () {
-                      AddCommunityGuidelinesRoute(
-                        communityId: widget.communityId,
-                        userId: widget.userId,
-                      ).push(context);
-                    },
+                    onPressed: () {},
                     label: const Text("Add More Community Guidelines"),
                   ),
                 ),
