@@ -22,21 +22,42 @@ class ChirpRepositoryImpl implements ChirpRepository {
       pageSize: pageSize,
     );
 
-    return await postResult.fold((failure) => left(failure), (posts) async {
-      final postEntities = <Post>[];
-      for (final post in posts.results) {
-        await localDataSource.createOrUpdatePost(post);
-        postEntities.add(post.toEntity());
-      }
-      return right(
-        PaginatedData(
-          results: postEntities,
-          count: posts.count,
-          next: posts.next,
-          previous: posts.previous,
-        ),
-      );
-    });
+    return await postResult.fold(
+      (failure) async {
+        final posts = await localDataSource.getCachedPosts();
+
+        return posts.fold(
+          (failure) {
+            return left(failure);
+          },
+          (retrieved) {
+            return right(
+              PaginatedData(
+                results: retrieved.map((e)=> e.toEntity()).toList(),
+                count:  retrieved.length,
+                next: null,
+                previous: null,
+              ),
+            );
+          },
+        );
+      },
+      (posts) async {
+        final postEntities = <Post>[];
+        for (final post in posts.results) {
+          await localDataSource.createOrUpdatePost(post);
+          postEntities.add(post.toEntity());
+        }
+        return right(
+          PaginatedData(
+            results: postEntities,
+            count: posts.count,
+            next: posts.next,
+            previous: posts.previous,
+          ),
+        );
+      },
+    );
   }
 
   @override
