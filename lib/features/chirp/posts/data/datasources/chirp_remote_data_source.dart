@@ -29,7 +29,6 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int pageSize,
   }) async {
     try {
-      // final res = await dioClient.dio.get("/$servicePrefix/posts/feed"); //TODO: Update API endpoint
       final res = await dioClient.dio.get(
         "https://qachirp.opencrafts.io/posts/feed",
         queryParameters: {'page': page, 'page_size': pageSize},
@@ -116,8 +115,7 @@ class ChirpRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final res = await dioClient.dio.get(
-        // '/$servicePrefix/posts/$postId/comments',
-        "https://qachirp.opencrafts.io/posts/$postId/comments",
+        "/$servicePrefix/posts/$postId/comments",
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
