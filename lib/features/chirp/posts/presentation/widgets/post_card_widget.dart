@@ -85,6 +85,13 @@ class _PostCardState extends State<PostCard> {
             ),
 
             SizedBox(height: 8),
+            Text(
+              widget.post.title,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
 
             Text(widget.post.content),
             if (widget.post.attachments.isNotEmpty) ...[
@@ -139,40 +146,39 @@ class _PostCardState extends State<PostCard> {
             SizedBox(height: 8),
             Row(
               children: [
-                SegmentedButton<Vote>(
-                  selected: {}, // TODO: To be Removed
-                  segments: [
-                    ButtonSegment(
-                      value: Vote.up,
-                      icon: Icon(Icons.thumb_up_outlined),
-                      label: Text(widget.post.upvotes.toString()),
-                    ),
-                    ButtonSegment(
-                      value: Vote.down,
-                      icon: Icon(Icons.thumb_down_outlined),
-                    ),
-                  ],
-                  style: SegmentedButton.styleFrom(padding: EdgeInsets.all(2)),
-                  emptySelectionAllowed: true,
-                  //TODO: implement like functionality and uncomment the below
-                  // selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
-                  // selectedIcon: widget.post.isLiked
-                  //     ? Icon(Icons.thumb_up)
-                  //     : Icon(Icons.thumb_down),
-                  onSelectionChanged: (vote) {
-                    // final isTogglingOff = vote.isEmpty && widget.post.isLiked;
-                    // context.read<FeedBloc>().add(
-                    //   ToggleLikePost(
-                    //     postId: widget.post.id.toString(),
-                    //     isCurrentlyLiked: isTogglingOff
-                    //         ? true
-                    //         : widget.post.isLiked,
-                    //   ),
-                    // );
-                  },
-                ),
-                SizedBox(width: 16),
-
+                // SegmentedButton<Vote>(
+                //   selected: {}, // TODO: To be Removed
+                //   segments: [
+                //     ButtonSegment(
+                //       value: Vote.up,
+                //       icon: Icon(Icons.thumb_up_outlined),
+                //       label: Text(widget.post.upvotes.toString()),
+                //     ),
+                //     ButtonSegment(
+                //       value: Vote.down,
+                //       icon: Icon(Icons.thumb_down_outlined),
+                //     ),
+                //   ],
+                //   style: SegmentedButton.styleFrom(padding: EdgeInsets.all(2)),
+                //   emptySelectionAllowed: true,
+                //   //TODO: implement like functionality and uncomment the below
+                //   // selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
+                //   // selectedIcon: widget.post.isLiked
+                //   //     ? Icon(Icons.thumb_up)
+                //   //     : Icon(Icons.thumb_down),
+                //   onSelectionChanged: (vote) {
+                //     // final isTogglingOff = vote.isEmpty && widget.post.isLiked;
+                //     // context.read<FeedBloc>().add(
+                //     //   ToggleLikePost(
+                //     //     postId: widget.post.id.toString(),
+                //     //     isCurrentlyLiked: isTogglingOff
+                //     //         ? true
+                //     //         : widget.post.isLiked,
+                //     //   ),
+                //     // );
+                //   },
+                // ),
+                // SizedBox(width: 16),
                 FilledButton.icon(
                   style: FilledButton.styleFrom(
                     padding: EdgeInsets.all(2),
@@ -186,6 +192,13 @@ class _PostCardState extends State<PostCard> {
                   icon: Icon(Icons.chat),
                   onPressed: widget.onTap,
                   label: Text('${widget.post.commentCount}'),
+                ),
+                SizedBox(width: 8),
+                OutlinedButton.icon(
+                  iconAlignment: IconAlignment.start,
+                  onPressed: null,
+                  label: Text(widget.post.viewsCount.toString()),
+                  icon: Icon(Icons.visibility),
                 ),
               ],
             ),

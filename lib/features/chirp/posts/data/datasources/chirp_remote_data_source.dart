@@ -33,7 +33,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       }
 
       final res = await dioClient.dio.get(
-        "https://qachirp.opencrafts.io/posts/feed",
+        "/$servicePrefix/posts/feed/",
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
@@ -128,7 +128,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       }
 
       final res = await dioClient.dio.get(
-        "/$servicePrefix/posts/$postId/comments",
+        "/$servicePrefix/posts/$postId/comments/",
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
