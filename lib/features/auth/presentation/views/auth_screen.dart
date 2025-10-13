@@ -14,6 +14,14 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   @override
+  void initState() {
+    super.initState();
+    final remoteConfigBloc = context.read<RemoteConfigBloc>();
+    remoteConfigBloc.add(GetBoolEvent(key: "enable_spotify_login"));
+    remoteConfigBloc.add(GetBoolEvent(key: "enable_review_login"));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: MultiBlocListener(
@@ -93,9 +101,36 @@ class _AuthScreenState extends State<AuthScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Image.asset("assets/icons/academia.png", width: 60),
+                  BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                    buildWhen: (stateA, stateB) =>
+                        stateB is BoolValueLoadedState &&
+                        stateB.value == true &&
+                        stateB.key == "enable_review_login",
+                    builder: (context, state) => GestureDetector(
+                      onDoubleTap:
+                          state is BoolValueLoadedState &&
+                              state.value == true &&
+                              state.key == "enable_review_login"
+                          ? () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Enabling test login..."),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          : null,
+                      child: Visibility(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            "assets/icons/academia.png",
+                            width: 60,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
 
                   Text(
@@ -137,16 +172,29 @@ class _AuthScreenState extends State<AuthScreen> {
                   //   label: Text("Continue with Github"),
                   //   icon: Icon(FontAwesome.github_brand),
                   // ),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      BlocProvider.of<AuthBloc>(
-                        context,
-                      ).add(AuthSignInWithSpotifyEvent());
+                  BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                    buildWhen: (stateA, stateB) =>
+                        stateB is BoolValueLoadedState &&
+                        stateB.key == "enable_spotify_login",
+                    builder: (context, state) {
+                      if (state is BoolValueLoadedState &&
+                          state.key == "enable_spotify_login") {
+                        return Visibility(
+                          visible: state.value,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              BlocProvider.of<AuthBloc>(
+                                context,
+                              ).add(AuthSignInWithSpotifyEvent());
+                            },
+                            label: Text("Continue with Spotify"),
+                            icon: Icon(FontAwesome.spotify_brand),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
                     },
-                    label: Text("Continue with Spotify"),
-                    icon: Icon(FontAwesome.spotify_brand),
                   ),
-
                   SizedBox(height: 22),
                   Text.rich(
                     TextSpan(

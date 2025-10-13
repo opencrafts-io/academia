@@ -139,8 +139,8 @@ class _AcademiaState extends State<Academia> {
           create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
+          create: (context) => sl<RemoteConfigBloc>()
+            ..add(InitializeRemoteConfigEvent()),
         ),
 
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
