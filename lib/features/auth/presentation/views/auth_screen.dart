@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vibration/vibration.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -208,7 +210,32 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Theme.of(context).colorScheme.primary,
                                 decoration: TextDecoration.underline,
                               ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  duration: 15,
+                                  amplitude: 255,
+                                  sharpness: 1.0,
+                                );
+                              }
+                              try {
+                                final url = Uri.parse(
+                                  'https://policy.opencrafts.io',
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  launchUrl(url);
+                                }
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Failed to lauch url"),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
                         ),
                         const TextSpan(text: " and "),
                         TextSpan(
@@ -218,7 +245,32 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Theme.of(context).colorScheme.primary,
                                 decoration: TextDecoration.underline,
                               ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  duration: 15,
+                                  amplitude: 255,
+                                  sharpness: 1.0,
+                                );
+                              }
+                              try {
+                                final url = Uri.parse(
+                                  'https://policy.opencrafts.io',
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  launchUrl(url);
+                                }
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Failed to lauch url"),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
                         ),
                       ],
                     ),
