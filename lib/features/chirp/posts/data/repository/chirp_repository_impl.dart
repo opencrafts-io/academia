@@ -5,8 +5,12 @@ import 'package:dio/dio.dart';
 
 class ChirpRepositoryImpl implements ChirpRepository {
   final ChirpRemoteDataSource remoteDataSource;
+  final ChirpPostLocalDataSource localDataSource;
 
-  ChirpRepositoryImpl({required this.remoteDataSource});
+  ChirpRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   @override
   Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
@@ -18,26 +22,35 @@ class ChirpRepositoryImpl implements ChirpRepository {
       pageSize: pageSize,
     );
 
-    return await postResult.fold(
-      (failure) => left(failure),
-      (posts) => right(
+    return await postResult.fold((failure) => left(failure), (posts) async {
+      final postEntities = <Post>[];
+      for (final post in posts.results) {
+        await localDataSource.createOrUpdatePost(post);
+        postEntities.add(post.toEntity());
+      }
+      return right(
         PaginatedData(
-          results: posts.results.map((e) => e.toEntity()).toList(),
+          results: postEntities,
           count: posts.count,
           next: posts.next,
           previous: posts.previous,
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override
+  /// First look through the cache then try the remote repo
   Future<Either<Failure, Post>> getPostDetails({required int postId}) async {
-    final result = await remoteDataSource.getPostDetails(postId: postId);
-    return result.fold(
-      (failure) => left(failure),
-      (post) => right(post.toEntity()),
-    );
+    final localRes = await localDataSource.getCachedPostByID(postId);
+
+    return localRes.fold((failure) async {
+      final result = await remoteDataSource.getPostDetails(postId: postId);
+      return result.fold((failure) => left(failure), (post) async {
+        await localDataSource.createOrUpdatePost(post);
+        return right(post.toEntity());
+      });
+    }, (post) => right(post.toEntity()));
   }
 
   @override
@@ -61,10 +74,10 @@ class ChirpRepositoryImpl implements ChirpRepository {
       communityId: communityId,
       content: content,
     );
-    return result.fold(
-      (failure) => left(failure),
-      (created) => right(created.toEntity()),
-    );
+    return result.fold((failure) => left(failure), (created) async {
+      await localDataSource.createOrUpdatePost(created);
+      return right(created.toEntity());
+    });
   }
 
   @override
@@ -128,7 +141,10 @@ class ChirpRepositoryImpl implements ChirpRepository {
   @override
   Future<Either<Failure, Unit>> deletePost({required int postId}) async {
     final result = await remoteDataSource.deletePost(postId: postId);
-    return result.fold((failure) => left(failure), (res) => right(res));
+    return result.fold((failure) => left(failure), (res) async {
+      await localDataSource.deleteCachedPost(postId);
+      return right(res);
+    });
   }
 
   @override
@@ -138,7 +154,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
     final result = await remoteDataSource.deletePostComment(
       commentId: commentId,
     );
-    return result.fold((failure) => left(failure), (res) => right(res));
+    return result.fold((failure) => left(failure), (res) async {
+      return right(res);
+    });
   }
 
   @override
