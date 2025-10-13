@@ -1,15 +1,18 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
-import 'package:academia/features/features.dart';
+import 'package:academia/database/database.dart';
+import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
-import 'package:academia/core/error/failures.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
 class ChirpRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
   final FlavorConfig flavor;
   late String servicePrefix;
+  final Logger _logger = Logger();
 
   ChirpRemoteDataSource({required this.dioClient, required this.flavor}) {
     if (flavor.isProduction) {
@@ -21,9 +24,16 @@ class ChirpRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<Post>>> getPosts() async {
+  Future<Either<Failure, PaginatedData<PostData>>> getPosts({
+    required int page,
+    required int pageSize,
+  }) async {
     try {
-      final res = await dioClient.dio.get("/$servicePrefix/statuses/");
+      // final res = await dioClient.dio.get("/$servicePrefix/posts/feed"); //TODO: Update API endpoint
+      final res = await dioClient.dio.get(
+        "https://qachirp.opencrafts.io/posts/feed",
+        queryParameters: {'page': page, 'page_size': pageSize},
+      );
 
       if (res.statusCode != 200 || res.data['results'] is! List) {
         return Left(
@@ -31,134 +41,328 @@ class ChirpRemoteDataSource with DioErrorHandler {
         );
       }
 
-      // Parse posts, replies will be empty
-      final List<Post> posts = (res.data['results'] as List)
-          .map((json) => PostHelper.fromJson(json))
-          .toList();
-
-      // Return the list of posts
-      return Right(posts);
+      return Right(
+        PaginatedData(
+          results: (res.data['results'] as List)
+              .map((json) => PostData.fromJson(json))
+              .toList(),
+          count: res.data['count'],
+          next: res.data['next'],
+          previous: res.data['previous'],
+        ),
+      );
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
-      return Left(CacheFailure(message: e.toString(), error: e));
+      _logger.e("Error fetching posts: $e");
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while getting posts",
+          error: e,
+        ),
+      );
     }
   }
 
-  Future<Either<Failure, List<PostReply>>> getPostReplies(String postId) async {
+  Future<Either<Failure, PostData>> getPostDetails({
+    required int postId,
+  }) async {
     try {
       final res = await dioClient.dio.get(
-        "/$servicePrefix/statuses/$postId/comments/",
+        '/$servicePrefix/posts/$postId/details/',
       );
 
-      if (res.statusCode == 200 && res.data is List) {
-        final List<PostReply> replies = (res.data as List)
-            .map((replyJson) => ReplyHelper.fromJson(replyJson))
-            .toList();
-
-        return Right(replies);
+      if (res.statusCode == 200) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return right(PostData.fromJson(json));
       }
 
-      return Left(
-        NetworkFailure(message: "Failed to fetch replies", error: res.data),
-      );
-    } on DioException catch (e) {
-      return handleDioError(e);
-    } catch (e) {
-      return Left(CacheFailure(message: e.toString(), error: e));
-    }
-  }
-
-  Future<Either<Failure, Post>> createPost(
-    String content,
-    List<MultipartFile> attachments, {
-    required String userName,
-    required String email,
-    required String groupId,
-  }) async {
-    try {
-      final formData = FormData.fromMap({
-        if (content.isNotEmpty) 'content': content,
-        if (attachments.isNotEmpty) 'attachments': attachments,
-        'user_name': userName,
-        'email': email,
-      });
-
-      final res = await dioClient.dio.post(
-        '/$servicePrefix/groups/$groupId/posts/create/',
-        data: formData,
-        options: Options(contentType: "multipart/form-data"),
-      );
-
-      if (res.statusCode == 201) {
-        final Post post = PostHelper.fromJson(res.data);
-        return Right(post);
-      }
-      return Left(
+      return left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
     } on DioException catch (e) {
       return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while getting post",
+          error: e,
+        ),
+      );
     }
   }
 
-  Future<Either<Failure, PostReply>> addComment({
-    required String postId,
-    required String content,
-    required String userName,
-    required String userId,
-    String? parentId,
+  Future<void> markPostAsViewed({
+    required int postId,
+    required String viewerId,
   }) async {
     try {
-      final url = parentId != null
-          ? '/$servicePrefix/statuses/$postId/comments/$parentId/replies/'
-          : '/$servicePrefix/statuses/$postId/comments/';
+      await dioClient.dio.post(
+        '/$servicePrefix/posts/$postId/viewed/',
+        data: {'post_id': postId, 'viewer_id': viewerId},
+      );
+      _logger.i("Successfully marked post $postId as viewed by $viewerId");
+    } on DioException catch (e) {
+      _logger.e("Failed to mark post as viewed: ${e.message}");
+    } catch (e) {
+      _logger.e("Unexpected error marking post as viewed: $e");
+    }
+  }
 
-      final Map<String, dynamic> data = {
+  Future<Either<Failure, PaginatedData<CommentData>>> getPostComments({
+    required int postId,
+    required int page,
+    required int pageSize,
+  }) async {
+    try {
+      final res = await dioClient.dio.get(
+        // '/$servicePrefix/posts/$postId/comments',
+        "https://qachirp.opencrafts.io/posts/$postId/comments",
+        queryParameters: {'page': page, 'page_size': pageSize},
+      );
+
+      if (res.statusCode != 200 || res.data['results'] is! List) {
+        return Left(
+          NetworkFailure(message: "Unexpected response", error: res.data),
+        );
+      }
+      return Right(
+        PaginatedData(
+          results: (res.data['results'] as List)
+              .map((json) => CommentData.fromJson(json))
+              .toList(),
+          count: res.data['count'],
+          next: res.data['next'],
+          previous: res.data['previous'],
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      _logger.e("Error fetching comments for post $postId: $e");
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while getting comments",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PostData>> createPost({
+    required String title,
+    required String authorId,
+    required int communityId,
+    required String content,
+  }) async {
+    try {
+      final Map<String, dynamic> formMap = {
+        'title': title,
+        'author_id': authorId,
+        'community_id': communityId,
         'content': content,
-        'user_name': userName,
-        'user_id': userId,
       };
 
-      if (parentId != null) {
-        data['parent_comment_id'] = parentId;
-      }
-
-      final res = await dioClient.dio.post(url, data: data);
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/posts/create/',
+        queryParameters: {'community_id': communityId},
+        data: formMap,
+      );
 
       if (res.statusCode == 201) {
-        final PostReply reply = ReplyHelper.fromJson(res.data);
-        return Right(reply);
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return right(PostData.fromJson(json));
       }
 
-      return Left(
+      return left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
-      return Left(CacheFailure(message: e.toString(), error: e));
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating post",
+          error: e,
+        ),
+      );
     }
   }
 
-  Future<Either<Failure, Map<String, dynamic>>> likePost(
-    String postId,
-    bool isLiked,
-  ) async {
+  Future<Either<Failure, CommentData>> createComment({
+    required int postId,
+    required String authorId,
+    required String content,
+    int? parent,
+  }) async {
     try {
-      final res = await dioClient.dio.post(
-        '/$servicePrefix/statuses/$postId/like/',
-      );
-      if (res.statusCode == 204 || res.statusCode == 201) {
-        return Right(res.data);
+      final Map<String, dynamic> formMap = {
+        'post': postId,
+        'author_id': authorId,
+        'content': content,
+      };
+
+      // Only include parent if it's not null
+      if (parent != null) {
+        formMap['parent'] = parent;
       }
-      return Left(
+
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/posts/$postId/comments/',
+        data: formMap,
+      );
+
+      if (res.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return right(CommentData.fromJson(json));
+      }
+
+      return left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
     } on DioException catch (e) {
       return handleDioError(e);
     } catch (e) {
-      return Left(CacheFailure(message: e.toString(), error: e));
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating comment",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, AttachmentData>> createPostAttachment({
+    required int postId,
+    required MultipartFile file,
+  }) async {
+    try {
+      final formData = FormData.fromMap({'post': postId, 'file': file});
+
+      final res = await dioClient.dio.post(
+        '/$servicePrefix/posts/attachment/create/',
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
+      );
+
+      if (res.statusCode == 201) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
+        return Right(AttachmentData.fromJson(json));
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while creating attachment",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating attachment",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, Unit>> deletePost({required int postId}) async {
+    try {
+      final res = await dioClient.dio.delete(
+        '/$servicePrefix/posts/$postId/delete/',
+      );
+
+      if (res.statusCode == 204) {
+        return const Right(unit);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while deleting post",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting post",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, Unit>> deletePostComment({
+    required int commentId,
+  }) async {
+    try {
+      final res = await dioClient.dio.delete(
+        '/$servicePrefix/posts/comments/$commentId/delete/',
+      );
+
+      if (res.statusCode == 204) {
+        return const Right(unit);
+      }
+
+      return Left(
+        NetworkFailure(
+          message: "Unexpected response while deleting comment",
+          error: res.data,
+        ),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting comment",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedData<PostData>>> getPostsFromCommunity({
+    required int communityId,
+    required int page,
+    required int pageSize,
+  }) async {
+    try {
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/from/$communityId',
+        queryParameters: {'page': page, 'page_size': pageSize},
+      );
+
+      if (res.statusCode == 200) {
+        return right(
+          PaginatedData(
+            results: (res.data['results'] as List)
+                .map((json) => PostData.fromJson(json))
+                .toList(),
+            count: res.data['count'],
+            next: res.data['next'],
+            previous: res.data['previous'],
+          ),
+        );
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred while fetching community posts",
+          error: e,
+        ),
+      );
     }
   }
 }

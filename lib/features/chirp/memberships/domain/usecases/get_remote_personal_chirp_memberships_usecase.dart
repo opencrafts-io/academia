@@ -26,7 +26,7 @@ class GetRemotePersonalChirpMembershipsUsecase
   Future<Either<Failure, List<ChirpCommunityMembership>>> call(
     GetRemotePersonalChirpMembershipsUsecaseParams params,
   ) async {
-    return await repository.getAndCachePersonalMemberships(
+    return await repository.getPersonalMemberships(
       pageSize: params.pageSize,
       page: params.page,
     );

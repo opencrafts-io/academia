@@ -16,13 +16,13 @@ final class SearchForCommunityUsecaseParams {
 }
 
 class SearchForCommunityUsecase
-    extends UseCase<PaginatedCommunity, SearchForCommunityUsecaseParams> {
+    extends UseCase<List<Community>, SearchForCommunityUsecaseParams> {
   final CommunityRepository communityRepository;
 
   SearchForCommunityUsecase({required this.communityRepository});
 
   @override
-  Future<Either<Failure, PaginatedCommunity>> call(
+  Future<Either<Failure, List<Community>>> call(
     SearchForCommunityUsecaseParams params,
   ) async {
     return await communityRepository.searchForCommunity(

@@ -8,20 +8,34 @@ abstract class ChirpCommunityMembershipRepository {
   ///
   /// Returns the newly created or updated [CommunityMembership] Entity on success.
   Future<Either<Failure, ChirpCommunityMembership>> joinCommunity({
-    required String communityID,
+    required int communityID,
   });
 
-  /// Fetches the current user's personal memberships from the remote source,
-  /// synchronizes (caches) the full list locally, and returns the list of Entities.
+  /// Retrieves all personal memberships for a user and caches them accordingly
   Future<Either<Failure, List<ChirpCommunityMembership>>>
-  getAndCachePersonalMemberships({int page = 1, int pageSize = 100});
+  getPersonalMemberships({int page = 1, int pageSize = 100});
 
   /// Provides a List of all memberships currently cached locally.
   Future<Either<Failure, List<ChirpCommunityMembership>>>
   getAllCachedMemberships();
 
-  /// Handles the process of removing a user's membership (leaving or being kicked).
+  /// Handles the process leaving a community.
   ///
   /// Returns nothing on successful completion (Right(void)).
   Future<Either<Failure, void>> leaveCommunity({required int communityID});
+
+  /// Fetches memberships for a community
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
+  getCommunityMemberships({
+    required int communityID,
+    int page = 1,
+    int pageSize = 50,
+  });
+
+  /// Fetched personal communit membership for a given community
+  Future<Either<Failure, ChirpCommunityMembership>>
+  getPersonalCommunityMemberShipForCommunity({
+    required int communityID,
+    required String userID,
+  });
 }
