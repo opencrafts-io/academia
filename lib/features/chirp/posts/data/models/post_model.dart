@@ -34,4 +34,10 @@ class PostTable extends Table {
 
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime()();
+
+  /// For internal trackog of when the post was lastly cached on the 
+  // local device
+  @JsonKey("cached_at")
+  DateTimeColumn get cachedAt =>
+      dateTime().nullable().withDefault(Constant(DateTime.now()))();
 }

@@ -1811,6 +1811,18 @@ class $PostTableTable extends PostTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1826,6 +1838,7 @@ class $PostTableTable extends PostTable
     comments,
     createdAt,
     updatedAt,
+    cachedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1909,6 +1922,12 @@ class $PostTableTable extends PostTable
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -1976,6 +1995,10 @@ class $PostTableTable extends PostTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
     );
   }
 
@@ -2006,6 +2029,9 @@ class PostData extends DataClass implements Insertable<PostData> {
   final List<dynamic> comments;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// For internal trackog of when the post was lastly cached on the
+  final DateTime? cachedAt;
   const PostData({
     required this.id,
     required this.community,
@@ -2020,6 +2046,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     required this.comments,
     required this.createdAt,
     required this.updatedAt,
+    this.cachedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2049,6 +2076,9 @@ class PostData extends DataClass implements Insertable<PostData> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
     return map;
   }
 
@@ -2067,6 +2097,9 @@ class PostData extends DataClass implements Insertable<PostData> {
       comments: Value(comments),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
     );
   }
 
@@ -2089,6 +2122,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       comments: serializer.fromJson<List<dynamic>>(json['comments']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
     );
   }
   @override
@@ -2108,6 +2142,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       'comments': serializer.toJson<List<dynamic>>(comments),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
     };
   }
 
@@ -2125,6 +2160,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     List<dynamic>? comments,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
   }) => PostData(
     id: id ?? this.id,
     community: community ?? this.community,
@@ -2139,6 +2175,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     comments: comments ?? this.comments,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
   PostData copyWithCompanion(PostTableCompanion data) {
     return PostData(
@@ -2161,6 +2198,7 @@ class PostData extends DataClass implements Insertable<PostData> {
       comments: data.comments.present ? data.comments.value : this.comments,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
     );
   }
 
@@ -2179,7 +2217,8 @@ class PostData extends DataClass implements Insertable<PostData> {
           ..write('commentCount: $commentCount, ')
           ..write('comments: $comments, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -2199,6 +2238,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     comments,
     createdAt,
     updatedAt,
+    cachedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -2216,7 +2256,8 @@ class PostData extends DataClass implements Insertable<PostData> {
           other.commentCount == this.commentCount &&
           other.comments == this.comments &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
 }
 
 class PostTableCompanion extends UpdateCompanion<PostData> {
@@ -2233,6 +2274,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<List<dynamic>> comments;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> cachedAt;
   const PostTableCompanion({
     this.id = const Value.absent(),
     this.community = const Value.absent(),
@@ -2247,6 +2289,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     this.comments = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
   });
   PostTableCompanion.insert({
     this.id = const Value.absent(),
@@ -2262,6 +2305,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     required List<dynamic> comments,
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.cachedAt = const Value.absent(),
   }) : community = Value(community),
        authorId = Value(authorId),
        title = Value(title),
@@ -2284,6 +2328,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Expression<String>? comments,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2299,6 +2344,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
       if (comments != null) 'comments': comments,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
     });
   }
 
@@ -2316,6 +2362,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Value<List<dynamic>>? comments,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<DateTime?>? cachedAt,
   }) {
     return PostTableCompanion(
       id: id ?? this.id,
@@ -2331,6 +2378,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
       comments: comments ?? this.comments,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
     );
   }
 
@@ -2382,6 +2430,9 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
     return map;
   }
 
@@ -2400,7 +2451,8 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
           ..write('commentCount: $commentCount, ')
           ..write('comments: $comments, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -16331,6 +16383,7 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required List<dynamic> comments,
       required DateTime createdAt,
       required DateTime updatedAt,
+      Value<DateTime?> cachedAt,
     });
 typedef $$PostTableTableUpdateCompanionBuilder =
     PostTableCompanion Function({
@@ -16347,6 +16400,7 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<List<dynamic>> comments,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
     });
 
 class $$PostTableTableFilterComposer
@@ -16429,6 +16483,11 @@ class $$PostTableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$PostTableTableOrderingComposer
@@ -16504,6 +16563,11 @@ class $$PostTableTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PostTableTableAnnotationComposer
@@ -16561,6 +16625,9 @@ class $$PostTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
 class $$PostTableTableTableManager
@@ -16604,6 +16671,7 @@ class $$PostTableTableTableManager
                 Value<List<dynamic>> comments = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => PostTableCompanion(
                 id: id,
                 community: community,
@@ -16618,6 +16686,7 @@ class $$PostTableTableTableManager
                 comments: comments,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
               ),
           createCompanionCallback:
               ({
@@ -16634,6 +16703,7 @@ class $$PostTableTableTableManager
                 required List<dynamic> comments,
                 required DateTime createdAt,
                 required DateTime updatedAt,
+                Value<DateTime?> cachedAt = const Value.absent(),
               }) => PostTableCompanion.insert(
                 id: id,
                 community: community,
@@ -16648,6 +16718,7 @@ class $$PostTableTableTableManager
                 comments: comments,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

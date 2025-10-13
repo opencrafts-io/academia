@@ -33,17 +33,14 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/calendar',
-
           factory: _$CalendarRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'create',
-
               factory: _$CreateAgendaEventRoute._fromState,
             ),
             GoRouteData.$route(
               path: 'item/:id',
-
               factory: _$AgendaItemViewRoute._fromState,
             ),
           ],
@@ -54,7 +51,6 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/essentials',
-
           factory: _$EssentialsRoute._fromState,
         ),
       ],
@@ -198,13 +194,12 @@ mixin _$FeedRoute on GoRouteData {
 
 RouteBase get $postDetailRoute => GoRouteData.$route(
   path: '/post/:postId',
-
   factory: _$PostDetailRoute._fromState,
 );
 
 mixin _$PostDetailRoute on GoRouteData {
   static PostDetailRoute _fromState(GoRouterState state) =>
-      PostDetailRoute(postId: int.parse(state.pathParameters['postId']!)!);
+      PostDetailRoute(postId: int.parse(state.pathParameters['postId']!));
 
   PostDetailRoute get _self => this as PostDetailRoute;
 
@@ -298,7 +293,6 @@ mixin _$ProfileRoute on GoRouteData {
 
 RouteBase get $completeProfileRoute => GoRouteData.$route(
   path: '/complete-profile',
-
   factory: _$CompleteProfileRoute._fromState,
 );
 
@@ -325,12 +319,10 @@ mixin _$CompleteProfileRoute on GoRouteData {
 
 RouteBase get $shereheRoute => GoRouteData.$route(
   path: '/sherehe',
-
   factory: _$ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'get-event',
-
       factory: _$ShereheDetailsRoute._fromState,
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
@@ -428,27 +420,22 @@ mixin _$TodosRoute on GoRouteData {
 
 RouteBase get $magnetRoute => GoRouteData.$route(
   path: '/magnet',
-
   factory: _$MagnetRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'auth/:institutionID',
-
       factory: _$MagnetAuthRoute._fromState,
     ),
     GoRouteData.$route(
       path: ':institutionID',
-
       factory: _$MagnetHomeRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'profile',
-
           factory: _$MagnetProfileRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'courses',
-
           factory: _$MagnetCoursesRoute._fromState,
         ),
         GoRouteData.$route(path: 'fees', factory: _$MagnetFeesRoute._fromState),
@@ -479,7 +466,7 @@ mixin _$MagnetRoute on GoRouteData {
 
 mixin _$MagnetAuthRoute on GoRouteData {
   static MagnetAuthRoute _fromState(GoRouterState state) => MagnetAuthRoute(
-    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+    institutionID: int.parse(state.pathParameters['institutionID']!),
   );
 
   MagnetAuthRoute get _self => this as MagnetAuthRoute;
@@ -505,7 +492,7 @@ mixin _$MagnetAuthRoute on GoRouteData {
 
 mixin _$MagnetHomeRoute on GoRouteData {
   static MagnetHomeRoute _fromState(GoRouterState state) => MagnetHomeRoute(
-    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+    institutionID: int.parse(state.pathParameters['institutionID']!),
   );
 
   MagnetHomeRoute get _self => this as MagnetHomeRoute;
@@ -532,7 +519,7 @@ mixin _$MagnetHomeRoute on GoRouteData {
 mixin _$MagnetProfileRoute on GoRouteData {
   static MagnetProfileRoute _fromState(GoRouterState state) =>
       MagnetProfileRoute(
-        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+        institutionID: int.parse(state.pathParameters['institutionID']!),
       );
 
   MagnetProfileRoute get _self => this as MagnetProfileRoute;
@@ -559,7 +546,7 @@ mixin _$MagnetProfileRoute on GoRouteData {
 mixin _$MagnetCoursesRoute on GoRouteData {
   static MagnetCoursesRoute _fromState(GoRouterState state) =>
       MagnetCoursesRoute(
-        institutionID: int.parse(state.pathParameters['institutionID']!)!,
+        institutionID: int.parse(state.pathParameters['institutionID']!),
       );
 
   MagnetCoursesRoute get _self => this as MagnetCoursesRoute;
@@ -585,7 +572,7 @@ mixin _$MagnetCoursesRoute on GoRouteData {
 
 mixin _$MagnetFeesRoute on GoRouteData {
   static MagnetFeesRoute _fromState(GoRouterState state) => MagnetFeesRoute(
-    institutionID: int.parse(state.pathParameters['institutionID']!)!,
+    institutionID: int.parse(state.pathParameters['institutionID']!),
   );
 
   MagnetFeesRoute get _self => this as MagnetFeesRoute;
@@ -611,18 +598,15 @@ mixin _$MagnetFeesRoute on GoRouteData {
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities/:communityId',
-
   factory: _$CommunitiesRoute._fromState,
   routes: [
     GoRouteData.$route(path: 'info', factory: _$CommunityInfoRoute._fromState),
     GoRouteData.$route(
       path: 'members/:role',
-
       factory: _$CommunityMembersRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'edit',
-
       factory: _$EditCommunityInfoRoute._fromState,
     ),
   ],
@@ -630,7 +614,7 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 
 mixin _$CommunitiesRoute on GoRouteData {
   static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute(
-    communityId: int.parse(state.pathParameters['communityId']!)!,
+    communityId: int.parse(state.pathParameters['communityId']!),
   );
 
   CommunitiesRoute get _self => this as CommunitiesRoute;
@@ -657,7 +641,7 @@ mixin _$CommunitiesRoute on GoRouteData {
 mixin _$CommunityInfoRoute on GoRouteData {
   static CommunityInfoRoute _fromState(GoRouterState state) =>
       CommunityInfoRoute(
-        communityId: int.parse(state.pathParameters['communityId']!)!,
+        communityId: int.parse(state.pathParameters['communityId']!),
       );
 
   CommunityInfoRoute get _self => this as CommunityInfoRoute;
@@ -684,7 +668,7 @@ mixin _$CommunityInfoRoute on GoRouteData {
 mixin _$CommunityMembersRoute on GoRouteData {
   static CommunityMembersRoute _fromState(GoRouterState state) =>
       CommunityMembersRoute(
-        communityId: int.parse(state.pathParameters['communityId']!)!,
+        communityId: int.parse(state.pathParameters['communityId']!),
         role: state.pathParameters['role']!,
       );
 
@@ -712,7 +696,7 @@ mixin _$CommunityMembersRoute on GoRouteData {
 mixin _$EditCommunityInfoRoute on GoRouteData {
   static EditCommunityInfoRoute _fromState(GoRouterState state) =>
       EditCommunityInfoRoute(
-        communityId: int.parse(state.pathParameters['communityId']!)!,
+        communityId: int.parse(state.pathParameters['communityId']!),
       );
 
   EditCommunityInfoRoute get _self => this as EditCommunityInfoRoute;
@@ -738,7 +722,6 @@ mixin _$EditCommunityInfoRoute on GoRouteData {
 
 RouteBase get $createCommunitiesRoute => GoRouteData.$route(
   path: '/create-community',
-
   factory: _$CreateCommunitiesRoute._fromState,
 );
 
@@ -765,7 +748,6 @@ mixin _$CreateCommunitiesRoute on GoRouteData {
 
 RouteBase get $trimVideoRoute => GoRouteData.$route(
   path: '/video-trimer/:videoPath',
-
   factory: _$TrimVideoRoute._fromState,
 );
 
@@ -796,7 +778,6 @@ mixin _$TrimVideoRoute on GoRouteData {
 
 RouteBase get $communityMembershipsRoute => GoRouteData.$route(
   path: '/community/memberships/mine',
-
   factory: _$CommunityMembershipsRoute._fromState,
 );
 
