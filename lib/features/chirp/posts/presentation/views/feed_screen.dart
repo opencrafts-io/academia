@@ -5,6 +5,7 @@ import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -21,7 +22,7 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    // context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
+    context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
   }
 
   void _onScroll() {
@@ -177,8 +178,23 @@ class _FeedPageState extends State<FeedPage> {
                       child: Center(child: Text(state.message)),
                     );
                   }
-                  return const SliverFillRemaining(
-                    child: Center(child: Text("Pull to refresh...")),
+                  return SliverPadding(
+                    padding: EdgeInsetsGeometry.all(16),
+                    sliver: SliverFillRemaining(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset("assets/lotties/chat.json", height: 300),
+                          Text(
+                            "It's a little quiet in here... "
+                            "Let's make some noise! Start following "
+                            "and posting to fill up your feed.",
+                            style: Theme.of(context).textTheme.titleMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
