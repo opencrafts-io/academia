@@ -3,6 +3,7 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
@@ -103,6 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Spacer(),
                   BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
                     buildWhen: (stateA, stateB) =>
                         stateB is BoolValueLoadedState &&
@@ -276,6 +278,42 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Spacer(),
+
+                  Image.asset("assets/icons/opencrafts.png", height: 40),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Powered by Opencrafts Interactive",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            if (await Vibration.hasVibrator()) {
+                              Vibration.vibrate(
+                                duration: 15,
+                                amplitude: 255,
+                                sharpness: 1.0,
+                              );
+                            }
+                            try {
+                              final url = Uri.parse('https://opencrafts.io/');
+                              if (await canLaunchUrl(url)) {
+                                launchUrl(url);
+                              }
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Failed to lauch url"),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                      ),
+                    ),
                   ),
                 ],
               ),
