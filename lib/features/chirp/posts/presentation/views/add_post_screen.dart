@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
@@ -5,9 +6,11 @@ import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:vibration/vibration.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -24,6 +27,7 @@ class _AddPostPageState extends State<AddPostPage> {
   XFile? file;
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
+  String? authorId;
 
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
@@ -42,11 +46,45 @@ class _AddPostPageState extends State<AddPostPage> {
         MaterialPageRoute(builder: (context) => ImageEditor(image: imageData)),
       );
 
+      final tempDir = await getTemporaryDirectory();
+      final filePath =
+          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      Uint8List finalImageBytes;
+
       if (editedImage != null) {
-        setState(() => attachments.add(XFile.fromData(editedImage)));
+        finalImageBytes = await FlutterImageCompress.compressWithList(
+          editedImage,
+          quality: 75,
+          minWidth: 1080,
+          minHeight: 1080,
+        );
+        print(
+          "Compressed user-edited image: ${finalImageBytes.lengthInBytes / 1024} KB",
+        );
+      } else {
+        finalImageBytes = await FlutterImageCompress.compressWithList(
+          imageData,
+          quality: 70,
+          minWidth: 1080,
+          minHeight: 1080,
+        );
+        print(
+          "Compressed original image: ${finalImageBytes.lengthInBytes / 1024} KB",
+        );
       }
+
+      final file = File(filePath);
+      await file.writeAsBytes(finalImageBytes);
+
+      setState(() {
+        attachments.add(XFile(file.path));
+      });
+
+      print("Saved compressed image at: ${file.path}");
     } catch (e) {
       _showSnackBar("Failed to pick or edit image: $e");
+      debugPrint("Error in _pickImage: $e");
     }
   }
 
@@ -93,13 +131,69 @@ class _AddPostPageState extends State<AddPostPage> {
     );
   }
 
+  Future<void> _submitPost() async {
+    final title = _postTitleController.text.trim();
+    final content = _postDescriptionController.text.trim();
+
+    if (title.isEmpty || content.isEmpty) {
+      _showSnackBar("Please enter both a title and content before posting.");
+      Vibration.vibrate(duration: 80);
+      return;
+    }
+
+    if (_selectedCommunity == null) {
+      _showSnackBar("Please select a community to post in.");
+      Vibration.vibrate(duration: 80);
+      return;
+    }
+
+    print("Sending ${attachments.length} attachments to bloc");
+    print('Attachments files: ${attachments.map((e) => e.path).toList()}');
+
+    if (!mounted) return;
+
+    context.read<FeedBloc>().add(
+      CreatePostEvent(
+        title: title,
+        authorId: authorId ?? '',
+        communityId: _selectedCommunity!.id,
+        content: content,
+        attachments: List<XFile>.from(attachments),
+      ),
+    );
+
+    _showSnackBar("Submitting post...");
+    Vibration.vibrate(duration: 50);
+
+    setState(() {
+      _postTitleController.clear();
+      _postDescriptionController.clear();
+      attachments.clear();
+      _selectedCommunity = null;
+    });
+
+    context.pop();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    final userState = context.read<ProfileBloc>().state;
+
+    if (userState is ProfileLoadedState) {
+      authorId = userState.profile.id;
+    } else {
+      authorId = null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Rebuilding AddPostPage — attachments count: ${attachments.length}');
+    print(
+      'Rebuilding AddPostPage — attachments files: ${attachments.map((e) => e.path).toList()}',
+    );
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
@@ -129,22 +223,27 @@ class _AddPostPageState extends State<AddPostPage> {
 
                       suggestionsBuilder: (context, controller) {
                         if (controller.text.trim().isNotEmpty) {
-                          context.read<CommunityBloc>().add(
-                            GetPostableCommunityEvent(
-                              searchTerm: controller.text.trim(),
-                            ),
-                          );
+                          context
+                              .read<CommunityListingCubit>()
+                              .getPostableCommunities(
+                                page: 1,
+
+                                // searchTerm: controller.text.trim(),
+                              );
                         }
                         return [
-                          BlocBuilder<CommunityBloc, CommunityState>(
+                          BlocBuilder<
+                            CommunityListingCubit,
+                            CommunityListingState
+                          >(
                             builder: (context, state) {
-                              if (state is CommunityLoadingState) {
+                              if (state is CommunityListingLoadingState) {
                                 return Column(
                                   children: [SpinningScallopIndicator()],
                                 );
-                              } else if (state is CommunitiesLoadedState) {
-                                final communities = state.paginatedCommunity;
-                                if (communities.communities.isEmpty) {
+                              } else if (state is CommunityListingLoadedState) {
+                                final communities = state.communities;
+                                if (communities.isEmpty) {
                                   return const ListTile(
                                     leading: AnimatedEmoji(AnimatedEmojis.sad),
                                     title: Text(
@@ -153,7 +252,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   );
                                 }
                                 return Column(
-                                  children: communities.communities
+                                  children: communities
                                       .map(
                                         (community) => ListTile(
                                           onTap: () {
@@ -414,7 +513,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   alignment: Alignment.center,
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
-                    onPressed: () {},
+                    onPressed: () => _submitPost(),
                     label: Text("Create post"),
                     icon: Icon(Icons.add),
                   ),

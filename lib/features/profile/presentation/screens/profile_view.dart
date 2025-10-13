@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

@@ -1,3 +1,4 @@
+import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:drift/drift.dart';
 
 class ChirpCommunityMembership extends Table {
@@ -8,7 +9,7 @@ class ChirpCommunityMembership extends Table {
   IntColumn get communityID => integer()();
 
   @JsonKey("user_id")
-  TextColumn get userID => text()();
+  TextColumn get userID => text().references(ChirpUser, #userID)();
 
   @JsonKey("role")
   TextColumn get role => text()();
@@ -29,6 +30,10 @@ class ChirpCommunityMembership extends Table {
   @JsonKey('joined_at')
   DateTimeColumn get joinedAt =>
       dateTime().withDefault(Constant(DateTime.now()))();
+
+  @JsonKey('cached_at')
+  DateTimeColumn get cachedAt =>
+      dateTime().withDefault(Constant(DateTime.now())).nullable()();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};

@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 class ChirpCommunityMembershipLocalDatasource {
   final AppDataBase localDB;
 
+  static const Duration ttl = Duration(minutes: 20);
   ChirpCommunityMembershipLocalDatasource({required this.localDB});
 
   /// --- 1. Create or Update Single Membership ---
@@ -13,6 +14,7 @@ class ChirpCommunityMembershipLocalDatasource {
   Future<Either<Failure, ChirpCommunityMembershipData>>
   createOrUpdateCommunityMembership(ChirpCommunityMembershipData data) async {
     try {
+      await _deleteAllExpiredCachedCommunityMemberships();
       final modified = await localDB
           .into(localDB.chirpCommunityMembership)
           .insertReturning(data, onConflict: DoUpdate((d) => data));
@@ -37,6 +39,7 @@ class ChirpCommunityMembershipLocalDatasource {
     List<ChirpCommunityMembershipData> dataList,
   ) async {
     try {
+      await _deleteAllExpiredCachedCommunityMemberships();
       if (dataList.isEmpty) return right([]);
 
       // 1. Perform a batch operation
@@ -63,6 +66,7 @@ class ChirpCommunityMembershipLocalDatasource {
   Future<Either<Failure, List<ChirpCommunityMembershipData>>>
   getAllCachedCommunityMemberships() async {
     try {
+      await _deleteAllExpiredCachedCommunityMemberships();
       final memberships = await localDB
           .select(localDB.chirpCommunityMembership)
           .get();
@@ -77,16 +81,33 @@ class ChirpCommunityMembershipLocalDatasource {
     }
   }
 
-  /// --- 4. Delete Single Cached Membership ---
-  Future<Either<Failure, ChirpCommunityMembershipData?>> deleteCached(
-    ChirpCommunityMembershipData communityMembership,
-  ) async {
+  /// --- 4. Returns a list of all cached community memberships
+  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  getCommunityMembershipByCommunityID(int communityID) async {
     try {
-      final deleted = await localDB
-          .delete(localDB.chirpCommunityMembership)
-          .deleteReturning(communityMembership);
+      await _deleteAllExpiredCachedCommunityMemberships();
+      final memberships =
+          await (localDB.select(localDB.chirpCommunityMembership)..where(
+                (membership) => membership.communityID.equals(communityID),
+              ))
+              .get();
+      return right(memberships);
+    } catch (e) {
+      return left(
+        CacheFailure(message: "Failed to fetch cached memberships.", error: e),
+      );
+    }
+  }
 
-      return right(deleted);
+  /// --- 5. Delete Single Cached Membership ---
+  Future<Either<Failure, void>> deleteCached(int communityID) async {
+    await _deleteAllExpiredCachedCommunityMemberships();
+    try {
+      await (localDB.delete(
+        localDB.chirpCommunityMembership,
+      )..where((community) => community.id.equals(communityID))).go();
+
+      return right(null);
     } catch (e) {
       return left(
         CacheFailure(message: "Failed to delete cached membership.", error: e),
@@ -99,6 +120,7 @@ class ChirpCommunityMembershipLocalDatasource {
     required String userID,
   }) async {
     try {
+      await _deleteAllExpiredCachedCommunityMemberships();
       final query = localDB.select(localDB.chirpCommunityMembership)
         ..where(
           (tbl) =>
@@ -122,6 +144,23 @@ class ChirpCommunityMembershipLocalDatasource {
           error: e,
         ),
       );
+    }
+  }
+
+  /// _deleteAllExpiredCachedCommunityMemberships
+  /// Deletes all expired cached community memberships
+  Future<void> _deleteAllExpiredCachedCommunityMemberships() async {
+    final expirationThreshold = DateTime.now().subtract(ttl);
+
+    try {
+      // Delete all memberships that are older than the TTL
+      await (localDB.delete(localDB.chirpCommunityMembership)..where(
+            (membership) =>
+                membership.cachedAt.isSmallerThanValue(expirationThreshold),
+          ))
+          .go();
+    } catch (e) {
+      /// Explicitly ignore the delete caching
     }
   }
 }

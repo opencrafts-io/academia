@@ -204,13 +204,14 @@ RouteBase get $postDetailRoute => GoRouteData.$route(
 
 mixin _$PostDetailRoute on GoRouteData {
   static PostDetailRoute _fromState(GoRouterState state) =>
-      PostDetailRoute(postId: state.pathParameters['postId']!);
+      PostDetailRoute(postId: int.parse(state.pathParameters['postId']!)!);
 
   PostDetailRoute get _self => this as PostDetailRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/post/${Uri.encodeComponent(_self.postId)}');
+  String get location => GoRouteData.$location(
+    '/post/${Uri.encodeComponent(_self.postId.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -613,28 +614,30 @@ RouteBase get $communitiesRoute => GoRouteData.$route(
 
   factory: _$CommunitiesRoute._fromState,
   routes: [
+    GoRouteData.$route(path: 'info', factory: _$CommunityInfoRoute._fromState),
     GoRouteData.$route(
-      path: 'users',
+      path: 'members/:role',
 
-      factory: _$CommunityUserListRoute._fromState,
+      factory: _$CommunityMembersRoute._fromState,
     ),
     GoRouteData.$route(
-      path: 'add-community-guidelines',
+      path: 'edit',
 
-      factory: _$AddCommunityGuidelinesRoute._fromState,
+      factory: _$EditCommunityInfoRoute._fromState,
     ),
   ],
 );
 
 mixin _$CommunitiesRoute on GoRouteData {
-  static CommunitiesRoute _fromState(GoRouterState state) =>
-      CommunitiesRoute(communityId: state.pathParameters['communityId']!);
+  static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute(
+    communityId: int.parse(state.pathParameters['communityId']!)!,
+  );
 
   CommunitiesRoute get _self => this as CommunitiesRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/communities/${Uri.encodeComponent(_self.communityId)}',
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}',
   );
 
   @override
@@ -651,91 +654,17 @@ mixin _$CommunitiesRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CommunityUserListRoute on GoRouteData {
-  static CommunityUserListRoute _fromState(GoRouterState state) =>
-      CommunityUserListRoute(
-        communityId: state.pathParameters['communityId']!,
-        userId: state.uri.queryParameters['user-id']!,
-        title: state.uri.queryParameters['title']!,
-        isTargetModerator:
-            _$convertMapValue(
-              'is-target-moderator',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isTargetBannedUsers:
-            _$convertMapValue(
-              'is-target-banned-users',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isTargetMember:
-            _$convertMapValue(
-              'is-target-member',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isCreator:
-            _$convertMapValue(
-              'is-creator',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isModerator:
-            _$convertMapValue(
-              'is-moderator',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isMember:
-            _$convertMapValue(
-              'is-member',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isBanned:
-            _$convertMapValue(
-              'is-banned',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
-        isPrivate:
-            _$convertMapValue(
-              'is-private',
-              state.uri.queryParameters,
-              _$boolConverter,
-            ) ??
-            false,
+mixin _$CommunityInfoRoute on GoRouteData {
+  static CommunityInfoRoute _fromState(GoRouterState state) =>
+      CommunityInfoRoute(
+        communityId: int.parse(state.pathParameters['communityId']!)!,
       );
 
-  CommunityUserListRoute get _self => this as CommunityUserListRoute;
+  CommunityInfoRoute get _self => this as CommunityInfoRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/communities/${Uri.encodeComponent(_self.communityId)}/users',
-    queryParams: {
-      'user-id': _self.userId,
-      'title': _self.title,
-      if (_self.isTargetModerator != false)
-        'is-target-moderator': _self.isTargetModerator.toString(),
-      if (_self.isTargetBannedUsers != false)
-        'is-target-banned-users': _self.isTargetBannedUsers.toString(),
-      if (_self.isTargetMember != false)
-        'is-target-member': _self.isTargetMember.toString(),
-      if (_self.isCreator != false) 'is-creator': _self.isCreator.toString(),
-      if (_self.isModerator != false)
-        'is-moderator': _self.isModerator.toString(),
-      if (_self.isMember != false) 'is-member': _self.isMember.toString(),
-      if (_self.isBanned != false) 'is-banned': _self.isBanned.toString(),
-      if (_self.isPrivate != false) 'is-private': _self.isPrivate.toString(),
-    },
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}/info',
   );
 
   @override
@@ -752,19 +681,18 @@ mixin _$CommunityUserListRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AddCommunityGuidelinesRoute on GoRouteData {
-  static AddCommunityGuidelinesRoute _fromState(GoRouterState state) =>
-      AddCommunityGuidelinesRoute(
-        communityId: state.pathParameters['communityId']!,
-        userId: state.uri.queryParameters['user-id']!,
+mixin _$CommunityMembersRoute on GoRouteData {
+  static CommunityMembersRoute _fromState(GoRouterState state) =>
+      CommunityMembersRoute(
+        communityId: int.parse(state.pathParameters['communityId']!)!,
+        role: state.pathParameters['role']!,
       );
 
-  AddCommunityGuidelinesRoute get _self => this as AddCommunityGuidelinesRoute;
+  CommunityMembersRoute get _self => this as CommunityMembersRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/communities/${Uri.encodeComponent(_self.communityId)}/add-community-guidelines',
-    queryParams: {'user-id': _self.userId},
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}/members/${Uri.encodeComponent(_self.role)}',
   );
 
   @override
@@ -781,24 +709,31 @@ mixin _$AddCommunityGuidelinesRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
-}
+mixin _$EditCommunityInfoRoute on GoRouteData {
+  static EditCommunityInfoRoute _fromState(GoRouterState state) =>
+      EditCommunityInfoRoute(
+        communityId: int.parse(state.pathParameters['communityId']!)!,
+      );
 
-bool _$boolConverter(String value) {
-  switch (value) {
-    case 'true':
-      return true;
-    case 'false':
-      return false;
-    default:
-      throw UnsupportedError('Cannot convert "$value" into a bool.');
-  }
+  EditCommunityInfoRoute get _self => this as EditCommunityInfoRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/communities/${Uri.encodeComponent(_self.communityId.toString())}/edit',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $createCommunitiesRoute => GoRouteData.$route(

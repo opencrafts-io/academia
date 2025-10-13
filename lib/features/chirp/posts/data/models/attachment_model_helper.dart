@@ -1,8 +1,7 @@
 
 import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
-
-extension AttachmentEntityHelper on AttachmentEntity {
+import 'package:academia/features/chirp/posts/posts.dart';
+extension AttachmentEntityHelper on AttachmentData {
   Attachments toEntity() {
     return Attachments(
       id: id,
@@ -12,22 +11,20 @@ extension AttachmentEntityHelper on AttachmentEntity {
       name: name,
       size: size,
       createdAt: createdAt,
-      updatedAt: updatedAt,
     );
   }
 }
 
 extension AttachmentHelper on Attachments {
-  AttachmentEntity toData({required String postId}) {
-    return AttachmentEntity(
+  AttachmentData toData({required String postId}) {
+    return AttachmentData(
       id: id,
-      postId: postId,
+      postId: int.tryParse(postId) ?? 0,
       attachmentType: attachmentType,
       name: name,
       size: size,
       file: file,
       createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
     );
   }
 }

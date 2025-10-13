@@ -8,10 +8,9 @@ class GetCommunityByIdUseCase {
 
   GetCommunityByIdUseCase({required this.repository});
 
-  Future<Either<Failure, Community>> call(String communityId, String userId) {
-    return repository.getCommunityById(
-      communityId: communityId,
-      userId: userId,
+  Future<Either<Failure, Community>> call(int communityID) {
+    return repository.getCommunityByID(
+      communityID: communityID,
     );
   }
 }
