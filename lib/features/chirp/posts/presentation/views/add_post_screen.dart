@@ -4,6 +4,7 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -264,7 +265,22 @@ class _AddPostPageState extends State<AddPostPage> {
                                               );
                                             });
                                           },
-                                          leading: CircleAvatar(),
+                                          leading: CircleAvatar(
+                                            backgroundImage:
+                                                community.profilePictureUrl ==
+                                                    null
+                                                ? null
+                                                : CachedNetworkImageProvider(
+                                                    community
+                                                        .profilePictureUrl!,
+                                                    errorListener: (error) {},
+                                                  ),
+                                            child:
+                                                community.profilePictureUrl ==
+                                                    null
+                                                ? Text(community.name[0])
+                                                : null,
+                                          ),
                                           title: Text(community.name),
                                           subtitle: Text(
                                             community.description ??

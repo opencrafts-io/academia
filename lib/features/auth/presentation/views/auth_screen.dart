@@ -3,7 +3,10 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vibration/vibration.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -13,6 +16,14 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final remoteConfigBloc = context.read<RemoteConfigBloc>();
+    remoteConfigBloc.add(GetBoolEvent(key: "enable_spotify_login"));
+    remoteConfigBloc.add(GetBoolEvent(key: "enable_review_login"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,9 +104,40 @@ class _AuthScreenState extends State<AuthScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Image.asset("assets/icons/academia.png", width: 60),
+                  Spacer(),
+                  BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                    buildWhen: (stateA, stateB) =>
+                        stateB is BoolValueLoadedState &&
+                        stateB.value == true &&
+                        stateB.key == "enable_review_login",
+                    builder: (context, state) => GestureDetector(
+                      onDoubleTap:
+                          state is BoolValueLoadedState &&
+                              state.value == true &&
+                              state.key == "enable_review_login"
+                          ? () {
+                              context.read<AuthBloc>().add(
+                                AuthSignInAsReviewerEvent(),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Enabling test login..."),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          : null,
+                      child: Visibility(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                            "assets/icons/academia.png",
+                            width: 60,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
 
                   Text(
@@ -137,16 +179,29 @@ class _AuthScreenState extends State<AuthScreen> {
                   //   label: Text("Continue with Github"),
                   //   icon: Icon(FontAwesome.github_brand),
                   // ),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      BlocProvider.of<AuthBloc>(
-                        context,
-                      ).add(AuthSignInWithSpotifyEvent());
+                  BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                    buildWhen: (stateA, stateB) =>
+                        stateB is BoolValueLoadedState &&
+                        stateB.key == "enable_spotify_login",
+                    builder: (context, state) {
+                      if (state is BoolValueLoadedState &&
+                          state.key == "enable_spotify_login") {
+                        return Visibility(
+                          visible: state.value,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              BlocProvider.of<AuthBloc>(
+                                context,
+                              ).add(AuthSignInWithSpotifyEvent());
+                            },
+                            label: Text("Continue with Spotify"),
+                            icon: Icon(FontAwesome.spotify_brand),
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
                     },
-                    label: Text("Continue with Spotify"),
-                    icon: Icon(FontAwesome.spotify_brand),
                   ),
-
                   SizedBox(height: 22),
                   Text.rich(
                     TextSpan(
@@ -160,7 +215,32 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Theme.of(context).colorScheme.primary,
                                 decoration: TextDecoration.underline,
                               ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  duration: 15,
+                                  amplitude: 255,
+                                  sharpness: 1.0,
+                                );
+                              }
+                              try {
+                                final url = Uri.parse(
+                                  'https://policy.opencrafts.io',
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  launchUrl(url);
+                                }
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Failed to lauch url"),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
                         ),
                         const TextSpan(text: " and "),
                         TextSpan(
@@ -170,12 +250,73 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Theme.of(context).colorScheme.primary,
                                 decoration: TextDecoration.underline,
                               ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(
+                                  duration: 15,
+                                  amplitude: 255,
+                                  sharpness: 1.0,
+                                );
+                              }
+                              try {
+                                final url = Uri.parse(
+                                  'https://policy.opencrafts.io',
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  launchUrl(url);
+                                }
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Failed to lauch url"),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
                         ),
                       ],
                     ),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Spacer(),
+
+                  Image.asset("assets/icons/opencrafts.png", height: 40),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Powered by Opencrafts Interactive",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            if (await Vibration.hasVibrator()) {
+                              Vibration.vibrate(
+                                duration: 15,
+                                amplitude: 255,
+                                sharpness: 1.0,
+                              );
+                            }
+                            try {
+                              final url = Uri.parse('https://opencrafts.io/');
+                              if (await canLaunchUrl(url)) {
+                                launchUrl(url);
+                              }
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Failed to lauch url"),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                      ),
+                    ),
                   ),
                 ],
               ),

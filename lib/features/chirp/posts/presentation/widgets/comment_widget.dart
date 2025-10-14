@@ -32,7 +32,7 @@ class CommentWidget extends StatelessWidget {
             if (hasReplies)
               Container(
                 width: 1,
-                margin: const EdgeInsets.only(right: 8, left: 8),
+                margin: const EdgeInsets.only(right: 2),
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,

@@ -14,7 +14,7 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
   final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: true,
+    isInspectorEnabled: false,
     password: '123456', // remove this line if you don't need password
     showSummary: false,
   );
@@ -50,6 +50,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SignInAsReviewUsecase>(
+    () => SignInAsReviewUsecase(repository: sl.get<AuthRepositoryImpl>()),
   );
 
   sl.registerFactory<SignInWithSpotifyUsecase>(
@@ -103,60 +107,10 @@ Future<void> init(FlavorConfig flavor) async {
       getCachedUserProfileUseCase: sl(),
     ),
   );
-  // Posts
-  sl.registerFactory<ChirpRemoteDataSource>(
-    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
-  );
-  sl.registerFactory<ChirpRepository>(
-    () =>
-        ChirpRepositoryImpl(remoteDataSource: sl.get<ChirpRemoteDataSource>()),
-  );
-  sl.registerFactory(() => GetFeedPostsUsecase(sl()));
-  sl.registerFactory(
-    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => CreatePostAttachmentUsecase(repository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => GetPostDetailUseCase(repository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => MarkPostAsViewedUsecase(repository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => GetPostCommentsUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => AddCommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => DeletePostUsecase(repository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
-  );
 
-  // sl.registerFactory(
-  //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
   sl.registerFactory(
-    () => FeedBloc(
-      getFeedPosts: sl.get<GetFeedPostsUsecase>(),
-      createPost: sl.get<CreatePostUsecase>(),
-      getPostDetail: sl.get<GetPostDetailUseCase>(),
-      markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
-      createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
-      deletePost: sl.get<DeletePostUsecase>(),
-      // likePost: sl.get<LikePostUsecase>(),
-      // addComment: sl.get<CommentUsecase>(),
-      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
-    ),
-  );
-  sl.registerFactory(
-    () => CommentBloc(
-      addComment: sl.get<AddCommentUsecase>(),
-      getPostComments: sl.get<GetPostCommentsUsecase>(),
+    () => CreateEventBloc(
+      createEventUseCase: sl(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(
@@ -441,6 +395,72 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<GetPersonalCommunityMembershipForCommunityUsecase>(
     () => GetPersonalCommunityMembershipForCommunityUsecase(repository: sl()),
+  );
+
+  //                    --- Posts ----
+  sl.registerFactory<ChirpPostLocalDataSource>(
+    () => ChirpPostLocalDataSource(db: sl()),
+  );
+  sl.registerFactory<ChirpRemoteDataSource>(
+    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
+  );
+  sl.registerFactory<ChirpRepository>(
+    () => ChirpRepositoryImpl(
+      remoteDataSource: sl.get<ChirpRemoteDataSource>(),
+      localDataSource: sl<ChirpPostLocalDataSource>(),
+    ),
+  );
+  sl.registerFactory(() => GetFeedPostsUsecase(sl()));
+  sl.registerFactory<GetPostsFromCommunityUsecase>(
+    () => GetPostsFromCommunityUsecase(repository: sl()),
+  );
+  sl.registerFactory(
+    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CreatePostAttachmentUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPostDetailUseCase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => MarkPostAsViewedUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPostCommentsUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => AddCommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => DeletePostUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
+  );
+
+  // sl.registerFactory(
+  //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  // );
+  sl.registerFactory(
+    () => FeedBloc(
+      getPostsFromCommunityUsecase: sl<GetPostsFromCommunityUsecase>(),
+      getFeedPosts: sl.get<GetFeedPostsUsecase>(),
+      createPost: sl.get<CreatePostUsecase>(),
+      getPostDetail: sl.get<GetPostDetailUseCase>(),
+      markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
+      createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
+      deletePost: sl.get<DeletePostUsecase>(),
+      // likePost: sl.get<LikePostUsecase>(),
+      // addComment: sl.get<CommentUsecase>(),
+      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => CommentBloc(
+      addComment: sl.get<AddCommentUsecase>(),
+      getPostComments: sl.get<GetPostCommentsUsecase>(),
+    ),
   );
 
   /*************************************************************************

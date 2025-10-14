@@ -5,12 +5,14 @@ class EventImagePickerWidget extends StatelessWidget {
   final File? selectedImage;
   final VoidCallback onTap;
   final String label;
+  final double height;
 
   const EventImagePickerWidget({
     super.key,
     required this.selectedImage,
     required this.onTap,
     required this.label,
+    this.height = 150,
   });
 
   @override
@@ -29,7 +31,7 @@ class EventImagePickerWidget extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            height: 150,
+            height: height,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surfaceContainerHighest,

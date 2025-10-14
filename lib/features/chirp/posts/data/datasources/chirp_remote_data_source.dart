@@ -1,14 +1,13 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/core/network/dio_client.dart';
-import 'package:academia/core/network/dio_error_handler.dart';
+import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
-class ChirpRemoteDataSource with DioErrorHandler {
+class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   final DioClient dioClient;
   final FlavorConfig flavor;
   late String servicePrefix;
@@ -29,9 +28,12 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int pageSize,
   }) async {
     try {
-      // final res = await dioClient.dio.get("/$servicePrefix/posts/feed"); //TODO: Update API endpoint
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.get(
-        "https://qachirp.opencrafts.io/posts/feed",
+        "/$servicePrefix/posts/feed/",
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
@@ -68,6 +70,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int postId,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.get(
         '/$servicePrefix/posts/$postId/details/',
       );
@@ -97,6 +103,8 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required String viewerId,
   }) async {
     try {
+      /// Safely ignore check  whether user is connected to the internet 
+      /// since this isnt important much .. used only for stats
       await dioClient.dio.post(
         '/$servicePrefix/posts/$postId/viewed/',
         data: {'post_id': postId, 'viewer_id': viewerId},
@@ -115,9 +123,12 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int pageSize,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.get(
-        // '/$servicePrefix/posts/$postId/comments',
-        "https://qachirp.opencrafts.io/posts/$postId/comments",
+        "/$servicePrefix/posts/$postId/comments/",
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
@@ -156,6 +167,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required String content,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final Map<String, dynamic> formMap = {
         'title': title,
         'author_id': authorId,
@@ -196,6 +211,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
     int? parent,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final Map<String, dynamic> formMap = {
         'post': postId,
         'author_id': authorId,
@@ -237,6 +256,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required MultipartFile file,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final formData = FormData.fromMap({'post': postId, 'file': file});
 
       final res = await dioClient.dio.post(
@@ -270,6 +293,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, Unit>> deletePost({required int postId}) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.delete(
         '/$servicePrefix/posts/$postId/delete/',
       );
@@ -300,6 +327,10 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int commentId,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.delete(
         '/$servicePrefix/posts/comments/$commentId/delete/',
       );
@@ -332,8 +363,12 @@ class ChirpRemoteDataSource with DioErrorHandler {
     required int pageSize,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final res = await dioClient.dio.get(
-        '/$servicePrefix/posts/from/$communityId',
+        '/$servicePrefix/posts/from/$communityId/',
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 

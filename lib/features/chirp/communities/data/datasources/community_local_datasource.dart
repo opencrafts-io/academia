@@ -129,13 +129,11 @@ class CommunityLocalDatasource {
     }
   }
 
-  Future<Either<Failure, void>> deleteCachedCommunity(
-    int communityID,
-  ) async {
+  Future<Either<Failure, void>> deleteCachedCommunity(int communityID) async {
     try {
-          await (localDB.delete(localDB.community)
-                ..where((community) => community.id.equals(communityID)))
-              .go();
+      await (localDB.delete(
+        localDB.community,
+      )..where((community) => community.id.equals(communityID))).go();
 
       await _deleteAllExpiredCachedCommunities();
       return right(null);

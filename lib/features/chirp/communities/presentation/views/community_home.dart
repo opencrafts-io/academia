@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/features/chirp/communities/communities.dart';
-import 'package:academia/features/chirp/memberships/memberships.dart';
+import 'package:academia/core/clippers/clippers.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +26,30 @@ class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
   late String currentUserID;
   late String currentUserName;
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<FeedBloc>().state;
+      if (state is FeedLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<FeedBloc>().add(
+          LoadPostsForCommunityEvent(
+            communityID: widget.communityId,
+            page: _currentPage,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -43,190 +65,405 @@ class _CommunityHomeState extends State<CommunityHome>
     context.read<CommunityHomeBloc>().add(
       FetchCommunityById(communityId: widget.communityId),
     );
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CommunityHomeBloc, CommunityHomeState>(
-      listener: (context, state) async {
-        if (state is CommunityDeleted) {
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
-          }
-          if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Community deleted"),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          context.pop();
-        }
-      },
-      builder: (context, state) {
-        if (state is CommunityHomeLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        } else if (state is CommunityHomeFailure) {
-          return Scaffold(
-            appBar: AppBar(title: Text("Community")),
-            body: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset(
-                    "assets/lotties/under-maintenance.json",
-                    height: 300,
-                  ),
-                  Text(
-                    "Ooops!",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
+    return BlocProvider(
+      create: (context) =>
+          sl<FeedBloc>()
+            ..add(LoadPostsForCommunityEvent(communityID: widget.communityId)),
+      child: BlocConsumer<CommunityHomeBloc, CommunityHomeState>(
+        listener: (context, state) async {
+          if (state is CommunityDeleted) {
+            if (await Vibration.hasVibrator()) {
+              Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
+            }
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Community deleted"),
+                behavior: SnackBarBehavior.floating,
               ),
-            ),
-          );
-        } else if (state is CommunityHomeLoaded) {
-          return RefreshIndicator.adaptive(
-            onRefresh: () async {
-              await Future.delayed(const Duration(seconds: 2));
-            },
-            child: BlocProvider(
-              create: (context) =>
-                  ChirpCommunityMembershipCubit(
-                    joinCommunityUsecase: sl(),
-                    leaveCommunityUsecase: sl(),
-                    getPersonalCommunityMembershipForCommunityUsecase: sl(),
-                  )..getPersonalCommunityMembershipForCommunity(
-                    communityID: widget.communityId,
-                    userID: currentUserID,
-                  ),
-              child: Scaffold(
-                body: NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverAppBar.medium(
-                      centerTitle: false,
-                      titleSpacing: 0,
-                      title: GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            showDragHandle: true,
-                            context: context,
-                            builder: (context) => Container(
-                              padding: EdgeInsets.all(16),
-                              child: Column(
+            );
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          if (state is CommunityHomeLoading) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is CommunityHomeFailure) {
+            return Scaffold(
+              appBar: AppBar(title: Text("Community")),
+              body: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      "assets/lotties/under-maintenance.json",
+                      height: 300,
+                    ),
+                    Text(
+                      "Ooops!",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    Text(
+                      state.message,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (state is CommunityHomeLoaded) {
+            return RefreshIndicator.adaptive(
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 2));
+              },
+              child: BlocProvider(
+                create: (context) =>
+                    ChirpCommunityMembershipCubit(
+                      joinCommunityUsecase: sl(),
+                      leaveCommunityUsecase: sl(),
+                      getPersonalCommunityMembershipForCommunityUsecase: sl(),
+                    )..getPersonalCommunityMembershipForCommunity(
+                      communityID: widget.communityId,
+                      userID: currentUserID,
+                    ),
+                child: Scaffold(
+                  body: NestedScrollView(
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      SliverAppBar.medium(
+                        centerTitle: false,
+                        titleSpacing: 0,
+                        title: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              showDragHandle: true,
+                              context: context,
+                              builder: (context) => Container(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Community guidelines",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.headlineSmall,
+                                    ),
+
+                                    Divider(),
+                                    state.community.guidelines.isNotEmpty
+                                        ? Expanded(
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: state
+                                                  .community
+                                                  .guidelines
+                                                  .length,
+                                              itemBuilder: (context, index) =>
+                                                  ListTile(
+                                                    leading: Text(
+                                                      (index + 1).toString(),
+                                                    ),
+                                                    title: Text(
+                                                      state
+                                                          .community
+                                                          .guidelines[index],
+                                                    ),
+                                                  ),
+                                            ),
+                                          )
+                                        : Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "No community guidelines"
+                                              " were provided by the mods",
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    state.community.profilePictureUrl == null
+                                    ? null
+                                    : CachedNetworkImageProvider(
+                                        state.community.profilePictureUrl!,
+                                        errorListener: (error) {},
+                                      ),
+                                child: state.community.profilePictureUrl == null
+                                    ? Text(state.community.name[0])
+                                    : null,
+                              ),
+                              SizedBox(width: 8),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text(state.community.name),
                                   Text(
-                                    "Community guidelines",
+                                    "${NumberFormat.compact().format(state.community.memberCount)} members",
                                     style: Theme.of(
                                       context,
-                                    ).textTheme.headlineSmall,
+                                    ).textTheme.bodySmall,
                                   ),
-
-                                  Divider(),
-                                  state.community.guidelines.isNotEmpty
-                                      ? Expanded(
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: state
-                                                .community
-                                                .guidelines
-                                                .length,
-                                            itemBuilder: (context, index) =>
-                                                ListTile(
-                                                  leading: Text(
-                                                    (index + 1).toString(),
-                                                  ),
-                                                  title: Text(
-                                                    state
-                                                        .community
-                                                        .guidelines[index],
-                                                  ),
-                                                ),
-                                          ),
-                                        )
-                                      : Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "No community guidelines"
-                                            " were provided by the mods",
-                                          ),
-                                        ),
                                 ],
                               ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage:
-                                  state.community.profilePictureUrl == null
-                                  ? null
-                                  : CachedNetworkImageProvider(
-                                      state.community.profilePictureUrl!,
-                                      errorListener: (error) {},
-                                    ),
-                              child: state.community.profilePictureUrl == null
-                                  ? Text(state.community.name[0])
-                                  : null,
-                            ),
-                            SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(state.community.name),
-                                Text(
-                                  "${NumberFormat.compact().format(state.community.memberCount)} members",
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        Builder(
-                          builder: (context) => _CommunityActionSection(
-                            communityID: widget.communityId,
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-
-                    SliverPadding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
-                      sliver: MultiSliver(
-                        pushPinnedChildren: true,
-                        children: [
-                          SliverPinnedHeader(
-                            child: Text(
-                              state.community.description ??
-                                  'No description available',
-                              style: Theme.of(context).textTheme.bodySmall,
+                        actions: [
+                          Builder(
+                            builder: (context) => _CommunityActionSection(
+                              communityID: widget.communityId,
                             ),
                           ),
                         ],
                       ),
+
+                      SliverPadding(
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                        sliver: MultiSliver(
+                          pushPinnedChildren: true,
+                          children: [
+                            SliverPinnedHeader(
+                              child: Text(
+                                state.community.description ??
+                                    'No description available',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    body: BlocListener<FeedBloc, FeedState>(
+                      listener: (context, state) {
+                        if (state is PostCreated) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Post created successfully!"),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        } else if (state is PostCreateError) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Error creating post"),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      },
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          _currentPage = 1;
+                          context.read<FeedBloc>().add(
+                            LoadFeedEvent(page: _currentPage),
+                          );
+                          await Future.delayed(Duration(seconds: 2));
+                        },
+                        child: CustomScrollView(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          slivers: [
+                            BlocBuilder<FeedBloc, FeedState>(
+                              builder: (context, state) {
+                                if (state is FeedLoaded &&
+                                    state.posts.isEmpty) {
+                                  return SliverPadding(
+                                    padding: EdgeInsetsGeometry.all(16),
+                                    sliver: SliverFillRemaining(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Lottie.asset(
+                                            "assets/lotties/chat.json",
+                                            height: 300,
+                                          ),
+                                          Text(
+                                            "It's a little quiet in here... "
+                                            "Youre here early. Spread the word "
+                                            "for your friends to join",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (state is FeedLoaded) {
+                                  return SliverList.builder(
+                                    itemBuilder: (context, index) {
+                                      return BlocProvider(
+                                        create: (context) =>
+                                            sl<ChirpUserCubit>()
+                                              ..getChirpUserByID(
+                                                state.posts[index].authorId,
+                                              ),
+                                        child: PostCard(
+                                          post: state.posts[index],
+                                          onTap: () async {
+                                            // marking the post as viewed
+                                            context.read<FeedBloc>().add(
+                                              MarkPostAsViewed(
+                                                postId: state.posts[index].id,
+                                                viewerId:
+                                                    state.posts[index].authorId,
+                                              ),
+                                            );
+                                            final updatedPost = await context
+                                                .push(
+                                                  PostDetailRoute(
+                                                    postId:
+                                                        state.posts[index].id,
+                                                  ).location,
+                                                  extra: state.posts[index],
+                                                );
+
+                                            if (!context.mounted) return;
+
+                                            if (updatedPost != null &&
+                                                updatedPost is Post) {
+                                              context.read<FeedBloc>().add(
+                                                UpdatePostInFeed(updatedPost),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    itemCount: state.posts.length,
+                                  );
+                                }
+                                if (state is FeedLoading) {
+                                  return const SliverFillRemaining(
+                                    child: Center(
+                                      child: SpinningScallopIndicator(),
+                                    ),
+                                  );
+                                }
+                                if (state is FeedPaginationLoading) {
+                                  return SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(24.0),
+                                      child: Column(
+                                        children: [
+                                          ...state.existingPosts.map(
+                                            (post) => BlocProvider(
+                                              create: (context) =>
+                                                  sl<ChirpUserCubit>()
+                                                    ..getChirpUserByID(
+                                                      post.authorId,
+                                                    ),
+                                              child: PostCard(post: post),
+                                            ),
+                                          ),
+                                          const Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: SpinningScallopIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (state is FeedPaginationError) {
+                                  return SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(24.0),
+                                      child: Column(
+                                        children: [
+                                          ...state.existingPosts.map(
+                                            (post) => BlocProvider(
+                                              create: (context) =>
+                                                  sl<ChirpUserCubit>()
+                                                    ..getChirpUserByID(
+                                                      post.authorId,
+                                                    ),
+                                              child: PostCard(post: post),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              context.read<FeedBloc>().add(
+                                                LoadFeedEvent(
+                                                  page: _currentPage,
+                                                ),
+                                              );
+                                            },
+                                            icon: const Icon(Icons.refresh),
+                                            label: const Text(
+                                              "Retry loading more posts",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (state is FeedError) {
+                                  return SliverFillRemaining(
+                                    // child: Center(child: Text("Connection error")),
+                                    child: Center(child: Text(state.message)),
+                                  );
+                                }
+                                return SliverPadding(
+                                  padding: EdgeInsetsGeometry.all(16),
+                                  sliver: SliverFillRemaining(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                          "assets/lotties/chat.json",
+                                          height: 300,
+                                        ),
+                                        Text(
+                                          "It's a little quiet in here... "
+                                          "Let's make some noise! Start following "
+                                          "and posting to fill up your feed.",
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                  body: const Center(child: Text("Community posts")),
+                  ),
                 ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        return const SizedBox.shrink();
-      },
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }
