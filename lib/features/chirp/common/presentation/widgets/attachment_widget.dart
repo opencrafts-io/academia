@@ -1,12 +1,9 @@
-import 'dart:ui';
-
-import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 class AttachmentWidget extends StatelessWidget {
   final Attachments attachment;
@@ -56,62 +53,24 @@ class _ImageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => _openFullScreen(context),
       child: Container(
-        height: 300,
-        width: double.infinity,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            width: 1.5,
+            color: Theme.of(context).colorScheme.outline,
+          ),
         ),
         clipBehavior: Clip.hardEdge,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Blurred background
-            CachedNetworkImage(
-              imageUrl: url,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Center(child: SpinningScallopIndicator()),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Icon(
-                  Icons.broken_image,
-                  size: 50,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    color: Theme.of(context).colorScheme.scrim.withAlpha(10),
-                  ),
-                ),
-              ),
-            ),
-
-            // Centered original image with proper aspect ratio
-            Center(
-              child: CachedNetworkImage(
-                imageUrl: url,
-                fit: BoxFit.contain,
-                placeholder: (context, url) => const SizedBox.shrink(),
-                errorWidget: (context, url, error) => Icon(
-                  Icons.broken_image,
-                  size: 50,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ),
-          ],
+        child: CachedNetworkImage(
+          imageUrl: url,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const SizedBox.shrink(),
+          errorWidget: (context, url, error) => Icon(
+            Icons.broken_image,
+            size: 50,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ),
     );
@@ -162,52 +121,46 @@ class _MediaKitVideoWidget extends StatefulWidget {
   State<_MediaKitVideoWidget> createState() => _MediaKitVideoWidgetState();
 }
 
-class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget> {
-  late final player = Player();
-  late final controller = VideoController(player);
+class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget>
+    with AutomaticKeepAliveClientMixin {
+  late VideoPlayerController videoPlayerController =
+      VideoPlayerController.networkUrl(Uri.parse(widget.url));
+  late ChewieController chewieController = ChewieController(
+    videoPlayerController: videoPlayerController,
+    autoPlay: true,
+    looping: true,
+    playbackSpeeds: [0.25, 0.5, 1.0, 1.5, 2.0],
+    showControls: true,
+    allowFullScreen: true,
+    aspectRatio: videoPlayerController.value.aspectRatio,
+    materialProgressColors: ChewieProgressColors(
+      playedColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
 
   @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() async {
-      if (player.platform is NativePlayer) {
-        await (player.platform as dynamic).setProperty('force-seekable', 'yes');
-      }
-      // player.stream.log.listen((event) {
-      //   print("log $event");
-      // });
-    });
-    player.open(
-      Media(
-        widget.url,
-        httpHeaders: {
-          'User-Agent': 'MediaKit/Flutter',
-          'Accept': 'video/mp4,video/*,*/*;q=0.9',
-          'Accept-Encoding': 'identity;q=1, *;q=0',
-          'Range': 'bytes=0-',
-        },
-      ),
-    );
-  }
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
-    player.dispose();
+    videoPlayerController.dispose();
+    chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: ClipRRect(
+    super.build(context);
+    return Stack(
+      children: [
+        ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Video(controller: controller),
+          child: GestureDetector(
+            onTap: () async {},
+            child: Chewie(controller: chewieController),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
