@@ -63,6 +63,16 @@ android {
 
     buildTypes {
         release {
+            // Enable R8 code shrinking and optimization
+            minifyEnabled = true
+            // Enable removal of unused resources (like drawables, layouts, etc.)
+            shrinkResources = true 
+            
+            // Specifies the location of the R8/ProGuard rules file
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             if (signingConfigs.findByName("staging") != null) {
