@@ -41,8 +41,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 28
         targetSdk = 36
-        versionCode = 4
-        versionName = "2025.9.22+0"
+        versionCode = 5
+        versionName = "2025.10.14+0"
     }
 
     signingConfigs {
@@ -63,11 +63,8 @@ android {
 
     buildTypes {
         release {
-            // Enable R8 code shrinking and optimization
-            minifyEnabled = true
-            // Enable removal of unused resources (like drawables, layouts, etc.)
-            shrinkResources = true 
-            
+            isMinifyEnabled = true
+            isShrinkResources = true
             // Specifies the location of the R8/ProGuard rules file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -14,7 +14,7 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
   final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: true,
+    isInspectorEnabled: false,
     password: '123456', // remove this line if you don't need password
     showSummary: false,
   );

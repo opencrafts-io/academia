@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:quick_actions/quick_actions.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -19,32 +18,32 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> {
-  final QuickActions quickActions = QuickActions();
+  // final QuickActions quickActions = QuickActions();
 
   @override
   void initState() {
     setOptimalDisplayMode();
     // setup quick actions
-    quickActions.setShortcutItems([
-      ShortcutItem(
-        type: "action_view_todos",
-        localizedTitle: "View your tasks",
-        icon: "ic_view_tasks",
-      ),
-      ShortcutItem(
-        type: "action_add_event",
-        localizedTitle: "Create a sherehe",
-
-        icon: "ic_create_event",
-      ),
-    ]);
-    quickActions.initialize((shortcut) {
-      if (shortcut == "action_view_todos") {
-        TodosRoute().go(context);
-      } else if (shortcut == "action_add_event") {
-        CreateEventRoute().go(context);
-      }
-    });
+    // quickActions.setShortcutItems([
+    //   ShortcutItem(
+    //     type: "action_view_todos",
+    //     localizedTitle: "View your tasks",
+    //     icon: "ic_view_tasks",
+    //   ),
+    //   ShortcutItem(
+    //     type: "action_add_event",
+    //     localizedTitle: "Create a sherehe",
+    //
+    //     icon: "ic_create_event",
+    //   ),
+    // ]);
+    // quickActions.initialize((shortcut) {
+    //   if (shortcut == "action_view_todos") {
+    //     TodosRoute().go(context);
+    //   } else if (shortcut == "action_add_event") {
+    //     CreateEventRoute().go(context);
+    //   }
+    // });
     super.initState();
   }
 
