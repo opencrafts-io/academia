@@ -116,6 +116,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               state.value == true &&
                               state.key == "enable_review_login"
                           ? () {
+                              context.read<AuthBloc>().add(
+                                AuthSignInAsReviewerEvent(),
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Enabling test login..."),
