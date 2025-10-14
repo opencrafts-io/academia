@@ -78,12 +78,13 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
                     viewerHeight: 50.0,
                     viewerWidth: MediaQuery.of(context).size.width,
                     maxVideoLength: const Duration(seconds: 90),
-                    onChangeStart: (value) => _startValue = value,
-                    onChangeEnd: (value) => _endValue = value,
+                    onChangeStart: (value) =>
+                        setState(() => _startValue = value),
+                    onChangeEnd: (value) => setState(() => _endValue = value),
                     onChangePlaybackState: (value) =>
                         setState(() => _isPlaying = value),
                     showDuration: true,
-                    type: ViewerType.scrollable,
+                    type: ViewerType.auto,
                     durationStyle: DurationStyle.FORMAT_MM_SS,
                     editorProperties: TrimEditorProperties(
                       borderPaintColor: Theme.of(
