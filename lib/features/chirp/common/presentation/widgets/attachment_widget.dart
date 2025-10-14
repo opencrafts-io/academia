@@ -58,7 +58,7 @@ class _ImageWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             width: 1.5,
-            color: Theme.of(context).colorScheme.outline,
+            color: Theme.of(context).colorScheme.outlineVariant,
           ),
         ),
         clipBehavior: Clip.hardEdge,
@@ -128,7 +128,7 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget>
   late ChewieController chewieController = ChewieController(
     videoPlayerController: videoPlayerController,
     autoPlay: true,
-    looping: true,
+    looping: false,
     playbackSpeeds: [0.25, 0.5, 1.0, 1.5, 2.0],
     showControls: true,
     allowFullScreen: true,
@@ -137,6 +137,12 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget>
       playedColor: Theme.of(context).colorScheme.primary,
     ),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {});
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -151,16 +157,13 @@ class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: GestureDetector(
-            onTap: () async {},
-            child: Chewie(controller: chewieController),
-          ),
-        ),
-      ],
+    return Container(
+      height: 600,
+      color: Colors.black,
+      child: GestureDetector(
+        onTap: () async {},
+        child: Chewie(controller: chewieController),
+      ),
     );
   }
 }

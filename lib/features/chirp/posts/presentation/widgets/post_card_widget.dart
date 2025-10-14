@@ -99,9 +99,10 @@ class _PostCardState extends State<PostCard> {
               LayoutBuilder(
                 builder: (context, constraints) {
                   final double attachmentWidth = constraints.maxWidth;
-                  final double attachmentHeight = attachmentWidth / (16 / 9);
+                  final double attachmentHeight = attachmentWidth / (16 / 9); 
 
                   return SizedBox(
+                    // constraints: BoxConstraints(),
                     height: attachmentHeight,
                     child: PageView.builder(
                       controller: _pageController,
