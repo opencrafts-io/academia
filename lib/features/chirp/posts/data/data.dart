@@ -1,5 +1,5 @@
 export 'datasources/chirp_remote_data_source.dart';
-export 'datasources/chirp_local_data_source.dart';
+export 'datasources/chirp_post_local_data_source.dart';
 export 'models/attachment_model_helper.dart';
 export 'models/post_model_helper.dart';
 export 'models/comment_model_helper.dart';

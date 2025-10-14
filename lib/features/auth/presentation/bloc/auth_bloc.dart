@@ -12,14 +12,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithSpotifyUsecase signInWithSpotifyUsecase;
   final GetPreviousAuthState getPreviousAuthState;
   final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
+  final SignInAsReviewUsecase signInAsReviewUsecase;
 
   AuthBloc({
     required this.signInWithGoogle,
     required this.signInWithSpotifyUsecase,
     required this.getPreviousAuthState,
     required this.refreshVerisafeTokenUsecase,
+    required this.signInAsReviewUsecase,
   }) : super(const AuthInitial()) {
     // Register event handlers
+    on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
     on<AuthSignInWithGoogleEvent>(_onSignInWithGoogle);
     on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
     on<AuthCheckStatusEvent>(_onAppLaunched);
@@ -34,6 +37,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthLoading()); // Show loading state
 
     final result = await signInWithSpotifyUsecase(NoParams());
+
+    result.fold(
+      (failure) =>
+          emit(AuthError(message: (failure as AuthenticationFailure).message)),
+      (token) => emit(AuthAuthenticated(token: token)),
+    );
+  }
+
+  Future<void> _onSignInAsReviewer(
+    AuthSignInAsReviewerEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading()); // Show loading state
+
+    final result = await signInAsReviewUsecase(NoParams());
 
     result.fold(
       (failure) =>

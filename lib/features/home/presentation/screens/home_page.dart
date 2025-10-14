@@ -43,11 +43,6 @@ class _HomePageState extends State<HomePage> {
                 centerTitle: true,
                 title: GlobalSearchBar(),
                 actions: [
-                  // PopupMenuButton<int>(
-                  //   itemBuilder: (context) => [
-                  //     PopupMenuItem(value: 1, child: Text("hello")),
-                  //   ],
-                  // ),
                   PopupMenuButton(
                     onSelected: (item) {
                       switch (item) {
@@ -87,16 +82,16 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      PopupMenuItem(
-                        value: 3,
-                        child: Row(
-                          children: [
-                            Icon(Icons.campaign),
-                            SizedBox(width: 4),
-                            Text("Your posts"),
-                          ],
-                        ),
-                      ),
+                      // PopupMenuItem(
+                      //   value: 3,
+                      //   child: Row(
+                      //     children: [
+                      //       Icon(Icons.campaign),
+                      //       SizedBox(width: 4),
+                      //       Text("Your posts"),
+                      //     ],
+                      //   ),
+                      // ),
                       PopupMenuItem(
                         value: 4,
                         child: Row(
