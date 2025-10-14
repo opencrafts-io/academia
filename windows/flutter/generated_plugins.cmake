@@ -3,17 +3,15 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
   desktop_webview_window
   dynamic_color
   file_selector_windows
   firebase_core
-  media_kit_libs_windows_video
-  media_kit_video
   permission_handler_windows
   share_plus
   sqlite3_flutter_libs
   url_launcher_windows
-  volume_controller
   window_to_front
 )
 

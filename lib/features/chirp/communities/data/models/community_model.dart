@@ -1,8 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName("CommunityData")
-class CommunityTable extends Table {
+class Community extends Table {
   @JsonKey("id")
   IntColumn get id => integer().autoIncrement()();
 
@@ -73,4 +72,9 @@ class CommunityTable extends Table {
 
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime()();
+
+  /// For storing the caching time that will be used in TTL
+  @JsonKey("cached_at")
+  DateTimeColumn get cachedAt =>
+      dateTime().withDefault(Constant(DateTime.now())).nullable()();
 }

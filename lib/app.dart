@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:quick_actions/quick_actions.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -19,32 +18,32 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> {
-  final QuickActions quickActions = QuickActions();
+  // final QuickActions quickActions = QuickActions();
 
   @override
   void initState() {
     setOptimalDisplayMode();
     // setup quick actions
-    quickActions.setShortcutItems([
-      ShortcutItem(
-        type: "action_view_todos",
-        localizedTitle: "View your tasks",
-        icon: "ic_view_tasks",
-      ),
-      ShortcutItem(
-        type: "action_add_event",
-        localizedTitle: "Create a sherehe",
-
-        icon: "ic_create_event",
-      ),
-    ]);
-    quickActions.initialize((shortcut) {
-      if (shortcut == "action_view_todos") {
-        TodosRoute().go(context);
-      } else if (shortcut == "action_add_event") {
-        CreateEventRoute().go(context);
-      }
-    });
+    // quickActions.setShortcutItems([
+    //   ShortcutItem(
+    //     type: "action_view_todos",
+    //     localizedTitle: "View your tasks",
+    //     icon: "ic_view_tasks",
+    //   ),
+    //   ShortcutItem(
+    //     type: "action_add_event",
+    //     localizedTitle: "Create a sherehe",
+    //
+    //     icon: "ic_create_event",
+    //   ),
+    // ]);
+    // quickActions.initialize((shortcut) {
+    //   if (shortcut == "action_view_todos") {
+    //     TodosRoute().go(context);
+    //   } else if (shortcut == "action_add_event") {
+    //     CreateEventRoute().go(context);
+    //   }
+    // });
     super.initState();
   }
 
@@ -85,6 +84,7 @@ class _AcademiaState extends State<Academia> {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(
+            signInAsReviewUsecase: sl(),
             refreshVerisafeTokenUsecase: sl(),
             signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
             getPreviousAuthState: sl.get<GetPreviousAuthState>(),
@@ -105,6 +105,7 @@ class _AcademiaState extends State<Academia> {
             getPostReplies: sl.get<GetPostRepliesUsecase>(),
           )..add(CacheFeedEvent()),
         ),
+        BlocProvider(create: (context) => sl<CommentBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
@@ -125,7 +126,7 @@ class _AcademiaState extends State<Academia> {
           )..add(FetchCachedTodosEvent()),
         ),
 
-        BlocProvider(create: (context) => sl<CommunityBloc>()),
+        BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
             createCommunityUseCase: sl<CreateCommunityUseCase>(),
@@ -149,8 +150,8 @@ class _AcademiaState extends State<Academia> {
           create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
+          create: (context) => sl<RemoteConfigBloc>()
+            ..add(InitializeRemoteConfigEvent()),
         ),
 
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
@@ -159,11 +160,6 @@ class _AcademiaState extends State<Academia> {
               sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
         ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
-        BlocProvider(
-          create: (context) =>
-              sl<ChirpCommunityMembershipBloc>()
-                ..add(GetCachedChirpCommunityMembershipEvent()),
-        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(

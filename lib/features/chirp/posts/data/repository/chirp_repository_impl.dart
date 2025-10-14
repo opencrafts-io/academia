@@ -5,96 +5,202 @@ import 'package:dio/dio.dart';
 
 class ChirpRepositoryImpl implements ChirpRepository {
   final ChirpRemoteDataSource remoteDataSource;
-  final ChirpLocalDataSource localDataSource;
+  final ChirpPostLocalDataSource localDataSource;
 
   ChirpRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
   });
-  @override
-  Future<Either<Failure, List<Post>>> getFeedPosts() async {
-    final cacheResult = await localDataSource.getCachedPosts();
 
-    return await cacheResult.fold(
-      (failure) => left(failure),
-      (posts) => right(posts),
+  @override
+  Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
+    required int page,
+    required int pageSize,
+  }) async {
+    final postResult = await remoteDataSource.getPosts(
+      page: page,
+      pageSize: pageSize,
+    );
+
+    return await postResult.fold(
+      (failure) async {
+        final posts = await localDataSource.getCachedPosts();
+
+        return posts.fold(
+          (failure) {
+            return left(failure);
+          },
+          (retrieved) {
+            return right(
+              PaginatedData(
+                results: retrieved.map((e)=> e.toEntity()).toList(),
+                count:  retrieved.length,
+                next: null,
+                previous: null,
+              ),
+            );
+          },
+        );
+      },
+      (posts) async {
+        final postEntities = <Post>[];
+        for (final post in posts.results) {
+          await localDataSource.createOrUpdatePost(post);
+          postEntities.add(post.toEntity());
+        }
+        return right(
+          PaginatedData(
+            results: postEntities,
+            count: posts.count,
+            next: posts.next,
+            previous: posts.previous,
+          ),
+        );
+      },
     );
   }
 
   @override
-  Future<Either<Failure, List<PostReply>>> getPostReplies(String postId) async {
-    final cacheResult = await localDataSource.getCachedPostReplies(postId);
+  /// First look through the cache then try the remote repo
+  Future<Either<Failure, Post>> getPostDetails({required int postId}) async {
+    final localRes = await localDataSource.getCachedPostByID(postId);
 
-    return await cacheResult.fold(
-      (failure) => left(failure),
-      (replies) => right(replies),
-    );
+    return localRes.fold((failure) async {
+      final result = await remoteDataSource.getPostDetails(postId: postId);
+      return result.fold((failure) => left(failure), (post) async {
+        await localDataSource.createOrUpdatePost(post);
+        return right(post.toEntity());
+      });
+    }, (post) => right(post.toEntity()));
   }
 
   @override
-  Future<Either<Failure, List<Post>>> addFeedPosts() async {
-    final remoteResult = await remoteDataSource.getPosts();
-    if (remoteResult.isLeft()) {
-      return left((remoteResult as Left).value);
-    }
-
-    final result = await localDataSource.cachePosts(
-      (remoteResult as Right).value,
-    );
-
-    return result.fold(
-      (failure) => left(failure),
-      (postData) => right(postData),
-    );
+  Future<void> markPostAsViewed({
+    required int postId,
+    required String viewerId,
+  }) async {
+    await remoteDataSource.markPostAsViewed(postId: postId, viewerId: viewerId);
   }
 
   @override
-  Future<Either<Failure, List<PostReply>>> cachePostReplies(String postId) async {
-    final remoteResult = await remoteDataSource.getPostReplies(postId);
-    if (remoteResult.isLeft()) {
-      return left((remoteResult as Left).value);
-    }
-
-    final result = await localDataSource.cachePostReplies(
-      (remoteResult as Right).value,
-    );
-
-    return result.fold(
-      (failure) => left(failure),
-      (postData) => right(postData),
-    );
-  }
-
-  @override
-  Future<Either<Failure, Post>> createPost(
-    String content,
-    List<MultipartFile> attachments, {
-    required String userName,
-    required String email,
-    required String groupId,
+  Future<Either<Failure, Post>> createPost({
+    required String title,
+    required String authorId,
+    required int communityId,
+    required String content,
   }) async {
     final result = await remoteDataSource.createPost(
-      content,
-      attachments,
-      userName: userName,
-      email: email,
-      groupId: groupId,
+      title: title,
+      authorId: authorId,
+      communityId: communityId,
+      content: content,
     );
-    return result.fold((failure) => left(failure), (created) => right(created));
+    return result.fold((failure) => left(failure), (created) async {
+      await localDataSource.createOrUpdatePost(created);
+      return right(created.toEntity());
+    });
   }
 
   @override
-  Future<Either<Failure, PostReply>> addComment(
-    {required String postId, required String userId,
-    required String content,required String userName, String? parentId}
-  ) async {
-    final result = await remoteDataSource.addComment(postId: postId, content: content, userName: userName, parentId: parentId, userId: userId );
-    return result.fold((failure) => left(failure), (created) => right(created));
+  Future<Either<Failure, PaginatedData<Comment>>> getPostComments({
+    required int postId,
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await remoteDataSource.getPostComments(
+      postId: postId,
+      page: page,
+      pageSize: pageSize,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (comments) => right(
+        PaginatedData(
+          results: comments.results.map((e) => e.toEntity()).toList(),
+          count: comments.count,
+          next: comments.next,
+          previous: comments.previous,
+        ),
+      ),
+    );
   }
 
   @override
-  Future<Either<Failure, Map<String, dynamic>>> toggleLike(String postId, bool isLiked) async {
-    final result = await remoteDataSource.likePost(postId, isLiked);
-    return result.fold((failure) => left(failure), (created) => right(created));
+  Future<Either<Failure, Comment>> createComment({
+    required int postId,
+    required String authorId,
+    required String content,
+    int? parent,
+  }) async {
+    final result = await remoteDataSource.createComment(
+      postId: postId,
+      authorId: authorId,
+      content: content,
+      parent: parent,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (created) => right(created.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Attachments>> createPostAttachment({
+    required int postId,
+    required MultipartFile file,
+  }) async {
+    final result = await remoteDataSource.createPostAttachment(
+      postId: postId,
+      file: file,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (attachment) => right(attachment.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deletePost({required int postId}) async {
+    final result = await remoteDataSource.deletePost(postId: postId);
+    return result.fold((failure) => left(failure), (res) async {
+      await localDataSource.deleteCachedPost(postId);
+      return right(res);
+    });
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deletePostComment({
+    required int commentId,
+  }) async {
+    final result = await remoteDataSource.deletePostComment(
+      commentId: commentId,
+    );
+    return result.fold((failure) => left(failure), (res) async {
+      return right(res);
+    });
+  }
+
+  @override
+  Future<Either<Failure, PaginatedData<Post>>> getPostsFromCommunity({
+    required int communityId,
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await remoteDataSource.getPostsFromCommunity(
+      communityId: communityId,
+      page: page,
+      pageSize: pageSize,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (posts) => right(
+        PaginatedData(
+          results: posts.results.map((e) => e.toEntity()).toList(),
+          count: posts.count,
+          next: posts.next,
+          previous: posts.previous,
+        ),
+      ),
+    );
   }
 }

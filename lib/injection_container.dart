@@ -2,7 +2,6 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
-import 'package:academia/features/chirp/memberships/data/repository/chirp_community_membership_repository_impl.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -15,7 +14,7 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
   final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: true,
+    isInspectorEnabled: false,
     password: '123456', // remove this line if you don't need password
     showSummary: false,
   );
@@ -51,6 +50,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SignInAsReviewUsecase>(
+    () => SignInAsReviewUsecase(repository: sl.get<AuthRepositoryImpl>()),
   );
 
   sl.registerFactory<SignInWithSpotifyUsecase>(
@@ -314,14 +317,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => ModerateMembersUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
 
-  sl.registerFactory<JoinCommunityUseCase>(
-    () => JoinCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
-  );
-
-  sl.registerFactory<LeaveCommunityUseCase>(
-    () => LeaveCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
-  );
-
   sl.registerFactory<DeleteCommunityUseCase>(
     () => DeleteCommunityUseCase(repository: sl.get<CommunityRepositoryImpl>()),
   );
@@ -351,7 +346,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(
-    () => CommunityBloc(
+    () => CommunityListingCubit(
       getPostableCommunitiesUsecase: sl(),
       searchForCommunityUsecase: sl(),
     ),
@@ -360,9 +355,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<CommunityHomeBloc>(
     () => CommunityHomeBloc(
       getCommunityByIdUseCase: sl.get<GetCommunityByIdUseCase>(),
-      moderateMembers: sl.get<ModerateMembersUseCase>(),
-      joinCommunityUseCase: sl.get<JoinCommunityUseCase>(),
-      leaveCommunityUseCase: sl.get<LeaveCommunityUseCase>(),
       deleteCommunityUseCase: sl.get<DeleteCommunityUseCase>(),
       addCommunityGuidelinesUsecase: sl.get<AddCommunityGuidelinesUsecase>(),
     ),
@@ -383,6 +375,31 @@ Future<void> init(FlavorConfig flavor) async {
   /*************************************************************************
                                     CHIRP
   *************************************************************************/
+  //                        --- Chirp Users ---
+  sl.registerFactory<ChirpUserLocalDataSource>(
+    () => ChirpUserLocalDataSource(localDB: sl()),
+  );
+  sl.registerFactory(
+    () => ChirpUserRemoteDataSource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<ChirpUserRepository>(
+    () => ChirpUserRepositoryImpl(
+      chirpRemoteDataSource: sl(),
+      chirpUserLocalDataSource: sl(),
+    ),
+  );
+
+  sl.registerFactory(() => GetChirpUserByIdUsecase(chirpUserRepository: sl()));
+  sl.registerFactory(
+    () => GetChirpUserByUsernameUsecase(chirpUserRepository: sl()),
+  );
+  sl.registerFactory<ChirpUserCubit>(
+    () => ChirpUserCubit(
+      getChirpUserByIdUsecase: sl(),
+      getChirpUserByUsernameUsecase: sl(),
+    ),
+  );
+
   // -- Memberships
   sl.registerFactory<ChirpCommunityMembershipLocalDatasource>(
     () => ChirpCommunityMembershipLocalDatasource(localDB: sl()),
@@ -395,7 +412,6 @@ Future<void> init(FlavorConfig flavor) async {
   );
   sl.registerFactory<ChirpCommunityMembershipRepository>(
     () => ChirpCommunityMembershipRepositoryImpl(
-      profileLocalDatasource: sl(),
       chirpCommunityMembershipLocalDatasource: sl(),
       chirpCommunityMembershipRemoteDatasource: sl(),
     ),
@@ -405,16 +421,91 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetCachedPersonalChirpCommunityMemberships(repository: sl()),
   );
 
+  sl.registerFactory<GetCommunityMembershipsUsecase>(
+    () => GetCommunityMembershipsUsecase(communityMembershipRepository: sl()),
+  );
+
   sl.registerFactory<GetRemotePersonalChirpMembershipsUsecase>(
     () => GetRemotePersonalChirpMembershipsUsecase(repository: sl()),
   );
 
-  sl.registerFactory<ChirpCommunityMembershipBloc>(
-    () => ChirpCommunityMembershipBloc(
-      getCachedPersonalChirpCommunityMemberships: sl(),
-      getRemotePersonalChirpMembershipsUsecase: sl(),
+  sl.registerFactory<JoinCommunityUsecase>(
+    () => JoinCommunityUsecase(chirpCommunityMembershipRepository: sl()),
+  );
+  sl.registerFactory<LeaveCommunityUsecase>(
+    () => LeaveCommunityUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<GetPersonalCommunityMembershipForCommunityUsecase>(
+    () => GetPersonalCommunityMembershipForCommunityUsecase(repository: sl()),
+  );
+
+  //                    --- Posts ----
+  sl.registerFactory<ChirpPostLocalDataSource>(
+    () => ChirpPostLocalDataSource(db: sl()),
+  );
+  sl.registerFactory<ChirpRemoteDataSource>(
+    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
+  );
+  sl.registerFactory<ChirpRepository>(
+    () => ChirpRepositoryImpl(
+      remoteDataSource: sl.get<ChirpRemoteDataSource>(),
+      localDataSource: sl<ChirpPostLocalDataSource>(),
     ),
   );
+  sl.registerFactory(() => GetFeedPostsUsecase(sl()));
+  sl.registerFactory<GetPostsFromCommunityUsecase>(
+    () => GetPostsFromCommunityUsecase(repository: sl()),
+  );
+  sl.registerFactory(
+    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CreatePostAttachmentUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPostDetailUseCase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => MarkPostAsViewedUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPostCommentsUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => AddCommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => DeletePostUsecase(repository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
+  );
+
+  // sl.registerFactory(
+  //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  // );
+  sl.registerFactory(
+    () => FeedBloc(
+      getPostsFromCommunityUsecase: sl<GetPostsFromCommunityUsecase>(),
+      getFeedPosts: sl.get<GetFeedPostsUsecase>(),
+      createPost: sl.get<CreatePostUsecase>(),
+      getPostDetail: sl.get<GetPostDetailUseCase>(),
+      markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
+      createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
+      deletePost: sl.get<DeletePostUsecase>(),
+      // likePost: sl.get<LikePostUsecase>(),
+      // addComment: sl.get<CommentUsecase>(),
+      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => CommentBloc(
+      addComment: sl.get<AddCommentUsecase>(),
+      getPostComments: sl.get<GetPostCommentsUsecase>(),
+    ),
+  );
+
   /*************************************************************************
                               // NOTIFICATIONS
   *************************************************************************/

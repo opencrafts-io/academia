@@ -1,6 +1,5 @@
 part of 'auth_bloc.dart';
 
-
 /// Abstract base class for all authentication events.
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
@@ -14,12 +13,13 @@ class AuthSignInWithGoogleEvent extends AuthEvent {
   const AuthSignInWithGoogleEvent();
 }
 
-/// Event dispatched to trigger a sign-in process, typically with Google.
+/// Event dispatched to trigger a sign-in process as a reviewer
+class AuthSignInAsReviewerEvent extends AuthEvent {}
+
+/// Event dispatched to trigger a sign-in process, typically with Spotify.
 class AuthSignInWithSpotifyEvent extends AuthEvent {
   const AuthSignInWithSpotifyEvent();
 }
-
-
 
 /// Event dispatched to check the current authentication status of the user
 /// (e.g., on app start).

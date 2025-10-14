@@ -129,12 +129,12 @@ class FilePickerService {
     }
 
     return Attachments(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      postId: '', // This will be set when the attachment is associated with a post
+      id: int.parse(DateTime.now().millisecondsSinceEpoch.toString()),
+      postId: 0, // This will be set when the attachment is associated with a post
       attachmentType: attachmentType,
       file: file.path ?? '', // For local files, this will be the file path
       name: file.name,
-      size: file.size.toDouble(),
+      size: int.parse(file.size.toString()),
       createdAt: DateTime.now(),
     );
   }

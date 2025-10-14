@@ -57,9 +57,34 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, ChirpCommunityMembershipData>>
+  getPersonalMembershipByCommunityID({required int communityID}) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/memberships/mine/for/$communityID",
+      );
+
+      if (response.statusCode == 200) {
+        return right(ChirpCommunityMembershipData.fromJson(response.data));
+      }
+      throw (
+        "Programming error expected response code 200 instead got ${response.statusCode}",
+      );
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "Something went wrong while trying to reach server",
+          error: e,
+        ),
+      );
+    }
+  }
+
   /// Sends a request to the server to join a community.
   Future<Either<Failure, ChirpCommunityMembershipData>> joinCommunity({
-    required String communityID,
+    required int communityID,
   }) async {
     try {
       final response = await dioClient.dio.post(
@@ -89,12 +114,11 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
 
   /// Sends a request to the server to leave a community.
   Future<Either<Failure, void>> leaveCommunity({
-    required String membershipID,
+    required int communityID,
   }) async {
     try {
-      // API endpoint to leave a community (DELETE request)
       final response = await dioClient.dio.delete(
-        "/$servicePrefix/community/$membershipID/leave/",
+        "/$servicePrefix/community/$communityID/leave/",
       );
 
       if (response.statusCode == 204 || response.statusCode == 200) {
@@ -110,6 +134,44 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
         ServerFailure(
           message:
               "Failed to leave community due to a server error (Leave Community)",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  getCommunityMemberships(
+    int communityID, {
+    int page = 1,
+    int pageSize = 50,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/community/$communityID/memberships",
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> rawData = response.data["results"] as List;
+        return right(
+          rawData
+              .map(
+                (e) => ChirpCommunityMembershipData.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
+      }
+      throw (
+        "Programming error expected response code 200 instead got ${response.statusCode}",
+      );
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "Something went wrong while trying to reach server",
           error: e,
         ),
       );
