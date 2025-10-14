@@ -16,23 +16,29 @@ class GlobalSearchBar extends StatefulWidget {
 }
 
 class _GlobalSearchBarState extends State<GlobalSearchBar> {
-  int _currentTabIndex = 0;
   void _performSearch(BuildContext context, String query) {
-    switch (_currentTabIndex) {
-      case 0:
-        debugPrint("Searching Posts for: $query");
-        break;
-      case 1:
-        context.read<CommunityListingCubit>().searchForCommunity(
-          query,
-          // pageSize: 1,
-          page: 1,
-        );
-        break;
-      case 2:
-        debugPrint("Searching Users for: $query");
-        break;
-    }
+    context.read<CommunityListingCubit>().searchForCommunity(
+      query,
+      // pageSize: 1,
+      page: 1,
+    );
+
+    //int _currentTabIndex = 0;
+    // switch (_currentTabIndex) {
+    //   case 0:
+    //     debugPrint("Searching Posts for: $query");
+    //     break;
+    //   case 1:
+    //     context.read<CommunityListingCubit>().searchForCommunity(
+    //       query,
+    //       // pageSize: 1,
+    //       page: 1,
+    //     );
+    //     break;
+    //   case 2:
+    //     debugPrint("Searching Users for: $query");
+    //     break;
+    // }
   }
 
   @override
@@ -41,38 +47,38 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
       suggestionsBuilder: (context, searchController) {
         return [
           DefaultTabController(
-            length: 3,
+            length: 1,
             child: Builder(
               builder: (tabContext) {
-                final tabController = DefaultTabController.of(tabContext);
-                tabController.addListener(() {
-                  if (!tabController.indexIsChanging) {
-                    setState(() {
-                      _currentTabIndex = tabController.index;
-                    });
-                  }
-                });
+                // final tabController = DefaultTabController.of(tabContext);
+                // tabController.addListener(() {
+                //   if (!tabController.indexIsChanging) {
+                //     setState(() {
+                //       _currentTabIndex = tabController.index;
+                //     });
+                //   }
+                // });
                 return Column(
                   children: [
-                    TabBar(
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicatorAnimation: TabIndicatorAnimation.elastic,
-                      tabs: [
-                        Tab(text: "Posts", icon: Icon(Icons.newspaper)),
-                        Tab(text: "Communities", icon: Icon(Icons.group)),
-                        Tab(text: "Users", icon: Icon(Icons.account_box)),
-                      ],
-                    ),
+                    // TabBar(
+                    //   indicatorSize: TabBarIndicatorSize.tab,
+                    //   indicatorAnimation: TabIndicatorAnimation.elastic,
+                    //   tabs: [
+                    //     // Tab(text: "Posts", icon: Icon(Icons.newspaper)),
+                    //     Tab(text: "Communities", icon: Icon(Icons.group)),
+                    //     // Tab(text: "Users", icon: Icon(Icons.account_box)),
+                    //   ],
+                    // ),
                     SizedBox(
                       height: MediaQuery.of(tabContext).size.height * 0.8,
                       child: TabBarView(
                         children: [
                           // if (_currentTabIndex == 0)
-                          _buildSearchPostSection(),
+                          // _buildSearchPostSection(),
                           // else if (_currentTabIndex == 1)
                           _buildSearchCommunitiesSection(),
                           // else if (_currentTabIndex == 2)
-                          _buildSearchFriendsSection(),
+                          // _buildSearchFriendsSection(),
                           // else
                           // const SizedBox.shrink(),
                         ],
@@ -89,7 +95,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
       barBackgroundColor: WidgetStatePropertyAll(
         Theme.of(context).colorScheme.primaryContainer,
       ),
-      barHintText: "Search for posts, events, friends",
+      barHintText: "Search for communities",
       barLeading: Icon(Icons.search),
       viewElevation: 0,
       isFullScreen: true,
@@ -98,41 +104,41 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
     );
   }
 
-  Widget _buildSearchPostSection() {
-    return Padding(
-      padding: EdgeInsetsGeometry.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AnimatedEmoji(AnimatedEmojis.thinkingFace, size: 80),
-          Text(
-            "There's just that post ",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSearchPostSection() {
+  //   return Padding(
+  //     padding: EdgeInsetsGeometry.all(12),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         AnimatedEmoji(AnimatedEmojis.thinkingFace, size: 80),
+  //         Text(
+  //           "There's just that post ",
+  //           style: Theme.of(context).textTheme.headlineSmall,
+  //           textAlign: TextAlign.center,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget _buildSearchFriendsSection() {
-    return Padding(
-      padding: EdgeInsetsGeometry.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AnimatedEmoji(AnimatedEmojis.pleading, size: 80),
-          Text(
-            "Find your friends via academia",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSearchFriendsSection() {
+  //   return Padding(
+  //     padding: EdgeInsetsGeometry.all(12),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         AnimatedEmoji(AnimatedEmojis.pleading, size: 80),
+  //         Text(
+  //           "Find your friends via academia",
+  //           style: Theme.of(context).textTheme.headlineSmall,
+  //           textAlign: TextAlign.center,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildSearchCommunitiesSection() {
     return Padding(
@@ -218,9 +224,7 @@ class CommunitySearchCard extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       context.pop();
-                      CommunitiesRoute(
-                        communityId: community.id,
-                      ).push(context);
+                      CommunitiesRoute(communityId: community.id).push(context);
                     },
                     child: Text("Continue"),
                   ),
@@ -228,9 +232,7 @@ class CommunitySearchCard extends StatelessWidget {
               ),
             );
           } else {
-            CommunitiesRoute(
-              communityId: community.id,
-            ).push(context);
+            CommunitiesRoute(communityId: community.id).push(context);
           }
         },
         child: Column(
