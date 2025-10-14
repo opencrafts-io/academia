@@ -13,4 +13,5 @@ export 'usecases/get_post_comments.dart';
 export 'usecases/get_post_detail_usecase.dart';
 export 'usecases/mark_post_as_viewed_usecase.dart';
 export 'usecases/delete_post_usecase.dart';
+export 'usecases/get_posts_from_community_usecase.dart';
 export 'usecases/delete_post_comment_usecase.dart';

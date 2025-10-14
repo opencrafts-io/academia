@@ -15,6 +15,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final MarkPostAsViewedUsecase markPostAsViewed;
   final CreatePostAttachmentUsecase createPostAttachment;
   final DeletePostUsecase deletePost;
+  final GetPostsFromCommunityUsecase getPostsFromCommunityUsecase;
   final Logger _logger = Logger();
   // final CachePostsUsecase cachePosts;
   // final LikePostUsecase likePost;
@@ -26,9 +27,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.markPostAsViewed,
     required this.createPostAttachment,
     required this.deletePost,
+    required this.getPostsFromCommunityUsecase,
     // required this.cachePosts,
     // required this.likePost,
   }) : super(FeedInitial()) {
+    on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
     on<LoadFeedEvent>(_onLoadFeed);
     on<CreatePostEvent>(_onCreatePost);
     on<GetPostDetailEvent>(_onFetchPostDetail);
@@ -210,6 +213,93 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     }
 
     final result = await getFeedPosts(
+      page: event.page,
+      pageSize: event.pageSize,
+    );
+
+    result.fold(
+      (failure) {
+        // Pagination failed, keep previous posts visible
+        if (currentState is FeedLoaded && event.page > 1) {
+          emit(
+            FeedPaginationError(
+              existingPosts: currentState.posts,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else if (currentState is FeedPaginationError && event.page > 1) {
+          // Retry after pagination error failed again
+          emit(
+            FeedPaginationError(
+              existingPosts: currentState.existingPosts,
+              message: failure.message,
+              hasMore: currentState.hasMore,
+            ),
+          );
+        } else {
+          // First load failed
+          emit(FeedError(message: failure.message));
+        }
+      },
+      (paginatedData) {
+        // Append or replace posts depending on the page
+        if (currentState is FeedLoaded && event.page > 1) {
+          emit(
+            FeedLoaded(
+              posts: [...currentState.posts, ...paginatedData.results],
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        } else {
+          emit(
+            FeedLoaded(
+              posts: paginatedData.results,
+              next: paginatedData.next,
+              previous: paginatedData.previous,
+              count: paginatedData.count,
+              hasMore: paginatedData.hasMore,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> _onLoadPostsForCommunity(
+    LoadPostsForCommunityEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final currentState = state;
+
+    // Show full-screen loader for first page
+    if (event.page == 1) {
+      emit(FeedLoading());
+    }
+    // Show pagination loader when fetching more
+    else if (currentState is FeedLoaded && event.page > 1) {
+      emit(
+        FeedPaginationLoading(
+          existingPosts: currentState.posts,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    }
+    // Retry after pagination error
+    else if (currentState is FeedPaginationError && event.page > 1) {
+      emit(
+        FeedPaginationLoading(
+          existingPosts: currentState.existingPosts,
+          hasMore: currentState.hasMore,
+        ),
+      );
+    }
+
+    final result = await getPostsFromCommunityUsecase(
+      communityId: event.communityID,
       page: event.page,
       pageSize: event.pageSize,
     );

@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/features/chirp/communities/communities.dart';
-import 'package:academia/features/chirp/memberships/memberships.dart';
+import 'package:academia/core/clippers/clippers.dart';
+import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +26,30 @@ class _CommunityHomeState extends State<CommunityHome>
     with SingleTickerProviderStateMixin {
   late String currentUserID;
   late String currentUserName;
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<FeedBloc>().state;
+      if (state is FeedLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<FeedBloc>().add(
+          LoadPostsForCommunityEvent(
+            communityID: widget.communityId,
+            page: _currentPage,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -42,6 +64,13 @@ class _CommunityHomeState extends State<CommunityHome>
 
     context.read<CommunityHomeBloc>().add(
       FetchCommunityById(communityId: widget.communityId),
+    );
+    _scrollController.addListener(_onScroll);
+    context.read<FeedBloc>().add(
+      LoadPostsForCommunityEvent(
+        communityID: widget.communityId,
+        page: _currentPage,
+      ),
     );
   }
 
@@ -218,7 +247,208 @@ class _CommunityHomeState extends State<CommunityHome>
                       ),
                     ),
                   ],
-                  body: const Center(child: Text("Community posts")),
+                  body: BlocListener<FeedBloc, FeedState>(
+                    listener: (context, state) {
+                      if (state is PostCreated) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Post created successfully!"),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      } else if (state is PostCreateError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Error creating post"),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        _currentPage = 1;
+                        context.read<FeedBloc>().add(
+                          LoadFeedEvent(page: _currentPage),
+                        );
+                        await Future.delayed(Duration(seconds: 2));
+                      },
+                      child: CustomScrollView(
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          BlocBuilder<FeedBloc, FeedState>(
+                            builder: (context, state) {
+                              if (state is FeedLoaded && state.posts.isEmpty) {
+                                return SliverPadding(
+                                  padding: EdgeInsetsGeometry.all(16),
+                                  sliver: SliverFillRemaining(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                          "assets/lotties/chat.json",
+                                          height: 300,
+                                        ),
+                                        Text(
+                                          "It's a little quiet in here... "
+                                          "Youre here early. Spread the word "
+                                          "for your friends to join",
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (state is FeedLoaded) {
+                                return SliverList.builder(
+                                  itemBuilder: (context, index) {
+                                    return BlocProvider(
+                                      create: (context) => sl<ChirpUserCubit>()
+                                        ..getChirpUserByID(
+                                          state.posts[index].authorId,
+                                        ),
+                                      child: PostCard(
+                                        post: state.posts[index],
+                                        onTap: () async {
+                                          // marking the post as viewed
+                                          context.read<FeedBloc>().add(
+                                            MarkPostAsViewed(
+                                              postId: state.posts[index].id,
+                                              viewerId:
+                                                  state.posts[index].authorId,
+                                            ),
+                                          );
+                                          final updatedPost = await context
+                                              .push(
+                                                PostDetailRoute(
+                                                  postId: state.posts[index].id,
+                                                ).location,
+                                                extra: state.posts[index],
+                                              );
+
+                                          if (!context.mounted) return;
+
+                                          if (updatedPost != null &&
+                                              updatedPost is Post) {
+                                            context.read<FeedBloc>().add(
+                                              UpdatePostInFeed(updatedPost),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  itemCount: state.posts.length,
+                                );
+                              }
+                              if (state is FeedLoading) {
+                                return const SliverFillRemaining(
+                                  child: Center(
+                                    child: SpinningScallopIndicator(),
+                                  ),
+                                );
+                              }
+                              if (state is FeedPaginationLoading) {
+                                return SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24.0),
+                                    child: Column(
+                                      children: [
+                                        ...state.existingPosts.map(
+                                          (post) => BlocProvider(
+                                            create: (context) =>
+                                                sl<ChirpUserCubit>()
+                                                  ..getChirpUserByID(
+                                                    post.authorId,
+                                                  ),
+                                            child: PostCard(post: post),
+                                          ),
+                                        ),
+                                        const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(16.0),
+                                            child: SpinningScallopIndicator(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (state is FeedPaginationError) {
+                                return SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24.0),
+                                    child: Column(
+                                      children: [
+                                        ...state.existingPosts.map(
+                                          (post) => BlocProvider(
+                                            create: (context) =>
+                                                sl<ChirpUserCubit>()
+                                                  ..getChirpUserByID(
+                                                    post.authorId,
+                                                  ),
+                                            child: PostCard(post: post),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                            context.read<FeedBloc>().add(
+                                              LoadFeedEvent(page: _currentPage),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.refresh),
+                                          label: const Text(
+                                            "Retry loading more posts",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (state is FeedError) {
+                                return SliverFillRemaining(
+                                  // child: Center(child: Text("Connection error")),
+                                  child: Center(child: Text(state.message)),
+                                );
+                              }
+                              return SliverPadding(
+                                padding: EdgeInsetsGeometry.all(16),
+                                sliver: SliverFillRemaining(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                        "assets/lotties/chat.json",
+                                        height: 300,
+                                      ),
+                                      Text(
+                                        "It's a little quiet in here... "
+                                        "Let's make some noise! Start following "
+                                        "and posting to fill up your feed.",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.titleMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

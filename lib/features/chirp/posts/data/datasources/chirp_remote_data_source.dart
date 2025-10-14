@@ -368,7 +368,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       }
 
       final res = await dioClient.dio.get(
-        '/$servicePrefix/posts/from/$communityId',
+        '/$servicePrefix/posts/from/$communityId/',
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 

@@ -12,6 +12,18 @@ class LoadFeedEvent extends FeedEvent {
   LoadFeedEvent({this.page = 1, this.pageSize = 20});
 }
 
+class LoadPostsForCommunityEvent extends FeedEvent {
+  final int communityID;
+  final int page;
+  final int pageSize;
+
+  LoadPostsForCommunityEvent({
+    required this.communityID,
+    this.page = 1,
+    this.pageSize = 20,
+  });
+}
+
 class CreatePostEvent extends FeedEvent {
   final String title;
   final String authorId;
