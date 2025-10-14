@@ -1,15 +1,25 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:image_editor_plus/options.dart' as image_editor_options;
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/profile/domain/domain.dart';
 import 'package:academia/injection_container.dart';
 import 'package:confetti/confetti.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/domain.dart';
 import '../../presentation/presentation.dart';
+import 'image_upload_page.dart';
+import 'description_page.dart';
+import 'basic_event_details_page.dart';
+import './submit_event_page.dart';
+
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
 
@@ -18,7 +28,15 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final PageController _pageController = PageController();
+  final ScrollController _stage3ScrollController = ScrollController();
+  double _progress = 0.25;
+  final int _numberOfStages = 4;
+
+  // Form Keys for validation in each stage
+  final _stage1FormKey = GlobalKey<FormState>();
+  final _stage2FormKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _dateTimeController = TextEditingController();
   final _locationController = TextEditingController();
@@ -29,10 +47,28 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   File? _selectedCardImage;
   List<String> _selectedGenres = [];
   final List<String> _availableGenres = [
-    'Meetup', 'Party', 'Official', 'Physical', 'Social', 'Sports', 'Conference',
-    'Workshop', 'Seminar', 'Webinar', 'Festival', 'Exhibition', 'Charity',
-    'Gaming', 'Music', 'Arts & Culture', 'Food & Drink', 'Networking',
-    'Education', 'Technology', 'Health & Wellness', 'Other',
+    'Meetup',
+    'Party',
+    'Official',
+    'Physical',
+    'Social',
+    'Sports',
+    'Conference',
+    'Workshop',
+    'Seminar',
+    'Webinar',
+    'Festival',
+    'Exhibition',
+    'Charity',
+    'Gaming',
+    'Music',
+    'Arts & Culture',
+    'Food & Drink',
+    'Networking',
+    'Education',
+    'Technology',
+    'Health & Wellness',
+    'Other',
   ];
   UserProfile? _userProfile;
   bool _isLoadingProfile = true;
@@ -43,7 +79,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   void initState() {
     super.initState();
     _loadUserProfile();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
   }
 
   Future<void> _loadUserProfile() async {
@@ -56,16 +94,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final profileUseCase = sl<GetCachedProfileUsecase>();
       final result = await profileUseCase(NoParams());
       await result.fold(
-            (failure) async {
+        (failure) async {
           String errorMessage = 'Could not load profile data.';
           if (failure is CacheFailure) {
-            errorMessage = 'Failed to load profile from cache: ${failure.message}';
+            errorMessage =
+                'Failed to load profile from cache: ${failure.message}';
           } else if (failure is NoDataFoundFailure) {
-            errorMessage = 'No profile found. Please create your profile first.';
+            errorMessage =
+                'No profile found. Please create your profile first.';
           } else if (failure is ServerFailure) {
             errorMessage = 'Server error loading profile: ${failure.message}';
           } else {
-            errorMessage = 'An unexpected error occurred while loading profile: ${failure.toString()}';
+            errorMessage =
+                'An unexpected error occurred while loading profile: ${failure.toString()}';
           }
           debugPrint("Profile Load Error: $errorMessage");
           debugPrint("Failure details: ${failure.toString()}");
@@ -75,7 +116,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             _profileLoadError = errorMessage;
           });
         },
-            (profile) async {
+        (profile) async {
           setState(() {
             _userProfile = profile;
             _isLoadingProfile = false;
@@ -88,7 +129,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       debugPrintStack(stackTrace: stackTrace);
       setState(() {
         _isLoadingProfile = false;
-        _profileLoadError = 'An unexpected error occurred while loading your profile.';
+        _profileLoadError =
+            'An unexpected error occurred while loading your profile.';
       });
     }
   }
@@ -103,31 +145,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.dispose();
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    final date =
-        "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
-    final time =
-        "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
-    return '$date $time';
-  }
-
   Future<void> _selectDateAndTime(BuildContext context) async {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
-      builder: (BuildContext dialogContext, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(),
-            dialogTheme: Theme.of(context).dialogTheme.copyWith(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
     if (!context.mounted) return;
     if (pickedDate != null) {
@@ -136,17 +159,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         initialTime: TimeOfDay.fromDateTime(
           _selectedDateTime ?? DateTime.now(),
         ),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(),
-              dialogTheme: Theme.of(context).dialogTheme.copyWith(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
-            child: child!,
-          );
-        },
       );
       if (pickedTime != null) {
         setState(() {
@@ -157,36 +169,181 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          _dateTimeController.text = _formatDateTime(_selectedDateTime!);
+          _dateTimeController.text = DateFormat.yMMMMEEEEd().add_jm().format(
+            _selectedDateTime!,
+          );
         });
       }
     }
   }
 
-  Future<void> _pickPosterImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedPosterImage = File(pickedFile.path);
-      });
+  Future<void> _pickBannerImage() async {
+    try {
+      final XFile? picked = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (picked == null) return;
+
+      final File originalImage = File(picked.path);
+      final imageData = await originalImage.readAsBytes();
+      if (!mounted) return;
+
+      // Crop the image, locked to 16:9
+      final Uint8List? croppedBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageCropper(
+            image: imageData,
+            availableRatios: [
+              image_editor_options.AspectRatio(title: "16:9", ratio: 16 / 9),
+            ],
+          ),
+        ),
+      );
+
+      if (croppedBytes == null) return;
+
+      final String croppedPath =
+          '${originalImage.parent.path}/cropped_banner.jpg';
+      final File croppedFile = await File(
+        croppedPath,
+      ).writeAsBytes(croppedBytes);
+
+      // Compress cropped file
+      final String targetPath =
+          '${originalImage.parent.path}/compressed_banner.jpg';
+      final XFile? compressedFile =
+          await FlutterImageCompress.compressAndGetFile(
+            croppedFile.path,
+            targetPath,
+            quality: 70,
+            minWidth: 1024,
+            minHeight: 1024,
+          );
+
+      if (compressedFile != null && mounted) {
+        setState(() {
+          _selectedBannerImage = File(compressedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking or cropping banner: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to process banner image")),
+        );
+      }
     }
   }
 
-  Future<void> _pickBannerImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedBannerImage = File(pickedFile.path);
-      });
+  Future<void> _pickPosterImage() async {
+    try {
+      final XFile? picked = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (picked == null) return;
+
+      final File originalImage = File(picked.path);
+      final imageData = await originalImage.readAsBytes();
+      if (!mounted) return;
+
+      // Crop the image
+      final Uint8List? croppedBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ImageCropper(image: imageData)),
+      );
+
+      if (croppedBytes == null) return;
+
+      final String croppedPath =
+          '${originalImage.parent.path}/cropped_poster.jpg';
+      final File croppedFile = await File(
+        croppedPath,
+      ).writeAsBytes(croppedBytes);
+
+      // Compress cropped file
+      final String targetPath =
+          '${originalImage.parent.path}/compressed_poster.jpg';
+      final XFile? compressedFile =
+          await FlutterImageCompress.compressAndGetFile(
+            croppedFile.path,
+            targetPath,
+            quality: 70,
+            minWidth: 512,
+            minHeight: 1024,
+          );
+
+      if (compressedFile != null && mounted) {
+        setState(() {
+          _selectedPosterImage = File(compressedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking or cropping poster: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to process poster image")),
+        );
+      }
     }
   }
 
   Future<void> _pickCardImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedCardImage = File(pickedFile.path);
-      });
+    try {
+      final XFile? picked = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (picked == null) return;
+
+      final File originalImage = File(picked.path);
+      final imageData = await originalImage.readAsBytes();
+      if (!mounted) return;
+
+      final Uint8List? croppedBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageCropper(
+            image: imageData,
+            availableRatios: [
+              image_editor_options.AspectRatio(title: "1:1", ratio: 1 / 1),
+            ],
+          ),
+        ),
+      );
+
+      if (croppedBytes == null) return;
+
+      // Save cropped bytes to temporary file
+      final String croppedPath =
+          '${originalImage.parent.path}/cropped_card.jpg';
+      final File croppedFile = await File(
+        croppedPath,
+      ).writeAsBytes(croppedBytes);
+
+      // Compress the cropped file
+      final String targetPath =
+          '${originalImage.parent.path}/compressed_card.jpg';
+      final XFile? compressedFile =
+          await FlutterImageCompress.compressAndGetFile(
+            croppedFile.path,
+            targetPath,
+            quality: 70,
+            minWidth: 512,
+            minHeight: 512,
+          );
+
+      if (compressedFile != null && mounted) {
+        setState(() {
+          _selectedCardImage = File(compressedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking or cropping card: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to process cardimage")),
+        );
+      }
     }
   }
 
@@ -197,7 +354,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (context, StateSetter setStateDialog) {
-            return AlertDialog(
+            return AlertDialog.adaptive(
               title: const Text('Select Genres'),
               content: SingleChildScrollView(
                 child: ListBody(
@@ -225,7 +382,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     Navigator.of(dialogContext).pop();
                   },
                 ),
-                TextButton(
+                FilledButton(
                   child: const Text('Done'),
                   onPressed: () {
                     setState(() {
@@ -243,88 +400,207 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedDateTime == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a date and time")),
-        );
-        return;
-      }
-      // Validate ALL required images
-      if (_selectedPosterImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a poster image")),
-        );
-        return;
-      }
-      if (_selectedBannerImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a banner image (16:9)")),
-        );
-        return;
-      }
-      if (_selectedCardImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a card image (1:1)")),
-        );
-        return;
-      }
-      if (_selectedGenres.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select at least one genre")),
-        );
-        return;
-      }
-      if (_isLoadingProfile) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Still loading profile data, please wait."), backgroundColor: Colors.orange),
-        );
-        return;
-      }
-      if (_userProfile == null) {
-        final errorMessage = _profileLoadError ?? "Profile data not loaded. Please try again or create your profile.";
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-        );
-        return;
-      }
-
-      final parts = _dateTimeController.text.split(' ');
-      final datePart = parts[0];
-      final timePart = parts[1];
-      final defaultUrl = 'https://academia.opencrafts.io/${_userProfile!.email}';
-      final event = Event(
-        id: '',
-        name: _nameController.text.trim(),
-        description: _aboutController.text.trim(),
-        url: defaultUrl,
-        location: _locationController.text.trim(),
-        time: timePart,
-        date: datePart,
-        organizer: _userProfile!.name,
-        imageUrl: '',
-        organizerId: _userProfile!.id.hashCode.toString(),
-        numberOfAttendees: 1,
-        genre: _selectedGenres,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        bannerImageUrl: '',
-        posterImageUrl: '',
+    if (_selectedDateTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a date and time")),
       );
-      context.read<CreateEventBloc>().add(
-        SubmitNewEvent(
-          event: event,
-          imageFile: _selectedPosterImage!,
-          bannerImageFile: _selectedBannerImage!,
-          cardImageFile: _selectedCardImage!,
-        ),
+      return;
+    }
+    // Validate ALL required images
+    if (_selectedPosterImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a poster image")),
       );
-    } else {
+      return;
+    }
+    if (_selectedBannerImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a banner image (16:9)")),
+      );
+      return;
+    }
+    if (_selectedCardImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a card image (1:1)")),
+      );
+      return;
+    }
+    if (_selectedGenres.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select at least one genre")),
+      );
+      return;
+    }
+    if (_isLoadingProfile) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Please fill all required fields correctly"),
+          content: Text("Still loading profile data, please wait."),
+          backgroundColor: Colors.orange,
         ),
       );
+      return;
+    }
+    if (_userProfile == null) {
+      final errorMessage =
+          _profileLoadError ??
+          "Profile data not loaded. Please try again or create your profile.";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    // final parts = _dateTimeController.text.split(' ');
+    // final datePart = parts[0];
+    // final timePart = parts[1];
+    final defaultUrl = 'https://academia.opencrafts.io/${_userProfile!.email}';
+    final event = Event(
+      id: '',
+      name: _nameController.text.trim(),
+      description: _aboutController.text.trim(),
+      url: defaultUrl,
+      location: _locationController.text.trim(),
+      time: DateFormat("HH:mm").format(_selectedDateTime!),
+      date: DateFormat("yyyy-MM-dd").format(_selectedDateTime!),
+      organizer: _userProfile!.name,
+      imageUrl: '',
+      organizerId: _userProfile!.id.hashCode.toString(),
+      numberOfAttendees: 1,
+      genre: _selectedGenres,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      bannerImageUrl: '',
+      posterImageUrl: '',
+    );
+    context.read<CreateEventBloc>().add(
+      SubmitNewEvent(
+        event: event,
+        imageFile: _selectedPosterImage!,
+        bannerImageFile: _selectedBannerImage!,
+        cardImageFile: _selectedCardImage!,
+      ),
+    );
+  }
+
+  // Update progress based on the current page index
+  void _updateProgress(int pageIndex) {
+    setState(() {
+      if (pageIndex <= 3) {
+        _progress = (pageIndex + 1) / 4; // Since there are 4 pages
+      }
+    });
+
+    if (pageIndex == 2 && _stage3ScrollController.hasClients) {
+      _stage3ScrollController.jumpTo(0);
+    }
+  }
+
+  void _moveToNextPage() {
+    _pageController.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _moveToPreviousPage() {
+    _pageController.previousPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.elasticOut,
+    );
+  }
+
+  Widget _buildPage(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return BasicEventDetailsPage(
+          formKey: _stage1FormKey,
+          nameController: _nameController,
+          dateTimeController: _dateTimeController,
+          locationController: _locationController,
+          onSelectDateAndTime: () => _selectDateAndTime(context),
+          onNext: () {
+            if (_stage1FormKey.currentState!.validate()) {
+              if (_selectedDateTime == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Please select a date and time"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+              _moveToNextPage();
+            }
+          },
+          context: context,
+        );
+      case 1:
+        return EventDescriptionPage(
+          formKey: _stage2FormKey,
+          aboutController: _aboutController,
+          selectedGenres: _selectedGenres,
+          onShowGenreSelectionDialog: _showGenreSelectionDialog,
+          onGenreDeleted: (genre) {
+            setState(() {
+              _selectedGenres.remove(genre);
+            });
+          },
+          onPrevious: _moveToPreviousPage,
+          onNext: () {
+            if (_stage2FormKey.currentState!.validate()) {
+              if (_selectedGenres.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Please select at least one genre"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+              _moveToNextPage();
+            }
+          },
+          context: context,
+        );
+      case 2:
+        return ImageUploadPage(
+          controller: _stage3ScrollController,
+          selectedCardImage: _selectedCardImage,
+          onPickCardImage: _pickCardImage,
+          selectedBannerImage: _selectedBannerImage,
+          onPickBannerImage: _pickBannerImage,
+          selectedPosterImage: _selectedPosterImage,
+          onPickPosterImage: _pickPosterImage,
+          onPrevious: _moveToPreviousPage,
+          onNext: () {
+            if (_selectedPosterImage == null ||
+                _selectedBannerImage == null ||
+                _selectedCardImage == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Please select all required images"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _moveToNextPage();
+          },
+          context: context,
+        );
+      case 3:
+        return Stage4ReviewAndSubmit(
+          isLoadingProfile: _isLoadingProfile,
+          profileLoadError: _profileLoadError,
+          userProfile: _userProfile,
+          onLoadUserProfile: _loadUserProfile,
+          onSubmit: _submitForm,
+          onPrevious: _moveToPreviousPage,
+          context: context,
+        );
+
+      default:
+        return const Center(child: Text("Page Not Found"));
     }
   }
 
@@ -333,221 +609,80 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar.large(title: const Text("Create an event")),
-              SliverToBoxAdapter(
-                child: BlocListener<CreateEventBloc, CreateEventState>(
-                  listener: (context, state) {
-                    if (state is CreateEventSuccess) {
-                      _confettiController.play();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Event created successfully!"),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                      final eventBloc = context.read<ShereheHomeBloc>();
-                      eventBloc.add(FetchAllEvents());
-                      if (context.canPop()) {
-                        context.pop();
-                      }
-                    } else if (state is CreateEventFailure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Failed to create event: ${state.message}'),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: _formKey,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              EventImagePickerWidget(
-                                selectedImage: _selectedCardImage,
-                                onTap: _pickCardImage,
-                                label: 'Card Image (1:1) *',
-                              ),
-                              const SizedBox(height: 20),
-                              EventImagePickerWidget(
-                                selectedImage: _selectedBannerImage,
-                                onTap: _pickBannerImage,
-                                label: 'Banner Image (16:9) *',
-                              ),
-                              const SizedBox(height: 20),
-                              EventImagePickerWidget(
-                                selectedImage: _selectedPosterImage,
-                                onTap: _pickPosterImage,
-                                label: 'Poster Image *',
-                              ),
-                              const SizedBox(height: 32),
-
-                              TextFormField(
-                                controller: _nameController,
-                                decoration: buildModernInputDecoration(
-                                  context: context,
-                                  labelText: 'Event Name',
-                                  hintText: 'Enter the name of your event',
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter an event name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              GenreSelectorWidget(
-                                selectedGenres: _selectedGenres,
-                                onSelectGenresPressed: _showGenreSelectionDialog,
-                                onGenreDeleted: (genre) {
-                                  setState(() {
-                                    _selectedGenres.remove(genre);
-                                  });
-                                },
-                                screenContext: context,
-                              ),
-                              const SizedBox(height: 20),
-                              TextFormField(
-                                readOnly: true,
-                                controller: _dateTimeController,
-                                decoration: buildModernInputDecoration(
-                                  context: context,
-                                  labelText: 'Date & Time',
-                                  hintText: 'Select date and time',
-                                  suffixIcon: Icon(
-                                    Icons.calendar_today_outlined,
-                                    color: Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                                onTap: () => _selectDateAndTime(context),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select a date and time';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              TextFormField(
-                                controller: _locationController,
-                                decoration: buildModernInputDecoration(
-                                  context: context,
-                                  labelText: 'Location',
-                                  hintText: 'e.g., Conference Hall A',
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter a location';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              TextFormField(
-                                controller: _aboutController,
-                                maxLines: 4,
-                                minLines: 2,
-                                decoration: buildModernInputDecoration(
-                                  context: context,
-                                  labelText: 'About Event',
-                                  hintText: 'Tell us more about your event...',
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please provide details about the event';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              // Remove URL TextFormField
-                              const SizedBox(height: 30),
-
-                              if (_isLoadingProfile)
-                                const Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Center(child: CircularProgressIndicator()),
-                                )
-                              else if (_profileLoadError != null)
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(_profileLoadError!, style: const TextStyle(color: Colors.red)),
-                                      TextButton(
-                                        onPressed: _loadUserProfile,
-                                        child: const Text("Retry Load Profile"),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              else if (_userProfile != null)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Text(
-                                      "Creating event as: ${_userProfile!.name}",
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                      textAlign: TextAlign.center, // Center the text
-                                    ),
-                                  ),
-
-                              // --- Submit Button Section ---
-                              BlocBuilder<CreateEventBloc, CreateEventState>(
-                                builder: (context, state) {
-                                  if (state is CreateEventLoading) {
-                                    return const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(16.0), // Padding around loader
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  }
-                                  final isButtonDisabled = _isLoadingProfile ||
-                                      _userProfile == null ||
-                                      _selectedPosterImage == null ||
-                                      _selectedBannerImage == null ||
-                                      _selectedCardImage == null;
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0), // Vertical padding
-                                    child: FilledButton(
-                                      onPressed: isButtonDisabled ? null : _submitForm,
-                                      style: FilledButton.styleFrom(
-                                        // Optional: Make disabled button style more distinct
-                                        // backgroundColor: isButtonDisabled ? Theme.of(context).disabledColor : null,
-                                        // foregroundColor: isButtonDisabled ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38) : null,
-                                      ),
-                                      child: const Text('Create Event'),
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              // Optional: Center the pricing text
-                              Center(
-                                child: Text(
-                                  "Posting events may be subject to changes. Please stay tuned for updates.",
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
+          NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      automaticallyImplyLeading: true,
+                      title: const Text("Create an event"),
+                      pinned: true,
+                      forceElevated: innerBoxIsScrolled,
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: LinearProgressIndicator(
+                            value: _progress,
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.primary,
+                            ),
+                            // backgroundColor: Theme.of(
+                            //   context,
+                            // ).colorScheme.primary,
                           ),
                         ),
                       ),
                     ),
+                  ];
+                },
+            body: BlocListener<CreateEventBloc, CreateEventState>(
+              listener: (context, state) {
+                if (state is CreateEventSuccess) {
+                  _confettiController.play();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Event created successfully!"),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  final eventBloc = context.read<ShereheHomeBloc>();
+                  eventBloc.add(FetchAllEvents());
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                } else if (state is CreateEventFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to create event: ${state.message}'),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: SafeArea(
+                minimum: const EdgeInsets.all(12),
+                child: Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: PageView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _pageController,
+                      onPageChanged: _updateProgress,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 12.0,
+                        ),
+                        child: _buildPage(index),
+                      ),
+                      itemCount: _numberOfStages + 1,
+                    ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
           Align(
             alignment: Alignment.topCenter,
