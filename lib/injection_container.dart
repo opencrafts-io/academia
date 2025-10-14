@@ -113,49 +113,6 @@ Future<void> init(FlavorConfig flavor) async {
       createEventUseCase: sl(),
     ),
   );
-  // Chirp
-  sl.registerFactory<ChirpRemoteDataSource>(
-    () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
-  );
-  sl.registerFactory<ChirpLocalDataSource>(
-    () => ChirpLocalDataSource(db: cacheDB),
-  );
-  sl.registerFactory<ChirpRepository>(
-    () => ChirpRepositoryImpl(
-      remoteDataSource: sl.get<ChirpRemoteDataSource>(),
-      localDataSource: sl.get<ChirpLocalDataSource>(),
-    ),
-  );
-  sl.registerFactory(() => GetFeedPosts(sl()));
-  sl.registerFactory(
-    () => CachePostsUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => GetPostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => CachePostRepliesUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => CommentUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => CreatePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  );
-  sl.registerFactory(
-    () => FeedBloc(
-      getFeedPosts: sl.get<GetFeedPosts>(),
-      cachePosts: sl.get<CachePostsUsecase>(),
-      likePost: sl.get<LikePostUsecase>(),
-      createPost: sl.get<CreatePostUsecase>(),
-      addComment: sl.get<CommentUsecase>(),
-      cachePostReplies: sl.get<CachePostRepliesUsecase>(),
-      getPostReplies: sl.get<GetPostRepliesUsecase>(),
-    ),
-  );
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
