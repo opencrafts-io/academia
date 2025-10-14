@@ -1,6 +1,7 @@
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -146,54 +147,63 @@ class _PostDetailPageState extends State<PostDetailPage> {
             children: [
               // Reply indicator
               if (_replyingTo != null)
-                BlocBuilder<ChirpUserCubit, ChirpUserState>(
-                  builder: (context, state) {
-                    String username = 'Unknown User';
+                BlocProvider(
+                  key: ValueKey(_replyingTo?.authorId ?? ''),
+                  create: (context) => ChirpUserCubit(
+                    getChirpUserByIdUsecase: sl(),
+                    getChirpUserByUsernameUsecase: sl(),
+                  )..getChirpUserByID(_replyingTo?.authorId ?? ''),
+                  child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                    builder: (context, state) {
+                      String username = 'Unknown User';
 
-                    if (state is ChirpUserLoadedState) {
-                      username = state.user.username ?? 'Unknown User';
-                    }
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.secondaryContainer.withAlpha(120),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.reply,
-                            size: 16,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSecondaryContainer,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Replying to @$username',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSecondaryContainer,
-                                  ),
+                      if (state is ChirpUserLoadedState) {
+                        username = state.user.username ?? 'Unknown User';
+                      }
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer.withAlpha(120),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.reply,
+                                  size: 16,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSecondaryContainer,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(child: Text('Replying to @$username')),
+                                IconButton(
+                                  icon: const Icon(Icons.close, size: 16),
+                                  onPressed: _cancelReply,
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ],
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, size: 16),
-                            onPressed: _cancelReply,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            Text(
+                              _replyingTo?.content ?? '',
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.start,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
 
               // Input row
