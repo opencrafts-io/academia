@@ -24,6 +24,50 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(
+        onDestinationSelected: (value) {
+          switch (value) {
+            case 1:
+              CreateCommunitiesRoute().push(context);
+              break;
+            case 2:
+              CommunityMembershipsRoute().push(context);
+              break;
+            default:
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Feature coming soon."),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+          }
+        },
+        children: [
+          Padding(
+            padding: EdgeInsetsGeometry.all(12),
+            child: Text(
+              "Chirp",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(Icons.newspaper_outlined),
+            selectedIcon: Icon(Icons.newspaper),
+            label: Text("View your posts"),
+          ),
+          NavigationDrawerDestination(
+            selectedIcon: Icon(Icons.group_add),
+            icon: Icon(Icons.group_add_outlined),
+            label: Text("Create community"),
+          ),
+
+          NavigationDrawerDestination(
+            icon: Icon(Icons.view_comfy_outlined),
+            selectedIcon: Icon(Icons.view_comfy),
+            label: Text("View your communities"),
+          ),
+        ],
+      ),
       body: DefaultTabController(
         initialIndex: 0,
         length: 2,
@@ -36,84 +80,15 @@ class _HomePageState extends State<HomePage> {
                 floating: true,
                 snap: true,
                 stretch: false,
-                leading: Padding(
-                  padding: EdgeInsetsGeometry.all(8),
-                  child: Image.asset("assets/icons/academia.png"),
-                ),
                 centerTitle: true,
                 title: GlobalSearchBar(),
                 actions: [
-                  PopupMenuButton(
-                    onSelected: (item) {
-                      switch (item) {
-                        case 1:
-                          ProfileRoute().push(context);
-                          break;
-                        case 2:
-                          CommunityMembershipsRoute().push(context);
-                          break;
-                        case 4:
-                          CreateCommunitiesRoute().push(context);
-                          break;
-
-                        default:
-                      }
+                  IconButton(
+                    onPressed: () {
+                      ProfileRoute().push(context);
                     },
-                    offset: Offset(-20, 35),
-                    padding: EdgeInsets.all(12),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 1,
-                        child: Row(
-                          children: [
-                            Icon(Icons.person),
-                            SizedBox(width: 4),
-                            Text("View profile"),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 2,
-                        child: Row(
-                          children: [
-                            Icon(Icons.account_box),
-                            SizedBox(width: 4),
-                            Text("Community Memberships"),
-                          ],
-                        ),
-                      ),
-                      // PopupMenuItem(
-                      //   value: 3,
-                      //   child: Row(
-                      //     children: [
-                      //       Icon(Icons.campaign),
-                      //       SizedBox(width: 4),
-                      //       Text("Your posts"),
-                      //     ],
-                      //   ),
-                      // ),
-                      PopupMenuItem(
-                        value: 4,
-                        child: Row(
-                          children: [
-                            Icon(Icons.add),
-                            SizedBox(width: 4),
-                            Text("Create a new community"),
-                          ],
-                        ),
-                      ),
-                    ],
-                    child: Padding(
-                      padding: EdgeInsets.all(4),
-                      child: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
-                    ),
+                    icon: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
                   ),
-                  // IconButton(
-                  //   onPressed: () {
-                  //     ProfileRoute().push(context);
-                  //   },
-                  //   icon: UserAvatar(scallopDepth: 2),
-                  // ),
                 ],
                 bottom: TabBar(
                   isScrollable: true,
