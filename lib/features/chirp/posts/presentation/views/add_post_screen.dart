@@ -10,11 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:image_editor_plus/options.dart' as o;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:vibration/vibration.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({super.key});
@@ -34,6 +35,8 @@ class _AddPostPageState extends State<AddPostPage> {
   final TextEditingController _postDescriptionController =
       TextEditingController();
 
+  final formState = GlobalKey<FormState>();
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final pickedFile = await picker.pickImage(source: source);
@@ -44,7 +47,15 @@ class _AddPostPageState extends State<AddPostPage> {
 
       final editedImage = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ImageEditor(image: imageData)),
+        MaterialPageRoute(
+          builder: (context) => ImageCropper(
+            image: imageData,
+            availableRatios: [
+              o.AspectRatio(title: "1:1", ratio: 1 / 1),
+              o.AspectRatio(title: "3:4", ratio: 3 / 4),
+            ],
+          ),
+        ),
       );
 
       final tempDir = await getTemporaryDirectory();
@@ -60,18 +71,12 @@ class _AddPostPageState extends State<AddPostPage> {
           minWidth: 1080,
           minHeight: 1080,
         );
-        print(
-          "Compressed user-edited image: ${finalImageBytes.lengthInBytes / 1024} KB",
-        );
       } else {
         finalImageBytes = await FlutterImageCompress.compressWithList(
           imageData,
           quality: 70,
           minWidth: 1080,
           minHeight: 1080,
-        );
-        print(
-          "Compressed original image: ${finalImageBytes.lengthInBytes / 1024} KB",
         );
       }
 
@@ -81,11 +86,8 @@ class _AddPostPageState extends State<AddPostPage> {
       setState(() {
         attachments.add(XFile(file.path));
       });
-
-      print("Saved compressed image at: ${file.path}");
     } catch (e) {
       _showSnackBar("Failed to pick or edit image: $e");
-      debugPrint("Error in _pickImage: $e");
     }
   }
 
@@ -111,9 +113,8 @@ class _AddPostPageState extends State<AddPostPage> {
   Future<Uint8List?> _getAttachmentThumbnail(XFile attachment) async {
     try {
       if (attachment.path.contains('mp4')) {
-        final thumbnailBytes = await VideoThumbnail.thumbnailData(
+        final thumbnailBytes = await gt.VideoThumbnail.thumbnailData(
           video: attachment.path,
-          imageFormat: ImageFormat.JPEG,
           quality: 25,
         );
         return thumbnailBytes;
@@ -133,38 +134,33 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   Future<void> _submitPost() async {
-    final title = _postTitleController.text.trim();
-    final content = _postDescriptionController.text.trim();
-
-    if (title.isEmpty || content.isEmpty) {
-      _showSnackBar("Please enter both a title and content before posting.");
-      Vibration.vibrate(duration: 80);
+    if (!formState.currentState!.validate()) {
+      _showSnackBar("Please provide required details before continuing");
+      if (await Vibration.hasVibrator()) {
+        await Vibration.vibrate(duration: 32, sharpness: 1.0);
+      }
       return;
     }
-
     if (_selectedCommunity == null) {
       _showSnackBar("Please select a community to post in.");
-      Vibration.vibrate(duration: 80);
+      if (await Vibration.hasVibrator()) {
+        Vibration.vibrate(duration: 32);
+      }
       return;
     }
-
-    print("Sending ${attachments.length} attachments to bloc");
-    print('Attachments files: ${attachments.map((e) => e.path).toList()}');
-
     if (!mounted) return;
-
     context.read<FeedBloc>().add(
       CreatePostEvent(
-        title: title,
+        title: _postTitleController.text.trim(),
         authorId: authorId ?? '',
         communityId: _selectedCommunity!.id,
-        content: content,
+        content: _postDescriptionController.text.trim(),
         attachments: List<XFile>.from(attachments),
       ),
     );
 
     _showSnackBar("Submitting post...");
-    Vibration.vibrate(duration: 50);
+    Vibration.vibrate(duration: 64);
 
     setState(() {
       _postTitleController.clear();
@@ -191,13 +187,10 @@ class _AddPostPageState extends State<AddPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('Rebuilding AddPostPage — attachments count: ${attachments.length}');
-    print(
-      'Rebuilding AddPostPage — attachments files: ${attachments.map((e) => e.path).toList()}',
-    );
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
+        key: formState,
         child: CustomScrollView(
           slivers: [
             SliverAppBar.large(title: Text("Create Post")),
@@ -306,12 +299,20 @@ class _AddPostPageState extends State<AddPostPage> {
                       textCapitalization: TextCapitalization.sentences,
                       maxLength: 250,
                       style: Theme.of(context).textTheme.headlineSmall,
+                      validator: (input) {
+                        if (input!.length < 3) {
+                          return "Please provide a longer title";
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
                         prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(12),
                         ),
+
                         hintText: "Whats on your mind",
                         hintStyle: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(
@@ -325,6 +326,14 @@ class _AddPostPageState extends State<AddPostPage> {
                       maxLines: null,
                       minLines: 3,
                       textCapitalization: TextCapitalization.sentences,
+                      validator: (input) {
+                        if (input!.length < 3) {
+                          return "Please describe your post ..";
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,

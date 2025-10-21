@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2025.8.12+0
+version: 2025.10.14+1
 
 environment:
   sdk: ^3.8.1
@@ -55,14 +55,11 @@ dependencies:
   flutter_native_splash: ^2.4.6
   material_symbols_icons: ^4.2815.1
   lottie: ^3.3.1
-  flutter_svg: ^2.2.0
   phone_form_field: ^10.0.8
   cached_network_image: ^3.4.1
   time_since: ^1.0.1
-  video_player: ^2.10.0
   sliver_tools: ^0.2.12
   table_calendar: ^3.2.0
-  flutter_expandable_fab: ^2.5.2
   intl: ^0.20.2
   file_picker: ^8.0.0+1
   image: ^4.1.7
@@ -102,14 +99,13 @@ dependencies:
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
   image_editor_plus: ^1.0.8
-  video_thumbnail: ^0.5.6
   upgrader: ^12.1.0
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
+  get_thumbnail_video: ^0.7.3
 
 
 dev_dependencies:
-  sentry_dart_plugin: ^3.1.1
   flutter_test:
     sdk: flutter
 
@@ -174,9 +170,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
-sentry:
-  upload_debug_symbols: true
-  upload_source_maps: true
-  project: academia
-  org: student-23z

@@ -14,7 +14,7 @@ class FeedPage extends StatefulWidget {
   State<FeedPage> createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
 
@@ -37,6 +37,9 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -44,6 +47,7 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: BlocListener<FeedBloc, FeedState>(
         listener: (context, state) {
