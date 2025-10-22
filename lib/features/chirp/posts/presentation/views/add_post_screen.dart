@@ -50,10 +50,7 @@ class _AddPostPageState extends State<AddPostPage> {
         MaterialPageRoute(
           builder: (context) => ImageCropper(
             image: imageData,
-            availableRatios: [
-              o.AspectRatio(title: "1:1", ratio: 1 / 1),
-              o.AspectRatio(title: "3:4", ratio: 3 / 4),
-            ],
+            availableRatios: [o.AspectRatio(title: "4:5", ratio: 4 / 5)],
           ),
         ),
       );
@@ -418,33 +415,49 @@ class _AddPostPageState extends State<AddPostPage> {
                             padding: EdgeInsets.all(12),
                             child: Column(
                               children: [
-                                // Card.filled(
-                                //   shape: RoundedRectangleBorder(
-                                //     borderRadius: BorderRadiusGeometry.vertical(
-                                //       top: Radius.circular(22),
-                                //     ),
-                                //   ),
-                                //   margin: EdgeInsets.all(0),
-                                //   color: Theme.of(
-                                //     context,
-                                //   ).colorScheme.primaryContainer,
-                                //   child: ListTile(
-                                //     leading: Icon(Icons.save),
-                                //     title: Text("Save to gallery"),
-                                //     onTap: () async {
-                                //       await attachments[index].saveTo(
-                                //         "academia_img_${DateTime.now().toString()}",
-                                //       );
-                                //       if (!context.mounted) return;
-                                //       context.pop();
-                                //       _showSnackBar("Successfully saved!");
-                                //     },
-                                //   ),
-                                // ),
                                 Card.filled(
+                                  clipBehavior: Clip.hardEdge,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadiusGeometry.vertical(
                                       top: Radius.circular(22),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.all(0),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  child: ListTile(
+                                    leading: Icon(Icons.save),
+                                    title: Text("View Attachment"),
+                                    onTap: () async {},
+                                  ),
+                                ),
+
+                                Card.filled(
+                                  clipBehavior: Clip.hardEdge,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.zero,
+                                  ),
+                                  margin: EdgeInsets.all(0),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  child: ListTile(
+                                    leading: Icon(Icons.save),
+                                    title: Text("Save to gallery"),
+                                    onTap: () async {
+                                      await attachments[index].saveTo(
+                                        "academia_img_${DateTime.now().toString()}",
+                                      );
+                                      if (!context.mounted) return;
+                                      context.pop();
+                                      _showSnackBar("Successfully saved!");
+                                    },
+                                  ),
+                                ),
+                                Card.filled(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.vertical(
                                       bottom: Radius.circular(22),
                                     ),
                                   ),
@@ -498,16 +511,11 @@ class _AddPostPageState extends State<AddPostPage> {
                                     ),
                                   ),
                                   if (attachment.path.endsWith('mp4'))
-                                    Positioned(
-                                      bottom: 8,
-                                      right: 8,
-                                      child: CircleAvatar(
-                                        child: Icon(
-                                          Icons.play_circle_outline,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Icon(
+                                        Icons.play_circle_outline,
+                                        size: 32,
                                       ),
                                     ),
                                 ],
@@ -517,7 +525,6 @@ class _AddPostPageState extends State<AddPostPage> {
                                 child: Text('Error loading attachment'),
                               );
                             } else {
-                              // Show a loading indicator while the thumbnail is generated
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -580,6 +587,18 @@ class LabeledIconButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ViewAttachmentPage extends StatelessWidget {
+  const ViewAttachmentPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("View attachment")),
+      body: Center(child: Text("Hello")),
     );
   }
 }
