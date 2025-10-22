@@ -31,14 +31,16 @@ class InstitutionRepositoryImpl implements InstitutionRepository {
   Future<Either<Failure, List<Institution>>>
   getAllUserAccountCachedInstitutions(String userID) async {
     final result = await institutionLocalDatasource.getCachedInstitutions();
-    return result.fold(
-      (error) => left(error),
-      (rawInstitutions) => right(
+    return result.fold((error) => left(error), (rawInstitutions) async {
+      if (rawInstitutions.isEmpty) {
+        return await getAllUserAccountInstitutions(userID);
+      }
+      return right(
         rawInstitutions
             .map((rawInstitution) => rawInstitution.toEntity())
             .toList(),
-      ),
-    );
+      );
+    });
   }
 
   @override
