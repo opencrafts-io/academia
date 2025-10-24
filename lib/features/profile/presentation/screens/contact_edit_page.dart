@@ -62,88 +62,90 @@ class _ContactEditPageState extends State<ContactEditPage> {
       },
       builder: (context, state) => Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 12,
-          children: [
-            SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AnimatedEmoji(AnimatedEmojis.callMeHand, size: 120),
-            ),
-
-            SizedBox(height: 12),
-            Text(
-              "How can we reach you",
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            PhoneFormField(
-              controller: _phoneController,
-              validator: PhoneValidator.compose([
-                PhoneValidator.required(context),
-                PhoneValidator.validMobile(context),
-              ]),
-              countrySelectorNavigator:
-                  const CountrySelectorNavigator.modalBottomSheet(),
-              enabled: true,
-              isCountrySelectionEnabled: true,
-              isCountryButtonPersistent: true,
-              countryButtonStyle: const CountryButtonStyle(
-                showFlag: true,
-                flagSize: 16,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 12,
+            children: [
+              SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: AnimatedEmoji(AnimatedEmojis.callMeHand, size: 120),
               ),
 
-              decoration: InputDecoration(
-                label: Text("Your phone number"),
-                hintText: "+254 712345678",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+              SizedBox(height: 12),
+              Text(
+                "How can we reach you",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              PhoneFormField(
+                controller: _phoneController,
+                validator: PhoneValidator.compose([
+                  PhoneValidator.required(context),
+                  PhoneValidator.validMobile(context),
+                ]),
+                countrySelectorNavigator:
+                    const CountrySelectorNavigator.modalBottomSheet(),
+                enabled: true,
+                isCountrySelectionEnabled: true,
+                isCountryButtonPersistent: true,
+                countryButtonStyle: const CountryButtonStyle(
+                  showFlag: true,
+                  flagSize: 16,
+                ),
+
+                decoration: InputDecoration(
+                  label: Text("Your phone number"),
+                  hintText: "+254 712345678",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 12),
-            ListTile(
-              isThreeLine: true,
-              leading: Icon(Icons.info),
-              title: Text("About your phone number"),
-              subtitle: Text(
-                "Some services in the application require your phone number.",
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-            Row(
-              spacing: 12,
-              children: [
-                OutlinedButton(
-                  onPressed: widget.onPrevious,
-                  child: Text("Previous"),
+              SizedBox(height: 12),
+              ListTile(
+                isThreeLine: true,
+                leading: Icon(Icons.info),
+                title: Text("About your phone number"),
+                subtitle: Text(
+                  "Some services in the application require your phone number.",
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                FilledButton(
-                  onPressed: () async {
-                    if (await Vibration.hasVibrator()) {
-                      await Vibration.vibrate(
-                        pattern: [0, 50],
-                        intensities: [0, 128],
-                      );
-                    }
-                    if (!context.mounted) return;
+              ),
+              Row(
+                spacing: 12,
+                children: [
+                  OutlinedButton(
+                    onPressed: widget.onPrevious,
+                    child: Text("Previous"),
+                  ),
+                  FilledButton(
+                    onPressed: () async {
+                      if (await Vibration.hasVibrator()) {
+                        await Vibration.vibrate(
+                          pattern: [0, 50],
+                          intensities: [0, 128],
+                        );
+                      }
+                      if (!context.mounted) return;
 
-                    if (_formKey.currentState?.validate() ?? false) {
-                      // Handle phone number submission
-                      BlocProvider.of<ProfileBloc>(context).add(
-                        UpdateUserPhoneEvent(
-                          profile: profile!.copyWith(
-                            phone: _phoneController.value.international,
+                      if (_formKey.currentState?.validate() ?? false) {
+                        // Handle phone number submission
+                        BlocProvider.of<ProfileBloc>(context).add(
+                          UpdateUserPhoneEvent(
+                            profile: profile!.copyWith(
+                              phone: _phoneController.value.international,
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text("Next"),
-                ),
-              ],
-            ),
-          ],
+                        );
+                      }
+                    },
+                    child: Text("Next"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
