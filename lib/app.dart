@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:logger/logger.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -18,32 +19,10 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> {
-  // final QuickActions quickActions = QuickActions();
-
+  final Logger _logger = Logger();
   @override
   void initState() {
     setOptimalDisplayMode();
-    // setup quick actions
-    // quickActions.setShortcutItems([
-    //   ShortcutItem(
-    //     type: "action_view_todos",
-    //     localizedTitle: "View your tasks",
-    //     icon: "ic_view_tasks",
-    //   ),
-    //   ShortcutItem(
-    //     type: "action_add_event",
-    //     localizedTitle: "Create a sherehe",
-    //
-    //     icon: "ic_create_event",
-    //   ),
-    // ]);
-    // quickActions.initialize((shortcut) {
-    //   if (shortcut == "action_view_todos") {
-    //     TodosRoute().go(context);
-    //   } else if (shortcut == "action_add_event") {
-    //     CreateEventRoute().go(context);
-    //   }
-    // });
     super.initState();
   }
 
@@ -94,17 +73,6 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
-        // BlocProvider(
-        //   create: (context) => FeedBloc(
-        //     getFeedPosts: sl.get<GetFeedPosts>(),
-        //     cachePosts: sl.get<CachePostsUsecase>(),
-        //     likePost: sl.get<LikePostUsecase>(),
-        //     createPost: sl.get<CreatePostUsecase>(),
-        //     addComment: sl.get<CommentUsecase>(),
-        //     cachePostReplies: sl.get<CachePostRepliesUsecase>(),
-        //     getPostReplies: sl.get<GetPostRepliesUsecase>(),
-        //   )..add(CacheFeedEvent()),
-        // ),
         BlocProvider(create: (context) => sl<FeedBloc>()),
         BlocProvider(create: (context) => sl<CommentBloc>()),
         BlocProvider(
@@ -173,8 +141,9 @@ class _AcademiaState extends State<Academia> {
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
                 if (state is NotificationErrorState) {
-                  debugPrint(
-                    '❌ OneSignal initialization failed: ${state.message}',
+                  _logger.e(
+                    'OneSignal initialization failed: ${state.message}',
+                    error: state.message,
                   );
                 }
               },
@@ -191,8 +160,9 @@ class _AcademiaState extends State<Academia> {
             BlocListener<RemoteConfigBloc, RemoteConfigState>(
               listener: (context, state) {
                 if (state is RemoteConfigErrorState) {
-                  debugPrint(
-                    '❌ Firebase Remote Config failed: ${state.message}',
+                  _logger.e(
+                    'Firebase Remote Config failed: ${state.message}',
+                    error: state.message,
                   );
                 }
               },
@@ -200,13 +170,12 @@ class _AcademiaState extends State<Academia> {
             BlocListener<AdBloc, AdState>(
               listener: (context, state) {
                 if (state is AdInitializedState) {
-                  debugPrint('✅ AdMob initialized successfully!');
+                  _logger.i('AdMob initialized successfully!');
                 } else if (state is AdErrorState) {
-                  debugPrint('❌ AdMob error: ${state.message}');
-                } else if (state is BannerAdLoadedState) {
-                  debugPrint('✅ Banner ad loaded: ${state.ad.id}');
-                } else if (state is AdLoadingState) {
-                  debugPrint('⏳ AdMob loading...');
+                  _logger.e(
+                    'AdMob error: ${state.message}',
+                    error: state.message,
+                  );
                 }
               },
             ),
