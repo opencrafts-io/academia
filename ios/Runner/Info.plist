@@ -37,12 +37,6 @@
 	<string>ca-app-pub-1784114980693221~6239287823</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to take pictures.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Used to capture audio</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to save images.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -53,6 +47,10 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -66,5 +64,23 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to take pictures.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to ensure you get feeds and stories around you</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Used to provide notification service to you</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to capture audio</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to save images.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>To sync your calendar with Academia</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>To enable you to add tasks and events to your calendar via Academia</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Keep track of app logs to ensure best performance possible for your device</string>
+	<key>PermissionGroupNotification</key>
+	<string>Bringing you notifications relevant to you</string>
 </dict>
 </plist>
