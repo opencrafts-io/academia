@@ -1,4 +1,3 @@
-import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +68,7 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
           Align(
             alignment: Alignment.center,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Align(
@@ -81,7 +81,13 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
                   style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 32),
                 FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Color(0xFF60D175),
+                    padding: EdgeInsets.all(22),
+                    textStyle: Theme.of(context).textTheme.titleSmall
+                  ),
                   onPressed: () async {
                     _confettiController.play();
                     BlocProvider.of<ProfileBloc>(context).add(
