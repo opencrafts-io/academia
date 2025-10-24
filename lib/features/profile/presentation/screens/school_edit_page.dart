@@ -4,8 +4,6 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 
 class SchoolEditPage extends StatefulWidget {
@@ -134,10 +132,6 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
                               .map(
                                 (ins) => ListTile(
                                   onTap: () {
-                                    Vibration.vibrate(
-                                      preset:
-                                          VibrationPreset.dramaticNotification,
-                                    );
                                     setState(() {
                                       _selectedInstitution = ins;
                                       searchController.closeView(ins.name);

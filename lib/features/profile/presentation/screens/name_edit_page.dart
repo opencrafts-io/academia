@@ -1,7 +1,6 @@
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vibration/vibration.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 
 class NameEditPage extends StatefulWidget {
@@ -159,12 +158,6 @@ class _NameEditPageState extends State<NameEditPage> {
                   ),
                   FilledButton(
                     onPressed: () async {
-                      if (await Vibration.hasVibrator()) {
-                        await Vibration.vibrate(
-                          pattern: [0, 50],
-                          intensities: [0, 128],
-                        );
-                      }
                       if (!context.mounted) return;
                       if (_formKey.currentState?.validate() ?? false) {
                         // Only update profile if the form is valid

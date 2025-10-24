@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:animated_emoji/animated_emoji.dart';
-import 'package:vibration/vibration.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key, required this.onNext});
@@ -28,12 +27,8 @@ class WelcomePage extends StatelessWidget {
         Spacer(),
         FilledButton(
           style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
-          onPressed: () async {
-            if (await Vibration.hasVibrator()) {
-              await Vibration.vibrate(pattern: [0, 50], intensities: [0, 128]);
-            }
-            onNext();
-          },
+          onPressed: onNext,
+
           child: Text("Get Started"),
         ),
       ],

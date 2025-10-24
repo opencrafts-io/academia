@@ -14,7 +14,6 @@ import 'package:image_editor_plus/options.dart' as o;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:vibration/vibration.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 
 class AddPostPage extends StatefulWidget {
@@ -133,18 +132,10 @@ class _AddPostPageState extends State<AddPostPage> {
   Future<void> _submitPost() async {
     if (!formState.currentState!.validate()) {
       _showSnackBar("Please provide required details before continuing");
-      if (await Vibration.hasVibrator()) {
-        await Vibration.vibrate(duration: 32, sharpness: 1.0);
-      }
-      return;
-    }
+         }
     if (_selectedCommunity == null) {
       _showSnackBar("Please select a community to post in.");
-      if (await Vibration.hasVibrator()) {
-        Vibration.vibrate(duration: 32);
-      }
-      return;
-    }
+         }
     if (!mounted) return;
     context.read<FeedBloc>().add(
       CreatePostEvent(
@@ -157,8 +148,6 @@ class _AddPostPageState extends State<AddPostPage> {
     );
 
     _showSnackBar("Submitting post...");
-    Vibration.vibrate(duration: 64);
-
     setState(() {
       _postTitleController.clear();
       _postDescriptionController.clear();
@@ -247,7 +236,6 @@ class _AddPostPageState extends State<AddPostPage> {
                                       .map(
                                         (community) => ListTile(
                                           onTap: () {
-                                            Vibration.vibrate(duration: 50);
                                             setState(() {
                                               _selectedCommunity = community;
                                               controller.closeView(

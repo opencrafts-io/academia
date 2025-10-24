@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
 
@@ -158,15 +156,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                 final event = todayEvents[index];
                                 return AgendaEventCard(
                                   event: event,
-                                  onEdit: () async {
-                                    if (await Vibration.hasVibrator()) {
-                                      Vibration.vibrate(
-                                        pattern: [0, 50, 100, 50],
-                                        intensities: [0, 128, 0, 128],
-                                      );
-                                    }
-                                    if (!context.mounted) return;
-
+                                  onEdit: () {
                                     // Navigate to edit mode
                                     AgendaItemViewRoute(
                                       id: event.id,
@@ -175,7 +165,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                   onDelete: () async {
                                     if (await Vibration.hasVibrator()) {
                                       Vibration.vibrate(
-                                        preset: VibrationPreset.emergencyAlert,
+                                        preset: VibrationPreset.gentleReminder,
                                       );
                                     }
                                     if (!context.mounted) return;

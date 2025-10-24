@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:magnet/magnet.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
 
 class MagnetAuthScreen extends StatefulWidget {
   final int institutionID;
@@ -97,10 +96,6 @@ class _MagnetAuthScreenState extends State<MagnetAuthScreen> {
                   return;
                 }
                 if (state is MagnetAuthenticatedState) {
-                  if (await Vibration.hasVibrator()) {
-                    Vibration.vibrate(pattern: [128, 64, 128, 64]);
-                  }
-                  if (!context.mounted) return;
                   context.pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

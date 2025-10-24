@@ -3,8 +3,6 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animated_emoji/animated_emoji.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 class OnboardingSuccessPage extends StatefulWidget {
   const OnboardingSuccessPage({super.key, required this.onNext});
@@ -86,7 +84,7 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
                   style: FilledButton.styleFrom(
                     backgroundColor: Color(0xFF60D175),
                     padding: EdgeInsets.all(22),
-                    textStyle: Theme.of(context).textTheme.titleSmall
+                    textStyle: Theme.of(context).textTheme.titleSmall,
                   ),
                   onPressed: () async {
                     _confettiController.play();
@@ -98,11 +96,6 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
                         ),
                       ),
                     );
-                    if (await Vibration.hasVibrator()) {
-                      await Vibration.vibrate(
-                        preset: VibrationPreset.dramaticNotification,
-                      );
-                    }
                   },
                   child: Text("Get started"),
                 ),

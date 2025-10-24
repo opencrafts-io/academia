@@ -2,8 +2,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/todos/todos.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 part 'todo_state.dart';
 part 'todo_event.dart';
@@ -49,9 +47,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) async {
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.gentleReminder);
-          }
           // add(FetchCachedTodosEvent());
         },
       );
@@ -76,10 +71,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) async {
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.softPulse);
-          }
-
           // add(FetchCachedTodosEvent());
         },
       );
@@ -92,9 +83,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           return emit(TodoErrorState(error: failure.message));
         },
         (todo) async {
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.quickSuccessAlert);
-          }
           // add(FetchCachedTodosEvent());
         },
       );
