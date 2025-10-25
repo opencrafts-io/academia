@@ -1,5 +1,4 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
@@ -222,87 +221,11 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("Get organized"),
-        icon: Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
         onPressed: () async {
-          // Provide haptic feedback for FAB press
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.gentleReminder);
-          }
-
-          if (!context.mounted) return;
-          showModalBottomSheet(
-            context: context,
-            showDragHandle: true,
-            enableDrag: true,
-            constraints: BoxConstraints(
-              minWidth: ResponsiveBreakPoints.tablet,
-              maxWidth: ResponsiveBreakPoints.tablet,
-            ),
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
-            ),
-            builder: (context) => Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      "What do you want to do ...",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    SizedBox(height: 22),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        // borderRadius: BorderRadius.circular(28),
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(28),
-                        ),
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.pop(context);
-                          TodosRoute().push(context);
-                        },
-                        leading: CircleAvatar(child: Icon(Icons.task_alt)),
-                        title: Text("Manage your To-Dos"),
-                        subtitle: Text(
-                          "Keep track of your tasks and assignments",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ),
-                    Divider(height: 0.5),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(28),
-                        ),
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.pop(context);
-                          CreateAgendaEventRoute().push(context);
-                        },
-                        leading: CircleAvatar(child: Icon(Icons.event)),
-                        title: Text("Create an agenda event"),
-                        subtitle: Text(
-                          "Schedule meetings, appointments, and events",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+          CreateAgendaEventRoute().push(context);
         },
-        // child: Icon(Icons.menu),
       ),
     );
   }

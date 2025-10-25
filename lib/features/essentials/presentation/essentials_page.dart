@@ -4,6 +4,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
+import '../widgets/essential_category_tile.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -12,7 +13,31 @@ class EssentialsPage extends StatefulWidget {
   State<EssentialsPage> createState() => _EssentialsPageState();
 }
 
+class _EssentialItem {
+  final String iconPath;
+  final String title;
+  final VoidCallback? ontap;
+
+  _EssentialItem({
+    required this.title,
+    required this.ontap,
+    required this.iconPath,
+  });
+}
+
 class _EssentialsPageState extends State<EssentialsPage> {
+  late List<_EssentialItem> essentialItems = <_EssentialItem>[
+    _EssentialItem(
+      title: "Tasks",
+      ontap: () => TodosRoute().push(context),
+      iconPath: "assets/icons/todos.png",
+    ),
+    _EssentialItem(
+      title: "Identity",
+      ontap: null,
+      iconPath: "assets/icons/card.png",
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,45 +69,37 @@ class _EssentialsPageState extends State<EssentialsPage> {
               ),
             ],
           ),
-
-          // SliverVisibility(
-          //   sliver: SliverPadding(
-          //     padding: EdgeInsets.all(12),
-          //     sliver: MultiSliver(
-          //       children: [
-          //         Text(
-          //           "Suggested",
-          //           style: Theme.of(context).textTheme.titleSmall,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           EssentialsInstitutionSection(),
 
           // Academia's tools
           SliverPadding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
             sliver: MultiSliver(
               children: [
                 Text(
-                  "Academia's tools",
-                  style: Theme.of(context).textTheme.titleSmall,
+                  "Explore tools",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ],
-            ),
-          ),
-
-          SliverPadding(
-            padding: EdgeInsetsGeometry.all(12),
-            sliver: MultiSliver(
-              children: [
-                AnimatedEmoji(AnimatedEmojis.dog, size: 80),
                 SizedBox(height: 22),
-
-                Text(
-                  "✨ These features are still in testing. We'll let you know as soon as they're ready for you!",
-                  textAlign: TextAlign.center,
+                SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 2.8,
+                  ),
+                  itemCount: essentialItems.length,
+                  itemBuilder: (context, index) => EssentialCategoryTile(
+                    title: essentialItems[index].title,
+                    iconWidget: Image.asset(
+                      essentialItems[index].iconPath,
+                      height: 32,
+                    ),
+                    onTap: essentialItems[index].ontap,
+                    position: index,
+                    crossAxisCount: 2,
+                    totalItems: essentialItems.length,
+                  ),
                 ),
               ],
             ),

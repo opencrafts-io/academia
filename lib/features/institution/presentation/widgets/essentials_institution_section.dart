@@ -40,8 +40,11 @@ class EssentialsInstitutionSection extends StatelessWidget {
                 children: [
                   Text(
                     "Features offered by your school",
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  SizedBox(height: 18),
                   SliverList.builder(
                     itemCount: institutionState.institutions.length,
                     itemBuilder: (context, index) {
