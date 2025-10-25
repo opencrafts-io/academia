@@ -268,7 +268,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                           TodosRoute().push(context);
                         },
                         leading: CircleAvatar(child: Icon(Icons.task_alt)),
-                        title: Text("Manage your todos"),
+                        title: Text("Manage your To-Dos"),
                         subtitle: Text(
                           "Keep track of your tasks and assignments",
                           style: Theme.of(context).textTheme.bodySmall,
