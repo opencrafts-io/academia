@@ -39,7 +39,7 @@ class _LayoutPageState extends State<LayoutPage> {
                   ),
                   NavigationRailDestination(
                     icon: Icon(Symbols.calendar_today),
-                    label: Text("Agenda"),
+                    label: Text("Calendar"),
                   ),
 
                   // NavigationRailDestination(
@@ -71,7 +71,7 @@ class _LayoutPageState extends State<LayoutPage> {
                   NavigationDestination(
                     icon: Icon(Symbols.calendar_today),
                     selectedIcon: Icon(Symbols.calendar_today),
-                    label: "Agenda",
+                    label: "Calendar",
                   ),
 
                   // NavigationDestination(
