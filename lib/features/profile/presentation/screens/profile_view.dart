@@ -110,8 +110,11 @@ class _ProfileViewState extends State<ProfileView> {
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
-                        Card(
-                          margin: EdgeInsets.all(2),
+                        Card.filled(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          margin: EdgeInsets.all(0.5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadiusGeometry.vertical(
                               top: Radius.circular(12),
@@ -128,12 +131,13 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
-                        Card(
-                          margin: EdgeInsets.all(2),
+                        Card.filled(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          margin: EdgeInsets.all(0.5),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.all(
-                              Radius.circular(0),
-                            ),
+                            borderRadius: BorderRadiusGeometry.zero,
                           ),
                           elevation: 0,
                           child: ListTile(
@@ -148,8 +152,11 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
-                        Card(
-                          margin: EdgeInsets.all(2),
+                        Card.filled(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          margin: EdgeInsets.all(0.5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadiusGeometry.all(
                               Radius.circular(0),
@@ -168,13 +175,14 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
-                        Card(
-                          margin: EdgeInsets.all(2),
+                        Card.filled(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.all(
-                              Radius.circular(0),
-                            ),
+                            borderRadius: BorderRadiusGeometry.zero,
                           ),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          margin: EdgeInsets.all(0.5),
                           elevation: 0,
                           child: ListTile(
                             leading: Icon(Symbols.email),
@@ -185,8 +193,11 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
-                        Card(
-                          margin: EdgeInsets.all(2),
+                        Card.filled(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          margin: EdgeInsets.all(0.5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadiusGeometry.vertical(
                               bottom: Radius.circular(8),
@@ -203,6 +214,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
 
+                        SizedBox(height: 22),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -211,7 +223,6 @@ class _ProfileViewState extends State<ProfileView> {
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
-
                         ProfileInstitutionSection(),
                       ],
                     ),

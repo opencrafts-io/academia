@@ -9,13 +9,13 @@ import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 Future<void> init(FlavorConfig flavor) async {
   final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: false,
-    password: '123456', // remove this line if you don't need password
+    isInspectorEnabled: kDebugMode,
     showSummary: false,
   );
 
@@ -108,11 +108,7 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerFactory(
-    () => CreateEventBloc(
-      createEventUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

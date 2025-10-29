@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vibration/vibration.dart';
 
 class GlobalSearchBar extends StatefulWidget {
   const GlobalSearchBar({super.key});
@@ -197,15 +196,7 @@ class CommunitySearchCard extends StatelessWidget {
     return Card.outlined(
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () async {
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(
-              pattern: [0, 50, 100, 128],
-              intensities: [0, 100, 0, 128],
-            );
-          }
-
-          if (!context.mounted) return;
+        onTap: () {
           if (community.nsfw) {
             showAdaptiveDialog(
               context: context,

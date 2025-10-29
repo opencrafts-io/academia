@@ -10,8 +10,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 class CommunityHome extends StatefulWidget {
   final int communityId;
@@ -75,12 +73,8 @@ class _CommunityHomeState extends State<CommunityHome>
           sl<FeedBloc>()
             ..add(LoadPostsForCommunityEvent(communityID: widget.communityId)),
       child: BlocConsumer<CommunityHomeBloc, CommunityHomeState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is CommunityDeleted) {
-            if (await Vibration.hasVibrator()) {
-              Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
-            }
-            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text("Community deleted"),
@@ -581,15 +575,7 @@ class _CommunityActionSection extends StatelessWidget {
                       Visibility(
                         visible: state.membership.role == "super-mod",
                         child: ListTile(
-                          onTap: () async {
-                            if (await Vibration.hasVibrator()) {
-                              await Vibration.vibrate(
-                                preset: VibrationPreset.dramaticNotification,
-                              );
-                            }
-
-                            if (!context.mounted) return;
-
+                          onTap: () {
                             showAdaptiveDialog(
                               context: context,
                               builder: (context) => AlertDialog.adaptive(

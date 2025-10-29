@@ -69,41 +69,6 @@ class _TodoCardState extends State<TodoCard> {
           ),
         ],
       ),
-
-      // background: Container(
-      //   alignment: Alignment.centerRight,
-      //   color: Theme.of(context).colorScheme.tertiaryContainer,
-      //   padding: const EdgeInsets.symmetric(horizontal: 16),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.start,
-      //     children: [
-      //       Icon(
-      //         Icons.check,
-      //         color: Theme.of(context).colorScheme.onTertiaryContainer,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // secondaryBackground: Container(
-      //   alignment: Alignment.centerRight,
-      //   color: Theme.of(context).colorScheme.error, // A color for deletion
-      //   padding: const EdgeInsets.symmetric(horizontal: 16),
-      //   child: Icon(
-      //     Icons.delete_forever,
-      //     color: Theme.of(context).colorScheme.onError,
-      //   ),
-      // ),
-      // onDismissed: (direction) async {
-      //   if (direction == DismissDirection.startToEnd) {
-      //          //     if (await Vibration.hasVibrator()) {
-      //       Vibration.vibrate(preset: VibrationPreset.gentleReminder);
-      //     }
-      //   } else if (direction == DismissDirection.endToStart) {
-      //          //     if (await Vibration.hasVibrator()) {
-      //       Vibration.vibrate(preset: VibrationPreset.gentleReminder);
-      //     }
-      //   }
-      // },
       child: ClipRRect(
         borderRadius: widget.borderRadius,
         child: Card(
