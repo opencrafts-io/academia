@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
 
@@ -221,11 +222,27 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          CreateAgendaEventRoute().push(context);
-        },
+      floatingActionButton: ExpandingFab(
+        mainIcon: Icons.add,
+        actions: [
+          FabAction(
+            tooltip: "Manage your To-Dos",
+            icon: Icons.task_alt,
+            iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            onPressed: () {
+              TodosRoute().push(context);
+            },
+          ),
+          FabAction(
+            icon: Symbols.calendar_add_on,
+            iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            onPressed: () {
+              CreateAgendaEventRoute().push(context);
+            },
+          ),
+        ],
       ),
     );
   }
