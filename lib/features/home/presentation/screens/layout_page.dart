@@ -26,6 +26,11 @@ class _LayoutPageState extends State<LayoutPage> {
             Visibility(
               visible: !ResponsiveBreakPoints.isMobile(context),
               child: NavigationRail(
+                selectedIconTheme: Theme.of(
+                  context,
+                ).iconTheme.copyWith(color: Theme.of(context).primaryColor),
+                selectedLabelTextStyle: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
                 labelType: NavigationRailLabelType.all,
                 groupAlignment:
                     constraints.maxWidth > ResponsiveBreakPoints.tablet
