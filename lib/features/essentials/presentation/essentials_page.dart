@@ -1,4 +1,5 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,9 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 SizedBox(height: 22),
                 SliverGrid.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                    crossAxisCount: ResponsiveBreakPoints.isMobile(context)
+                        ? 2
+                        : 6,
                     childAspectRatio: 2.8,
                   ),
                   itemCount: essentialItems.length,
