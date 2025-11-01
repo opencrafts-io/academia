@@ -12,7 +12,8 @@ class TodoLocalDatasource {
     return (localDB.select(localDB.todo)..orderBy([
           (todo) =>
               OrderingTerm(expression: todo.position, mode: OrderingMode.asc),
-          // (todo) => OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
+          (todo) =>
+              OrderingTerm(expression: todo.updated, mode: OrderingMode.desc),
         ]))
         .watch();
   }
@@ -39,7 +40,7 @@ class TodoLocalDatasource {
     try {
       await (localDB.delete(
         localDB.todo,
-      )..where((t) => t.id.equals(todo.id))).go();
+      )..where((t) => t.externalID.equals(todo.externalID ?? ''))).go();
       return right(null);
     } catch (e) {
       return left(

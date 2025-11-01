@@ -95,7 +95,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
               ],
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(0),
               sliver: SliverFillRemaining(
                 fillOverscroll: true,
                 hasScrollBody: true,
