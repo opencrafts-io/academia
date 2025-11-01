@@ -5,7 +5,7 @@ import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-class TodoRemoteDatasource with DioErrorHandler {
+class TodoRemoteDatasource with DioErrorHandler, ConnectivityChecker {
   final DioClient dioClient;
   final FlavorConfig flavor;
   late String servicePath;
@@ -25,6 +25,10 @@ class TodoRemoteDatasource with DioErrorHandler {
     int pageSize = 100,
   }) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.get(
         "/$servicePath/todos/",
         queryParameters: {"page": page, "pageSize": pageSize},
@@ -46,13 +50,40 @@ class TodoRemoteDatasource with DioErrorHandler {
       return handleDioError(de);
     } catch (e) {
       return left(
-        CacheFailure(error: e, message: "We couldn't fetch your todos"),
+        ServerFailure(error: e, message: "We couldn't fetch your todos"),
+      );
+    }
+  }
+
+  Future<Either<Failure, bool>> sync() async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final response = await dioClient.dio.post("/$servicePath/todos/sync");
+      if (response.statusCode == 200) {
+        return Right(true);
+      }
+      return Left(
+        ServerFailure(message: "Failed to sync google tasks", error: ""),
+      );
+    } catch (e) {
+      return left(
+        ServerFailure(
+          error: e,
+          message: "We couldn't sync your todos at the moment try again later",
+        ),
       );
     }
   }
 
   Future<Either<Failure, TodoData>> createTodo(TodoData todo) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.post(
         "/$servicePath/todos/add",
         data: todo.toJson(),
@@ -65,7 +96,7 @@ class TodoRemoteDatasource with DioErrorHandler {
       );
     } catch (e) {
       return left(
-        CacheFailure(
+        ServerFailure(
           error: e,
           message: "We couldn't create your todo at the moment",
         ),
@@ -75,6 +106,10 @@ class TodoRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, TodoData>> updateTodo(TodoData todo) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.put(
         "/$servicePath/todos/update/${todo.id}",
         data: todo.toJson(),
@@ -90,7 +125,7 @@ class TodoRemoteDatasource with DioErrorHandler {
       );
     } catch (e) {
       return left(
-        CacheFailure(
+        ServerFailure(
           error: e,
           message: "We couldn't update your todo at the moment",
         ),
@@ -100,6 +135,10 @@ class TodoRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, TodoData>> completeTodo(TodoData todo) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.put(
         "/$servicePath/todos/complete/${todo.id}",
         data: todo.toJson(),
@@ -112,7 +151,7 @@ class TodoRemoteDatasource with DioErrorHandler {
       );
     } catch (e) {
       return left(
-        CacheFailure(
+        ServerFailure(
           error: e,
           message: "We couldn't update your todo at the moment",
         ),
@@ -122,6 +161,10 @@ class TodoRemoteDatasource with DioErrorHandler {
 
   Future<Either<Failure, TodoData>> deleteTodo(TodoData todo) async {
     try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
       final response = await dioClient.dio.delete(
         "/$servicePath/todos/delete/${todo.id}",
         data: todo.toJson(),
@@ -134,7 +177,7 @@ class TodoRemoteDatasource with DioErrorHandler {
       );
     } catch (e) {
       return left(
-        CacheFailure(
+        ServerFailure(
           error: e,
           message: "We couldn't delete your todo at the moment",
         ),

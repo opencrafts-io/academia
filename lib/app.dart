@@ -85,14 +85,9 @@ class _AcademiaState extends State<Academia> {
           )..add(GetCachedProfileEvent()),
         ),
         BlocProvider(
-          create: (context) => TodoBloc(
-            getCachedTodosUsecase: sl.get<GetCachedTodosUsecase>(),
-            refreshTodosUsecase: sl<RefreshTodosUsecase>(),
-            createTodoUsecase: sl<CreateTodoUsecase>(),
-            updateTodoUsecase: sl<UpdateTodoUsecase>(),
-            completeTodoUsecase: sl.get<CompleteTodoUsecase>(),
-            deleteTodoUsecase: sl<DeleteTodoUsecase>(),
-          )..add(FetchCachedTodosEvent()),
+          create: (context) => sl<TodoBloc>()
+            ..add(FetchCachedTodosEvent())
+            ..add(SyncTodosWithGoogleCalendar()),
         ),
 
         BlocProvider(create: (context) => sl<CommunityListingCubit>()),

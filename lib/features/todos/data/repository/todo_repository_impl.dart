@@ -66,6 +66,13 @@ class TodoRepositoryImpl implements TodoRepository {
     );
   }
 
+  @override 
+  /// syncWithGoogleTasks
+  /// Syncs todos with google calendar
+  Future<Either<Failure, bool>> syncWithGoogleTasks() async {
+    return todoRemoteDatasource.sync();
+  }
+
   @override
   Future<Either<Failure, Stream<List<Todo>>>> refreshTodos({
     int page = 1,

@@ -8,6 +8,7 @@ abstract class TodoRepository {
     int page = 1,
     int pageSize = 100,
   });
+  Future<Either<Failure, bool>> syncWithGoogleTasks();
   Stream<List<Todo>> getCachedTodos();
   Future<Either<Failure, Todo>> updateTodo(Todo todo);
   Future<Either<Failure, Todo>> completeTodo(Todo todo);
