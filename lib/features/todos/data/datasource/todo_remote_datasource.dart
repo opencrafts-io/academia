@@ -111,7 +111,7 @@ class TodoRemoteDatasource with DioErrorHandler, ConnectivityChecker {
       }
 
       final response = await dioClient.dio.put(
-        "/$servicePath/todos/update/${todo.id}",
+        "/$servicePath/todos/update/${todo.externalID}",
         data: todo.toJson(),
       );
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class TodoRemoteDatasource with DioErrorHandler, ConnectivityChecker {
       }
 
       final response = await dioClient.dio.put(
-        "/$servicePath/todos/complete/${todo.id}",
+        "/$servicePath/todos/complete/${todo.externalID}",
         data: todo.toJson(),
       );
       if (response.statusCode == 200) {

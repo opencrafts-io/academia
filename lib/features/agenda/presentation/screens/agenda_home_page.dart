@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/todos/presensentation/widgets/create_todo_bottom_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -231,7 +232,15 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             onPressed: () {
-              TodosRoute().push(context);
+              showModalBottomSheet(
+                showDragHandle: true,
+                isScrollControlled: true,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                ),
+                context: context,
+                builder: (context) => CreateTodoBottomSheet(),
+              );
             },
           ),
           FabAction(

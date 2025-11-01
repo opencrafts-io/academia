@@ -1,9 +1,9 @@
+import 'package:academia/features/todos/presensentation/widgets/todo_view_sheet.dart';
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:time_since/time_since.dart';
 
 class TodoCard extends StatefulWidget {
@@ -65,52 +65,70 @@ class _TodoCardState extends State<TodoCard> {
           ),
         ],
       ),
-      child: CheckboxListTile(
-        onChanged: (value) {
-          setState(() {
-            isComplete = value!;
-          });
+      child: InkWell(
+        onDoubleTap: () {
+          showModalBottomSheet(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            showDragHandle: true,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => TodoViewSheet(todo: widget.todo),
+          );
         },
-        checkboxShape: CircleBorder(),
-        value: isComplete,
-        title: Text(
-          truncateWithEllipsis(widget.todo.title, maxLength: 60),
-          style: isComplete
-              ? TextStyle(decoration: TextDecoration.lineThrough)
-              : null,
-        ),
-        subtitle: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              truncateWithEllipsis(widget.todo.notes ?? ''),
-              textAlign: TextAlign.justify,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+        child: CheckboxListTile(
+          internalAddSemanticForOnTap: true,
+          onChanged: (value) {
+            BlocProvider.of<TodoBloc>(
+              context,
+            ).add(CompleteTodoEvent(todo: widget.todo));
 
-            Row(
-              children: [
-                if (widget.todo.due?.isAfter(DateTime.now()) ?? false)
-                  Text(
-                    widget.todo.due == null
-                        ? "Indeterminate"
-                        : DateFormat(
-                            'EEE, dd MMM yyyy HH:mm',
-                          ).format(widget.todo.due!),
-                  ),
-                if (widget.todo.due?.isBefore(DateTime.now()) ?? false)
-                  Text(
-                    timeSince(widget.todo.due!),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
+            setState(() {
+              isComplete = value!;
+            });
+          },
+          checkboxShape: CircleBorder(),
+          value: isComplete,
+          title: Text(
+            truncateWithEllipsis(widget.todo.title, maxLength: 60),
+            style: isComplete
+                ? TextStyle(decoration: TextDecoration.lineThrough)
+                : null,
+          ),
+          subtitle: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                truncateWithEllipsis(widget.todo.notes ?? ''),
+                textAlign: TextAlign.justify,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+
+              Row(
+                children: [
+                  if (widget.todo.due?.isAfter(DateTime.now()) ?? false)
+                    Text(
+                      widget.todo.due == null
+                          ? "Indeterminate"
+                          : DateFormat(
+                              'EEE, dd MMM yyyy HH:mm',
+                            ).format(widget.todo.due!),
                     ),
-                  ),
-              ],
-            ),
-          ],
+                  if (widget.todo.due?.isBefore(DateTime.now()) ?? false)
+                    Text(
+                      timeSince(widget.todo.due!),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+          isThreeLine: true,
         ),
-        isThreeLine: true,
       ),
     );
   }
