@@ -3,13 +3,15 @@ import 'package:drift/drift.dart';
 
 @DataClassName('TodoData')
 class Todo extends Table {
+  TextColumn get id => text()();
+  @JsonKey("external_id")
+  TextColumn get externalID => text().nullable().unique()();
   @DateTimeConverter()
   DateTimeColumn get completed => dateTime().nullable()();
   BoolColumn get deleted => boolean().withDefault(Constant(false))();
   DateTimeColumn get due => dateTime().nullable()();
   TextColumn get etag => text()();
   BoolColumn get hidden => boolean().withDefault(Constant(false))();
-  TextColumn get id => text()();
   TextColumn get kind => text()();
   TextColumn get notes => text().nullable()();
   @JsonKey("owner_id")
