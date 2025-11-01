@@ -166,7 +166,7 @@ class TodoRemoteDatasource with DioErrorHandler, ConnectivityChecker {
       }
 
       final response = await dioClient.dio.delete(
-        "/$servicePath/todos/delete/${todo.id}",
+        "/$servicePath/todos/delete/${todo.externalID}",
         data: todo.toJson(),
       );
       if (response.statusCode == 204) {
