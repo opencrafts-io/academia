@@ -63,147 +63,144 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // constraints: BoxConstraints(minHeight: 120, maxHeight: ),
-      padding: EdgeInsets.all(12),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4,
-            children: [
-              TextFormField(
-                controller: _titleController,
-                style: Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                  hintText: "New task",
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(22),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close),
+        ),
+        actionsPadding: EdgeInsets.only(right: 12),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              final state = BlocProvider.of<ProfileBloc>(context).state;
+              if (state is! ProfileLoadedState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("We cant create your todo at the moment"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+              if (_titleController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Todo title cannot be empty"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+              BlocProvider.of<TodoBloc>(context).add(
+                AddTodoEvent(
+                  todo: Todo(
+                    deleted: false,
+                    etag: "",
+                    hidden: false,
+                    id: "",
+                    kind: "",
+                    owner: state.profile.id,
+                    position: "",
+                    selfLink: "",
+                    status: "",
+                    title: _titleController.text,
+                    webViewLink: "",
+                    due: due ?? DateTime.now(),
+                    notes: _descriptionController.text,
+                    parent: widget.parentTodo,
                   ),
                 ),
-              ),
-              Visibility(
-                visible: due != null,
-                child: Chip(
-                  deleteIcon: Icon(Icons.close),
-                  label: Text(
-                    due == null
-                        ? "Pick date"
-                        : DateFormat('EEE, dd MMM').format(due!),
-                  ),
-                  onDeleted: () {
-                    setState(() {
-                      due = null;
-                    });
-                  },
-                ),
-              ),
-              Visibility(
-                visible: showDescription,
-                child: TextFormField(
-                  controller: _descriptionController,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  decoration: InputDecoration(
-                    hintText: "Add details",
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Visibility(
-                    visible: !showDescription,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          showDescription = !showDescription;
-                        });
-                      },
-                      icon: Icon(Icons.short_text),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      due = await showDateTimePicker(context: context);
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.schedule),
-                  ),
-                  Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      final state = BlocProvider.of<ProfileBloc>(context).state;
-                      if (state is! ProfileLoadedState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "We cant create your todo at the moment",
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        return;
-                      }
-                      if (_titleController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Todo title cannot be empty"),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        return;
-                      }
-                      BlocProvider.of<TodoBloc>(context).add(
-                        AddTodoEvent(
-                          todo: Todo(
-                            deleted: false,
-                            etag: "",
-                            hidden: false,
-                            id: "",
-                            kind: "",
-                            owner: state.profile.id,
-                            position: "",
-                            selfLink: "",
-                            status: "",
-                            title: _titleController.text,
-                            webViewLink: "",
-                            due: due ?? DateTime.now(),
-                            notes: _descriptionController.text,
-                            parent: widget.parentTodo,
-                          ),
-                        ),
-                      );
+              );
 
-                      context.pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            spacing: 8,
-                            children: [
-                              SizedBox(
-                                height: 16,
-                                width: 16,
-                                child: CircularProgressIndicator.adaptive(),
-                              ),
-                              Text("Creating your todo"),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text("Save"),
+              context.pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    spacing: 8,
+                    children: [
+                      SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                      Text("Creating your todo"),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              );
+            },
+            child: Text("Save"),
           ),
+        ],
+      ),
+
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.transparent,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 4,
+          children: [
+            TextFormField(
+              controller: _titleController,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              decoration: InputDecoration(
+                hintText: "Add a title",
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_month),
+              title: Text(
+                DateFormat(
+                  'EEE, dd MMMM',
+                ).format(due ?? DateTime.now().add(Duration(hours: 1))),
+              ),
+              onTap: () async {
+                due = await showDateTimePicker(
+                  context: context,
+                  firstDate: DateTime.now(),
+                );
+                setState(() {});
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.attachment),
+              title: Text("Add attachments"),
+              onTap: () {},
+            ),
+            TextFormField(
+              controller: _descriptionController,
+              style: Theme.of(context).textTheme.bodyMedium,
+              maxLines: null,
+              minLines: 3,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                hintText: "Add a note",
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+              ),
+            ),
+
+            Divider(),
+            ListTile(leading: Icon(Icons.checklist), title: Text("Subtasks")),
+            TextButton.icon(
+              onPressed: () {},
+              label: Text("Add subtask"),
+              icon: Icon(Icons.add),
+            ),
+          ],
         ),
       ),
     );

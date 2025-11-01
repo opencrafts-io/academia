@@ -285,8 +285,16 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
           showModalBottomSheet(
             showDragHandle: true,
             enableDrag: true,
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            isScrollControlled: true,
             context: context,
-            builder: (context) => const CreateTodoBottomSheet(),
+            sheetAnimationStyle: AnimationStyle(
+              curve: Curves.elasticInOut,
+              reverseCurve: Curves.elasticOut,
+            ),
+            builder: (context) => CreateTodoBottomSheet(),
           );
         },
       ),
