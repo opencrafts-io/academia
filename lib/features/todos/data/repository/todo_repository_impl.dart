@@ -51,14 +51,6 @@ class TodoRepositoryImpl implements TodoRepository {
 
   @override
   Future<Either<Failure, Todo>> createTodo(Todo todo) async {
-    final localRes = await todoLocalDatasource.createOrUpdateTodo(
-      todo.toModel(),
-    );
-
-    if (localRes.isLeft()) {
-      return left((localRes as Left).value);
-    }
-
     final remoteRes = await todoRemoteDatasource.createTodo(todo.toModel());
 
     if (remoteRes.isLeft()) {

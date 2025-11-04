@@ -29,7 +29,7 @@ class _EssentialItem {
 class _EssentialsPageState extends State<EssentialsPage> {
   late List<_EssentialItem> essentialItems = <_EssentialItem>[
     _EssentialItem(
-      title: "Tasks",
+      title: "To-Dos",
       ontap: () => TodosRoute().push(context),
       iconPath: "assets/icons/todos.png",
     ),

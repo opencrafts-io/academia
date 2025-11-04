@@ -78,6 +78,8 @@ class _TodoCardState extends State<TodoCard> {
           );
         },
         child: CheckboxListTile(
+          dense: false,
+          contentPadding: EdgeInsets.zero,
           internalAddSemanticForOnTap: true,
           onChanged: (value) {
             BlocProvider.of<TodoBloc>(
@@ -108,6 +110,8 @@ class _TodoCardState extends State<TodoCard> {
 
               Row(
                 children: [
+                  Icon(Icons.timer_outlined, size: 18),
+                  SizedBox(width: 4),
                   if (widget.todo.due?.isAfter(DateTime.now()) ?? false)
                     Text(
                       widget.todo.due == null
@@ -115,6 +119,9 @@ class _TodoCardState extends State<TodoCard> {
                           : DateFormat(
                               'EEE, dd MMM yyyy HH:mm',
                             ).format(widget.todo.due!),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   if (widget.todo.due?.isBefore(DateTime.now()) ?? false)
                     Text(
