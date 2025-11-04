@@ -2,7 +2,6 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import '../widgets/create_todo_bottom_sheet.dart';
 import '../widgets/todo_card.dart';
@@ -16,40 +15,11 @@ class TodoHomeScreen extends StatefulWidget {
 }
 
 class _TodoHomeScreenState extends State<TodoHomeScreen> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final List<Todo> _todos = [];
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      setState(() {
-        _searchQuery = _searchController.text;
-      });
-    });
-  }
-
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  // This function is the animation for removing an item
-  Widget _removedItemBuilder(
-    Todo todo,
-    BuildContext context,
-    Animation<double> animation,
-  ) {
-    return FadeTransition(
-      opacity: animation,
-      child: SizeTransition(
-        sizeFactor: animation,
-        child: TodoCard(todo: todo),
-      ),
-    );
   }
 
   @override
@@ -70,21 +40,76 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
               pinned: true,
               floating: true,
               snap: true,
-              title: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(28),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.primaryContainer,
-                  hintText: 'Search for your To-Dos',
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: AnimatedEmoji(AnimatedEmojis.nerdFace, size: 12),
-                  ),
+              title: SearchAnchor.bar(
+                barElevation: WidgetStateProperty.all(0),
+                barHintText: "Search for your To-Dos",
+                barLeading: AnimatedEmoji(AnimatedEmojis.nerdFace),
+                barBackgroundColor: WidgetStateProperty.all(
+                  Theme.of(context).colorScheme.primaryContainer,
                 ),
+                suggestionsBuilder: (context, controller) {
+                  if (controller.text.trim().isEmpty) {
+                    return [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedEmoji(AnimatedEmojis.owl, size: 60),
+                          SizedBox(height: 12),
+                          Text("Please provide a search term"),
+                        ],
+                      ),
+                    ];
+                  }
+                  return [
+                    BlocBuilder<TodoBloc, TodoState>(
+                      buildWhen: (stateA, stateB) => stateB is TodoLoadedState,
+                      builder: (context, state) {
+                        if (state is TodoLoadedState) {
+                          return StreamBuilder(
+                            stream: state.todosStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.active) {
+                                return Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                );
+                              }
+                              if (snapshot.hasData &&
+                                  snapshot.data!.isNotEmpty) {
+                                final activeTodos = snapshot.data!
+                                    .where(
+                                      (todo) =>
+                                          todo.title.toLowerCase().contains(
+                                            controller.text
+                                                .toLowerCase()
+                                                .trim(),
+                                          ),
+                                    )
+                                    .toList();
+                                return ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  addAutomaticKeepAlives: true,
+                                  itemCount: activeTodos.length,
+                                  itemBuilder: (context, index) {
+                                    return TodoCard(todo: activeTodos[index]);
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      Divider(),
+                                );
+                              }
+                              return Text(snapshot.connectionState.toString());
+                            },
+                          );
+                        }
+                        return Center(
+                          child: Text("You have no To-Dos at the moment"),
+                        );
+                      },
+                    ),
+                  ];
+                },
               ),
               actions: [
                 IconButton(
