@@ -186,8 +186,8 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerSingleton<TodoBloc>(
-    TodoBloc(
+  sl.registerFactory<TodoBloc>(
+    () => TodoBloc(
       syncTodosWithGoogleTasksUsecase: sl(),
       getCachedTodosUsecase: sl(),
       refreshTodosUsecase: sl(),
