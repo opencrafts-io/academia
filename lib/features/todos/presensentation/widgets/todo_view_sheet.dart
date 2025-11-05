@@ -27,6 +27,13 @@ class _TodoViewSheetState extends State<TodoViewSheet> {
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? due;
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
   Future<DateTime?> showDateTimePicker({
     required BuildContext context,
     DateTime? initialDate,
@@ -162,11 +169,14 @@ class _TodoViewSheetState extends State<TodoViewSheet> {
                 ).format(due ?? DateTime.now().add(Duration(hours: 1))),
               ),
               onTap: () async {
-                due = await showDateTimePicker(
+                final newDue = await showDateTimePicker(
                   context: context,
                   firstDate: DateTime.now(),
                 );
-                setState(() {});
+                if (!mounted) return;
+                setState(() {
+                  due = newDue;
+                });
               },
             ),
             ListTile(
