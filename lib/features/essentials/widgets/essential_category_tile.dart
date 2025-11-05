@@ -59,7 +59,7 @@ class EssentialCategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final customBorderRadius = _getBorderRadius();
     return Card.filled(
-      margin: EdgeInsetsGeometry.all(1),
+      margin: const EdgeInsets.all(1),
       clipBehavior: Clip.hardEdge,
       color: Theme.of(context).colorScheme.secondaryContainer,
       shape: RoundedRectangleBorder(borderRadius: customBorderRadius),
