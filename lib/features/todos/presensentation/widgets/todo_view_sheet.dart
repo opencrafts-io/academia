@@ -4,25 +4,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class CreateTodoBottomSheet extends StatefulWidget {
-  const CreateTodoBottomSheet({super.key, this.parentTodo});
+class TodoViewSheet extends StatefulWidget {
+  const TodoViewSheet({super.key, this.parentTodo, required this.todo});
+  final Todo todo;
+
   final String? parentTodo;
 
   @override
-  State<CreateTodoBottomSheet> createState() => _CreateTodoBottomSheetState();
+  State<TodoViewSheet> createState() => _TodoViewSheetState();
 }
 
-class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
-  bool showDescription = false;
-  bool showTime = true;
+class _TodoViewSheetState extends State<TodoViewSheet> {
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.todo.title;
+    _descriptionController.text = widget.todo.notes ?? '';
+    due = widget.todo.due;
+  }
 
-  final TextEditingController _titleController = TextEditingController(
-    text: "",
-  );
-  final TextEditingController _descriptionController = TextEditingController(
-    text: "",
-  );
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   DateTime? due;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   Future<DateTime?> showDateTimePicker({
     required BuildContext context,
@@ -95,22 +105,12 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                 return;
               }
               BlocProvider.of<TodoBloc>(context).add(
-                AddTodoEvent(
-                  todo: Todo(
-                    deleted: false,
-                    etag: "",
-                    hidden: false,
-                    id: "",
-                    kind: "",
-                    owner: state.profile.id,
-                    position: "",
-                    selfLink: "",
-                    status: "",
+                UpdateTodoEvent(
+                  todo: widget.todo.copyWith(
                     title: _titleController.text,
-                    webViewLink: "",
-                    due: due ?? DateTime.now(),
                     notes: _descriptionController.text,
-                    parent: widget.parentTodo,
+                    due: due,
+                    updated: DateTime.now(),
                   ),
                 ),
               );
@@ -118,6 +118,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
               context.pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Row(
                     spacing: 8,
                     children: [
@@ -126,13 +127,13 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                         width: 16,
                         child: CircularProgressIndicator.adaptive(),
                       ),
-                      Text("Creating your todo"),
+                      Text("Updating todo ..."),
                     ],
                   ),
                 ),
               );
             },
-            child: Text("Save"),
+            child: Text("Update To-Do"),
           ),
         ],
       ),
@@ -146,6 +147,8 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
           spacing: 4,
           children: [
             TextFormField(
+              maxLines: null,
+              minLines: 1,
               controller: _titleController,
               style: Theme.of(
                 context,
@@ -166,11 +169,14 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                 ).format(due ?? DateTime.now().add(Duration(hours: 1))),
               ),
               onTap: () async {
-                due = await showDateTimePicker(
+                final newDue = await showDateTimePicker(
                   context: context,
                   firstDate: DateTime.now(),
                 );
-                setState(() {});
+                if (!mounted) return;
+                setState(() {
+                  due = newDue;
+                });
               },
             ),
             ListTile(

@@ -5,6 +5,7 @@ class Todo {
   final String etag;
   final bool hidden;
   final String id;
+  final String? externalID;
   final String kind;
   final String? notes;
   final String owner;
@@ -17,6 +18,7 @@ class Todo {
   final String webViewLink;
 
   Todo({
+    this.externalID,
     this.completed,
     required this.deleted,
     this.due,
@@ -42,6 +44,7 @@ class Todo {
     String? etag,
     bool? hidden,
     String? id,
+    String? externalID,
     String? kind,
     String? notes,
     String? owner,
@@ -60,6 +63,7 @@ class Todo {
       etag: etag ?? this.etag,
       hidden: hidden ?? this.hidden,
       id: id ?? this.id,
+      externalID: externalID ?? this.externalID,
       kind: kind ?? this.kind,
       notes: notes ?? this.notes,
       owner: owner ?? this.owner,

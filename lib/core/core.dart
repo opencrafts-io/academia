@@ -7,3 +7,4 @@ export 'data/paginated_result.dart';
 export 'data/date_time_converter.dart';
 export 'data/json_converter.dart';
 export 'views/video_trimmer.dart';
+export 'widgets/expanding_fab.dart';

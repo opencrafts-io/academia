@@ -56,6 +56,14 @@ class CompleteTodoEvent extends TodoEvent {
   bool? get stringify => true;
 }
 
+class SyncTodosWithGoogleCalendar extends TodoEvent {
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool? get stringify => true;
+}
+
 class DeleteTodoEvent extends TodoEvent {
   final Todo todo;
   DeleteTodoEvent({required this.todo});

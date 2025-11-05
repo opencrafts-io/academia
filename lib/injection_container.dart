@@ -180,6 +180,24 @@ Future<void> init(FlavorConfig flavor) async {
     () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );
 
+  sl.registerFactory<SyncTodosWithGoogleTasksUsecase>(
+    () => SyncTodosWithGoogleTasksUsecase(
+      todoRepository: sl.get<TodoRepository>(),
+    ),
+  );
+
+  sl.registerFactory<TodoBloc>(
+    () => TodoBloc(
+      syncTodosWithGoogleTasksUsecase: sl(),
+      getCachedTodosUsecase: sl(),
+      refreshTodosUsecase: sl(),
+      createTodoUsecase: sl(),
+      updateTodoUsecase: sl(),
+      deleteTodoUsecase: sl(),
+      completeTodoUsecase: sl(),
+    ),
+  );
+
   // Agenda
   sl.registerFactory<AgendaEventLocalDataSource>(
     () => AgendaEventLocalDataSource(localDB: cacheDB),

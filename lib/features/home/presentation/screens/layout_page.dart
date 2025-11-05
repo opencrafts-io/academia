@@ -26,6 +26,11 @@ class _LayoutPageState extends State<LayoutPage> {
             Visibility(
               visible: !ResponsiveBreakPoints.isMobile(context),
               child: NavigationRail(
+                selectedIconTheme: Theme.of(
+                  context,
+                ).iconTheme.copyWith(color: Theme.of(context).primaryColor),
+                selectedLabelTextStyle: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
                 labelType: NavigationRailLabelType.all,
                 groupAlignment:
                     constraints.maxWidth > ResponsiveBreakPoints.tablet
@@ -39,7 +44,7 @@ class _LayoutPageState extends State<LayoutPage> {
                   ),
                   NavigationRailDestination(
                     icon: Icon(Symbols.calendar_today),
-                    label: Text("Agenda"),
+                    label: Text("Calendar"),
                   ),
 
                   // NavigationRailDestination(
@@ -71,7 +76,7 @@ class _LayoutPageState extends State<LayoutPage> {
                   NavigationDestination(
                     icon: Icon(Symbols.calendar_today),
                     selectedIcon: Icon(Symbols.calendar_today),
-                    label: "Agenda",
+                    label: "Calendar",
                   ),
 
                   // NavigationDestination(

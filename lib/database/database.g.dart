@@ -3065,6 +3065,27 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TodoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _externalIDMeta = const VerificationMeta(
+    'externalID',
+  );
+  @override
+  late final GeneratedColumn<String> externalID = GeneratedColumn<String>(
+    'external_i_d',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
   static const VerificationMeta _completedMeta = const VerificationMeta(
     'completed',
   );
@@ -3121,15 +3142,6 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
       'CHECK ("hidden" IN (0, 1))',
     ),
     defaultValue: Constant(false),
-  );
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
   );
   static const VerificationMeta _kindMeta = const VerificationMeta('kind');
   @override
@@ -3231,12 +3243,13 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
+    externalID,
     completed,
     deleted,
     due,
     etag,
     hidden,
-    id,
     kind,
     notes,
     owner,
@@ -3260,6 +3273,20 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('external_i_d')) {
+      context.handle(
+        _externalIDMeta,
+        externalID.isAcceptableOrUnknown(
+          data['external_i_d']!,
+          _externalIDMeta,
+        ),
+      );
+    }
     if (data.containsKey('completed')) {
       context.handle(
         _completedMeta,
@@ -3291,11 +3318,6 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
         _hiddenMeta,
         hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
       );
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('kind')) {
       context.handle(
@@ -3383,6 +3405,14 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
   TodoData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TodoData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      externalID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}external_i_d'],
+      ),
       completed: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}completed'],
@@ -3402,10 +3432,6 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
       hidden: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}hidden'],
-      )!,
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
       )!,
       kind: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -3457,12 +3483,13 @@ class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
 }
 
 class TodoData extends DataClass implements Insertable<TodoData> {
+  final String id;
+  final String? externalID;
   final DateTime? completed;
   final bool deleted;
   final DateTime? due;
   final String etag;
   final bool hidden;
-  final String id;
   final String kind;
   final String? notes;
   final String owner;
@@ -3474,12 +3501,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   final DateTime? updated;
   final String webViewLink;
   const TodoData({
+    required this.id,
+    this.externalID,
     this.completed,
     required this.deleted,
     this.due,
     required this.etag,
     required this.hidden,
-    required this.id,
     required this.kind,
     this.notes,
     required this.owner,
@@ -3494,6 +3522,10 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || externalID != null) {
+      map['external_i_d'] = Variable<String>(externalID);
+    }
     if (!nullToAbsent || completed != null) {
       map['completed'] = Variable<DateTime>(completed);
     }
@@ -3503,7 +3535,6 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     }
     map['etag'] = Variable<String>(etag);
     map['hidden'] = Variable<bool>(hidden);
-    map['id'] = Variable<String>(id);
     map['kind'] = Variable<String>(kind);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
@@ -3525,6 +3556,10 @@ class TodoData extends DataClass implements Insertable<TodoData> {
 
   TodoCompanion toCompanion(bool nullToAbsent) {
     return TodoCompanion(
+      id: Value(id),
+      externalID: externalID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(externalID),
       completed: completed == null && nullToAbsent
           ? const Value.absent()
           : Value(completed),
@@ -3532,7 +3567,6 @@ class TodoData extends DataClass implements Insertable<TodoData> {
       due: due == null && nullToAbsent ? const Value.absent() : Value(due),
       etag: Value(etag),
       hidden: Value(hidden),
-      id: Value(id),
       kind: Value(kind),
       notes: notes == null && nullToAbsent
           ? const Value.absent()
@@ -3558,12 +3592,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TodoData(
+      id: serializer.fromJson<String>(json['id']),
+      externalID: serializer.fromJson<String?>(json['external_id']),
       completed: serializer.fromJson<DateTime?>(json['completed']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       due: serializer.fromJson<DateTime?>(json['due']),
       etag: serializer.fromJson<String>(json['etag']),
       hidden: serializer.fromJson<bool>(json['hidden']),
-      id: serializer.fromJson<String>(json['id']),
       kind: serializer.fromJson<String>(json['kind']),
       notes: serializer.fromJson<String?>(json['notes']),
       owner: serializer.fromJson<String>(json['owner_id']),
@@ -3580,12 +3615,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'external_id': serializer.toJson<String?>(externalID),
       'completed': serializer.toJson<DateTime?>(completed),
       'deleted': serializer.toJson<bool>(deleted),
       'due': serializer.toJson<DateTime?>(due),
       'etag': serializer.toJson<String>(etag),
       'hidden': serializer.toJson<bool>(hidden),
-      'id': serializer.toJson<String>(id),
       'kind': serializer.toJson<String>(kind),
       'notes': serializer.toJson<String?>(notes),
       'owner_id': serializer.toJson<String>(owner),
@@ -3600,12 +3636,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   }
 
   TodoData copyWith({
+    String? id,
+    Value<String?> externalID = const Value.absent(),
     Value<DateTime?> completed = const Value.absent(),
     bool? deleted,
     Value<DateTime?> due = const Value.absent(),
     String? etag,
     bool? hidden,
-    String? id,
     String? kind,
     Value<String?> notes = const Value.absent(),
     String? owner,
@@ -3617,12 +3654,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
     Value<DateTime?> updated = const Value.absent(),
     String? webViewLink,
   }) => TodoData(
+    id: id ?? this.id,
+    externalID: externalID.present ? externalID.value : this.externalID,
     completed: completed.present ? completed.value : this.completed,
     deleted: deleted ?? this.deleted,
     due: due.present ? due.value : this.due,
     etag: etag ?? this.etag,
     hidden: hidden ?? this.hidden,
-    id: id ?? this.id,
     kind: kind ?? this.kind,
     notes: notes.present ? notes.value : this.notes,
     owner: owner ?? this.owner,
@@ -3636,12 +3674,15 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   );
   TodoData copyWithCompanion(TodoCompanion data) {
     return TodoData(
+      id: data.id.present ? data.id.value : this.id,
+      externalID: data.externalID.present
+          ? data.externalID.value
+          : this.externalID,
       completed: data.completed.present ? data.completed.value : this.completed,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       due: data.due.present ? data.due.value : this.due,
       etag: data.etag.present ? data.etag.value : this.etag,
       hidden: data.hidden.present ? data.hidden.value : this.hidden,
-      id: data.id.present ? data.id.value : this.id,
       kind: data.kind.present ? data.kind.value : this.kind,
       notes: data.notes.present ? data.notes.value : this.notes,
       owner: data.owner.present ? data.owner.value : this.owner,
@@ -3660,12 +3701,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   @override
   String toString() {
     return (StringBuffer('TodoData(')
+          ..write('id: $id, ')
+          ..write('externalID: $externalID, ')
           ..write('completed: $completed, ')
           ..write('deleted: $deleted, ')
           ..write('due: $due, ')
           ..write('etag: $etag, ')
           ..write('hidden: $hidden, ')
-          ..write('id: $id, ')
           ..write('kind: $kind, ')
           ..write('notes: $notes, ')
           ..write('owner: $owner, ')
@@ -3682,12 +3724,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
 
   @override
   int get hashCode => Object.hash(
+    id,
+    externalID,
     completed,
     deleted,
     due,
     etag,
     hidden,
-    id,
     kind,
     notes,
     owner,
@@ -3703,12 +3746,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TodoData &&
+          other.id == this.id &&
+          other.externalID == this.externalID &&
           other.completed == this.completed &&
           other.deleted == this.deleted &&
           other.due == this.due &&
           other.etag == this.etag &&
           other.hidden == this.hidden &&
-          other.id == this.id &&
           other.kind == this.kind &&
           other.notes == this.notes &&
           other.owner == this.owner &&
@@ -3722,12 +3766,13 @@ class TodoData extends DataClass implements Insertable<TodoData> {
 }
 
 class TodoCompanion extends UpdateCompanion<TodoData> {
+  final Value<String> id;
+  final Value<String?> externalID;
   final Value<DateTime?> completed;
   final Value<bool> deleted;
   final Value<DateTime?> due;
   final Value<String> etag;
   final Value<bool> hidden;
-  final Value<String> id;
   final Value<String> kind;
   final Value<String?> notes;
   final Value<String> owner;
@@ -3740,12 +3785,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   final Value<String> webViewLink;
   final Value<int> rowid;
   const TodoCompanion({
+    this.id = const Value.absent(),
+    this.externalID = const Value.absent(),
     this.completed = const Value.absent(),
     this.deleted = const Value.absent(),
     this.due = const Value.absent(),
     this.etag = const Value.absent(),
     this.hidden = const Value.absent(),
-    this.id = const Value.absent(),
     this.kind = const Value.absent(),
     this.notes = const Value.absent(),
     this.owner = const Value.absent(),
@@ -3759,12 +3805,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     this.rowid = const Value.absent(),
   });
   TodoCompanion.insert({
+    required String id,
+    this.externalID = const Value.absent(),
     this.completed = const Value.absent(),
     this.deleted = const Value.absent(),
     this.due = const Value.absent(),
     required String etag,
     this.hidden = const Value.absent(),
-    required String id,
     required String kind,
     this.notes = const Value.absent(),
     required String owner,
@@ -3776,8 +3823,8 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     this.updated = const Value.absent(),
     required String webViewLink,
     this.rowid = const Value.absent(),
-  }) : etag = Value(etag),
-       id = Value(id),
+  }) : id = Value(id),
+       etag = Value(etag),
        kind = Value(kind),
        owner = Value(owner),
        position = Value(position),
@@ -3786,12 +3833,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
        title = Value(title),
        webViewLink = Value(webViewLink);
   static Insertable<TodoData> custom({
+    Expression<String>? id,
+    Expression<String>? externalID,
     Expression<DateTime>? completed,
     Expression<bool>? deleted,
     Expression<DateTime>? due,
     Expression<String>? etag,
     Expression<bool>? hidden,
-    Expression<String>? id,
     Expression<String>? kind,
     Expression<String>? notes,
     Expression<String>? owner,
@@ -3805,12 +3853,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (externalID != null) 'external_i_d': externalID,
       if (completed != null) 'completed': completed,
       if (deleted != null) 'deleted': deleted,
       if (due != null) 'due': due,
       if (etag != null) 'etag': etag,
       if (hidden != null) 'hidden': hidden,
-      if (id != null) 'id': id,
       if (kind != null) 'kind': kind,
       if (notes != null) 'notes': notes,
       if (owner != null) 'owner': owner,
@@ -3826,12 +3875,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   }
 
   TodoCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? externalID,
     Value<DateTime?>? completed,
     Value<bool>? deleted,
     Value<DateTime?>? due,
     Value<String>? etag,
     Value<bool>? hidden,
-    Value<String>? id,
     Value<String>? kind,
     Value<String?>? notes,
     Value<String>? owner,
@@ -3845,12 +3895,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     Value<int>? rowid,
   }) {
     return TodoCompanion(
+      id: id ?? this.id,
+      externalID: externalID ?? this.externalID,
       completed: completed ?? this.completed,
       deleted: deleted ?? this.deleted,
       due: due ?? this.due,
       etag: etag ?? this.etag,
       hidden: hidden ?? this.hidden,
-      id: id ?? this.id,
       kind: kind ?? this.kind,
       notes: notes ?? this.notes,
       owner: owner ?? this.owner,
@@ -3868,6 +3919,12 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (externalID.present) {
+      map['external_i_d'] = Variable<String>(externalID.value);
+    }
     if (completed.present) {
       map['completed'] = Variable<DateTime>(completed.value);
     }
@@ -3882,9 +3939,6 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
     }
     if (hidden.present) {
       map['hidden'] = Variable<bool>(hidden.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
     }
     if (kind.present) {
       map['kind'] = Variable<String>(kind.value);
@@ -3925,12 +3979,13 @@ class TodoCompanion extends UpdateCompanion<TodoData> {
   @override
   String toString() {
     return (StringBuffer('TodoCompanion(')
+          ..write('id: $id, ')
+          ..write('externalID: $externalID, ')
           ..write('completed: $completed, ')
           ..write('deleted: $deleted, ')
           ..write('due: $due, ')
           ..write('etag: $etag, ')
           ..write('hidden: $hidden, ')
-          ..write('id: $id, ')
           ..write('kind: $kind, ')
           ..write('notes: $notes, ')
           ..write('owner: $owner, ')
@@ -17040,12 +17095,13 @@ typedef $$CommentTableTableProcessedTableManager =
     >;
 typedef $$TodoTableCreateCompanionBuilder =
     TodoCompanion Function({
+      required String id,
+      Value<String?> externalID,
       Value<DateTime?> completed,
       Value<bool> deleted,
       Value<DateTime?> due,
       required String etag,
       Value<bool> hidden,
-      required String id,
       required String kind,
       Value<String?> notes,
       required String owner,
@@ -17060,12 +17116,13 @@ typedef $$TodoTableCreateCompanionBuilder =
     });
 typedef $$TodoTableUpdateCompanionBuilder =
     TodoCompanion Function({
+      Value<String> id,
+      Value<String?> externalID,
       Value<DateTime?> completed,
       Value<bool> deleted,
       Value<DateTime?> due,
       Value<String> etag,
       Value<bool> hidden,
-      Value<String> id,
       Value<String> kind,
       Value<String?> notes,
       Value<String> owner,
@@ -17087,6 +17144,16 @@ class $$TodoTableFilterComposer extends Composer<_$AppDataBase, $TodoTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get externalID => $composableBuilder(
+    column: $table.externalID,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get completed => $composableBuilder(
     column: $table.completed,
     builder: (column) => ColumnFilters(column),
@@ -17109,11 +17176,6 @@ class $$TodoTableFilterComposer extends Composer<_$AppDataBase, $TodoTable> {
 
   ColumnFilters<bool> get hidden => $composableBuilder(
     column: $table.hidden,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17176,6 +17238,16 @@ class $$TodoTableOrderingComposer extends Composer<_$AppDataBase, $TodoTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get externalID => $composableBuilder(
+    column: $table.externalID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get completed => $composableBuilder(
     column: $table.completed,
     builder: (column) => ColumnOrderings(column),
@@ -17198,11 +17270,6 @@ class $$TodoTableOrderingComposer extends Composer<_$AppDataBase, $TodoTable> {
 
   ColumnOrderings<bool> get hidden => $composableBuilder(
     column: $table.hidden,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -17266,6 +17333,14 @@ class $$TodoTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get externalID => $composableBuilder(
+    column: $table.externalID,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get completed =>
       $composableBuilder(column: $table.completed, builder: (column) => column);
 
@@ -17280,9 +17355,6 @@ class $$TodoTableAnnotationComposer
 
   GeneratedColumn<bool> get hidden =>
       $composableBuilder(column: $table.hidden, builder: (column) => column);
-
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get kind =>
       $composableBuilder(column: $table.kind, builder: (column) => column);
@@ -17345,12 +17417,13 @@ class $$TodoTableTableManager
               $$TodoTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> id = const Value.absent(),
+                Value<String?> externalID = const Value.absent(),
                 Value<DateTime?> completed = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<DateTime?> due = const Value.absent(),
                 Value<String> etag = const Value.absent(),
                 Value<bool> hidden = const Value.absent(),
-                Value<String> id = const Value.absent(),
                 Value<String> kind = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<String> owner = const Value.absent(),
@@ -17363,12 +17436,13 @@ class $$TodoTableTableManager
                 Value<String> webViewLink = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TodoCompanion(
+                id: id,
+                externalID: externalID,
                 completed: completed,
                 deleted: deleted,
                 due: due,
                 etag: etag,
                 hidden: hidden,
-                id: id,
                 kind: kind,
                 notes: notes,
                 owner: owner,
@@ -17383,12 +17457,13 @@ class $$TodoTableTableManager
               ),
           createCompanionCallback:
               ({
+                required String id,
+                Value<String?> externalID = const Value.absent(),
                 Value<DateTime?> completed = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<DateTime?> due = const Value.absent(),
                 required String etag,
                 Value<bool> hidden = const Value.absent(),
-                required String id,
                 required String kind,
                 Value<String?> notes = const Value.absent(),
                 required String owner,
@@ -17401,12 +17476,13 @@ class $$TodoTableTableManager
                 required String webViewLink,
                 Value<int> rowid = const Value.absent(),
               }) => TodoCompanion.insert(
+                id: id,
+                externalID: externalID,
                 completed: completed,
                 deleted: deleted,
                 due: due,
                 etag: etag,
                 hidden: hidden,
-                id: id,
                 kind: kind,
                 notes: notes,
                 owner: owner,

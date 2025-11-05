@@ -57,13 +57,21 @@ class TodoRepositoryImpl implements TodoRepository {
       return Left((remoteRes as Left).value);
     }
 
-    final localRes = await todoLocalDatasource.createOrUpdateTodo(
+    final updateLocalRes = await todoLocalDatasource.createOrUpdateTodo(
       (remoteRes as Right).value,
     );
-    return localRes.fold(
+
+    return updateLocalRes.fold(
       (failure) => left(failure),
       (created) => right(created.toEntity()),
     );
+  }
+
+  @override
+  /// syncWithGoogleTasks
+  /// Syncs todos with google calendar
+  Future<Either<Failure, bool>> syncWithGoogleTasks() async {
+    return todoRemoteDatasource.sync();
   }
 
   @override
