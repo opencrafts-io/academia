@@ -27,6 +27,13 @@ class _TodoViewSheetState extends State<TodoViewSheet> {
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? due;
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
   Future<DateTime?> showDateTimePicker({
     required BuildContext context,
     DateTime? initialDate,
