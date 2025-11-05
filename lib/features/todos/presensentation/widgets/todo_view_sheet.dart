@@ -162,11 +162,14 @@ class _TodoViewSheetState extends State<TodoViewSheet> {
                 ).format(due ?? DateTime.now().add(Duration(hours: 1))),
               ),
               onTap: () async {
-                due = await showDateTimePicker(
+                final newDue = await showDateTimePicker(
                   context: context,
                   firstDate: DateTime.now(),
                 );
-                setState(() {});
+                if (!mounted) return;
+                setState(() {
+                  due = newDue;
+                });
               },
             ),
             ListTile(
