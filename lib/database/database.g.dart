@@ -15536,6 +15536,613 @@ class ChirpCommunityMembershipCompanion
   }
 }
 
+class $LeaderboardRankTable extends LeaderboardRank
+    with TableInfo<$LeaderboardRankTable, LeaderboardRankData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LeaderboardRankTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _vibePointsMeta = const VerificationMeta(
+    'vibePoints',
+  );
+  @override
+  late final GeneratedColumn<int> vibePoints = GeneratedColumn<int>(
+    'vibe_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _vibeRankMeta = const VerificationMeta(
+    'vibeRank',
+  );
+  @override
+  late final GeneratedColumn<int> vibeRank = GeneratedColumn<int>(
+    'vibe_rank',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    avatarUrl,
+    email,
+    name,
+    username,
+    vibePoints,
+    vibeRank,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'leaderboard_rank';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LeaderboardRankData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_avatarUrlMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('vibe_points')) {
+      context.handle(
+        _vibePointsMeta,
+        vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
+      );
+    }
+    if (data.containsKey('vibe_rank')) {
+      context.handle(
+        _vibeRankMeta,
+        vibeRank.isAcceptableOrUnknown(data['vibe_rank']!, _vibeRankMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_vibeRankMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  LeaderboardRankData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LeaderboardRankData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
+      vibePoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibe_points'],
+      )!,
+      vibeRank: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibe_rank'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
+    );
+  }
+
+  @override
+  $LeaderboardRankTable createAlias(String alias) {
+    return $LeaderboardRankTable(attachedDatabase, alias);
+  }
+}
+
+class LeaderboardRankData extends DataClass
+    implements Insertable<LeaderboardRankData> {
+  final String id;
+  final String avatarUrl;
+  final String email;
+  final String name;
+  final String username;
+  final int vibePoints;
+  final int vibeRank;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? cachedAt;
+  const LeaderboardRankData({
+    required this.id,
+    required this.avatarUrl,
+    required this.email,
+    required this.name,
+    required this.username,
+    required this.vibePoints,
+    required this.vibeRank,
+    required this.createdAt,
+    required this.updatedAt,
+    this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['avatar_url'] = Variable<String>(avatarUrl);
+    map['email'] = Variable<String>(email);
+    map['name'] = Variable<String>(name);
+    map['username'] = Variable<String>(username);
+    map['vibe_points'] = Variable<int>(vibePoints);
+    map['vibe_rank'] = Variable<int>(vibeRank);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
+    return map;
+  }
+
+  LeaderboardRankCompanion toCompanion(bool nullToAbsent) {
+    return LeaderboardRankCompanion(
+      id: Value(id),
+      avatarUrl: Value(avatarUrl),
+      email: Value(email),
+      name: Value(name),
+      username: Value(username),
+      vibePoints: Value(vibePoints),
+      vibeRank: Value(vibeRank),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
+    );
+  }
+
+  factory LeaderboardRankData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LeaderboardRankData(
+      id: serializer.fromJson<String>(json['id']),
+      avatarUrl: serializer.fromJson<String>(json['avatarUrl']),
+      email: serializer.fromJson<String>(json['email']),
+      name: serializer.fromJson<String>(json['name']),
+      username: serializer.fromJson<String>(json['username']),
+      vibePoints: serializer.fromJson<int>(json['vibe_points']),
+      vibeRank: serializer.fromJson<int>(json['vibe_rank']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'avatarUrl': serializer.toJson<String>(avatarUrl),
+      'email': serializer.toJson<String>(email),
+      'name': serializer.toJson<String>(name),
+      'username': serializer.toJson<String>(username),
+      'vibe_points': serializer.toJson<int>(vibePoints),
+      'vibe_rank': serializer.toJson<int>(vibeRank),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
+    };
+  }
+
+  LeaderboardRankData copyWith({
+    String? id,
+    String? avatarUrl,
+    String? email,
+    String? name,
+    String? username,
+    int? vibePoints,
+    int? vibeRank,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
+  }) => LeaderboardRankData(
+    id: id ?? this.id,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    email: email ?? this.email,
+    name: name ?? this.name,
+    username: username ?? this.username,
+    vibePoints: vibePoints ?? this.vibePoints,
+    vibeRank: vibeRank ?? this.vibeRank,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
+  );
+  LeaderboardRankData copyWithCompanion(LeaderboardRankCompanion data) {
+    return LeaderboardRankData(
+      id: data.id.present ? data.id.value : this.id,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      email: data.email.present ? data.email.value : this.email,
+      name: data.name.present ? data.name.value : this.name,
+      username: data.username.present ? data.username.value : this.username,
+      vibePoints: data.vibePoints.present
+          ? data.vibePoints.value
+          : this.vibePoints,
+      vibeRank: data.vibeRank.present ? data.vibeRank.value : this.vibeRank,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LeaderboardRankData(')
+          ..write('id: $id, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('vibeRank: $vibeRank, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    avatarUrl,
+    email,
+    name,
+    username,
+    vibePoints,
+    vibeRank,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LeaderboardRankData &&
+          other.id == this.id &&
+          other.avatarUrl == this.avatarUrl &&
+          other.email == this.email &&
+          other.name == this.name &&
+          other.username == this.username &&
+          other.vibePoints == this.vibePoints &&
+          other.vibeRank == this.vibeRank &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
+}
+
+class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
+  final Value<String> id;
+  final Value<String> avatarUrl;
+  final Value<String> email;
+  final Value<String> name;
+  final Value<String> username;
+  final Value<int> vibePoints;
+  final Value<int> vibeRank;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> cachedAt;
+  final Value<int> rowid;
+  const LeaderboardRankCompanion({
+    this.id = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.email = const Value.absent(),
+    this.name = const Value.absent(),
+    this.username = const Value.absent(),
+    this.vibePoints = const Value.absent(),
+    this.vibeRank = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LeaderboardRankCompanion.insert({
+    required String id,
+    required String avatarUrl,
+    required String email,
+    required String name,
+    required String username,
+    this.vibePoints = const Value.absent(),
+    required int vibeRank,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       avatarUrl = Value(avatarUrl),
+       email = Value(email),
+       name = Value(name),
+       username = Value(username),
+       vibeRank = Value(vibeRank),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<LeaderboardRankData> custom({
+    Expression<String>? id,
+    Expression<String>? avatarUrl,
+    Expression<String>? email,
+    Expression<String>? name,
+    Expression<String>? username,
+    Expression<int>? vibePoints,
+    Expression<int>? vibeRank,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
+      if (username != null) 'username': username,
+      if (vibePoints != null) 'vibe_points': vibePoints,
+      if (vibeRank != null) 'vibe_rank': vibeRank,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LeaderboardRankCompanion copyWith({
+    Value<String>? id,
+    Value<String>? avatarUrl,
+    Value<String>? email,
+    Value<String>? name,
+    Value<String>? username,
+    Value<int>? vibePoints,
+    Value<int>? vibeRank,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return LeaderboardRankCompanion(
+      id: id ?? this.id,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      vibePoints: vibePoints ?? this.vibePoints,
+      vibeRank: vibeRank ?? this.vibeRank,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (vibePoints.present) {
+      map['vibe_points'] = Variable<int>(vibePoints.value);
+    }
+    if (vibeRank.present) {
+      map['vibe_rank'] = Variable<int>(vibeRank.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LeaderboardRankCompanion(')
+          ..write('id: $id, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('vibeRank: $vibeRank, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -15568,6 +16175,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $CommunityTable community = $CommunityTable(this);
   late final $ChirpCommunityMembershipTable chirpCommunityMembership =
       $ChirpCommunityMembershipTable(this);
+  late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -15593,6 +16203,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     chirpUser,
     community,
     chirpCommunityMembership,
+    leaderboardRank,
   ];
 }
 
@@ -23774,6 +24385,313 @@ typedef $$ChirpCommunityMembershipTableProcessedTableManager =
       ChirpCommunityMembershipData,
       PrefetchHooks Function({bool userID})
     >;
+typedef $$LeaderboardRankTableCreateCompanionBuilder =
+    LeaderboardRankCompanion Function({
+      required String id,
+      required String avatarUrl,
+      required String email,
+      required String name,
+      required String username,
+      Value<int> vibePoints,
+      required int vibeRank,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+typedef $$LeaderboardRankTableUpdateCompanionBuilder =
+    LeaderboardRankCompanion Function({
+      Value<String> id,
+      Value<String> avatarUrl,
+      Value<String> email,
+      Value<String> name,
+      Value<String> username,
+      Value<int> vibePoints,
+      Value<int> vibeRank,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+
+class $$LeaderboardRankTableFilterComposer
+    extends Composer<_$AppDataBase, $LeaderboardRankTable> {
+  $$LeaderboardRankTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibeRank => $composableBuilder(
+    column: $table.vibeRank,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LeaderboardRankTableOrderingComposer
+    extends Composer<_$AppDataBase, $LeaderboardRankTable> {
+  $$LeaderboardRankTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibeRank => $composableBuilder(
+    column: $table.vibeRank,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LeaderboardRankTableAnnotationComposer
+    extends Composer<_$AppDataBase, $LeaderboardRankTable> {
+  $$LeaderboardRankTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get vibeRank =>
+      $composableBuilder(column: $table.vibeRank, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$LeaderboardRankTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $LeaderboardRankTable,
+          LeaderboardRankData,
+          $$LeaderboardRankTableFilterComposer,
+          $$LeaderboardRankTableOrderingComposer,
+          $$LeaderboardRankTableAnnotationComposer,
+          $$LeaderboardRankTableCreateCompanionBuilder,
+          $$LeaderboardRankTableUpdateCompanionBuilder,
+          (
+            LeaderboardRankData,
+            BaseReferences<
+              _$AppDataBase,
+              $LeaderboardRankTable,
+              LeaderboardRankData
+            >,
+          ),
+          LeaderboardRankData,
+          PrefetchHooks Function()
+        > {
+  $$LeaderboardRankTableTableManager(
+    _$AppDataBase db,
+    $LeaderboardRankTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LeaderboardRankTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LeaderboardRankTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LeaderboardRankTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> avatarUrl = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> username = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
+                Value<int> vibeRank = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LeaderboardRankCompanion(
+                id: id,
+                avatarUrl: avatarUrl,
+                email: email,
+                name: name,
+                username: username,
+                vibePoints: vibePoints,
+                vibeRank: vibeRank,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String avatarUrl,
+                required String email,
+                required String name,
+                required String username,
+                Value<int> vibePoints = const Value.absent(),
+                required int vibeRank,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LeaderboardRankCompanion.insert(
+                id: id,
+                avatarUrl: avatarUrl,
+                email: email,
+                name: name,
+                username: username,
+                vibePoints: vibePoints,
+                vibeRank: vibeRank,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LeaderboardRankTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $LeaderboardRankTable,
+      LeaderboardRankData,
+      $$LeaderboardRankTableFilterComposer,
+      $$LeaderboardRankTableOrderingComposer,
+      $$LeaderboardRankTableAnnotationComposer,
+      $$LeaderboardRankTableCreateCompanionBuilder,
+      $$LeaderboardRankTableUpdateCompanionBuilder,
+      (
+        LeaderboardRankData,
+        BaseReferences<
+          _$AppDataBase,
+          $LeaderboardRankTable,
+          LeaderboardRankData
+        >,
+      ),
+      LeaderboardRankData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -23824,4 +24742,6 @@ class $AppDataBaseManager {
         _db,
         _db.chirpCommunityMembership,
       );
+  $$LeaderboardRankTableTableManager get leaderboardRank =>
+      $$LeaderboardRankTableTableManager(_db, _db.leaderboardRank);
 }

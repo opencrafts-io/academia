@@ -7,6 +7,7 @@ import 'package:academia/features/chirp/posts/data/models/attachment_model.dart'
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
 import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
 import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
 import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
@@ -58,8 +59,8 @@ part 'database.g.dart';
     MagnetCredentials,
     MagnetCourseInfo,
     MagnetFinancialTransaction,
-       /**************************************************************
-    *           CHIRP
+    /**************************************************************
+    *              CHIRP FEATURE DATA MODELS
     **************************************************************/
     // Users
     ChirpUser,
@@ -67,6 +68,11 @@ part 'database.g.dart';
     Community,
     // Memberships
     ChirpCommunityMembership,
+
+    /**************************************************************
+    *               LEADERBOARD FEATURE DATA MODELS
+    ***************************************************************/
+    LeaderboardRank,
   ],
 )
 
@@ -78,7 +84,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration {
