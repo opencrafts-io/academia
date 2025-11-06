@@ -789,4 +789,25 @@ Future<void> init(FlavorConfig flavor) async {
       requestPermissionUsecase: sl(),
     ),
   );
+
+  /**********************************************************************
+  *                               LEADERBOARD
+  **********************************************************************/
+  sl.registerFactory<LeaderboardLocalDataSource>(
+    () => LeaderboardLocalDataSource(localDB: sl()),
+  );
+  sl.registerFactory<LeaderboardRemoteDataSource>(
+    () => LeaderboardRemoteDataSource(dioClient: sl(), flavor: sl()),
+  );
+  sl.registerFactory<LeaderboardRepository>(
+    () => LeaderboardRepositoryImpl(
+      leaderboardRemoteDataSource: sl(),
+      leaderboardLocalDataSource: sl(),
+    ),
+  );
+  sl.registerFactory<GetGlobalLeaderboardUsecase>(
+    () => GetGlobalLeaderboardUsecase(leaderboardRepository: sl()),
+  );
+
+  sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
 }
