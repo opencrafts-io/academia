@@ -15558,9 +15558,9 @@ class $LeaderboardRankTable extends LeaderboardRank
   late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
     'avatar_url',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
@@ -15587,9 +15587,9 @@ class $LeaderboardRankTable extends LeaderboardRank
   late final GeneratedColumn<String> username = GeneratedColumn<String>(
     'username',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _vibePointsMeta = const VerificationMeta(
     'vibePoints',
@@ -15683,8 +15683,6 @@ class $LeaderboardRankTable extends LeaderboardRank
         _avatarUrlMeta,
         avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
       );
-    } else if (isInserting) {
-      context.missing(_avatarUrlMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -15707,8 +15705,6 @@ class $LeaderboardRankTable extends LeaderboardRank
         _usernameMeta,
         username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_usernameMeta);
     }
     if (data.containsKey('vibe_points')) {
       context.handle(
@@ -15762,7 +15758,7 @@ class $LeaderboardRankTable extends LeaderboardRank
       avatarUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}avatar_url'],
-      )!,
+      ),
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -15774,7 +15770,7 @@ class $LeaderboardRankTable extends LeaderboardRank
       username: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}username'],
-      )!,
+      ),
       vibePoints: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}vibe_points'],
@@ -15807,10 +15803,10 @@ class $LeaderboardRankTable extends LeaderboardRank
 class LeaderboardRankData extends DataClass
     implements Insertable<LeaderboardRankData> {
   final String id;
-  final String avatarUrl;
+  final String? avatarUrl;
   final String email;
   final String name;
-  final String username;
+  final String? username;
   final int vibePoints;
   final int vibeRank;
   final DateTime createdAt;
@@ -15818,10 +15814,10 @@ class LeaderboardRankData extends DataClass
   final DateTime? cachedAt;
   const LeaderboardRankData({
     required this.id,
-    required this.avatarUrl,
+    this.avatarUrl,
     required this.email,
     required this.name,
-    required this.username,
+    this.username,
     required this.vibePoints,
     required this.vibeRank,
     required this.createdAt,
@@ -15832,10 +15828,14 @@ class LeaderboardRankData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['avatar_url'] = Variable<String>(avatarUrl);
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
     map['email'] = Variable<String>(email);
     map['name'] = Variable<String>(name);
-    map['username'] = Variable<String>(username);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String>(username);
+    }
     map['vibe_points'] = Variable<int>(vibePoints);
     map['vibe_rank'] = Variable<int>(vibeRank);
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -15849,10 +15849,14 @@ class LeaderboardRankData extends DataClass
   LeaderboardRankCompanion toCompanion(bool nullToAbsent) {
     return LeaderboardRankCompanion(
       id: Value(id),
-      avatarUrl: Value(avatarUrl),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
       email: Value(email),
       name: Value(name),
-      username: Value(username),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
       vibePoints: Value(vibePoints),
       vibeRank: Value(vibeRank),
       createdAt: Value(createdAt),
@@ -15870,10 +15874,10 @@ class LeaderboardRankData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LeaderboardRankData(
       id: serializer.fromJson<String>(json['id']),
-      avatarUrl: serializer.fromJson<String>(json['avatarUrl']),
+      avatarUrl: serializer.fromJson<String?>(json['avatar_url']),
       email: serializer.fromJson<String>(json['email']),
       name: serializer.fromJson<String>(json['name']),
-      username: serializer.fromJson<String>(json['username']),
+      username: serializer.fromJson<String?>(json['username']),
       vibePoints: serializer.fromJson<int>(json['vibe_points']),
       vibeRank: serializer.fromJson<int>(json['vibe_rank']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
@@ -15886,10 +15890,10 @@ class LeaderboardRankData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'avatarUrl': serializer.toJson<String>(avatarUrl),
+      'avatar_url': serializer.toJson<String?>(avatarUrl),
       'email': serializer.toJson<String>(email),
       'name': serializer.toJson<String>(name),
-      'username': serializer.toJson<String>(username),
+      'username': serializer.toJson<String?>(username),
       'vibe_points': serializer.toJson<int>(vibePoints),
       'vibe_rank': serializer.toJson<int>(vibeRank),
       'created_at': serializer.toJson<DateTime>(createdAt),
@@ -15900,10 +15904,10 @@ class LeaderboardRankData extends DataClass
 
   LeaderboardRankData copyWith({
     String? id,
-    String? avatarUrl,
+    Value<String?> avatarUrl = const Value.absent(),
     String? email,
     String? name,
-    String? username,
+    Value<String?> username = const Value.absent(),
     int? vibePoints,
     int? vibeRank,
     DateTime? createdAt,
@@ -15911,10 +15915,10 @@ class LeaderboardRankData extends DataClass
     Value<DateTime?> cachedAt = const Value.absent(),
   }) => LeaderboardRankData(
     id: id ?? this.id,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
     email: email ?? this.email,
     name: name ?? this.name,
-    username: username ?? this.username,
+    username: username.present ? username.value : this.username,
     vibePoints: vibePoints ?? this.vibePoints,
     vibeRank: vibeRank ?? this.vibeRank,
     createdAt: createdAt ?? this.createdAt,
@@ -15986,10 +15990,10 @@ class LeaderboardRankData extends DataClass
 
 class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
   final Value<String> id;
-  final Value<String> avatarUrl;
+  final Value<String?> avatarUrl;
   final Value<String> email;
   final Value<String> name;
-  final Value<String> username;
+  final Value<String?> username;
   final Value<int> vibePoints;
   final Value<int> vibeRank;
   final Value<DateTime> createdAt;
@@ -16011,10 +16015,10 @@ class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
   });
   LeaderboardRankCompanion.insert({
     required String id,
-    required String avatarUrl,
+    this.avatarUrl = const Value.absent(),
     required String email,
     required String name,
-    required String username,
+    this.username = const Value.absent(),
     this.vibePoints = const Value.absent(),
     required int vibeRank,
     required DateTime createdAt,
@@ -16022,10 +16026,8 @@ class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       avatarUrl = Value(avatarUrl),
        email = Value(email),
        name = Value(name),
-       username = Value(username),
        vibeRank = Value(vibeRank),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
@@ -16059,10 +16061,10 @@ class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
 
   LeaderboardRankCompanion copyWith({
     Value<String>? id,
-    Value<String>? avatarUrl,
+    Value<String?>? avatarUrl,
     Value<String>? email,
     Value<String>? name,
-    Value<String>? username,
+    Value<String?>? username,
     Value<int>? vibePoints,
     Value<int>? vibeRank,
     Value<DateTime>? createdAt,
@@ -24388,10 +24390,10 @@ typedef $$ChirpCommunityMembershipTableProcessedTableManager =
 typedef $$LeaderboardRankTableCreateCompanionBuilder =
     LeaderboardRankCompanion Function({
       required String id,
-      required String avatarUrl,
+      Value<String?> avatarUrl,
       required String email,
       required String name,
-      required String username,
+      Value<String?> username,
       Value<int> vibePoints,
       required int vibeRank,
       required DateTime createdAt,
@@ -24402,10 +24404,10 @@ typedef $$LeaderboardRankTableCreateCompanionBuilder =
 typedef $$LeaderboardRankTableUpdateCompanionBuilder =
     LeaderboardRankCompanion Function({
       Value<String> id,
-      Value<String> avatarUrl,
+      Value<String?> avatarUrl,
       Value<String> email,
       Value<String> name,
-      Value<String> username,
+      Value<String?> username,
       Value<int> vibePoints,
       Value<int> vibeRank,
       Value<DateTime> createdAt,
@@ -24614,10 +24616,10 @@ class $$LeaderboardRankTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> avatarUrl = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> username = const Value.absent(),
+                Value<String?> username = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
                 Value<int> vibeRank = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -24640,10 +24642,10 @@ class $$LeaderboardRankTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String avatarUrl,
+                Value<String?> avatarUrl = const Value.absent(),
                 required String email,
                 required String name,
-                required String username,
+                Value<String?> username = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
                 required int vibeRank,
                 required DateTime createdAt,

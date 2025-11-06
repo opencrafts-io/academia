@@ -2,10 +2,11 @@ import 'package:drift/drift.dart';
 
 class LeaderboardRank extends Table {
   TextColumn get id => text()();
-  TextColumn get avatarUrl => text()();
+  @JsonKey("avatar_url")
+  TextColumn get avatarUrl => text().nullable()();
   TextColumn get email => text()();
   TextColumn get name => text()();
-  TextColumn get username => text()();
+  TextColumn get username => text().nullable()();
   @JsonKey("vibe_points")
   IntColumn get vibePoints =>
       integer().named("vibe_points").withDefault(Constant(0))();

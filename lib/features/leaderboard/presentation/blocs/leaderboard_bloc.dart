@@ -33,7 +33,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
     result.fold(
       (failure) =>
-          emit(const LeaderboardError(message: 'Failed to load leaderboard')),
+          emit(LeaderboardError(message: failure.message)),
       (paginated) => emit(
         LeaderboardLoaded(
           entries: paginated.entries,

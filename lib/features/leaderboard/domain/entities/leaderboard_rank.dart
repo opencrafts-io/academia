@@ -11,10 +11,10 @@ abstract class LeaderboardRank with _$LeaderboardRank {
 
   const factory LeaderboardRank({
     required String id,
-    required String avatarUrl,
+    required String? avatarUrl,
     required String email,
     required String name,
-    required String username,
+    required String? username,
     required int vibePoints,
     required int vibeRank,
     required DateTime createdAt,

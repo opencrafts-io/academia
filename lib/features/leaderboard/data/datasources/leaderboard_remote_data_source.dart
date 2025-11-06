@@ -24,7 +24,7 @@ class LeaderboardRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   getGlobalLeaderboard({required int page, required int pageSize}) async {
     try {
       final response = await dioClient.dio.get(
-        '$servicePath/leaderboard/global',
+        '/$servicePath/leaderboard/global',
         queryParameters: {'page': page, 'page_size': pageSize},
       );
 
@@ -43,7 +43,7 @@ class LeaderboardRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     } catch (e) {
       return left(
         NetworkFailure(
-          message: "Error retrieving leaderboard at the momemnt",
+          message: "Error retrieving leaderboard at the momemnt ${e.toString()}",
           error: e,
         ),
       );

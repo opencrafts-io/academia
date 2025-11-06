@@ -124,6 +124,7 @@ class _AcademiaState extends State<Academia> {
               sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
         ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
+        BlocProvider(create: (context) => sl<LeaderboardBloc>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
