@@ -75,15 +75,24 @@ class _LeaderboardHomepageState extends State<LeaderboardHomepage>
               builder: (context, state) {
                 if (state is LeaderboardLoading) {
                   return SliverFillRemaining(
-                    child: Column(children: [Text("Loading")]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Fetching global leaderboard",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
                   );
                 } else if (state is LeaderboardError) {
                   return SliverFillRemaining(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(state.message),
                         const SizedBox(height: 16),
-                        ElevatedButton(
+                        FilledButton(
                           onPressed: () => context.read<LeaderboardBloc>().add(
                             const LoadLeaderboard(),
                           ),
