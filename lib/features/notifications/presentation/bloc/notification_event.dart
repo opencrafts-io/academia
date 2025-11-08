@@ -18,6 +18,16 @@ class InitializeOneSignalEvent extends NotificationEvent {
   List<Object?> get props => [appId];
 }
 
+/// Event to initialize local notification service
+class InitializeLocalNotificationEvent extends NotificationEvent {
+  final List<NotificationChannelConfig> channels;
+
+  const InitializeLocalNotificationEvent({required this.channels});
+
+  @override
+  List<Object?> get props => [channels];
+}
+
 /// Event to load notifications from local storage
 class LoadNotificationsEvent extends NotificationEvent {
   const LoadNotificationsEvent();
@@ -78,20 +88,20 @@ class GetNotificationPermissionEvent extends NotificationEvent {
   const GetNotificationPermissionEvent();
 }
 
-/// Event to send a local notification (for testing)
 class SendLocalNotificationEvent extends NotificationEvent {
-  final String title;
-  final String body;
-  final Map<String, dynamic>? data;
-
   const SendLocalNotificationEvent({
-    required this.title,
-    required this.body,
-    this.data,
+    required this.content,
+    this.schedule,
+    this.actionButtons,
+    this.localizations,
   });
+  final NotificationContent content;
+  final NotificationCalendar? schedule;
+  final List<NotificationActionButton>? actionButtons;
+  final Map<String, NotificationLocalization>? localizations;
 
   @override
-  List<Object?> get props => [title, body, data];
+  List<Object?> get props => [content, schedule, actionButtons, localizations];
 }
 
 /// Event to set user data (external user ID and metadata) in OneSignal
@@ -109,4 +119,3 @@ class SetUserDataEvent extends NotificationEvent {
   @override
   List<Object?> get props => [userId, name, email];
 }
-
