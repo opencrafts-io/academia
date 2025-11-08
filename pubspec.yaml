@@ -102,6 +102,8 @@ dependencies:
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
+  awesome_notifications: ^0.10.1
+  awesome_notifications_core: ^0.10.1
 
 
 dev_dependencies:
