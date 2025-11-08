@@ -33,11 +33,12 @@ class ShereheRepositoryImpl implements ShereheRepository {
       limit: limit,
     );
     return result.fold((failure) => Left(failure), (paginatedData) async {
-      await localDataSource.cacheEvents(paginatedData.events);
       return Right(
         PaginatedEvents(
           events: paginatedData.events.map((e) => e.toEntity()).toList(),
           nextPage: paginatedData.nextPage,
+          previousPage: paginatedData.previousPage,
+          totalEvents: paginatedData.totalEvents,
         ),
       );
     });
@@ -101,20 +102,20 @@ class ShereheRepositoryImpl implements ShereheRepository {
     );
   }
 
-  @override
-  Future<Either<Failure, Unit>> createEvent(
-    Event event,
-    File imageFile, {
-    required File bannerImageFile,
-    required File cardImageFile,
-  }) async {
-    return await remoteDataSource.createEvent(
-      event,
-      eventImage: imageFile,
-      bannerImage: bannerImageFile,
-      cardImage: cardImageFile,
-    );
-  }
+  // @override
+  // Future<Either<Failure, Unit>> createEvent(
+  //   Event event,
+  //   File imageFile, {
+  //   required File bannerImageFile,
+  //   required File cardImageFile,
+  // }) async {
+  //   return await remoteDataSource.createEvent(
+  //     event,
+  //     eventImage: imageFile,
+  //     bannerImage: bannerImageFile,
+  //     cardImage: cardImageFile,
+  //   );
+  // }
 
   @override
   Future<Either<Failure, Attendee>> createAttendee(Attendee attendee) async {

@@ -19,6 +19,7 @@ class EventDetailsHeader extends StatelessWidget {
       return 500.0;
     }
   }
+
   String _formatDate(String isoString, {String pattern = 'dd MMM yyyy'}) {
     try {
       final dateTime = DateTime.parse(isoString).toLocal();
@@ -42,7 +43,7 @@ class EventDetailsHeader extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             CachedNetworkImage(
-              imageUrl: event.imageUrl,
+              imageUrl: event.eventBannerImage!,
               fit: BoxFit.cover,
               errorWidget: (context, child, error) {
                 return Container(
@@ -71,16 +72,21 @@ class EventDetailsHeader extends StatelessWidget {
                   Wrap(
                     spacing: 2.0,
                     runSpacing: 0.5,
-                    children: event.genre.map((genre) {
-                      return Chip(
-                        label: Text(genre),
-                        padding: EdgeInsets.all(3),
-                      );
-                    }).toList(),
+                    children: event.eventGenre!
+                        .split(',')
+                        .map((e) => e.trim())
+                        .toList()
+                        .map((genre) {
+                          return Chip(
+                            label: Text(genre),
+                            padding: EdgeInsets.all(3),
+                          );
+                        })
+                        .toList(),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    event.name,
+                    event.eventName,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       // Use headlineMedium
                       fontWeight: FontWeight.bold,
@@ -97,7 +103,7 @@ class EventDetailsHeader extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        _formatDate(event.date),
+                        _formatDate(event.eventDate),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -111,12 +117,10 @@ class EventDetailsHeader extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          event.location,
+                          event.eventLocation,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -132,4 +136,3 @@ class EventDetailsHeader extends StatelessWidget {
     );
   }
 }
-

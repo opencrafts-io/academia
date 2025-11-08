@@ -4,37 +4,35 @@ import 'package:academia/features/sherehe/domain/entities/event.dart';
 extension EventModelHelper on EventData {
   Event toEntity() => Event(
     id: id,
-    name: name,
-    description: description,
-    date: date,
-    location: location,
-    time: time,
-    organizer: organizer,
-    imageUrl: imageUrl,
+    eventName: eventName,
+    eventDescription: eventDescription,
+    eventLocation: eventLocation,
+    eventDate: eventDate,
     organizerId: organizerId,
-    numberOfAttendees: numberOfAttendees,
-    genre: genre.split(',').map((e) => e.trim()).toList(),
+    eventCardImage: eventCardImage,
+    eventPosterImage: eventPosterImage,
+    eventBannerImage: eventBannerImage,
+    eventGenre: eventGenre,
+    deleteTag: deleteTag,
     createdAt: createdAt,
     updatedAt: updatedAt,
-    url: url,
   );
 }
 
 extension EventEntityHelper on Event {
-  EventData toEntity() => EventData(
+  EventData toModel() => EventData(
     id: id,
-    name: name,
-    description: description,
-    date: date,
-    location: location,
-    time: time,
-    organizer: organizer,
-    imageUrl: imageUrl,
+    eventName: eventName,
+    eventDescription: eventDescription,
+    eventLocation: eventLocation,
+    eventDate: eventDate,
     organizerId: organizerId,
-    numberOfAttendees: numberOfAttendees,
-    genre: genre.join(', '),
+    eventCardImage: eventCardImage,
+    eventPosterImage: eventPosterImage,
+    eventBannerImage: eventBannerImage,
+    eventGenre: eventGenre,
+    deleteTag: deleteTag,
     createdAt: createdAt,
     updatedAt: updatedAt,
-    url: url,
   );
 }

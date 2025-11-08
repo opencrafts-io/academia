@@ -4017,119 +4017,48 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
+  static const VerificationMeta _eventNameMeta = const VerificationMeta(
+    'eventName',
   );
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
+  late final GeneratedColumn<String> eventName = GeneratedColumn<String>(
+    'event_name',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
+  static const VerificationMeta _eventDescriptionMeta = const VerificationMeta(
+    'eventDescription',
   );
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
+  late final GeneratedColumn<String> eventDescription = GeneratedColumn<String>(
+    'event_description',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  static const VerificationMeta _eventLocationMeta = const VerificationMeta(
+    'eventLocation',
+  );
   @override
-  late final GeneratedColumn<String> url = GeneratedColumn<String>(
-    'url',
+  late final GeneratedColumn<String> eventLocation = GeneratedColumn<String>(
+    'event_location',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _locationMeta = const VerificationMeta(
-    'location',
+  static const VerificationMeta _eventDateMeta = const VerificationMeta(
+    'eventDate',
   );
   @override
-  late final GeneratedColumn<String> location = GeneratedColumn<String>(
-    'location',
+  late final GeneratedColumn<String> eventDate = GeneratedColumn<String>(
+    'event_date',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _timeMeta = const VerificationMeta('time');
-  @override
-  late final GeneratedColumn<String> time = GeneratedColumn<String>(
-    'time',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
-  @override
-  late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _organizerMeta = const VerificationMeta(
-    'organizer',
-  );
-  @override
-  late final GeneratedColumn<String> organizer = GeneratedColumn<String>(
-    'organizer',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
-  );
-  @override
-  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
-    'image_url',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _numberOfAttendeesMeta = const VerificationMeta(
-    'numberOfAttendees',
-  );
-  @override
-  late final GeneratedColumn<int> numberOfAttendees = GeneratedColumn<int>(
-    'number_of_attendees',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   static const VerificationMeta _organizerIdMeta = const VerificationMeta(
@@ -4143,51 +4072,114 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _genreMeta = const VerificationMeta('genre');
+  static const VerificationMeta _eventCardImageMeta = const VerificationMeta(
+    'eventCardImage',
+  );
   @override
-  late final GeneratedColumn<String> genre = GeneratedColumn<String>(
-    'genre',
+  late final GeneratedColumn<String> eventCardImage = GeneratedColumn<String>(
+    'event_card_image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _eventPosterImageMeta = const VerificationMeta(
+    'eventPosterImage',
+  );
+  @override
+  late final GeneratedColumn<String> eventPosterImage = GeneratedColumn<String>(
+    'event_poster_image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _eventBannerImageMeta = const VerificationMeta(
+    'eventBannerImage',
+  );
+  @override
+  late final GeneratedColumn<String> eventBannerImage = GeneratedColumn<String>(
+    'event_banner_image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _eventUrlMeta = const VerificationMeta(
+    'eventUrl',
+  );
+  @override
+  late final GeneratedColumn<String> eventUrl = GeneratedColumn<String>(
+    'event_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _eventGenreMeta = const VerificationMeta(
+    'eventGenre',
+  );
+  @override
+  late final GeneratedColumn<String> eventGenre = GeneratedColumn<String>(
+    'event_genre',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deleteTagMeta = const VerificationMeta(
+    'deleteTag',
+  );
+  @override
+  late final GeneratedColumn<bool> deleteTag = GeneratedColumn<bool>(
+    'delete_tag',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("delete_tag" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _posterMeta = const VerificationMeta('poster');
-  @override
-  late final GeneratedColumn<String> poster = GeneratedColumn<String>(
-    'poster',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
   );
-  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
   @override
-  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
-    'banner',
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
+    'updated_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    eventName,
+    eventDescription,
+    eventLocation,
+    eventDate,
+    organizerId,
+    eventCardImage,
+    eventPosterImage,
+    eventBannerImage,
+    eventUrl,
+    eventGenre,
+    deleteTag,
     createdAt,
     updatedAt,
-    name,
-    description,
-    url,
-    location,
-    time,
-    date,
-    organizer,
-    imageUrl,
-    numberOfAttendees,
-    organizerId,
-    genre,
-    poster,
-    banner,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4206,95 +4198,43 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_idMeta);
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('event_name')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+        _eventNameMeta,
+        eventName.isAcceptableOrUnknown(data['event_name']!, _eventNameMeta),
       );
     } else if (isInserting) {
-      context.missing(_nameMeta);
+      context.missing(_eventNameMeta);
     }
-    if (data.containsKey('description')) {
+    if (data.containsKey('event_description')) {
       context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
+        _eventDescriptionMeta,
+        eventDescription.isAcceptableOrUnknown(
+          data['event_description']!,
+          _eventDescriptionMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_descriptionMeta);
+      context.missing(_eventDescriptionMeta);
     }
-    if (data.containsKey('url')) {
+    if (data.containsKey('event_location')) {
       context.handle(
-        _urlMeta,
-        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_urlMeta);
-    }
-    if (data.containsKey('location')) {
-      context.handle(
-        _locationMeta,
-        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_locationMeta);
-    }
-    if (data.containsKey('time')) {
-      context.handle(
-        _timeMeta,
-        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_timeMeta);
-    }
-    if (data.containsKey('date')) {
-      context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('organizer')) {
-      context.handle(
-        _organizerMeta,
-        organizer.isAcceptableOrUnknown(data['organizer']!, _organizerMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_organizerMeta);
-    }
-    if (data.containsKey('image_url')) {
-      context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_imageUrlMeta);
-    }
-    if (data.containsKey('number_of_attendees')) {
-      context.handle(
-        _numberOfAttendeesMeta,
-        numberOfAttendees.isAcceptableOrUnknown(
-          data['number_of_attendees']!,
-          _numberOfAttendeesMeta,
+        _eventLocationMeta,
+        eventLocation.isAcceptableOrUnknown(
+          data['event_location']!,
+          _eventLocationMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_numberOfAttendeesMeta);
+      context.missing(_eventLocationMeta);
+    }
+    if (data.containsKey('event_date')) {
+      context.handle(
+        _eventDateMeta,
+        eventDate.isAcceptableOrUnknown(data['event_date']!, _eventDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventDateMeta);
     }
     if (data.containsKey('organizer_id')) {
       context.handle(
@@ -4307,31 +4247,72 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_organizerIdMeta);
     }
-    if (data.containsKey('genre')) {
+    if (data.containsKey('event_card_image')) {
       context.handle(
-        _genreMeta,
-        genre.isAcceptableOrUnknown(data['genre']!, _genreMeta),
+        _eventCardImageMeta,
+        eventCardImage.isAcceptableOrUnknown(
+          data['event_card_image']!,
+          _eventCardImageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('event_poster_image')) {
+      context.handle(
+        _eventPosterImageMeta,
+        eventPosterImage.isAcceptableOrUnknown(
+          data['event_poster_image']!,
+          _eventPosterImageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('event_banner_image')) {
+      context.handle(
+        _eventBannerImageMeta,
+        eventBannerImage.isAcceptableOrUnknown(
+          data['event_banner_image']!,
+          _eventBannerImageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('event_url')) {
+      context.handle(
+        _eventUrlMeta,
+        eventUrl.isAcceptableOrUnknown(data['event_url']!, _eventUrlMeta),
+      );
+    }
+    if (data.containsKey('event_genre')) {
+      context.handle(
+        _eventGenreMeta,
+        eventGenre.isAcceptableOrUnknown(data['event_genre']!, _eventGenreMeta),
+      );
+    }
+    if (data.containsKey('delete_tag')) {
+      context.handle(
+        _deleteTagMeta,
+        deleteTag.isAcceptableOrUnknown(data['delete_tag']!, _deleteTagMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     } else if (isInserting) {
-      context.missing(_genreMeta);
+      context.missing(_createdAtMeta);
     }
-    if (data.containsKey('poster')) {
+    if (data.containsKey('updated_at')) {
       context.handle(
-        _posterMeta,
-        poster.isAcceptableOrUnknown(data['poster']!, _posterMeta),
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    }
-    if (data.containsKey('banner')) {
-      context.handle(
-        _bannerMeta,
-        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
-      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   EventData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -4340,66 +4321,58 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
+      eventName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}name'],
+        data['${effectivePrefix}event_name'],
       )!,
-      description: attachedDatabase.typeMapping.read(
+      eventDescription: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}description'],
+        data['${effectivePrefix}event_description'],
       )!,
-      url: attachedDatabase.typeMapping.read(
+      eventLocation: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}url'],
+        data['${effectivePrefix}event_location'],
       )!,
-      location: attachedDatabase.typeMapping.read(
+      eventDate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}location'],
-      )!,
-      time: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}time'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
-      organizer: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}organizer'],
-      )!,
-      imageUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}image_url'],
-      )!,
-      numberOfAttendees: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}number_of_attendees'],
+        data['${effectivePrefix}event_date'],
       )!,
       organizerId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}organizer_id'],
       )!,
-      genre: attachedDatabase.typeMapping.read(
+      eventCardImage: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}genre'],
+        data['${effectivePrefix}event_card_image'],
+      ),
+      eventPosterImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_poster_image'],
+      ),
+      eventBannerImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_banner_image'],
+      ),
+      eventUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_url'],
+      ),
+      eventGenre: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_genre'],
+      ),
+      deleteTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}delete_tag'],
       )!,
-      poster: attachedDatabase.typeMapping.read(
+      createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}poster'],
-      ),
-      banner: attachedDatabase.typeMapping.read(
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}banner'],
-      ),
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -4411,87 +4384,91 @@ class $EventTableTable extends EventTable
 
 class EventData extends DataClass implements Insertable<EventData> {
   final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String name;
-  final String description;
-  final String url;
-  final String location;
-  final String time;
-  final String date;
-  final String organizer;
-  final String imageUrl;
-  final int numberOfAttendees;
+  final String eventName;
+  final String eventDescription;
+  final String eventLocation;
+  final String eventDate;
   final String organizerId;
-  final String genre;
-  final String? poster;
-  final String? banner;
+  final String? eventCardImage;
+  final String? eventPosterImage;
+  final String? eventBannerImage;
+  final String? eventUrl;
+  final String? eventGenre;
+  final bool deleteTag;
+  final String createdAt;
+  final String updatedAt;
   const EventData({
     required this.id,
+    required this.eventName,
+    required this.eventDescription,
+    required this.eventLocation,
+    required this.eventDate,
+    required this.organizerId,
+    this.eventCardImage,
+    this.eventPosterImage,
+    this.eventBannerImage,
+    this.eventUrl,
+    this.eventGenre,
+    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
-    required this.name,
-    required this.description,
-    required this.url,
-    required this.location,
-    required this.time,
-    required this.date,
-    required this.organizer,
-    required this.imageUrl,
-    required this.numberOfAttendees,
-    required this.organizerId,
-    required this.genre,
-    this.poster,
-    this.banner,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
-    map['url'] = Variable<String>(url);
-    map['location'] = Variable<String>(location);
-    map['time'] = Variable<String>(time);
-    map['date'] = Variable<String>(date);
-    map['organizer'] = Variable<String>(organizer);
-    map['image_url'] = Variable<String>(imageUrl);
-    map['number_of_attendees'] = Variable<int>(numberOfAttendees);
+    map['event_name'] = Variable<String>(eventName);
+    map['event_description'] = Variable<String>(eventDescription);
+    map['event_location'] = Variable<String>(eventLocation);
+    map['event_date'] = Variable<String>(eventDate);
     map['organizer_id'] = Variable<String>(organizerId);
-    map['genre'] = Variable<String>(genre);
-    if (!nullToAbsent || poster != null) {
-      map['poster'] = Variable<String>(poster);
+    if (!nullToAbsent || eventCardImage != null) {
+      map['event_card_image'] = Variable<String>(eventCardImage);
     }
-    if (!nullToAbsent || banner != null) {
-      map['banner'] = Variable<String>(banner);
+    if (!nullToAbsent || eventPosterImage != null) {
+      map['event_poster_image'] = Variable<String>(eventPosterImage);
     }
+    if (!nullToAbsent || eventBannerImage != null) {
+      map['event_banner_image'] = Variable<String>(eventBannerImage);
+    }
+    if (!nullToAbsent || eventUrl != null) {
+      map['event_url'] = Variable<String>(eventUrl);
+    }
+    if (!nullToAbsent || eventGenre != null) {
+      map['event_genre'] = Variable<String>(eventGenre);
+    }
+    map['delete_tag'] = Variable<bool>(deleteTag);
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
     return map;
   }
 
   EventTableCompanion toCompanion(bool nullToAbsent) {
     return EventTableCompanion(
       id: Value(id),
+      eventName: Value(eventName),
+      eventDescription: Value(eventDescription),
+      eventLocation: Value(eventLocation),
+      eventDate: Value(eventDate),
+      organizerId: Value(organizerId),
+      eventCardImage: eventCardImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventCardImage),
+      eventPosterImage: eventPosterImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventPosterImage),
+      eventBannerImage: eventBannerImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventBannerImage),
+      eventUrl: eventUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventUrl),
+      eventGenre: eventGenre == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventGenre),
+      deleteTag: Value(deleteTag),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      name: Value(name),
-      description: Value(description),
-      url: Value(url),
-      location: Value(location),
-      time: Value(time),
-      date: Value(date),
-      organizer: Value(organizer),
-      imageUrl: Value(imageUrl),
-      numberOfAttendees: Value(numberOfAttendees),
-      organizerId: Value(organizerId),
-      genre: Value(genre),
-      poster: poster == null && nullToAbsent
-          ? const Value.absent()
-          : Value(poster),
-      banner: banner == null && nullToAbsent
-          ? const Value.absent()
-          : Value(banner),
     );
   }
 
@@ -4502,21 +4479,23 @@ class EventData extends DataClass implements Insertable<EventData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return EventData(
       id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
-      url: serializer.fromJson<String>(json['url']),
-      location: serializer.fromJson<String>(json['location']),
-      time: serializer.fromJson<String>(json['time']),
-      date: serializer.fromJson<String>(json['date']),
-      organizer: serializer.fromJson<String>(json['organizer']),
-      imageUrl: serializer.fromJson<String>(json['event_card_image']),
-      numberOfAttendees: serializer.fromJson<int>(json['number_of_attendees']),
+      eventName: serializer.fromJson<String>(json['event_name']),
+      eventDescription: serializer.fromJson<String>(json['event_description']),
+      eventLocation: serializer.fromJson<String>(json['event_location']),
+      eventDate: serializer.fromJson<String>(json['event_date']),
       organizerId: serializer.fromJson<String>(json['organizer_id']),
-      genre: serializer.fromJson<String>(json['genre']),
-      poster: serializer.fromJson<String?>(json['poster']),
-      banner: serializer.fromJson<String?>(json['banner']),
+      eventCardImage: serializer.fromJson<String?>(json['event_card_image']),
+      eventPosterImage: serializer.fromJson<String?>(
+        json['event_poster_image'],
+      ),
+      eventBannerImage: serializer.fromJson<String?>(
+        json['event_banner_image'],
+      ),
+      eventUrl: serializer.fromJson<String?>(json['event_url']),
+      eventGenre: serializer.fromJson<String?>(json['event_genre']),
+      deleteTag: serializer.fromJson<bool>(json['delete_tag']),
+      createdAt: serializer.fromJson<String>(json['created_at']),
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
     );
   }
   @override
@@ -4524,83 +4503,89 @@ class EventData extends DataClass implements Insertable<EventData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
-      'url': serializer.toJson<String>(url),
-      'location': serializer.toJson<String>(location),
-      'time': serializer.toJson<String>(time),
-      'date': serializer.toJson<String>(date),
-      'organizer': serializer.toJson<String>(organizer),
-      'event_card_image': serializer.toJson<String>(imageUrl),
-      'number_of_attendees': serializer.toJson<int>(numberOfAttendees),
+      'event_name': serializer.toJson<String>(eventName),
+      'event_description': serializer.toJson<String>(eventDescription),
+      'event_location': serializer.toJson<String>(eventLocation),
+      'event_date': serializer.toJson<String>(eventDate),
       'organizer_id': serializer.toJson<String>(organizerId),
-      'genre': serializer.toJson<String>(genre),
-      'poster': serializer.toJson<String?>(poster),
-      'banner': serializer.toJson<String?>(banner),
+      'event_card_image': serializer.toJson<String?>(eventCardImage),
+      'event_poster_image': serializer.toJson<String?>(eventPosterImage),
+      'event_banner_image': serializer.toJson<String?>(eventBannerImage),
+      'event_url': serializer.toJson<String?>(eventUrl),
+      'event_genre': serializer.toJson<String?>(eventGenre),
+      'delete_tag': serializer.toJson<bool>(deleteTag),
+      'created_at': serializer.toJson<String>(createdAt),
+      'updatedAt': serializer.toJson<String>(updatedAt),
     };
   }
 
   EventData copyWith({
     String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? name,
-    String? description,
-    String? url,
-    String? location,
-    String? time,
-    String? date,
-    String? organizer,
-    String? imageUrl,
-    int? numberOfAttendees,
+    String? eventName,
+    String? eventDescription,
+    String? eventLocation,
+    String? eventDate,
     String? organizerId,
-    String? genre,
-    Value<String?> poster = const Value.absent(),
-    Value<String?> banner = const Value.absent(),
+    Value<String?> eventCardImage = const Value.absent(),
+    Value<String?> eventPosterImage = const Value.absent(),
+    Value<String?> eventBannerImage = const Value.absent(),
+    Value<String?> eventUrl = const Value.absent(),
+    Value<String?> eventGenre = const Value.absent(),
+    bool? deleteTag,
+    String? createdAt,
+    String? updatedAt,
   }) => EventData(
     id: id ?? this.id,
+    eventName: eventName ?? this.eventName,
+    eventDescription: eventDescription ?? this.eventDescription,
+    eventLocation: eventLocation ?? this.eventLocation,
+    eventDate: eventDate ?? this.eventDate,
+    organizerId: organizerId ?? this.organizerId,
+    eventCardImage: eventCardImage.present
+        ? eventCardImage.value
+        : this.eventCardImage,
+    eventPosterImage: eventPosterImage.present
+        ? eventPosterImage.value
+        : this.eventPosterImage,
+    eventBannerImage: eventBannerImage.present
+        ? eventBannerImage.value
+        : this.eventBannerImage,
+    eventUrl: eventUrl.present ? eventUrl.value : this.eventUrl,
+    eventGenre: eventGenre.present ? eventGenre.value : this.eventGenre,
+    deleteTag: deleteTag ?? this.deleteTag,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    url: url ?? this.url,
-    location: location ?? this.location,
-    time: time ?? this.time,
-    date: date ?? this.date,
-    organizer: organizer ?? this.organizer,
-    imageUrl: imageUrl ?? this.imageUrl,
-    numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
-    organizerId: organizerId ?? this.organizerId,
-    genre: genre ?? this.genre,
-    poster: poster.present ? poster.value : this.poster,
-    banner: banner.present ? banner.value : this.banner,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
     return EventData(
       id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      url: data.url.present ? data.url.value : this.url,
-      location: data.location.present ? data.location.value : this.location,
-      time: data.time.present ? data.time.value : this.time,
-      date: data.date.present ? data.date.value : this.date,
-      organizer: data.organizer.present ? data.organizer.value : this.organizer,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      numberOfAttendees: data.numberOfAttendees.present
-          ? data.numberOfAttendees.value
-          : this.numberOfAttendees,
+      eventName: data.eventName.present ? data.eventName.value : this.eventName,
+      eventDescription: data.eventDescription.present
+          ? data.eventDescription.value
+          : this.eventDescription,
+      eventLocation: data.eventLocation.present
+          ? data.eventLocation.value
+          : this.eventLocation,
+      eventDate: data.eventDate.present ? data.eventDate.value : this.eventDate,
       organizerId: data.organizerId.present
           ? data.organizerId.value
           : this.organizerId,
-      genre: data.genre.present ? data.genre.value : this.genre,
-      poster: data.poster.present ? data.poster.value : this.poster,
-      banner: data.banner.present ? data.banner.value : this.banner,
+      eventCardImage: data.eventCardImage.present
+          ? data.eventCardImage.value
+          : this.eventCardImage,
+      eventPosterImage: data.eventPosterImage.present
+          ? data.eventPosterImage.value
+          : this.eventPosterImage,
+      eventBannerImage: data.eventBannerImage.present
+          ? data.eventBannerImage.value
+          : this.eventBannerImage,
+      eventUrl: data.eventUrl.present ? data.eventUrl.value : this.eventUrl,
+      eventGenre: data.eventGenre.present
+          ? data.eventGenre.value
+          : this.eventGenre,
+      deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -4608,21 +4593,19 @@ class EventData extends DataClass implements Insertable<EventData> {
   String toString() {
     return (StringBuffer('EventData(')
           ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('url: $url, ')
-          ..write('location: $location, ')
-          ..write('time: $time, ')
-          ..write('date: $date, ')
-          ..write('organizer: $organizer, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('numberOfAttendees: $numberOfAttendees, ')
+          ..write('eventName: $eventName, ')
+          ..write('eventDescription: $eventDescription, ')
+          ..write('eventLocation: $eventLocation, ')
+          ..write('eventDate: $eventDate, ')
           ..write('organizerId: $organizerId, ')
-          ..write('genre: $genre, ')
-          ..write('poster: $poster, ')
-          ..write('banner: $banner')
+          ..write('eventCardImage: $eventCardImage, ')
+          ..write('eventPosterImage: $eventPosterImage, ')
+          ..write('eventBannerImage: $eventBannerImage, ')
+          ..write('eventUrl: $eventUrl, ')
+          ..write('eventGenre: $eventGenre, ')
+          ..write('deleteTag: $deleteTag, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -4630,187 +4613,165 @@ class EventData extends DataClass implements Insertable<EventData> {
   @override
   int get hashCode => Object.hash(
     id,
+    eventName,
+    eventDescription,
+    eventLocation,
+    eventDate,
+    organizerId,
+    eventCardImage,
+    eventPosterImage,
+    eventBannerImage,
+    eventUrl,
+    eventGenre,
+    deleteTag,
     createdAt,
     updatedAt,
-    name,
-    description,
-    url,
-    location,
-    time,
-    date,
-    organizer,
-    imageUrl,
-    numberOfAttendees,
-    organizerId,
-    genre,
-    poster,
-    banner,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is EventData &&
           other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.description == this.description &&
-          other.url == this.url &&
-          other.location == this.location &&
-          other.time == this.time &&
-          other.date == this.date &&
-          other.organizer == this.organizer &&
-          other.imageUrl == this.imageUrl &&
-          other.numberOfAttendees == this.numberOfAttendees &&
+          other.eventName == this.eventName &&
+          other.eventDescription == this.eventDescription &&
+          other.eventLocation == this.eventLocation &&
+          other.eventDate == this.eventDate &&
           other.organizerId == this.organizerId &&
-          other.genre == this.genre &&
-          other.poster == this.poster &&
-          other.banner == this.banner);
+          other.eventCardImage == this.eventCardImage &&
+          other.eventPosterImage == this.eventPosterImage &&
+          other.eventBannerImage == this.eventBannerImage &&
+          other.eventUrl == this.eventUrl &&
+          other.eventGenre == this.eventGenre &&
+          other.deleteTag == this.deleteTag &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> description;
-  final Value<String> url;
-  final Value<String> location;
-  final Value<String> time;
-  final Value<String> date;
-  final Value<String> organizer;
-  final Value<String> imageUrl;
-  final Value<int> numberOfAttendees;
+  final Value<String> eventName;
+  final Value<String> eventDescription;
+  final Value<String> eventLocation;
+  final Value<String> eventDate;
   final Value<String> organizerId;
-  final Value<String> genre;
-  final Value<String?> poster;
-  final Value<String?> banner;
+  final Value<String?> eventCardImage;
+  final Value<String?> eventPosterImage;
+  final Value<String?> eventBannerImage;
+  final Value<String?> eventUrl;
+  final Value<String?> eventGenre;
+  final Value<bool> deleteTag;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
   final Value<int> rowid;
   const EventTableCompanion({
     this.id = const Value.absent(),
+    this.eventName = const Value.absent(),
+    this.eventDescription = const Value.absent(),
+    this.eventLocation = const Value.absent(),
+    this.eventDate = const Value.absent(),
+    this.organizerId = const Value.absent(),
+    this.eventCardImage = const Value.absent(),
+    this.eventPosterImage = const Value.absent(),
+    this.eventBannerImage = const Value.absent(),
+    this.eventUrl = const Value.absent(),
+    this.eventGenre = const Value.absent(),
+    this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.url = const Value.absent(),
-    this.location = const Value.absent(),
-    this.time = const Value.absent(),
-    this.date = const Value.absent(),
-    this.organizer = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    this.numberOfAttendees = const Value.absent(),
-    this.organizerId = const Value.absent(),
-    this.genre = const Value.absent(),
-    this.poster = const Value.absent(),
-    this.banner = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EventTableCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String name,
-    required String description,
-    required String url,
-    required String location,
-    required String time,
-    required String date,
-    required String organizer,
-    required String imageUrl,
-    required int numberOfAttendees,
+    required String eventName,
+    required String eventDescription,
+    required String eventLocation,
+    required String eventDate,
     required String organizerId,
-    required String genre,
-    this.poster = const Value.absent(),
-    this.banner = const Value.absent(),
+    this.eventCardImage = const Value.absent(),
+    this.eventPosterImage = const Value.absent(),
+    this.eventBannerImage = const Value.absent(),
+    this.eventUrl = const Value.absent(),
+    this.eventGenre = const Value.absent(),
+    this.deleteTag = const Value.absent(),
+    required String createdAt,
+    required String updatedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       name = Value(name),
-       description = Value(description),
-       url = Value(url),
-       location = Value(location),
-       time = Value(time),
-       date = Value(date),
-       organizer = Value(organizer),
-       imageUrl = Value(imageUrl),
-       numberOfAttendees = Value(numberOfAttendees),
+       eventName = Value(eventName),
+       eventDescription = Value(eventDescription),
+       eventLocation = Value(eventLocation),
+       eventDate = Value(eventDate),
        organizerId = Value(organizerId),
-       genre = Value(genre);
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
   static Insertable<EventData> custom({
     Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? url,
-    Expression<String>? location,
-    Expression<String>? time,
-    Expression<String>? date,
-    Expression<String>? organizer,
-    Expression<String>? imageUrl,
-    Expression<int>? numberOfAttendees,
+    Expression<String>? eventName,
+    Expression<String>? eventDescription,
+    Expression<String>? eventLocation,
+    Expression<String>? eventDate,
     Expression<String>? organizerId,
-    Expression<String>? genre,
-    Expression<String>? poster,
-    Expression<String>? banner,
+    Expression<String>? eventCardImage,
+    Expression<String>? eventPosterImage,
+    Expression<String>? eventBannerImage,
+    Expression<String>? eventUrl,
+    Expression<String>? eventGenre,
+    Expression<bool>? deleteTag,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (eventName != null) 'event_name': eventName,
+      if (eventDescription != null) 'event_description': eventDescription,
+      if (eventLocation != null) 'event_location': eventLocation,
+      if (eventDate != null) 'event_date': eventDate,
+      if (organizerId != null) 'organizer_id': organizerId,
+      if (eventCardImage != null) 'event_card_image': eventCardImage,
+      if (eventPosterImage != null) 'event_poster_image': eventPosterImage,
+      if (eventBannerImage != null) 'event_banner_image': eventBannerImage,
+      if (eventUrl != null) 'event_url': eventUrl,
+      if (eventGenre != null) 'event_genre': eventGenre,
+      if (deleteTag != null) 'delete_tag': deleteTag,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (url != null) 'url': url,
-      if (location != null) 'location': location,
-      if (time != null) 'time': time,
-      if (date != null) 'date': date,
-      if (organizer != null) 'organizer': organizer,
-      if (imageUrl != null) 'image_url': imageUrl,
-      if (numberOfAttendees != null) 'number_of_attendees': numberOfAttendees,
-      if (organizerId != null) 'organizer_id': organizerId,
-      if (genre != null) 'genre': genre,
-      if (poster != null) 'poster': poster,
-      if (banner != null) 'banner': banner,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   EventTableCompanion copyWith({
     Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? description,
-    Value<String>? url,
-    Value<String>? location,
-    Value<String>? time,
-    Value<String>? date,
-    Value<String>? organizer,
-    Value<String>? imageUrl,
-    Value<int>? numberOfAttendees,
+    Value<String>? eventName,
+    Value<String>? eventDescription,
+    Value<String>? eventLocation,
+    Value<String>? eventDate,
     Value<String>? organizerId,
-    Value<String>? genre,
-    Value<String?>? poster,
-    Value<String?>? banner,
+    Value<String?>? eventCardImage,
+    Value<String?>? eventPosterImage,
+    Value<String?>? eventBannerImage,
+    Value<String?>? eventUrl,
+    Value<String?>? eventGenre,
+    Value<bool>? deleteTag,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
     Value<int>? rowid,
   }) {
     return EventTableCompanion(
       id: id ?? this.id,
+      eventName: eventName ?? this.eventName,
+      eventDescription: eventDescription ?? this.eventDescription,
+      eventLocation: eventLocation ?? this.eventLocation,
+      eventDate: eventDate ?? this.eventDate,
+      organizerId: organizerId ?? this.organizerId,
+      eventCardImage: eventCardImage ?? this.eventCardImage,
+      eventPosterImage: eventPosterImage ?? this.eventPosterImage,
+      eventBannerImage: eventBannerImage ?? this.eventBannerImage,
+      eventUrl: eventUrl ?? this.eventUrl,
+      eventGenre: eventGenre ?? this.eventGenre,
+      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      url: url ?? this.url,
-      location: location ?? this.location,
-      time: time ?? this.time,
-      date: date ?? this.date,
-      organizer: organizer ?? this.organizer,
-      imageUrl: imageUrl ?? this.imageUrl,
-      numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
-      organizerId: organizerId ?? this.organizerId,
-      genre: genre ?? this.genre,
-      poster: poster ?? this.poster,
-      banner: banner ?? this.banner,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4821,50 +4782,44 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (eventName.present) {
+      map['event_name'] = Variable<String>(eventName.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    if (eventDescription.present) {
+      map['event_description'] = Variable<String>(eventDescription.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
+    if (eventLocation.present) {
+      map['event_location'] = Variable<String>(eventLocation.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (url.present) {
-      map['url'] = Variable<String>(url.value);
-    }
-    if (location.present) {
-      map['location'] = Variable<String>(location.value);
-    }
-    if (time.present) {
-      map['time'] = Variable<String>(time.value);
-    }
-    if (date.present) {
-      map['date'] = Variable<String>(date.value);
-    }
-    if (organizer.present) {
-      map['organizer'] = Variable<String>(organizer.value);
-    }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<String>(imageUrl.value);
-    }
-    if (numberOfAttendees.present) {
-      map['number_of_attendees'] = Variable<int>(numberOfAttendees.value);
+    if (eventDate.present) {
+      map['event_date'] = Variable<String>(eventDate.value);
     }
     if (organizerId.present) {
       map['organizer_id'] = Variable<String>(organizerId.value);
     }
-    if (genre.present) {
-      map['genre'] = Variable<String>(genre.value);
+    if (eventCardImage.present) {
+      map['event_card_image'] = Variable<String>(eventCardImage.value);
     }
-    if (poster.present) {
-      map['poster'] = Variable<String>(poster.value);
+    if (eventPosterImage.present) {
+      map['event_poster_image'] = Variable<String>(eventPosterImage.value);
     }
-    if (banner.present) {
-      map['banner'] = Variable<String>(banner.value);
+    if (eventBannerImage.present) {
+      map['event_banner_image'] = Variable<String>(eventBannerImage.value);
+    }
+    if (eventUrl.present) {
+      map['event_url'] = Variable<String>(eventUrl.value);
+    }
+    if (eventGenre.present) {
+      map['event_genre'] = Variable<String>(eventGenre.value);
+    }
+    if (deleteTag.present) {
+      map['delete_tag'] = Variable<bool>(deleteTag.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -4876,21 +4831,19 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   String toString() {
     return (StringBuffer('EventTableCompanion(')
           ..write('id: $id, ')
+          ..write('eventName: $eventName, ')
+          ..write('eventDescription: $eventDescription, ')
+          ..write('eventLocation: $eventLocation, ')
+          ..write('eventDate: $eventDate, ')
+          ..write('organizerId: $organizerId, ')
+          ..write('eventCardImage: $eventCardImage, ')
+          ..write('eventPosterImage: $eventPosterImage, ')
+          ..write('eventBannerImage: $eventBannerImage, ')
+          ..write('eventUrl: $eventUrl, ')
+          ..write('eventGenre: $eventGenre, ')
+          ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('url: $url, ')
-          ..write('location: $location, ')
-          ..write('time: $time, ')
-          ..write('date: $date, ')
-          ..write('organizer: $organizer, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('numberOfAttendees: $numberOfAttendees, ')
-          ..write('organizerId: $organizerId, ')
-          ..write('genre: $genre, ')
-          ..write('poster: $poster, ')
-          ..write('banner: $banner, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17520,41 +17473,37 @@ typedef $$TodoTableProcessedTableManager =
 typedef $$EventTableTableCreateCompanionBuilder =
     EventTableCompanion Function({
       required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String name,
-      required String description,
-      required String url,
-      required String location,
-      required String time,
-      required String date,
-      required String organizer,
-      required String imageUrl,
-      required int numberOfAttendees,
+      required String eventName,
+      required String eventDescription,
+      required String eventLocation,
+      required String eventDate,
       required String organizerId,
-      required String genre,
-      Value<String?> poster,
-      Value<String?> banner,
+      Value<String?> eventCardImage,
+      Value<String?> eventPosterImage,
+      Value<String?> eventBannerImage,
+      Value<String?> eventUrl,
+      Value<String?> eventGenre,
+      Value<bool> deleteTag,
+      required String createdAt,
+      required String updatedAt,
       Value<int> rowid,
     });
 typedef $$EventTableTableUpdateCompanionBuilder =
     EventTableCompanion Function({
       Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> description,
-      Value<String> url,
-      Value<String> location,
-      Value<String> time,
-      Value<String> date,
-      Value<String> organizer,
-      Value<String> imageUrl,
-      Value<int> numberOfAttendees,
+      Value<String> eventName,
+      Value<String> eventDescription,
+      Value<String> eventLocation,
+      Value<String> eventDate,
       Value<String> organizerId,
-      Value<String> genre,
-      Value<String?> poster,
-      Value<String?> banner,
+      Value<String?> eventCardImage,
+      Value<String?> eventPosterImage,
+      Value<String?> eventBannerImage,
+      Value<String?> eventUrl,
+      Value<String?> eventGenre,
+      Value<bool> deleteTag,
+      Value<String> createdAt,
+      Value<String> updatedAt,
       Value<int> rowid,
     });
 
@@ -17613,58 +17562,23 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnFilters<String> get eventName => $composableBuilder(
+    column: $table.eventName,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnFilters<String> get eventDescription => $composableBuilder(
+    column: $table.eventDescription,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnFilters<String> get eventLocation => $composableBuilder(
+    column: $table.eventLocation,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get url => $composableBuilder(
-    column: $table.url,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get location => $composableBuilder(
-    column: $table.location,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get time => $composableBuilder(
-    column: $table.time,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get organizer => $composableBuilder(
-    column: $table.organizer,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get numberOfAttendees => $composableBuilder(
-    column: $table.numberOfAttendees,
+  ColumnFilters<String> get eventDate => $composableBuilder(
+    column: $table.eventDate,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17673,18 +17587,43 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get genre => $composableBuilder(
-    column: $table.genre,
+  ColumnFilters<String> get eventCardImage => $composableBuilder(
+    column: $table.eventCardImage,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get poster => $composableBuilder(
-    column: $table.poster,
+  ColumnFilters<String> get eventPosterImage => $composableBuilder(
+    column: $table.eventPosterImage,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get banner => $composableBuilder(
-    column: $table.banner,
+  ColumnFilters<String> get eventBannerImage => $composableBuilder(
+    column: $table.eventBannerImage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventUrl => $composableBuilder(
+    column: $table.eventUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventGenre => $composableBuilder(
+    column: $table.eventGenre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleteTag => $composableBuilder(
+    column: $table.deleteTag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17753,58 +17692,23 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnOrderings<String> get eventName => $composableBuilder(
+    column: $table.eventName,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnOrderings<String> get eventDescription => $composableBuilder(
+    column: $table.eventDescription,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnOrderings<String> get eventLocation => $composableBuilder(
+    column: $table.eventLocation,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get url => $composableBuilder(
-    column: $table.url,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get location => $composableBuilder(
-    column: $table.location,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get time => $composableBuilder(
-    column: $table.time,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get organizer => $composableBuilder(
-    column: $table.organizer,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get numberOfAttendees => $composableBuilder(
-    column: $table.numberOfAttendees,
+  ColumnOrderings<String> get eventDate => $composableBuilder(
+    column: $table.eventDate,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -17813,18 +17717,43 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get genre => $composableBuilder(
-    column: $table.genre,
+  ColumnOrderings<String> get eventCardImage => $composableBuilder(
+    column: $table.eventCardImage,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get poster => $composableBuilder(
-    column: $table.poster,
+  ColumnOrderings<String> get eventPosterImage => $composableBuilder(
+    column: $table.eventPosterImage,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get banner => $composableBuilder(
-    column: $table.banner,
+  ColumnOrderings<String> get eventBannerImage => $composableBuilder(
+    column: $table.eventBannerImage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventUrl => $composableBuilder(
+    column: $table.eventUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventGenre => $composableBuilder(
+    column: $table.eventGenre,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get deleteTag => $composableBuilder(
+    column: $table.deleteTag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -17841,56 +17770,58 @@ class $$EventTableTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<String> get eventName =>
+      $composableBuilder(column: $table.eventName, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
+  GeneratedColumn<String> get eventDescription => $composableBuilder(
+    column: $table.eventDescription,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get url =>
-      $composableBuilder(column: $table.url, builder: (column) => column);
-
-  GeneratedColumn<String> get location =>
-      $composableBuilder(column: $table.location, builder: (column) => column);
-
-  GeneratedColumn<String> get time =>
-      $composableBuilder(column: $table.time, builder: (column) => column);
-
-  GeneratedColumn<String> get date =>
-      $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get organizer =>
-      $composableBuilder(column: $table.organizer, builder: (column) => column);
-
-  GeneratedColumn<String> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  GeneratedColumn<int> get numberOfAttendees => $composableBuilder(
-    column: $table.numberOfAttendees,
+  GeneratedColumn<String> get eventLocation => $composableBuilder(
+    column: $table.eventLocation,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get eventDate =>
+      $composableBuilder(column: $table.eventDate, builder: (column) => column);
 
   GeneratedColumn<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get genre =>
-      $composableBuilder(column: $table.genre, builder: (column) => column);
+  GeneratedColumn<String> get eventCardImage => $composableBuilder(
+    column: $table.eventCardImage,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get poster =>
-      $composableBuilder(column: $table.poster, builder: (column) => column);
+  GeneratedColumn<String> get eventPosterImage => $composableBuilder(
+    column: $table.eventPosterImage,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get banner =>
-      $composableBuilder(column: $table.banner, builder: (column) => column);
+  GeneratedColumn<String> get eventBannerImage => $composableBuilder(
+    column: $table.eventBannerImage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get eventUrl =>
+      $composableBuilder(column: $table.eventUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get eventGenre => $composableBuilder(
+    column: $table.eventGenre,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get deleteTag =>
+      $composableBuilder(column: $table.deleteTag, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   Expression<T> attendeeTableRefs<T extends Object>(
     Expression<T> Function($$AttendeeTableTableAnnotationComposer a) f,
@@ -17972,77 +17903,69 @@ class $$EventTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> url = const Value.absent(),
-                Value<String> location = const Value.absent(),
-                Value<String> time = const Value.absent(),
-                Value<String> date = const Value.absent(),
-                Value<String> organizer = const Value.absent(),
-                Value<String> imageUrl = const Value.absent(),
-                Value<int> numberOfAttendees = const Value.absent(),
+                Value<String> eventName = const Value.absent(),
+                Value<String> eventDescription = const Value.absent(),
+                Value<String> eventLocation = const Value.absent(),
+                Value<String> eventDate = const Value.absent(),
                 Value<String> organizerId = const Value.absent(),
-                Value<String> genre = const Value.absent(),
-                Value<String?> poster = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
+                Value<String?> eventCardImage = const Value.absent(),
+                Value<String?> eventPosterImage = const Value.absent(),
+                Value<String?> eventBannerImage = const Value.absent(),
+                Value<String?> eventUrl = const Value.absent(),
+                Value<String?> eventGenre = const Value.absent(),
+                Value<bool> deleteTag = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
                 id: id,
+                eventName: eventName,
+                eventDescription: eventDescription,
+                eventLocation: eventLocation,
+                eventDate: eventDate,
+                organizerId: organizerId,
+                eventCardImage: eventCardImage,
+                eventPosterImage: eventPosterImage,
+                eventBannerImage: eventBannerImage,
+                eventUrl: eventUrl,
+                eventGenre: eventGenre,
+                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                url: url,
-                location: location,
-                time: time,
-                date: date,
-                organizer: organizer,
-                imageUrl: imageUrl,
-                numberOfAttendees: numberOfAttendees,
-                organizerId: organizerId,
-                genre: genre,
-                poster: poster,
-                banner: banner,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String name,
-                required String description,
-                required String url,
-                required String location,
-                required String time,
-                required String date,
-                required String organizer,
-                required String imageUrl,
-                required int numberOfAttendees,
+                required String eventName,
+                required String eventDescription,
+                required String eventLocation,
+                required String eventDate,
                 required String organizerId,
-                required String genre,
-                Value<String?> poster = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
+                Value<String?> eventCardImage = const Value.absent(),
+                Value<String?> eventPosterImage = const Value.absent(),
+                Value<String?> eventBannerImage = const Value.absent(),
+                Value<String?> eventUrl = const Value.absent(),
+                Value<String?> eventGenre = const Value.absent(),
+                Value<bool> deleteTag = const Value.absent(),
+                required String createdAt,
+                required String updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
                 id: id,
+                eventName: eventName,
+                eventDescription: eventDescription,
+                eventLocation: eventLocation,
+                eventDate: eventDate,
+                organizerId: organizerId,
+                eventCardImage: eventCardImage,
+                eventPosterImage: eventPosterImage,
+                eventBannerImage: eventBannerImage,
+                eventUrl: eventUrl,
+                eventGenre: eventGenre,
+                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                url: url,
-                location: location,
-                time: time,
-                date: date,
-                organizer: organizer,
-                imageUrl: imageUrl,
-                numberOfAttendees: numberOfAttendees,
-                organizerId: organizerId,
-                genre: genre,
-                poster: poster,
-                banner: banner,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

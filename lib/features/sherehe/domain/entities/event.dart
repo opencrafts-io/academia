@@ -2,70 +2,66 @@ import 'package:equatable/equatable.dart';
 
 class Event extends Equatable {
   final String id;
-  final String name;
-  final String description;
-  final String url;
-  final String location;
-  final String time;
-  final String date;
-  final String organizer;
-  final String imageUrl;
+  final String eventName;
+  final String eventDescription;
+  final String? eventUrl;
+  final String eventLocation;
+  final String eventDate;
   final String organizerId;
-  final int numberOfAttendees;
-  final List<String> genre;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? bannerImageUrl;
-  final String? posterImageUrl;
+  final String? eventCardImage;
+  final String? eventPosterImage;
+  final String? eventBannerImage;
+  final String? eventGenre;
+  final bool deleteTag;
+  final String createdAt;
+  final String updatedAt;
 
   const Event({
     required this.id,
-    required this.name,
-    required this.description,
-    required this.date,
-    required this.location,
-    required this.time,
-    required this.organizer,
-    required this.imageUrl,
+    required this.eventName,
+    required this.eventDescription,
+    this.eventUrl,
+    required this.eventLocation,
+    required this.eventDate,
     required this.organizerId,
-    required this.numberOfAttendees,
-    required this.genre,
+    this.eventCardImage,
+    this.eventPosterImage,
+    this.eventBannerImage,
+    this.eventGenre,
+    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
-    required this.url,
-    this.bannerImageUrl,
-    this.posterImageUrl,
   });
 
   Event copyWith({
     String? id,
-    String? name,
-    String? description,
-    String? url,
-    String? location,
-    String? time,
-    String? date,
-    String? organizer,
-    String? imageUrl,
+    String? eventName,
+    String? eventDescription,
+    String? eventUrl,
+    String? eventLocation,
+    String? eventDate,
     String? organizerId,
-    int? numberOfAttendees,
-    List<String>? genre,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? eventCardImage,
+    String? eventPosterImage,
+    String? eventBannerImage,
+    String? eventGenre,
+    bool? deleteTag,
+    String? createdAt,
+    String? updatedAt,
   }) {
     return Event(
       id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      url: url ?? this.url,
-      location: location ?? this.location,
-      time: time ?? this.time,
-      date: date ?? this.date,
-      organizer: organizer ?? this.organizer,
-      imageUrl: imageUrl ?? this.imageUrl,
+      eventName: eventName ?? this.eventName,
+      eventDescription: eventDescription ?? this.eventDescription,
+      eventUrl: eventUrl ?? this.eventUrl,
+      eventLocation: eventLocation ?? this.eventLocation,
+      eventDate: eventDate ?? this.eventDate,
       organizerId: organizerId ?? this.organizerId,
-      numberOfAttendees: numberOfAttendees ?? this.numberOfAttendees,
-      genre: genre ?? this.genre,
+      eventCardImage: eventCardImage ?? this.eventCardImage,
+      eventPosterImage: eventPosterImage ?? this.eventPosterImage,
+      eventBannerImage: eventBannerImage ?? this.eventBannerImage,
+      eventGenre: eventGenre ?? this.eventGenre,
+      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -74,17 +70,17 @@ class Event extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    name,
-    description,
-    url,
-    location,
-    time,
-    date,
-    organizer,
-    imageUrl,
+    eventName,
+    eventDescription,
+    eventUrl,
+    eventLocation,
+    eventDate,
     organizerId,
-    numberOfAttendees,
-    genre,
+    eventCardImage,
+    eventPosterImage,
+    eventBannerImage,
+    eventGenre,
+    deleteTag,
     createdAt,
     updatedAt,
   ];

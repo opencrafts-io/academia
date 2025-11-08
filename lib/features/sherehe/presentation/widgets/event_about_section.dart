@@ -38,7 +38,7 @@ class EventAboutSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          event.description,
+          event.eventDescription,
           style: descriptionStyle,
         ),
       ],

@@ -83,7 +83,7 @@ class AttendeesList extends StatelessWidget {
     }
 
     String attendeeFullName = (attendee.firstName).trim();
-    if (event.organizer.trim().toLowerCase() == attendeeFullName.toLowerCase()) {
+    if (event.organizerId.trim().toLowerCase() == attendeeFullName.toLowerCase()) {
       return true;
     }
     return false;
