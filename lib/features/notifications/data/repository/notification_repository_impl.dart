@@ -21,14 +21,31 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .map((config) => config.toNotificationChannel())
         .toList();
 
-    await AwesomeNotifications().initialize(
-      "resource://drawable/academia",
-      notificationChannels,
-      debug: kDebugMode,
-    );
+    try {
+      final initialized = await AwesomeNotifications().initialize(
+        "resource://drawable/academia",
+        notificationChannels,
+        debug: kDebugMode,
+      );
 
-    return right(null);
-  }
+      if (!initialized) {
+        return left(
+          NotificationFailure(
+            message: "Failed to initialize local notifications",
+            error: initialized,
+          ),
+        );
+      }
+
+      return right(null);
+    } catch (error) {
+      return left(
+        NotificationFailure(
+          message: "Failed to initialize local notifications",
+          error: error,
+        ),
+      );
+    }
 
   @override
   Future<Either<Failure, void>> initializeOneSignal(String appId) async {
