@@ -494,6 +494,12 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<InitializeLocalNotificationsUsecase>(
+    () => InitializeLocalNotificationsUsecase(
+      notificationRepository: sl.get<NotificationRepository>(),
+    ),
+  );
+
   sl.registerFactory<InitializeOneSignalUsecase>(
     () => InitializeOneSignalUsecase(sl.get<NotificationRepository>()),
   );
@@ -533,6 +539,8 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
+      initializeLocalNotificationsUsecase: sl
+          .get<InitializeLocalNotificationsUsecase>(),
       initializeOneSignalUsecase: sl.get<InitializeOneSignalUsecase>(),
       getNotificationsUsecase: sl.get<GetNotificationsUsecase>(),
       markNotificationAsReadUsecase: sl.get<MarkNotificationAsReadUsecase>(),

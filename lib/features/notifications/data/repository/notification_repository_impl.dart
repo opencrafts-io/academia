@@ -1,6 +1,8 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/notifications/notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationRemoteDatasource remoteDatasource;
@@ -10,6 +12,23 @@ class NotificationRepositoryImpl implements NotificationRepository {
     required this.remoteDatasource,
     required this.localDatasource,
   });
+
+  @override
+  Future<Either<Failure, void>> initializeLocalNotifications(
+    List<NotificationChannelConfig> channels,
+  ) async {
+    final notificationChannels = channels
+        .map((config) => config.toNotificationChannel())
+        .toList();
+
+    await AwesomeNotifications().initialize(
+      "resource://drawable/academia",
+      notificationChannels,
+      debug: kDebugMode,
+    );
+
+    return right(null);
+  }
 
   @override
   Future<Either<Failure, void>> initializeOneSignal(String appId) async {
@@ -45,7 +64,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteNotification(String notificationId) async {
+  Future<Either<Failure, void>> deleteNotification(
+    String notificationId,
+  ) async {
     return await localDatasource.deleteNotification(notificationId);
   }
 
@@ -76,15 +97,25 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<Either<Failure, void>> sendLocalNotification({
-    required String title,
-    required String body,
-    Map<String, dynamic>? data,
+    required NotificationContent content,
+    NotificationCalendar? schedule,
+    List<NotificationActionButton>? actionButtons,
+    Map<String, NotificationLocalization>? localizations,
   }) async {
-    return await remoteDatasource.sendLocalNotification(
-      title: title,
-      body: body,
-      data: data,
+    final result = await AwesomeNotifications().createNotification(
+      content: content,
+      schedule: schedule,
+      actionButtons: actionButtons,
+      localizations: localizations,
+    );
+
+    if (result) return right(null);
+
+    return left(
+      NotificationFailure(
+        message: "Failed to schedule local notification",
+        error: result,
+      ),
     );
   }
 }
-
