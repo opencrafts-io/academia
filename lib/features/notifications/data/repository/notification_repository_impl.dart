@@ -46,6 +46,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
         ),
       );
     }
+  }
 
   @override
   Future<Either<Failure, void>> initializeOneSignal(String appId) async {
