@@ -4,7 +4,6 @@ import 'package:academia/features/magnet/magnet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:vibration/vibration.dart';
 
 class EssentialsInstitutionSection extends StatelessWidget {
   const EssentialsInstitutionSection({super.key});
@@ -65,13 +64,7 @@ class EssentialsInstitutionSection extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           onTap: isSupported
-                              ? () async {
-                                  if (await Vibration.hasVibrator()) {
-                                    Vibration.vibrate(
-                                      pattern: [0, 50, 100, 50, 100, 100],
-                                      intensities: [0, 128, 0, 128, 0, 128],
-                                    );
-                                  }
+                              ? () {
                                   if (!context.mounted) return;
                                   MagnetHomeRoute(
                                     institutionID: ins.institutionId,

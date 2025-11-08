@@ -2,7 +2,6 @@ import 'package:academia/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:vibration/vibration.dart';
 
 class LayoutPage extends StatefulWidget {
   const LayoutPage({super.key, required this.navigationShell});
@@ -13,10 +12,7 @@ class LayoutPage extends StatefulWidget {
 }
 
 class _LayoutPageState extends State<LayoutPage> {
-  void _onNavigationSelected(int index) async {
-    if (await Vibration.hasVibrator()) {
-      Vibration.vibrate(duration: 50);
-    }
+  void _onNavigationSelected(int index) {
     widget.navigationShell.goBranch(index);
   }
 

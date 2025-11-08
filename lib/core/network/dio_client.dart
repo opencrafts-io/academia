@@ -35,20 +35,22 @@ class DioClient {
 
     dio.interceptors.add(requestInspector.getDioRequestInterceptor());
 
-    dio.interceptors.add(
-      PrettyDioLogger(
-        error: true,
-        responseBody: true,
-        request: true,
-        requestBody: true,
-        requestHeader: true,
-        responseHeader: true,
-        maxWidth: 90,
-        compact: true,
-        enabled: kDebugMode,
-      ),
-    );
-
+    // NOTE: Do not push the loggin version it pollutes the logs!
+    // Use the inbuilt ui inspector
+    // dio.interceptors.add(
+    //   PrettyDioLogger(
+    //     error: true,
+    //     responseBody: true,
+    //     request: true,
+    //     requestBody: true,
+    //     requestHeader: true,
+    //     responseHeader: true,
+    //     maxWidth: 90,
+    //     compact: true,
+    //     enabled: kDebugMode,
+    //   ),
+    // );
+    //
     _addAuthInterceptor();
   }
 

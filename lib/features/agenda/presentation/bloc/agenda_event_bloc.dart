@@ -2,8 +2,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/agenda/agenda.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 part 'agenda_event_state.dart';
 part 'agenda_event_event.dart';
@@ -24,7 +22,6 @@ class AgendaEventBloc extends Bloc<AgendaEventEvent, AgendaEventState> {
     required this.updateAgendaEventUsecase,
     required this.deleteAgendaEventUsecase,
   }) : super(AgendaEventInitialState()) {
-    
     // Handle fetching cached agenda events
     on<FetchCachedAgendaEventsEvent>((event, emit) {
       final agendaEventsStream = getCachedAgendaEventsUsecase(NoParams());
@@ -53,11 +50,7 @@ class AgendaEventBloc extends Bloc<AgendaEventEvent, AgendaEventState> {
         (failure) {
           return emit(AgendaEventErrorState(error: failure.message));
         },
-        (agendaEvent) async {
-          // Provide haptic feedback for successful creation
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.gentleReminder);
-          }
+        (agendaEvent) {
           // Refresh the cached events to show the new event
           add(FetchCachedAgendaEventsEvent());
         },
@@ -72,10 +65,6 @@ class AgendaEventBloc extends Bloc<AgendaEventEvent, AgendaEventState> {
           return emit(AgendaEventErrorState(error: failure.message));
         },
         (agendaEvent) async {
-          // Provide haptic feedback for successful update
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.softPulse);
-          }
           // Refresh the cached events to show the updated event
           add(FetchCachedAgendaEventsEvent());
         },
@@ -90,10 +79,6 @@ class AgendaEventBloc extends Bloc<AgendaEventEvent, AgendaEventState> {
           return emit(AgendaEventErrorState(error: failure.message));
         },
         (agendaEvent) async {
-          // Provide haptic feedback for successful deletion
-          if (await Vibration.hasVibrator()) {
-            Vibration.vibrate(preset: VibrationPreset.quickSuccessAlert);
-          }
           // Refresh the cached events to reflect the deletion
           add(FetchCachedAgendaEventsEvent());
         },

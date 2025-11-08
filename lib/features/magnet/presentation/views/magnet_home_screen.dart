@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
 
 class MagnetHomeScreenAction {
   final String title;
@@ -174,14 +173,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
                         return Card.outlined(
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
-                            onTap: () async {
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  pattern: [0, 50, 100, 50, 100, 100],
-                                  intensities: [0, 128, 0, 128, 0, 128],
-                                );
-                              }
-                              if (!context.mounted) return;
+                            onTap: () {
                               item.ontap(context, widget.institutionID);
                             },
                             child: Column(

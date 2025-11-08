@@ -58,12 +58,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
         return Container(
           constraints: BoxConstraints(maxWidth: ResponsiveBreakPoints.mobile),
           child: TableCalendar(
-            onDaySelected: (selectedDay, focusedDay) async {
-              // Provide haptic feedback for day selection
-              if (await Vibration.hasVibrator()) {
-                Vibration.vibrate(duration: 50, amplitude: 128);
-              }
-
+            onDaySelected: (selectedDay, focusedDay) {
               if (context.mounted) {
                 setState(() {
                   _selectedDay = selectedDay;
@@ -297,7 +292,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                               // Provide haptic feedback for edit action
                               if (await Vibration.hasVibrator()) {
                                 Vibration.vibrate(
-                                  preset: VibrationPreset.softPulse,
+                                  preset: VibrationPreset.gentleReminder,
                                 );
                               }
 
@@ -309,7 +304,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                             onDelete: () async {
                               if (await Vibration.hasVibrator()) {
                                 Vibration.vibrate(
-                                  preset: VibrationPreset.emergencyAlert,
+                                  preset: VibrationPreset.gentleReminder,
                                 );
                               }
 

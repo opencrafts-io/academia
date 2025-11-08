@@ -46,13 +46,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: Padding(
           padding: EdgeInsetsGeometry.all(8),
           child: Image.asset("assets/icons/academia.png"),
         ),
         title: Text("Setup your profile"),
       ),
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state is ProfileErrorState) {

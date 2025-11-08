@@ -71,7 +71,6 @@ dependencies:
   onesignal_flutter: ^5.3.4
   firebase_core: ^4.0.0
   firebase_remote_config: ^6.0.0
-  quick_actions: ^1.1.0
   confetti: ^0.7.0
   google_mobile_ads: ^6.0.0
   firebase_analytics: ^12.0.0

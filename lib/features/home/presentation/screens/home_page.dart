@@ -4,6 +4,7 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,9 +29,11 @@ class _HomePageState extends State<HomePage> {
         onDestinationSelected: (value) {
           switch (value) {
             case 1:
+              context.pop();
               CreateCommunitiesRoute().push(context);
               break;
             case 2:
+              context.pop();
               CommunityMembershipsRoute().push(context);
               break;
             default:

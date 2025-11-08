@@ -3,10 +3,8 @@ import 'package:academia/features/features.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -217,13 +215,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  duration: 15,
-                                  amplitude: 255,
-                                  sharpness: 1.0,
-                                );
-                              }
                               try {
                                 final url = Uri.parse(
                                   'https://policy.opencrafts.io',
@@ -252,13 +243,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  duration: 15,
-                                  amplitude: 255,
-                                  sharpness: 1.0,
-                                );
-                              }
                               try {
                                 final url = Uri.parse(
                                   'https://policy.opencrafts.io',
@@ -284,7 +268,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   Spacer(),
 
-                  Image.asset("assets/icons/opencrafts.png", height: 40),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Image.asset(
+                      "assets/icons/opencrafts.png",
+                      height: 40,
+                    ),
+                  ),
+
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Text.rich(
@@ -293,13 +284,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: Theme.of(context).textTheme.bodySmall,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
-                            if (await Vibration.hasVibrator()) {
-                              Vibration.vibrate(
-                                duration: 15,
-                                amplitude: 255,
-                                sharpness: 1.0,
-                              );
-                            }
                             try {
                               final url = Uri.parse('https://opencrafts.io/');
                               if (await canLaunchUrl(url)) {
