@@ -102,20 +102,29 @@ class NotificationRepositoryImpl implements NotificationRepository {
     List<NotificationActionButton>? actionButtons,
     Map<String, NotificationLocalization>? localizations,
   }) async {
-    final result = await AwesomeNotifications().createNotification(
-      content: content,
-      schedule: schedule,
-      actionButtons: actionButtons,
-      localizations: localizations,
-    );
+    try {
+      final result = await AwesomeNotifications().createNotification(
+        content: content,
+        schedule: schedule,
+        actionButtons: actionButtons,
+        localizations: localizations,
+      );
 
-    if (result) return right(null);
+      if (result) return right(null);
 
-    return left(
-      NotificationFailure(
-        message: "Failed to schedule local notification",
-        error: result,
-      ),
-    );
+      return left(
+        NotificationFailure(
+          message: "Failed to schedule local notification",
+          error: result,
+        ),
+      );
+    } catch (error) {
+      return left(
+        NotificationFailure(
+          message: "Failed to schedule local notification",
+          error: error,
+        ),
+      );
+    }
   }
 }
