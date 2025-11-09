@@ -102,6 +102,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
+  freezed_annotation: ^3.1.0
   awesome_notifications: ^0.10.1
   awesome_notifications_core: ^0.10.1
   workmanager: ^0.9.0+3
@@ -121,6 +122,7 @@ dev_dependencies:
   build_runner: ^2.4.15
   drift_dev: ^2.27.0
   json_serializable: ^6.8.0
+  freezed: ^3.2.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
