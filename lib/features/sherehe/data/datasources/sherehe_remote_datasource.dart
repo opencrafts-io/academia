@@ -113,43 +113,32 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, EventData>> getSpecificEvent(String id) async {
+  Future<Either<Failure, EventData>> getEventById({
+    required String eventId,
+  }) async {
     try {
       final response = await dioClient.dio.get(
-        // 'https://qasherehe.opencrafts.io/events/getEventById/$id',
-        "/$servicePrefix/events/getEventById/$id",
+        "http://192.168.100.128:3001/event/$eventId",
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> eventJson = Map<String, dynamic>.from(
-          response.data['result'],
-        );
-        if (eventJson['organizer_id'] is String) {
-          eventJson['organizer_id'] =
-              int.tryParse(eventJson['organizer_id'] as String) ?? 0;
-        }
-        if (eventJson['number_of_attendees'] is String) {
-          eventJson['number_of_attendees'] =
-              int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
-        }
-
-        return right(EventData.fromJson(eventJson));
+        return right(EventData.fromJson(response.data));
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected server response while fetching event.",
+            message: "Unexpected server response: ${response.statusCode}",
             error: response,
           ),
         );
       }
     } on DioException catch (de) {
-      _logger.e("DioException when fetching event $id", error: de);
+      _logger.e("DioException when fetching event by ID", error: de);
       return handleDioError(de);
     } catch (e) {
-      _logger.e("Unknown error while fetching event $id", error: e);
+      _logger.e("Unknown error while fetching event by ID", error: e);
       return left(
         ServerFailure(
-          message: "An unexpected error occurred while fetching the event",
+          message: "An unexpected error occurred while fetching event",
           error: e,
         ),
       );

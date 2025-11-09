@@ -1,4 +1,3 @@
-import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 import '../../domain/domain.dart';
@@ -45,16 +44,12 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, Event>> getSpecificEvent(String id) async {
-    final localResult = await localDataSource.getCachedEventById(id);
-    if (localResult.isRight()) {
-      return right(((localResult as Right).value as EventData).toEntity());
-    }
-    final result = await remoteDataSource.getSpecificEvent(id);
-    return result.fold((failure) => Left(failure), (model) async {
-      await localDataSource.cacheEvents([model]);
-      return Right(model.toEntity());
-    });
+  Future<Either<Failure, Event>> getEventById({required String eventId}) async {
+    final result = await remoteDataSource.getEventById(eventId: eventId);
+    return result.fold(
+      (failure) => left(failure),
+      (event) => right(event.toEntity()),
+    );
   }
 
   @override

@@ -11,7 +11,9 @@ abstract class ShereheRepository {
     required int limit,
   });
 
-  Future<Either<Failure, Event>> getSpecificEvent(String id);
+  Future<Either<Failure, Event>> getEventById({
+    required String eventId,
+  });
 
   Future<Either<Failure, List<Attendee>>> getAttendeesByEventId({
     required String eventId,

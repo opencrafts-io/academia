@@ -39,7 +39,7 @@ class ShereheDetailsBloc extends Bloc<ShereheDetailsEvent, ShereheDetailsState> 
       },
     );
 
-    final eventResult = await getSpecificEventUseCase.execute(event.eventId);
+    final eventResult = await getSpecificEventUseCase.execute(eventId: event.eventId);
     await eventResult.fold(
           (eventFailure) async {
         String errorMessage = 'An unexpected error occurred.';
