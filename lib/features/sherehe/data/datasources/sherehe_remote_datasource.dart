@@ -8,7 +8,6 @@ import 'package:logger/logger.dart';
 import 'package:academia/core/network/network.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/attendee.dart';
-import '../../domain/entities/event.dart';
 import 'dart:math';
 
 class ShereheRemoteDataSource with DioErrorHandler {
@@ -290,201 +289,79 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  // Future<Either<Failure, Unit>> createEvent(
-  //   Event event, {
-  //   File? eventImage,
-  //   File? bannerImage,
-  //   File? cardImage,
-  // }) async {
-  //   try {
-  //     if (eventImage == null) {
-  //       _logger.w("createEvent called without a required poster image file.");
-  //       return left(
-  //         ServerFailure(
-  //           message: "No poster image provided for event creation.",
-  //           error: "Poster image file is required",
-  //         ),
-  //       );
-  //     }
-  //     if (bannerImage == null) {
-  //       _logger.w("createEvent called without a required banner image file.");
-  //       return left(
-  //         ServerFailure(
-  //           message: "No banner image provided for event creation.",
-  //           error: "Banner image file is required",
-  //         ),
-  //       );
-  //     }
-  //     if (cardImage == null) {
-  //       _logger.w("createEvent called without a required card image file.");
-  //       return left(
-  //         ServerFailure(
-  //           message: "No card image provided for event creation.",
-  //           error: "Card image file is required",
-  //         ),
-  //       );
-  //     }
-  //     Map<String, dynamic> eventDataMap = {
-  //       'name': event.name,
-  //       'description': event.description,
-  //       'date': event.date,
-  //       'time': event.time,
-  //       'genre': event.genre.join(','),
-  //       'location': event.location,
-  //       'organizer': event.organizer,
-  //       'organizer_id': event.organizerId,
-  //       'url': event.url,
-  //     };
-  //     final FormData formData = FormData.fromMap(eventDataMap);
-  //     String posterFileName;
-  //     try {
-  //       posterFileName = eventImage.path.split('/').last;
-  //       if (posterFileName.isEmpty) {
-  //         throw FormatException("Extracted poster filename is empty");
-  //       }
-  //     } catch (e) {
-  //       _logger.w(
-  //         "Could not extract poster filename from path '${eventImage.path}'. Error: $e. Generating default filename.",
-  //       );
-  //       String extension = '.jpg';
-  //       try {
-  //         final pathParts = eventImage.path.split('.');
-  //         if (pathParts.length > 1) {
-  //           extension = '.${pathParts.last}';
-  //         }
-  //       } catch (extError) {
-  //         _logger.d(
-  //           "Could not determine poster file extension, using default .jpg. Error: $extError",
-  //         );
-  //       }
-  //       posterFileName =
-  //           'event_poster_${DateTime.now().millisecondsSinceEpoch}$extension';
-  //     }
-  //     _logger.d("Using poster filename for upload: $posterFileName");
-  //     formData.files.add(
-  //       MapEntry(
-  //         'poster',
-  //         await MultipartFile.fromFile(
-  //           eventImage.path,
-  //           filename: posterFileName,
-  //         ),
-  //       ),
-  //     );
-  //     String bannerFileName;
-  //     try {
-  //       bannerFileName = bannerImage.path.split('/').last;
-  //       if (bannerFileName.isEmpty) {
-  //         throw FormatException("Extracted banner filename is empty");
-  //       }
-  //     } catch (e) {
-  //       _logger.w(
-  //         "Could not extract banner filename from path '${bannerImage.path}'. Error: $e. Generating default filename.",
-  //       );
-  //       String extension = '.jpg';
-  //       try {
-  //         final pathParts = bannerImage.path.split('.');
-  //         if (pathParts.length > 1) {
-  //           extension = '.${pathParts.last}';
-  //         }
-  //       } catch (extError) {
-  //         _logger.d(
-  //           "Could not determine banner file extension, using default .jpg. Error: $extError",
-  //         );
-  //       }
-  //       bannerFileName =
-  //           'event_banner_${DateTime.now().millisecondsSinceEpoch}$extension';
-  //     }
-  //     _logger.d("Using banner filename for upload: $bannerFileName");
-  //     formData.files.add(
-  //       MapEntry(
-  //         'banner',
-  //         await MultipartFile.fromFile(
-  //           bannerImage.path,
-  //           filename: bannerFileName,
-  //         ),
-  //       ),
-  //     );
-  //     String cardFileName;
-  //     try {
-  //       cardFileName = cardImage.path.split('/').last;
-  //       if (cardFileName.isEmpty) {
-  //         throw FormatException("Extracted card filename is empty");
-  //       }
-  //     } catch (e) {
-  //       _logger.w(
-  //         "Could not extract card filename from path '${cardImage.path}'. Error: $e. Generating default filename.",
-  //       );
-  //       String extension = '.jpg';
-  //       try {
-  //         final pathParts = cardImage.path.split('.');
-  //         if (pathParts.length > 1) {
-  //           extension = '.${pathParts.last}';
-  //         }
-  //       } catch (extError) {
-  //         _logger.d(
-  //           "Could not determine card file extension, using default .jpg. Error: $extError",
-  //         );
-  //       }
-  //       cardFileName =
-  //           'event_card_${DateTime.now().millisecondsSinceEpoch}$extension';
-  //     }
-  //     _logger.d("Using card filename for upload: $cardFileName");
-  //     formData.files.add(
-  //       MapEntry(
-  //         'event_card_image',
-  //         await MultipartFile.fromFile(cardImage.path, filename: cardFileName),
-  //       ),
-  //     );
+  Future<Either<Failure, EventData>> createEvent({
+    required String eventName,
+    required String eventDescription,
+    String? eventUrl,
+    required String eventLocation,
+    required String eventDate,
+    required String organizerId,
+    required String eventGenre,
+    required File eventCardImage,
+    required File eventPosterImage,
+    required File eventBannerImage,
+    required List<TicketData> tickets,
+  }) async {
+    try {
+      // Prepare multipart form data
+      final formData = FormData.fromMap({
+        'event_name': eventName,
+        'event_description': eventDescription,
+        if (eventUrl != null) 'event_url': eventUrl,
+        'event_location': eventLocation,
+        'event_date': eventDate,
+        // 'organizer_id': organizerId,// to be commented out later
+        'organizer_id':
+            "b19a3c82-1d5e-4f77-95cb-5b5196ad06c8", // temporarily hardcoded
+        'event_genre': eventGenre,
+        'tickets': tickets.map((ticket) {
+          final json = ticket.toJson();
+          json.removeWhere((key, value) => value == null || value == "");
+          return json;
+        }).toList(),
 
-  //     // final String endpointUrl =
-  //     //     "https://qasherehe.opencrafts.io/events/createEvent";
-  //     //
-  //     final String endpointUrl = "/$servicePrefix/events/createEvent";
+        'event_card_image': await MultipartFile.fromFile(
+          eventCardImage.path,
+          filename: eventCardImage.path.split('/').last,
+        ),
+        'event_poster_image': await MultipartFile.fromFile(
+          eventPosterImage.path,
+          filename: eventPosterImage.path.split('/').last,
+        ),
+        'event_banner_image': await MultipartFile.fromFile(
+          eventBannerImage.path,
+          filename: eventBannerImage.path.split('/').last,
+        ),
+      });
 
-  //     _logger.i("Sending event creation request to: $endpointUrl");
-  //     _logger.d("Event data (non-file): $eventDataMap");
-  //     final response = await dioClient.dio.post(endpointUrl, data: formData);
-  //     _logger.i("Event creation response status: ${response.statusCode}");
-  //     _logger.d("Event creation response data: ${response.data}");
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       String message = response.data['message'] ?? 'Event created';
-  //       _logger.i("Event created successfully: $message");
-  //       return right(unit);
-  //     } else {
-  //       _logger.e(
-  //         "Server error creating event. Status: ${response.statusCode}, Response: ${response.data}",
-  //       );
-  //       String errorMessage =
-  //           response.data['message'] ?? 'Unknown server error';
-  //       _logger.e("Server error message: $errorMessage");
-  //       return left(
-  //         ServerFailure(
-  //           message:
-  //               "Server error: $errorMessage (Status: ${response.statusCode})",
-  //           error: response,
-  //         ),
-  //       );
-  //     }
-  //   } on DioException catch (de) {
-  //     _logger.e(
-  //       "DioException when creating event",
-  //       error: de,
-  //       stackTrace: de.stackTrace,
-  //     );
-  //     return handleDioError(de);
-  //   } catch (e, stackTrace) {
-  //     _logger.e(
-  //       "Unexpected error while creating event",
-  //       error: e,
-  //       stackTrace: stackTrace,
-  //     );
-  //     return left(
-  //       ServerFailure(
-  //         message:
-  //             "An unexpected error occurred while creating the event: ${e.toString()}",
-  //         error: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
+      // Send request
+      final response = await dioClient.dio.post(
+        "http://192.168.100.128:3001/event/",
+        data: formData,
+        options: Options(headers: {"Content-Type": "multipart/form-data"}),
+      );
+
+      // Handle success
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(EventData.fromJson(response.data['event']));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating the event",
+          error: e,
+        ),
+      );
+    }
+  }
 }

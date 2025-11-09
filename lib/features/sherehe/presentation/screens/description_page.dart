@@ -1,5 +1,4 @@
 import 'package:academia/features/sherehe/presentation/widgets/genre_selector_widget.dart';
-import 'package:academia/features/sherehe/presentation/widgets/modern_input_decoration.dart';
 import 'package:flutter/material.dart';
 
 class EventDescriptionPage extends StatelessWidget {

@@ -71,9 +71,9 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
   );
-  // sl.registerLazySingleton(
-  //   () => CreateEventUseCase(sl.get<ShereheRepository>()),
-  // );
+  sl.registerLazySingleton(
+    () => CreateEventUseCase(sl.get<ShereheRepository>()),
+  );
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
@@ -108,7 +108,7 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
+  sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

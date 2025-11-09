@@ -10,7 +10,4 @@ class CreateAttendeeUseCase {
   Future<Either<Failure, Attendee>> call(Attendee attendee) async {
     return await repository.createAttendee(attendee);
   }
-
-  @override
-  List<Object> get props => [repository];
 }

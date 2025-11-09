@@ -102,20 +102,37 @@ class ShereheRepositoryImpl implements ShereheRepository {
     );
   }
 
-  // @override
-  // Future<Either<Failure, Unit>> createEvent(
-  //   Event event,
-  //   File imageFile, {
-  //   required File bannerImageFile,
-  //   required File cardImageFile,
-  // }) async {
-  //   return await remoteDataSource.createEvent(
-  //     event,
-  //     eventImage: imageFile,
-  //     bannerImage: bannerImageFile,
-  //     cardImage: cardImageFile,
-  //   );
-  // }
+  @override
+  Future<Either<Failure, Event>> createEvent({
+    required String eventName,
+    required String eventDescription,
+    String? eventUrl,
+    required String eventLocation,
+    required String eventDate,
+    required String organizerId,
+    required String eventGenre,
+    required File eventCardImage,
+    required File eventPosterImage,
+    required File eventBannerImage,
+    required List<Ticket> tickets,
+  }) async {
+    final result = await remoteDataSource.createEvent(
+      eventName: eventName,
+      eventDescription: eventDescription,
+      eventLocation: eventLocation,
+      eventDate: eventDate,
+      organizerId: organizerId,
+      eventGenre: eventGenre,
+      eventCardImage: eventCardImage,
+      eventPosterImage: eventPosterImage,
+      eventBannerImage: eventBannerImage,
+      tickets: tickets.map((ticket) => ticket.toModel()).toList(),
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (createdEvent) => right(createdEvent.toEntity()),
+    );
+  }
 
   @override
   Future<Either<Failure, Attendee>> createAttendee(Attendee attendee) async {
@@ -126,4 +143,3 @@ class ShereheRepositoryImpl implements ShereheRepository {
     });
   }
 }
-
