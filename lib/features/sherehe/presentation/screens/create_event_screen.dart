@@ -12,11 +12,6 @@ import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import 'package:intl/intl.dart';
 import '../../presentation/presentation.dart';
-import 'image_upload_page.dart';
-import 'description_page.dart';
-import 'basic_event_details_page.dart';
-import './submit_event_page.dart';
-
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
 
@@ -399,7 +394,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventBannerImage: _selectedBannerImage!,
         eventGenre: _selectedGenres.join(','),
         tickets: [
-          Ticket( // mock data for now
+          Ticket(
+            // mock data for now
             ticketName: "General Admission",
             ticketPrice: 0,
             ticketQuantity: 100,
@@ -434,98 +430,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       duration: Duration(milliseconds: 300),
       curve: Curves.elasticOut,
     );
-  }
-
-  Widget _buildPage(int pageIndex) {
-    switch (pageIndex) {
-      case 0:
-        return BasicEventDetailsPage(
-          formKey: _stage1FormKey,
-          nameController: _nameController,
-          dateTimeController: _dateTimeController,
-          locationController: _locationController,
-          onSelectDateAndTime: () => _selectDateAndTime(context),
-          onNext: () {
-            if (_stage1FormKey.currentState!.validate()) {
-              if (_selectedDateTime == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Please select a date and time"),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-                return;
-              }
-              _moveToNextPage();
-            }
-          },
-          context: context,
-        );
-      case 1:
-        return EventDescriptionPage(
-          formKey: _stage2FormKey,
-          aboutController: _aboutController,
-          selectedGenres: _selectedGenres,
-          onShowGenreSelectionDialog: _showGenreSelectionDialog,
-          onGenreDeleted: (genre) {
-            setState(() {
-              _selectedGenres.remove(genre);
-            });
-          },
-          onPrevious: _moveToPreviousPage,
-          onNext: () {
-            if (_stage2FormKey.currentState!.validate()) {
-              if (_selectedGenres.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Please select at least one genre"),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-                return;
-              }
-              _moveToNextPage();
-            }
-          },
-          context: context,
-        );
-      case 2:
-        return ImageUploadPage(
-          controller: _stage3ScrollController,
-          selectedCardImage: _selectedCardImage,
-          onPickCardImage: _pickCardImage,
-          selectedBannerImage: _selectedBannerImage,
-          onPickBannerImage: _pickBannerImage,
-          selectedPosterImage: _selectedPosterImage,
-          onPickPosterImage: _pickPosterImage,
-          onPrevious: _moveToPreviousPage,
-          onNext: () {
-            if (_selectedPosterImage == null ||
-                _selectedBannerImage == null ||
-                _selectedCardImage == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Please select all required images"),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              return;
-            }
-            _moveToNextPage();
-          },
-          context: context,
-        );
-      case 3:
-        return Stage4ReviewAndSubmit(
-          onSubmit: _submitForm,
-          onPrevious: _moveToPreviousPage,
-          userName: organizerName ?? "Unknown",
-          context: context,
-        );
-
-      default:
-        return const Center(child: Text("Page Not Found"));
-    }
   }
 
   @override
@@ -598,7 +502,32 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           horizontal: 8.0,
                           vertical: 12.0,
                         ),
-                        child: _buildPage(index),
+                        child: CreateEventPageBuilder(
+                          pageIndex: index,
+                          stage1FormKey: _stage1FormKey,
+                          stage2FormKey: _stage2FormKey,
+                          nameController: _nameController,
+                          dateTimeController: _dateTimeController,
+                          locationController: _locationController,
+                          aboutController: _aboutController,
+                          selectedGenres: _selectedGenres,
+                          onSelectDateAndTime: () =>
+                              _selectDateAndTime(context),
+                          moveToNextPage: _moveToNextPage,
+                          moveToPreviousPage: _moveToPreviousPage,
+                          showGenreSelectionDialog: _showGenreSelectionDialog,
+                          stage3ScrollController: _stage3ScrollController,
+                          selectedCardImage: _selectedCardImage,
+                          selectedBannerImage: _selectedBannerImage,
+                          selectedPosterImage: _selectedPosterImage,
+                          pickCardImage: _pickCardImage,
+                          pickBannerImage: _pickBannerImage,
+                          pickPosterImage: _pickPosterImage,
+                          submitForm: _submitForm,
+                          selectedDateTime: _selectedDateTime,
+                          organizerName: organizerName,
+                          context: context,
+                        ),
                       ),
                       itemCount: _numberOfStages + 1,
                     ),
