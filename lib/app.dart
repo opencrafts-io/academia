@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
@@ -10,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -22,6 +27,22 @@ class _AcademiaState extends State<Academia> {
   final Logger _logger = Logger();
   @override
   void initState() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString(
+        "user_activity",
+        jsonEncode({"last_app_launch_date": DateTime.now()}),
+      );
+    });
+
+    final DailyLoginBackgroundTask dailyLoginBackgroundTask =
+        DailyLoginBackgroundTask();
+    Workmanager().registerPeriodicTask(
+      dailyLoginBackgroundTask.taskName,
+      dailyLoginBackgroundTask.taskName,
+      frequency: dailyLoginBackgroundTask.frequency,
+      constraints: dailyLoginBackgroundTask.constraints
+          .toWorkManagerConstraints(),
+    );
     setOptimalDisplayMode();
     super.initState();
   }
@@ -105,6 +126,15 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) => sl<NotificationBloc>()
             ..add(
+              InitializeLocalNotificationEvent(
+                channels: [
+                  NotificationChannelConfig.reminders,
+                  NotificationChannelConfig.alerts,
+                  NotificationChannelConfig.updates,
+                ],
+              ),
+            )
+            ..add(
               InitializeOneSignalEvent(
                 appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
               ),
@@ -137,10 +167,7 @@ class _AcademiaState extends State<Academia> {
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
                 if (state is NotificationErrorState) {
-                  _logger.e(
-                    'OneSignal initialization failed: ${state.message}',
-                    error: state.message,
-                  );
+                  _logger.e(state.message);
                 }
               },
             ),
