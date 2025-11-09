@@ -43,7 +43,6 @@ class EventCardWrapper extends StatelessWidget {
           title: event.eventName,
           location: event.eventLocation,
           date: event.eventDate,
-          time: '19:00hrs', //TODO: Should have a event time as well
           genres: event.eventGenre!.split(',').map((e) => e.trim()).toList(),
           attendees: attendeeNames,
           attendeesCount: attendeeCount,

@@ -62,7 +62,6 @@ class EventCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String location;
-  final String time;
   final String date;
   final List<String> genres;
   final List<String> attendees;
@@ -75,7 +74,6 @@ class EventCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.location,
-    required this.time,
     required this.date,
     required this.genres,
     this.attendees = const [],
@@ -91,6 +89,15 @@ class EventCard extends StatelessWidget {
   }
 
   String _formatDate(String isoString, {String pattern = 'dd MMM yyyy'}) {
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat(pattern).format(dateTime);
+    } catch (e) {
+      return isoString; // fallback in case parsing fails
+    }
+  }
+
+  String _formatTime(String isoString, {String pattern = 'hh:mm a'}) {
     try {
       final dateTime = DateTime.parse(isoString).toLocal();
       return DateFormat(pattern).format(dateTime);
@@ -219,7 +226,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            time,
+                            _formatTime(date),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
