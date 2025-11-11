@@ -15,15 +15,16 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
   final Event event;
   final List<Attendee> attendees;
   final bool isUserAttending;
-  final UserProfile? currentUserProfile;
+  final bool isLoadingAttendees;
   final bool showConfettiEffect;
-
+  final String? attendeeErrorMessage;
 
   const ShereheDetailsLoaded({
     required this.event,
     required this.attendees,
     this.isUserAttending = false,
-    this.currentUserProfile,
+    this.isLoadingAttendees = false,
+    this.attendeeErrorMessage,
     this.showConfettiEffect = false,
   });
 
@@ -31,14 +32,16 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
     Event? event,
     List<Attendee>? attendees,
     bool? isUserAttending,
-    UserProfile? currentUserProfile,
+    bool? isLoadingAttendees,
+    String? attendeeErrorMessage,
     bool? showConfettiEffect,
   }) {
     return ShereheDetailsLoaded(
       event: event ?? this.event,
       attendees: attendees ?? this.attendees,
       isUserAttending: isUserAttending ?? this.isUserAttending,
-      currentUserProfile: currentUserProfile ?? this.currentUserProfile,
+      isLoadingAttendees: isLoadingAttendees ?? this.isLoadingAttendees,
+      attendeeErrorMessage: attendeeErrorMessage ?? this.attendeeErrorMessage,
       showConfettiEffect: showConfettiEffect ?? this.showConfettiEffect,
     );
   }
@@ -48,7 +51,8 @@ class ShereheDetailsLoaded extends ShereheDetailsState {
     event,
     attendees,
     isUserAttending,
-    currentUserProfile,
+    isLoadingAttendees,
+    attendeeErrorMessage,
     showConfettiEffect,
   ];
 }
@@ -62,13 +66,20 @@ class ShereheDetailsError extends ShereheDetailsState {
   List<Object?> get props => [message];
 }
 
-class MarkingAsGoing extends ShereheDetailsState {}
+class MarkingAsGoing extends ShereheDetailsLoaded {
+  const MarkingAsGoing({
+    required super.event,
+    required super.attendees,
+    required super.isUserAttending,
+  });
+}
 
-class MarkedAsGoingFailure extends ShereheDetailsState {
+class MarkedAsGoingFailure extends ShereheDetailsLoaded {
   final String message;
-
-  const MarkedAsGoingFailure({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  const MarkedAsGoingFailure({
+    required super.event,
+    required super.attendees,
+    required super.isUserAttending,
+    required this.message,
+  });
 }

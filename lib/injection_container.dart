@@ -104,7 +104,6 @@ Future<void> init(FlavorConfig flavor) async {
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
       createAttendeeUseCase: sl(),
-      getCachedUserProfileUseCase: sl(),
     ),
   );
 

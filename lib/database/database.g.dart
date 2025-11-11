@@ -4865,58 +4865,10 @@ class $AttendeeTableTable extends AttendeeTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _firstNameMeta = const VerificationMeta(
-    'firstName',
-  );
-  @override
-  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
-    'first_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _middleNameMeta = const VerificationMeta(
-    'middleName',
-  );
-  @override
-  late final GeneratedColumn<String> middleName = GeneratedColumn<String>(
-    'middle_name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _lastNameMeta = const VerificationMeta(
-    'lastName',
-  );
-  @override
-  late final GeneratedColumn<String> lastName = GeneratedColumn<String>(
-    'last_name',
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -4932,14 +4884,38 @@ class $AttendeeTableTable extends AttendeeTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deleteTagMeta = const VerificationMeta(
+    'deleteTag',
+  );
+  @override
+  late final GeneratedColumn<bool> deleteTag = GeneratedColumn<bool>(
+    'delete_tag',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES event_table (id)',
+      'CHECK ("delete_tag" IN (0, 1))',
     ),
   );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
+    'updated_at',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -4948,13 +4924,11 @@ class $AttendeeTableTable extends AttendeeTable
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    userId,
+    eventId,
+    deleteTag,
     createdAt,
     updatedAt,
-    firstName,
-    middleName,
-    lastName,
-    eventId,
-    email,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4973,39 +4947,13 @@ class $AttendeeTableTable extends AttendeeTable
     } else if (isInserting) {
       context.missing(_idMeta);
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('user_id')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('first_name')) {
-      context.handle(
-        _firstNameMeta,
-        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_firstNameMeta);
-    }
-    if (data.containsKey('middle_name')) {
-      context.handle(
-        _middleNameMeta,
-        middleName.isAcceptableOrUnknown(data['middle_name']!, _middleNameMeta),
-      );
-    }
-    if (data.containsKey('last_name')) {
-      context.handle(
-        _lastNameMeta,
-        lastName.isAcceptableOrUnknown(data['last_name']!, _lastNameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_lastNameMeta);
+      context.missing(_userIdMeta);
     }
     if (data.containsKey('event_id')) {
       context.handle(
@@ -5015,19 +4963,35 @@ class $AttendeeTableTable extends AttendeeTable
     } else if (isInserting) {
       context.missing(_eventIdMeta);
     }
-    if (data.containsKey('email')) {
+    if (data.containsKey('delete_tag')) {
       context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+        _deleteTagMeta,
+        deleteTag.isAcceptableOrUnknown(data['delete_tag']!, _deleteTagMeta),
       );
     } else if (isInserting) {
-      context.missing(_emailMeta);
+      context.missing(_deleteTagMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   AttendeeData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -5036,33 +5000,25 @@ class $AttendeeTableTable extends AttendeeTable
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      firstName: attachedDatabase.typeMapping.read(
+      userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}first_name'],
-      )!,
-      middleName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}middle_name'],
-      ),
-      lastName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_name'],
+        data['${effectivePrefix}user_id'],
       )!,
       eventId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}event_id'],
       )!,
-      email: attachedDatabase.typeMapping.read(
+      deleteTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}delete_tag'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}email'],
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
       )!,
     );
   }
@@ -5075,51 +5031,39 @@ class $AttendeeTableTable extends AttendeeTable
 
 class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String firstName;
-  final String? middleName;
-  final String lastName;
+  final String userId;
   final String eventId;
-  final String email;
+  final bool deleteTag;
+  final String createdAt;
+  final String updatedAt;
   const AttendeeData({
     required this.id,
+    required this.userId,
+    required this.eventId,
+    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
-    required this.eventId,
-    required this.email,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['first_name'] = Variable<String>(firstName);
-    if (!nullToAbsent || middleName != null) {
-      map['middle_name'] = Variable<String>(middleName);
-    }
-    map['last_name'] = Variable<String>(lastName);
+    map['user_id'] = Variable<String>(userId);
     map['event_id'] = Variable<String>(eventId);
-    map['email'] = Variable<String>(email);
+    map['delete_tag'] = Variable<bool>(deleteTag);
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
     return map;
   }
 
   AttendeeTableCompanion toCompanion(bool nullToAbsent) {
     return AttendeeTableCompanion(
       id: Value(id),
+      userId: Value(userId),
+      eventId: Value(eventId),
+      deleteTag: Value(deleteTag),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      firstName: Value(firstName),
-      middleName: middleName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(middleName),
-      lastName: Value(lastName),
-      eventId: Value(eventId),
-      email: Value(email),
     );
   }
 
@@ -5130,13 +5074,11 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AttendeeData(
       id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      firstName: serializer.fromJson<String>(json['first_name']),
-      middleName: serializer.fromJson<String?>(json['middle_name']),
-      lastName: serializer.fromJson<String>(json['last_name']),
+      userId: serializer.fromJson<String>(json['user_id']),
       eventId: serializer.fromJson<String>(json['event_id']),
-      email: serializer.fromJson<String>(json['email']),
+      deleteTag: serializer.fromJson<bool>(json['delete_tag']),
+      createdAt: serializer.fromJson<String>(json['createdAt']),
+      updatedAt: serializer.fromJson<String>(json['updatedAt']),
     );
   }
   @override
@@ -5144,47 +5086,37 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'first_name': serializer.toJson<String>(firstName),
-      'middle_name': serializer.toJson<String?>(middleName),
-      'last_name': serializer.toJson<String>(lastName),
+      'user_id': serializer.toJson<String>(userId),
       'event_id': serializer.toJson<String>(eventId),
-      'email': serializer.toJson<String>(email),
+      'delete_tag': serializer.toJson<bool>(deleteTag),
+      'createdAt': serializer.toJson<String>(createdAt),
+      'updatedAt': serializer.toJson<String>(updatedAt),
     };
   }
 
   AttendeeData copyWith({
     String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? firstName,
-    Value<String?> middleName = const Value.absent(),
-    String? lastName,
+    String? userId,
     String? eventId,
-    String? email,
+    bool? deleteTag,
+    String? createdAt,
+    String? updatedAt,
   }) => AttendeeData(
     id: id ?? this.id,
+    userId: userId ?? this.userId,
+    eventId: eventId ?? this.eventId,
+    deleteTag: deleteTag ?? this.deleteTag,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    firstName: firstName ?? this.firstName,
-    middleName: middleName.present ? middleName.value : this.middleName,
-    lastName: lastName ?? this.lastName,
-    eventId: eventId ?? this.eventId,
-    email: email ?? this.email,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
       id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      firstName: data.firstName.present ? data.firstName.value : this.firstName,
-      middleName: data.middleName.present
-          ? data.middleName.value
-          : this.middleName,
-      lastName: data.lastName.present ? data.lastName.value : this.lastName,
-      eventId: data.eventId.present ? data.eventId.value : this.eventId,
-      email: data.email.present ? data.email.value : this.email,
     );
   }
 
@@ -5192,122 +5124,97 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   String toString() {
     return (StringBuffer('AttendeeData(')
           ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('firstName: $firstName, ')
-          ..write('middleName: $middleName, ')
-          ..write('lastName: $lastName, ')
+          ..write('userId: $userId, ')
           ..write('eventId: $eventId, ')
-          ..write('email: $email')
+          ..write('deleteTag: $deleteTag, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    createdAt,
-    updatedAt,
-    firstName,
-    middleName,
-    lastName,
-    eventId,
-    email,
-  );
+  int get hashCode =>
+      Object.hash(id, userId, eventId, deleteTag, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AttendeeData &&
           other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.firstName == this.firstName &&
-          other.middleName == this.middleName &&
-          other.lastName == this.lastName &&
+          other.userId == this.userId &&
           other.eventId == this.eventId &&
-          other.email == this.email);
+          other.deleteTag == this.deleteTag &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> firstName;
-  final Value<String?> middleName;
-  final Value<String> lastName;
+  final Value<String> userId;
   final Value<String> eventId;
-  final Value<String> email;
+  final Value<bool> deleteTag;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.firstName = const Value.absent(),
-    this.middleName = const Value.absent(),
-    this.lastName = const Value.absent(),
-    this.eventId = const Value.absent(),
-    this.email = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String firstName,
-    this.middleName = const Value.absent(),
-    required String lastName,
+    required String userId,
     required String eventId,
-    required String email,
+    required bool deleteTag,
+    required String createdAt,
+    required String updatedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       firstName = Value(firstName),
-       lastName = Value(lastName),
+       userId = Value(userId),
        eventId = Value(eventId),
-       email = Value(email);
+       deleteTag = Value(deleteTag),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
   static Insertable<AttendeeData> custom({
     Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? firstName,
-    Expression<String>? middleName,
-    Expression<String>? lastName,
+    Expression<String>? userId,
     Expression<String>? eventId,
-    Expression<String>? email,
+    Expression<bool>? deleteTag,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (eventId != null) 'event_id': eventId,
+      if (deleteTag != null) 'delete_tag': deleteTag,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (firstName != null) 'first_name': firstName,
-      if (middleName != null) 'middle_name': middleName,
-      if (lastName != null) 'last_name': lastName,
-      if (eventId != null) 'event_id': eventId,
-      if (email != null) 'email': email,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   AttendeeTableCompanion copyWith({
     Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? firstName,
-    Value<String?>? middleName,
-    Value<String>? lastName,
+    Value<String>? userId,
     Value<String>? eventId,
-    Value<String>? email,
+    Value<bool>? deleteTag,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
+      eventId: eventId ?? this.eventId,
+      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
-      lastName: lastName ?? this.lastName,
-      eventId: eventId ?? this.eventId,
-      email: email ?? this.email,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5318,26 +5225,20 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (firstName.present) {
-      map['first_name'] = Variable<String>(firstName.value);
-    }
-    if (middleName.present) {
-      map['middle_name'] = Variable<String>(middleName.value);
-    }
-    if (lastName.present) {
-      map['last_name'] = Variable<String>(lastName.value);
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
     }
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
     }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
+    if (deleteTag.present) {
+      map['delete_tag'] = Variable<bool>(deleteTag.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -5349,13 +5250,11 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   String toString() {
     return (StringBuffer('AttendeeTableCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('eventId: $eventId, ')
+          ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('firstName: $firstName, ')
-          ..write('middleName: $middleName, ')
-          ..write('lastName: $lastName, ')
-          ..write('eventId: $eventId, ')
-          ..write('email: $email, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17618,29 +17517,6 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$EventTableTableReferences
-    extends BaseReferences<_$AppDataBase, $EventTableTable, EventData> {
-  $$EventTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$AttendeeTableTable, List<AttendeeData>>
-  _attendeeTableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.attendeeTable,
-    aliasName: $_aliasNameGenerator(db.eventTable.id, db.attendeeTable.eventId),
-  );
-
-  $$AttendeeTableTableProcessedTableManager get attendeeTableRefs {
-    final manager = $$AttendeeTableTableTableManager(
-      $_db,
-      $_db.attendeeTable,
-    ).filter((f) => f.eventId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_attendeeTableRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$EventTableTableFilterComposer
     extends Composer<_$AppDataBase, $EventTableTable> {
   $$EventTableTableFilterComposer({
@@ -17719,31 +17595,6 @@ class $$EventTableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> attendeeTableRefs(
-    Expression<bool> Function($$AttendeeTableTableFilterComposer f) f,
-  ) {
-    final $$AttendeeTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.attendeeTable,
-      getReferencedColumn: (t) => t.eventId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AttendeeTableTableFilterComposer(
-            $db: $db,
-            $table: $db.attendeeTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$EventTableTableOrderingComposer
@@ -17890,31 +17741,6 @@ class $$EventTableTableAnnotationComposer
 
   GeneratedColumn<String> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  Expression<T> attendeeTableRefs<T extends Object>(
-    Expression<T> Function($$AttendeeTableTableAnnotationComposer a) f,
-  ) {
-    final $$AttendeeTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.attendeeTable,
-      getReferencedColumn: (t) => t.eventId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AttendeeTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.attendeeTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$EventTableTableTableManager
@@ -17928,9 +17754,12 @@ class $$EventTableTableTableManager
           $$EventTableTableAnnotationComposer,
           $$EventTableTableCreateCompanionBuilder,
           $$EventTableTableUpdateCompanionBuilder,
-          (EventData, $$EventTableTableReferences),
+          (
+            EventData,
+            BaseReferences<_$AppDataBase, $EventTableTable, EventData>,
+          ),
           EventData,
-          PrefetchHooks Function({bool attendeeTableRefs})
+          PrefetchHooks Function()
         > {
   $$EventTableTableTableManager(_$AppDataBase db, $EventTableTable table)
     : super(
@@ -18012,45 +17841,9 @@ class $$EventTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$EventTableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({attendeeTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (attendeeTableRefs) db.attendeeTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (attendeeTableRefs)
-                    await $_getPrefetchedData<
-                      EventData,
-                      $EventTableTable,
-                      AttendeeData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$EventTableTableReferences
-                          ._attendeeTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$EventTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).attendeeTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.eventId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -18065,62 +17858,30 @@ typedef $$EventTableTableProcessedTableManager =
       $$EventTableTableAnnotationComposer,
       $$EventTableTableCreateCompanionBuilder,
       $$EventTableTableUpdateCompanionBuilder,
-      (EventData, $$EventTableTableReferences),
+      (EventData, BaseReferences<_$AppDataBase, $EventTableTable, EventData>),
       EventData,
-      PrefetchHooks Function({bool attendeeTableRefs})
+      PrefetchHooks Function()
     >;
 typedef $$AttendeeTableTableCreateCompanionBuilder =
     AttendeeTableCompanion Function({
       required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String firstName,
-      Value<String?> middleName,
-      required String lastName,
+      required String userId,
       required String eventId,
-      required String email,
+      required bool deleteTag,
+      required String createdAt,
+      required String updatedAt,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
     AttendeeTableCompanion Function({
       Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> firstName,
-      Value<String?> middleName,
-      Value<String> lastName,
+      Value<String> userId,
       Value<String> eventId,
-      Value<String> email,
+      Value<bool> deleteTag,
+      Value<String> createdAt,
+      Value<String> updatedAt,
       Value<int> rowid,
     });
-
-final class $$AttendeeTableTableReferences
-    extends BaseReferences<_$AppDataBase, $AttendeeTableTable, AttendeeData> {
-  $$AttendeeTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $EventTableTable _eventIdTable(_$AppDataBase db) =>
-      db.eventTable.createAlias(
-        $_aliasNameGenerator(db.attendeeTable.eventId, db.eventTable.id),
-      );
-
-  $$EventTableTableProcessedTableManager get eventId {
-    final $_column = $_itemColumn<String>('event_id')!;
-
-    final manager = $$EventTableTableTableManager(
-      $_db,
-      $_db.eventTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_eventIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
 
 class $$AttendeeTableTableFilterComposer
     extends Composer<_$AppDataBase, $AttendeeTableTable> {
@@ -18136,58 +17897,30 @@ class $$AttendeeTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleteTag => $composableBuilder(
+    column: $table.deleteTag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+  ColumnFilters<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get firstName => $composableBuilder(
-    column: $table.firstName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get middleName => $composableBuilder(
-    column: $table.middleName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get lastName => $composableBuilder(
-    column: $table.lastName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$EventTableTableFilterComposer get eventId {
-    final $$EventTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.eventId,
-      referencedTable: $db.eventTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$EventTableTableFilterComposer(
-            $db: $db,
-            $table: $db.eventTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$AttendeeTableTableOrderingComposer
@@ -18204,58 +17937,30 @@ class $$AttendeeTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get deleteTag => $composableBuilder(
+    column: $table.deleteTag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get firstName => $composableBuilder(
-    column: $table.firstName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get middleName => $composableBuilder(
-    column: $table.middleName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get lastName => $composableBuilder(
-    column: $table.lastName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$EventTableTableOrderingComposer get eventId {
-    final $$EventTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.eventId,
-      referencedTable: $db.eventTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$EventTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.eventTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$AttendeeTableTableAnnotationComposer
@@ -18270,48 +17975,20 @@ class $$AttendeeTableTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<bool> get deleteTag =>
+      $composableBuilder(column: $table.deleteTag, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
+  GeneratedColumn<String> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get firstName =>
-      $composableBuilder(column: $table.firstName, builder: (column) => column);
-
-  GeneratedColumn<String> get middleName => $composableBuilder(
-    column: $table.middleName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get lastName =>
-      $composableBuilder(column: $table.lastName, builder: (column) => column);
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  $$EventTableTableAnnotationComposer get eventId {
-    final $$EventTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.eventId,
-      referencedTable: $db.eventTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$EventTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.eventTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$AttendeeTableTableTableManager
@@ -18325,9 +18002,12 @@ class $$AttendeeTableTableTableManager
           $$AttendeeTableTableAnnotationComposer,
           $$AttendeeTableTableCreateCompanionBuilder,
           $$AttendeeTableTableUpdateCompanionBuilder,
-          (AttendeeData, $$AttendeeTableTableReferences),
+          (
+            AttendeeData,
+            BaseReferences<_$AppDataBase, $AttendeeTableTable, AttendeeData>,
+          ),
           AttendeeData,
-          PrefetchHooks Function({bool eventId})
+          PrefetchHooks Function()
         > {
   $$AttendeeTableTableTableManager(_$AppDataBase db, $AttendeeTableTable table)
     : super(
@@ -18343,96 +18023,43 @@ class $$AttendeeTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> firstName = const Value.absent(),
-                Value<String?> middleName = const Value.absent(),
-                Value<String> lastName = const Value.absent(),
+                Value<String> userId = const Value.absent(),
                 Value<String> eventId = const Value.absent(),
-                Value<String> email = const Value.absent(),
+                Value<bool> deleteTag = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
+                userId: userId,
+                eventId: eventId,
+                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                firstName: firstName,
-                middleName: middleName,
-                lastName: lastName,
-                eventId: eventId,
-                email: email,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String firstName,
-                Value<String?> middleName = const Value.absent(),
-                required String lastName,
+                required String userId,
                 required String eventId,
-                required String email,
+                required bool deleteTag,
+                required String createdAt,
+                required String updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
+                userId: userId,
+                eventId: eventId,
+                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                firstName: firstName,
-                middleName: middleName,
-                lastName: lastName,
-                eventId: eventId,
-                email: email,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$AttendeeTableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({eventId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (eventId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.eventId,
-                                referencedTable: $$AttendeeTableTableReferences
-                                    ._eventIdTable(db),
-                                referencedColumn: $$AttendeeTableTableReferences
-                                    ._eventIdTable(db)
-                                    .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -18447,9 +18074,12 @@ typedef $$AttendeeTableTableProcessedTableManager =
       $$AttendeeTableTableAnnotationComposer,
       $$AttendeeTableTableCreateCompanionBuilder,
       $$AttendeeTableTableUpdateCompanionBuilder,
-      (AttendeeData, $$AttendeeTableTableReferences),
+      (
+        AttendeeData,
+        BaseReferences<_$AppDataBase, $AttendeeTableTable, AttendeeData>,
+      ),
       AttendeeData,
-      PrefetchHooks Function({bool eventId})
+      PrefetchHooks Function()
     >;
 typedef $$TicketTableTableCreateCompanionBuilder =
     TicketTableCompanion Function({

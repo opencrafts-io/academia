@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../../profile/data/models/user_profile.dart';
 import '../../domain/domain.dart';
 import '../presentation.dart';
 
 class AttendeesList extends StatelessWidget {
   final Event event;
   final List<Attendee> allAttendees;
-  final UserProfile? currentUserProfile;
+  final String? userId;
 
   const AttendeesList({
-    Key? key,
+    super.key,
     required this.event,
     required this.allAttendees,
-    this.currentUserProfile,
-  }) : super(key: key);
+    this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     if (allAttendees.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Who's Coming",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Center(
@@ -46,22 +44,22 @@ class AttendeesList extends StatelessWidget {
     }
 
     List<Attendee> sortedAttendees = List.from(allAttendees);
-    sortedAttendees.sort((a, b) {
-      bool aIsHost = _isAttendeeHost(a);
-      bool bIsHost = _isAttendeeHost(b);
-      if (aIsHost && !bIsHost) return -1;
-      if (!aIsHost && bIsHost) return 1;
-      return (a.firstName).compareTo(b.firstName);
-    });
+    // sortedAttendees.sort((a, b) {
+    //   bool aIsHost = _isAttendeeHost(a);
+    //   bool bIsHost = _isAttendeeHost(b);
+    //   if (aIsHost && !bIsHost) return -1;
+    //   if (!aIsHost && bIsHost) return 1;
+    //   return (a..id).compareTo(b.id);
+    // });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Who's Coming (${sortedAttendees.length})",
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         ...sortedAttendees.map((attendee) {
@@ -70,20 +68,14 @@ class AttendeesList extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: AttendeeCard(attendee: attendee, isHost: isHost),
           );
-        }).toList(),
+        }),
       ],
     );
   }
 
   bool _isAttendeeHost(Attendee attendee) {
-    if (currentUserProfile != null &&
-        currentUserProfile!.id.hashCode == event.organizerId &&
-        attendee.email == currentUserProfile!.email) {
-      return true;
-    }
-
-    String attendeeFullName = (attendee.firstName).trim();
-    if (event.organizerId.trim().toLowerCase() == attendeeFullName.toLowerCase()) {
+    if (userId != null &&
+        userId == event.organizerId) {
       return true;
     }
     return false;

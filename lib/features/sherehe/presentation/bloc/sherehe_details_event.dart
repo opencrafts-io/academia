@@ -18,9 +18,10 @@ class LoadShereheDetails extends ShereheDetailsEvent {
 
 class MarkAsGoing extends ShereheDetailsEvent {
   final String eventId;
+  final String userId;
 
-  const MarkAsGoing({required this.eventId});
+  const MarkAsGoing({required this.eventId, required this.userId});
 
   @override
-  List<Object> get props => [eventId];
+  List<Object> get props => [eventId, userId];
 }

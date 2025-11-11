@@ -1,4 +1,5 @@
 import 'package:academia/constants/constants.dart';
+import 'package:academia/features/profile/profile.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class ShereheDetailsPage extends StatefulWidget {
 
 class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
   late ConfettiController _confettiController;
+  String? userId;
 
   @override
   void initState() {
@@ -21,6 +23,13 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 1),
     );
+
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      userId = profileState.profile.id;
+    } else {
+      userId = null;
+    }
 
     // Trigger event loading
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -122,7 +131,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             onPressed: () {
                               if (state is ShereheDetailsLoaded) {
                                 context.read<ShereheDetailsBloc>().add(
-                                  MarkAsGoing(eventId: state.event.id),
+                                  MarkAsGoing(
+                                    eventId: state.event.id,
+                                    userId: userId ?? '',
+                                  ),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -156,6 +168,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             AttendeesList(
                               event: event,
                               allAttendees: allAttendees,
+                              userId: userId,
                             ),
                             const SizedBox(height: 32),
                             SizedBox(

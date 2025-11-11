@@ -7,7 +7,10 @@ class CreateAttendeeUseCase {
 
   CreateAttendeeUseCase(this.repository);
 
-  Future<Either<Failure, Attendee>> call(Attendee attendee) async {
-    return await repository.createAttendee(attendee);
+  Future<Either<Failure, Attendee>> call({
+    required String userId,
+    required String eventId,
+  }) async {
+    return await repository.createAttendee(userId: userId, eventId: eventId);
   }
 }

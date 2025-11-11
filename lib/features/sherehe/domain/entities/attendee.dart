@@ -2,57 +2,47 @@ import 'package:equatable/equatable.dart';
 
 class Attendee extends Equatable {
   final String id;
-  final String firstName;
-  final String? middleName;
-  final String lastName;
+  final String userId;
   final String eventId;
+  final bool deleteTag;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String email;
 
   const Attendee({
     required this.id,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
+    required this.userId,
     required this.eventId,
+    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
-    required this.email
   });
 
   Attendee copyWith({
     String? id,
-    String? firstName,
-    String? middleName,
-    String? lastName,
+    String? userId,
     String? eventId,
+    bool? deleteTag,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? email,
   }) {
     return Attendee(
       id: id ?? this.id,
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
-      lastName: lastName ?? this.lastName,
+      userId: userId ?? this.userId,
       eventId: eventId ?? this.eventId,
+      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      email: email ?? this.email,
     );
   }
 
   @override
   List<Object?> get props => [
     id,
-    firstName,
-    middleName,
-    lastName,
+    userId,
     eventId,
+    deleteTag,
     createdAt,
     updatedAt,
-    email,
   ];
 
   @override

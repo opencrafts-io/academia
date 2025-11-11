@@ -18,8 +18,8 @@ class AttendeeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String initials = _getInitials(attendee.firstName);
-    final String fullName = attendee.lastName.trim();
+    final String initials = _getInitials("Unknown"); // to be replaced with attendee first name when available
+    final String fullName = "Unknown"; // to be replaced with attendee full name when available
     final String status = isHost ? 'Organizer' : 'Attending';
 
     return Container(
