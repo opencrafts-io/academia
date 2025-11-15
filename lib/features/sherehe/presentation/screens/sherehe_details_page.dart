@@ -133,7 +133,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 context.read<ShereheDetailsBloc>().add(
                                   MarkAsGoing(
                                     eventId: state.event.id,
-                                    userId: userId ?? '',
+                                    // userId: userId ?? '', //to be uncommented once backend is ready
+                                    userId:
+                                        'b19a3c82-1d5e-4f77-95cb-5b5196ad06c8',
                                   ),
                                 );
                               } else {

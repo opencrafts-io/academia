@@ -30,37 +30,46 @@ class ShereheDetailsBloc
       eventId: event.eventId,
     );
 
-    eventResult.fold(
-      (failure) => emit(ShereheDetailsError(message: failure.message)),
-      (eventData) async {
+    // Handle event details result
+    if (eventResult.isLeft()) {
+      final failure = eventResult.swap().getOrElse(() => throw '');
+      emit(ShereheDetailsError(message: failure.message));
+      return;
+    }
+
+    final eventData = eventResult.getOrElse(() => throw '');
+    emit(
+      ShereheDetailsLoaded(
+        event: eventData,
+        attendees: const [],
+        isLoadingAttendees: true,
+      ),
+    );
+
+    // Load attendees
+    final attendeeResult = await getAttendeesUseCase.execute(
+      eventId: event.eventId,
+    );
+
+    attendeeResult.fold(
+      (failure) {
         emit(
           ShereheDetailsLoaded(
             event: eventData,
             attendees: const [],
-            isLoadingAttendees: true,
+            isUserAttending: false,
+            isLoadingAttendees: false,
+            attendeeErrorMessage: failure.message,
           ),
         );
-
-        final attendeeResult = await getAttendeesUseCase.execute(
-          eventId: event.eventId,
-        );
-        attendeeResult.fold(
-          (failure) => emit(
-            ShereheDetailsLoaded(
-              event: eventData,
-              attendees: const [],
-              isUserAttending: false,
-              isLoadingAttendees: false,
-              attendeeErrorMessage: failure.message,
-            ),
-          ),
-          (attendeeList) => emit(
-            ShereheDetailsLoaded(
-              event: eventData,
-              attendees: attendeeList,
-              isUserAttending: false, //to be determined later
-              isLoadingAttendees: false,
-            ),
+      },
+      (attendeeList) {
+        emit(
+          ShereheDetailsLoaded(
+            event: eventData,
+            attendees: attendeeList,
+            isUserAttending: false,
+            isLoadingAttendees: false,
           ),
         );
       },
@@ -81,7 +90,7 @@ class ShereheDetailsBloc
         attendees: currentState.attendees,
         isUserAttending: currentState.isUserAttending,
       ),
-    );
+    );    
 
     final result = await createAttendeeUseCase.call(
       userId: event.userId,

@@ -252,16 +252,13 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required String eventId,
   }) async {
     try {
-      // Prepare form data
-      final formData = FormData.fromMap({
-        'user_id': userId,
-        'event_id': eventId,
-      });
+      final data = {"event_id": eventId, "user_id": userId};
+
 
       // Send POST request
       final response = await dioClient.dio.post(
         "http://localhost:3001/attendee",
-        data: formData,
+        data: data,
         options: Options(headers: {"Content-Type": "application/json"}),
       );
 
@@ -277,7 +274,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       }
     } on DioException catch (de) {
-      _logger.e("DioException when creating attendee", error: de);
+      _logger.e("DioException when creating attendee", error: de.response);
       return handleDioError(de);
     } catch (e) {
       _logger.e("Unknown error while creating attendee", error: e);
