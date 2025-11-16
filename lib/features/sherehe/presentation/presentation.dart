@@ -5,6 +5,7 @@ export 'screens/description_page.dart';
 export 'screens/image_upload_page.dart';
 export 'screens/create_event_screen.dart';
 export 'screens/submit_event_page.dart';
+export 'screens/ticket_selection_page.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/event_about_section.dart';

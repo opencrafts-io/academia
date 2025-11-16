@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import 'package:intl/intl.dart';
 import '../../presentation/presentation.dart';
+
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
 
@@ -23,12 +24,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final PageController _pageController = PageController();
   final ScrollController _stage3ScrollController = ScrollController();
   double _progress = 0.25;
-  final int _numberOfStages = 4;
+  final int _numberOfStages = 5;
 
   // Form Keys for validation in each stage
   final _stage1FormKey = GlobalKey<FormState>();
   final _stage2FormKey = GlobalKey<FormState>();
-
   final _nameController = TextEditingController();
   final _dateTimeController = TextEditingController();
   final _locationController = TextEditingController();
@@ -38,6 +38,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   File? _selectedBannerImage;
   File? _selectedCardImage;
   List<String> _selectedGenres = [];
+  List<Ticket> _tickets = [];
   final List<String> _availableGenres = [
     'Meetup',
     'Party',
@@ -393,14 +394,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventPosterImage: _selectedPosterImage!,
         eventBannerImage: _selectedBannerImage!,
         eventGenre: _selectedGenres.join(','),
-        tickets: [
-          Ticket(
-            // mock data for now
-            ticketName: "General Admission",
-            ticketPrice: 0,
-            ticketQuantity: 100,
-          ),
-        ],
+        tickets: _tickets,
       ),
     );
   }
@@ -409,7 +403,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   void _updateProgress(int pageIndex) {
     setState(() {
       if (pageIndex <= 3) {
-        _progress = (pageIndex + 1) / 4; // Since there are 4 pages
+        _progress = (pageIndex + 1) / 5; 
       }
     });
 
@@ -517,6 +511,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           moveToPreviousPage: _moveToPreviousPage,
                           showGenreSelectionDialog: _showGenreSelectionDialog,
                           stage3ScrollController: _stage3ScrollController,
+                          selectedTickets: _tickets,
+                          onTicketsSelected: (tickets) {
+                            setState(() {
+                              _tickets = tickets;
+                            });
+                          },
                           selectedCardImage: _selectedCardImage,
                           selectedBannerImage: _selectedBannerImage,
                           selectedPosterImage: _selectedPosterImage,

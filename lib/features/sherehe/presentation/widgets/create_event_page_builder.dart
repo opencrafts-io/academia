@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:flutter/material.dart';
-
 
 class CreateEventPageBuilder extends StatelessWidget {
   final int pageIndex;
@@ -20,6 +20,8 @@ class CreateEventPageBuilder extends StatelessWidget {
   final File? selectedCardImage;
   final File? selectedBannerImage;
   final File? selectedPosterImage;
+  final List<Ticket> selectedTickets;
+  final Function(List<Ticket>) onTicketsSelected;
   final VoidCallback pickCardImage;
   final VoidCallback pickBannerImage;
   final VoidCallback pickPosterImage;
@@ -46,6 +48,8 @@ class CreateEventPageBuilder extends StatelessWidget {
     required this.selectedCardImage,
     required this.selectedBannerImage,
     required this.selectedPosterImage,
+    required this.selectedTickets,
+    required this.onTicketsSelected,
     required this.pickCardImage,
     required this.pickBannerImage,
     required this.pickPosterImage,
@@ -137,6 +141,17 @@ class CreateEventPageBuilder extends StatelessWidget {
         );
 
       case 3:
+        return TicketSelectionPage(
+          initialTickets: selectedTickets,
+          onContinue: (tickets) {
+            onTicketsSelected(tickets);
+            moveToNextPage();
+          },
+          onSkip: moveToNextPage,
+          onPrevious: moveToPreviousPage,
+        );
+
+      case 4:
         return Stage4ReviewAndSubmit(
           onSubmit: submitForm,
           onPrevious: moveToPreviousPage,
