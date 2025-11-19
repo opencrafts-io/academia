@@ -1,0 +1,61 @@
+lane :auto_build do
+  # Read Flutter version from pubspec.yaml
+  flutter_version_file = File.expand_path("../../pubspec.yaml", __dir__)
+  unless File.exist?(flutter_version_file)
+    UI.user_error!("❌ pubspec.yaml not found at #{flutter_version_file}")
+  end
+
+  flutter_version = sh("grep '^version:' #{flutter_version_file} | awk '{print $2}'").strip
+  version_number, build_number = flutter_version.split('+')
+
+  UI.message("📦 Flutter version: #{version_number} (#{build_number})")
+
+  # Update main app Info.plist
+  update_info_plist(
+    plist_path: "Runner/Info.plist",
+    block: lambda { |plist|
+      plist['CFBundleShortVersionString'] = version_number
+      plist['CFBundleVersion'] = build_number
+    }
+  )
+
+  # Update OneSignal extension Info.plist
+  update_info_plist(
+    plist_path: "OneSignalNotificationServiceExtension/Info.plist",
+    block: lambda { |plist|
+      plist['CFBundleShortVersionString'] = version_number
+      plist['CFBundleVersion'] = build_number
+    }
+  )
+
+  # Increment iOS build number
+  increment_build_number(
+    build_number: build_number,
+    xcodeproj: "Runner.xcodeproj"
+  )
+
+  # Build the app
+  build_ios_app(
+    scheme: "Runner",
+    export_method: "app-store",
+    export_options: {
+      provisioningProfiles: {
+        "io.opencrafts.academia" => "Academia Global",
+        "io.opencrafts.academia.OneSignalNotificationServiceExtension" => "Academia OneSignal Profile"
+      },
+      signingStyle: "manual"
+    }
+  )
+
+  # Upload to App Store
+  deliver(
+    ipa: "./Runner.ipa",
+    skip_screenshots: true,
+    skip_metadata: true,
+    submit_for_review: false,
+    automatic_release: false,
+    app_version: version_number  # <-- explicitly set version number
+  )
+
+  puts "✅ Build completed successfully!"
+end

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: grep &apos;^version:&apos; /Volumes/DevWork/Projects/Personal/MobileDev/academia-opencraft/pubspec.yaml | awk &apos;{print $2}&apos;" time="0.014886">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: update_info_plist" time="0.011387">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: update_info_plist" time="0.007372">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: increment_build_number" time="0.198335">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: build_ios_app" time="136.767747">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: deliver" time="126.247713">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
