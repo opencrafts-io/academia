@@ -180,6 +180,24 @@ Future<void> init(FlavorConfig flavor) async {
     () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
   );
 
+  sl.registerFactory<SyncTodosWithGoogleTasksUsecase>(
+    () => SyncTodosWithGoogleTasksUsecase(
+      todoRepository: sl.get<TodoRepository>(),
+    ),
+  );
+
+  sl.registerFactory<TodoBloc>(
+    () => TodoBloc(
+      syncTodosWithGoogleTasksUsecase: sl(),
+      getCachedTodosUsecase: sl(),
+      refreshTodosUsecase: sl(),
+      createTodoUsecase: sl(),
+      updateTodoUsecase: sl(),
+      deleteTodoUsecase: sl(),
+      completeTodoUsecase: sl(),
+    ),
+  );
+
   // Agenda
   sl.registerFactory<AgendaEventLocalDataSource>(
     () => AgendaEventLocalDataSource(localDB: cacheDB),
@@ -476,6 +494,12 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<InitializeLocalNotificationsUsecase>(
+    () => InitializeLocalNotificationsUsecase(
+      notificationRepository: sl.get<NotificationRepository>(),
+    ),
+  );
+
   sl.registerFactory<InitializeOneSignalUsecase>(
     () => InitializeOneSignalUsecase(sl.get<NotificationRepository>()),
   );
@@ -515,6 +539,8 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
+      initializeLocalNotificationsUsecase: sl
+          .get<InitializeLocalNotificationsUsecase>(),
       initializeOneSignalUsecase: sl.get<InitializeOneSignalUsecase>(),
       getNotificationsUsecase: sl.get<GetNotificationsUsecase>(),
       markNotificationAsReadUsecase: sl.get<MarkNotificationAsReadUsecase>(),
@@ -771,4 +797,25 @@ Future<void> init(FlavorConfig flavor) async {
       requestPermissionUsecase: sl(),
     ),
   );
+
+  /**********************************************************************
+  *                               LEADERBOARD
+  **********************************************************************/
+  sl.registerFactory<LeaderboardLocalDataSource>(
+    () => LeaderboardLocalDataSource(localDB: sl()),
+  );
+  sl.registerFactory<LeaderboardRemoteDataSource>(
+    () => LeaderboardRemoteDataSource(dioClient: sl(), flavor: sl()),
+  );
+  sl.registerFactory<LeaderboardRepository>(
+    () => LeaderboardRepositoryImpl(
+      leaderboardRemoteDataSource: sl(),
+      leaderboardLocalDataSource: sl(),
+    ),
+  );
+  sl.registerFactory<GetGlobalLeaderboardUsecase>(
+    () => GetGlobalLeaderboardUsecase(leaderboardRepository: sl()),
+  );
+
+  sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
 }

@@ -2,7 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import '../widgets/create_todo_bottom_sheet.dart';
 import '../widgets/todo_card.dart';
 import 'package:animated_emoji/animated_emoji.dart';
@@ -15,40 +15,11 @@ class TodoHomeScreen extends StatefulWidget {
 }
 
 class _TodoHomeScreenState extends State<TodoHomeScreen> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final List<Todo> _todos = [];
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      setState(() {
-        _searchQuery = _searchController.text;
-      });
-    });
-  }
-
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  // This function is the animation for removing an item
-  Widget _removedItemBuilder(
-    Todo todo,
-    BuildContext context,
-    Animation<double> animation,
-  ) {
-    return FadeTransition(
-      opacity: animation,
-      child: SizeTransition(
-        sizeFactor: animation,
-        child: TodoCard(todo: todo),
-      ),
-    );
   }
 
   @override
@@ -69,21 +40,76 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
               pinned: true,
               floating: true,
               snap: true,
-              title: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(28),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.primaryContainer,
-                  hintText: 'Search for that task',
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: AnimatedEmoji(AnimatedEmojis.nerdFace, size: 12),
-                  ),
+              title: SearchAnchor.bar(
+                barElevation: WidgetStateProperty.all(0),
+                barHintText: "Search for your To-Dos",
+                barLeading: AnimatedEmoji(AnimatedEmojis.nerdFace),
+                barBackgroundColor: WidgetStateProperty.all(
+                  Theme.of(context).colorScheme.primaryContainer,
                 ),
+                suggestionsBuilder: (context, controller) {
+                  if (controller.text.trim().isEmpty) {
+                    return [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedEmoji(AnimatedEmojis.owl, size: 60),
+                          SizedBox(height: 12),
+                          Text("Please provide a search term"),
+                        ],
+                      ),
+                    ];
+                  }
+                  return [
+                    BlocBuilder<TodoBloc, TodoState>(
+                      buildWhen: (stateA, stateB) => stateB is TodoLoadedState,
+                      builder: (context, state) {
+                        if (state is TodoLoadedState) {
+                          return StreamBuilder(
+                            stream: state.todosStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.active) {
+                                return Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                );
+                              }
+                              if (snapshot.hasData &&
+                                  snapshot.data!.isNotEmpty) {
+                                final activeTodos = snapshot.data!
+                                    .where(
+                                      (todo) =>
+                                          todo.title.toLowerCase().contains(
+                                            controller.text
+                                                .toLowerCase()
+                                                .trim(),
+                                          ),
+                                    )
+                                    .toList();
+                                return ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  addAutomaticKeepAlives: true,
+                                  itemCount: activeTodos.length,
+                                  itemBuilder: (context, index) {
+                                    return TodoCard(todo: activeTodos[index]);
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      Divider(),
+                                );
+                              }
+                              return Text(snapshot.connectionState.toString());
+                            },
+                          );
+                        }
+                        return Center(
+                          child: Text("You have no To-Dos at the moment"),
+                        );
+                      },
+                    ),
+                  ];
+                },
               ),
               actions: [
                 IconButton(
@@ -94,186 +120,121 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                 ),
               ],
             ),
+
             SliverPadding(
-              padding: const EdgeInsets.all(12),
-              sliver: SliverFillRemaining(
-                fillOverscroll: true,
-                hasScrollBody: true,
-                child: BlocConsumer<TodoBloc, TodoState>(
-                  buildWhen: (previous, current) => current is TodoLoadedState,
-                  listener: (context, state) {
-                    if (state is TodoErrorState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.error),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is TodoLoadedState) {
-                      return StreamBuilder<List<Todo>>(
-                        stream: state.todosStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Lottie.asset(
-                                  "assets/lotties/google-calendar.json",
-                                  width: 250,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "Your todos are just a sec away...",
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineSmall,
-                                ),
-                              ],
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              sliver: MultiSliver(
+                children: [
+                  ExpansionTile(
+                    expansionAnimationStyle: AnimationStyle(
+                      curve: Curves.bounceInOut,
+                    ),
+                    title: Text("Pending To-Dos"),
+                    leading: Icon(Icons.pending_outlined),
+                    tilePadding: EdgeInsets.zero,
+                    maintainState: true,
+                    initiallyExpanded: true,
+                    children: [
+                      BlocBuilder<TodoBloc, TodoState>(
+                        buildWhen: (stateA, stateB) =>
+                            stateB is TodoLoadedState,
+                        builder: (context, state) {
+                          if (state is TodoLoadedState) {
+                            return StreamBuilder(
+                              stream: state.todosStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.active) {
+                                  return Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  );
+                                }
+                                if (snapshot.hasData &&
+                                    snapshot.data!.isNotEmpty) {
+                                  final activeTodos = snapshot.data!
+                                      .where(
+                                        (todo) => todo.status == "needsAction",
+                                      )
+                                      .toList();
+                                  return ListView.separated(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    addAutomaticKeepAlives: true,
+                                    itemCount: activeTodos.length,
+                                    itemBuilder: (context, index) {
+                                      return TodoCard(todo: activeTodos[index]);
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        Divider(),
+                                  );
+                                }
+                                return Text(
+                                  snapshot.connectionState.toString(),
+                                );
+                              },
                             );
                           }
-
-                          if (snapshot.hasError) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Lottie.asset(
-                                  "assets/lotties/google-calendar.json",
-                                  width: 250,
-                                  repeat: false,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "Ooops, ${snapshot.error}",
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineSmall,
-                                ),
-                              ],
+                          return Center(child: Text("Whoops"));
+                        },
+                      ),
+                    ],
+                  ),
+                  ExpansionTile(
+                    title: Text("Completed"),
+                    tilePadding: EdgeInsets.zero,
+                    leading: Icon(Icons.check_box),
+                    children: [
+                      BlocBuilder<TodoBloc, TodoState>(
+                        buildWhen: (stateA, stateB) =>
+                            stateB is TodoLoadedState,
+                        builder: (context, state) {
+                          if (state is TodoLoadedState) {
+                            return StreamBuilder(
+                              stream: state.todosStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.active) {
+                                  return Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  );
+                                }
+                                if (snapshot.hasData &&
+                                    snapshot.data!.isNotEmpty) {
+                                  final activeTodos = snapshot.data!
+                                      .where(
+                                        (todo) => todo.status != "needsAction",
+                                      )
+                                      .toList();
+                                  return ListView.separated(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    addAutomaticKeepAlives: true,
+                                    itemCount: activeTodos.length,
+                                    itemBuilder: (context, index) {
+                                      return TodoCard(todo: activeTodos[index]);
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        Divider(),
+                                  );
+                                }
+                                return Text(
+                                  snapshot.connectionState.toString(),
+                                );
+                              },
                             );
                           }
-
-                          final allTodos = snapshot.data ?? [];
-
-                          // Filter the todos based on the search query
-                          final filteredTodos = allTodos.where((todo) {
-                            final lowerCaseQuery = _searchQuery.toLowerCase();
-                            return todo.title.toLowerCase().contains(
-                                  lowerCaseQuery,
-                                ) ||
-                                (todo.notes?.toLowerCase().contains(
-                                      lowerCaseQuery,
-                                    ) ??
-                                    false);
-                          }).toList();
-
-                          // Efficiently synchronize the animated list
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            // Convert the new list to a set for fast lookups
-                            final newTodosSet = filteredTodos.toSet();
-
-                            // Remove items that are no longer in the filtered list
-                            for (int i = _todos.length - 1; i >= 0; i--) {
-                              if (!newTodosSet.contains(_todos[i])) {
-                                final removedTodo = _todos.removeAt(i);
-                                _listKey.currentState?.removeItem(
-                                  i,
-                                  (context, animation) => _removedItemBuilder(
-                                    removedTodo,
-                                    context,
-                                    animation,
-                                  ),
-                                );
-                              }
-                            }
-
-                            // Add new items that are in the filtered list
-                            for (int i = 0; i < filteredTodos.length; i++) {
-                              if (!_todos.contains(filteredTodos[i])) {
-                                _todos.insert(i, filteredTodos[i]);
-                                _listKey.currentState?.insertItem(i);
-                              }
-                            }
-                          });
-
-                          // If there are no todos after filtering, show a message
-                          if (filteredTodos.isEmpty &&
-                              _searchQuery.isNotEmpty) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('We couldn\'t find that todo!'),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            });
-                          }
-
-                          // Now that the list is synchronized, build the animated list
-                          return AnimatedList.separated(
-                            key: _listKey,
-                            shrinkWrap: true,
-                            initialItemCount: _todos.length,
-                            removedSeparatorBuilder:
-                                (context, index, animation) => const SizedBox(),
-                            separatorBuilder: (context, index, animation) =>
-                                const Divider(height: 0.2),
-                            itemBuilder: (context, index, animation) {
-                              final todo = _todos[index];
-                              BorderRadius borderRadius;
-                              if (_todos.length == 1) {
-                                borderRadius = BorderRadius.circular(18);
-                              } else if (index == 0) {
-                                borderRadius = const BorderRadius.vertical(
-                                  top: Radius.circular(18),
-                                );
-                              } else if (index == (_todos.length - 1)) {
-                                borderRadius = const BorderRadius.vertical(
-                                  bottom: Radius.circular(18),
-                                );
-                              } else {
-                                borderRadius = BorderRadius.zero;
-                              }
-
-                              return SlideTransition(
-                                position: animation.drive(
-                                  Tween(
-                                    begin: const Offset(1, 0),
-                                    end: Offset.zero,
-                                  ),
-                                ),
-                                child: TodoCard(
-                                  todo: todo,
-                                  borderRadius: borderRadius,
-                                ),
-                              );
-                            },
+                          return Center(
+                            child: Text("You have no To-Dos at the moment"),
                           );
                         },
-                      );
-                    }
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset(
-                          "assets/lotties/google-calendar.json",
-                          width: 250,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          "Your todos are just a sec away...",
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 32),
+                ],
               ),
             ),
           ],
@@ -285,8 +246,16 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
           showModalBottomSheet(
             showDragHandle: true,
             enableDrag: true,
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            isScrollControlled: true,
             context: context,
-            builder: (context) => const CreateTodoBottomSheet(),
+            sheetAnimationStyle: AnimationStyle(
+              curve: Curves.elasticInOut,
+              reverseCurve: Curves.elasticOut,
+            ),
+            builder: (context) => CreateTodoBottomSheet(),
           );
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/notifications/notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -9,6 +10,7 @@ part 'notification_state.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final InitializeOneSignalUsecase initializeOneSignalUsecase;
+  final InitializeLocalNotificationsUsecase initializeLocalNotificationsUsecase;
   final GetNotificationsUsecase getNotificationsUsecase;
   final MarkNotificationAsReadUsecase markNotificationAsReadUsecase;
   final MarkAllNotificationsAsReadUsecase markAllNotificationsAsReadUsecase;
@@ -24,6 +26,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final Logger _logger = Logger();
 
   NotificationBloc({
+    required this.initializeLocalNotificationsUsecase,
     required this.initializeOneSignalUsecase,
     required this.getNotificationsUsecase,
     required this.markNotificationAsReadUsecase,
@@ -38,6 +41,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     required this.setUserDataUsecase,
   }) : super(NotificationInitialState()) {
     on<InitializeOneSignalEvent>(_onInitializeOneSignal);
+    on<InitializeLocalNotificationEvent>(_onInitializeLocalNotificationEvent);
     on<LoadNotificationsEvent>(_onLoadNotifications);
     on<MarkNotificationAsReadEvent>(_onMarkNotificationAsRead);
     on<MarkAllNotificationsAsReadEvent>(_onMarkAllNotificationsAsRead);
@@ -49,6 +53,25 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<GetNotificationPermissionEvent>(_onGetNotificationPermission);
     on<SendLocalNotificationEvent>(_onSendLocalNotification);
     on<SetUserDataEvent>(_onSetUserData);
+  }
+
+  Future<void> _onInitializeLocalNotificationEvent(
+    InitializeLocalNotificationEvent event,
+    Emitter<NotificationState> emit,
+  ) async {
+    emit(NotificationLoadingState());
+
+    final result = await initializeLocalNotificationsUsecase(event.channels);
+
+    result.fold(
+      (failure) {
+        _logger.e('Failed to initialize local notifications', error: failure.error);
+        emit(NotificationErrorState(message: failure.message));
+      },
+      (_) {
+        emit(NotificationInitializedState());
+      },
+    );
   }
 
   Future<void> _onInitializeOneSignal(
@@ -239,9 +262,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     Emitter<NotificationState> emit,
   ) async {
     final params = SendLocalNotificationParams(
-      title: event.title,
-      body: event.body,
-      data: event.data,
+      actionButtons: event.actionButtons,
+      localizations: event.localizations,
+      content: event.content,
+      schedule: event.schedule,
     );
 
     final result = await sendLocalNotificationUsecase(params);
@@ -271,20 +295,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     result.fold(
       (failure) {
-        _logger.e(
-          'Failed to set user data',
-          error: failure.error,
-        );
+        _logger.e('Failed to set user data', error: failure.error);
         emit(NotificationErrorState(message: failure.message));
       },
       (_) {
-        emit(UserDataSetState(
-          userId: event.userId,
-          name: event.name,
-          email: event.email,
-        ));
+        emit(
+          UserDataSetState(
+            userId: event.userId,
+            name: event.name,
+            email: event.email,
+          ),
+        );
       },
     );
   }
 }
-

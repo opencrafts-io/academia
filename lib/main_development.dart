@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:academia/app.dart';
 import 'package:academia/config/flavor.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:workmanager/workmanager.dart';
+import './background_callback_dispatcher.dart';
 
 void main(args) async {
   await runZonedGuarded(
@@ -29,6 +32,9 @@ void main(args) async {
       if (!kIsWeb) {
         FlutterError.onError =
             FirebaseCrashlytics.instance.recordFlutterFatalError;
+        if (Platform.isAndroid || Platform.isIOS) {
+          Workmanager().initialize(backgroundCallbackDispatcher);
+        }
       }
       await di.init(
         FlavorConfig(

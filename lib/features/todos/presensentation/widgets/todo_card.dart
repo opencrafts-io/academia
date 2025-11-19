@@ -1,9 +1,10 @@
+import 'package:academia/features/todos/presensentation/widgets/todo_view_sheet.dart';
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:time_since/time_since.dart';
 
 class TodoCard extends StatefulWidget {
   const TodoCard({
@@ -48,7 +49,6 @@ class _TodoCardState extends State<TodoCard> {
             icon: Icons.delete,
             backgroundColor: Theme.of(context).colorScheme.errorContainer,
             foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
-            borderRadius: widget.borderRadius.copyWith(topRight: Radius.zero),
             label: "Delete todo",
           ),
           SlidableAction(
@@ -62,66 +62,79 @@ class _TodoCardState extends State<TodoCard> {
             icon: Icons.check,
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: widget.borderRadius.copyWith(
-              bottomRight: Radius.zero,
-              topLeft: Radius.zero,
-            ),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: widget.borderRadius,
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
-          elevation: 2,
-          margin: EdgeInsets.zero,
-          child: ListTile(
-            tileColor: widget.todo.status == "needsAction"
-                ? Colors.green.withValues(alpha: 0.4)
-                : Colors.red.withValues(alpha: 0.4),
-
-            leading: Icon(Symbols.pending_actions),
-            subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-            trailing: Checkbox.adaptive(
-              value: isComplete,
-              onChanged: (val) {
-                setState(() {
-                  isComplete = !isComplete;
-                });
-                BlocProvider.of<TodoBloc>(
-                  context,
-                ).add(CompleteTodoEvent(todo: widget.todo));
-              },
+      child: InkWell(
+        onDoubleTap: () {
+          showModalBottomSheet(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
             ),
+            showDragHandle: true,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => TodoViewSheet(todo: widget.todo),
+          );
+        },
+        child: CheckboxListTile(
+          dense: false,
+          contentPadding: EdgeInsets.zero,
+          internalAddSemanticForOnTap: true,
+          onChanged: (value) {
+            BlocProvider.of<TodoBloc>(
+              context,
+            ).add(CompleteTodoEvent(todo: widget.todo));
 
-            title: Text(truncateWithEllipsis(widget.todo.title, maxLength: 60)),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  truncateWithEllipsis(widget.todo.notes ?? ''),
-                  textAlign: TextAlign.justify,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Chip(
-                  avatar: Icon(Icons.alarm),
-                  label: Text(
-                    widget.todo.due == null
-                        ? "Indeterminate"
-                        : DateFormat(
-                            'EEE, dd MMM yyyy',
-                          ).format(widget.todo.due!),
-                  ),
-                ),
-
-                // widget.todo.due!.isAfter(DateTime.now())
-                //     ? Text(timeSince(widget.todo.due))
-                //     : Text(timeSince(widget.todo.due)),
-              ],
-            ),
-            // contentPadding: EdgeInsets.zero,
-            isThreeLine: true,
+            setState(() {
+              isComplete = value!;
+            });
+          },
+          checkboxShape: CircleBorder(),
+          value: isComplete,
+          title: Text(
+            truncateWithEllipsis(widget.todo.title, maxLength: 60),
+            style: isComplete
+                ? TextStyle(decoration: TextDecoration.lineThrough)
+                : null,
           ),
+          subtitle: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                truncateWithEllipsis(widget.todo.notes ?? ''),
+                textAlign: TextAlign.justify,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+
+              Row(
+                children: [
+                  Icon(Icons.timer_outlined, size: 18),
+                  SizedBox(width: 4),
+                  if (widget.todo.due?.isAfter(DateTime.now()) ?? false)
+                    Text(
+                      widget.todo.due == null
+                          ? "Indeterminate"
+                          : DateFormat(
+                              'EEE, dd MMM yyyy HH:mm',
+                            ).format(widget.todo.due!),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  if (widget.todo.due?.isBefore(DateTime.now()) ?? false)
+                    Text(
+                      timeSince(widget.todo.due!),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+          isThreeLine: true,
         ),
       ),
     );

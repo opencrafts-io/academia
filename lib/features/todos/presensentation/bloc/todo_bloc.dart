@@ -13,7 +13,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final UpdateTodoUsecase updateTodoUsecase;
   final DeleteTodoUsecase deleteTodoUsecase;
   final CompleteTodoUsecase completeTodoUsecase;
+  final SyncTodosWithGoogleTasksUsecase syncTodosWithGoogleTasksUsecase;
   TodoBloc({
+    required this.syncTodosWithGoogleTasksUsecase,
     required this.getCachedTodosUsecase,
     required this.refreshTodosUsecase,
     required this.createTodoUsecase,
@@ -74,6 +76,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           // add(FetchCachedTodosEvent());
         },
       );
+    });
+
+    on<SyncTodosWithGoogleCalendar>((event, emit) async {
+      syncTodosWithGoogleTasksUsecase(NoParams());
     });
 
     on<DeleteTodoEvent>((event, emit) async {
