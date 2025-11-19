@@ -73,7 +73,6 @@ class EventDetailsHeader extends StatelessWidget {
                     spacing: 2.0,
                     runSpacing: 0.5,
                     children: event.eventGenre!
-                        .split(',')
                         .map((e) => e.trim())
                         .toList()
                         .map((genre) {

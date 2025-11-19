@@ -1,7 +1,9 @@
+import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('EventData')
 class EventTable extends Table {
+  @JsonKey('id')
   TextColumn get id => text()();
 
   @JsonKey('event_name')
@@ -16,11 +18,12 @@ class EventTable extends Table {
   @JsonKey('event_date')
   TextColumn get eventDate => text()();
 
-  // Organizer
+  @JsonKey('attendee_count')
+  IntColumn get attendeeCount => integer()();
+
   @JsonKey('organizer_id')
   TextColumn get organizerId => text()();
 
-  // Media
   @JsonKey('event_card_image')
   TextColumn get eventCardImage => text().nullable()();
 
@@ -34,14 +37,14 @@ class EventTable extends Table {
   TextColumn get eventUrl => text().nullable()();
 
   @JsonKey('event_genre')
-  TextColumn get eventGenre => text().nullable()();
-
-  @JsonKey('delete_tag')
-  BoolColumn get deleteTag => boolean().withDefault(const Constant(false))();
+  TextColumn get eventGenre => text().map(JsonListConverter()).nullable()();
 
   @JsonKey('created_at')
   TextColumn get createdAt => text()();
 
-  @JsonKey('updatedAt')
+  @JsonKey('updated_at')
   TextColumn get updatedAt => text()();
+
+  @JsonKey('deleted_at')
+  TextColumn get deletedAt => text().nullable()();
 }

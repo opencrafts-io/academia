@@ -4061,6 +4061,17 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _attendeeCountMeta = const VerificationMeta(
+    'attendeeCount',
+  );
+  @override
+  late final GeneratedColumn<int> attendeeCount = GeneratedColumn<int>(
+    'attendee_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _organizerIdMeta = const VerificationMeta(
     'organizerId',
   );
@@ -4116,32 +4127,15 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _eventGenreMeta = const VerificationMeta(
-    'eventGenre',
-  );
   @override
-  late final GeneratedColumn<String> eventGenre = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  eventGenre = GeneratedColumn<String>(
     'event_genre',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _deleteTagMeta = const VerificationMeta(
-    'deleteTag',
-  );
-  @override
-  late final GeneratedColumn<bool> deleteTag = GeneratedColumn<bool>(
-    'delete_tag',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("delete_tag" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
+  ).withConverter<List<dynamic>?>($EventTableTable.$convertereventGenren);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -4164,6 +4158,17 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<String> deletedAt = GeneratedColumn<String>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4171,15 +4176,16 @@ class $EventTableTable extends EventTable
     eventDescription,
     eventLocation,
     eventDate,
+    attendeeCount,
     organizerId,
     eventCardImage,
     eventPosterImage,
     eventBannerImage,
     eventUrl,
     eventGenre,
-    deleteTag,
     createdAt,
     updatedAt,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4236,6 +4242,17 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_eventDateMeta);
     }
+    if (data.containsKey('attendee_count')) {
+      context.handle(
+        _attendeeCountMeta,
+        attendeeCount.isAcceptableOrUnknown(
+          data['attendee_count']!,
+          _attendeeCountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attendeeCountMeta);
+    }
     if (data.containsKey('organizer_id')) {
       context.handle(
         _organizerIdMeta,
@@ -4280,18 +4297,6 @@ class $EventTableTable extends EventTable
         eventUrl.isAcceptableOrUnknown(data['event_url']!, _eventUrlMeta),
       );
     }
-    if (data.containsKey('event_genre')) {
-      context.handle(
-        _eventGenreMeta,
-        eventGenre.isAcceptableOrUnknown(data['event_genre']!, _eventGenreMeta),
-      );
-    }
-    if (data.containsKey('delete_tag')) {
-      context.handle(
-        _deleteTagMeta,
-        deleteTag.isAcceptableOrUnknown(data['delete_tag']!, _deleteTagMeta),
-      );
-    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -4307,6 +4312,12 @@ class $EventTableTable extends EventTable
       );
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
     }
     return context;
   }
@@ -4337,6 +4348,10 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}event_date'],
       )!,
+      attendeeCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attendee_count'],
+      )!,
       organizerId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}organizer_id'],
@@ -4357,14 +4372,12 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}event_url'],
       ),
-      eventGenre: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}event_genre'],
+      eventGenre: $EventTableTable.$convertereventGenren.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}event_genre'],
+        ),
       ),
-      deleteTag: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}delete_tag'],
-      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -4373,6 +4386,10 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}updated_at'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -4380,6 +4397,11 @@ class $EventTableTable extends EventTable
   $EventTableTable createAlias(String alias) {
     return $EventTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<dynamic>, String> $convertereventGenre =
+      JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $convertereventGenren =
+      NullAwareTypeConverter.wrap($convertereventGenre);
 }
 
 class EventData extends DataClass implements Insertable<EventData> {
@@ -4388,30 +4410,32 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String eventDescription;
   final String eventLocation;
   final String eventDate;
+  final int attendeeCount;
   final String organizerId;
   final String? eventCardImage;
   final String? eventPosterImage;
   final String? eventBannerImage;
   final String? eventUrl;
-  final String? eventGenre;
-  final bool deleteTag;
+  final List<dynamic>? eventGenre;
   final String createdAt;
   final String updatedAt;
+  final String? deletedAt;
   const EventData({
     required this.id,
     required this.eventName,
     required this.eventDescription,
     required this.eventLocation,
     required this.eventDate,
+    required this.attendeeCount,
     required this.organizerId,
     this.eventCardImage,
     this.eventPosterImage,
     this.eventBannerImage,
     this.eventUrl,
     this.eventGenre,
-    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4421,6 +4445,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['event_description'] = Variable<String>(eventDescription);
     map['event_location'] = Variable<String>(eventLocation);
     map['event_date'] = Variable<String>(eventDate);
+    map['attendee_count'] = Variable<int>(attendeeCount);
     map['organizer_id'] = Variable<String>(organizerId);
     if (!nullToAbsent || eventCardImage != null) {
       map['event_card_image'] = Variable<String>(eventCardImage);
@@ -4435,11 +4460,15 @@ class EventData extends DataClass implements Insertable<EventData> {
       map['event_url'] = Variable<String>(eventUrl);
     }
     if (!nullToAbsent || eventGenre != null) {
-      map['event_genre'] = Variable<String>(eventGenre);
+      map['event_genre'] = Variable<String>(
+        $EventTableTable.$convertereventGenren.toSql(eventGenre),
+      );
     }
-    map['delete_tag'] = Variable<bool>(deleteTag);
     map['created_at'] = Variable<String>(createdAt);
     map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<String>(deletedAt);
+    }
     return map;
   }
 
@@ -4450,6 +4479,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventDescription: Value(eventDescription),
       eventLocation: Value(eventLocation),
       eventDate: Value(eventDate),
+      attendeeCount: Value(attendeeCount),
       organizerId: Value(organizerId),
       eventCardImage: eventCardImage == null && nullToAbsent
           ? const Value.absent()
@@ -4466,9 +4496,11 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventGenre: eventGenre == null && nullToAbsent
           ? const Value.absent()
           : Value(eventGenre),
-      deleteTag: Value(deleteTag),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -4483,6 +4515,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventDescription: serializer.fromJson<String>(json['event_description']),
       eventLocation: serializer.fromJson<String>(json['event_location']),
       eventDate: serializer.fromJson<String>(json['event_date']),
+      attendeeCount: serializer.fromJson<int>(json['attendee_count']),
       organizerId: serializer.fromJson<String>(json['organizer_id']),
       eventCardImage: serializer.fromJson<String?>(json['event_card_image']),
       eventPosterImage: serializer.fromJson<String?>(
@@ -4492,10 +4525,10 @@ class EventData extends DataClass implements Insertable<EventData> {
         json['event_banner_image'],
       ),
       eventUrl: serializer.fromJson<String?>(json['event_url']),
-      eventGenre: serializer.fromJson<String?>(json['event_genre']),
-      deleteTag: serializer.fromJson<bool>(json['delete_tag']),
+      eventGenre: serializer.fromJson<List<dynamic>?>(json['event_genre']),
       createdAt: serializer.fromJson<String>(json['created_at']),
-      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      updatedAt: serializer.fromJson<String>(json['updated_at']),
+      deletedAt: serializer.fromJson<String?>(json['deleted_at']),
     );
   }
   @override
@@ -4507,15 +4540,16 @@ class EventData extends DataClass implements Insertable<EventData> {
       'event_description': serializer.toJson<String>(eventDescription),
       'event_location': serializer.toJson<String>(eventLocation),
       'event_date': serializer.toJson<String>(eventDate),
+      'attendee_count': serializer.toJson<int>(attendeeCount),
       'organizer_id': serializer.toJson<String>(organizerId),
       'event_card_image': serializer.toJson<String?>(eventCardImage),
       'event_poster_image': serializer.toJson<String?>(eventPosterImage),
       'event_banner_image': serializer.toJson<String?>(eventBannerImage),
       'event_url': serializer.toJson<String?>(eventUrl),
-      'event_genre': serializer.toJson<String?>(eventGenre),
-      'delete_tag': serializer.toJson<bool>(deleteTag),
+      'event_genre': serializer.toJson<List<dynamic>?>(eventGenre),
       'created_at': serializer.toJson<String>(createdAt),
-      'updatedAt': serializer.toJson<String>(updatedAt),
+      'updated_at': serializer.toJson<String>(updatedAt),
+      'deleted_at': serializer.toJson<String?>(deletedAt),
     };
   }
 
@@ -4525,21 +4559,23 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? eventDescription,
     String? eventLocation,
     String? eventDate,
+    int? attendeeCount,
     String? organizerId,
     Value<String?> eventCardImage = const Value.absent(),
     Value<String?> eventPosterImage = const Value.absent(),
     Value<String?> eventBannerImage = const Value.absent(),
     Value<String?> eventUrl = const Value.absent(),
-    Value<String?> eventGenre = const Value.absent(),
-    bool? deleteTag,
+    Value<List<dynamic>?> eventGenre = const Value.absent(),
     String? createdAt,
     String? updatedAt,
+    Value<String?> deletedAt = const Value.absent(),
   }) => EventData(
     id: id ?? this.id,
     eventName: eventName ?? this.eventName,
     eventDescription: eventDescription ?? this.eventDescription,
     eventLocation: eventLocation ?? this.eventLocation,
     eventDate: eventDate ?? this.eventDate,
+    attendeeCount: attendeeCount ?? this.attendeeCount,
     organizerId: organizerId ?? this.organizerId,
     eventCardImage: eventCardImage.present
         ? eventCardImage.value
@@ -4552,9 +4588,9 @@ class EventData extends DataClass implements Insertable<EventData> {
         : this.eventBannerImage,
     eventUrl: eventUrl.present ? eventUrl.value : this.eventUrl,
     eventGenre: eventGenre.present ? eventGenre.value : this.eventGenre,
-    deleteTag: deleteTag ?? this.deleteTag,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
     return EventData(
@@ -4567,6 +4603,9 @@ class EventData extends DataClass implements Insertable<EventData> {
           ? data.eventLocation.value
           : this.eventLocation,
       eventDate: data.eventDate.present ? data.eventDate.value : this.eventDate,
+      attendeeCount: data.attendeeCount.present
+          ? data.attendeeCount.value
+          : this.attendeeCount,
       organizerId: data.organizerId.present
           ? data.organizerId.value
           : this.organizerId,
@@ -4583,9 +4622,9 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventGenre: data.eventGenre.present
           ? data.eventGenre.value
           : this.eventGenre,
-      deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -4597,15 +4636,16 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('eventDescription: $eventDescription, ')
           ..write('eventLocation: $eventLocation, ')
           ..write('eventDate: $eventDate, ')
+          ..write('attendeeCount: $attendeeCount, ')
           ..write('organizerId: $organizerId, ')
           ..write('eventCardImage: $eventCardImage, ')
           ..write('eventPosterImage: $eventPosterImage, ')
           ..write('eventBannerImage: $eventBannerImage, ')
           ..write('eventUrl: $eventUrl, ')
           ..write('eventGenre: $eventGenre, ')
-          ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -4617,15 +4657,16 @@ class EventData extends DataClass implements Insertable<EventData> {
     eventDescription,
     eventLocation,
     eventDate,
+    attendeeCount,
     organizerId,
     eventCardImage,
     eventPosterImage,
     eventBannerImage,
     eventUrl,
     eventGenre,
-    deleteTag,
     createdAt,
     updatedAt,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -4636,15 +4677,16 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.eventDescription == this.eventDescription &&
           other.eventLocation == this.eventLocation &&
           other.eventDate == this.eventDate &&
+          other.attendeeCount == this.attendeeCount &&
           other.organizerId == this.organizerId &&
           other.eventCardImage == this.eventCardImage &&
           other.eventPosterImage == this.eventPosterImage &&
           other.eventBannerImage == this.eventBannerImage &&
           other.eventUrl == this.eventUrl &&
           other.eventGenre == this.eventGenre &&
-          other.deleteTag == this.deleteTag &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventData> {
@@ -4653,15 +4695,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> eventDescription;
   final Value<String> eventLocation;
   final Value<String> eventDate;
+  final Value<int> attendeeCount;
   final Value<String> organizerId;
   final Value<String?> eventCardImage;
   final Value<String?> eventPosterImage;
   final Value<String?> eventBannerImage;
   final Value<String?> eventUrl;
-  final Value<String?> eventGenre;
-  final Value<bool> deleteTag;
+  final Value<List<dynamic>?> eventGenre;
   final Value<String> createdAt;
   final Value<String> updatedAt;
+  final Value<String?> deletedAt;
   final Value<int> rowid;
   const EventTableCompanion({
     this.id = const Value.absent(),
@@ -4669,15 +4712,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.eventDescription = const Value.absent(),
     this.eventLocation = const Value.absent(),
     this.eventDate = const Value.absent(),
+    this.attendeeCount = const Value.absent(),
     this.organizerId = const Value.absent(),
     this.eventCardImage = const Value.absent(),
     this.eventPosterImage = const Value.absent(),
     this.eventBannerImage = const Value.absent(),
     this.eventUrl = const Value.absent(),
     this.eventGenre = const Value.absent(),
-    this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EventTableCompanion.insert({
@@ -4686,21 +4730,23 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String eventDescription,
     required String eventLocation,
     required String eventDate,
+    required int attendeeCount,
     required String organizerId,
     this.eventCardImage = const Value.absent(),
     this.eventPosterImage = const Value.absent(),
     this.eventBannerImage = const Value.absent(),
     this.eventUrl = const Value.absent(),
     this.eventGenre = const Value.absent(),
-    this.deleteTag = const Value.absent(),
     required String createdAt,
     required String updatedAt,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        eventName = Value(eventName),
        eventDescription = Value(eventDescription),
        eventLocation = Value(eventLocation),
        eventDate = Value(eventDate),
+       attendeeCount = Value(attendeeCount),
        organizerId = Value(organizerId),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
@@ -4710,15 +4756,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? eventDescription,
     Expression<String>? eventLocation,
     Expression<String>? eventDate,
+    Expression<int>? attendeeCount,
     Expression<String>? organizerId,
     Expression<String>? eventCardImage,
     Expression<String>? eventPosterImage,
     Expression<String>? eventBannerImage,
     Expression<String>? eventUrl,
     Expression<String>? eventGenre,
-    Expression<bool>? deleteTag,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
+    Expression<String>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4727,15 +4774,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (eventDescription != null) 'event_description': eventDescription,
       if (eventLocation != null) 'event_location': eventLocation,
       if (eventDate != null) 'event_date': eventDate,
+      if (attendeeCount != null) 'attendee_count': attendeeCount,
       if (organizerId != null) 'organizer_id': organizerId,
       if (eventCardImage != null) 'event_card_image': eventCardImage,
       if (eventPosterImage != null) 'event_poster_image': eventPosterImage,
       if (eventBannerImage != null) 'event_banner_image': eventBannerImage,
       if (eventUrl != null) 'event_url': eventUrl,
       if (eventGenre != null) 'event_genre': eventGenre,
-      if (deleteTag != null) 'delete_tag': deleteTag,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4746,15 +4794,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? eventDescription,
     Value<String>? eventLocation,
     Value<String>? eventDate,
+    Value<int>? attendeeCount,
     Value<String>? organizerId,
     Value<String?>? eventCardImage,
     Value<String?>? eventPosterImage,
     Value<String?>? eventBannerImage,
     Value<String?>? eventUrl,
-    Value<String?>? eventGenre,
-    Value<bool>? deleteTag,
+    Value<List<dynamic>?>? eventGenre,
     Value<String>? createdAt,
     Value<String>? updatedAt,
+    Value<String?>? deletedAt,
     Value<int>? rowid,
   }) {
     return EventTableCompanion(
@@ -4763,15 +4812,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       eventDescription: eventDescription ?? this.eventDescription,
       eventLocation: eventLocation ?? this.eventLocation,
       eventDate: eventDate ?? this.eventDate,
+      attendeeCount: attendeeCount ?? this.attendeeCount,
       organizerId: organizerId ?? this.organizerId,
       eventCardImage: eventCardImage ?? this.eventCardImage,
       eventPosterImage: eventPosterImage ?? this.eventPosterImage,
       eventBannerImage: eventBannerImage ?? this.eventBannerImage,
       eventUrl: eventUrl ?? this.eventUrl,
       eventGenre: eventGenre ?? this.eventGenre,
-      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4794,6 +4844,9 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (eventDate.present) {
       map['event_date'] = Variable<String>(eventDate.value);
     }
+    if (attendeeCount.present) {
+      map['attendee_count'] = Variable<int>(attendeeCount.value);
+    }
     if (organizerId.present) {
       map['organizer_id'] = Variable<String>(organizerId.value);
     }
@@ -4810,16 +4863,18 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       map['event_url'] = Variable<String>(eventUrl.value);
     }
     if (eventGenre.present) {
-      map['event_genre'] = Variable<String>(eventGenre.value);
-    }
-    if (deleteTag.present) {
-      map['delete_tag'] = Variable<bool>(deleteTag.value);
+      map['event_genre'] = Variable<String>(
+        $EventTableTable.$convertereventGenren.toSql(eventGenre.value),
+      );
     }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<String>(deletedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -4835,15 +4890,16 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('eventDescription: $eventDescription, ')
           ..write('eventLocation: $eventLocation, ')
           ..write('eventDate: $eventDate, ')
+          ..write('attendeeCount: $attendeeCount, ')
           ..write('organizerId: $organizerId, ')
           ..write('eventCardImage: $eventCardImage, ')
           ..write('eventPosterImage: $eventPosterImage, ')
           ..write('eventBannerImage: $eventBannerImage, ')
           ..write('eventUrl: $eventUrl, ')
           ..write('eventGenre: $eventGenre, ')
-          ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17487,15 +17543,16 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String eventDescription,
       required String eventLocation,
       required String eventDate,
+      required int attendeeCount,
       required String organizerId,
       Value<String?> eventCardImage,
       Value<String?> eventPosterImage,
       Value<String?> eventBannerImage,
       Value<String?> eventUrl,
-      Value<String?> eventGenre,
-      Value<bool> deleteTag,
+      Value<List<dynamic>?> eventGenre,
       required String createdAt,
       required String updatedAt,
+      Value<String?> deletedAt,
       Value<int> rowid,
     });
 typedef $$EventTableTableUpdateCompanionBuilder =
@@ -17505,15 +17562,16 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> eventDescription,
       Value<String> eventLocation,
       Value<String> eventDate,
+      Value<int> attendeeCount,
       Value<String> organizerId,
       Value<String?> eventCardImage,
       Value<String?> eventPosterImage,
       Value<String?> eventBannerImage,
       Value<String?> eventUrl,
-      Value<String?> eventGenre,
-      Value<bool> deleteTag,
+      Value<List<dynamic>?> eventGenre,
       Value<String> createdAt,
       Value<String> updatedAt,
+      Value<String?> deletedAt,
       Value<int> rowid,
     });
 
@@ -17551,6 +17609,11 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get attendeeCount => $composableBuilder(
+    column: $table.attendeeCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnFilters(column),
@@ -17576,14 +17639,10 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get eventGenre => $composableBuilder(
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get eventGenre => $composableBuilder(
     column: $table.eventGenre,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get createdAt => $composableBuilder(
@@ -17593,6 +17652,11 @@ class $$EventTableTableFilterComposer
 
   ColumnFilters<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -17631,6 +17695,11 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get attendeeCount => $composableBuilder(
+    column: $table.attendeeCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => ColumnOrderings(column),
@@ -17661,11 +17730,6 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -17673,6 +17737,11 @@ class $$EventTableTableOrderingComposer
 
   ColumnOrderings<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -17705,6 +17774,11 @@ class $$EventTableTableAnnotationComposer
   GeneratedColumn<String> get eventDate =>
       $composableBuilder(column: $table.eventDate, builder: (column) => column);
 
+  GeneratedColumn<int> get attendeeCount => $composableBuilder(
+    column: $table.attendeeCount,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get organizerId => $composableBuilder(
     column: $table.organizerId,
     builder: (column) => column,
@@ -17728,19 +17802,20 @@ class $$EventTableTableAnnotationComposer
   GeneratedColumn<String> get eventUrl =>
       $composableBuilder(column: $table.eventUrl, builder: (column) => column);
 
-  GeneratedColumn<String> get eventGenre => $composableBuilder(
-    column: $table.eventGenre,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get deleteTag =>
-      $composableBuilder(column: $table.deleteTag, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get eventGenre =>
+      $composableBuilder(
+        column: $table.eventGenre,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<String> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$EventTableTableTableManager
@@ -17779,15 +17854,16 @@ class $$EventTableTableTableManager
                 Value<String> eventDescription = const Value.absent(),
                 Value<String> eventLocation = const Value.absent(),
                 Value<String> eventDate = const Value.absent(),
+                Value<int> attendeeCount = const Value.absent(),
                 Value<String> organizerId = const Value.absent(),
                 Value<String?> eventCardImage = const Value.absent(),
                 Value<String?> eventPosterImage = const Value.absent(),
                 Value<String?> eventBannerImage = const Value.absent(),
                 Value<String?> eventUrl = const Value.absent(),
-                Value<String?> eventGenre = const Value.absent(),
-                Value<bool> deleteTag = const Value.absent(),
+                Value<List<dynamic>?> eventGenre = const Value.absent(),
                 Value<String> createdAt = const Value.absent(),
                 Value<String> updatedAt = const Value.absent(),
+                Value<String?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
                 id: id,
@@ -17795,15 +17871,16 @@ class $$EventTableTableTableManager
                 eventDescription: eventDescription,
                 eventLocation: eventLocation,
                 eventDate: eventDate,
+                attendeeCount: attendeeCount,
                 organizerId: organizerId,
                 eventCardImage: eventCardImage,
                 eventPosterImage: eventPosterImage,
                 eventBannerImage: eventBannerImage,
                 eventUrl: eventUrl,
                 eventGenre: eventGenre,
-                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -17813,15 +17890,16 @@ class $$EventTableTableTableManager
                 required String eventDescription,
                 required String eventLocation,
                 required String eventDate,
+                required int attendeeCount,
                 required String organizerId,
                 Value<String?> eventCardImage = const Value.absent(),
                 Value<String?> eventPosterImage = const Value.absent(),
                 Value<String?> eventBannerImage = const Value.absent(),
                 Value<String?> eventUrl = const Value.absent(),
-                Value<String?> eventGenre = const Value.absent(),
-                Value<bool> deleteTag = const Value.absent(),
+                Value<List<dynamic>?> eventGenre = const Value.absent(),
                 required String createdAt,
                 required String updatedAt,
+                Value<String?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
                 id: id,
@@ -17829,15 +17907,16 @@ class $$EventTableTableTableManager
                 eventDescription: eventDescription,
                 eventLocation: eventLocation,
                 eventDate: eventDate,
+                attendeeCount: attendeeCount,
                 organizerId: organizerId,
                 eventCardImage: eventCardImage,
                 eventPosterImage: eventPosterImage,
                 eventBannerImage: eventBannerImage,
                 eventUrl: eventUrl,
                 eventGenre: eventGenre,
-                deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

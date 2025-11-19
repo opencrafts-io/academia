@@ -7,14 +7,15 @@ class Event extends Equatable {
   final String? eventUrl;
   final String eventLocation;
   final String eventDate;
+  final int attendeeCount;
   final String organizerId;
   final String? eventCardImage;
   final String? eventPosterImage;
   final String? eventBannerImage;
-  final String? eventGenre;
-  final bool deleteTag;
+  final List<String>? eventGenre;
   final String createdAt;
   final String updatedAt;
+  final String? deletedAt;
 
   const Event({
     required this.id,
@@ -23,14 +24,15 @@ class Event extends Equatable {
     this.eventUrl,
     required this.eventLocation,
     required this.eventDate,
+    required this.attendeeCount,
     required this.organizerId,
     this.eventCardImage,
     this.eventPosterImage,
     this.eventBannerImage,
     this.eventGenre,
-    required this.deleteTag,
     required this.createdAt,
     required this.updatedAt,
+    this.deletedAt,
   });
 
   Event copyWith({
@@ -40,14 +42,15 @@ class Event extends Equatable {
     String? eventUrl,
     String? eventLocation,
     String? eventDate,
+    int? attendeeCount,
     String? organizerId,
     String? eventCardImage,
     String? eventPosterImage,
     String? eventBannerImage,
-    String? eventGenre,
-    bool? deleteTag,
+    List<String>? eventGenre,
     String? createdAt,
     String? updatedAt,
+    String? deletedAt,
   }) {
     return Event(
       id: id ?? this.id,
@@ -56,14 +59,15 @@ class Event extends Equatable {
       eventUrl: eventUrl ?? this.eventUrl,
       eventLocation: eventLocation ?? this.eventLocation,
       eventDate: eventDate ?? this.eventDate,
+      attendeeCount: attendeeCount ?? this.attendeeCount,
       organizerId: organizerId ?? this.organizerId,
       eventCardImage: eventCardImage ?? this.eventCardImage,
       eventPosterImage: eventPosterImage ?? this.eventPosterImage,
       eventBannerImage: eventBannerImage ?? this.eventBannerImage,
       eventGenre: eventGenre ?? this.eventGenre,
-      deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt
     );
   }
 
@@ -75,12 +79,12 @@ class Event extends Equatable {
     eventUrl,
     eventLocation,
     eventDate,
+    attendeeCount,
     organizerId,
     eventCardImage,
     eventPosterImage,
     eventBannerImage,
     eventGenre,
-    deleteTag,
     createdAt,
     updatedAt,
   ];

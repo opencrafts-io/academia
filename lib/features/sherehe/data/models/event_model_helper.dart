@@ -8,14 +8,15 @@ extension EventModelHelper on EventData {
     eventDescription: eventDescription,
     eventLocation: eventLocation,
     eventDate: eventDate,
+    attendeeCount: attendeeCount,
     organizerId: organizerId,
     eventCardImage: eventCardImage,
     eventPosterImage: eventPosterImage,
     eventBannerImage: eventBannerImage,
-    eventGenre: eventGenre,
-    deleteTag: deleteTag,
+    eventGenre: List<String>.from(eventGenre ?? []),
     createdAt: createdAt,
     updatedAt: updatedAt,
+    deletedAt: deletedAt,
   );
 }
 
@@ -26,13 +27,14 @@ extension EventEntityHelper on Event {
     eventDescription: eventDescription,
     eventLocation: eventLocation,
     eventDate: eventDate,
+    attendeeCount: attendeeCount,
     organizerId: organizerId,
     eventCardImage: eventCardImage,
     eventPosterImage: eventPosterImage,
     eventBannerImage: eventBannerImage,
     eventGenre: eventGenre,
-    deleteTag: deleteTag,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    deletedAt: deletedAt,
   );
 }

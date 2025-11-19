@@ -43,7 +43,7 @@ class EventCardWrapper extends StatelessWidget {
           title: event.eventName,
           location: event.eventLocation,
           date: event.eventDate,
-          genres: event.eventGenre!.split(',').map((e) => e.trim()).toList(),
+          genres: event.eventGenre!,
           attendees: attendeeNames,
           attendeesCount: attendeeCount,
           isAttendeesLoading: isLoading,

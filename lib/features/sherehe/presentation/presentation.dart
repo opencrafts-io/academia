@@ -6,6 +6,9 @@ export 'screens/image_upload_page.dart';
 export 'screens/create_event_screen.dart';
 export 'screens/submit_event_page.dart';
 export 'screens/ticket_selection_page.dart';
+export 'screens/user_ticket_selection_page.dart';
+export 'screens/review_ticket_page.dart';
+export 'screens/ticket_flow_page.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/event_about_section.dart';
@@ -19,6 +22,7 @@ export 'widgets/genre_selector_widget.dart';
 export 'widgets/create_event_page_builder.dart';
 export 'widgets/event_card_wrapper.dart';
 export 'widgets/event_card.dart';
+export 'widgets/ticket_stub_card.dart';
 
 
 

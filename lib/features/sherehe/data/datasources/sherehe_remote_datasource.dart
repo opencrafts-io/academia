@@ -30,8 +30,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3001/event",
-        // "/$servicePrefix/events/getAllEvents",
+        "https://qasherehe.opencrafts.io/event",
+        // "$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -70,7 +70,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3001/event/$eventId",
+        "https://qasherehe.opencrafts.io/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -144,7 +144,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send request
       final response = await dioClient.dio.post(
-        "http://localhost:3001/event/",
+        "https://qasherehe.opencrafts.io/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
@@ -178,8 +178,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        // "https://qasherehe.opencrafts.io/attendees/event/$eventId",
-        "http://localhost:3001/attendee/event/$eventId",
+        "https://qasherehe.opencrafts.io/attendee/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -219,8 +218,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
       final response = await dioClient.dio.get(
-        // 'https://qasherehe.opencrafts.io/attendees/$id',
-        "http://localhost:3001/attendee/$id",
+        "https://qasherehe.opencrafts.io/attendee/$id",
       );
 
       if (response.statusCode == 200) {
@@ -257,7 +255,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send POST request
       final response = await dioClient.dio.post(
-        "http://localhost:3001/attendee",
+        "https://qasherehe.opencrafts.io/attendee",
         data: data,
         options: Options(headers: {"Content-Type": "application/json"}),
       );

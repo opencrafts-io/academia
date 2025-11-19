@@ -207,6 +207,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   routes: [
     TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
     TypedGoRoute<CreateEventRoute>(path: "create"),
+    TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"), //TODO: To be changed later
   ],
 )
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
@@ -220,6 +221,13 @@ class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
+  }
+}
+
+class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const TicketFlowPage();
   }
 }
 
