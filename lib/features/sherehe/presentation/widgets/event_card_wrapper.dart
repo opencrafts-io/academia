@@ -7,45 +7,33 @@ import '../bloc/sherehe_home_bloc.dart';
 
 class EventCardWrapper extends StatelessWidget {
   final Event event;
-
   const EventCardWrapper({super.key, required this.event});
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
-      // buildWhen: (previous, current) {
-      //   if (current is! EventLoaded) return false;
-      //   if (previous is! EventLoaded) return true;
+      buildWhen: (previous, current) {
+        if (current is! EventLoaded) return false;
+        if (previous is! EventLoaded) return true;
 
-      //   final oldAttendees = previous.attendeesMap[event.id];
-      //   final newAttendees = current.attendeesMap[event.id];
+        final oldAttendees = previous.attendeesMap[event.id];
+        final newAttendees = current.attendeesMap[event.id];
 
-      //   return oldAttendees != newAttendees;
-      // },
+        return oldAttendees != newAttendees;
+      },
+
       builder: (context, state) {
-        List<String> attendeeNames = ['Wamalwa', 'Eugene'];
-        int attendeeCount = 2;
-
+        List<String> attendeeUserNames = [];
         bool isLoading = true;
-
         if (state is EventLoaded) {
-          // final attendees = ['Wamalwa', 'Eugene']; //state.attendeesMap[event.id];
-          // if (attendees != null) {
-          //   attendeeNames = attendees
-          //       .map((a) => "${a.firstName} ${a.lastName}")
-          //       .toList();
-          //   isLoading = false;
-          // }
+          final attendees = state.attendeesMap[event.id];
+          if (attendees != null) {
+            attendeeUserNames = attendees.map((a) => a.user.username).toList();
+            isLoading = false;
+          }
         }
-
         return EventCard(
-          imagePath: event.eventBannerImage!,
-          title: event.eventName,
-          location: event.eventLocation,
-          date: event.eventDate,
-          genres: event.eventGenre!,
-          attendees: attendeeNames,
-          attendeesCount: attendeeCount,
+          event: event,
+          attendees: attendeeUserNames,
           isAttendeesLoading: isLoading,
           onTap: () => ShereheDetailsRoute(eventId: event.id).push(context),
         );

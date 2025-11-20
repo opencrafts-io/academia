@@ -173,20 +173,28 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<AttendeeData>>> getAttendeesByEventId({
+  Future<Either<Failure, PaginatedResult<AttendeeData>>> getAttendeesByEventId({
     required String eventId,
+    required int page,
+    required int limit,
   }) async {
     try {
       final response = await dioClient.dio.get(
         "https://qasherehe.opencrafts.io/attendee/event/$eventId",
+        queryParameters: {"page": page, "limit": limit},
       );
 
       if (response.statusCode == 200) {
-        final List<AttendeeData> attendees = (response.data as List)
-            .map((e) => AttendeeData.fromJson(e))
-            .toList();
-
-        return right(attendees);
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage'],
+            previous: response.data['previousPage'],
+            currentPage: response.data['currentPage'],
+          ),
+        );
       } else {
         return left(
           ServerFailure(
@@ -251,7 +259,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final data = {"event_id": eventId, "user_id": userId};
-
 
       // Send POST request
       final response = await dioClient.dio.post(

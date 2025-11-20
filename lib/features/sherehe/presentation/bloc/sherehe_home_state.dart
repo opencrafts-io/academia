@@ -17,6 +17,7 @@ class EventLoaded extends ShereheHomeState {
   final int count;
   final int? nextPage;
   final int? previousPage;
+  final Map<String, List<Attendee>> attendeesMap;
 
   const EventLoaded({
     required this.events,
@@ -24,6 +25,7 @@ class EventLoaded extends ShereheHomeState {
     required this.count,
     this.nextPage,
     this.previousPage,
+    required this.attendeesMap,
   });
 
   EventLoaded copyWith({
@@ -32,6 +34,9 @@ class EventLoaded extends ShereheHomeState {
     int? count,
     int? nextPage,
     int? previousPage,
+    Map<String, List<Attendee>>? attendeesMap,
+    Map<String, bool>? attendeesLoadingMap,
+    Map<String, bool>? attendeesErrorMap,
   }) {
     return EventLoaded(
       events: events ?? this.events,
@@ -39,16 +44,24 @@ class EventLoaded extends ShereheHomeState {
       count: count ?? this.count,
       nextPage: nextPage ?? this.nextPage,
       previousPage: previousPage ?? this.previousPage,
+      attendeesMap: attendeesMap ?? this.attendeesMap,
     );
   }
 
   @override
-  List<Object?> get props => [events, hasMore, count, nextPage, previousPage];
+  List<Object?> get props => [
+    events,
+    hasMore,
+    count,
+    nextPage,
+    previousPage,
+    attendeesMap,
+  ];
 }
 
 class EventsError extends ShereheHomeState {
   final String message;
-  
+
   const EventsError({required this.message});
 
   @override

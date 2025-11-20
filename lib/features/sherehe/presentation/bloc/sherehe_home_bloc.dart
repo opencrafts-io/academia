@@ -10,13 +10,13 @@ class ShereheHomeBloc extends Bloc<ShereheHomeEvent, ShereheHomeState> {
   final GetAttendee getAttendee;
   final CacheEventsUseCase cacheEventsUseCase;
 
-
   ShereheHomeBloc({
     required this.getEvent,
     required this.getAttendee,
     required this.cacheEventsUseCase,
   }) : super(EventInitial()) {
     on<FetchAllEvents>(_onFetchAllEvents);
+    // on<FetchEventAttendees>(_onFetchEventAttendees);
   }
 
   Future<void> _onFetchAllEvents(
@@ -46,7 +46,7 @@ class ShereheHomeBloc extends Bloc<ShereheHomeEvent, ShereheHomeState> {
 
     final result = await getEvent.execute(page: event.page, limit: event.limit);
 
-    result.fold(
+    await result.fold(
       (failure) {
         if (currentState is EventLoaded && event.page > 1) {
           emit(
@@ -68,31 +68,101 @@ class ShereheHomeBloc extends Bloc<ShereheHomeEvent, ShereheHomeState> {
           emit(EventsError(message: failure.message));
         }
       },
-      (paginatedData) {
-        final newEvents = paginatedData.events;
+      (paginatedEvents) async {
+        final List<Event> updatedEvents =
+            (currentState is EventLoaded && event.isLoadMore)
+            ? [...currentState.events, ...paginatedEvents.events]
+            : paginatedEvents.events;
 
-        if (currentState is EventLoaded && event.page > 1) {
-          emit(
-            currentState.copyWith( 
-              events: [...currentState.events, ...newEvents],
-              hasMore: paginatedData.hasMore,
-              count: paginatedData.totalEvents,
-              nextPage: paginatedData.nextPage,
-              previousPage: paginatedData.previousPage,
-            ),
+        final attendeesMap = (currentState is EventLoaded && event.isLoadMore)
+            ? Map<String, List<Attendee>>.from(currentState.attendeesMap)
+            : <String, List<Attendee>>{};
+
+        // Fetch attendees for each event
+        for (final ev in paginatedEvents.events) {
+          final attendeeResult = await getAttendee.execute(
+            eventId: ev.id,
+            page: 1,
+            limit: 4,
           );
-        } else {
-          emit(
-            EventLoaded(
-              events: newEvents,
-              hasMore: paginatedData.hasMore,
-              count: paginatedData.totalEvents,
-              nextPage: paginatedData.nextPage,
-              previousPage: paginatedData.previousPage,
-            ),
+          attendeeResult.fold(
+            (_) => attendeesMap[ev.id] = [],
+            (attendees) => attendeesMap[ev.id] = attendees.results,
           );
         }
+
+        emit(
+          EventLoaded(
+            events: updatedEvents,
+            attendeesMap: attendeesMap,
+            hasMore: paginatedEvents.nextPage != null,
+            nextPage: paginatedEvents.nextPage,
+            count: paginatedEvents.totalEvents,
+          ),
+        );
       },
     );
   }
+
+  // Future<void> _onFetchEventAttendees(
+  //   FetchEventAttendees event,
+  //   Emitter<ShereheHomeState> emit,
+  // ) async {
+  //   final current = state as EventLoaded;
+
+  //   // Mark only this event as loading
+  //   emit(
+  //     current.copyWith(
+  //       attendeesMap: {
+  //         ...current.attendeesMap,
+  //         event.event.id: current.attendeesMap[event.event.id] ?? [],
+  //       },
+  //       attendeesLoadingMap: {
+  //         ...current.attendeesLoadingMap,
+  //         event.event.id: true,
+  //       },
+  //     ),
+  //   );
+
+  //   final result = await getAttendee.execute(
+  //     eventId: event.event.id,
+  //     page: 1,
+  //     limit: 4,
+  //   );
+
+  //   result.fold(
+  //     (_) {
+  //       emit(
+  //         current.copyWith(
+  //           attendeesLoadingMap: {
+  //             ...current.attendeesLoadingMap,
+  //             event.event.id: false,
+  //           },
+  //           attendeesErrorMap: {
+  //             ...current.attendeesErrorMap,
+  //             event.event.id: true,
+  //           },
+  //         ),
+  //       );
+  //     },
+  //     (attendees) {
+  //       emit(
+  //         current.copyWith(
+  //           attendeesLoadingMap: {
+  //             ...current.attendeesLoadingMap,
+  //             event.event.id: false,
+  //           },
+  //           attendeesMap: {
+  //             ...current.attendeesMap,
+  //             event.event.id: attendees.results,
+  //           },
+  //           attendeesErrorMap: {
+  //             ...current.attendeesErrorMap,
+  //             event.event.id: false,
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

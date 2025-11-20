@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -59,27 +60,17 @@ CardSizing getCardSizing(BuildContext context) {
 }
 
 class EventCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String location;
-  final String date;
-  final List<String> genres;
+  final Event event;
   final List<String> attendees;
-  final int attendeesCount;
-  final VoidCallback? onTap;
   final bool isAttendeesLoading;
+  final VoidCallback? onTap;
 
   const EventCard({
     super.key,
-    required this.imagePath,
-    required this.title,
-    required this.location,
-    required this.date,
-    required this.genres,
-    this.attendees = const [],
-    this.attendeesCount = 0,
+    required this.event,
+    required this.attendees,
+    required this.isAttendeesLoading,
     this.onTap,
-    this.isAttendeesLoading = false,
   });
 
   String _getInitials(String name) {
@@ -135,7 +126,7 @@ class EventCard extends StatelessWidget {
                 flex: 3,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: imagePath,
+                  imageUrl: event.eventBannerImage!,
                   width: double.infinity,
                   errorWidget: (context, child, error) {
                     return Container(
@@ -156,7 +147,7 @@ class EventCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        event.eventName,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           // fontSize: sizing.titleFontSize,
                           fontWeight: FontWeight.bold,
@@ -177,7 +168,7 @@ class EventCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              location,
+                              event.eventLocation,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     fontSize: sizing.bodyFontSize,
@@ -203,7 +194,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            _formatDate(date),
+                            _formatDate(event.eventDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
@@ -226,7 +217,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            _formatTime(date),
+                            _formatTime(event.eventDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
@@ -238,13 +229,13 @@ class EventCard extends StatelessWidget {
                         ],
                       ),
 
-                      if (genres.isNotEmpty)
+                      if (event.eventGenre!.isNotEmpty)
                         Padding(
                           padding: EdgeInsets.only(top: sizing.spacing),
                           child: Wrap(
                             spacing: 4.0,
                             runSpacing: 2.0,
-                            children: genres.map((genre) {
+                            children: event.eventGenre!.map((genre) {
                               return Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 4.0,
@@ -338,7 +329,7 @@ class EventCard extends StatelessWidget {
                                     final isOverflow =
                                         index == maxAvatars - 1 &&
                                         attendees.length == maxAvatars &&
-                                        attendeesCount > maxAvatars;
+                                        event.attendeeCount > maxAvatars;
 
                                     return Positioned(
                                       left: index * 16.0,
@@ -349,7 +340,7 @@ class EventCard extends StatelessWidget {
                                         ).colorScheme.primary,
                                         child: Text(
                                           isOverflow
-                                              ? '+${attendeesCount - (maxAvatars - 1)}'
+                                              ? '+${event.attendeeCount - (maxAvatars - 1)}'
                                               : _getInitials(attendees[index]),
                                           style: TextStyle(
                                             color: Theme.of(
@@ -368,14 +359,15 @@ class EventCard extends StatelessWidget {
                             Expanded(
                               child: Builder(
                                 builder: (context) {
-                                  if (attendeesCount == 1) {
+                                  if (event.attendeeCount == 1) {
                                     return Text(
                                       "is attending",
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
                                     );
-                                  } else if (attendeesCount <= maxAvatars - 1) {
+                                  } else if (event.attendeeCount <=
+                                      maxAvatars - 1) {
                                     return Text(
                                       "are attending",
                                       style: Theme.of(
@@ -384,7 +376,7 @@ class EventCard extends StatelessWidget {
                                     );
                                   } else {
                                     final extra =
-                                        attendeesCount - (maxAvatars - 1);
+                                        event.attendeeCount - (maxAvatars - 1);
                                     return Text(
                                       "and $extra other${extra > 1 ? 's' : ''} are attending",
                                       style: Theme.of(

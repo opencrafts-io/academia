@@ -49,6 +49,8 @@ class ShereheDetailsBloc
     // Load attendees
     final attendeeResult = await getAttendeesUseCase.execute(
       eventId: event.eventId,
+      page: 1,
+      limit: 3,
     );
 
     attendeeResult.fold(
@@ -67,7 +69,7 @@ class ShereheDetailsBloc
         emit(
           ShereheDetailsLoaded(
             event: eventData,
-            attendees: attendeeList,
+            attendees: attendeeList.results,
             isUserAttending: false,
             isLoadingAttendees: false,
           ),
@@ -90,7 +92,7 @@ class ShereheDetailsBloc
         attendees: currentState.attendees,
         isUserAttending: currentState.isUserAttending,
       ),
-    );    
+    );
 
     final result = await createAttendeeUseCase.call(
       userId: event.userId,

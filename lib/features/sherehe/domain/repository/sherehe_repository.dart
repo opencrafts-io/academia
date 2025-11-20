@@ -25,8 +25,10 @@ abstract class ShereheRepository {
     required List<Ticket> tickets,
   });
 
-  Future<Either<Failure, List<Attendee>>> getAttendeesByEventId({
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAttendeesByEventId({
     required String eventId,
+    required int page,
+    required int limit,
   });
 
   Future<Either<Failure, Attendee>> getAttendeeByID(String id);

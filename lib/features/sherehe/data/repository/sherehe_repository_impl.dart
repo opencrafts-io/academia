@@ -76,15 +76,26 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, List<Attendee>>> getAttendeesByEventId({
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAttendeesByEventId({
     required String eventId,
+    required int page,
+    required int limit,
   }) async {
     final result = await remoteDataSource.getAttendeesByEventId(
       eventId: eventId,
+      page: page,
+      limit: limit,
     );
     return result.fold(
       (failure) => left(failure),
-      (attendees) => right(attendees.map((e) => e.toEntity()).toList()),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
     );
   }
 

@@ -1,37 +1,38 @@
+import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:equatable/equatable.dart';
 
 class Attendee extends Equatable {
   final String id;
   final String userId;
   final String eventId;
-  final bool deleteTag;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String ticketId;
+  final int ticketQuantity;
+  final ShereheUser user;
 
   const Attendee({
     required this.id,
     required this.userId,
     required this.eventId,
-    required this.deleteTag,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.ticketId,
+    required this.ticketQuantity,
+    required this.user,
   });
 
   Attendee copyWith({
     String? id,
     String? userId,
     String? eventId,
-    bool? deleteTag,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? ticketId,
+    int? ticketQuantity,
+    ShereheUser? user,
   }) {
     return Attendee(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       eventId: eventId ?? this.eventId,
-      deleteTag: deleteTag ?? this.deleteTag,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      ticketId: ticketId ?? this.ticketId,
+      ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+      user: user ?? this.user,
     );
   }
 
@@ -40,9 +41,9 @@ class Attendee extends Equatable {
     id,
     userId,
     eventId,
-    deleteTag,
-    createdAt,
-    updatedAt,
+    ticketId,
+    ticketQuantity,
+    user,
   ];
 
   @override

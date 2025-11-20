@@ -18,3 +18,9 @@ class FetchAllEvents extends ShereheHomeEvent {
     this.isLoadMore = false,
   });
 }
+
+class FetchEventAttendees extends ShereheHomeEvent {
+  final Event event;
+
+  const FetchEventAttendees({required this.event});
+}

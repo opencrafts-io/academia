@@ -266,19 +266,19 @@ class _ShereheHomeState extends State<ShereheHome>
                 },
               ),
             ),
-            // BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
-            //   builder: (context, state) {
-            //     if (state is EventLoaded && state.hasMore) {
-            //       return const SliverToBoxAdapter(
-            //         child: Padding(
-            //           padding: EdgeInsets.symmetric(vertical: 16.0),
-            //           child: Center(child: CircularProgressIndicator()),
-            //         ),
-            //       );
-            //     }
-            //     return const SliverToBoxAdapter(child: SizedBox.shrink());
-            //   },
-            // ),
+            BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
+              builder: (context, state) {
+                if (state is EventLoaded && state.hasMore) {
+                  return const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              },
+            ),
           ],
         ),
       ),

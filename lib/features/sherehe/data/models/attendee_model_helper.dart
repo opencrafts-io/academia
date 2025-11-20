@@ -1,4 +1,5 @@
 import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/models/sherehe_user_model_helper.dart';
 import 'package:academia/features/sherehe/domain/entities/attendee.dart';
 
 extension AttendeeModelHelper on AttendeeData {
@@ -6,9 +7,9 @@ extension AttendeeModelHelper on AttendeeData {
     id: id,
     userId: userId,
     eventId: eventId,
-    deleteTag: deleteTag,
-    createdAt: DateTime.tryParse(createdAt) ?? DateTime.now(),
-    updatedAt: DateTime.tryParse(updatedAt) ?? DateTime.now(),
+    ticketId: ticketId,
+    ticketQuantity: ticketQuantity,
+    user: ShereheUserData.fromJson(user).toEntity(),
   );
 }
 
@@ -17,8 +18,8 @@ extension AttendeeEntityHelper on Attendee {
     id: id,
     userId: userId,
     eventId: eventId,
-    deleteTag: deleteTag,
-    createdAt: createdAt.toIso8601String(),
-    updatedAt: updatedAt.toIso8601String(),
+    ticketId: ticketId,
+    ticketQuantity: ticketQuantity,
+    user: user.toModel().toJson(),
   );
 }

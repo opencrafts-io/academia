@@ -4941,50 +4941,45 @@ class $AttendeeTableTable extends AttendeeTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _deleteTagMeta = const VerificationMeta(
-    'deleteTag',
+  static const VerificationMeta _ticketIdMeta = const VerificationMeta(
+    'ticketId',
   );
   @override
-  late final GeneratedColumn<bool> deleteTag = GeneratedColumn<bool>(
-    'delete_tag',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("delete_tag" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
-    'created_at',
+  late final GeneratedColumn<String> ticketId = GeneratedColumn<String>(
+    'ticket_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
+  static const VerificationMeta _ticketQuantityMeta = const VerificationMeta(
+    'ticketQuantity',
   );
   @override
-  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
-    'updated_at',
+  late final GeneratedColumn<int> ticketQuantity = GeneratedColumn<int>(
+    'ticket_quantity',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  user = GeneratedColumn<String>(
+    'user',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<Map<String, dynamic>>($AttendeeTableTable.$converteruser);
   @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
     eventId,
-    deleteTag,
-    createdAt,
-    updatedAt,
+    ticketId,
+    ticketQuantity,
+    user,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5019,29 +5014,24 @@ class $AttendeeTableTable extends AttendeeTable
     } else if (isInserting) {
       context.missing(_eventIdMeta);
     }
-    if (data.containsKey('delete_tag')) {
+    if (data.containsKey('ticket_id')) {
       context.handle(
-        _deleteTagMeta,
-        deleteTag.isAcceptableOrUnknown(data['delete_tag']!, _deleteTagMeta),
+        _ticketIdMeta,
+        ticketId.isAcceptableOrUnknown(data['ticket_id']!, _ticketIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_deleteTagMeta);
+      context.missing(_ticketIdMeta);
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('ticket_quantity')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+        _ticketQuantityMeta,
+        ticketQuantity.isAcceptableOrUnknown(
+          data['ticket_quantity']!,
+          _ticketQuantityMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
+      context.missing(_ticketQuantityMeta);
     }
     return context;
   }
@@ -5064,18 +5054,20 @@ class $AttendeeTableTable extends AttendeeTable
         DriftSqlType.string,
         data['${effectivePrefix}event_id'],
       )!,
-      deleteTag: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}delete_tag'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
+      ticketId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}created_at'],
+        data['${effectivePrefix}ticket_id'],
       )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}updated_at'],
+      ticketQuantity: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ticket_quantity'],
       )!,
+      user: $AttendeeTableTable.$converteruser.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}user'],
+        )!,
+      ),
     );
   }
 
@@ -5083,22 +5075,25 @@ class $AttendeeTableTable extends AttendeeTable
   $AttendeeTableTable createAlias(String alias) {
     return $AttendeeTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, dynamic>, String> $converteruser =
+      JsonConverter();
 }
 
 class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final String id;
   final String userId;
   final String eventId;
-  final bool deleteTag;
-  final String createdAt;
-  final String updatedAt;
+  final String ticketId;
+  final int ticketQuantity;
+  final Map<String, dynamic> user;
   const AttendeeData({
     required this.id,
     required this.userId,
     required this.eventId,
-    required this.deleteTag,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.ticketId,
+    required this.ticketQuantity,
+    required this.user,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5106,9 +5101,13 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['event_id'] = Variable<String>(eventId);
-    map['delete_tag'] = Variable<bool>(deleteTag);
-    map['created_at'] = Variable<String>(createdAt);
-    map['updated_at'] = Variable<String>(updatedAt);
+    map['ticket_id'] = Variable<String>(ticketId);
+    map['ticket_quantity'] = Variable<int>(ticketQuantity);
+    {
+      map['user'] = Variable<String>(
+        $AttendeeTableTable.$converteruser.toSql(user),
+      );
+    }
     return map;
   }
 
@@ -5117,9 +5116,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       id: Value(id),
       userId: Value(userId),
       eventId: Value(eventId),
-      deleteTag: Value(deleteTag),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+      ticketId: Value(ticketId),
+      ticketQuantity: Value(ticketQuantity),
+      user: Value(user),
     );
   }
 
@@ -5132,9 +5131,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['user_id']),
       eventId: serializer.fromJson<String>(json['event_id']),
-      deleteTag: serializer.fromJson<bool>(json['delete_tag']),
-      createdAt: serializer.fromJson<String>(json['createdAt']),
-      updatedAt: serializer.fromJson<String>(json['updatedAt']),
+      ticketId: serializer.fromJson<String>(json['ticket_id']),
+      ticketQuantity: serializer.fromJson<int>(json['ticket_quantity']),
+      user: serializer.fromJson<Map<String, dynamic>>(json['user']),
     );
   }
   @override
@@ -5144,9 +5143,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'id': serializer.toJson<String>(id),
       'user_id': serializer.toJson<String>(userId),
       'event_id': serializer.toJson<String>(eventId),
-      'delete_tag': serializer.toJson<bool>(deleteTag),
-      'createdAt': serializer.toJson<String>(createdAt),
-      'updatedAt': serializer.toJson<String>(updatedAt),
+      'ticket_id': serializer.toJson<String>(ticketId),
+      'ticket_quantity': serializer.toJson<int>(ticketQuantity),
+      'user': serializer.toJson<Map<String, dynamic>>(user),
     };
   }
 
@@ -5154,25 +5153,27 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     String? id,
     String? userId,
     String? eventId,
-    bool? deleteTag,
-    String? createdAt,
-    String? updatedAt,
+    String? ticketId,
+    int? ticketQuantity,
+    Map<String, dynamic>? user,
   }) => AttendeeData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     eventId: eventId ?? this.eventId,
-    deleteTag: deleteTag ?? this.deleteTag,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    ticketId: ticketId ?? this.ticketId,
+    ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+    user: user ?? this.user,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       eventId: data.eventId.present ? data.eventId.value : this.eventId,
-      deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      ticketId: data.ticketId.present ? data.ticketId.value : this.ticketId,
+      ticketQuantity: data.ticketQuantity.present
+          ? data.ticketQuantity.value
+          : this.ticketQuantity,
+      user: data.user.present ? data.user.value : this.user,
     );
   }
 
@@ -5182,16 +5183,16 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('eventId: $eventId, ')
-          ..write('deleteTag: $deleteTag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('ticketId: $ticketId, ')
+          ..write('ticketQuantity: $ticketQuantity, ')
+          ..write('user: $user')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, userId, eventId, deleteTag, createdAt, updatedAt);
+      Object.hash(id, userId, eventId, ticketId, ticketQuantity, user);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5199,58 +5200,58 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.eventId == this.eventId &&
-          other.deleteTag == this.deleteTag &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.ticketId == this.ticketId &&
+          other.ticketQuantity == this.ticketQuantity &&
+          other.user == this.user);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> eventId;
-  final Value<bool> deleteTag;
-  final Value<String> createdAt;
-  final Value<String> updatedAt;
+  final Value<String> ticketId;
+  final Value<int> ticketQuantity;
+  final Value<Map<String, dynamic>> user;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.eventId = const Value.absent(),
-    this.deleteTag = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.ticketId = const Value.absent(),
+    this.ticketQuantity = const Value.absent(),
+    this.user = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
     required String id,
     required String userId,
     required String eventId,
-    required bool deleteTag,
-    required String createdAt,
-    required String updatedAt,
+    required String ticketId,
+    required int ticketQuantity,
+    required Map<String, dynamic> user,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
        eventId = Value(eventId),
-       deleteTag = Value(deleteTag),
-       createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
+       ticketId = Value(ticketId),
+       ticketQuantity = Value(ticketQuantity),
+       user = Value(user);
   static Insertable<AttendeeData> custom({
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? eventId,
-    Expression<bool>? deleteTag,
-    Expression<String>? createdAt,
-    Expression<String>? updatedAt,
+    Expression<String>? ticketId,
+    Expression<int>? ticketQuantity,
+    Expression<String>? user,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (eventId != null) 'event_id': eventId,
-      if (deleteTag != null) 'delete_tag': deleteTag,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (ticketId != null) 'ticket_id': ticketId,
+      if (ticketQuantity != null) 'ticket_quantity': ticketQuantity,
+      if (user != null) 'user': user,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5259,18 +5260,18 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? eventId,
-    Value<bool>? deleteTag,
-    Value<String>? createdAt,
-    Value<String>? updatedAt,
+    Value<String>? ticketId,
+    Value<int>? ticketQuantity,
+    Value<Map<String, dynamic>>? user,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       eventId: eventId ?? this.eventId,
-      deleteTag: deleteTag ?? this.deleteTag,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      ticketId: ticketId ?? this.ticketId,
+      ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+      user: user ?? this.user,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5287,14 +5288,16 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
     }
-    if (deleteTag.present) {
-      map['delete_tag'] = Variable<bool>(deleteTag.value);
+    if (ticketId.present) {
+      map['ticket_id'] = Variable<String>(ticketId.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<String>(createdAt.value);
+    if (ticketQuantity.present) {
+      map['ticket_quantity'] = Variable<int>(ticketQuantity.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<String>(updatedAt.value);
+    if (user.present) {
+      map['user'] = Variable<String>(
+        $AttendeeTableTable.$converteruser.toSql(user.value),
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -5308,9 +5311,9 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('eventId: $eventId, ')
-          ..write('deleteTag: $deleteTag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
+          ..write('ticketId: $ticketId, ')
+          ..write('ticketQuantity: $ticketQuantity, ')
+          ..write('user: $user, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5841,6 +5844,356 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ShereheUserTableTable extends ShereheUserTable
+    with TableInfo<$ShereheUserTableTable, ShereheUserData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ShereheUserTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, username, email, name, phone];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sherehe_user_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ShereheUserData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_phoneMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  ShereheUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ShereheUserData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      )!,
+    );
+  }
+
+  @override
+  $ShereheUserTableTable createAlias(String alias) {
+    return $ShereheUserTableTable(attachedDatabase, alias);
+  }
+}
+
+class ShereheUserData extends DataClass implements Insertable<ShereheUserData> {
+  final String id;
+  final String username;
+  final String email;
+  final String name;
+  final String phone;
+  const ShereheUserData({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.name,
+    required this.phone,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['username'] = Variable<String>(username);
+    map['email'] = Variable<String>(email);
+    map['name'] = Variable<String>(name);
+    map['phone'] = Variable<String>(phone);
+    return map;
+  }
+
+  ShereheUserTableCompanion toCompanion(bool nullToAbsent) {
+    return ShereheUserTableCompanion(
+      id: Value(id),
+      username: Value(username),
+      email: Value(email),
+      name: Value(name),
+      phone: Value(phone),
+    );
+  }
+
+  factory ShereheUserData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ShereheUserData(
+      id: serializer.fromJson<String>(json['id']),
+      username: serializer.fromJson<String>(json['username']),
+      email: serializer.fromJson<String>(json['email']),
+      name: serializer.fromJson<String>(json['name']),
+      phone: serializer.fromJson<String>(json['phone']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'username': serializer.toJson<String>(username),
+      'email': serializer.toJson<String>(email),
+      'name': serializer.toJson<String>(name),
+      'phone': serializer.toJson<String>(phone),
+    };
+  }
+
+  ShereheUserData copyWith({
+    String? id,
+    String? username,
+    String? email,
+    String? name,
+    String? phone,
+  }) => ShereheUserData(
+    id: id ?? this.id,
+    username: username ?? this.username,
+    email: email ?? this.email,
+    name: name ?? this.name,
+    phone: phone ?? this.phone,
+  );
+  ShereheUserData copyWithCompanion(ShereheUserTableCompanion data) {
+    return ShereheUserData(
+      id: data.id.present ? data.id.value : this.id,
+      username: data.username.present ? data.username.value : this.username,
+      email: data.email.present ? data.email.value : this.email,
+      name: data.name.present ? data.name.value : this.name,
+      phone: data.phone.present ? data.phone.value : this.phone,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShereheUserData(')
+          ..write('id: $id, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('phone: $phone')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, username, email, name, phone);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ShereheUserData &&
+          other.id == this.id &&
+          other.username == this.username &&
+          other.email == this.email &&
+          other.name == this.name &&
+          other.phone == this.phone);
+}
+
+class ShereheUserTableCompanion extends UpdateCompanion<ShereheUserData> {
+  final Value<String> id;
+  final Value<String> username;
+  final Value<String> email;
+  final Value<String> name;
+  final Value<String> phone;
+  final Value<int> rowid;
+  const ShereheUserTableCompanion({
+    this.id = const Value.absent(),
+    this.username = const Value.absent(),
+    this.email = const Value.absent(),
+    this.name = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ShereheUserTableCompanion.insert({
+    required String id,
+    required String username,
+    required String email,
+    required String name,
+    required String phone,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       username = Value(username),
+       email = Value(email),
+       name = Value(name),
+       phone = Value(phone);
+  static Insertable<ShereheUserData> custom({
+    Expression<String>? id,
+    Expression<String>? username,
+    Expression<String>? email,
+    Expression<String>? name,
+    Expression<String>? phone,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (username != null) 'username': username,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
+      if (phone != null) 'phone': phone,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ShereheUserTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? username,
+    Value<String>? email,
+    Value<String>? name,
+    Value<String>? phone,
+    Value<int>? rowid,
+  }) {
+    return ShereheUserTableCompanion(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShereheUserTableCompanion(')
+          ..write('id: $id, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('phone: $phone, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -15569,6 +15922,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
+  late final $ShereheUserTableTable shereheUserTable = $ShereheUserTableTable(
+    this,
+  );
   late final $GroupTableTable groupTable = $GroupTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $NotificationTableTable notificationTable =
@@ -15601,6 +15957,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     eventTable,
     attendeeTable,
     ticketTable,
+    shereheUserTable,
     groupTable,
     agendaEvent,
     notificationTable,
@@ -17946,9 +18303,9 @@ typedef $$AttendeeTableTableCreateCompanionBuilder =
       required String id,
       required String userId,
       required String eventId,
-      required bool deleteTag,
-      required String createdAt,
-      required String updatedAt,
+      required String ticketId,
+      required int ticketQuantity,
+      required Map<String, dynamic> user,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
@@ -17956,9 +18313,9 @@ typedef $$AttendeeTableTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> eventId,
-      Value<bool> deleteTag,
-      Value<String> createdAt,
-      Value<String> updatedAt,
+      Value<String> ticketId,
+      Value<int> ticketQuantity,
+      Value<Map<String, dynamic>> user,
       Value<int> rowid,
     });
 
@@ -17986,19 +18343,24 @@ class $$AttendeeTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
+  ColumnFilters<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnFilters<int> get ticketQuantity => $composableBuilder(
+    column: $table.ticketQuantity,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get user => $composableBuilder(
+    column: $table.user,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -18026,18 +18388,18 @@ class $$AttendeeTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
+  ColumnOrderings<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnOrderings<int> get ticketQuantity => $composableBuilder(
+    column: $table.ticketQuantity,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnOrderings<String> get user => $composableBuilder(
+    column: $table.user,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -18060,14 +18422,16 @@ class $$AttendeeTableTableAnnotationComposer
   GeneratedColumn<String> get eventId =>
       $composableBuilder(column: $table.eventId, builder: (column) => column);
 
-  GeneratedColumn<bool> get deleteTag =>
-      $composableBuilder(column: $table.deleteTag, builder: (column) => column);
+  GeneratedColumn<String> get ticketId =>
+      $composableBuilder(column: $table.ticketId, builder: (column) => column);
 
-  GeneratedColumn<String> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<int> get ticketQuantity => $composableBuilder(
+    column: $table.ticketQuantity,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get user =>
+      $composableBuilder(column: $table.user, builder: (column) => column);
 }
 
 class $$AttendeeTableTableTableManager
@@ -18104,17 +18468,17 @@ class $$AttendeeTableTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> eventId = const Value.absent(),
-                Value<bool> deleteTag = const Value.absent(),
-                Value<String> createdAt = const Value.absent(),
-                Value<String> updatedAt = const Value.absent(),
+                Value<String> ticketId = const Value.absent(),
+                Value<int> ticketQuantity = const Value.absent(),
+                Value<Map<String, dynamic>> user = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
                 userId: userId,
                 eventId: eventId,
-                deleteTag: deleteTag,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                ticketId: ticketId,
+                ticketQuantity: ticketQuantity,
+                user: user,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -18122,17 +18486,17 @@ class $$AttendeeTableTableTableManager
                 required String id,
                 required String userId,
                 required String eventId,
-                required bool deleteTag,
-                required String createdAt,
-                required String updatedAt,
+                required String ticketId,
+                required int ticketQuantity,
+                required Map<String, dynamic> user,
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
                 userId: userId,
                 eventId: eventId,
-                deleteTag: deleteTag,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                ticketId: ticketId,
+                ticketQuantity: ticketQuantity,
+                user: user,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -18421,6 +18785,212 @@ typedef $$TicketTableTableProcessedTableManager =
         BaseReferences<_$AppDataBase, $TicketTableTable, TicketData>,
       ),
       TicketData,
+      PrefetchHooks Function()
+    >;
+typedef $$ShereheUserTableTableCreateCompanionBuilder =
+    ShereheUserTableCompanion Function({
+      required String id,
+      required String username,
+      required String email,
+      required String name,
+      required String phone,
+      Value<int> rowid,
+    });
+typedef $$ShereheUserTableTableUpdateCompanionBuilder =
+    ShereheUserTableCompanion Function({
+      Value<String> id,
+      Value<String> username,
+      Value<String> email,
+      Value<String> name,
+      Value<String> phone,
+      Value<int> rowid,
+    });
+
+class $$ShereheUserTableTableFilterComposer
+    extends Composer<_$AppDataBase, $ShereheUserTableTable> {
+  $$ShereheUserTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ShereheUserTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ShereheUserTableTable> {
+  $$ShereheUserTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ShereheUserTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ShereheUserTableTable> {
+  $$ShereheUserTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+}
+
+class $$ShereheUserTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ShereheUserTableTable,
+          ShereheUserData,
+          $$ShereheUserTableTableFilterComposer,
+          $$ShereheUserTableTableOrderingComposer,
+          $$ShereheUserTableTableAnnotationComposer,
+          $$ShereheUserTableTableCreateCompanionBuilder,
+          $$ShereheUserTableTableUpdateCompanionBuilder,
+          (
+            ShereheUserData,
+            BaseReferences<
+              _$AppDataBase,
+              $ShereheUserTableTable,
+              ShereheUserData
+            >,
+          ),
+          ShereheUserData,
+          PrefetchHooks Function()
+        > {
+  $$ShereheUserTableTableTableManager(
+    _$AppDataBase db,
+    $ShereheUserTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ShereheUserTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ShereheUserTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ShereheUserTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> username = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> phone = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ShereheUserTableCompanion(
+                id: id,
+                username: username,
+                email: email,
+                name: name,
+                phone: phone,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String username,
+                required String email,
+                required String name,
+                required String phone,
+                Value<int> rowid = const Value.absent(),
+              }) => ShereheUserTableCompanion.insert(
+                id: id,
+                username: username,
+                email: email,
+                name: name,
+                phone: phone,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ShereheUserTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ShereheUserTableTable,
+      ShereheUserData,
+      $$ShereheUserTableTableFilterComposer,
+      $$ShereheUserTableTableOrderingComposer,
+      $$ShereheUserTableTableAnnotationComposer,
+      $$ShereheUserTableTableCreateCompanionBuilder,
+      $$ShereheUserTableTableUpdateCompanionBuilder,
+      (
+        ShereheUserData,
+        BaseReferences<_$AppDataBase, $ShereheUserTableTable, ShereheUserData>,
+      ),
+      ShereheUserData,
       PrefetchHooks Function()
     >;
 typedef $$GroupTableTableCreateCompanionBuilder =
@@ -23189,6 +23759,8 @@ class $AppDataBaseManager {
       $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
   $$TicketTableTableTableManager get ticketTable =>
       $$TicketTableTableTableManager(_db, _db.ticketTable);
+  $$ShereheUserTableTableTableManager get shereheUserTable =>
+      $$ShereheUserTableTableTableManager(_db, _db.shereheUserTable);
   $$GroupTableTableTableManager get groupTable =>
       $$GroupTableTableTableManager(_db, _db.groupTable);
   $$AgendaEventTableTableManager get agendaEvent =>

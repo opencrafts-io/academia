@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('AttendeeData')
@@ -10,12 +11,11 @@ class AttendeeTable extends Table {
   @JsonKey('event_id')
   TextColumn get eventId => text()();
 
-  @JsonKey('delete_tag')
-  BoolColumn get deleteTag => boolean()();
+  @JsonKey('ticket_id')
+  TextColumn get ticketId => text()();
 
-  @JsonKey('createdAt')
-  TextColumn get createdAt => text()();
+  @JsonKey('ticket_quantity')
+  IntColumn get ticketQuantity => integer()();
 
-  @JsonKey('updatedAt')
-  TextColumn get updatedAt => text()();
+  TextColumn get user => text().map(JsonConverter())();
 }
