@@ -393,7 +393,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventCardImage: _selectedCardImage!,
         eventPosterImage: _selectedPosterImage!,
         eventBannerImage: _selectedBannerImage!,
-        eventGenre: _selectedGenres.join(','),
+        eventGenre: _selectedGenres,
         tickets: _tickets,
       ),
     );

@@ -14,7 +14,7 @@ class SubmitNewEvent extends CreateEventEvent {
   final String eventLocation;
   final String eventDate;
   final String organizerId;
-  final String eventGenre;
+  final List<String> eventGenre;
   final File eventCardImage;
   final File eventPosterImage;
   final File eventBannerImage;

@@ -18,7 +18,7 @@ abstract class ShereheRepository {
     required String eventLocation,
     required String eventDate,
     required String organizerId,
-    required String eventGenre,
+    required List<String> eventGenre,
     required File eventCardImage,
     required File eventPosterImage,
     required File eventBannerImage,
