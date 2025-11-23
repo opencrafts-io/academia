@@ -17,5 +17,5 @@ class AttendeeTable extends Table {
   @JsonKey('ticket_quantity')
   IntColumn get ticketQuantity => integer()();
 
-  TextColumn get user => text().map(JsonConverter())();
+  TextColumn get user => text().map(JsonConverter()).nullable()();
 }

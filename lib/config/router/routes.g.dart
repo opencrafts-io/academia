@@ -324,12 +324,14 @@ RouteBase get $shereheRoute => GoRouteData.$route(
     GoRouteData.$route(
       path: 'get-event',
       factory: _$ShereheDetailsRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'ticket-flow',
+          factory: _$TicketFlowRoute._fromState,
+        ),
+      ],
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
-    GoRouteData.$route(
-      path: 'ticket-flow',
-      factory: _$TicketFlowRoute._fromState,
-    ),
   ],
 );
 
@@ -379,11 +381,17 @@ mixin _$ShereheDetailsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CreateEventRoute on GoRouteData {
-  static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
+mixin _$TicketFlowRoute on GoRouteData {
+  static TicketFlowRoute _fromState(GoRouterState state) =>
+      TicketFlowRoute(eventId: state.uri.queryParameters['event-id']!);
+
+  TicketFlowRoute get _self => this as TicketFlowRoute;
 
   @override
-  String get location => GoRouteData.$location('/sherehe/create');
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/ticket-flow',
+    queryParams: {'event-id': _self.eventId},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -399,11 +407,11 @@ mixin _$CreateEventRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$TicketFlowRoute on GoRouteData {
-  static TicketFlowRoute _fromState(GoRouterState state) => TicketFlowRoute();
+mixin _$CreateEventRoute on GoRouteData {
+  static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
 
   @override
-  String get location => GoRouteData.$location('/sherehe/ticket-flow');
+  String get location => GoRouteData.$location('/sherehe/create');
 
   @override
   void go(BuildContext context) => context.go(location);

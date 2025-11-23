@@ -205,9 +205,11 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
-    TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
+    TypedGoRoute<ShereheDetailsRoute>(
+      path: "get-event",
+      routes: [TypedGoRoute<TicketFlowRoute>(path: "ticket-flow")],
+    ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
-    TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"), //TODO: To be changed later
   ],
 )
 class ShereheRoute extends GoRouteData with _$ShereheRoute {
@@ -221,13 +223,6 @@ class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
-  }
-}
-
-class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const TicketFlowPage();
   }
 }
 
@@ -261,6 +256,17 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
             return SlideTransition(position: offsetAnimation, child: child);
           },
     );
+  }
+}
+
+class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
+  final String eventId;
+
+  const TicketFlowRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketFlowPage(eventId: eventId);
   }
 }
 

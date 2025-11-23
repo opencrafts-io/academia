@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
@@ -129,24 +130,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                           return FilledButton(
                             onPressed: () {
-                              if (state is ShereheDetailsLoaded) {
-                                context.read<ShereheDetailsBloc>().add(
-                                  MarkAsGoing(
-                                    eventId: state.event.id,
-                                    // userId: userId ?? '', //to be uncommented once backend is ready
-                                    userId:
-                                        'b19a3c82-1d5e-4f77-95cb-5b5196ad06c8',
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Event details not available yet.",
-                                    ),
-                                  ),
-                                );
-                              }
+                              TicketFlowRoute(eventId: event.id).push(context);
                             },
                             child: const Text("I'm Going"),
                           );

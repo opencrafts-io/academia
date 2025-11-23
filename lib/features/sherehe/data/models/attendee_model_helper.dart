@@ -9,7 +9,7 @@ extension AttendeeModelHelper on AttendeeData {
     eventId: eventId,
     ticketId: ticketId,
     ticketQuantity: ticketQuantity,
-    user: ShereheUserData.fromJson(user).toEntity(),
+    user: user != null ? ShereheUserData.fromJson(user!).toEntity() : null,
   );
 }
 
@@ -20,6 +20,6 @@ extension AttendeeEntityHelper on Attendee {
     eventId: eventId,
     ticketId: ticketId,
     ticketQuantity: ticketQuantity,
-    user: user.toModel().toJson(),
+    user: user?.toModel().toJson(),
   );
 }

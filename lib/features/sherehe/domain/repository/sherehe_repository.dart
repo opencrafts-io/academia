@@ -38,5 +38,5 @@ abstract class ShereheRepository {
     required String eventId,
   });
 
-  //TODO:Add ticketing on the next iteration//
+  Future<Either<Failure, List<Ticket>>> getTicketByEventId(String eventId);
 }

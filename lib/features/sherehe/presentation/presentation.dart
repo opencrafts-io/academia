@@ -16,6 +16,7 @@ export 'widgets/event_details_header.dart';
 export 'widgets/attendee_list.dart';
 export 'bloc/sherehe_home_bloc.dart';
 export 'bloc/create_event/create_event_bloc.dart';
+export 'bloc/user_ticket_selection/user_ticket_selection_bloc.dart';
 export 'widgets/modern_input_decoration.dart';
 export 'widgets/event_image_picker_widget.dart';
 export 'widgets/genre_selector_widget.dart';

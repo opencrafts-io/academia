@@ -7,7 +7,7 @@ class Attendee extends Equatable {
   final String eventId;
   final String ticketId;
   final int ticketQuantity;
-  final ShereheUser user;
+  final ShereheUser? user;
 
   const Attendee({
     required this.id,
@@ -15,7 +15,7 @@ class Attendee extends Equatable {
     required this.eventId,
     required this.ticketId,
     required this.ticketQuantity,
-    required this.user,
+    this.user,
   });
 
   Attendee copyWith({

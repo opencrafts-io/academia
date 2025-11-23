@@ -90,6 +90,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
+  sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
 
   sl.registerFactory(
     () => ShereheHomeBloc(
@@ -108,6 +109,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
+  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
