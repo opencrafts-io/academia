@@ -118,9 +118,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         if (eventUrl != null) 'event_url': eventUrl,
         'event_location': eventLocation,
         'event_date': eventDate,
-        // 'organizer_id': organizerId,// to be commented out later
-        'organizer_id':
-            "b19a3c82-1d5e-4f77-95cb-5b5196ad06c8", // temporarily hardcoded
+        'organizer_id': organizerId,
         'event_genre': eventGenre,
         'tickets': tickets.map((ticket) {
           final json = ticket.toJson();
@@ -315,6 +313,14 @@ class ShereheRemoteDataSource with DioErrorHandler {
       }
     } on DioException catch (de) {
       _logger.e("DioException when purchasing ticket", error: de);
+
+      // this is to catch where tickets are sold out
+      if (de.response?.data?['message']?.toString().trim() ==
+          "Not enough tickets available") {
+        return left(
+          ServerFailure(message: "This ticket is sold out.", error: de),
+        );
+      }
       return handleDioError(de);
     } catch (e) {
       _logger.e("Unknown error when purchasing ticket", error: e);
