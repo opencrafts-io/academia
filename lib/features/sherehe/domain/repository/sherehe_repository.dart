@@ -33,11 +33,6 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, Attendee>> getAttendeeByID(String id);
 
-  Future<Either<Failure, Attendee>> createAttendee({
-    required String userId,
-    required String eventId,
-  });
-
   Future<Either<Failure, List<Ticket>>> getTicketByEventId(String eventId);
 
   Future<Either<Failure, Attendee>> purchaseTicket({

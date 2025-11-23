@@ -8,7 +8,6 @@ export 'usecases/get_specific_event.dart';
 export 'usecases/get_specific_attendee.dart';
 export 'usecases/create_event_use_case.dart';
 export 'usecases/cache_events_use_case.dart';
-export 'usecases/create_attendee.dart';
 export 'usecases/get_cached_events_use_case.dart';
 export 'usecases/get_tickets_by_event_id_use_case.dart';
 export 'usecases/purchase_ticket_use_case.dart';

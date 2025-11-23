@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
         },
         builder: (context, state) {
           if (state is UserTicketLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: SpinningScallopIndicator());
           } else if (state is UserTicketError) {
             return Center(child: Text(state.message));
           } else if (state is UserTicketLoaded ||

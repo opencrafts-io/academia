@@ -1,8 +1,8 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,15 +15,11 @@ class ShereheDetailsPage extends StatefulWidget {
 }
 
 class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
-  late ConfettiController _confettiController;
   String? userId;
 
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 1),
-    );
 
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
@@ -42,7 +38,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
   @override
   void dispose() {
-    _confettiController.dispose();
     super.dispose();
   }
 
@@ -54,93 +49,11 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
             builder: (context, state) {
               if (state is ShereheDetailsLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: SpinningScallopIndicator());
               } else if (state is ShereheDetailsLoaded) {
-                final event = state.event;
-                final allAttendees = state.attendees;
-
-                Widget actionButton;
-
-                if (state.isUserAttending) {
-                  actionButton = FilledButton(
-                    onPressed: null,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).disabledColor,
-                    ),
-                    child: const Text("You are locked in"),
-                  );
-                } else {
-                  actionButton =
-                      BlocConsumer<ShereheDetailsBloc, ShereheDetailsState>(
-                        listener: (context, state) {
-                          if (state is MarkedAsGoingFailure) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(state.message),
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.error,
-                              ),
-                            );
-                          } else if (state is ShereheDetailsLoaded &&
-                              state.showConfettiEffect) {
-                            _confettiController.play();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("You're locked in!"),
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimary,
-                              ),
-                            );
-                          }
-                        },
-                        builder: (context, state) {
-                          bool userIsAttending =
-                              state is ShereheDetailsLoaded &&
-                              state.isUserAttending;
-
-                          if (state is MarkingAsGoing) {
-                            return const FilledButton(
-                              onPressed: null,
-                              child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-
-                          if (userIsAttending) {
-                            return FilledButton(
-                              onPressed: null,
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).disabledColor,
-                              ),
-                              child: const Text("You are so locked in"),
-                            );
-                          }
-
-                          return FilledButton(
-                            onPressed: () {
-                              TicketFlowRoute(eventId: event.id).push(context);
-                            },
-                            child: const Text("I'm Going"),
-                          );
-                        },
-                      );
-                }
-
                 return CustomScrollView(
                   slivers: [
-                    EventDetailsHeader(event: event),
+                    EventDetailsHeader(event: state.event),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.all(
@@ -149,11 +62,12 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            EventAboutSection(event: event),
+                            EventAboutSection(event: state.event),
                             const SizedBox(height: 24),
                             AttendeesList(
-                              event: event,
-                              allAttendees: allAttendees,
+                              event: state.event,
+                              allAttendees: state.attendees,
+                              isAttendeesLoading: state.isLoadingAttendees,
                               userId: userId,
                             ),
                             const SizedBox(height: 32),
@@ -162,7 +76,14 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                               height: ResponsiveBreakPoints.isMobile(context)
                                   ? 50
                                   : 56,
-                              child: actionButton,
+                              child: FilledButton(
+                                onPressed: () {
+                                  TicketFlowRoute(
+                                    eventId: state.event.id,
+                                  ).push(context);
+                                },
+                                child: const Text("I'm Going"),
+                              ),
                             ),
                             const SizedBox(height: 20),
                           ],
@@ -191,19 +112,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
               }
               return const SizedBox.shrink();
             },
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              shouldLoop: false,
-              emissionFrequency: 0.01,
-              numberOfParticles: 100,
-              maxBlastForce: 100,
-              minBlastForce: 80,
-              gravity: 0.3,
-            ),
           ),
         ],
       ),

@@ -109,21 +109,6 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, Attendee>> createAttendee({
-    required String userId,
-    required String eventId,
-  }) async {
-    final result = await remoteDataSource.createAttendee(
-      userId: userId,
-      eventId: eventId,
-    );
-    return result.fold(
-      (failure) => left(failure),
-      (attendee) => right(attendee.toEntity()),
-    );
-  }
-
-  @override
   Future<Either<Failure, List<Ticket>>> getTicketByEventId(
     String eventId,
   ) async {

@@ -77,7 +77,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
-  sl.registerLazySingleton(() => CreateAttendeeUseCase(sl()));
 
   sl.registerSingleton<ShereheRepository>(
     ShereheRepositoryImpl(
@@ -105,7 +104,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => ShereheDetailsBloc(
       getSpecificEventUseCase: sl(),
       getAttendeesUseCase: sl(),
-      createAttendeeUseCase: sl(),
     ),
   );
 

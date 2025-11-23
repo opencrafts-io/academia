@@ -9,15 +9,12 @@ class ShereheDetailsBloc
     extends Bloc<ShereheDetailsEvent, ShereheDetailsState> {
   final GetSpecificEvent getSpecificEventUseCase;
   final GetAttendee getAttendeesUseCase;
-  final CreateAttendeeUseCase createAttendeeUseCase;
 
   ShereheDetailsBloc({
     required this.getSpecificEventUseCase,
     required this.getAttendeesUseCase,
-    required this.createAttendeeUseCase,
   }) : super(ShereheDetailsInitial()) {
     on<LoadShereheDetails>(_onLoadShereheDetails);
-    on<MarkAsGoing>(_onMarkAsGoing);
   }
 
   Future<void> _onLoadShereheDetails(
@@ -50,7 +47,7 @@ class ShereheDetailsBloc
     final attendeeResult = await getAttendeesUseCase.execute(
       eventId: event.eventId,
       page: 1,
-      limit: 3,
+      limit: 2,
     );
 
     attendeeResult.fold(
@@ -72,54 +69,6 @@ class ShereheDetailsBloc
             attendees: attendeeList.results,
             isUserAttending: false,
             isLoadingAttendees: false,
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _onMarkAsGoing(
-    MarkAsGoing event,
-    Emitter<ShereheDetailsState> emit,
-  ) async {
-    final currentState = state;
-
-    if (currentState is! ShereheDetailsLoaded) return;
-
-    emit(
-      MarkingAsGoing(
-        event: currentState.event,
-        attendees: currentState.attendees,
-        isUserAttending: currentState.isUserAttending,
-      ),
-    );
-
-    final result = await createAttendeeUseCase.call(
-      userId: event.userId,
-      eventId: event.eventId,
-    );
-
-    await result.fold(
-      (failure) {
-        emit(
-          MarkedAsGoingFailure(
-            event: currentState.event,
-            attendees: currentState.attendees,
-            isUserAttending: currentState.isUserAttending,
-            message: failure.message,
-          ),
-        );
-      },
-      (newAttendee) async {
-        final updatedAttendees = List<Attendee>.from(currentState.attendees)
-          ..add(newAttendee);
-
-        emit(
-          ShereheDetailsLoaded(
-            event: currentState.event,
-            attendees: updatedAttendees,
-            isUserAttending: true,
-            showConfettiEffect: true,
           ),
         );
       },

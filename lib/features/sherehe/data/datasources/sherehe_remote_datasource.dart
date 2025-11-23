@@ -190,8 +190,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
             results: (response.data['data'] as List)
                 .map((e) => AttendeeData.fromJson(e))
                 .toList(),
-            next: response.data['nextPage'],
-            previous: response.data['previousPage'],
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
             currentPage: response.data['currentPage'],
           ),
         );
@@ -247,45 +247,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred while fetching the attendee",
-          error: e,
-        ),
-      );
-    }
-  }
-
-  Future<Either<Failure, AttendeeData>> createAttendee({
-    required String userId,
-    required String eventId,
-  }) async {
-    try {
-      final data = {"event_id": eventId, "user_id": userId};
-
-      // Send POST request
-      final response = await dioClient.dio.post(
-        "https://qasherehe.opencrafts.io/attendee",
-        data: data,
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(AttendeeData.fromJson(response.data['attendee']));
-      } else {
-        return left(
-          ServerFailure(
-            message:
-                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
-            error: response,
-          ),
-        );
-      }
-    } on DioException catch (de) {
-      _logger.e("DioException when creating attendee", error: de.response);
-      return handleDioError(de);
-    } catch (e) {
-      _logger.e("Unknown error while creating attendee", error: e);
-      return left(
-        ServerFailure(
-          message: "An unexpected error occurred while creating the attendee",
           error: e,
         ),
       );
