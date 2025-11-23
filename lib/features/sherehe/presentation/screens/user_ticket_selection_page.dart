@@ -21,8 +21,25 @@ class UserTicketSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isFreeEvent =
+        ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
+
+    // Auto-select free ticket in parent
+    if (isFreeEvent && selectedTicket == null) {
+      // Schedule microtask to avoid rebuild-loop
+      Future.microtask(() {
+        onTicketSelected(ticketTypes.first);
+      });
+    }
+
+    final Ticket? activeTicket = isFreeEvent
+        ? ticketTypes.first
+        : selectedTicket;
+
+    // Sort for normal paid event UI
     final sortedTickets = [...ticketTypes]
       ..sort((a, b) => b.ticketPrice.compareTo(a.ticketPrice));
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -35,44 +52,48 @@ class UserTicketSelectionPage extends StatelessWidget {
             children: [
               Text("1.", style: Theme.of(context).textTheme.headlineSmall),
               Text(
-                "Select Ticket",
+                isFreeEvent ? "Free Ticket" : "Select Ticket",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ],
           ),
-          // Ticket list
-          ...sortedTickets.map((ticket) {
-            final isSelected = selectedTicket == ticket;
-            return GestureDetector(
-              onTap: () => onTicketSelected(ticket),
-              child: Card(
-                elevation: isSelected ? 6 : 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: isSelected
-                      ? BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        )
-                      : BorderSide.none,
-                ),
-                child: ListTile(
-                  title: Text(ticket.ticketName),
-                  subtitle: Text(
-                    "KES ${ticket.ticketPrice.toStringAsFixed(0)}",
+
+          // Ticket list - only visible for paid events
+          if (!isFreeEvent) ...[
+            ...sortedTickets.map((ticket) {
+              final isSelected = selectedTicket == ticket;
+              return GestureDetector(
+                onTap: () => onTicketSelected(ticket),
+                child: Card(
+                  elevation: isSelected ? 6 : 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: isSelected
+                        ? BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2,
+                          )
+                        : BorderSide.none,
                   ),
-                  trailing: Icon(
-                    isSelected ? Icons.check_circle : Icons.circle_outlined,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
+                  child: ListTile(
+                    title: Text(ticket.ticketName),
+                    subtitle: Text(
+                      "KES ${ticket.ticketPrice.toStringAsFixed(0)}",
+                    ),
+                    trailing: Icon(
+                      isSelected ? Icons.check_circle : Icons.circle_outlined,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
-          // Quantity selector & continue button
-          if (selectedTicket != null)
+              );
+            }),
+          ],
+
+          // Quantity selector appears for both free + paid
+          if (activeTicket != null)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -84,9 +105,13 @@ class UserTicketSelectionPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Select Quantity",
+                    isFreeEvent
+                        ? "Select Free Ticket Quantity"
+                        : "Select Quantity",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
+
+                  // Quantity controls
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -106,11 +131,13 @@ class UserTicketSelectionPage extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  // Continue button
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: onContinue,
-                      child: const Text("Continue"),
+                      child: Text(isFreeEvent ? "Continue (Free)" : "Continue"),
                     ),
                   ),
                 ],

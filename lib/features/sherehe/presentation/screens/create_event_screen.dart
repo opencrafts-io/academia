@@ -403,7 +403,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   void _updateProgress(int pageIndex) {
     setState(() {
       if (pageIndex <= 3) {
-        _progress = (pageIndex + 1) / 5; 
+        _progress = (pageIndex + 1) / 5;
       }
     });
 
