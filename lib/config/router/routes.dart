@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/streaks/streaks.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -464,6 +465,19 @@ class AchievementsHomePageRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AchievementsHomePage();
+  }
+}
+
+@TypedGoRoute<ActivitiesPageRoute>(
+  path: "/activities/:id",
+)
+class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
+  final String id;
+  const ActivitiesPageRoute({required this.id});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ActivityDetailPage(id: id);
   }
 }
 

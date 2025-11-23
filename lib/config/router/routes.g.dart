@@ -22,6 +22,7 @@ List<RouteBase> get $appRoutes => [
   $trimVideoRoute,
   $communityMembershipsRoute,
   $achievementsHomePageRoute,
+  $activitiesPageRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -844,6 +845,35 @@ mixin _$AchievementDetailPageRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/achievements/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $activitiesPageRoute => GoRouteData.$route(
+  path: '/activities/:id',
+  factory: _$ActivitiesPageRoute._fromState,
+);
+
+mixin _$ActivitiesPageRoute on GoRouteData {
+  static ActivitiesPageRoute _fromState(GoRouterState state) =>
+      ActivitiesPageRoute(id: state.pathParameters['id']!);
+
+  ActivitiesPageRoute get _self => this as ActivitiesPageRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/activities/${Uri.encodeComponent(_self.id)}');
 
   @override
   void go(BuildContext context) => context.go(location);

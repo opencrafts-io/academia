@@ -8,4 +8,9 @@ abstract class AchievementRepository {
       {int page = 1, int pageSize = 100, bool forceRefresh = false});
 
   Future<Either<Failure, StreakMilestoneData>> getAchievementById(String id);
+
+  Future<Either<Failure, PaginatedActivities>> getStreakActivities(
+      {int page = 1, int pageSize = 200, bool forceRefresh = false});
+
+  Future<Either<Failure, StreakActivityData>> getActivityById(String id);
 }

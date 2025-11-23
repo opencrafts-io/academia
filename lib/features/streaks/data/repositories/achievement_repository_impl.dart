@@ -16,7 +16,6 @@ class AchievementRepositoryImpl implements AchievementRepository {
   @override
   Future<Either<Failure, PaginatedAchievements>> getAchievements(
       {int page = 1, int pageSize = 100, bool forceRefresh = false}) async {
-    // For the initial load, try the local cache first.
     if (page == 1 && !forceRefresh) {
       final localResult = await localDatasource.getAchievements();
       if (localResult.isRight() && localResult.getOrElse(() => []).isNotEmpty) {
@@ -29,21 +28,17 @@ class AchievementRepositoryImpl implements AchievementRepository {
       }
     }
 
-    // If it's a refresh, pagination, or the cache is empty, fetch from remote.
     final remoteResult = await remoteDatasource.getAchievements(page: page, pageSize: pageSize);
 
     return remoteResult.fold(
       (failure) {
-        // If remote fetch fails, return the error.
         return Left(failure);
       },
       (paginatedData) {
-        // On successful remote fetch, update the cache.
-        // This handles cache invalidation on page 1 or refresh.
         if (page == 1) {
           localDatasource.deleteAll();
-          localDatasource.cacheAchievements(paginatedData.entries);
         }
+        localDatasource.cacheAchievements(paginatedData.entries);
         return Right(paginatedData);
       },
     );
@@ -52,5 +47,41 @@ class AchievementRepositoryImpl implements AchievementRepository {
   @override
   Future<Either<Failure, StreakMilestoneData>> getAchievementById(String id) async {
     return await localDatasource.getAchievementById(id);
+  }
+
+  @override
+  Future<Either<Failure, StreakActivityData>> getActivityById(String id) async {
+    return await localDatasource.getActivityById(id);
+  }
+
+  @override
+  Future<Either<Failure, PaginatedActivities>> getStreakActivities(
+      {int page = 1, int pageSize = 200, bool forceRefresh = false}) async {
+    if (page == 1 && !forceRefresh) {
+      final localResult = await localDatasource.getActivities();
+      if (localResult.isRight() && localResult.getOrElse(() => []).isNotEmpty) {
+        final activities = localResult.getOrElse(() => []);
+        return Right((
+          entries: activities,
+          hasNext: false, // Cannot determine from cache
+          totalCount: activities.length,
+        ));
+      }
+    }
+
+    final remoteResult = await remoteDatasource.getStreakActivities(page: page, pageSize: pageSize);
+
+    return remoteResult.fold(
+      (failure) {
+        return Left(failure);
+      },
+      (paginatedData) {
+        if (page == 1) {
+          localDatasource.deleteAllActivities();
+        }
+        localDatasource.cacheActivities(paginatedData.entries);
+        return Right(paginatedData);
+      },
+    );
   }
 }

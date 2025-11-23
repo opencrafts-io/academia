@@ -16169,6 +16169,17 @@ class $StreakActivityTable extends StreakActivity
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _categoryMeta = const VerificationMeta(
     'category',
   );
@@ -16264,7 +16275,7 @@ class $StreakActivityTable extends StreakActivity
   late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
     'cached_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
@@ -16273,6 +16284,7 @@ class $StreakActivityTable extends StreakActivity
   List<GeneratedColumn> get $columns => [
     id,
     name,
+    description,
     category,
     pointsAwarded,
     maxDailyCompletions,
@@ -16306,6 +16318,15 @@ class $StreakActivityTable extends StreakActivity
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
     }
     if (data.containsKey('category')) {
       context.handle(
@@ -16383,6 +16404,10 @@ class $StreakActivityTable extends StreakActivity
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
       category: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}category'],
@@ -16414,7 +16439,7 @@ class $StreakActivityTable extends StreakActivity
       cachedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}cached_at'],
-      )!,
+      ),
     );
   }
 
@@ -16428,6 +16453,7 @@ class StreakActivityData extends DataClass
     implements Insertable<StreakActivityData> {
   final String id;
   final String name;
+  final String? description;
   final String category;
   final int pointsAwarded;
   final int maxDailyCompletions;
@@ -16435,10 +16461,11 @@ class StreakActivityData extends DataClass
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final DateTime cachedAt;
+  final DateTime? cachedAt;
   const StreakActivityData({
     required this.id,
     required this.name,
+    this.description,
     required this.category,
     required this.pointsAwarded,
     required this.maxDailyCompletions,
@@ -16446,13 +16473,16 @@ class StreakActivityData extends DataClass
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
-    required this.cachedAt,
+    this.cachedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
     map['category'] = Variable<String>(category);
     map['points_awarded'] = Variable<int>(pointsAwarded);
     map['max_daily_completions'] = Variable<int>(maxDailyCompletions);
@@ -16460,7 +16490,9 @@ class StreakActivityData extends DataClass
     map['is_active'] = Variable<bool>(isActive);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['cached_at'] = Variable<DateTime>(cachedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
     return map;
   }
 
@@ -16468,6 +16500,9 @@ class StreakActivityData extends DataClass
     return StreakActivityCompanion(
       id: Value(id),
       name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
       category: Value(category),
       pointsAwarded: Value(pointsAwarded),
       maxDailyCompletions: Value(maxDailyCompletions),
@@ -16475,7 +16510,9 @@ class StreakActivityData extends DataClass
       isActive: Value(isActive),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      cachedAt: Value(cachedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
     );
   }
 
@@ -16487,6 +16524,7 @@ class StreakActivityData extends DataClass
     return StreakActivityData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
       category: serializer.fromJson<String>(json['category']),
       pointsAwarded: serializer.fromJson<int>(json['points_awarded']),
       maxDailyCompletions: serializer.fromJson<int>(
@@ -16496,7 +16534,7 @@ class StreakActivityData extends DataClass
       isActive: serializer.fromJson<bool>(json['is_active']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      cachedAt: serializer.fromJson<DateTime>(json['cached_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
     );
   }
   @override
@@ -16505,6 +16543,7 @@ class StreakActivityData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
       'category': serializer.toJson<String>(category),
       'points_awarded': serializer.toJson<int>(pointsAwarded),
       'max_daily_completions': serializer.toJson<int>(maxDailyCompletions),
@@ -16512,13 +16551,14 @@ class StreakActivityData extends DataClass
       'is_active': serializer.toJson<bool>(isActive),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'cached_at': serializer.toJson<DateTime>(cachedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
     };
   }
 
   StreakActivityData copyWith({
     String? id,
     String? name,
+    Value<String?> description = const Value.absent(),
     String? category,
     int? pointsAwarded,
     int? maxDailyCompletions,
@@ -16526,10 +16566,11 @@ class StreakActivityData extends DataClass
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? cachedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
   }) => StreakActivityData(
     id: id ?? this.id,
     name: name ?? this.name,
+    description: description.present ? description.value : this.description,
     category: category ?? this.category,
     pointsAwarded: pointsAwarded ?? this.pointsAwarded,
     maxDailyCompletions: maxDailyCompletions ?? this.maxDailyCompletions,
@@ -16537,12 +16578,15 @@ class StreakActivityData extends DataClass
     isActive: isActive ?? this.isActive,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    cachedAt: cachedAt ?? this.cachedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
   StreakActivityData copyWithCompanion(StreakActivityCompanion data) {
     return StreakActivityData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       category: data.category.present ? data.category.value : this.category,
       pointsAwarded: data.pointsAwarded.present
           ? data.pointsAwarded.value
@@ -16565,6 +16609,7 @@ class StreakActivityData extends DataClass
     return (StringBuffer('StreakActivityData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('category: $category, ')
           ..write('pointsAwarded: $pointsAwarded, ')
           ..write('maxDailyCompletions: $maxDailyCompletions, ')
@@ -16581,6 +16626,7 @@ class StreakActivityData extends DataClass
   int get hashCode => Object.hash(
     id,
     name,
+    description,
     category,
     pointsAwarded,
     maxDailyCompletions,
@@ -16596,6 +16642,7 @@ class StreakActivityData extends DataClass
       (other is StreakActivityData &&
           other.id == this.id &&
           other.name == this.name &&
+          other.description == this.description &&
           other.category == this.category &&
           other.pointsAwarded == this.pointsAwarded &&
           other.maxDailyCompletions == this.maxDailyCompletions &&
@@ -16609,6 +16656,7 @@ class StreakActivityData extends DataClass
 class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String?> description;
   final Value<String> category;
   final Value<int> pointsAwarded;
   final Value<int> maxDailyCompletions;
@@ -16616,11 +16664,12 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
   final Value<bool> isActive;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  final Value<DateTime> cachedAt;
+  final Value<DateTime?> cachedAt;
   final Value<int> rowid;
   const StreakActivityCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.description = const Value.absent(),
     this.category = const Value.absent(),
     this.pointsAwarded = const Value.absent(),
     this.maxDailyCompletions = const Value.absent(),
@@ -16634,6 +16683,7 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
   StreakActivityCompanion.insert({
     required String id,
     required String name,
+    this.description = const Value.absent(),
     required String category,
     this.pointsAwarded = const Value.absent(),
     this.maxDailyCompletions = const Value.absent(),
@@ -16649,6 +16699,7 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
   static Insertable<StreakActivityData> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? description,
     Expression<String>? category,
     Expression<int>? pointsAwarded,
     Expression<int>? maxDailyCompletions,
@@ -16662,6 +16713,7 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (description != null) 'description': description,
       if (category != null) 'category': category,
       if (pointsAwarded != null) 'points_awarded': pointsAwarded,
       if (maxDailyCompletions != null)
@@ -16678,6 +16730,7 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
   StreakActivityCompanion copyWith({
     Value<String>? id,
     Value<String>? name,
+    Value<String?>? description,
     Value<String>? category,
     Value<int>? pointsAwarded,
     Value<int>? maxDailyCompletions,
@@ -16685,12 +16738,13 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
     Value<bool>? isActive,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
-    Value<DateTime>? cachedAt,
+    Value<DateTime?>? cachedAt,
     Value<int>? rowid,
   }) {
     return StreakActivityCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      description: description ?? this.description,
       category: category ?? this.category,
       pointsAwarded: pointsAwarded ?? this.pointsAwarded,
       maxDailyCompletions: maxDailyCompletions ?? this.maxDailyCompletions,
@@ -16711,6 +16765,9 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
     }
     if (category.present) {
       map['category'] = Variable<String>(category.value);
@@ -16747,6 +16804,7 @@ class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
     return (StringBuffer('StreakActivityCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('description: $description, ')
           ..write('category: $category, ')
           ..write('pointsAwarded: $pointsAwarded, ')
           ..write('maxDailyCompletions: $maxDailyCompletions, ')
@@ -25855,6 +25913,7 @@ typedef $$StreakActivityTableCreateCompanionBuilder =
     StreakActivityCompanion Function({
       required String id,
       required String name,
+      Value<String?> description,
       required String category,
       Value<int> pointsAwarded,
       Value<int> maxDailyCompletions,
@@ -25862,13 +25921,14 @@ typedef $$StreakActivityTableCreateCompanionBuilder =
       Value<bool> isActive,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<DateTime> cachedAt,
+      Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
 typedef $$StreakActivityTableUpdateCompanionBuilder =
     StreakActivityCompanion Function({
       Value<String> id,
       Value<String> name,
+      Value<String?> description,
       Value<String> category,
       Value<int> pointsAwarded,
       Value<int> maxDailyCompletions,
@@ -25876,7 +25936,7 @@ typedef $$StreakActivityTableUpdateCompanionBuilder =
       Value<bool> isActive,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
-      Value<DateTime> cachedAt,
+      Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
 
@@ -25933,6 +25993,11 @@ class $$StreakActivityTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26021,6 +26086,11 @@ class $$StreakActivityTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get category => $composableBuilder(
     column: $table.category,
     builder: (column) => ColumnOrderings(column),
@@ -26076,6 +26146,11 @@ class $$StreakActivityTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
@@ -26165,6 +26240,7 @@ class $$StreakActivityTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
                 Value<String> category = const Value.absent(),
                 Value<int> pointsAwarded = const Value.absent(),
                 Value<int> maxDailyCompletions = const Value.absent(),
@@ -26172,11 +26248,12 @@ class $$StreakActivityTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<DateTime> cachedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => StreakActivityCompanion(
                 id: id,
                 name: name,
+                description: description,
                 category: category,
                 pointsAwarded: pointsAwarded,
                 maxDailyCompletions: maxDailyCompletions,
@@ -26191,6 +26268,7 @@ class $$StreakActivityTableTableManager
               ({
                 required String id,
                 required String name,
+                Value<String?> description = const Value.absent(),
                 required String category,
                 Value<int> pointsAwarded = const Value.absent(),
                 Value<int> maxDailyCompletions = const Value.absent(),
@@ -26198,11 +26276,12 @@ class $$StreakActivityTableTableManager
                 Value<bool> isActive = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-                Value<DateTime> cachedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => StreakActivityCompanion.insert(
                 id: id,
                 name: name,
+                description: description,
                 category: category,
                 pointsAwarded: pointsAwarded,
                 maxDailyCompletions: maxDailyCompletions,

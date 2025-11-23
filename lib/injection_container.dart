@@ -853,15 +853,39 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<GetStreakActivities>(
+    () => GetStreakActivities(
+      sl<AchievementRepository>(),
+    ),
+  );
+
+  sl.registerFactory<GetActivityById>(
+    () => GetActivityById(
+      sl<AchievementRepository>(),
+    ),
+  );
+
   sl.registerFactory<AchievementsBloc>(
     () => AchievementsBloc(
       getAchievements: sl<GetAchievements>(),
     ),
   );
 
+  sl.registerFactory<ActivitiesBloc>(
+    () => ActivitiesBloc(
+      getStreakActivities: sl<GetStreakActivities>(),
+    ),
+  );
+
   sl.registerFactory<AchievementDetailBloc>(
     () => AchievementDetailBloc(
       getAchievementById: sl<GetAchievementById>(),
+    ),
+  );
+
+  sl.registerFactory<ActivityDetailBloc>(
+    () => ActivityDetailBloc(
+      getActivityById: sl<GetActivityById>(),
     ),
   );
 }

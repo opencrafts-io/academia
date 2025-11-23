@@ -2,15 +2,21 @@ import 'package:academia/features/streaks/streaks.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class AchievementsHomePage extends StatelessWidget {
   const AchievementsHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AchievementsBloc>()..add(LoadAchievements()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<AchievementsBloc>()..add(LoadAchievements()),
+        ),
+        BlocProvider(
+          create: (context) => sl<ActivitiesBloc>()..add(LoadActivities()),
+        ),
+      ],
       child: const AchievementsView(),
     );
   }
@@ -23,12 +29,14 @@ class AchievementsView extends StatefulWidget {
   State<AchievementsView> createState() => _AchievementsViewState();
 }
 
-class _AchievementsViewState extends State<AchievementsView> {
+class _AchievementsViewState extends State<AchievementsView> with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _scrollController.addListener(_onScroll);
   }
 
@@ -37,71 +45,37 @@ class _AchievementsViewState extends State<AchievementsView> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          context.read<AchievementsBloc>().add(RefreshAchievements());
+          if (_tabController.index == 0) {
+            context.read<AchievementsBloc>().add(RefreshAchievements());
+          } else {
+            context.read<ActivitiesBloc>().add(RefreshActivities());
+          }
         },
-        child: CustomScrollView(
+        child: NestedScrollView(
           controller: _scrollController,
-          slivers: [
-            SliverAppBar.medium(title: const Text("Achievements")),
-            const SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  "Build your reputation. "
-                  "Earn badges to be featured your profile on the leaderboard",
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                title: const Text("Achievements"),
+                pinned: true,
+                floating: true,
+                bottom: TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: "Achievements"),
+                    Tab(text: "Activities"),
+                  ],
                 ),
               ),
-            ),
-            BlocBuilder<AchievementsBloc, AchievementsState>(
-              builder: (context, state) {
-                if (state is AchievementsLoading) {
-                  return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
-                } else if (state is AchievementsError) {
-                  return SliverToBoxAdapter(child: Center(child: Text(state.message)));
-                } else if (state is AchievementsLoaded) {
-                  return SliverPadding(
-                    padding: const EdgeInsets.all(16),
-                    sliver: SliverGrid.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                      ),
-                      itemCount: state.achievements.length,
-                      itemBuilder: (context, index) {
-                        final achievement = state.achievements[index];
-                        return GestureDetector(
-                          onTap: () {
-                            context.push('/achievements/${achievement.id}');
-                          },
-                          child: Card.filled(
-                            color: Theme.of(context).colorScheme.tertiaryContainer,
-                            elevation: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/locked-badge.png",
-                                    height: 120,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    achievement.title,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return const SliverToBoxAdapter(child: SizedBox());
-              },
-            ),
-          ],
+            ];
+          },
+          body: TabBarView(
+            controller: _tabController,
+            children: const [
+              AchievementsTabView(),
+              ActivitiesTabView(),
+            ],
+          ),
         ),
       ),
     );
@@ -112,11 +86,16 @@ class _AchievementsViewState extends State<AchievementsView> {
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<AchievementsBloc>().add(LoadMoreAchievements());
+    if (_isBottom && _tabController.index == 0) {
+      context.read<AchievementsBloc>().add(LoadMoreAchievements());
+    } else if (_isBottom && _tabController.index == 1) {
+      context.read<ActivitiesBloc>().add(LoadMoreActivities());
+    }
   }
 
   bool get _isBottom {
