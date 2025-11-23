@@ -15,3 +15,16 @@ class FetchTicketsByEventId extends UserTicketSelectionEvent {
   @override
   List<Object?> get props => [eventId];
 }
+
+class PurchaseTicket extends UserTicketSelectionEvent {
+  final String ticketId;
+  final int ticketQuantity;
+
+  const PurchaseTicket({
+    required this.ticketId,
+    required this.ticketQuantity,
+  });
+
+  @override
+  List<Object?> get props => [ticketId, ticketQuantity];
+}

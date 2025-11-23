@@ -2,6 +2,7 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class TicketFlowPage extends StatefulWidget {
   final String eventId;
@@ -57,19 +58,45 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           ),
         ),
       ),
-      body: BlocBuilder<UserTicketSelectionBloc, UserTicketSelectionState>(
+      body: BlocConsumer<UserTicketSelectionBloc, UserTicketSelectionState>(
+        listener: (context, state) {
+          if (state is UserTicketPurchased) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Ticket purchased successfully! See you at the event",
+                ),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            );
+            context.pop();
+          } else if (state is UserTicketPurchaseFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Purchase failed: ${state.message}"),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is UserTicketLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserTicketError) {
             return Center(child: Text(state.message));
-          } else if (state is UserTicketLoaded) {
+          } else if (state is UserTicketLoaded ||
+              state is UserTicketPurchaseInProgress) {
             return CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
                   child: currentPage == 0
                       ? UserTicketSelectionPage(
-                          ticketTypes: state.tickets,
+                          ticketTypes: state is UserTicketLoaded
+                              ? state.tickets
+                              : (state as UserTicketPurchaseInProgress)
+                                    .existingTickets,
                           selectedTicket: selectedTicket,
                           quantity: quantity,
                           onTicketSelected: (ticket) =>
@@ -84,7 +111,14 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                           ticket: selectedTicket!,
                           quantity: quantity,
                           onPurchase: () {
-                            // TODO: Implement purchase logic
+                            if (selectedTicket != null) {
+                              context.read<UserTicketSelectionBloc>().add(
+                                PurchaseTicket(
+                                  ticketId: selectedTicket!.id!,
+                                  ticketQuantity: quantity,
+                                ),
+                              );
+                            }
                           },
                           onPrevious: () => previousPage(),
                         ),

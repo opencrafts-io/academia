@@ -39,4 +39,9 @@ abstract class ShereheRepository {
   });
 
   Future<Either<Failure, List<Ticket>>> getTicketByEventId(String eventId);
+
+  Future<Either<Failure, Attendee>> purchaseTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  });
 }

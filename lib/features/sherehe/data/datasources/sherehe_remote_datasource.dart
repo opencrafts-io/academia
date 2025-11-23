@@ -331,4 +331,38 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, AttendeeData>> purchaseTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "https://qasherehe.opencrafts.io/purchase/",
+        data: {"ticket_id": ticketId, "ticket_quantity": ticketQuantity},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(AttendeeData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when purchasing ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when purchasing ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when purchasing ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while purchasing the ticket",
+          error: e,
+        ),
+      );
+    }
+  }
 }
