@@ -51,7 +51,28 @@ class AchievementRepositoryImpl implements AchievementRepository {
 
   @override
   Future<Either<Failure, StreakActivityData>> getActivityById(String id) async {
-    return await localDatasource.getActivityById(id);
+    // First, try to get from local cache
+    final localResult = await localDatasource.getActivityById(id);
+    if (localResult.isRight()) {
+      return localResult;
+    }
+
+    // If not in cache, fetch from remote
+    final remoteResult = await remoteDatasource.getStreakActivities();
+    return remoteResult.fold(
+      (failure) => Left(failure), // Return remote failure
+      (paginatedData) {
+        // Cache the fetched activities
+        localDatasource.cacheActivities(paginatedData.entries);
+        // Try to find the activity in the newly cached data
+        final activity = paginatedData.entries.where((element) => element.id == id).firstOrNull;
+        if (activity != null) {
+          return Right(activity);
+        } else {
+          return Left(CacheFailure(message: "Activity not found even after remote fetch", error: ""));
+        }
+      },
+    );
   }
 
   @override
