@@ -880,6 +880,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<AchievementDetailBloc>(
     () => AchievementDetailBloc(
       getAchievementById: sl<GetAchievementById>(),
+      getActivityById: sl<GetActivityById>(),
     ),
   );
 

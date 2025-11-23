@@ -1,5 +1,5 @@
 import 'package:academia/database/database.dart';
-import 'package:academia/features/streaks/domain/usecases/get_achievement_by_id.dart';
+import 'package:academia/features/streaks/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,8 +8,12 @@ part 'achievement_detail_state.dart';
 
 class AchievementDetailBloc extends Bloc<AchievementDetailEvent, AchievementDetailState> {
   final GetAchievementById getAchievementById;
+  final GetActivityById getActivityById;
 
-  AchievementDetailBloc({required this.getAchievementById}) : super(AchievementDetailInitial()) {
+  AchievementDetailBloc({
+    required this.getAchievementById,
+    required this.getActivityById,
+  }) : super(AchievementDetailInitial()) {
     on<LoadAchievementDetail>(_onLoadAchievementDetail);
   }
 
@@ -19,11 +23,17 @@ class AchievementDetailBloc extends Bloc<AchievementDetailEvent, AchievementDeta
   ) async {
     emit(AchievementDetailLoading());
 
-    final result = await getAchievementById(event.id);
+    final achievementResult = await getAchievementById(event.id);
 
-    result.fold(
-      (failure) => emit(AchievementDetailError(failure.message)),
-      (achievement) => emit(AchievementDetailLoaded(achievement)),
+    await achievementResult.fold(
+      (failure) async => emit(AchievementDetailError(failure.message)),
+      (achievement) async {
+        final activityResult = await getActivityById(achievement.activityID);
+        activityResult.fold(
+          (failure) => emit(AchievementDetailLoaded(achievement)),
+          (activity) => emit(AchievementDetailLoaded(achievement, activity: activity)),
+        );
+      },
     );
   }
 }

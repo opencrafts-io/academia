@@ -2,6 +2,7 @@ import 'package:academia/features/streaks/streaks.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AchievementDetailPage extends StatelessWidget {
   const AchievementDetailPage({super.key, required this.id});
@@ -32,6 +33,7 @@ class AchievementDetailView extends StatelessWidget {
             return Center(child: Text(state.message));
           } else if (state is AchievementDetailLoaded) {
             final achievement = state.achievement;
+            final activity = state.activity;
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -85,6 +87,21 @@ class AchievementDetailView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (activity != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Card(
+                          elevation: 0,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          child: ListTile(
+                            title: Text(activity.name),
+                            subtitle: Text(activity.description ?? ''),
+                            onTap: () {
+                              context.push('/activities/${activity.id}');
+                            },
+                          ),
+                        ),
+                      )
                   ],
                 ),
               ),

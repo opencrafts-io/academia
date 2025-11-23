@@ -4,7 +4,7 @@ abstract class AchievementDetailState extends Equatable {
   const AchievementDetailState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AchievementDetailInitial extends AchievementDetailState {}
@@ -13,11 +13,12 @@ class AchievementDetailLoading extends AchievementDetailState {}
 
 class AchievementDetailLoaded extends AchievementDetailState {
   final StreakMilestoneData achievement;
+  final StreakActivityData? activity;
 
-  const AchievementDetailLoaded(this.achievement);
+  const AchievementDetailLoaded(this.achievement, {this.activity});
 
   @override
-  List<Object> get props => [achievement];
+  List<Object?> get props => [achievement, activity];
 }
 
 class AchievementDetailError extends AchievementDetailState {
