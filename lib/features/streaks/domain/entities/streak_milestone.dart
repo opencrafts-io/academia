@@ -4,7 +4,7 @@ part 'streak_milestone.freezed.dart';
 
 @freezed
 abstract class StreakMilestone with _$StreakMilestone {
-  StreakMilestone._();
+  const StreakMilestone._();
   const factory StreakMilestone({
     required String id,
     required String activityID,
