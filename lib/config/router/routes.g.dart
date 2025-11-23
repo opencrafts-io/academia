@@ -329,6 +329,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
           path: 'ticket-flow',
           factory: _$TicketFlowRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'purchased-tickets',
+          factory: _$PurchasedTicketsRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
@@ -390,6 +394,32 @@ mixin _$TicketFlowRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/ticket-flow',
+    queryParams: {'event-id': _self.eventId},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$PurchasedTicketsRoute on GoRouteData {
+  static PurchasedTicketsRoute _fromState(GoRouterState state) =>
+      PurchasedTicketsRoute(eventId: state.uri.queryParameters['event-id']!);
+
+  PurchasedTicketsRoute get _self => this as PurchasedTicketsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/purchased-tickets',
     queryParams: {'event-id': _self.eventId},
   );
 

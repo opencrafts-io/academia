@@ -207,7 +207,10 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   routes: [
     TypedGoRoute<ShereheDetailsRoute>(
       path: "get-event",
-      routes: [TypedGoRoute<TicketFlowRoute>(path: "ticket-flow")],
+      routes: [
+        TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
+        TypedGoRoute<PurchasedTicketsRoute>(path: "purchased-tickets"),
+      ],
     ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
   ],
@@ -267,6 +270,17 @@ class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TicketFlowPage(eventId: eventId);
+  }
+}
+
+class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
+  final String eventId;
+
+  const PurchasedTicketsRoute({required this.eventId});
+  
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PurchasedTicketsPage(eventId: eventId);
   }
 }
 

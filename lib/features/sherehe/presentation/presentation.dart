@@ -9,6 +9,7 @@ export 'screens/ticket_selection_page.dart';
 export 'screens/user_ticket_selection_page.dart';
 export 'screens/review_ticket_page.dart';
 export 'screens/ticket_flow_page.dart';
+export 'screens/purchased_tickets_page.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/event_about_section.dart';

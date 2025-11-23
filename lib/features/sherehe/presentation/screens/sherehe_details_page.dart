@@ -115,6 +115,13 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          PurchasedTicketsRoute(eventId: widget.eventId).push(context);
+        },
+        icon: const Icon(Icons.confirmation_num),
+        label: const Text("My Tickets"),
+      ),
     );
   }
 }
