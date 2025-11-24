@@ -332,4 +332,50 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>>
+  getUserTicketsForEvent({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://qasherehe.opencrafts.io/attendee/user/$eventId",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting user's ticket for event",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting user's ticket for event", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting user's ticket for event", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when getting user's ticket for event",
+          error: e,
+        ),
+      );
+    }
+  }
 }

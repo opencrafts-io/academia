@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,6 +9,7 @@ class Attendee extends Equatable {
   final String ticketId;
   final int ticketQuantity;
   final ShereheUser? user;
+  final Ticket? ticket;
 
   const Attendee({
     required this.id,
@@ -16,6 +18,7 @@ class Attendee extends Equatable {
     required this.ticketId,
     required this.ticketQuantity,
     this.user,
+    this.ticket,
   });
 
   Attendee copyWith({
@@ -25,6 +28,7 @@ class Attendee extends Equatable {
     String? ticketId,
     int? ticketQuantity,
     ShereheUser? user,
+    Ticket? ticket,
   }) {
     return Attendee(
       id: id ?? this.id,
@@ -33,6 +37,7 @@ class Attendee extends Equatable {
       ticketId: ticketId ?? this.ticketId,
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
       user: user ?? this.user,
+      ticket: ticket ?? this.ticket,
     );
   }
 
@@ -44,6 +49,7 @@ class Attendee extends Equatable {
     ticketId,
     ticketQuantity,
     user,
+    ticket,
   ];
 
   @override

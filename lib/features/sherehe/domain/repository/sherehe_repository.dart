@@ -39,4 +39,10 @@ abstract class ShereheRepository {
     required String ticketId,
     required int ticketQuantity,
   });
+
+  Future<Either<Failure, PaginatedResult<Attendee>>> getUserTicketsForEvent({
+    required String eventId,
+    required int page,
+    required int limit,
+  });
 }

@@ -1,5 +1,6 @@
 import 'package:academia/database/database.dart';
 import 'package:academia/features/sherehe/data/models/sherehe_user_model_helper.dart';
+import 'package:academia/features/sherehe/data/models/ticket_model_helper.dart';
 import 'package:academia/features/sherehe/domain/entities/attendee.dart';
 
 extension AttendeeModelHelper on AttendeeData {
@@ -10,6 +11,7 @@ extension AttendeeModelHelper on AttendeeData {
     ticketId: ticketId,
     ticketQuantity: ticketQuantity,
     user: user != null ? ShereheUserData.fromJson(user!).toEntity() : null,
+    ticket: ticket != null ? TicketData.fromJson(ticket!).toEntity() : null,
   );
 }
 
@@ -21,5 +23,6 @@ extension AttendeeEntityHelper on Attendee {
     ticketId: ticketId,
     ticketQuantity: ticketQuantity,
     user: user?.toModel().toJson(),
+    ticket: ticket?.toModel().toJson(),
   );
 }

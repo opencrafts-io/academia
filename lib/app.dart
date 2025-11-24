@@ -74,6 +74,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
         BlocProvider(create: (context) => sl<UserTicketSelectionBloc>()),
+        BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
         BlocProvider(create: (context) => sl<FeedBloc>()),
         BlocProvider(create: (context) => sl<CommentBloc>()),
         BlocProvider(

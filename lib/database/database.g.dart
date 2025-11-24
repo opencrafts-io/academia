@@ -4973,6 +4973,15 @@ class $AttendeeTableTable extends AttendeeTable
     requiredDuringInsert: false,
   ).withConverter<Map<String, dynamic>?>($AttendeeTableTable.$converterusern);
   @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  ticket = GeneratedColumn<String>(
+    'ticket',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Map<String, dynamic>?>($AttendeeTableTable.$converterticketn);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
@@ -4980,6 +4989,7 @@ class $AttendeeTableTable extends AttendeeTable
     ticketId,
     ticketQuantity,
     user,
+    ticket,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5068,6 +5078,12 @@ class $AttendeeTableTable extends AttendeeTable
           data['${effectivePrefix}user'],
         ),
       ),
+      ticket: $AttendeeTableTable.$converterticketn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}ticket'],
+        ),
+      ),
     );
   }
 
@@ -5080,6 +5096,10 @@ class $AttendeeTableTable extends AttendeeTable
       JsonConverter();
   static TypeConverter<Map<String, dynamic>?, String?> $converterusern =
       NullAwareTypeConverter.wrap($converteruser);
+  static TypeConverter<Map<String, dynamic>, String> $converterticket =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterticketn =
+      NullAwareTypeConverter.wrap($converterticket);
 }
 
 class AttendeeData extends DataClass implements Insertable<AttendeeData> {
@@ -5089,6 +5109,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final String ticketId;
   final int ticketQuantity;
   final Map<String, dynamic>? user;
+  final Map<String, dynamic>? ticket;
   const AttendeeData({
     required this.id,
     required this.userId,
@@ -5096,6 +5117,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     required this.ticketId,
     required this.ticketQuantity,
     this.user,
+    this.ticket,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5110,6 +5132,11 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
         $AttendeeTableTable.$converterusern.toSql(user),
       );
     }
+    if (!nullToAbsent || ticket != null) {
+      map['ticket'] = Variable<String>(
+        $AttendeeTableTable.$converterticketn.toSql(ticket),
+      );
+    }
     return map;
   }
 
@@ -5121,6 +5148,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       ticketId: Value(ticketId),
       ticketQuantity: Value(ticketQuantity),
       user: user == null && nullToAbsent ? const Value.absent() : Value(user),
+      ticket: ticket == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ticket),
     );
   }
 
@@ -5136,6 +5166,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       ticketId: serializer.fromJson<String>(json['ticket_id']),
       ticketQuantity: serializer.fromJson<int>(json['ticket_quantity']),
       user: serializer.fromJson<Map<String, dynamic>?>(json['user']),
+      ticket: serializer.fromJson<Map<String, dynamic>?>(json['ticket']),
     );
   }
   @override
@@ -5148,6 +5179,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'ticket_id': serializer.toJson<String>(ticketId),
       'ticket_quantity': serializer.toJson<int>(ticketQuantity),
       'user': serializer.toJson<Map<String, dynamic>?>(user),
+      'ticket': serializer.toJson<Map<String, dynamic>?>(ticket),
     };
   }
 
@@ -5158,6 +5190,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     String? ticketId,
     int? ticketQuantity,
     Value<Map<String, dynamic>?> user = const Value.absent(),
+    Value<Map<String, dynamic>?> ticket = const Value.absent(),
   }) => AttendeeData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -5165,6 +5198,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     ticketId: ticketId ?? this.ticketId,
     ticketQuantity: ticketQuantity ?? this.ticketQuantity,
     user: user.present ? user.value : this.user,
+    ticket: ticket.present ? ticket.value : this.ticket,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
@@ -5176,6 +5210,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ? data.ticketQuantity.value
           : this.ticketQuantity,
       user: data.user.present ? data.user.value : this.user,
+      ticket: data.ticket.present ? data.ticket.value : this.ticket,
     );
   }
 
@@ -5187,14 +5222,15 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('eventId: $eventId, ')
           ..write('ticketId: $ticketId, ')
           ..write('ticketQuantity: $ticketQuantity, ')
-          ..write('user: $user')
+          ..write('user: $user, ')
+          ..write('ticket: $ticket')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, userId, eventId, ticketId, ticketQuantity, user);
+      Object.hash(id, userId, eventId, ticketId, ticketQuantity, user, ticket);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5204,7 +5240,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.eventId == this.eventId &&
           other.ticketId == this.ticketId &&
           other.ticketQuantity == this.ticketQuantity &&
-          other.user == this.user);
+          other.user == this.user &&
+          other.ticket == this.ticket);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
@@ -5214,6 +5251,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<String> ticketId;
   final Value<int> ticketQuantity;
   final Value<Map<String, dynamic>?> user;
+  final Value<Map<String, dynamic>?> ticket;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
@@ -5222,6 +5260,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.ticketId = const Value.absent(),
     this.ticketQuantity = const Value.absent(),
     this.user = const Value.absent(),
+    this.ticket = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
@@ -5231,6 +5270,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     required String ticketId,
     required int ticketQuantity,
     this.user = const Value.absent(),
+    this.ticket = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -5244,6 +5284,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Expression<String>? ticketId,
     Expression<int>? ticketQuantity,
     Expression<String>? user,
+    Expression<String>? ticket,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5253,6 +5294,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       if (ticketId != null) 'ticket_id': ticketId,
       if (ticketQuantity != null) 'ticket_quantity': ticketQuantity,
       if (user != null) 'user': user,
+      if (ticket != null) 'ticket': ticket,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5264,6 +5306,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Value<String>? ticketId,
     Value<int>? ticketQuantity,
     Value<Map<String, dynamic>?>? user,
+    Value<Map<String, dynamic>?>? ticket,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
@@ -5273,6 +5316,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       ticketId: ticketId ?? this.ticketId,
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
       user: user ?? this.user,
+      ticket: ticket ?? this.ticket,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5300,6 +5344,11 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
         $AttendeeTableTable.$converterusern.toSql(user.value),
       );
     }
+    if (ticket.present) {
+      map['ticket'] = Variable<String>(
+        $AttendeeTableTable.$converterticketn.toSql(ticket.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5315,6 +5364,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
           ..write('ticketId: $ticketId, ')
           ..write('ticketQuantity: $ticketQuantity, ')
           ..write('user: $user, ')
+          ..write('ticket: $ticket, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18307,6 +18357,7 @@ typedef $$AttendeeTableTableCreateCompanionBuilder =
       required String ticketId,
       required int ticketQuantity,
       Value<Map<String, dynamic>?> user,
+      Value<Map<String, dynamic>?> ticket,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
@@ -18317,6 +18368,7 @@ typedef $$AttendeeTableTableUpdateCompanionBuilder =
       Value<String> ticketId,
       Value<int> ticketQuantity,
       Value<Map<String, dynamic>?> user,
+      Value<Map<String, dynamic>?> ticket,
       Value<int> rowid,
     });
 
@@ -18363,6 +18415,16 @@ class $$AttendeeTableTableFilterComposer
     column: $table.user,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get ticket => $composableBuilder(
+    column: $table.ticket,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
 }
 
 class $$AttendeeTableTableOrderingComposer
@@ -18403,6 +18465,11 @@ class $$AttendeeTableTableOrderingComposer
     column: $table.user,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get ticket => $composableBuilder(
+    column: $table.ticket,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AttendeeTableTableAnnotationComposer
@@ -18433,6 +18500,9 @@ class $$AttendeeTableTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get user =>
       $composableBuilder(column: $table.user, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get ticket =>
+      $composableBuilder(column: $table.ticket, builder: (column) => column);
 }
 
 class $$AttendeeTableTableTableManager
@@ -18472,6 +18542,7 @@ class $$AttendeeTableTableTableManager
                 Value<String> ticketId = const Value.absent(),
                 Value<int> ticketQuantity = const Value.absent(),
                 Value<Map<String, dynamic>?> user = const Value.absent(),
+                Value<Map<String, dynamic>?> ticket = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
@@ -18480,6 +18551,7 @@ class $$AttendeeTableTableTableManager
                 ticketId: ticketId,
                 ticketQuantity: ticketQuantity,
                 user: user,
+                ticket: ticket,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -18490,6 +18562,7 @@ class $$AttendeeTableTableTableManager
                 required String ticketId,
                 required int ticketQuantity,
                 Value<Map<String, dynamic>?> user = const Value.absent(),
+                Value<Map<String, dynamic>?> ticket = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
@@ -18498,6 +18571,7 @@ class $$AttendeeTableTableTableManager
                 ticketId: ticketId,
                 ticketQuantity: ticketQuantity,
                 user: user,
+                ticket: ticket,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

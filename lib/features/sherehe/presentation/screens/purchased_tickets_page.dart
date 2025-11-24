@@ -1,75 +1,221 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:academia/features/sherehe/domain/entities/ticket.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PurchasedTicketsPage extends StatelessWidget {
+class PurchasedTicketsPage extends StatefulWidget {
   final String eventId;
 
   const PurchasedTicketsPage({super.key, required this.eventId});
 
   @override
+  State<PurchasedTicketsPage> createState() => _PurchasedTicketsPageState();
+}
+
+class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
+  int _currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Trigger loading on first build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UserEventTicketsBloc>().add(
+        FetchUserEventTickets(
+          eventId: widget.eventId,
+          page: _currentPage,
+          limit: 10,
+        ),
+      );
+    });
+  }
+
+  void _loadMore() {
+    _currentPage++;
+    context.read<UserEventTicketsBloc>().add(
+      FetchUserEventTickets(
+        eventId: widget.eventId,
+        page: _currentPage,
+        limit: 10,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> purchasedTickets = [
-      {
-        "ticket": Ticket(
-          ticketName: "VIP Ticket",
-          ticketPrice: 3500,
-          ticketQuantity: 1,
-        ),
-        "quantity": 2,
-      },
-      {
-        "ticket": Ticket(
-          ticketName: "Regular Ticket",
-          ticketPrice: 1500,
-          ticketQuantity: 1,
-        ),
-        "quantity": 1,
-      },
-      {
-        "ticket": Ticket(
-          ticketName: "Free Ticket",
-          ticketPrice: 0,
-          ticketQuantity: 1,
-        ),
-        "quantity": 3,
-      },
-    ];
-
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            floating: true,
-            title: const Text("My Tickets"),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "Here are the tickets you've purchased for this event.",
-                style: Theme.of(context).textTheme.bodyLarge,
+      body: BlocBuilder<UserEventTicketsBloc, UserEventTicketsState>(
+        builder: (context, state) {
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                floating: true,
+                title: const Text("My Tickets"),
               ),
-            ),
-          ),
 
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverList.separated(
-              itemCount: purchasedTickets.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 20),
-              itemBuilder: (context, index) {
-                final item = purchasedTickets[index];
-                final ticket = item["ticket"] as Ticket;
-                final quantity = item["quantity"] as int;
+              // Header text
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Here are the tickets you've purchased for this event.",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ),
+              if (state is UserEventTicketLoading) ...[
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: SpinningScallopIndicator()),
+                ),
+              ] else if (state is UserEventTicketError) ...[
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(state.message),
+                        const SizedBox(height: 12),
+                        FilledButton(
+                          onPressed: () {
+                            _currentPage = 1;
+                            context.read<UserEventTicketsBloc>().add(
+                              FetchUserEventTickets(
+                                eventId: widget.eventId,
+                                page: _currentPage,
+                                limit: 10,
+                              ),
+                            );
+                          },
+                          child: const Text("Retry"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ] else if (state is UserEventTicketLoaded) ...[
+                if (state.attendee.isEmpty)
+                  // EMPTY LIST UI
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.confirmation_number_outlined, size: 60),
+                          SizedBox(height: 16),
+                          Text(
+                            "You haven't purchased any tickets for this event yet.",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  // MAIN LIST
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16.0),
+                    sliver: SliverList.separated(
+                      itemCount: state.attendee.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 20),
+                      itemBuilder: (context, index) {
+                        final item = state.attendee[index];
 
-                return TicketStubCard(ticket: ticket, quantity: quantity);
-              },
-            ),
-          ),
-        ],
+                        return TicketStubCard(
+                          ticket: item.ticket!,
+                          quantity: item.ticketQuantity,
+                        );
+                      },
+                    ),
+                  ),
+
+                if (state.hasMore)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Center(
+                        child: FilledButton(
+                          onPressed: _loadMore,
+                          child: const Text("Load More"),
+                        ),
+                      ),
+                    ),
+                  ),
+              ] else if (state is UserEventTicketPaginationLoading) ...[
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList.separated(
+                    itemCount: state.existingAttendee.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 20),
+                    itemBuilder: (context, index) {
+                      final item = state.existingAttendee[index];
+
+                      return TicketStubCard(
+                        ticket: item.ticket!,
+                        quantity: item.ticketQuantity,
+                      );
+                    },
+                  ),
+                ),
+                // Show loading spinner for pagination
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Center(child: SpinningScallopIndicator()),
+                  ),
+                ),
+              ] else if (state is UserEventTicketPaginationError) ...[
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList.separated(
+                    itemCount: state.existingAttendee.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 20),
+                    itemBuilder: (context, index) {
+                      final item = state.existingAttendee[index];
+
+                      return TicketStubCard(
+                        ticket: item.ticket!,
+                        quantity: item.ticketQuantity,
+                      );
+                    },
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          state.message,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        FilledButton(
+                          onPressed: _loadMore,
+                          child: const Text("Try Again"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ] else ...[
+                const SliverFillRemaining(child: SizedBox.shrink()),
+              ],
+            ],
+          );
+        },
       ),
     );
   }
