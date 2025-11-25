@@ -72,8 +72,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: DefaultTabController(
-        initialIndex: 1,
-        length: 3,
+        initialIndex: 0,
+        length: 2,
         child: RefreshIndicator.adaptive(
           onRefresh: () async {},
           child: CustomScrollView(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   tabs: [
                     Tab(child: Text("Leaderboard")),
                     Tab(child: Text("For you")),
-                    Tab(child: Text("Sherehe")),
+                    // Tab(child: Text("Sherehe")),
                   ],
                 ),
               ),
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         LeaderboardHomepage(),
                         FeedPage(),
-                        ShereheHome(),
+                        // ShereheHome(),
                       ],
                     ),
                   ),
