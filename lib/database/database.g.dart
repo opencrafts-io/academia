@@ -16145,6 +16145,1215 @@ class LeaderboardRankCompanion extends UpdateCompanion<LeaderboardRankData> {
   }
 }
 
+class $StreakActivityTable extends StreakActivity
+    with TableInfo<$StreakActivityTable, StreakActivityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StreakActivityTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pointsAwardedMeta = const VerificationMeta(
+    'pointsAwarded',
+  );
+  @override
+  late final GeneratedColumn<int> pointsAwarded = GeneratedColumn<int>(
+    'points_awarded',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _maxDailyCompletionsMeta =
+      const VerificationMeta('maxDailyCompletions');
+  @override
+  late final GeneratedColumn<int> maxDailyCompletions = GeneratedColumn<int>(
+    'max_daily_completions',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _streakEligibleMeta = const VerificationMeta(
+    'streakEligible',
+  );
+  @override
+  late final GeneratedColumn<bool> streakEligible = GeneratedColumn<bool>(
+    'streak_eligible',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("streak_eligible" IN (0, 1))',
+    ),
+    defaultValue: Constant(true),
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: Constant(true),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    description,
+    category,
+    pointsAwarded,
+    maxDailyCompletions,
+    streakEligible,
+    isActive,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'streak_activity';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StreakActivityData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryMeta);
+    }
+    if (data.containsKey('points_awarded')) {
+      context.handle(
+        _pointsAwardedMeta,
+        pointsAwarded.isAcceptableOrUnknown(
+          data['points_awarded']!,
+          _pointsAwardedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('max_daily_completions')) {
+      context.handle(
+        _maxDailyCompletionsMeta,
+        maxDailyCompletions.isAcceptableOrUnknown(
+          data['max_daily_completions']!,
+          _maxDailyCompletionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('streak_eligible')) {
+      context.handle(
+        _streakEligibleMeta,
+        streakEligible.isAcceptableOrUnknown(
+          data['streak_eligible']!,
+          _streakEligibleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StreakActivityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StreakActivityData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      pointsAwarded: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}points_awarded'],
+      )!,
+      maxDailyCompletions: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}max_daily_completions'],
+      )!,
+      streakEligible: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}streak_eligible'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
+    );
+  }
+
+  @override
+  $StreakActivityTable createAlias(String alias) {
+    return $StreakActivityTable(attachedDatabase, alias);
+  }
+}
+
+class StreakActivityData extends DataClass
+    implements Insertable<StreakActivityData> {
+  final String id;
+  final String name;
+  final String? description;
+  final String category;
+  final int pointsAwarded;
+  final int maxDailyCompletions;
+  final bool streakEligible;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? cachedAt;
+  const StreakActivityData({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.category,
+    required this.pointsAwarded,
+    required this.maxDailyCompletions,
+    required this.streakEligible,
+    required this.isActive,
+    required this.createdAt,
+    required this.updatedAt,
+    this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['category'] = Variable<String>(category);
+    map['points_awarded'] = Variable<int>(pointsAwarded);
+    map['max_daily_completions'] = Variable<int>(maxDailyCompletions);
+    map['streak_eligible'] = Variable<bool>(streakEligible);
+    map['is_active'] = Variable<bool>(isActive);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
+    return map;
+  }
+
+  StreakActivityCompanion toCompanion(bool nullToAbsent) {
+    return StreakActivityCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      category: Value(category),
+      pointsAwarded: Value(pointsAwarded),
+      maxDailyCompletions: Value(maxDailyCompletions),
+      streakEligible: Value(streakEligible),
+      isActive: Value(isActive),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
+    );
+  }
+
+  factory StreakActivityData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StreakActivityData(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      category: serializer.fromJson<String>(json['category']),
+      pointsAwarded: serializer.fromJson<int>(json['points_awarded']),
+      maxDailyCompletions: serializer.fromJson<int>(
+        json['max_daily_completions'],
+      ),
+      streakEligible: serializer.fromJson<bool>(json['streak_eligible']),
+      isActive: serializer.fromJson<bool>(json['is_active']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'category': serializer.toJson<String>(category),
+      'points_awarded': serializer.toJson<int>(pointsAwarded),
+      'max_daily_completions': serializer.toJson<int>(maxDailyCompletions),
+      'streak_eligible': serializer.toJson<bool>(streakEligible),
+      'is_active': serializer.toJson<bool>(isActive),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
+    };
+  }
+
+  StreakActivityData copyWith({
+    String? id,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    String? category,
+    int? pointsAwarded,
+    int? maxDailyCompletions,
+    bool? streakEligible,
+    bool? isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
+  }) => StreakActivityData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    category: category ?? this.category,
+    pointsAwarded: pointsAwarded ?? this.pointsAwarded,
+    maxDailyCompletions: maxDailyCompletions ?? this.maxDailyCompletions,
+    streakEligible: streakEligible ?? this.streakEligible,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
+  );
+  StreakActivityData copyWithCompanion(StreakActivityCompanion data) {
+    return StreakActivityData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      category: data.category.present ? data.category.value : this.category,
+      pointsAwarded: data.pointsAwarded.present
+          ? data.pointsAwarded.value
+          : this.pointsAwarded,
+      maxDailyCompletions: data.maxDailyCompletions.present
+          ? data.maxDailyCompletions.value
+          : this.maxDailyCompletions,
+      streakEligible: data.streakEligible.present
+          ? data.streakEligible.value
+          : this.streakEligible,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StreakActivityData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('category: $category, ')
+          ..write('pointsAwarded: $pointsAwarded, ')
+          ..write('maxDailyCompletions: $maxDailyCompletions, ')
+          ..write('streakEligible: $streakEligible, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    description,
+    category,
+    pointsAwarded,
+    maxDailyCompletions,
+    streakEligible,
+    isActive,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StreakActivityData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.category == this.category &&
+          other.pointsAwarded == this.pointsAwarded &&
+          other.maxDailyCompletions == this.maxDailyCompletions &&
+          other.streakEligible == this.streakEligible &&
+          other.isActive == this.isActive &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
+}
+
+class StreakActivityCompanion extends UpdateCompanion<StreakActivityData> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String> category;
+  final Value<int> pointsAwarded;
+  final Value<int> maxDailyCompletions;
+  final Value<bool> streakEligible;
+  final Value<bool> isActive;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> cachedAt;
+  final Value<int> rowid;
+  const StreakActivityCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.category = const Value.absent(),
+    this.pointsAwarded = const Value.absent(),
+    this.maxDailyCompletions = const Value.absent(),
+    this.streakEligible = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StreakActivityCompanion.insert({
+    required String id,
+    required String name,
+    this.description = const Value.absent(),
+    required String category,
+    this.pointsAwarded = const Value.absent(),
+    this.maxDailyCompletions = const Value.absent(),
+    this.streakEligible = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       category = Value(category);
+  static Insertable<StreakActivityData> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? category,
+    Expression<int>? pointsAwarded,
+    Expression<int>? maxDailyCompletions,
+    Expression<bool>? streakEligible,
+    Expression<bool>? isActive,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (category != null) 'category': category,
+      if (pointsAwarded != null) 'points_awarded': pointsAwarded,
+      if (maxDailyCompletions != null)
+        'max_daily_completions': maxDailyCompletions,
+      if (streakEligible != null) 'streak_eligible': streakEligible,
+      if (isActive != null) 'is_active': isActive,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StreakActivityCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String>? category,
+    Value<int>? pointsAwarded,
+    Value<int>? maxDailyCompletions,
+    Value<bool>? streakEligible,
+    Value<bool>? isActive,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return StreakActivityCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      pointsAwarded: pointsAwarded ?? this.pointsAwarded,
+      maxDailyCompletions: maxDailyCompletions ?? this.maxDailyCompletions,
+      streakEligible: streakEligible ?? this.streakEligible,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (pointsAwarded.present) {
+      map['points_awarded'] = Variable<int>(pointsAwarded.value);
+    }
+    if (maxDailyCompletions.present) {
+      map['max_daily_completions'] = Variable<int>(maxDailyCompletions.value);
+    }
+    if (streakEligible.present) {
+      map['streak_eligible'] = Variable<bool>(streakEligible.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StreakActivityCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('category: $category, ')
+          ..write('pointsAwarded: $pointsAwarded, ')
+          ..write('maxDailyCompletions: $maxDailyCompletions, ')
+          ..write('streakEligible: $streakEligible, ')
+          ..write('isActive: $isActive, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StreakMilestoneTable extends StreakMilestone
+    with TableInfo<$StreakMilestoneTable, StreakMilestoneData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StreakMilestoneTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _activityIDMeta = const VerificationMeta(
+    'activityID',
+  );
+  @override
+  late final GeneratedColumn<String> activityID = GeneratedColumn<String>(
+    'activity_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES streak_activity (id)',
+    ),
+  );
+  static const VerificationMeta _daysRequiredMeta = const VerificationMeta(
+    'daysRequired',
+  );
+  @override
+  late final GeneratedColumn<int> daysRequired = GeneratedColumn<int>(
+    'days_required',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _bonusPointsMeta = const VerificationMeta(
+    'bonusPoints',
+  );
+  @override
+  late final GeneratedColumn<int> bonusPoints = GeneratedColumn<int>(
+    'bonus_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    activityID,
+    daysRequired,
+    bonusPoints,
+    title,
+    description,
+    isActive,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'streak_milestone';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StreakMilestoneData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('activity_i_d')) {
+      context.handle(
+        _activityIDMeta,
+        activityID.isAcceptableOrUnknown(
+          data['activity_i_d']!,
+          _activityIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_activityIDMeta);
+    }
+    if (data.containsKey('days_required')) {
+      context.handle(
+        _daysRequiredMeta,
+        daysRequired.isAcceptableOrUnknown(
+          data['days_required']!,
+          _daysRequiredMeta,
+        ),
+      );
+    }
+    if (data.containsKey('bonus_points')) {
+      context.handle(
+        _bonusPointsMeta,
+        bonusPoints.isAcceptableOrUnknown(
+          data['bonus_points']!,
+          _bonusPointsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isActiveMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StreakMilestoneData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StreakMilestoneData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      activityID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_i_d'],
+      )!,
+      daysRequired: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}days_required'],
+      )!,
+      bonusPoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bonus_points'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
+    );
+  }
+
+  @override
+  $StreakMilestoneTable createAlias(String alias) {
+    return $StreakMilestoneTable(attachedDatabase, alias);
+  }
+}
+
+class StreakMilestoneData extends DataClass
+    implements Insertable<StreakMilestoneData> {
+  final String id;
+  final String activityID;
+  final int daysRequired;
+  final int bonusPoints;
+  final String title;
+  final String description;
+  final bool isActive;
+  final DateTime? cachedAt;
+  const StreakMilestoneData({
+    required this.id,
+    required this.activityID,
+    required this.daysRequired,
+    required this.bonusPoints,
+    required this.title,
+    required this.description,
+    required this.isActive,
+    this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['activity_i_d'] = Variable<String>(activityID);
+    map['days_required'] = Variable<int>(daysRequired);
+    map['bonus_points'] = Variable<int>(bonusPoints);
+    map['title'] = Variable<String>(title);
+    map['description'] = Variable<String>(description);
+    map['is_active'] = Variable<bool>(isActive);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
+    return map;
+  }
+
+  StreakMilestoneCompanion toCompanion(bool nullToAbsent) {
+    return StreakMilestoneCompanion(
+      id: Value(id),
+      activityID: Value(activityID),
+      daysRequired: Value(daysRequired),
+      bonusPoints: Value(bonusPoints),
+      title: Value(title),
+      description: Value(description),
+      isActive: Value(isActive),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
+    );
+  }
+
+  factory StreakMilestoneData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StreakMilestoneData(
+      id: serializer.fromJson<String>(json['id']),
+      activityID: serializer.fromJson<String>(json['activity_id']),
+      daysRequired: serializer.fromJson<int>(json['days_required']),
+      bonusPoints: serializer.fromJson<int>(json['bonus_points']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      isActive: serializer.fromJson<bool>(json['is_active']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'activity_id': serializer.toJson<String>(activityID),
+      'days_required': serializer.toJson<int>(daysRequired),
+      'bonus_points': serializer.toJson<int>(bonusPoints),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'is_active': serializer.toJson<bool>(isActive),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
+    };
+  }
+
+  StreakMilestoneData copyWith({
+    String? id,
+    String? activityID,
+    int? daysRequired,
+    int? bonusPoints,
+    String? title,
+    String? description,
+    bool? isActive,
+    Value<DateTime?> cachedAt = const Value.absent(),
+  }) => StreakMilestoneData(
+    id: id ?? this.id,
+    activityID: activityID ?? this.activityID,
+    daysRequired: daysRequired ?? this.daysRequired,
+    bonusPoints: bonusPoints ?? this.bonusPoints,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    isActive: isActive ?? this.isActive,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
+  );
+  StreakMilestoneData copyWithCompanion(StreakMilestoneCompanion data) {
+    return StreakMilestoneData(
+      id: data.id.present ? data.id.value : this.id,
+      activityID: data.activityID.present
+          ? data.activityID.value
+          : this.activityID,
+      daysRequired: data.daysRequired.present
+          ? data.daysRequired.value
+          : this.daysRequired,
+      bonusPoints: data.bonusPoints.present
+          ? data.bonusPoints.value
+          : this.bonusPoints,
+      title: data.title.present ? data.title.value : this.title,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StreakMilestoneData(')
+          ..write('id: $id, ')
+          ..write('activityID: $activityID, ')
+          ..write('daysRequired: $daysRequired, ')
+          ..write('bonusPoints: $bonusPoints, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('isActive: $isActive, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    activityID,
+    daysRequired,
+    bonusPoints,
+    title,
+    description,
+    isActive,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StreakMilestoneData &&
+          other.id == this.id &&
+          other.activityID == this.activityID &&
+          other.daysRequired == this.daysRequired &&
+          other.bonusPoints == this.bonusPoints &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.isActive == this.isActive &&
+          other.cachedAt == this.cachedAt);
+}
+
+class StreakMilestoneCompanion extends UpdateCompanion<StreakMilestoneData> {
+  final Value<String> id;
+  final Value<String> activityID;
+  final Value<int> daysRequired;
+  final Value<int> bonusPoints;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<bool> isActive;
+  final Value<DateTime?> cachedAt;
+  final Value<int> rowid;
+  const StreakMilestoneCompanion({
+    this.id = const Value.absent(),
+    this.activityID = const Value.absent(),
+    this.daysRequired = const Value.absent(),
+    this.bonusPoints = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StreakMilestoneCompanion.insert({
+    required String id,
+    required String activityID,
+    this.daysRequired = const Value.absent(),
+    this.bonusPoints = const Value.absent(),
+    required String title,
+    required String description,
+    required bool isActive,
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       activityID = Value(activityID),
+       title = Value(title),
+       description = Value(description),
+       isActive = Value(isActive);
+  static Insertable<StreakMilestoneData> custom({
+    Expression<String>? id,
+    Expression<String>? activityID,
+    Expression<int>? daysRequired,
+    Expression<int>? bonusPoints,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<bool>? isActive,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (activityID != null) 'activity_i_d': activityID,
+      if (daysRequired != null) 'days_required': daysRequired,
+      if (bonusPoints != null) 'bonus_points': bonusPoints,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (isActive != null) 'is_active': isActive,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StreakMilestoneCompanion copyWith({
+    Value<String>? id,
+    Value<String>? activityID,
+    Value<int>? daysRequired,
+    Value<int>? bonusPoints,
+    Value<String>? title,
+    Value<String>? description,
+    Value<bool>? isActive,
+    Value<DateTime?>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return StreakMilestoneCompanion(
+      id: id ?? this.id,
+      activityID: activityID ?? this.activityID,
+      daysRequired: daysRequired ?? this.daysRequired,
+      bonusPoints: bonusPoints ?? this.bonusPoints,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isActive: isActive ?? this.isActive,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (activityID.present) {
+      map['activity_i_d'] = Variable<String>(activityID.value);
+    }
+    if (daysRequired.present) {
+      map['days_required'] = Variable<int>(daysRequired.value);
+    }
+    if (bonusPoints.present) {
+      map['bonus_points'] = Variable<int>(bonusPoints.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StreakMilestoneCompanion(')
+          ..write('id: $id, ')
+          ..write('activityID: $activityID, ')
+          ..write('daysRequired: $daysRequired, ')
+          ..write('bonusPoints: $bonusPoints, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('isActive: $isActive, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -16180,6 +17389,10 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
     this,
   );
+  late final $StreakActivityTable streakActivity = $StreakActivityTable(this);
+  late final $StreakMilestoneTable streakMilestone = $StreakMilestoneTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -16206,6 +17419,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     community,
     chirpCommunityMembership,
     leaderboardRank,
+    streakActivity,
+    streakMilestone,
   ];
 }
 
@@ -24694,6 +25909,845 @@ typedef $$LeaderboardRankTableProcessedTableManager =
       LeaderboardRankData,
       PrefetchHooks Function()
     >;
+typedef $$StreakActivityTableCreateCompanionBuilder =
+    StreakActivityCompanion Function({
+      required String id,
+      required String name,
+      Value<String?> description,
+      required String category,
+      Value<int> pointsAwarded,
+      Value<int> maxDailyCompletions,
+      Value<bool> streakEligible,
+      Value<bool> isActive,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+typedef $$StreakActivityTableUpdateCompanionBuilder =
+    StreakActivityCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<String> category,
+      Value<int> pointsAwarded,
+      Value<int> maxDailyCompletions,
+      Value<bool> streakEligible,
+      Value<bool> isActive,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+
+final class $$StreakActivityTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $StreakActivityTable,
+          StreakActivityData
+        > {
+  $$StreakActivityTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$StreakMilestoneTable, List<StreakMilestoneData>>
+  _streakMilestoneRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.streakMilestone,
+    aliasName: $_aliasNameGenerator(
+      db.streakActivity.id,
+      db.streakMilestone.activityID,
+    ),
+  );
+
+  $$StreakMilestoneTableProcessedTableManager get streakMilestoneRefs {
+    final manager = $$StreakMilestoneTableTableManager(
+      $_db,
+      $_db.streakMilestone,
+    ).filter((f) => f.activityID.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _streakMilestoneRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$StreakActivityTableFilterComposer
+    extends Composer<_$AppDataBase, $StreakActivityTable> {
+  $$StreakActivityTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pointsAwarded => $composableBuilder(
+    column: $table.pointsAwarded,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get maxDailyCompletions => $composableBuilder(
+    column: $table.maxDailyCompletions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get streakEligible => $composableBuilder(
+    column: $table.streakEligible,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> streakMilestoneRefs(
+    Expression<bool> Function($$StreakMilestoneTableFilterComposer f) f,
+  ) {
+    final $$StreakMilestoneTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.streakMilestone,
+      getReferencedColumn: (t) => t.activityID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$StreakMilestoneTableFilterComposer(
+            $db: $db,
+            $table: $db.streakMilestone,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$StreakActivityTableOrderingComposer
+    extends Composer<_$AppDataBase, $StreakActivityTable> {
+  $$StreakActivityTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pointsAwarded => $composableBuilder(
+    column: $table.pointsAwarded,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get maxDailyCompletions => $composableBuilder(
+    column: $table.maxDailyCompletions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get streakEligible => $composableBuilder(
+    column: $table.streakEligible,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StreakActivityTableAnnotationComposer
+    extends Composer<_$AppDataBase, $StreakActivityTable> {
+  $$StreakActivityTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<int> get pointsAwarded => $composableBuilder(
+    column: $table.pointsAwarded,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get maxDailyCompletions => $composableBuilder(
+    column: $table.maxDailyCompletions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get streakEligible => $composableBuilder(
+    column: $table.streakEligible,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+
+  Expression<T> streakMilestoneRefs<T extends Object>(
+    Expression<T> Function($$StreakMilestoneTableAnnotationComposer a) f,
+  ) {
+    final $$StreakMilestoneTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.streakMilestone,
+      getReferencedColumn: (t) => t.activityID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$StreakMilestoneTableAnnotationComposer(
+            $db: $db,
+            $table: $db.streakMilestone,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$StreakActivityTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $StreakActivityTable,
+          StreakActivityData,
+          $$StreakActivityTableFilterComposer,
+          $$StreakActivityTableOrderingComposer,
+          $$StreakActivityTableAnnotationComposer,
+          $$StreakActivityTableCreateCompanionBuilder,
+          $$StreakActivityTableUpdateCompanionBuilder,
+          (StreakActivityData, $$StreakActivityTableReferences),
+          StreakActivityData,
+          PrefetchHooks Function({bool streakMilestoneRefs})
+        > {
+  $$StreakActivityTableTableManager(
+    _$AppDataBase db,
+    $StreakActivityTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StreakActivityTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StreakActivityTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$StreakActivityTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<int> pointsAwarded = const Value.absent(),
+                Value<int> maxDailyCompletions = const Value.absent(),
+                Value<bool> streakEligible = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StreakActivityCompanion(
+                id: id,
+                name: name,
+                description: description,
+                category: category,
+                pointsAwarded: pointsAwarded,
+                maxDailyCompletions: maxDailyCompletions,
+                streakEligible: streakEligible,
+                isActive: isActive,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<String?> description = const Value.absent(),
+                required String category,
+                Value<int> pointsAwarded = const Value.absent(),
+                Value<int> maxDailyCompletions = const Value.absent(),
+                Value<bool> streakEligible = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StreakActivityCompanion.insert(
+                id: id,
+                name: name,
+                description: description,
+                category: category,
+                pointsAwarded: pointsAwarded,
+                maxDailyCompletions: maxDailyCompletions,
+                streakEligible: streakEligible,
+                isActive: isActive,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$StreakActivityTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({streakMilestoneRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (streakMilestoneRefs) db.streakMilestone,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (streakMilestoneRefs)
+                    await $_getPrefetchedData<
+                      StreakActivityData,
+                      $StreakActivityTable,
+                      StreakMilestoneData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$StreakActivityTableReferences
+                          ._streakMilestoneRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$StreakActivityTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).streakMilestoneRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.activityID == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$StreakActivityTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $StreakActivityTable,
+      StreakActivityData,
+      $$StreakActivityTableFilterComposer,
+      $$StreakActivityTableOrderingComposer,
+      $$StreakActivityTableAnnotationComposer,
+      $$StreakActivityTableCreateCompanionBuilder,
+      $$StreakActivityTableUpdateCompanionBuilder,
+      (StreakActivityData, $$StreakActivityTableReferences),
+      StreakActivityData,
+      PrefetchHooks Function({bool streakMilestoneRefs})
+    >;
+typedef $$StreakMilestoneTableCreateCompanionBuilder =
+    StreakMilestoneCompanion Function({
+      required String id,
+      required String activityID,
+      Value<int> daysRequired,
+      Value<int> bonusPoints,
+      required String title,
+      required String description,
+      required bool isActive,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+typedef $$StreakMilestoneTableUpdateCompanionBuilder =
+    StreakMilestoneCompanion Function({
+      Value<String> id,
+      Value<String> activityID,
+      Value<int> daysRequired,
+      Value<int> bonusPoints,
+      Value<String> title,
+      Value<String> description,
+      Value<bool> isActive,
+      Value<DateTime?> cachedAt,
+      Value<int> rowid,
+    });
+
+final class $$StreakMilestoneTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $StreakMilestoneTable,
+          StreakMilestoneData
+        > {
+  $$StreakMilestoneTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $StreakActivityTable _activityIDTable(_$AppDataBase db) =>
+      db.streakActivity.createAlias(
+        $_aliasNameGenerator(
+          db.streakMilestone.activityID,
+          db.streakActivity.id,
+        ),
+      );
+
+  $$StreakActivityTableProcessedTableManager get activityID {
+    final $_column = $_itemColumn<String>('activity_i_d')!;
+
+    final manager = $$StreakActivityTableTableManager(
+      $_db,
+      $_db.streakActivity,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_activityIDTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$StreakMilestoneTableFilterComposer
+    extends Composer<_$AppDataBase, $StreakMilestoneTable> {
+  $$StreakMilestoneTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get daysRequired => $composableBuilder(
+    column: $table.daysRequired,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bonusPoints => $composableBuilder(
+    column: $table.bonusPoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$StreakActivityTableFilterComposer get activityID {
+    final $$StreakActivityTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityID,
+      referencedTable: $db.streakActivity,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$StreakActivityTableFilterComposer(
+            $db: $db,
+            $table: $db.streakActivity,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$StreakMilestoneTableOrderingComposer
+    extends Composer<_$AppDataBase, $StreakMilestoneTable> {
+  $$StreakMilestoneTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get daysRequired => $composableBuilder(
+    column: $table.daysRequired,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bonusPoints => $composableBuilder(
+    column: $table.bonusPoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$StreakActivityTableOrderingComposer get activityID {
+    final $$StreakActivityTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityID,
+      referencedTable: $db.streakActivity,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$StreakActivityTableOrderingComposer(
+            $db: $db,
+            $table: $db.streakActivity,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$StreakMilestoneTableAnnotationComposer
+    extends Composer<_$AppDataBase, $StreakMilestoneTable> {
+  $$StreakMilestoneTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get daysRequired => $composableBuilder(
+    column: $table.daysRequired,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bonusPoints => $composableBuilder(
+    column: $table.bonusPoints,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+
+  $$StreakActivityTableAnnotationComposer get activityID {
+    final $$StreakActivityTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.activityID,
+      referencedTable: $db.streakActivity,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$StreakActivityTableAnnotationComposer(
+            $db: $db,
+            $table: $db.streakActivity,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$StreakMilestoneTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $StreakMilestoneTable,
+          StreakMilestoneData,
+          $$StreakMilestoneTableFilterComposer,
+          $$StreakMilestoneTableOrderingComposer,
+          $$StreakMilestoneTableAnnotationComposer,
+          $$StreakMilestoneTableCreateCompanionBuilder,
+          $$StreakMilestoneTableUpdateCompanionBuilder,
+          (StreakMilestoneData, $$StreakMilestoneTableReferences),
+          StreakMilestoneData,
+          PrefetchHooks Function({bool activityID})
+        > {
+  $$StreakMilestoneTableTableManager(
+    _$AppDataBase db,
+    $StreakMilestoneTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StreakMilestoneTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StreakMilestoneTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$StreakMilestoneTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> activityID = const Value.absent(),
+                Value<int> daysRequired = const Value.absent(),
+                Value<int> bonusPoints = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StreakMilestoneCompanion(
+                id: id,
+                activityID: activityID,
+                daysRequired: daysRequired,
+                bonusPoints: bonusPoints,
+                title: title,
+                description: description,
+                isActive: isActive,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String activityID,
+                Value<int> daysRequired = const Value.absent(),
+                Value<int> bonusPoints = const Value.absent(),
+                required String title,
+                required String description,
+                required bool isActive,
+                Value<DateTime?> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StreakMilestoneCompanion.insert(
+                id: id,
+                activityID: activityID,
+                daysRequired: daysRequired,
+                bonusPoints: bonusPoints,
+                title: title,
+                description: description,
+                isActive: isActive,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$StreakMilestoneTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({activityID = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (activityID) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.activityID,
+                                referencedTable:
+                                    $$StreakMilestoneTableReferences
+                                        ._activityIDTable(db),
+                                referencedColumn:
+                                    $$StreakMilestoneTableReferences
+                                        ._activityIDTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$StreakMilestoneTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $StreakMilestoneTable,
+      StreakMilestoneData,
+      $$StreakMilestoneTableFilterComposer,
+      $$StreakMilestoneTableOrderingComposer,
+      $$StreakMilestoneTableAnnotationComposer,
+      $$StreakMilestoneTableCreateCompanionBuilder,
+      $$StreakMilestoneTableUpdateCompanionBuilder,
+      (StreakMilestoneData, $$StreakMilestoneTableReferences),
+      StreakMilestoneData,
+      PrefetchHooks Function({bool activityID})
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -24746,4 +26800,8 @@ class $AppDataBaseManager {
       );
   $$LeaderboardRankTableTableManager get leaderboardRank =>
       $$LeaderboardRankTableTableManager(_db, _db.leaderboardRank);
+  $$StreakActivityTableTableManager get streakActivity =>
+      $$StreakActivityTableTableManager(_db, _db.streakActivity);
+  $$StreakMilestoneTableTableManager get streakMilestone =>
+      $$StreakMilestoneTableTableManager(_db, _db.streakMilestone);
 }
