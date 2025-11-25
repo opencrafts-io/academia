@@ -97,8 +97,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(
     () => ShereheHomeBloc(
       getEvent: sl(),
-      getAttendee: sl(),
-      cacheEventsUseCase: sl(),
     ),
   );
 
