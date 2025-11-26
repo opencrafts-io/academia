@@ -39,16 +39,16 @@ class _EssentialsPageState extends State<EssentialsPage> {
       iconPath: "assets/icons/todos.png",
     ),
 
-    _EssentialItem(
-      title: "Identity",
-      ontap: null,
-      iconPath: "assets/icons/card.png",
-    ),
-    _EssentialItem(
-      title: "Exam timetable",
-      ontap: null,
-      iconPath: "assets/icons/exam.png",
-    ),
+    // _EssentialItem(
+    //   title: "Identity",
+    //   ontap: null,
+    //   iconPath: "assets/icons/card.png",
+    // ),
+    // _EssentialItem(
+    //   title: "Exam timetable",
+    //   ontap: null,
+    //   iconPath: "assets/icons/exam.png",
+    // ),
   ];
   @override
   Widget build(BuildContext context) {
