@@ -67,6 +67,81 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     }
   }
 
+  Future<void> _editTicketDialog(int index) async {
+    final ticket = _tickets[index];
+
+    final nameController = TextEditingController(text: ticket.ticketName);
+    final priceController = TextEditingController(
+      text: ticket.ticketPrice.toString(),
+    );
+    final qtyController = TextEditingController(
+      text: ticket.ticketQuantity.toString(),
+    );
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Edit Ticket"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (ticket.ticketPrice != 0) ...[
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: "Ticket Name"),
+                ),
+                TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: "Price"),
+                ),
+              ],
+              TextField(
+                controller: qtyController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: "Quantity"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel"),
+            ),
+            FilledButton(
+              onPressed: () {
+                final name = nameController.text.trim();
+                final price = int.tryParse(priceController.text.trim());
+                final qty = int.tryParse(qtyController.text.trim());
+
+                if (name.isEmpty || price == null || qty == null || qty <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Invalid ticket values")),
+                  );
+                  return;
+                }
+
+                Navigator.pop(context, true);
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == true) {
+      setState(() {
+        _tickets[index] = Ticket(
+          ticketName: nameController.text.trim(),
+          ticketPrice: int.parse(priceController.text.trim()),
+          ticketQuantity: int.parse(qtyController.text.trim()),
+        );
+      });
+    }
+  }
+
   Future<void> _showFreeTicketQuantityDialog() async {
     final TextEditingController qtyController = TextEditingController();
 
@@ -246,11 +321,20 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                             subtitle: Text(
                               "Price: ${ticket.ticketPrice}  •  Qty: ${ticket.ticketQuantity}",
                             ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                setState(() => _tickets.removeAt(index));
-                              },
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () => _editTicketDialog(index),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    setState(() => _tickets.removeAt(index));
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         );
