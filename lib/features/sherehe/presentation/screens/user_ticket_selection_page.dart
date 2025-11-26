@@ -126,11 +126,23 @@ class UserTicketSelectionPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       IconButton(
-                        onPressed: () => onQuantityChanged(quantity + 1),
+                        onPressed: quantity < 3
+                            ? () => onQuantityChanged(quantity + 1)
+                            : null,
                         icon: const Icon(Icons.add_circle_outline),
                       ),
                     ],
                   ),
+                  if (quantity == 3)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        "Maximum of 3 tickets allowed per order",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
 
                   // Continue button
                   SizedBox(
