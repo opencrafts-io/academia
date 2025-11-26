@@ -24,7 +24,7 @@ class UserTicketSelectionPage extends StatelessWidget {
     final bool isFreeEvent =
         ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
 
-    // Auto-select free ticket in parent
+    // // Auto-select free ticket in parent
     if (isFreeEvent && selectedTicket == null) {
       // Schedule microtask to avoid rebuild-loop
       Future.microtask(() {
@@ -35,6 +35,14 @@ class UserTicketSelectionPage extends StatelessWidget {
     final Ticket? activeTicket = isFreeEvent
         ? ticketTypes.first
         : selectedTicket;
+
+    print("Active ticket: $activeTicket");
+
+    final int maxAllowedQuantity = activeTicket == null
+        ? 0
+        : activeTicket.ticketQuantity < 3
+        ? activeTicket.ticketQuantity
+        : 3;
 
     // Sort for normal paid event UI
     final sortedTickets = [...ticketTypes]
@@ -63,28 +71,35 @@ class UserTicketSelectionPage extends StatelessWidget {
             ...sortedTickets.map((ticket) {
               final isSelected = selectedTicket == ticket;
               return GestureDetector(
-                onTap: () => onTicketSelected(ticket),
-                child: Card(
-                  elevation: isSelected ? 6 : 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: isSelected
-                        ? BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          )
-                        : BorderSide.none,
-                  ),
-                  child: ListTile(
-                    title: Text(ticket.ticketName),
-                    subtitle: Text(
-                      "KES ${ticket.ticketPrice.toStringAsFixed(0)}",
+                onTap: ticket.ticketQuantity == 0
+                    ? null
+                    : () => onTicketSelected(ticket),
+                child: Opacity(
+                  opacity: ticket.ticketQuantity == 0 ? 0.5 : 1.0,
+                  child: Card(
+                    elevation: isSelected ? 6 : 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: isSelected
+                          ? BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            )
+                          : BorderSide.none,
                     ),
-                    trailing: Icon(
-                      isSelected ? Icons.check_circle : Icons.circle_outlined,
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : null,
+                    child: ListTile(
+                      title: Text(ticket.ticketName),
+                      subtitle: Text(
+                        ticket.ticketQuantity == 0
+                            ? "Sold Out"
+                            : "KES ${ticket.ticketPrice.toStringAsFixed(0)}",
+                      ),
+                      trailing: Icon(
+                        isSelected ? Icons.check_circle : Icons.circle_outlined,
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
                     ),
                   ),
                 ),
@@ -126,18 +141,31 @@ class UserTicketSelectionPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       IconButton(
-                        onPressed: quantity < 3
+                        onPressed: quantity < maxAllowedQuantity
                             ? () => onQuantityChanged(quantity + 1)
                             : null,
                         icon: const Icon(Icons.add_circle_outline),
                       ),
                     ],
                   ),
-                  if (quantity == 3)
+                  if (quantity == maxAllowedQuantity && maxAllowedQuantity > 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        "Maximum of 3 tickets allowed per order",
+                        quantity == 3 && activeTicket.ticketQuantity > 3
+                            ? "Maximum of 3 tickets per order"
+                            : "Only ${activeTicket.ticketQuantity} tickets remaining",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+
+                  if (activeTicket.ticketQuantity == 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        "Sorry this ticket is sold out.",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.error,
                         ),
@@ -148,7 +176,9 @@ class UserTicketSelectionPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
-                      onPressed: onContinue,
+                      onPressed: activeTicket.ticketQuantity == 0
+                          ? null
+                          : onContinue,
                       child: Text(isFreeEvent ? "Continue (Free)" : "Continue"),
                     ),
                   ),
