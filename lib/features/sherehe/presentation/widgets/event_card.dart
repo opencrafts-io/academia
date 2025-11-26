@@ -90,7 +90,7 @@ class EventCard extends StatelessWidget {
 
   String _formatTime(String isoString, {String pattern = 'hh:mm a'}) {
     try {
-      final dateTime = DateTime.parse(isoString).toLocal();
+      final dateTime = DateTime.parse(isoString);
       return DateFormat(pattern).format(dateTime);
     } catch (e) {
       return isoString; // fallback in case parsing fails
