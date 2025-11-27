@@ -12,64 +12,54 @@ class AttachmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
     switch (attachment.attachmentType) {
       case 'image':
-        return _ImageWidget(url: attachment.file);
+        child = _ImagePreview(url: attachment.file);
+        break;
       case 'video':
-        return _MediaKitVideoWidget(url: attachment.file);
+        child = _VideoPreview(url: attachment.file);
+        break;
       case 'file':
-        return _FileWidget(url: attachment.file, fileName: attachment.name);
+        child = _FilePreview(url: attachment.file, fileName: attachment.name);
+        break;
       default:
-        return const SizedBox.shrink();
+        child = const SizedBox.shrink();
     }
+    return SizedBox(
+      width: 80,
+      height: 80,
+      child: child,
+    );
   }
 }
 
-class _ImageWidget extends StatelessWidget {
-  final String url;
-  const _ImageWidget({required this.url});
+// --- Fullscreen Viewers ---
 
-  void _openFullScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          body: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Center(
-              child: InteractiveViewer(
-                child: CachedNetworkImage(imageUrl: url),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+class _FullScreenImageViewer extends StatelessWidget {
+  final String url;
+  const _FullScreenImageViewer({required this.url});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _openFullScreen(context),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            width: 1.5,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
         ),
-        clipBehavior: Clip.hardEdge,
-        child: CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => const SizedBox.shrink(),
-          errorWidget: (context, url, error) => Icon(
-            Icons.broken_image,
-            size: 50,
-            color: Theme.of(context).colorScheme.onSurface,
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          child: CachedNetworkImage(
+            imageUrl: url,
+            placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.broken_image, color: Colors.white, size: 50),
           ),
         ),
       ),
@@ -77,93 +67,203 @@ class _ImageWidget extends StatelessWidget {
   }
 }
 
-class _FileWidget extends StatelessWidget {
+class _FullScreenVideoViewer extends StatefulWidget {
   final String url;
-  final String fileName;
-  const _FileWidget({required this.url, required this.fileName});
-
-  Future<void> _openFile() async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
+  const _FullScreenVideoViewer({required this.url});
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(8),
-        child: ListTile(
-          leading: Icon(
-            Icons.insert_drive_file,
-            size: 40,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          title: Text(fileName, overflow: TextOverflow.ellipsis),
-          trailing: IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: _openFile,
-          ),
-        ),
-      ),
-    );
-  }
+  State<_FullScreenVideoViewer> createState() => _FullScreenVideoViewerState();
 }
 
-class _MediaKitVideoWidget extends StatefulWidget {
-  final String url;
-  const _MediaKitVideoWidget({required this.url});
-
-  @override
-  State<_MediaKitVideoWidget> createState() => _MediaKitVideoWidgetState();
-}
-
-class _MediaKitVideoWidgetState extends State<_MediaKitVideoWidget>
-    with AutomaticKeepAliveClientMixin {
-  late VideoPlayerController videoPlayerController =
-      VideoPlayerController.networkUrl(Uri.parse(widget.url));
-  late ChewieController chewieController = ChewieController(
-    videoPlayerController: videoPlayerController,
-    autoPlay: true,
-    looping: false,
-    playbackSpeeds: [0.25, 0.5, 1.0, 1.5, 2.0],
-    showControls: true,
-    allowFullScreen: true,
-    aspectRatio: videoPlayerController.value.aspectRatio,
-    materialProgressColors: ChewieProgressColors(
-      playedColor: Theme.of(context).colorScheme.primary,
-    ),
-  );
+class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    setState(() {});
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.url));
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: false,
+      showControls: true,
+      allowFullScreen: true,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+    _videoPlayerController.initialize().then((_) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void dispose() {
-    videoPlayerController.dispose();
-    chewieController.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Container(
-      height: 600,
-      color: Colors.black,
-      child: GestureDetector(
-        onTap: () async {},
-        child: Chewie(controller: chewieController),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
+      body: Center(
+        child: _isLoading
+            ? const CircularProgressIndicator()
+            : Chewie(controller: _chewieController),
+      ),
+    );
+  }
+}
+
+
+// --- Preview Widgets ---
+
+abstract class _PreviewWidget extends StatelessWidget {
+  const _PreviewWidget({super.key});
+
+  Widget buildPreview(BuildContext context);
+  void onPreviewTap(BuildContext context);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onPreviewTap(context),
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            width: 1.0,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ),
+        child: buildPreview(context),
+      ),
+    );
+  }
+}
+
+class _ImagePreview extends _PreviewWidget {
+  final String url;
+  const _ImagePreview({required this.url});
+
+  @override
+  void onPreviewTap(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => _FullScreenImageViewer(url: url)),
+    );
+  }
+
+  @override
+  Widget buildPreview(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const SizedBox.shrink(),
+      errorWidget: (context, url, error) => Icon(
+        Icons.broken_image,
+        size: 40,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+}
+
+
+class _VideoPreview extends _PreviewWidget {
+  final String url;
+  const _VideoPreview({required this.url});
+
+  @override
+  void onPreviewTap(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => _FullScreenVideoViewer(url: url)),
+    );
+  }
+
+  @override
+  Widget buildPreview(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // In a real app, we'd use a thumbnail generator.
+        // For now, a static icon is sufficient.
+        Icon(
+          Icons.videocam,
+          size: 40,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        Center(
+          child: Icon(
+            Icons.play_circle_outline,
+            size: 32,
+            color: Colors.white.withOpacity(0.8),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _FilePreview extends _PreviewWidget {
+  final String url;
+  final String fileName;
+  const _FilePreview({required this.url, required this.fileName});
+
+  @override
+  Future<void> onPreviewTap(BuildContext context) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+       ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Could not open file."),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget buildPreview(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.insert_drive_file,
+          size: 40,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            fileName,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ],
     );
   }
 }
