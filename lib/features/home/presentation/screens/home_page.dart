@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: DefaultTabController(
-        initialIndex: 0,
+        initialIndex: 1,
         length: 2,
         child: RefreshIndicator.adaptive(
           onRefresh: () async {},
