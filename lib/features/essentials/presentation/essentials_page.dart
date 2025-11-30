@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import '../widgets/essential_category_tile.dart';
+import 'package:academia/injection_container.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -32,7 +33,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
   late List<_EssentialItem> essentialItems = <_EssentialItem>[
     _EssentialItem(
       title: "Achievements",
-      ontap: () => AchievementsHomePageRoute().push(context),
+      ontap: () {
+        sl<AdService>().showInterstitialAd();
+        AchievementsHomePageRoute().push(context);
+      },
       iconPath: "assets/icons/medal.png",
     ),
     _EssentialItem(
