@@ -1,8 +1,10 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/admob/admob.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import '../widgets/essential_category_tile.dart';
@@ -115,6 +117,8 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     totalItems: essentialItems.length,
                   ),
                 ),
+                SizedBox(height: 22),
+                BannerAdWidget(size: AdSize.fullBanner),
               ],
             ),
           ),
