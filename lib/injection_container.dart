@@ -7,7 +7,6 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/streaks/streaks.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +25,12 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
+
+  final AdService adService = AdService();
+  await adService.initialize();
+  adService.loadInterstitialAd();
+
+  sl.registerSingleton<AdService>(adService);
 
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
@@ -736,51 +741,6 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // AdMob
-  sl.registerFactory<AdRemoteDataSource>(() => AdRemoteDataSourceImpl());
-
-  sl.registerFactory<AdRepository>(
-    () => AdRepositoryImpl(sl.get<AdRemoteDataSource>()),
-  );
-
-  sl.registerFactory<InitializeAdMobUsecase>(
-    () => InitializeAdMobUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadBannerAdUsecase>(
-    () => LoadBannerAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadInterstitialAdUsecase>(
-    () => LoadInterstitialAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadRewardedAdUsecase>(
-    () => LoadRewardedAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<ShowInterstitialAdUsecase>(
-    () => ShowInterstitialAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<ShowRewardedAdUsecase>(
-    () => ShowRewardedAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<GetLoadedAdsUsecase>(
-    () => GetLoadedAdsUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<SetTestModeUsecase>(
-    () => SetTestModeUsecase(sl.get<AdRepository>()),
-  );
-
-  sl.registerFactory<AdBloc>(
-    () => AdBloc(
-      initializeAdMobUsecase: sl.get<InitializeAdMobUsecase>(),
-      loadBannerAdUsecase: sl.get<LoadBannerAdUsecase>(),
-      loadInterstitialAdUsecase: sl.get<LoadInterstitialAdUsecase>(),
-      loadRewardedAdUsecase: sl.get<LoadRewardedAdUsecase>(),
-      showInterstitialAdUsecase: sl.get<ShowInterstitialAdUsecase>(),
-      showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
-      getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
-      setTestModeUsecase: sl.get<SetTestModeUsecase>(),
-    ),
-  );
-
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(
@@ -828,10 +788,7 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<AchievementRemoteDatasource>(
-    () => AchievementRemoteDatasource(
-      dioClient: sl(),
-      flavor: sl(),
-    ),
+    () => AchievementRemoteDatasource(dioClient: sl(), flavor: sl()),
   );
 
   sl.registerFactory<AchievementRepository>(
@@ -842,39 +799,27 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<GetAchievements>(
-    () => GetAchievements(
-      sl<AchievementRepository>(),
-    ),
+    () => GetAchievements(sl<AchievementRepository>()),
   );
 
   sl.registerFactory<GetAchievementById>(
-    () => GetAchievementById(
-      sl<AchievementRepository>(),
-    ),
+    () => GetAchievementById(sl<AchievementRepository>()),
   );
 
   sl.registerFactory<GetStreakActivities>(
-    () => GetStreakActivities(
-      sl<AchievementRepository>(),
-    ),
+    () => GetStreakActivities(sl<AchievementRepository>()),
   );
 
   sl.registerFactory<GetActivityById>(
-    () => GetActivityById(
-      sl<AchievementRepository>(),
-    ),
+    () => GetActivityById(sl<AchievementRepository>()),
   );
 
   sl.registerFactory<AchievementsBloc>(
-    () => AchievementsBloc(
-      getAchievements: sl<GetAchievements>(),
-    ),
+    () => AchievementsBloc(getAchievements: sl<GetAchievements>()),
   );
 
   sl.registerFactory<ActivitiesBloc>(
-    () => ActivitiesBloc(
-      getStreakActivities: sl<GetStreakActivities>(),
-    ),
+    () => ActivitiesBloc(getStreakActivities: sl<GetStreakActivities>()),
   );
 
   sl.registerFactory<AchievementDetailBloc>(
@@ -885,8 +830,6 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<ActivityDetailBloc>(
-    () => ActivityDetailBloc(
-      getActivityById: sl<GetActivityById>(),
-    ),
+    () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
   );
 }

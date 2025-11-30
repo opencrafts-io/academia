@@ -141,9 +141,6 @@ class _AcademiaState extends State<Academia> {
             ),
         ),
         BlocProvider(
-          create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
-        ),
-        BlocProvider(
           create: (context) =>
               sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
@@ -185,18 +182,6 @@ class _AcademiaState extends State<Academia> {
                 if (state is RemoteConfigErrorState) {
                   _logger.e(
                     'Firebase Remote Config failed: ${state.message}',
-                    error: state.message,
-                  );
-                }
-              },
-            ),
-            BlocListener<AdBloc, AdState>(
-              listener: (context, state) {
-                if (state is AdInitializedState) {
-                  _logger.i('AdMob initialized successfully!');
-                } else if (state is AdErrorState) {
-                  _logger.e(
-                    'AdMob error: ${state.message}',
                     error: state.message,
                   );
                 }
