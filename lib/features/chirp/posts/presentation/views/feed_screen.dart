@@ -80,7 +80,7 @@ class _FeedPageState extends State<FeedPage>
 
       // Insert ad after every `adInterval` posts
       if ((i + 1) % adInterval == 0) {
-        postsWithAds.add(BannerAdWidget(size: AdSize.fullBanner));
+        postsWithAds.add(BannerAdWidget(size: AdSize.banner));
       }
     }
 
