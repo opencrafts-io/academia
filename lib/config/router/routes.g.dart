@@ -23,6 +23,7 @@ List<RouteBase> get $appRoutes => [
   $communityMembershipsRoute,
   $achievementsHomePageRoute,
   $activitiesPageRoute,
+  $examTimetableRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -874,6 +875,69 @@ mixin _$ActivitiesPageRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/activities/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $examTimetableRoute => GoRouteData.$route(
+  path: '/exam-timetable/:institutionId',
+  factory: _$ExamTimetableRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'search',
+      factory: _$ExamTimetableSearchRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$ExamTimetableRoute on GoRouteData {
+  static ExamTimetableRoute _fromState(GoRouterState state) =>
+      ExamTimetableRoute(institutionId: state.pathParameters['institutionId']!);
+
+  ExamTimetableRoute get _self => this as ExamTimetableRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$ExamTimetableSearchRoute on GoRouteData {
+  static ExamTimetableSearchRoute _fromState(GoRouterState state) =>
+      ExamTimetableSearchRoute(
+        institutionId: state.pathParameters['institutionId']!,
+      );
+
+  ExamTimetableSearchRoute get _self => this as ExamTimetableSearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}/search',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

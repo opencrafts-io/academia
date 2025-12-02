@@ -12,3 +12,4 @@ export 'essentials/essentials.dart';
 export 'magnet/magnet.dart';
 export 'leaderboard/leaderboard.dart';
 export 'streaks/streaks.dart';
+export 'exam_timetable/exam_timetable.dart';

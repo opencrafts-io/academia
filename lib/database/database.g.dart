@@ -12966,6 +12966,632 @@ class MagnetFinancialTransactionCompanion
   }
 }
 
+class $ExamTimetableTable extends ExamTimetable
+    with TableInfo<$ExamTimetableTable, ExamTimetableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExamTimetableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
+    'courseCode',
+  );
+  @override
+  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
+    'course_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<String> institutionId = GeneratedColumn<String>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dayMeta = const VerificationMeta('day');
+  @override
+  late final GeneratedColumn<String> day = GeneratedColumn<String>(
+    'day',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _timeMeta = const VerificationMeta('time');
+  @override
+  late final GeneratedColumn<String> time = GeneratedColumn<String>(
+    'time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _venueMeta = const VerificationMeta('venue');
+  @override
+  late final GeneratedColumn<String> venue = GeneratedColumn<String>(
+    'venue',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hrsMeta = const VerificationMeta('hrs');
+  @override
+  late final GeneratedColumn<String> hrs = GeneratedColumn<String>(
+    'hrs',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
+  @override
+  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
+    'campus',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _coordinatorMeta = const VerificationMeta(
+    'coordinator',
+  );
+  @override
+  late final GeneratedColumn<String> coordinator = GeneratedColumn<String>(
+    'coordinator',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _invigilatorMeta = const VerificationMeta(
+    'invigilator',
+  );
+  @override
+  late final GeneratedColumn<String> invigilator = GeneratedColumn<String>(
+    'invigilator',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _datetimeStrMeta = const VerificationMeta(
+    'datetimeStr',
+  );
+  @override
+  late final GeneratedColumn<DateTime> datetimeStr = GeneratedColumn<DateTime>(
+    'datetime_str',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    courseCode,
+    institutionId,
+    day,
+    time,
+    venue,
+    hrs,
+    campus,
+    coordinator,
+    invigilator,
+    datetimeStr,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'exam_timetable';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExamTimetableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('course_code')) {
+      context.handle(
+        _courseCodeMeta,
+        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseCodeMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIdMeta);
+    }
+    if (data.containsKey('day')) {
+      context.handle(
+        _dayMeta,
+        day.isAcceptableOrUnknown(data['day']!, _dayMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayMeta);
+    }
+    if (data.containsKey('time')) {
+      context.handle(
+        _timeMeta,
+        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (data.containsKey('venue')) {
+      context.handle(
+        _venueMeta,
+        venue.isAcceptableOrUnknown(data['venue']!, _venueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_venueMeta);
+    }
+    if (data.containsKey('hrs')) {
+      context.handle(
+        _hrsMeta,
+        hrs.isAcceptableOrUnknown(data['hrs']!, _hrsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hrsMeta);
+    }
+    if (data.containsKey('campus')) {
+      context.handle(
+        _campusMeta,
+        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_campusMeta);
+    }
+    if (data.containsKey('coordinator')) {
+      context.handle(
+        _coordinatorMeta,
+        coordinator.isAcceptableOrUnknown(
+          data['coordinator']!,
+          _coordinatorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_coordinatorMeta);
+    }
+    if (data.containsKey('invigilator')) {
+      context.handle(
+        _invigilatorMeta,
+        invigilator.isAcceptableOrUnknown(
+          data['invigilator']!,
+          _invigilatorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_invigilatorMeta);
+    }
+    if (data.containsKey('datetime_str')) {
+      context.handle(
+        _datetimeStrMeta,
+        datetimeStr.isAcceptableOrUnknown(
+          data['datetime_str']!,
+          _datetimeStrMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_datetimeStrMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {courseCode, institutionId};
+  @override
+  ExamTimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExamTimetableData(
+      courseCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_code'],
+      )!,
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      day: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day'],
+      )!,
+      time: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}time'],
+      )!,
+      venue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}venue'],
+      )!,
+      hrs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hrs'],
+      )!,
+      campus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}campus'],
+      )!,
+      coordinator: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}coordinator'],
+      )!,
+      invigilator: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invigilator'],
+      )!,
+      datetimeStr: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}datetime_str'],
+      )!,
+    );
+  }
+
+  @override
+  $ExamTimetableTable createAlias(String alias) {
+    return $ExamTimetableTable(attachedDatabase, alias);
+  }
+}
+
+class ExamTimetableData extends DataClass
+    implements Insertable<ExamTimetableData> {
+  final String courseCode;
+  final String institutionId;
+  final String day;
+  final String time;
+  final String venue;
+  final String hrs;
+  final String campus;
+  final String coordinator;
+  final String invigilator;
+  final DateTime datetimeStr;
+  const ExamTimetableData({
+    required this.courseCode,
+    required this.institutionId,
+    required this.day,
+    required this.time,
+    required this.venue,
+    required this.hrs,
+    required this.campus,
+    required this.coordinator,
+    required this.invigilator,
+    required this.datetimeStr,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['course_code'] = Variable<String>(courseCode);
+    map['institution_id'] = Variable<String>(institutionId);
+    map['day'] = Variable<String>(day);
+    map['time'] = Variable<String>(time);
+    map['venue'] = Variable<String>(venue);
+    map['hrs'] = Variable<String>(hrs);
+    map['campus'] = Variable<String>(campus);
+    map['coordinator'] = Variable<String>(coordinator);
+    map['invigilator'] = Variable<String>(invigilator);
+    map['datetime_str'] = Variable<DateTime>(datetimeStr);
+    return map;
+  }
+
+  ExamTimetableCompanion toCompanion(bool nullToAbsent) {
+    return ExamTimetableCompanion(
+      courseCode: Value(courseCode),
+      institutionId: Value(institutionId),
+      day: Value(day),
+      time: Value(time),
+      venue: Value(venue),
+      hrs: Value(hrs),
+      campus: Value(campus),
+      coordinator: Value(coordinator),
+      invigilator: Value(invigilator),
+      datetimeStr: Value(datetimeStr),
+    );
+  }
+
+  factory ExamTimetableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExamTimetableData(
+      courseCode: serializer.fromJson<String>(json['course_code']),
+      institutionId: serializer.fromJson<String>(json['institution_id']),
+      day: serializer.fromJson<String>(json['day']),
+      time: serializer.fromJson<String>(json['time']),
+      venue: serializer.fromJson<String>(json['venue']),
+      hrs: serializer.fromJson<String>(json['hrs']),
+      campus: serializer.fromJson<String>(json['campus']),
+      coordinator: serializer.fromJson<String>(json['coordinator']),
+      invigilator: serializer.fromJson<String>(json['invigilator']),
+      datetimeStr: serializer.fromJson<DateTime>(json['datetime_str']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'course_code': serializer.toJson<String>(courseCode),
+      'institution_id': serializer.toJson<String>(institutionId),
+      'day': serializer.toJson<String>(day),
+      'time': serializer.toJson<String>(time),
+      'venue': serializer.toJson<String>(venue),
+      'hrs': serializer.toJson<String>(hrs),
+      'campus': serializer.toJson<String>(campus),
+      'coordinator': serializer.toJson<String>(coordinator),
+      'invigilator': serializer.toJson<String>(invigilator),
+      'datetime_str': serializer.toJson<DateTime>(datetimeStr),
+    };
+  }
+
+  ExamTimetableData copyWith({
+    String? courseCode,
+    String? institutionId,
+    String? day,
+    String? time,
+    String? venue,
+    String? hrs,
+    String? campus,
+    String? coordinator,
+    String? invigilator,
+    DateTime? datetimeStr,
+  }) => ExamTimetableData(
+    courseCode: courseCode ?? this.courseCode,
+    institutionId: institutionId ?? this.institutionId,
+    day: day ?? this.day,
+    time: time ?? this.time,
+    venue: venue ?? this.venue,
+    hrs: hrs ?? this.hrs,
+    campus: campus ?? this.campus,
+    coordinator: coordinator ?? this.coordinator,
+    invigilator: invigilator ?? this.invigilator,
+    datetimeStr: datetimeStr ?? this.datetimeStr,
+  );
+  ExamTimetableData copyWithCompanion(ExamTimetableCompanion data) {
+    return ExamTimetableData(
+      courseCode: data.courseCode.present
+          ? data.courseCode.value
+          : this.courseCode,
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
+      day: data.day.present ? data.day.value : this.day,
+      time: data.time.present ? data.time.value : this.time,
+      venue: data.venue.present ? data.venue.value : this.venue,
+      hrs: data.hrs.present ? data.hrs.value : this.hrs,
+      campus: data.campus.present ? data.campus.value : this.campus,
+      coordinator: data.coordinator.present
+          ? data.coordinator.value
+          : this.coordinator,
+      invigilator: data.invigilator.present
+          ? data.invigilator.value
+          : this.invigilator,
+      datetimeStr: data.datetimeStr.present
+          ? data.datetimeStr.value
+          : this.datetimeStr,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExamTimetableData(')
+          ..write('courseCode: $courseCode, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('day: $day, ')
+          ..write('time: $time, ')
+          ..write('venue: $venue, ')
+          ..write('hrs: $hrs, ')
+          ..write('campus: $campus, ')
+          ..write('coordinator: $coordinator, ')
+          ..write('invigilator: $invigilator, ')
+          ..write('datetimeStr: $datetimeStr')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    courseCode,
+    institutionId,
+    day,
+    time,
+    venue,
+    hrs,
+    campus,
+    coordinator,
+    invigilator,
+    datetimeStr,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExamTimetableData &&
+          other.courseCode == this.courseCode &&
+          other.institutionId == this.institutionId &&
+          other.day == this.day &&
+          other.time == this.time &&
+          other.venue == this.venue &&
+          other.hrs == this.hrs &&
+          other.campus == this.campus &&
+          other.coordinator == this.coordinator &&
+          other.invigilator == this.invigilator &&
+          other.datetimeStr == this.datetimeStr);
+}
+
+class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
+  final Value<String> courseCode;
+  final Value<String> institutionId;
+  final Value<String> day;
+  final Value<String> time;
+  final Value<String> venue;
+  final Value<String> hrs;
+  final Value<String> campus;
+  final Value<String> coordinator;
+  final Value<String> invigilator;
+  final Value<DateTime> datetimeStr;
+  final Value<int> rowid;
+  const ExamTimetableCompanion({
+    this.courseCode = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.day = const Value.absent(),
+    this.time = const Value.absent(),
+    this.venue = const Value.absent(),
+    this.hrs = const Value.absent(),
+    this.campus = const Value.absent(),
+    this.coordinator = const Value.absent(),
+    this.invigilator = const Value.absent(),
+    this.datetimeStr = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ExamTimetableCompanion.insert({
+    required String courseCode,
+    required String institutionId,
+    required String day,
+    required String time,
+    required String venue,
+    required String hrs,
+    required String campus,
+    required String coordinator,
+    required String invigilator,
+    required DateTime datetimeStr,
+    this.rowid = const Value.absent(),
+  }) : courseCode = Value(courseCode),
+       institutionId = Value(institutionId),
+       day = Value(day),
+       time = Value(time),
+       venue = Value(venue),
+       hrs = Value(hrs),
+       campus = Value(campus),
+       coordinator = Value(coordinator),
+       invigilator = Value(invigilator),
+       datetimeStr = Value(datetimeStr);
+  static Insertable<ExamTimetableData> custom({
+    Expression<String>? courseCode,
+    Expression<String>? institutionId,
+    Expression<String>? day,
+    Expression<String>? time,
+    Expression<String>? venue,
+    Expression<String>? hrs,
+    Expression<String>? campus,
+    Expression<String>? coordinator,
+    Expression<String>? invigilator,
+    Expression<DateTime>? datetimeStr,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (courseCode != null) 'course_code': courseCode,
+      if (institutionId != null) 'institution_id': institutionId,
+      if (day != null) 'day': day,
+      if (time != null) 'time': time,
+      if (venue != null) 'venue': venue,
+      if (hrs != null) 'hrs': hrs,
+      if (campus != null) 'campus': campus,
+      if (coordinator != null) 'coordinator': coordinator,
+      if (invigilator != null) 'invigilator': invigilator,
+      if (datetimeStr != null) 'datetime_str': datetimeStr,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ExamTimetableCompanion copyWith({
+    Value<String>? courseCode,
+    Value<String>? institutionId,
+    Value<String>? day,
+    Value<String>? time,
+    Value<String>? venue,
+    Value<String>? hrs,
+    Value<String>? campus,
+    Value<String>? coordinator,
+    Value<String>? invigilator,
+    Value<DateTime>? datetimeStr,
+    Value<int>? rowid,
+  }) {
+    return ExamTimetableCompanion(
+      courseCode: courseCode ?? this.courseCode,
+      institutionId: institutionId ?? this.institutionId,
+      day: day ?? this.day,
+      time: time ?? this.time,
+      venue: venue ?? this.venue,
+      hrs: hrs ?? this.hrs,
+      campus: campus ?? this.campus,
+      coordinator: coordinator ?? this.coordinator,
+      invigilator: invigilator ?? this.invigilator,
+      datetimeStr: datetimeStr ?? this.datetimeStr,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (courseCode.present) {
+      map['course_code'] = Variable<String>(courseCode.value);
+    }
+    if (institutionId.present) {
+      map['institution_id'] = Variable<String>(institutionId.value);
+    }
+    if (day.present) {
+      map['day'] = Variable<String>(day.value);
+    }
+    if (time.present) {
+      map['time'] = Variable<String>(time.value);
+    }
+    if (venue.present) {
+      map['venue'] = Variable<String>(venue.value);
+    }
+    if (hrs.present) {
+      map['hrs'] = Variable<String>(hrs.value);
+    }
+    if (campus.present) {
+      map['campus'] = Variable<String>(campus.value);
+    }
+    if (coordinator.present) {
+      map['coordinator'] = Variable<String>(coordinator.value);
+    }
+    if (invigilator.present) {
+      map['invigilator'] = Variable<String>(invigilator.value);
+    }
+    if (datetimeStr.present) {
+      map['datetime_str'] = Variable<DateTime>(datetimeStr.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExamTimetableCompanion(')
+          ..write('courseCode: $courseCode, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('day: $day, ')
+          ..write('time: $time, ')
+          ..write('venue: $venue, ')
+          ..write('hrs: $hrs, ')
+          ..write('campus: $campus, ')
+          ..write('coordinator: $coordinator, ')
+          ..write('invigilator: $invigilator, ')
+          ..write('datetimeStr: $datetimeStr, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ChirpUserTable extends ChirpUser
     with TableInfo<$ChirpUserTable, ChirpUserData> {
   @override
@@ -17382,6 +18008,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   );
   late final $MagnetFinancialTransactionTable magnetFinancialTransaction =
       $MagnetFinancialTransactionTable(this);
+  late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
   late final $ChirpCommunityMembershipTable chirpCommunityMembership =
@@ -17415,6 +18042,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     magnetCredentials,
     magnetCourseInfo,
     magnetFinancialTransaction,
+    examTimetable,
     chirpUser,
     community,
     chirpCommunityMembership,
@@ -24158,6 +24786,315 @@ typedef $$MagnetFinancialTransactionTableProcessedTableManager =
       MagnetFinancialTransactionData,
       PrefetchHooks Function()
     >;
+typedef $$ExamTimetableTableCreateCompanionBuilder =
+    ExamTimetableCompanion Function({
+      required String courseCode,
+      required String institutionId,
+      required String day,
+      required String time,
+      required String venue,
+      required String hrs,
+      required String campus,
+      required String coordinator,
+      required String invigilator,
+      required DateTime datetimeStr,
+      Value<int> rowid,
+    });
+typedef $$ExamTimetableTableUpdateCompanionBuilder =
+    ExamTimetableCompanion Function({
+      Value<String> courseCode,
+      Value<String> institutionId,
+      Value<String> day,
+      Value<String> time,
+      Value<String> venue,
+      Value<String> hrs,
+      Value<String> campus,
+      Value<String> coordinator,
+      Value<String> invigilator,
+      Value<DateTime> datetimeStr,
+      Value<int> rowid,
+    });
+
+class $$ExamTimetableTableFilterComposer
+    extends Composer<_$AppDataBase, $ExamTimetableTable> {
+  $$ExamTimetableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get venue => $composableBuilder(
+    column: $table.venue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get hrs => $composableBuilder(
+    column: $table.hrs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get coordinator => $composableBuilder(
+    column: $table.coordinator,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invigilator => $composableBuilder(
+    column: $table.invigilator,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get datetimeStr => $composableBuilder(
+    column: $table.datetimeStr,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ExamTimetableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ExamTimetableTable> {
+  $$ExamTimetableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get venue => $composableBuilder(
+    column: $table.venue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get hrs => $composableBuilder(
+    column: $table.hrs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get coordinator => $composableBuilder(
+    column: $table.coordinator,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invigilator => $composableBuilder(
+    column: $table.invigilator,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get datetimeStr => $composableBuilder(
+    column: $table.datetimeStr,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExamTimetableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ExamTimetableTable> {
+  $$ExamTimetableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get day =>
+      $composableBuilder(column: $table.day, builder: (column) => column);
+
+  GeneratedColumn<String> get time =>
+      $composableBuilder(column: $table.time, builder: (column) => column);
+
+  GeneratedColumn<String> get venue =>
+      $composableBuilder(column: $table.venue, builder: (column) => column);
+
+  GeneratedColumn<String> get hrs =>
+      $composableBuilder(column: $table.hrs, builder: (column) => column);
+
+  GeneratedColumn<String> get campus =>
+      $composableBuilder(column: $table.campus, builder: (column) => column);
+
+  GeneratedColumn<String> get coordinator => $composableBuilder(
+    column: $table.coordinator,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get invigilator => $composableBuilder(
+    column: $table.invigilator,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get datetimeStr => $composableBuilder(
+    column: $table.datetimeStr,
+    builder: (column) => column,
+  );
+}
+
+class $$ExamTimetableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ExamTimetableTable,
+          ExamTimetableData,
+          $$ExamTimetableTableFilterComposer,
+          $$ExamTimetableTableOrderingComposer,
+          $$ExamTimetableTableAnnotationComposer,
+          $$ExamTimetableTableCreateCompanionBuilder,
+          $$ExamTimetableTableUpdateCompanionBuilder,
+          (
+            ExamTimetableData,
+            BaseReferences<
+              _$AppDataBase,
+              $ExamTimetableTable,
+              ExamTimetableData
+            >,
+          ),
+          ExamTimetableData,
+          PrefetchHooks Function()
+        > {
+  $$ExamTimetableTableTableManager(_$AppDataBase db, $ExamTimetableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExamTimetableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExamTimetableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExamTimetableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> courseCode = const Value.absent(),
+                Value<String> institutionId = const Value.absent(),
+                Value<String> day = const Value.absent(),
+                Value<String> time = const Value.absent(),
+                Value<String> venue = const Value.absent(),
+                Value<String> hrs = const Value.absent(),
+                Value<String> campus = const Value.absent(),
+                Value<String> coordinator = const Value.absent(),
+                Value<String> invigilator = const Value.absent(),
+                Value<DateTime> datetimeStr = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ExamTimetableCompanion(
+                courseCode: courseCode,
+                institutionId: institutionId,
+                day: day,
+                time: time,
+                venue: venue,
+                hrs: hrs,
+                campus: campus,
+                coordinator: coordinator,
+                invigilator: invigilator,
+                datetimeStr: datetimeStr,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String courseCode,
+                required String institutionId,
+                required String day,
+                required String time,
+                required String venue,
+                required String hrs,
+                required String campus,
+                required String coordinator,
+                required String invigilator,
+                required DateTime datetimeStr,
+                Value<int> rowid = const Value.absent(),
+              }) => ExamTimetableCompanion.insert(
+                courseCode: courseCode,
+                institutionId: institutionId,
+                day: day,
+                time: time,
+                venue: venue,
+                hrs: hrs,
+                campus: campus,
+                coordinator: coordinator,
+                invigilator: invigilator,
+                datetimeStr: datetimeStr,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExamTimetableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ExamTimetableTable,
+      ExamTimetableData,
+      $$ExamTimetableTableFilterComposer,
+      $$ExamTimetableTableOrderingComposer,
+      $$ExamTimetableTableAnnotationComposer,
+      $$ExamTimetableTableCreateCompanionBuilder,
+      $$ExamTimetableTableUpdateCompanionBuilder,
+      (
+        ExamTimetableData,
+        BaseReferences<_$AppDataBase, $ExamTimetableTable, ExamTimetableData>,
+      ),
+      ExamTimetableData,
+      PrefetchHooks Function()
+    >;
 typedef $$ChirpUserTableCreateCompanionBuilder =
     ChirpUserCompanion Function({
       required String userID,
@@ -26789,6 +27726,8 @@ class $AppDataBaseManager {
         _db,
         _db.magnetFinancialTransaction,
       );
+  $$ExamTimetableTableTableManager get examTimetable =>
+      $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>
       $$ChirpUserTableTableManager(_db, _db.chirpUser);
   $$CommunityTableTableManager get community =>
