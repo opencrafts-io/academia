@@ -25,44 +25,10 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
   }
 
 
-  Future<Either<Failure, List<ExamTimetableData>>> getExamTimetable({
-    required String institutionId,
-    required List<String> courseCodes,
-  }) async {
-    try {
-      final response = await dioClient.dio.post(
-        "/$servicePath/api/exams/by-codes/",
-        data: {"institution_id": institutionId, "course_codes": courseCodes},
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final results = (response.data as List)
-            .map((e) => ExamTimetableData.fromJson(e as Map<String, dynamic>))
-            .toList();
-
-        return Right(results);
-      }
-
-      return left(
-        NetworkFailure(error: "", message: "Failed to fetch exam timetable"),
-      );
-    } on DioException catch (de) {
-      return handleDioError(de);
-    } catch (e) {
-      return left(
-        CacheFailure(
-          error: e,
-          message:
-              // "Another Brick in the Wall" - Pink Floyd
-              "We don't need no education... but we do need a working connection! Couldn't fetch your exam timetable. The system is in detention!",
-        ),
-      );
-    }
-  }
-
-  Future<Either<Failure, List<ExamTimetableData>>> refreshExamTimetable({
+  Future<Either<Failure, List<ExamTimetableData>>> _fetchExamTimetable({
     required String institutionId,
     List<String>? courseCodes,
+    required String operationName,
   }) async {
     try {
       final response = await dioClient.dio.post(
@@ -78,12 +44,14 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
         final results = (response.data as List)
             .map((e) => ExamTimetableData.fromJson(e as Map<String, dynamic>))
             .toList();
-
         return Right(results);
       }
 
       return left(
-        NetworkFailure(error: "", message: "Failed to refresh exam timetable"),
+        NetworkFailure(
+          error: "HTTP ${response.statusCode}",
+          message: "Failed to $operationName exam timetable",
+        ),
       );
     } on DioException catch (de) {
       return handleDioError(de);
@@ -92,10 +60,31 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
         CacheFailure(
           error: e,
           message:
-              // "The Final Countdown" - Europe
-              "It's the final countdown... but the exam schedule won't load! We're having technical difficulties before the big day!",
+              "Could not $operationName your exam timetable. Please check your connection and try again.",
         ),
       );
     }
+  }
+
+  Future<Either<Failure, List<ExamTimetableData>>> getExamTimetable({
+    required String institutionId,
+    required List<String> courseCodes,
+  }) async {
+    return _fetchExamTimetable(
+      institutionId: institutionId,
+      courseCodes: courseCodes,
+      operationName: "fetch",
+    );
+  }
+
+  Future<Either<Failure, List<ExamTimetableData>>> refreshExamTimetable({
+    required String institutionId,
+    List<String>? courseCodes,
+  }) async {
+    return _fetchExamTimetable(
+      institutionId: institutionId,
+      courseCodes: courseCodes,
+      operationName: "refresh",
+    );
   }
 }

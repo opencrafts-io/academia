@@ -140,7 +140,6 @@ class ExamTimetableBloc extends Bloc<ExamTimetableEvent, ExamTimetableState> {
   ) async {
     final result = await deleteExamByCourseCodeUseCase(
       courseCode: event.courseCode,
-      institutionId: event.institutionId,
     );
 
     result.fold(

@@ -5,9 +5,6 @@ class ExamTimetable extends Table {
   @JsonKey("course_code")
   TextColumn get courseCode => text()();
 
-  // @JsonKey("institution_id")
-  // TextColumn get institutionId => text()();
-
   TextColumn get day => text()();
   @JsonKey("start_time")
   TextColumn get startTime => text()();
