@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
-  final VoidCallback onSearchTap;
 
-  const EmptyState({required this.onSearchTap, super.key});
+  const EmptyState({ super.key});
 
   @override
   Widget build(BuildContext context) {

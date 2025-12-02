@@ -76,7 +76,7 @@ class ExamSearchResultCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          exam.time,
+                          "${exam.startTime} - ${exam.endTime}",
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),

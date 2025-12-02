@@ -41,31 +41,48 @@ class _CountdownTimerState extends State<CountdownTimer> {
     });
   }
 
-  String _formatDuration(Duration duration) {
-    if (duration == Duration.zero) {
-      return 'Exam time!';
-    }
-
-    final days = duration.inDays;
-    final hours = duration.inHours % 24;
-    final minutes = duration.inMinutes % 60;
-    final seconds = duration.inSeconds % 60;
-
-    if (days > 0) {
-      return '$days ${days == 1 ? 'day' : 'days'}, $hours ${hours == 1 ? 'hr' : 'hrs'}, $minutes ${minutes == 1 ? 'min' : 'mins'}, $seconds ${seconds == 1 ? 'sec' : 'secs'}';
-    } else if (hours > 0) {
-      return '$hours ${hours == 1 ? 'hr' : 'hrs'}, $minutes ${minutes == 1 ? 'min' : 'mins'}, $seconds ${seconds == 1 ? 'sec' : 'secs'}';
-    } else if (minutes > 0) {
-      return '$minutes ${minutes == 1 ? 'min' : 'mins'}, $seconds ${seconds == 1 ? 'sec' : 'secs'}';
-    } else {
-      return '$seconds ${seconds == 1 ? 'second' : 'seconds'}';
-    }
+  // Helper to get time values
+  Map<String, int> _getTimeValues(Duration duration) {
+    return {
+      'days': duration.inDays,
+      'hours': duration.inHours % 24,
+      'minutes': duration.inMinutes % 60,
+      'seconds': duration.inSeconds % 60,
+    };
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final timeValues = _getTimeValues(_remainingTime);
+
+    if (_remainingTime == Duration.zero) {
+      return Container(
+        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.primaryContainer,
+              colorScheme.secondaryContainer,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Center(
+          child: Text(
+            'Exam time!',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              color: colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -80,13 +97,6 @@ class _CountdownTimerState extends State<CountdownTimer> {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: colorScheme.primary.withValues(alpha: 0.2),
-        //     blurRadius: 12,
-        //     offset: const Offset(0, 4),
-        //   ),
-        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,16 +118,108 @@ class _CountdownTimerState extends State<CountdownTimer> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            _formatDuration(_remainingTime),
-            style: theme.textTheme.headlineMedium?.copyWith(
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _TimeDigit(
+                value: timeValues['days']!,
+                label: 'DAYS',
+                colorScheme: colorScheme,
+                textTheme: theme.textTheme,
+              ),
+              _TimeSeparator(colorScheme: colorScheme),
+              _TimeDigit(
+                value: timeValues['hours']!,
+                label: 'HOURS',
+                colorScheme: colorScheme,
+                textTheme: theme.textTheme,
+              ),
+              _TimeSeparator(colorScheme: colorScheme),
+              _TimeDigit(
+                value: timeValues['minutes']!,
+                label: 'MINUTES',
+                colorScheme: colorScheme,
+                textTheme: theme.textTheme,
+              ),
+              _TimeSeparator(colorScheme: colorScheme),
+              _TimeDigit(
+                value: timeValues['seconds']!,
+                label: 'SECONDS',
+                colorScheme: colorScheme,
+                textTheme: theme.textTheme,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimeDigit extends StatelessWidget {
+  final int value;
+  final String label;
+  final ColorScheme colorScheme;
+  final TextTheme textTheme;
+
+  const _TimeDigit({
+    required this.value,
+    required this.label,
+    required this.colorScheme,
+    required this.textTheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            value.toString().padLeft(2, '0'),
+            style: textTheme.headlineMedium?.copyWith(
               color: colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),
           ),
-        ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: textTheme.labelSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TimeSeparator extends StatelessWidget {
+  final ColorScheme colorScheme;
+
+  const _TimeSeparator({required this.colorScheme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Text(
+        ':',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
+        ),
       ),
     );
   }

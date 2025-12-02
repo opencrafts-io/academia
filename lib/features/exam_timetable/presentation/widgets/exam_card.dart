@@ -17,18 +17,18 @@ class ExamCard extends StatelessWidget {
     this.isPast = false,
   });
 
-  Color _getExamColor(BuildContext context, int index) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final colors = [
-      colorScheme.primaryContainer,
-      colorScheme.secondaryContainer,
-      colorScheme.tertiaryContainer,
-      colorScheme.primary.withValues(alpha: 0.15),
-      colorScheme.secondary.withValues(alpha: 0.15),
-      colorScheme.tertiary.withValues(alpha: 0.15),
-    ];
-    return colors[index % colors.length];
-  }
+  // Color _getExamColor(BuildContext context, int index) {
+  //   final colorScheme = Theme.of(context).colorScheme;
+  //   final colors = [
+  //     colorScheme.primaryContainer,
+  //     colorScheme.secondaryContainer,
+  //     colorScheme.tertiaryContainer,
+  //     colorScheme.primary.withValues(alpha: 0.15),
+  //     colorScheme.secondary.withValues(alpha: 0.15),
+  //     colorScheme.tertiary.withValues(alpha: 0.15),
+  //   ];
+  //   return colors[index % colors.length];
+  // }
 
   void _showDeleteDialog(BuildContext context) {
     final theme = Theme.of(context);
@@ -75,8 +75,8 @@ class ExamCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     final cardColor = isPast
-        ? colorScheme.surfaceContainerHigh
-        : _getExamColor(context, index);
+        ? colorScheme.secondaryContainer
+        : colorScheme.tertiaryContainer;
 
     final textColor = isPast
         ? colorScheme.onSurfaceVariant
@@ -189,7 +189,7 @@ class ExamCard extends StatelessWidget {
                         const SizedBox(height: 6),
                         _CompactInfoRow(
                           icon: Icons.access_time,
-                          text: exam.time,
+                          text: "${exam.startTime} - ${exam.endTime}",
                           textColor: textColor,
                           theme: theme,
                         ),
