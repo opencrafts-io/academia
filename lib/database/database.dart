@@ -26,7 +26,6 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/core/core.dart';
 
-
 part 'database.g.dart';
 
 @DriftDatabase(
@@ -65,7 +64,7 @@ part 'database.g.dart';
 
     // Exam Timetable
     ExamTimetable,
-    
+
     /**************************************************************
     *              CHIRP FEATURE DATA MODELS
     **************************************************************/
@@ -86,7 +85,6 @@ part 'database.g.dart';
     StreakMilestone,
   ],
 )
-
 class AppDataBase extends _$AppDataBase {
   final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter
@@ -105,6 +103,9 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
+        if (from < 15) {
+          await m.createTable(examTimetable);
+        }
       },
       beforeOpen: (details) async {
         _logger.i(
