@@ -79,8 +79,8 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
+        Navigator.of(context).pop();
       }
-      Navigator.of(context).pop();
     }
   }
 
@@ -134,6 +134,7 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
           if (state is ExamTimetableLoaded) {
             setState(() {
               _searchResults = state.exams;
+              _selectedExams.clear();
             });
           } else if (state is ExamTimetableError) {
             ScaffoldMessenger.of(context).showSnackBar(

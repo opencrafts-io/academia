@@ -47,12 +47,19 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   void _importCoursesFromMagnet() {
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
-      context.read<MagnetBloc>().add(
-        GetCachedMagnetStudentTimetableEvent(
-          institutionID: int.parse(widget.institutionId),
-          userID: profileState.profile.id,
-        ),
-      );
+      try {
+        final institutionIdInt = int.parse(widget.institutionId);
+        context.read<MagnetBloc>().add(
+          GetCachedMagnetStudentTimetableEvent(
+            institutionID: institutionIdInt,
+            userID: profileState.profile.id,
+          ),
+        );
+      } on Exception catch (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid institution ID format")),
+        );
+      }
     }
   }
 
@@ -81,7 +88,15 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
       currentCourseCodes = currentState.exams.map((e) => e.courseCode).toList();
     }
 
-    if (currentCourseCodes.isEmpty) return;
+    if (currentCourseCodes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No courses to refresh. Add exams first."),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
 
     context.read<ExamTimetableBloc>().add(
       RefreshExamTimetable(
