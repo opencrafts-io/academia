@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 
 class ExamTimetable extends Equatable {
   final String courseCode;
-  final String institutionId;
   final String day;
-  final String time;
+  final String startTime;
+  final String endTime;
   final String venue;
   final String hrs;
   final String campus;
@@ -14,9 +14,9 @@ class ExamTimetable extends Equatable {
 
   const ExamTimetable({
     required this.courseCode,
-    required this.institutionId,
     required this.day,
-    required this.time,
+    required this.startTime,
+    required this.endTime,
     required this.venue,
     required this.hrs,
     required this.campus,
@@ -38,9 +38,9 @@ class ExamTimetable extends Equatable {
   @override
   List<Object?> get props => [
     courseCode,
-    institutionId,
     day,
-    time,
+    startTime,
+    endTime,
     venue,
     hrs,
     campus,

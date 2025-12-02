@@ -9,12 +9,12 @@ class ExamTimetableLocalDataSource {
   ExamTimetableLocalDataSource({required this.localDB});
 
   Future<Either<Failure, List<ExamTimetableData>>> getCachedExams({
-    required String institutionId,
+    // required String institutionId,
     List<String>? courseCodes,
   }) async {
     try {
-      final query = localDB.select(localDB.examTimetable)
-        ..where((t) => t.institutionId.equals(institutionId));
+      final query = localDB.select(localDB.examTimetable);
+        // ..where((t) => t.institutionId.equals(institutionId));
 
       if (courseCodes != null && courseCodes.isNotEmpty) {
         query.where((t) => t.courseCode.isIn(courseCodes));
@@ -22,7 +22,7 @@ class ExamTimetableLocalDataSource {
 
       query.orderBy([
         (exam) => OrderingTerm(expression: exam.day, mode: OrderingMode.asc),
-        (exam) => OrderingTerm(expression: exam.time, mode: OrderingMode.asc),
+        (exam) => OrderingTerm(expression: exam.startTime, mode: OrderingMode.asc),
       ]);
 
       final results = await query.get();
@@ -85,13 +85,11 @@ class ExamTimetableLocalDataSource {
 
   Future<Either<Failure, void>> deleteExamByCourseCode({
     required String courseCode,
-    required String institutionId,
   }) async {
     try {
       await (localDB.delete(localDB.examTimetable)..where(
             (t) =>
-                t.courseCode.equals(courseCode) &
-                t.institutionId.equals(institutionId),
+                t.courseCode.equals(courseCode),
           ))
           .go();
       return right(null);
@@ -107,47 +105,6 @@ class ExamTimetableLocalDataSource {
     }
   }
 
-  Future<Either<Failure, void>> deleteExamsByCourseCodes({
-    required List<String> courseCodes,
-    required String institutionId,
-  }) async {
-    try {
-      await (localDB.delete(localDB.examTimetable)..where(
-            (t) =>
-                t.courseCode.isIn(courseCodes) &
-                t.institutionId.equals(institutionId),
-          ))
-          .go();
-      return right(null);
-    } catch (e) {
-      return left(
-        CacheFailure(
-          error: e,
-          message:
-              // "Wipe Out" - The Surfaris
-              "Wipe out! We couldn't clear the exam timetable. The database is hanging ten!",
-        ),
-      );
-    }
-  }
 
-  Future<Either<Failure, void>> deleteAllExamsByInstitution(
-    String institutionId,
-  ) async {
-    try {
-      await (localDB.delete(
-        localDB.examTimetable,
-      )..where((t) => t.institutionId.equals(institutionId))).go();
-      return right(null);
-    } catch (e) {
-      return left(
-        CacheFailure(
-          error: e,
-          message:
-              // "Wipe Out" - The Surfaris
-              "Wipe out! We couldn't clear the exam timetable. The database is hanging ten!",
-        ),
-      );
-    }
-  }
+
 }

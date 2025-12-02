@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class ExamTimetableRepository {
   Future<Either<Failure, List<ExamTimetable>>> getCachedExams({
-    required String institutionId,
+    // required String institutionId,
     List<String>? courseCodes,
   });
 
@@ -22,11 +22,6 @@ abstract class ExamTimetableRepository {
 
   Future<Either<Failure, void>> deleteExamByCourseCode({
     required String courseCode,
-    required String institutionId,
   });
 
-  Future<Either<Failure, void>> deleteExamsByCourseCodes({
-    required List<String> courseCodes,
-    required String institutionId,
-  });
 }

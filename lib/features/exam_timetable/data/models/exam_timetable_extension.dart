@@ -4,9 +4,10 @@ import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.da
 extension ExamTimetableExtension on ExamTimetable {
   ExamTimetableData toModel() => ExamTimetableData(
     courseCode: courseCode,
-    institutionId: institutionId,
+    // institutionId: institutionId,
     day: day,
-    time: time,
+    startTime: startTime,
+    endTime: endTime,
     venue: venue,
     hrs: hrs,
     campus: campus,
@@ -19,9 +20,10 @@ extension ExamTimetableExtension on ExamTimetable {
 extension ExamTimetableDataExtension on ExamTimetableData {
   ExamTimetable toEntity() => ExamTimetable(
     courseCode: courseCode,
-    institutionId: institutionId,
+    // institutionId: institutionId,
     day: day,
-    time: time,
+    startTime: startTime,
+    endTime: endTime,
     venue: venue,
     hrs: hrs,
     campus: campus,
@@ -32,9 +34,10 @@ extension ExamTimetableDataExtension on ExamTimetableData {
 
   ExamTimetable toDomainEntity() => ExamTimetable(
     courseCode: courseCode,
-    institutionId: institutionId,
+    // institutionId: institutionId,
     day: day,
-    time: time,
+    startTime: startTime,
+    endTime: endTime,
     venue: venue,
     hrs: hrs,
     campus: campus,

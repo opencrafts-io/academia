@@ -5,11 +5,14 @@ class ExamTimetable extends Table {
   @JsonKey("course_code")
   TextColumn get courseCode => text()();
 
-  @JsonKey("institution_id")
-  TextColumn get institutionId => text()();
+  // @JsonKey("institution_id")
+  // TextColumn get institutionId => text()();
 
   TextColumn get day => text()();
-  TextColumn get time => text()();
+  @JsonKey("start_time")
+  TextColumn get startTime => text()();
+  @JsonKey("end_time")
+  TextColumn get endTime => text()();
   TextColumn get venue => text()();
   TextColumn get hrs => text()();
   TextColumn get campus => text()();
@@ -20,5 +23,6 @@ class ExamTimetable extends Table {
   DateTimeColumn get datetimeStr => dateTime()();
 
   @override
-  Set<Column> get primaryKey => {courseCode, institutionId};
+  Set<Column> get primaryKey => {courseCode};
 }
+

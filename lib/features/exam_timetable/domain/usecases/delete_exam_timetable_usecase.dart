@@ -13,7 +13,7 @@ class DeleteExamByCourseCodeUseCase {
   }) {
     return repository.deleteExamByCourseCode(
       courseCode: courseCode,
-      institutionId: institutionId,
+      // institutionId: institutionId,
     );
   }
 }

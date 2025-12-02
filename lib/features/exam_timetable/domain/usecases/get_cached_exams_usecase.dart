@@ -8,11 +8,11 @@ class GetCachedExamsUseCase {
   GetCachedExamsUseCase(this.repository);
 
   Future<Either<Failure, List<ExamTimetable>>> call({
-    required String institutionId,
+    // required String institutionId,
     List<String>? courseCodes,
   }) {
     return repository.getCachedExams(
-      institutionId: institutionId,
+      // institutionId: institutionId,
       courseCodes: courseCodes,
     );
   }

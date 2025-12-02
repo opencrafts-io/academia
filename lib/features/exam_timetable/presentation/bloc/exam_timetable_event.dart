@@ -8,13 +8,13 @@ abstract class ExamTimetableEvent extends Equatable {
 }
 
 class LoadCachedExams extends ExamTimetableEvent {
-  final String institutionId;
+  // final String institutionId;
   final List<String>? courseCodes;
 
-  const LoadCachedExams({required this.institutionId, this.courseCodes});
+  const LoadCachedExams({ this.courseCodes});
 
   @override
-  List<Object?> get props => [institutionId, courseCodes];
+  List<Object?> get props => [ courseCodes];
 }
 
 class SearchExamTimetable extends ExamTimetableEvent {
