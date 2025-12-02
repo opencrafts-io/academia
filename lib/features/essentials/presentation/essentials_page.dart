@@ -73,6 +73,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
       );
 
       if (isSupported) {
+        sl<AdService>().showInterstitialAd();
         ExamTimetableRoute(
           institutionId: primaryInstitution.institutionId.toString(),
         ).push(context);
@@ -84,13 +85,13 @@ class _EssentialsPageState extends State<EssentialsPage> {
         );
       }
       // TODO: multiple institutuions
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("No institution data found")),
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
