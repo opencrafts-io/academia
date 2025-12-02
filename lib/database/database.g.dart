@@ -12983,17 +12983,6 @@ class $ExamTimetableTable extends ExamTimetable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
-    'institutionId',
-  );
-  @override
-  late final GeneratedColumn<String> institutionId = GeneratedColumn<String>(
-    'institution_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _dayMeta = const VerificationMeta('day');
   @override
   late final GeneratedColumn<String> day = GeneratedColumn<String>(
@@ -13003,10 +12992,23 @@ class $ExamTimetableTable extends ExamTimetable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _timeMeta = const VerificationMeta('time');
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
   @override
-  late final GeneratedColumn<String> time = GeneratedColumn<String>(
-    'time',
+  late final GeneratedColumn<String> startTime = GeneratedColumn<String>(
+    'start_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
+  @override
+  late final GeneratedColumn<String> endTime = GeneratedColumn<String>(
+    'end_time',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -13075,9 +13077,9 @@ class $ExamTimetableTable extends ExamTimetable
   @override
   List<GeneratedColumn> get $columns => [
     courseCode,
-    institutionId,
     day,
-    time,
+    startTime,
+    endTime,
     venue,
     hrs,
     campus,
@@ -13105,17 +13107,6 @@ class $ExamTimetableTable extends ExamTimetable
     } else if (isInserting) {
       context.missing(_courseCodeMeta);
     }
-    if (data.containsKey('institution_id')) {
-      context.handle(
-        _institutionIdMeta,
-        institutionId.isAcceptableOrUnknown(
-          data['institution_id']!,
-          _institutionIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_institutionIdMeta);
-    }
     if (data.containsKey('day')) {
       context.handle(
         _dayMeta,
@@ -13124,13 +13115,21 @@ class $ExamTimetableTable extends ExamTimetable
     } else if (isInserting) {
       context.missing(_dayMeta);
     }
-    if (data.containsKey('time')) {
+    if (data.containsKey('start_time')) {
       context.handle(
-        _timeMeta,
-        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
       );
     } else if (isInserting) {
-      context.missing(_timeMeta);
+      context.missing(_startTimeMeta);
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endTimeMeta);
     }
     if (data.containsKey('venue')) {
       context.handle(
@@ -13193,7 +13192,7 @@ class $ExamTimetableTable extends ExamTimetable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {courseCode, institutionId};
+  Set<GeneratedColumn> get $primaryKey => {courseCode};
   @override
   ExamTimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -13202,17 +13201,17 @@ class $ExamTimetableTable extends ExamTimetable
         DriftSqlType.string,
         data['${effectivePrefix}course_code'],
       )!,
-      institutionId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}institution_id'],
-      )!,
       day: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}day'],
       )!,
-      time: attachedDatabase.typeMapping.read(
+      startTime: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}time'],
+        data['${effectivePrefix}start_time'],
+      )!,
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_time'],
       )!,
       venue: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -13250,9 +13249,9 @@ class $ExamTimetableTable extends ExamTimetable
 class ExamTimetableData extends DataClass
     implements Insertable<ExamTimetableData> {
   final String courseCode;
-  final String institutionId;
   final String day;
-  final String time;
+  final String startTime;
+  final String endTime;
   final String venue;
   final String hrs;
   final String campus;
@@ -13261,9 +13260,9 @@ class ExamTimetableData extends DataClass
   final DateTime datetimeStr;
   const ExamTimetableData({
     required this.courseCode,
-    required this.institutionId,
     required this.day,
-    required this.time,
+    required this.startTime,
+    required this.endTime,
     required this.venue,
     required this.hrs,
     required this.campus,
@@ -13275,9 +13274,9 @@ class ExamTimetableData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['course_code'] = Variable<String>(courseCode);
-    map['institution_id'] = Variable<String>(institutionId);
     map['day'] = Variable<String>(day);
-    map['time'] = Variable<String>(time);
+    map['start_time'] = Variable<String>(startTime);
+    map['end_time'] = Variable<String>(endTime);
     map['venue'] = Variable<String>(venue);
     map['hrs'] = Variable<String>(hrs);
     map['campus'] = Variable<String>(campus);
@@ -13290,9 +13289,9 @@ class ExamTimetableData extends DataClass
   ExamTimetableCompanion toCompanion(bool nullToAbsent) {
     return ExamTimetableCompanion(
       courseCode: Value(courseCode),
-      institutionId: Value(institutionId),
       day: Value(day),
-      time: Value(time),
+      startTime: Value(startTime),
+      endTime: Value(endTime),
       venue: Value(venue),
       hrs: Value(hrs),
       campus: Value(campus),
@@ -13309,9 +13308,9 @@ class ExamTimetableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ExamTimetableData(
       courseCode: serializer.fromJson<String>(json['course_code']),
-      institutionId: serializer.fromJson<String>(json['institution_id']),
       day: serializer.fromJson<String>(json['day']),
-      time: serializer.fromJson<String>(json['time']),
+      startTime: serializer.fromJson<String>(json['start_time']),
+      endTime: serializer.fromJson<String>(json['end_time']),
       venue: serializer.fromJson<String>(json['venue']),
       hrs: serializer.fromJson<String>(json['hrs']),
       campus: serializer.fromJson<String>(json['campus']),
@@ -13325,9 +13324,9 @@ class ExamTimetableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'course_code': serializer.toJson<String>(courseCode),
-      'institution_id': serializer.toJson<String>(institutionId),
       'day': serializer.toJson<String>(day),
-      'time': serializer.toJson<String>(time),
+      'start_time': serializer.toJson<String>(startTime),
+      'end_time': serializer.toJson<String>(endTime),
       'venue': serializer.toJson<String>(venue),
       'hrs': serializer.toJson<String>(hrs),
       'campus': serializer.toJson<String>(campus),
@@ -13339,9 +13338,9 @@ class ExamTimetableData extends DataClass
 
   ExamTimetableData copyWith({
     String? courseCode,
-    String? institutionId,
     String? day,
-    String? time,
+    String? startTime,
+    String? endTime,
     String? venue,
     String? hrs,
     String? campus,
@@ -13350,9 +13349,9 @@ class ExamTimetableData extends DataClass
     DateTime? datetimeStr,
   }) => ExamTimetableData(
     courseCode: courseCode ?? this.courseCode,
-    institutionId: institutionId ?? this.institutionId,
     day: day ?? this.day,
-    time: time ?? this.time,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
     venue: venue ?? this.venue,
     hrs: hrs ?? this.hrs,
     campus: campus ?? this.campus,
@@ -13365,11 +13364,9 @@ class ExamTimetableData extends DataClass
       courseCode: data.courseCode.present
           ? data.courseCode.value
           : this.courseCode,
-      institutionId: data.institutionId.present
-          ? data.institutionId.value
-          : this.institutionId,
       day: data.day.present ? data.day.value : this.day,
-      time: data.time.present ? data.time.value : this.time,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
       venue: data.venue.present ? data.venue.value : this.venue,
       hrs: data.hrs.present ? data.hrs.value : this.hrs,
       campus: data.campus.present ? data.campus.value : this.campus,
@@ -13389,9 +13386,9 @@ class ExamTimetableData extends DataClass
   String toString() {
     return (StringBuffer('ExamTimetableData(')
           ..write('courseCode: $courseCode, ')
-          ..write('institutionId: $institutionId, ')
           ..write('day: $day, ')
-          ..write('time: $time, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
           ..write('venue: $venue, ')
           ..write('hrs: $hrs, ')
           ..write('campus: $campus, ')
@@ -13405,9 +13402,9 @@ class ExamTimetableData extends DataClass
   @override
   int get hashCode => Object.hash(
     courseCode,
-    institutionId,
     day,
-    time,
+    startTime,
+    endTime,
     venue,
     hrs,
     campus,
@@ -13420,9 +13417,9 @@ class ExamTimetableData extends DataClass
       identical(this, other) ||
       (other is ExamTimetableData &&
           other.courseCode == this.courseCode &&
-          other.institutionId == this.institutionId &&
           other.day == this.day &&
-          other.time == this.time &&
+          other.startTime == this.startTime &&
+          other.endTime == this.endTime &&
           other.venue == this.venue &&
           other.hrs == this.hrs &&
           other.campus == this.campus &&
@@ -13433,9 +13430,9 @@ class ExamTimetableData extends DataClass
 
 class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   final Value<String> courseCode;
-  final Value<String> institutionId;
   final Value<String> day;
-  final Value<String> time;
+  final Value<String> startTime;
+  final Value<String> endTime;
   final Value<String> venue;
   final Value<String> hrs;
   final Value<String> campus;
@@ -13445,9 +13442,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   final Value<int> rowid;
   const ExamTimetableCompanion({
     this.courseCode = const Value.absent(),
-    this.institutionId = const Value.absent(),
     this.day = const Value.absent(),
-    this.time = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
     this.venue = const Value.absent(),
     this.hrs = const Value.absent(),
     this.campus = const Value.absent(),
@@ -13458,9 +13455,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   });
   ExamTimetableCompanion.insert({
     required String courseCode,
-    required String institutionId,
     required String day,
-    required String time,
+    required String startTime,
+    required String endTime,
     required String venue,
     required String hrs,
     required String campus,
@@ -13469,9 +13466,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     required DateTime datetimeStr,
     this.rowid = const Value.absent(),
   }) : courseCode = Value(courseCode),
-       institutionId = Value(institutionId),
        day = Value(day),
-       time = Value(time),
+       startTime = Value(startTime),
+       endTime = Value(endTime),
        venue = Value(venue),
        hrs = Value(hrs),
        campus = Value(campus),
@@ -13480,9 +13477,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
        datetimeStr = Value(datetimeStr);
   static Insertable<ExamTimetableData> custom({
     Expression<String>? courseCode,
-    Expression<String>? institutionId,
     Expression<String>? day,
-    Expression<String>? time,
+    Expression<String>? startTime,
+    Expression<String>? endTime,
     Expression<String>? venue,
     Expression<String>? hrs,
     Expression<String>? campus,
@@ -13493,9 +13490,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   }) {
     return RawValuesInsertable({
       if (courseCode != null) 'course_code': courseCode,
-      if (institutionId != null) 'institution_id': institutionId,
       if (day != null) 'day': day,
-      if (time != null) 'time': time,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
       if (venue != null) 'venue': venue,
       if (hrs != null) 'hrs': hrs,
       if (campus != null) 'campus': campus,
@@ -13508,9 +13505,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
 
   ExamTimetableCompanion copyWith({
     Value<String>? courseCode,
-    Value<String>? institutionId,
     Value<String>? day,
-    Value<String>? time,
+    Value<String>? startTime,
+    Value<String>? endTime,
     Value<String>? venue,
     Value<String>? hrs,
     Value<String>? campus,
@@ -13521,9 +13518,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   }) {
     return ExamTimetableCompanion(
       courseCode: courseCode ?? this.courseCode,
-      institutionId: institutionId ?? this.institutionId,
       day: day ?? this.day,
-      time: time ?? this.time,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
       venue: venue ?? this.venue,
       hrs: hrs ?? this.hrs,
       campus: campus ?? this.campus,
@@ -13540,14 +13537,14 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     if (courseCode.present) {
       map['course_code'] = Variable<String>(courseCode.value);
     }
-    if (institutionId.present) {
-      map['institution_id'] = Variable<String>(institutionId.value);
-    }
     if (day.present) {
       map['day'] = Variable<String>(day.value);
     }
-    if (time.present) {
-      map['time'] = Variable<String>(time.value);
+    if (startTime.present) {
+      map['start_time'] = Variable<String>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<String>(endTime.value);
     }
     if (venue.present) {
       map['venue'] = Variable<String>(venue.value);
@@ -13577,9 +13574,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   String toString() {
     return (StringBuffer('ExamTimetableCompanion(')
           ..write('courseCode: $courseCode, ')
-          ..write('institutionId: $institutionId, ')
           ..write('day: $day, ')
-          ..write('time: $time, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
           ..write('venue: $venue, ')
           ..write('hrs: $hrs, ')
           ..write('campus: $campus, ')
@@ -24789,9 +24786,9 @@ typedef $$MagnetFinancialTransactionTableProcessedTableManager =
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
       required String courseCode,
-      required String institutionId,
       required String day,
-      required String time,
+      required String startTime,
+      required String endTime,
       required String venue,
       required String hrs,
       required String campus,
@@ -24803,9 +24800,9 @@ typedef $$ExamTimetableTableCreateCompanionBuilder =
 typedef $$ExamTimetableTableUpdateCompanionBuilder =
     ExamTimetableCompanion Function({
       Value<String> courseCode,
-      Value<String> institutionId,
       Value<String> day,
-      Value<String> time,
+      Value<String> startTime,
+      Value<String> endTime,
       Value<String> venue,
       Value<String> hrs,
       Value<String> campus,
@@ -24829,18 +24826,18 @@ class $$ExamTimetableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get institutionId => $composableBuilder(
-    column: $table.institutionId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get day => $composableBuilder(
     column: $table.day,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get time => $composableBuilder(
-    column: $table.time,
+  ColumnFilters<String> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endTime => $composableBuilder(
+    column: $table.endTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24889,18 +24886,18 @@ class $$ExamTimetableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get institutionId => $composableBuilder(
-    column: $table.institutionId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get day => $composableBuilder(
     column: $table.day,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get time => $composableBuilder(
-    column: $table.time,
+  ColumnOrderings<String> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endTime => $composableBuilder(
+    column: $table.endTime,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24949,16 +24946,14 @@ class $$ExamTimetableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get institutionId => $composableBuilder(
-    column: $table.institutionId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get day =>
       $composableBuilder(column: $table.day, builder: (column) => column);
 
-  GeneratedColumn<String> get time =>
-      $composableBuilder(column: $table.time, builder: (column) => column);
+  GeneratedColumn<String> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<String> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
 
   GeneratedColumn<String> get venue =>
       $composableBuilder(column: $table.venue, builder: (column) => column);
@@ -25021,9 +25016,9 @@ class $$ExamTimetableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> courseCode = const Value.absent(),
-                Value<String> institutionId = const Value.absent(),
                 Value<String> day = const Value.absent(),
-                Value<String> time = const Value.absent(),
+                Value<String> startTime = const Value.absent(),
+                Value<String> endTime = const Value.absent(),
                 Value<String> venue = const Value.absent(),
                 Value<String> hrs = const Value.absent(),
                 Value<String> campus = const Value.absent(),
@@ -25033,9 +25028,9 @@ class $$ExamTimetableTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => ExamTimetableCompanion(
                 courseCode: courseCode,
-                institutionId: institutionId,
                 day: day,
-                time: time,
+                startTime: startTime,
+                endTime: endTime,
                 venue: venue,
                 hrs: hrs,
                 campus: campus,
@@ -25047,9 +25042,9 @@ class $$ExamTimetableTableTableManager
           createCompanionCallback:
               ({
                 required String courseCode,
-                required String institutionId,
                 required String day,
-                required String time,
+                required String startTime,
+                required String endTime,
                 required String venue,
                 required String hrs,
                 required String campus,
@@ -25059,9 +25054,9 @@ class $$ExamTimetableTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => ExamTimetableCompanion.insert(
                 courseCode: courseCode,
-                institutionId: institutionId,
                 day: day,
-                time: time,
+                startTime: startTime,
+                endTime: endTime,
                 venue: venue,
                 hrs: hrs,
                 campus: campus,

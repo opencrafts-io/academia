@@ -167,7 +167,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
           onTap: _navigateToSearch,
           borderRadius: BorderRadius.circular(50),
           child: Container(
-            height: 44,
+            height: 52,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(

@@ -188,7 +188,7 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Enter course codes',
+                      'Provide courses to search for.',
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w600,

@@ -33,25 +33,25 @@ class _EssentialItem {
 
 class _EssentialsPageState extends State<EssentialsPage> {
   late List<_EssentialItem> essentialItems = <_EssentialItem>[
-    _EssentialItem(
-      title: "Achievements",
-      ontap: () {
-        sl<AdService>().showInterstitialAd();
-        AchievementsHomePageRoute().push(context);
-      },
-      iconPath: "assets/icons/medal.png",
-    ),
+    // _EssentialItem(
+    //   title: "Achievements",
+    //   ontap: () {
+    //     sl<AdService>().showInterstitialAd();
+    //     AchievementsHomePageRoute().push(context);
+    //   },
+    //   iconPath: "assets/icons/medal.png",
+    // ),
     _EssentialItem(
       title: "To-Dos",
       ontap: () => TodosRoute().push(context),
       iconPath: "assets/icons/todos.png",
     ),
 
-    _EssentialItem(
-      title: "Identity",
-      ontap: null,
-      iconPath: "assets/icons/card.png",
-    ),
+    // _EssentialItem(
+    //   title: "Identity",
+    //   ontap: null,
+    //   iconPath: "assets/icons/card.png",
+    // ),
     _EssentialItem(
       title: "Exam timetable",
       ontap: _navigateToExamTimetable,
