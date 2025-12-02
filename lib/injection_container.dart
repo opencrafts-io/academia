@@ -661,6 +661,39 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  // Exam Timetable
+  // Data sources
+  sl.registerFactory(() => ExamTimetableLocalDataSource(localDB: sl()));
+  sl.registerFactory(
+    () => ExamTimetableRemoteDatasource(dioClient: sl(), flavor: sl()),
+  );
+
+  // Repository
+  sl.registerFactory<ExamTimetableRepository>(
+    () => ExamTimetableRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerFactory(() => GetCachedExamsUseCase(sl()));
+  sl.registerFactory(() => GetExamTimetableUseCase(sl()));
+  sl.registerFactory(() => CacheExamsUseCase(sl()));
+  sl.registerFactory(() => RefreshExamTimetableUseCase(sl()));
+  sl.registerFactory(() => DeleteExamByCourseCodeUseCase(sl()));
+
+  // BLoC
+  sl.registerFactory(
+    () => ExamTimetableBloc(
+      getCachedExamsUseCase: sl(),
+      getExamTimetableUseCase: sl(),
+      cacheExamsUseCase: sl(),
+      refreshExamTimetableUseCase: sl(),
+      deleteExamByCourseCodeUseCase: sl(),
+    ),
+  );
+
   // Magnet
   sl.registerFactory<MagnetCredentialsLocalDatasource>(
     () => MagnetCredentialsLocalDatasource(localDB: sl()),

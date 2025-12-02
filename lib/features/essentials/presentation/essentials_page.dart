@@ -3,8 +3,10 @@ import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/admob/admob.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/magnet/presentation/bloc/magnet_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import '../widgets/essential_category_tile.dart';
@@ -45,17 +47,50 @@ class _EssentialsPageState extends State<EssentialsPage> {
       iconPath: "assets/icons/todos.png",
     ),
 
-    // _EssentialItem(
-    //   title: "Identity",
-    //   ontap: null,
-    //   iconPath: "assets/icons/card.png",
-    // ),
-    // _EssentialItem(
-    //   title: "Exam timetable",
-    //   ontap: null,
-    //   iconPath: "assets/icons/exam.png",
-    // ),
+    _EssentialItem(
+      title: "Identity",
+      ontap: null,
+      iconPath: "assets/icons/card.png",
+    ),
+    _EssentialItem(
+      title: "Exam timetable",
+      ontap: _navigateToExamTimetable,
+      iconPath: "assets/icons/exam.png",
+    ),
   ];
+
+  void _navigateToExamTimetable() {
+    final institutionState = context.read<InstitutionBloc>().state;
+    final magnetBloc = context.read<MagnetBloc>();
+
+    if (institutionState is InstitutionLoadedState &&
+        institutionState.institutions.isNotEmpty) {
+      final primaryInstitution = institutionState.institutions.first;
+
+      //Check if institution is supported
+      final isSupported = magnetBloc.isInstitutionSupported(
+        primaryInstitution.institutionId,
+      );
+
+      if (isSupported) {
+        ExamTimetableRoute(
+          institutionId: primaryInstitution.institutionId.toString(),
+        ).push(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("This feature is not supported for your school"),
+          ),
+        );
+      }
+      // TODO: multiple institutuions
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No institution data found")),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

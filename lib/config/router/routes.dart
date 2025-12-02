@@ -490,3 +490,30 @@ class AchievementDetailPageRoute extends GoRouteData with _$AchievementDetailPag
     return AchievementDetailPage(id: id);
   }
 }
+
+@TypedGoRoute<ExamTimetableRoute>(
+  path: "/exam-timetable/:institutionId",
+  routes: [TypedGoRoute<ExamTimetableSearchRoute>(path: "search")],
+)
+class ExamTimetableRoute extends GoRouteData with _$ExamTimetableRoute {
+  final String institutionId;
+
+  const ExamTimetableRoute({required this.institutionId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ExamTimetableHomeScreen(institutionId: institutionId);
+  }
+}
+
+class ExamTimetableSearchRoute extends GoRouteData
+    with _$ExamTimetableSearchRoute {
+  final String institutionId;
+
+  const ExamTimetableSearchRoute({required this.institutionId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ExamTimetableSearchScreen(institutionId: institutionId);
+  }
+}

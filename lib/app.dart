@@ -96,6 +96,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
         BlocProvider(create: (context) => sl<FeedBloc>()),
         BlocProvider(create: (context) => sl<CommentBloc>()),
+        BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),

@@ -6,6 +6,7 @@ import 'package:academia/features/chirp/memberships/data/models/chirp_community_
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
+import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
 import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
@@ -24,7 +25,6 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/core/core.dart';
-
 
 part 'database.g.dart';
 
@@ -61,6 +61,10 @@ part 'database.g.dart';
     MagnetCredentials,
     MagnetCourseInfo,
     MagnetFinancialTransaction,
+
+    // Exam Timetable
+    ExamTimetable,
+
     /**************************************************************
     *              CHIRP FEATURE DATA MODELS
     **************************************************************/
@@ -81,7 +85,6 @@ part 'database.g.dart';
     StreakMilestone,
   ],
 )
-
 class AppDataBase extends _$AppDataBase {
   final Logger _logger = Logger();
   // After generating code, this class needs to define a `schemaVersion` getter
@@ -90,7 +93,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration {
@@ -100,6 +103,9 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
+        if (from < 15) {
+          await m.createTable(examTimetable);
+        }
       },
       beforeOpen: (details) async {
         _logger.i(
