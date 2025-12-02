@@ -9,12 +9,10 @@ class ExamTimetableLocalDataSource {
   ExamTimetableLocalDataSource({required this.localDB});
 
   Future<Either<Failure, List<ExamTimetableData>>> getCachedExams({
-    // required String institutionId,
     List<String>? courseCodes,
   }) async {
     try {
       final query = localDB.select(localDB.examTimetable);
-        // ..where((t) => t.institutionId.equals(institutionId));
 
       if (courseCodes != null && courseCodes.isNotEmpty) {
         query.where((t) => t.courseCode.isIn(courseCodes));

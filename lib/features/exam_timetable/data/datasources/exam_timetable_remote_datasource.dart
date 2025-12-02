@@ -10,7 +10,6 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
   late String servicePath;
   final FlavorConfig flavor;
 
-
   ExamTimetableRemoteDatasource({
     required this.dioClient,
     required this.flavor,
@@ -23,7 +22,6 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
       servicePath = "dev-professor";
     }
   }
-
 
   Future<Either<Failure, List<ExamTimetableData>>> _fetchExamTimetable({
     required String institutionId,
@@ -41,6 +39,14 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.data == null || response.data is! List) {
+          return left(
+            NetworkFailure(
+              error: "Invalid response format",
+              message: "Failed to $operationName exam timetable",
+            ),
+          );
+        }
         final results = (response.data as List)
             .map((e) => ExamTimetableData.fromJson(e as Map<String, dynamic>))
             .toList();
