@@ -280,15 +280,25 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
               );
             }
 
+            List<ExamTimetable>? displayExams;
+            bool isRefreshing = false;
+
+            if (state is ExamTimetableLoaded) {
+              displayExams = state.exams;
+            } else if (state is ExamTimetableRefreshing) {
+              displayExams = state.previousExams;
+              isRefreshing = true;
+            }
+
             if (state is ExamTimetableEmpty ||
-                (state is ExamTimetableLoaded && state.exams.isEmpty)) {
+                (displayExams != null && displayExams.isEmpty)) {
               return EmptyState();
             }
 
-            if (state is ExamTimetableLoaded) {
-              final upcomingExams = _getUpcomingExams(state.exams);
-              final pastExams = _getPastExams(state.exams);
-              final nextExam = _getNextExam(state.exams);
+            if (displayExams != null) {
+              final upcomingExams = _getUpcomingExams(displayExams);
+              final pastExams = _getPastExams(displayExams);
+              final nextExam = _getNextExam(displayExams);
 
               return RefreshIndicator(
                 onRefresh: _refreshExams,
@@ -296,6 +306,12 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: 16),
                   children: [
+                    if (isRefreshing)
+                      LinearProgressIndicator(
+                        color: colorScheme.primary,
+                        backgroundColor: colorScheme.surfaceContainerHighest,
+                        minHeight: 2,
+                      ),
                     if (nextExam != null)
                       CountdownTimer(targetDateTime: nextExam.datetimeStr),
                     // Upcoming
