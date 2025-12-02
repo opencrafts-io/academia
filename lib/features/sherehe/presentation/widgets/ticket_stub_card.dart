@@ -1,14 +1,19 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket.dart';
 import 'package:flutter/material.dart';
 
 class TicketStubCard extends StatelessWidget {
   final Ticket ticket;
   final int quantity;
+  final String? eventId;
+  final bool showQrCode;
 
   const TicketStubCard({
     super.key,
     required this.ticket,
     required this.quantity,
+    this.eventId,
+    this.showQrCode = false,
   });
 
   @override
@@ -74,6 +79,20 @@ class TicketStubCard extends StatelessWidget {
               ],
             ),
           ),
+
+          if (showQrCode)
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 8),
+              child: FilledButton.icon(
+                onPressed: () => QrCodeRoute(
+                  eventId: eventId!,
+                  ticketName: ticket.ticketName,
+                  quantity: quantity,
+                ).push(context),
+                icon: const Icon(Icons.qr_code),
+                label: const Text("View QR Code"),
+              ),
+            ),
         ],
       ),
     );

@@ -102,6 +102,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
+  pretty_qr_code: ^3.5.0
 
 
 dev_dependencies:

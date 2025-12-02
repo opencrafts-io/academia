@@ -134,6 +134,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         return TicketStubCard(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
+                          eventId: state.attendee[index].eventId,
+                          showQrCode: true,
                         );
                       },
                     ),
@@ -163,6 +165,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       return TicketStubCard(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
+                        eventId: state.existingAttendee[index].eventId,
                       );
                     },
                   ),
@@ -186,6 +189,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       return TicketStubCard(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
+                        eventId: state.existingAttendee[index].eventId,
                       );
                     },
                   ),
