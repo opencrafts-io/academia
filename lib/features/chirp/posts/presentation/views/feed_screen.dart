@@ -80,7 +80,7 @@ class _FeedPageState extends State<FeedPage>
 
       // Insert ad after every `adInterval` posts
       if ((i + 1) % adInterval == 0) {
-        postsWithAds.add(BannerAdWidget(size: AdSize.fullBanner));
+        postsWithAds.add(BannerAdWidget(size: AdSize.banner));
       }
     }
 
@@ -175,13 +175,18 @@ class _FeedPageState extends State<FeedPage>
                     itemCount:
                         feed.length + (isLoadingMore || hasError ? 1 : 0),
                     itemBuilder: (context, index) {
-                      if (index < posts.length) {
-                        return BlocProvider(
-                          create: (context) =>
-                              sl<ChirpUserCubit>()
-                                ..getChirpUserByID(posts[index].authorId),
-                          child: feed[index],
-                        );
+                      if (index < feed.length) {
+                        final item = feed[index];
+
+                        if (item is PostCard) {
+                          return BlocProvider(
+                            create: (context) =>
+                                sl<ChirpUserCubit>()
+                                  ..getChirpUserByID(item.post.authorId),
+                            child: item,
+                          );
+                        }
+                        return item;
                       } else {
                         if (isLoadingMore) {
                           return const Center(

@@ -157,7 +157,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                   ),
                 ),
                 SizedBox(height: 22),
-                BannerAdWidget(size: AdSize.fullBanner),
+                BannerAdWidget(size: AdSize.banner),
               ],
             ),
           ),
