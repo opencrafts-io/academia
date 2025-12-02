@@ -176,15 +176,17 @@ class _FeedPageState extends State<FeedPage>
                         feed.length + (isLoadingMore || hasError ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index < feed.length) {
-                        if (feed[index] is PostCard) {
+                        final item = feed[index];
+
+                        if (item is PostCard) {
                           return BlocProvider(
                             create: (context) =>
                                 sl<ChirpUserCubit>()
-                                  ..getChirpUserByID(posts[index].authorId),
-                            child: feed[index],
+                                  ..getChirpUserByID(item.post.authorId),
+                            child: item,
                           );
                         }
-                        return feed[index];
+                        return item;
                       } else {
                         if (isLoadingMore) {
                           return const Center(
