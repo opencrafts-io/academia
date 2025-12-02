@@ -24,6 +24,7 @@ class ExamTimetableHomeScreen extends StatefulWidget {
 
 class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   Timer? _timer;
+  bool _hasAttemptedAutoImport = false;
 
   @override
   void initState() {
@@ -215,7 +216,10 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
               }
 
               if (state is ExamTimetableEmpty) {
-                _importCoursesFromMagnet();
+                if (!_hasAttemptedAutoImport) {
+                  _hasAttemptedAutoImport = true;
+                  _importCoursesFromMagnet();
+                }
               }
             },
           ),
