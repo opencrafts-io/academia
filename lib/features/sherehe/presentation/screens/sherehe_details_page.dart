@@ -115,12 +115,27 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          PurchasedTicketsRoute(eventId: widget.eventId).push(context);
-        },
-        icon: const Icon(Icons.confirmation_num),
-        label: const Text("My Tickets"),
+      floatingActionButton: Column(
+        spacing: 12.0,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            heroTag: "scan",
+            onPressed: () =>
+                QrCodeScannerRoute(eventId: widget.eventId).push(context),
+            icon: const Icon(Icons.qr_code_scanner),
+            label: const Text("Scan Tickets"),
+          ),
+          FloatingActionButton.extended(
+            heroTag: "tickets",
+            onPressed: () {
+              PurchasedTicketsRoute(eventId: widget.eventId).push(context);
+            },
+            icon: const Icon(Icons.confirmation_num),
+            label: const Text("My Tickets"),
+          ),
+        ],
       ),
     );
   }

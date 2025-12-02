@@ -339,6 +339,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
             ),
           ],
         ),
+        GoRouteData.$route(
+          path: 'qr-code-scanner',
+          factory: _$QrCodeScannerRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
@@ -460,6 +464,32 @@ mixin _$QrCodeRoute on GoRouteData {
       'ticket-name': _self.ticketName,
       'quantity': _self.quantity.toString(),
     },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$QrCodeScannerRoute on GoRouteData {
+  static QrCodeScannerRoute _fromState(GoRouterState state) =>
+      QrCodeScannerRoute(eventId: state.uri.queryParameters['event-id']!);
+
+  QrCodeScannerRoute get _self => this as QrCodeScannerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/qr-code-scanner',
+    queryParams: {'event-id': _self.eventId},
   );
 
   @override

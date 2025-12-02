@@ -213,6 +213,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
           path: "purchased-tickets",
           routes: [TypedGoRoute<QrCodeRoute>(path: "qr-code")],
         ),
+        TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
       ],
     ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
@@ -305,6 +306,17 @@ class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
       ticketName: ticketName,
       quantity: quantity,
     );
+  }
+}
+
+class QrCodeScannerRoute extends GoRouteData with _$QrCodeScannerRoute {
+  final String eventId;
+
+  const QrCodeScannerRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return QrCodeScannerScreen(eventId: eventId);
   }
 }
 
