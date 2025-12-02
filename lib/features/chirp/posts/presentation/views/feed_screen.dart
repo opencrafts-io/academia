@@ -1,10 +1,11 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
-import 'package:academia/features/chirp/chirp.dart';
+import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 
 class FeedPage extends StatefulWidget {
@@ -14,7 +15,8 @@ class FeedPage extends StatefulWidget {
   State<FeedPage> createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin {
+class _FeedPageState extends State<FeedPage>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
 
@@ -43,6 +45,46 @@ class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin 
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  List<Widget> getPostsWithAds(List<Post> posts) {
+    List<Widget> postsWithAds = [];
+    int adInterval = 3; // Interval after which to show ads
+
+    for (int i = 0; i < posts.length; i++) {
+      // Add the post item
+      postsWithAds.add(
+        PostCard(
+          post: posts[i],
+          onTap: () async {
+            // marking the post as viewed
+            context.read<FeedBloc>().add(
+              MarkPostAsViewed(
+                postId: posts[i].id,
+                viewerId: posts[i].authorId,
+              ),
+            );
+            final updatedPost = await context.push(
+              PostDetailRoute(postId: posts[i].id).location,
+              extra: posts[i],
+            );
+
+            if (!context.mounted) return;
+
+            if (updatedPost != null && updatedPost is Post) {
+              context.read<FeedBloc>().add(UpdatePostInFeed(updatedPost));
+            }
+          },
+        ),
+      );
+
+      // Insert ad after every `adInterval` posts
+      if ((i + 1) % adInterval == 0) {
+        postsWithAds.add(BannerAdWidget(size: AdSize.fullBanner));
+      }
+    }
+
+    return postsWithAds;
   }
 
   @override
@@ -112,7 +154,10 @@ class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin 
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Lottie.asset("assets/lotties/chat.json", height: 300),
+                            Lottie.asset(
+                              "assets/lotties/chat.json",
+                              height: 300,
+                            ),
                             Text(
                               "It's a little quiet in here... "
                               "Let's make some noise! Start following "
@@ -125,39 +170,17 @@ class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin 
                       ),
                     );
                   }
+                  final feed = getPostsWithAds(posts);
                   return SliverList.builder(
-                    itemCount: posts.length + (isLoadingMore || hasError ? 1 : 0),
+                    itemCount:
+                        feed.length + (isLoadingMore || hasError ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index < posts.length) {
                         return BlocProvider(
-                          create: (context) => sl<ChirpUserCubit>()
-                            ..getChirpUserByID(posts[index].authorId),
-                          child: PostCard(
-                            post: posts[index],
-                            onTap: () async {
-                              // marking the post as viewed
-                              context.read<FeedBloc>().add(
-                                    MarkPostAsViewed(
-                                      postId: posts[index].id,
-                                      viewerId: posts[index].authorId,
-                                    ),
-                                  );
-                              final updatedPost = await context.push(
-                                PostDetailRoute(
-                                  postId: posts[index].id,
-                                ).location,
-                                extra: posts[index],
-                              );
-
-                              if (!context.mounted) return;
-
-                              if (updatedPost != null && updatedPost is Post) {
-                                context.read<FeedBloc>().add(
-                                      UpdatePostInFeed(updatedPost),
-                                    );
-                              }
-                            },
-                          ),
+                          create: (context) =>
+                              sl<ChirpUserCubit>()
+                                ..getChirpUserByID(posts[index].authorId),
+                          child: feed[index],
                         );
                       } else {
                         if (isLoadingMore) {
@@ -172,9 +195,9 @@ class _FeedPageState extends State<FeedPage> with AutomaticKeepAliveClientMixin 
                           return Center(
                             child: TextButton.icon(
                               onPressed: () {
-                                context
-                                    .read<FeedBloc>()
-                                    .add(LoadFeedEvent(page: _currentPage));
+                                context.read<FeedBloc>().add(
+                                  LoadFeedEvent(page: _currentPage),
+                                );
                               },
                               icon: const Icon(Icons.refresh),
                               label: const Text("Retry loading more posts"),
