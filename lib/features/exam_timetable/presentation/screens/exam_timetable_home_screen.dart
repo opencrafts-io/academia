@@ -3,7 +3,9 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/countdown_timer.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
+import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
+import 'package:academia/features/magnet/presentation/bloc/magnet_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
@@ -39,9 +41,19 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   }
 
   void _loadCachedExams() {
-    context.read<ExamTimetableBloc>().add(
-      LoadCachedExams(institutionId: widget.institutionId),
-    );
+    context.read<ExamTimetableBloc>().add(LoadCachedExams());
+  }
+
+  void _importCoursesFromMagnet() {
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      context.read<MagnetBloc>().add(
+        GetCachedMagnetStudentTimetableEvent(
+          institutionID: int.parse(widget.institutionId),
+          userID: profileState.profile.id,
+        ),
+      );
+    }
   }
 
   void _navigateToSearch() {
@@ -174,148 +186,203 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
           ),
         ],
       ),
-      body: BlocConsumer<ExamTimetableBloc, ExamTimetableState>(
-        listener: (context, state) {
-          if (state is ExamTimetableError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: colorScheme.error,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is ExamTimetableLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: colorScheme.primary),
-            );
-          }
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ExamTimetableBloc, ExamTimetableState>(
+            listener: (context, state) {
+              if (state is ExamTimetableError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: colorScheme.error,
+                  ),
+                );
+              }
 
-          if (state is ExamTimetableEmpty ||
-              (state is ExamTimetableLoaded && state.exams.isEmpty)) {
-            return EmptyState(onSearchTap: _navigateToSearch);
-          }
+              if (state is ExamTimetableEmpty) {
+                _importCoursesFromMagnet();
+              }
+            },
+          ),
+          BlocListener<MagnetBloc, MagnetState>(
+            listener: (context, state) {
+              if (state is MagnetTimeTableLoadedState) {
+                final courseCodes = state.timetable
+                    .map((e) {
+                      final cleanCode = e.courseCode.replaceAll('-', '');
 
-          if (state is ExamTimetableLoaded) {
-            final upcomingExams = _getUpcomingExams(state.exams);
-            final pastExams = _getPastExams(state.exams);
-            final nextExam = _getNextExam(state.exams);
+                      if (e.courseType != null) {
+                        if (e.courseType!.contains('-')) {
+                          final suffix = e.courseType!.split('-').first;
+                          return '$cleanCode$suffix';
+                        }
+                      }
+                      return cleanCode;
+                    })
+                    .toSet()
+                    .take(6)
+                    .toList();
 
-            return RefreshIndicator(
-              onRefresh: _refreshExams,
-              color: colorScheme.primary,
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 16),
-                children: [
-                  // Countdown timer
-                  if (nextExam != null)
-                    CountdownTimer(targetDateTime: nextExam.datetimeStr),
+                if (courseCodes.isNotEmpty) {
+                  context.read<ExamTimetableBloc>().add(
+                    RefreshExamTimetable(
+                      institutionId: widget.institutionId,
+                      courseCodes: courseCodes,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "No courses found in your class timetable.",
+                      ),
+                    ),
+                  );
+                }
+              }
 
-                  // Upcoming Exams Section
-                  if (upcomingExams.isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Upcoming Exams',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${upcomingExams.length}',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onPrimaryContainer,
+              if (state is MagnetErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Failed to load class timetable: ${state.error}",
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<ExamTimetableBloc, ExamTimetableState>(
+          builder: (context, state) {
+            if (state is ExamTimetableLoading) {
+              return Center(
+                child: CircularProgressIndicator(color: colorScheme.primary),
+              );
+            }
+
+            if (state is ExamTimetableEmpty ||
+                (state is ExamTimetableLoaded && state.exams.isEmpty)) {
+              return EmptyState();
+            }
+
+            if (state is ExamTimetableLoaded) {
+              final upcomingExams = _getUpcomingExams(state.exams);
+              final pastExams = _getPastExams(state.exams);
+              final nextExam = _getNextExam(state.exams);
+
+              return RefreshIndicator(
+                onRefresh: _refreshExams,
+                color: colorScheme.primary,
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  children: [
+                    if (nextExam != null)
+                      CountdownTimer(targetDateTime: nextExam.datetimeStr),
+                    // Upcoming
+                    if (upcomingExams.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Upcoming Exams',
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.tertiaryContainer,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '${upcomingExams.length}',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: colorScheme.onPrimaryContainer,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        children: upcomingExams.asMap().entries.map((entry) {
-                          return ExamCard(
-                            exam: entry.value,
-                            index: entry.key,
-                            institutionId: widget.institutionId,
-                            isPast: false,
-                          );
-                        }).toList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: upcomingExams.asMap().entries.map((entry) {
+                            return ExamCard(
+                              exam: entry.value,
+                              index: entry.key,
+                              institutionId: widget.institutionId,
+                            );
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
 
-                  // Past Exams Section
-                  if (pastExams.isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Past Exams',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${pastExams.length}',
-                              style: theme.textTheme.labelMedium?.copyWith(
+                    // Past
+                    if (pastExams.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Past Exams',
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
                                 color: colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '${pastExams.length}',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        children: pastExams.asMap().entries.map((entry) {
-                          return ExamCard(
-                            exam: entry.value,
-                            index: entry.key,
-                            institutionId: widget.institutionId,
-                            isPast: true,
-                          );
-                        }).toList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: pastExams.asMap().entries.map((entry) {
+                            return ExamCard(
+                              exam: entry.value,
+                              index: entry.key,
+                              institutionId: widget.institutionId,
+                              // isPast: true,
+                            );
+                          }).toList(),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
-              ),
-            );
-          }
+                ),
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
