@@ -8,6 +8,7 @@ class UserTicketSelectionPage extends StatelessWidget {
   final void Function(Ticket ticket) onTicketSelected;
   final void Function(int quantity) onQuantityChanged;
   final VoidCallback onContinue;
+  final bool isFreeEvent;
 
   const UserTicketSelectionPage({
     super.key,
@@ -17,31 +18,16 @@ class UserTicketSelectionPage extends StatelessWidget {
     required this.onTicketSelected,
     required this.onQuantityChanged,
     required this.onContinue,
+    required this.isFreeEvent,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool isFreeEvent =
-        ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
 
-    // // Auto-select free ticket in parent
-    if (isFreeEvent && selectedTicket == null) {
-      // Schedule microtask to avoid rebuild-loop
-      Future.microtask(() {
-        onTicketSelected(ticketTypes.first);
-      });
-    }
-
-    final Ticket? activeTicket = isFreeEvent
-        ? ticketTypes.first
-        : selectedTicket;
-
-    print("Active ticket: $activeTicket");
-
-    final int maxAllowedQuantity = activeTicket == null
+    final int maxAllowedQuantity = selectedTicket == null
         ? 0
-        : activeTicket.ticketQuantity < 3
-        ? activeTicket.ticketQuantity
+        : selectedTicket!.ticketQuantity < 3
+        ? selectedTicket!.ticketQuantity
         : 3;
 
     // Sort for normal paid event UI
@@ -108,7 +94,7 @@ class UserTicketSelectionPage extends StatelessWidget {
           ],
 
           // Quantity selector appears for both free + paid
-          if (activeTicket != null)
+          if (selectedTicket != null)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -152,16 +138,16 @@ class UserTicketSelectionPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        quantity == 3 && activeTicket.ticketQuantity > 3
+                        quantity == 3 && selectedTicket!.ticketQuantity > 3
                             ? "Maximum of 3 tickets per order"
-                            : "Only ${activeTicket.ticketQuantity} tickets remaining",
+                            : "Only ${selectedTicket!.ticketQuantity} tickets remaining",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ),
 
-                  if (activeTicket.ticketQuantity == 0)
+                  if (selectedTicket!.ticketQuantity == 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
@@ -176,7 +162,7 @@ class UserTicketSelectionPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
-                      onPressed: activeTicket.ticketQuantity == 0
+                      onPressed: selectedTicket!.ticketQuantity == 0
                           ? null
                           : onContinue,
                       child: Text(isFreeEvent ? "Continue (Free)" : "Continue"),

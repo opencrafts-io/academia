@@ -16,6 +16,8 @@ class TicketFlowPage extends StatefulWidget {
 
 class _TicketFlowPageState extends State<TicketFlowPage> {
   Ticket? selectedTicket;
+  List<Ticket> ticketTypes = [];
+  bool isFreeEvent = false;
   int quantity = 1;
 
   int currentPage = 0;
@@ -28,6 +30,14 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
       FetchTicketsByEventId(eventId: widget.eventId),
     );
   }
+
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   selectedTicket = null;
+  //   print("people!!!!");
+  //   super.dispose();
+  // }
 
   void nextPage() {
     if (currentPage < 1) {
@@ -92,6 +102,17 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
+          } else if (state is UserTicketLoaded ||
+              state is UserTicketPurchaseInProgress ||
+              state is UserTicketSoldOut) {
+            ticketTypes = state is UserTicketLoaded
+                ? state.tickets
+                : state is UserTicketSoldOut
+                ? state.existingTickets
+                : (state as UserTicketPurchaseInProgress).existingTickets;
+            isFreeEvent =
+                ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
+            selectedTicket = isFreeEvent ? ticketTypes.first : null;
           }
         },
         builder: (context, state) {
@@ -107,21 +128,18 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 SliverToBoxAdapter(
                   child: currentPage == 0
                       ? UserTicketSelectionPage(
-                          ticketTypes: state is UserTicketLoaded
-                              ? state.tickets
-                              : state is UserTicketSoldOut
-                              ? state.existingTickets
-                              : (state as UserTicketPurchaseInProgress)
-                                    .existingTickets,
+                          ticketTypes: ticketTypes,
                           selectedTicket: selectedTicket,
                           quantity: quantity,
-                          onTicketSelected: (ticket) =>
-                              setState(() => selectedTicket = ticket),
+                          onTicketSelected: (ticket) {
+                            setState(() => selectedTicket = ticket);
+                          },
                           onQuantityChanged: (q) =>
                               setState(() => quantity = q),
                           onContinue: () {
                             if (selectedTicket != null) nextPage();
                           },
+                          isFreeEvent: isFreeEvent,
                         )
                       : ReviewTicketPage(
                           ticket: selectedTicket!,
