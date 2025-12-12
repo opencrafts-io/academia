@@ -15,9 +15,9 @@ class SubmitNewEvent extends CreateEventEvent {
   final String eventDate;
   final String organizerId;
   final List<String> eventGenre;
-  final File eventCardImage;
-  final File eventPosterImage;
-  final File eventBannerImage;
+  final File? eventCardImage;
+  final File? eventPosterImage;
+  final File? eventBannerImage;
   final List<Ticket> tickets;
 
   const SubmitNewEvent({
@@ -28,9 +28,9 @@ class SubmitNewEvent extends CreateEventEvent {
     required this.eventDate,
     required this.organizerId,
     required this.eventGenre,
-    required this.eventCardImage,
-    required this.eventPosterImage,
-    required this.eventBannerImage,
+    this.eventCardImage,
+    this.eventPosterImage,
+    this.eventBannerImage,
     required this.tickets,
   });
 

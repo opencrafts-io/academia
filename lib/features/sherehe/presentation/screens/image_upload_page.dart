@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:academia/features/sherehe/presentation/widgets/event_image_picker_widget.dart';
@@ -69,7 +68,7 @@ class ImageUploadPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                'All three images are required.',
+                'Please note that for any image not uploaded, a default image will be used instead.',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: Theme.of(context).colorScheme.error,
                 ),
@@ -87,12 +86,7 @@ class ImageUploadPage extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: FilledButton.icon(
-                  onPressed:
-                      (selectedCardImage != null &&
-                          selectedBannerImage != null &&
-                          selectedPosterImage != null)
-                      ? onNext
-                      : null,
+                  onPressed: onNext,
                   label: const Text('Next'),
                 ),
               ),

@@ -105,9 +105,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required String eventDate,
     required String organizerId,
     required List<String> eventGenre,
-    required File eventCardImage,
-    required File eventPosterImage,
-    required File eventBannerImage,
+    File? eventCardImage,
+    File? eventPosterImage,
+    File? eventBannerImage,
     required List<TicketData> tickets,
   }) async {
     try {
@@ -126,18 +126,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
           return json;
         }).toList(),
 
-        'event_card_image': await MultipartFile.fromFile(
-          eventCardImage.path,
-          filename: eventCardImage.path.split('/').last,
-        ),
-        'event_poster_image': await MultipartFile.fromFile(
-          eventPosterImage.path,
-          filename: eventPosterImage.path.split('/').last,
-        ),
-        'event_banner_image': await MultipartFile.fromFile(
-          eventBannerImage.path,
-          filename: eventBannerImage.path.split('/').last,
-        ),
+        if (eventCardImage != null)
+          'event_card_image': await MultipartFile.fromFile(
+            eventCardImage.path,
+            filename: eventCardImage.path.split('/').last,
+          ),
+        if (eventPosterImage != null)
+          'event_poster_image': await MultipartFile.fromFile(
+            eventPosterImage.path,
+            filename: eventPosterImage.path.split('/').last,
+          ),
+        if (eventBannerImage != null)
+          'event_banner_image': await MultipartFile.fromFile(
+            eventBannerImage.path,
+            filename: eventBannerImage.path.split('/').last,
+          ),
       });
 
       // Send request

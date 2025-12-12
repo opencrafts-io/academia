@@ -16,9 +16,9 @@ class CreateEventUseCase {
     required String eventDate,
     required String organizerId,
     required List<String> eventGenre,
-    required File eventCardImage,
-    required File eventPosterImage,
-    required File eventBannerImage,
+    File? eventCardImage,
+    File? eventPosterImage,
+    File? eventBannerImage,
     required List<Ticket> tickets,
   }) async {
     return await repository.createEvent(

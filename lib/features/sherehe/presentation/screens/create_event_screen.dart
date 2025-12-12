@@ -130,7 +130,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final XFile? picked = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
-      if (picked == null) return;
+      if (picked == null) {
+        setState(() => _selectedBannerImage = null);
+        return;
+      }
 
       final File originalImage = File(picked.path);
       final imageData = await originalImage.readAsBytes();
@@ -149,7 +152,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       );
 
-      if (croppedBytes == null) return;
+      if (croppedBytes == null) {
+        // User cancelled cropping
+        setState(() => _selectedBannerImage = null);
+        return;
+      }
 
       final String croppedPath =
           '${originalImage.parent.path}/cropped_banner.jpg';
@@ -169,11 +176,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             minHeight: 1024,
           );
 
-      if (compressedFile != null && mounted) {
-        setState(() {
-          _selectedBannerImage = File(compressedFile.path);
-        });
-      }
+      setState(() {
+        _selectedBannerImage = compressedFile != null
+            ? File(compressedFile.path)
+            : null;
+      });
     } catch (e) {
       debugPrint("Error picking or cropping banner: $e");
       if (mounted) {
@@ -189,7 +196,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final XFile? picked = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
-      if (picked == null) return;
+      if (picked == null) {
+        setState(() => _selectedPosterImage = null);
+        return;
+      }
 
       final File originalImage = File(picked.path);
       final imageData = await originalImage.readAsBytes();
@@ -201,7 +211,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         MaterialPageRoute(builder: (context) => ImageCropper(image: imageData)),
       );
 
-      if (croppedBytes == null) return;
+      if (croppedBytes == null) {
+        setState(() => _selectedPosterImage = null);
+        return;
+      }
 
       final String croppedPath =
           '${originalImage.parent.path}/cropped_poster.jpg';
@@ -221,11 +234,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             minHeight: 1024,
           );
 
-      if (compressedFile != null && mounted) {
-        setState(() {
-          _selectedPosterImage = File(compressedFile.path);
-        });
-      }
+      setState(() {
+        _selectedPosterImage = compressedFile != null
+            ? File(compressedFile.path)
+            : null;
+      });
     } catch (e) {
       debugPrint("Error picking or cropping poster: $e");
       if (mounted) {
@@ -241,7 +254,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       final XFile? picked = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
-      if (picked == null) return;
+      if (picked == null) {
+        setState(() => _selectedCardImage = null);
+        return;
+      }
 
       final File originalImage = File(picked.path);
       final imageData = await originalImage.readAsBytes();
@@ -259,7 +275,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       );
 
-      if (croppedBytes == null) return;
+      if (croppedBytes == null) {
+        setState(() => _selectedCardImage = null);
+        return;
+      }
 
       // Save cropped bytes to temporary file
       final String croppedPath =
@@ -280,11 +299,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             minHeight: 512,
           );
 
-      if (compressedFile != null && mounted) {
-        setState(() {
-          _selectedCardImage = File(compressedFile.path);
-        });
-      }
+      setState(() {
+        _selectedCardImage = compressedFile != null
+            ? File(compressedFile.path)
+            : null;
+      });
     } catch (e) {
       debugPrint("Error picking or cropping card: $e");
       if (mounted) {
@@ -354,25 +373,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       );
       return;
     }
-    // Validate ALL required images
-    if (_selectedPosterImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a poster image")),
-      );
-      return;
-    }
-    if (_selectedBannerImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a banner image (16:9)")),
-      );
-      return;
-    }
-    if (_selectedCardImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a card image (1:1)")),
-      );
-      return;
-    }
     if (_selectedGenres.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select at least one genre")),
@@ -380,9 +380,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       return;
     }
 
-    // final parts = _dateTimeController.text.split(' ');
-    // final datePart = parts[0];
-    // final timePart = parts[1];
     context.read<CreateEventBloc>().add(
       SubmitNewEvent(
         eventName: _nameController.text.trim(),
@@ -390,9 +387,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventLocation: _locationController.text.trim(),
         eventDate: _selectedDateTime!.toIso8601String(),
         organizerId: organizerId!,
-        eventCardImage: _selectedCardImage!,
-        eventPosterImage: _selectedPosterImage!,
-        eventBannerImage: _selectedBannerImage!,
+        eventCardImage: _selectedCardImage,
+        eventPosterImage: _selectedPosterImage,
+        eventBannerImage: _selectedBannerImage,
         eventGenre: _selectedGenres,
         tickets: _tickets,
       ),

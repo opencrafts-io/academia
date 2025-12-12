@@ -124,17 +124,6 @@ class CreateEventPageBuilder extends StatelessWidget {
           onPickPosterImage: pickPosterImage,
           onPrevious: moveToPreviousPage,
           onNext: () {
-            if (selectedPosterImage == null ||
-                selectedBannerImage == null ||
-                selectedCardImage == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Please select all required images"),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              return;
-            }
             moveToNextPage();
           },
           context: context,
