@@ -1,4 +1,5 @@
 import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
+import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -290,83 +291,29 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
               ),
             ),
           ),
-
-          /// -------------------------------
-          /// ATTENDEES (Expandable)
-          /// -------------------------------
           SliverPadding(
             padding: EdgeInsets.all(
               ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
             ),
             sliver: SliverToBoxAdapter(
-              child: AttendeesList(
-                eventId: widget.event.id,
-                organizerId: widget.event.organizerId,
-                userId: userId,
+              child: Text(
+                "Who's Coming",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              // ExpansionTile(
-              //   initiallyExpanded: false,
-              //   title: Text(
-              //     "Attendees (${mockAttendees.length})",
-              //     style: Theme.of(context).textTheme.titleMedium,
-              //   ),
-              //   children: [
-              //     if (state.isLoadingAttendees)
-              //       const Padding(
-              //         padding: EdgeInsets.all(12),
-              //         child: Center(child: CircularProgressIndicator()),
-              //       )
-              //     else
-              //       ListView.builder(
-              //         shrinkWrap: true,
-              //         primary: false,
-              //         itemCount: mockAttendees.length,
-              //         // separatorBuilder: (_, __) =>
-              //         //     const Divider(height: 1),
-              //         itemBuilder: (context, index) {
-              //           final attendee = mockAttendees[index];
-              //           return Container(
-              //             padding: const EdgeInsets.all(12),
-              //             margin: const EdgeInsets.all(8),
-              //             decoration: BoxDecoration(
-              //               borderRadius: BorderRadius.circular(28),
-              //               color: Theme.of(
-              //                 context,
-              //               ).colorScheme.tertiaryContainer,
-              //             ),
-              //             child: ListTile(
-              //               leading: CircleAvatar(
-              //                 backgroundColor: Theme.of(
-              //                   context,
-              //                 ).primaryColor,
-              //                 child: Text(
-              //                   _getInitials(attendee.user?.username),
-              //                 ),
-              //               ),
-              //               title: Text(
-              //                 attendee.user!.username.isNotEmpty
-              //                     ? attendee.user!.username
-              //                     : "Anonymous",
-              //               ),
-              //               subtitle: Text(
-              //                 userId == attendee.userId
-              //                     ? 'Organizer'
-              //                     : 'Attending',
-              //               ),
-              //               trailing: userId == attendee.userId
-              //                   ? Icon(Symbols.server_person)
-              //                   : null,
-              //             ),
-              //           );
-              //         },
-              //       ),
-              //   ],
-              // ),
             ),
           ),
 
-          /// Bottom spacer so content doesn't hide behind bottom bar
-          const SliverToBoxAdapter(child: SizedBox(height: 120)),
+          BlocProvider(
+            create: (_) => AttendeeBloc(getAttendee: sl()),
+            child: AttendeesList(
+              eventId: widget.event.id,
+              organizerId: widget.event.organizerId,
+              userId: userId,
+              attendees: mockAttendees,
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: SafeArea(
