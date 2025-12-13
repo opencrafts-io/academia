@@ -30,7 +30,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/event",
+        "http://localhost:3000/event",
         // "$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
@@ -70,7 +70,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/event/$eventId",
+        "http://localhost:3000/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -145,7 +145,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send request
       final response = await dioClient.dio.post(
-        "http://192.168.100.128:3000/event/",
+        "http://localhost:3000/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
@@ -181,7 +181,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/attendee/event/$eventId",
+        "http://localhost:3000/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -227,7 +227,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/attendee/$id",
+        "http://localhost:3000/attendee/$id",
       );
 
       if (response.statusCode == 200) {
@@ -259,7 +259,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/ticket/event/$eventId",
+        "http://localhost:3000/ticket/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -300,7 +300,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "http://192.168.100.128:3000/purchase/",
+        "http://localhost:3000/purchase/",
         data: {"ticket_id": ticketId, "ticket_quantity": ticketQuantity},
       );
 
@@ -340,7 +340,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   getUserPurchasedTickets({required int page, required int limit}) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/attendee/user/1",
+        "http://localhost:3000/attendee/user/1",
         queryParameters: {"page": page, "limit": limit},
       );
 
