@@ -30,7 +30,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/event",
+        "http://192.168.100.128:3000/event",
         // "$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
@@ -70,7 +70,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/event/$eventId",
+        "http://192.168.100.128:3000/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -145,7 +145,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send request
       final response = await dioClient.dio.post(
-        "https://qasherehe.opencrafts.io/event/",
+        "http://192.168.100.128:3000/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
@@ -181,7 +181,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/attendee/event/$eventId",
+        "http://192.168.100.128:3000/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -227,7 +227,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/attendee/$id",
+        "http://192.168.100.128:3000/attendee/$id",
       );
 
       if (response.statusCode == 200) {
@@ -259,7 +259,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/ticket/event/$eventId",
+        "http://192.168.100.128:3000/ticket/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -300,7 +300,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "https://qasherehe.opencrafts.io/purchase/",
+        "http://192.168.100.128:3000/purchase/",
         data: {"ticket_id": ticketId, "ticket_quantity": ticketQuantity},
       );
 
@@ -344,7 +344,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://qasherehe.opencrafts.io/attendee/user/$eventId",
+        "http://192.168.100.128:3000/attendee/user/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 

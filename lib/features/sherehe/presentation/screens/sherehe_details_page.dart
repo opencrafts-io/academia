@@ -1,14 +1,21 @@
-import 'package:academia/config/config.dart';
-import 'package:academia/constants/constants.dart';
-import 'package:academia/core/core.dart';
-import 'package:academia/features/profile/profile.dart';
-import 'package:academia/features/sherehe/sherehe.dart';
+import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:academia/features/profile/profile.dart';
+import 'package:academia/features/sherehe/sherehe.dart';
+import 'package:academia/constants/constants.dart';
+import 'package:academia/config/config.dart';
+import 'package:go_router/go_router.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
   final String eventId;
-  const ShereheDetailsPage({super.key, required this.eventId});
+  final Event event;
+  const ShereheDetailsPage({
+    super.key,
+    required this.eventId,
+    required this.event,
+  });
 
   @override
   State<ShereheDetailsPage> createState() => _ShereheDetailsPageState();
@@ -24,118 +31,358 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
       userId = profileState.profile.id;
-    } else {
-      userId = null;
     }
-
-    // Trigger event loading
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ShereheDetailsBloc>().add(
-        LoadShereheDetails(eventId: widget.eventId),
-      );
-    });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  double _getExpandedHeight(BuildContext context) {
+    if (ResponsiveBreakPoints.isMobile(context)) {
+      return MediaQuery.of(context).size.height * 0.40;
+    } else if (ResponsiveBreakPoints.isTablet(context)) {
+      return MediaQuery.of(context).size.height * 0.4;
+    } else {
+      return 500.0;
+    }
   }
+
+  final List<Attendee> mockAttendees = [
+    Attendee(
+      id: "att_001",
+      userId: "user_001",
+      eventId: "event_123",
+      ticketId: "ticket_01",
+      ticketQuantity: 2,
+      user: const ShereheUser(
+        id: "user_001",
+        username: "eugene_w",
+        email: "eugene@example.com",
+        name: "Eugene Wachira",
+        phone: "+254712345678",
+      ),
+    ),
+
+    Attendee(
+      id: "att_002",
+      userId: "user_002",
+      eventId: "event_123",
+      ticketId: "ticket_02",
+      ticketQuantity: 1,
+      user: const ShereheUser(
+        id: "user_002",
+        username: "mary_j",
+        email: "mary@example.com",
+        name: "Mary Jane",
+        phone: "+254711223344",
+      ),
+    ),
+
+    Attendee(
+      id: "att_003",
+      userId: "user_003",
+      eventId: "event_123",
+      ticketId: "ticket_01",
+      ticketQuantity: 3,
+      user: const ShereheUser(
+        id: "user_003",
+        username: "kevin_m",
+        email: "kevin@example.com",
+        name: "Kevin Mutua",
+        phone: "+254701122233",
+      ),
+    ),
+
+    Attendee(
+      id: "att_004",
+      userId: "user_004",
+      eventId: "event_123",
+      ticketId: "ticket_03",
+      ticketQuantity: 1,
+      user: const ShereheUser(
+        id: "user_004",
+        username: "sarah_k",
+        email: "sarah@example.com",
+        name: "Sarah Kimani",
+        phone: "+254719998877",
+      ),
+    ),
+
+    Attendee(
+      id: "att_005",
+      userId: "user_005",
+      eventId: "event_123",
+      ticketId: "ticket_02",
+      ticketQuantity: 2,
+      user: const ShereheUser(
+        id: "user_005",
+        username: "brian_o",
+        email: "brian@example.com",
+        name: "Brian Otieno",
+        phone: "+254700111222",
+      ),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
-            builder: (context, state) {
-              if (state is ShereheDetailsLoading) {
-                return const Center(child: SpinningScallopIndicator());
-              } else if (state is ShereheDetailsLoaded) {
-                return CustomScrollView(
-                  slivers: [
-                    EventDetailsHeader(event: state.event),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.all(
-                          ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            EventAboutSection(event: state.event),
-                            const SizedBox(height: 24),
-                            AttendeesList(
-                              event: state.event,
-                              allAttendees: state.attendees,
-                              isAttendeesLoading: state.isLoadingAttendees,
-                              userId: userId,
-                            ),
-                            const SizedBox(height: 32),
-                            SizedBox(
-                              width: double.infinity,
-                              height: ResponsiveBreakPoints.isMobile(context)
-                                  ? 50
-                                  : 56,
-                              child: FilledButton(
-                                onPressed: () {
-                                  TicketFlowRoute(
-                                    eventId: state.event.id,
-                                  ).push(context);
-                                },
-                                child: const Text("I'm Going"),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: _getExpandedHeight(context),
+            pinned: true,
+            leading: IconButton(
+              onPressed: () => context.pop(),
+              icon: const Icon(Icons.arrow_back),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.qr_code_scanner),
+                onPressed: () {
+                  QrCodeScannerRoute(eventId: widget.event.id).push(context);
+                },
+              ),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                widget.event.eventName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: widget.event.eventBannerImage!,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, child, error) {
+                      return Container(
+                        width: double.infinity,
+                        color: Theme.of(context).colorScheme.errorContainer,
+                        child: const Icon(Icons.image_not_supported),
+                      );
+                    },
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Colors.black],
                       ),
                     ),
-                  ],
-                );
-              } else if (state is ShereheDetailsError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.all(
+              ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
+            ),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Error loading event details: ${state.message}'),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<ShereheDetailsBloc>().add(
-                            LoadShereheDetails(eventId: widget.eventId),
-                          );
-                        },
-                        child: const Text('Retry'),
+                      Text(
+                        'About Event',
+                        style:
+                            ResponsiveBreakPoints.isTablet(context) ||
+                                ResponsiveBreakPoints.isDesktop(context)
+                            ? Theme.of(
+                                context,
+                              ).textTheme.headlineMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              )
+                            : Theme.of(
+                                context,
+                              ).textTheme.headlineSmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                      ),
+                      const SizedBox(height: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: widget.event.eventGenre!
+                                .map((e) => e.trim())
+                                .map(
+                                  (genre) => Chip(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                    label: Text(
+                                      genre,
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                      Text(
+                        widget.event.eventDescription,
+                        style:
+                            ResponsiveBreakPoints.isTablet(context) ||
+                                ResponsiveBreakPoints.isDesktop(context)
+                            ? Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                                height: 1.5,
+                              )
+                            : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                                height: 1.5,
+                              ),
                       ),
                     ],
                   ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(widget.event.eventLocation)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    spacing: 16.0,
+                    children: [
+                      Row(
+                        spacing: 8.0,
+                        children: [
+                          const Icon(Icons.calendar_month),
+                          Text(ShereheUtils.formatDate(widget.event.eventDate)),
+                        ],
+                      ),
+                      Row(
+                        spacing: 8.0,
+                        children: [
+                          const Icon(Icons.access_time),
+                          Text(ShereheUtils.formatTime(widget.event.eventDate)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
+
+          /// -------------------------------
+          /// ATTENDEES (Expandable)
+          /// -------------------------------
+          SliverPadding(
+            padding: EdgeInsets.all(
+              ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
+            ),
+            sliver: SliverToBoxAdapter(
+              child: AttendeesList(
+                eventId: widget.event.id,
+                organizerId: widget.event.organizerId,
+                userId: userId,
+              ),
+              // ExpansionTile(
+              //   initiallyExpanded: false,
+              //   title: Text(
+              //     "Attendees (${mockAttendees.length})",
+              //     style: Theme.of(context).textTheme.titleMedium,
+              //   ),
+              //   children: [
+              //     if (state.isLoadingAttendees)
+              //       const Padding(
+              //         padding: EdgeInsets.all(12),
+              //         child: Center(child: CircularProgressIndicator()),
+              //       )
+              //     else
+              //       ListView.builder(
+              //         shrinkWrap: true,
+              //         primary: false,
+              //         itemCount: mockAttendees.length,
+              //         // separatorBuilder: (_, __) =>
+              //         //     const Divider(height: 1),
+              //         itemBuilder: (context, index) {
+              //           final attendee = mockAttendees[index];
+              //           return Container(
+              //             padding: const EdgeInsets.all(12),
+              //             margin: const EdgeInsets.all(8),
+              //             decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(28),
+              //               color: Theme.of(
+              //                 context,
+              //               ).colorScheme.tertiaryContainer,
+              //             ),
+              //             child: ListTile(
+              //               leading: CircleAvatar(
+              //                 backgroundColor: Theme.of(
+              //                   context,
+              //                 ).primaryColor,
+              //                 child: Text(
+              //                   _getInitials(attendee.user?.username),
+              //                 ),
+              //               ),
+              //               title: Text(
+              //                 attendee.user!.username.isNotEmpty
+              //                     ? attendee.user!.username
+              //                     : "Anonymous",
+              //               ),
+              //               subtitle: Text(
+              //                 userId == attendee.userId
+              //                     ? 'Organizer'
+              //                     : 'Attending',
+              //               ),
+              //               trailing: userId == attendee.userId
+              //                   ? Icon(Symbols.server_person)
+              //                   : null,
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //   ],
+              // ),
+            ),
+          ),
+
+          /// Bottom spacer so content doesn't hide behind bottom bar
+          const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
-      floatingActionButton: Column(
-        spacing: 12.0,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          FloatingActionButton.extended(
-            heroTag: "scan",
-            onPressed: () =>
-                QrCodeScannerRoute(eventId: widget.eventId).push(context),
-            icon: const Icon(Icons.qr_code_scanner),
-            label: const Text("Scan Tickets"),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
+            child: FilledButton(
+              onPressed: () {
+                TicketFlowRoute(eventId: widget.event.id).push(context);
+              },
+              child: const Text("I'm Going"),
+            ),
           ),
-          FloatingActionButton.extended(
-            heroTag: "tickets",
-            onPressed: () {
-              PurchasedTicketsRoute(eventId: widget.eventId).push(context);
-            },
-            icon: const Icon(Icons.confirmation_num),
-            label: const Text("My Tickets"),
-          ),
-        ],
+        ),
       ),
     );
   }

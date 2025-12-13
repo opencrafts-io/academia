@@ -14,8 +14,6 @@ export 'screens/qr_code_screen.dart';
 export 'screens/qr_code_scanner_screen.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
-export 'widgets/event_about_section.dart';
-export 'widgets/event_details_header.dart';
 export 'widgets/attendee_list.dart';
 export 'bloc/sherehe_home_bloc.dart';
 export 'bloc/create_event/create_event_bloc.dart';
@@ -29,6 +27,7 @@ export 'widgets/create_event_page_builder.dart';
 export 'widgets/event_card_wrapper.dart';
 export 'widgets/event_card.dart';
 export 'widgets/ticket_stub_card.dart';
+export 'utils/sherehe_utils.dart';
 
 
 

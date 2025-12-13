@@ -243,9 +243,17 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
     BuildContext context,
     GoRouterState state,
   ) {
+    if (state.extra == null || state.extra is! Event) {
+      throw FlutterError(
+        'ShereheDetailsRoute requires an Event passed via extra',
+      );
+    }
+
+    final event = state.extra as Event;
+
     return CustomTransitionPage<void>(
       key: state.pageKey,
-      child: ShereheDetailsPage(eventId: eventId),
+      child: ShereheDetailsPage(eventId: eventId, event: event),
 
       transitionsBuilder:
           (
