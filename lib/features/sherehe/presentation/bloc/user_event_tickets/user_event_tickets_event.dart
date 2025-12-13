@@ -8,16 +8,11 @@ abstract class UserEventTicketsEvent extends Equatable {
 }
 
 class FetchUserEventTickets extends UserEventTicketsEvent {
-  final String eventId;
   final int page;
   final int limit;
 
-  const FetchUserEventTickets({
-    required this.eventId,
-    required this.page,
-    required this.limit,
-  });
+  const FetchUserEventTickets({required this.page, required this.limit});
 
   @override
-  List<Object?> get props => [eventId, page, limit];
+  List<Object?> get props => [page, limit];
 }

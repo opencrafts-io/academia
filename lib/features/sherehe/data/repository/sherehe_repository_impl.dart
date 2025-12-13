@@ -135,13 +135,11 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedResult<Attendee>>> getUserTicketsForEvent({
-    required String eventId,
+  Future<Either<Failure, PaginatedResult<Attendee>>> getUserPurchasedTickets({
     required int page,
     required int limit,
   }) async {
-    final result = await remoteDataSource.getUserTicketsForEvent(
-      eventId: eventId,
+    final result = await remoteDataSource.getUserPurchasedTickets(
       page: page,
       limit: limit,
     );

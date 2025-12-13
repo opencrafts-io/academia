@@ -7,7 +7,7 @@ part 'user_event_tickets_state.dart';
 
 class UserEventTicketsBloc
     extends Bloc<UserEventTicketsEvent, UserEventTicketsState> {
-  final GetUserTicketsForEventUseCase getUserTicketsForEvent;
+  final GetUserPurchasedTicketsUseCase getUserTicketsForEvent;
 
   UserEventTicketsBloc({required this.getUserTicketsForEvent})
     : super(UserEventTicketInitial()) {
@@ -44,7 +44,6 @@ class UserEventTicketsBloc
     }
 
     final result = await getUserTicketsForEvent(
-      eventId: event.eventId,
       page: event.page,
       limit: event.limit,
     );

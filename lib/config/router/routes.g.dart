@@ -15,6 +15,7 @@ List<RouteBase> get $appRoutes => [
   $profileRoute,
   $completeProfileRoute,
   $shereheRoute,
+  $purchasedTicketsRoute,
   $todosRoute,
   $magnetRoute,
   $communitiesRoute,
@@ -330,16 +331,6 @@ RouteBase get $shereheRoute => GoRouteData.$route(
           factory: _$TicketFlowRoute._fromState,
         ),
         GoRouteData.$route(
-          path: 'purchased-tickets',
-          factory: _$PurchasedTicketsRoute._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'qr-code',
-              factory: _$QrCodeRoute._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
           path: 'qr-code-scanner',
           factory: _$QrCodeScannerRoute._fromState,
         ),
@@ -421,65 +412,6 @@ mixin _$TicketFlowRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$PurchasedTicketsRoute on GoRouteData {
-  static PurchasedTicketsRoute _fromState(GoRouterState state) =>
-      PurchasedTicketsRoute(eventId: state.uri.queryParameters['event-id']!);
-
-  PurchasedTicketsRoute get _self => this as PurchasedTicketsRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/sherehe/get-event/purchased-tickets',
-    queryParams: {'event-id': _self.eventId},
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin _$QrCodeRoute on GoRouteData {
-  static QrCodeRoute _fromState(GoRouterState state) => QrCodeRoute(
-    eventId: state.uri.queryParameters['event-id']!,
-    ticketName: state.uri.queryParameters['ticket-name']!,
-    quantity: int.parse(state.uri.queryParameters['quantity']!),
-  );
-
-  QrCodeRoute get _self => this as QrCodeRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/sherehe/get-event/purchased-tickets/qr-code',
-    queryParams: {
-      'event-id': _self.eventId,
-      'ticket-name': _self.ticketName,
-      'quantity': _self.quantity.toString(),
-    },
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
 mixin _$QrCodeScannerRoute on GoRouteData {
   static QrCodeScannerRoute _fromState(GoRouterState state) =>
       QrCodeScannerRoute(eventId: state.uri.queryParameters['event-id']!);
@@ -511,6 +443,70 @@ mixin _$CreateEventRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/sherehe/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $purchasedTicketsRoute => GoRouteData.$route(
+  path: '/purchased-tickets/mine',
+  factory: _$PurchasedTicketsRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'qr-code/:eventId',
+      factory: _$QrCodeRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$PurchasedTicketsRoute on GoRouteData {
+  static PurchasedTicketsRoute _fromState(GoRouterState state) =>
+      PurchasedTicketsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/purchased-tickets/mine');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$QrCodeRoute on GoRouteData {
+  static QrCodeRoute _fromState(GoRouterState state) => QrCodeRoute(
+    eventId: state.pathParameters['eventId']!,
+    ticketName: state.uri.queryParameters['ticket-name']!,
+    quantity: int.parse(state.uri.queryParameters['quantity']!),
+  );
+
+  QrCodeRoute get _self => this as QrCodeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/purchased-tickets/mine/qr-code/${Uri.encodeComponent(_self.eventId)}',
+    queryParams: {
+      'ticket-name': _self.ticketName,
+      'quantity': _self.quantity.toString(),
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

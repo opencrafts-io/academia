@@ -36,6 +36,10 @@ class _HomePageState extends State<HomePage> {
               context.pop();
               CommunityMembershipsRoute().push(context);
               break;
+            case 3:
+              context.pop();
+              PurchasedTicketsRoute().push(context);
+              break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -68,6 +72,23 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.view_comfy_outlined),
             selectedIcon: Icon(Icons.view_comfy),
             label: Text("View your communities"),
+          ),
+          Padding(
+            padding: EdgeInsetsGeometry.all(12),
+            child: Text(
+              "Sherehe",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(Icons.confirmation_number_outlined),
+            selectedIcon: Icon(Icons.confirmation_number),
+            label: Text("My Tickets"),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(Icons.event_note_outlined),
+            selectedIcon: Icon(Icons.event_note),
+            label: Text("My Organized Events"),
           ),
         ],
       ),

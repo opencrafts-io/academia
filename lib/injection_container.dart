@@ -91,7 +91,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
-  sl.registerLazySingleton(() => GetUserTicketsForEventUseCase(sl()));
+  sl.registerLazySingleton(() => GetUserPurchasedTicketsUseCase(sl()));
   
 
   sl.registerFactory(

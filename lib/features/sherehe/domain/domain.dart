@@ -11,5 +11,5 @@ export 'usecases/cache_events_use_case.dart';
 export 'usecases/get_cached_events_use_case.dart';
 export 'usecases/get_tickets_by_event_id_use_case.dart';
 export 'usecases/purchase_ticket_use_case.dart';
-export 'usecases/get_user_tickets_for_event_use_case.dart';
+export 'usecases/get_user_purchased_tickets_use_case.dart';
 export 'entities/paginated_events.dart';

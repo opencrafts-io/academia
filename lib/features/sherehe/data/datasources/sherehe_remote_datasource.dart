@@ -337,14 +337,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }
 
   Future<Either<Failure, PaginatedResult<AttendeeData>>>
-  getUserTicketsForEvent({
-    required String eventId,
-    required int page,
-    required int limit,
-  }) async {
+  getUserPurchasedTickets({required int page, required int limit}) async {
     try {
       final response = await dioClient.dio.get(
-        "http://192.168.100.128:3000/attendee/user/$eventId",
+        "http://192.168.100.128:3000/attendee/user/1",
         queryParameters: {"page": page, "limit": limit},
       );
 
