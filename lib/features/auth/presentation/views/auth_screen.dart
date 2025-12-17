@@ -153,6 +153,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   SizedBox(height: 16),
                   OutlinedButton.icon(
+                    onPressed: () {},
+                    label: Text("Continue with Apple"),
+                    icon: Icon(FontAwesome.apple_brand),
+                  ),
+
+                  OutlinedButton.icon(
                     iconAlignment: IconAlignment.start,
                     onPressed: () async {
                       BlocProvider.of<AuthBloc>(
@@ -162,11 +168,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     label: Text("Continue with Google"),
                     icon: Icon(FontAwesome.google_brand),
                   ),
-                  // OutlinedButton.icon(
-                  //   onPressed: () {},
-                  //   label: Text("Continue with Apple"),
-                  //   icon: Icon(FontAwesome.apple_brand),
-                  // ),
                   // OutlinedButton.icon(
                   //   onPressed: () {},
                   //   label: Text("Continue with Microsoft"),
