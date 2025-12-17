@@ -153,7 +153,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   SizedBox(height: 16),
                   OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<AuthBloc>(
+                        context,
+                      ).add(AuthSignInWithAppleEvent());
+                    },
                     label: Text("Continue with Apple"),
                     icon: Icon(FontAwesome.apple_brand),
                   ),
