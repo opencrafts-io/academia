@@ -193,36 +193,62 @@ class _AcademiaState extends State<Academia> {
           ],
           child: SplashRemover(
             child: BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, state) => MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                showPerformanceOverlay: kProfileMode,
-                themeMode: state.themeMode,
-                theme: ThemeData(
-                  fontFamily: 'ProductSans',
-                  useMaterial3: true,
-                  colorScheme:
-                      lightScheme ??
+              builder: (context, state) {
+                final seedColor = Color(state.colorSeedValue);
+                final surfaceColor = state.extraDarkMode
+                    ? const Color(0xFF000000)
+                    : null;
+
+                ColorScheme buildColorScheme({
+                  required Brightness brightness,
+                  ColorScheme? preferredScheme,
+                }) {
+                  final baseScheme =
+                      preferredScheme ??
                       ColorScheme.fromSeed(
-                        seedColor: Color(state.colorSeedValue),
-                        brightness: Brightness.light,
-                      ),
-                  brightness: Brightness.light,
-                ),
-                
-                darkTheme: ThemeData(
-                
-                  fontFamily: 'ProductSans',
-                  useMaterial3: true,
-                  brightness: Brightness.dark,
-                  colorScheme:
-                      darkScheme ??
-                      ColorScheme.fromSeed(
-                        seedColor: Color(state.colorSeedValue),
-                        brightness: Brightness.dark,
-                      ),
-                ),
-                routerConfig: AppRouter.router,
-              ),
+                        seedColor: seedColor,
+                        brightness: brightness,
+                      );
+
+                  return surfaceColor != null
+                      ? baseScheme.copyWith(
+                          surface: brightness == Brightness.light
+                              ? null
+                              : surfaceColor,
+                        )
+                      : baseScheme;
+                }
+
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  showPerformanceOverlay: kProfileMode,
+                  themeMode: state.themeMode,
+                  theme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.light,
+                    colorScheme: buildColorScheme(
+                      brightness: Brightness.light,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? lightScheme
+                          : null,
+                    ),
+                  ),
+
+                  darkTheme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.dark,
+                    colorScheme: buildColorScheme(
+                      brightness: Brightness.dark,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? darkScheme
+                          : null,
+                    ),
+                  ),
+                  routerConfig: AppRouter.router,
+                );
+              },
             ),
           ),
         ),

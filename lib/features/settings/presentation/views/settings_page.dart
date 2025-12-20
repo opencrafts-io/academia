@@ -34,26 +34,64 @@ class SettingsPage extends StatelessWidget {
                             },
                           ),
                           const SizedBox(height: 16),
-                          _ColorSeedCard(
-                            currentColor: Color(state.colorSeedValue),
-                            onColorChanged: (color) {
-                              context.read<SettingsCubit>().updateColor(
-                                color.value,
-                              );
+                          _ToggleCard(
+                            title: "Enable material you",
+                            subTitle: "Makes the app feel more modern",
+                            value: state.enableMaterialYou,
+                            onChanged: (value) {
+                              context
+                                  .read<SettingsCubit>()
+                                  .toggleEnableMaterialYou();
                             },
+                          ),
+
+                          _ToggleCard(
+                            title: "Automatic Color scheme",
+                            subTitle:
+                                "Pick your color scheme based on wallpaper",
+                            value: state.automaticallyPickAccentColor,
+                            onChanged: (value) {
+                              context
+                                  .read<SettingsCubit>()
+                                  .toggleEnableAutomaticAccentColor();
+                            },
+                          ),
+
+                          Visibility(
+                            visible: !state.automaticallyPickAccentColor,
+                            child: _ColorSeedCard(
+                              currentColor: Color(state.colorSeedValue),
+                              onColorChanged: (color) {
+                                context.read<SettingsCubit>().updateColor(
+                                  color.toARGB32(),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(height: 24),
 
                           // Display Section
                           _SectionHeader(title: "Display"),
                           const SizedBox(height: 12),
-                          _CompactModeCard(
-                            isCompact: state.compactMode,
+                          _ToggleCard(
+                            title: "Compact Mode",
+                            subTitle: "Reduce spacing and padding",
+                            value: state.compactMode,
                             onChanged: (value) {
                               context.read<SettingsCubit>().toggleCompactMode();
                             },
                           ),
-                          const SizedBox(height: 24),
+                          _ToggleCard(
+                            title: "Extra Dark Mode",
+                            subTitle:
+                                "Enable extra dark mode for OLED displays",
+                            value: state.extraDarkMode,
+                            onChanged: (value) {
+                              context
+                                  .read<SettingsCubit>()
+                                  .toggleEnableExtraDarkMode();
+                            },
+                          ),
                         ],
                       );
                     },
@@ -140,7 +178,6 @@ class _ThemeModeCard extends StatelessWidget {
         return 'System';
     }
   }
-
 }
 
 class _ColorSeedCard extends StatelessWidget {
@@ -180,13 +217,16 @@ class _ColorSeedCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Accent Color", style: Theme.of(context).textTheme.labelLarge),
+            Text(
+              "Pick an accent color",
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
             const SizedBox(height: 16),
             Wrap(
               spacing: 12,
               runSpacing: 12,
               children: colors.map((color) {
-                final isSelected = currentColor.value == color.value;
+                final isSelected = currentColor.toARGB32() == color.toARGB32();
                 return GestureDetector(
                   onTap: () => onColorChanged(color),
                   child: Container(
@@ -223,11 +263,18 @@ class _ColorSeedCard extends StatelessWidget {
   }
 }
 
-class _CompactModeCard extends StatelessWidget {
-  final bool isCompact;
+class _ToggleCard extends StatelessWidget {
+  final bool value;
+  final String title;
+  final String subTitle;
   final ValueChanged<bool> onChanged;
 
-  const _CompactModeCard({required this.isCompact, required this.onChanged});
+  const _ToggleCard({
+    required this.value,
+    required this.title,
+    required this.subTitle,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -247,20 +294,17 @@ class _CompactModeCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Compact Mode",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
+                Text(title, style: Theme.of(context).textTheme.labelLarge),
                 const SizedBox(height: 4),
                 Text(
-                  "Reduce spacing and padding",
+                  subTitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
-            Switch(value: isCompact, onChanged: onChanged),
+            Switch(value: value, onChanged: onChanged),
           ],
         ),
       ),

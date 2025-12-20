@@ -27,6 +27,9 @@ abstract class SettingsState with _$SettingsState {
     @ThemeModeConverter() @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(0xFF6200EE) int colorSeedValue,
     @Default(false) bool compactMode,
+    @Default(false) bool extraDarkMode,
+    @Default(true) bool enableMaterialYou,
+    @Default(true) bool automaticallyPickAccentColor,
     @Default('en') String language,
   }) = _SettingsState;
 

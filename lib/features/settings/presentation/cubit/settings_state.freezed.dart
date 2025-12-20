@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsState {
 
-@ThemeModeConverter() ThemeMode get themeMode; int get colorSeedValue; bool get compactMode; String get language;
+@ThemeModeConverter() ThemeMode get themeMode; int get colorSeedValue; bool get compactMode; bool get extraDarkMode; bool get enableMaterialYou; bool get automaticallyPickAccentColor; String get language;
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,language);
+int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language);
 
 @override
 String toString() {
-  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, language: $language)';
+  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SettingsStateCopyWith<$Res>  {
   factory $SettingsStateCopyWith(SettingsState value, $Res Function(SettingsState) _then) = _$SettingsStateCopyWithImpl;
 @useResult
 $Res call({
-@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, String language
+@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language
 });
 
 
@@ -65,11 +65,14 @@ class _$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? language = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,}) {
   return _then(_self.copyWith(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,colorSeedValue: null == colorSeedValue ? _self.colorSeedValue : colorSeedValue // ignore: cast_nullable_to_non_nullable
 as int,compactMode: null == compactMode ? _self.compactMode : compactMode // ignore: cast_nullable_to_non_nullable
+as bool,extraDarkMode: null == extraDarkMode ? _self.extraDarkMode : extraDarkMode // ignore: cast_nullable_to_non_nullable
+as bool,enableMaterialYou: null == enableMaterialYou ? _self.enableMaterialYou : enableMaterialYou // ignore: cast_nullable_to_non_nullable
+as bool,automaticallyPickAccentColor: null == automaticallyPickAccentColor ? _self.automaticallyPickAccentColor : automaticallyPickAccentColor // ignore: cast_nullable_to_non_nullable
 as bool,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -156,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  String language)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.language);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language);case _:
   return orElse();
 
 }
@@ -177,10 +180,10 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.lan
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  String language)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language)  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState():
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.language);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +200,10 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.lan
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  String language)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language)?  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.language);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language);case _:
   return null;
 
 }
@@ -212,12 +215,15 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.lan
 @JsonSerializable()
 
 class _SettingsState extends SettingsState {
-  const _SettingsState({@ThemeModeConverter() this.themeMode = ThemeMode.system, this.colorSeedValue = 0xFF6200EE, this.compactMode = false, this.language = 'en'}): super._();
+  const _SettingsState({@ThemeModeConverter() this.themeMode = ThemeMode.system, this.colorSeedValue = 0xFF6200EE, this.compactMode = false, this.extraDarkMode = false, this.enableMaterialYou = true, this.automaticallyPickAccentColor = true, this.language = 'en'}): super._();
   factory _SettingsState.fromJson(Map<String, dynamic> json) => _$SettingsStateFromJson(json);
 
 @override@JsonKey()@ThemeModeConverter() final  ThemeMode themeMode;
 @override@JsonKey() final  int colorSeedValue;
 @override@JsonKey() final  bool compactMode;
+@override@JsonKey() final  bool extraDarkMode;
+@override@JsonKey() final  bool enableMaterialYou;
+@override@JsonKey() final  bool automaticallyPickAccentColor;
 @override@JsonKey() final  String language;
 
 /// Create a copy of SettingsState
@@ -233,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,language);
+int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language);
 
 @override
 String toString() {
-  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, language: $language)';
+  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language)';
 }
 
 
@@ -253,7 +259,7 @@ abstract mixin class _$SettingsStateCopyWith<$Res> implements $SettingsStateCopy
   factory _$SettingsStateCopyWith(_SettingsState value, $Res Function(_SettingsState) _then) = __$SettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
-@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, String language
+@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language
 });
 
 
@@ -270,11 +276,14 @@ class __$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? language = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,}) {
   return _then(_SettingsState(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,colorSeedValue: null == colorSeedValue ? _self.colorSeedValue : colorSeedValue // ignore: cast_nullable_to_non_nullable
 as int,compactMode: null == compactMode ? _self.compactMode : compactMode // ignore: cast_nullable_to_non_nullable
+as bool,extraDarkMode: null == extraDarkMode ? _self.extraDarkMode : extraDarkMode // ignore: cast_nullable_to_non_nullable
+as bool,enableMaterialYou: null == enableMaterialYou ? _self.enableMaterialYou : enableMaterialYou // ignore: cast_nullable_to_non_nullable
+as bool,automaticallyPickAccentColor: null == automaticallyPickAccentColor ? _self.automaticallyPickAccentColor : automaticallyPickAccentColor // ignore: cast_nullable_to_non_nullable
 as bool,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,
   ));

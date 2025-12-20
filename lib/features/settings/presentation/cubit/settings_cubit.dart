@@ -13,6 +13,18 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
   void toggleCompactMode() =>
       emit(state.copyWith(compactMode: !state.compactMode));
 
+  void toggleEnableMaterialYou() =>
+      emit(state.copyWith(enableMaterialYou: !state.enableMaterialYou));
+
+  void toggleEnableExtraDarkMode() =>
+      emit(state.copyWith(extraDarkMode: !state.extraDarkMode));
+
+  void toggleEnableAutomaticAccentColor() => emit(
+    state.copyWith(
+      automaticallyPickAccentColor: !state.automaticallyPickAccentColor,
+    ),
+  );
+
   @override
   SettingsState? fromJson(Map<String, dynamic> json) =>
       SettingsState.fromJson(json);
