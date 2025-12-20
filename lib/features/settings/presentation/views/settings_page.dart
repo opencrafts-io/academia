@@ -141,16 +141,6 @@ class _ThemeModeCard extends StatelessWidget {
     }
   }
 
-  IconData _getThemeModeIcon(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.light:
-        return Icons.light_mode;
-      case ThemeMode.dark:
-        return Icons.dark_mode;
-      case ThemeMode.system:
-        return Icons.brightness_auto;
-    }
-  }
 }
 
 class _ColorSeedCard extends StatelessWidget {
