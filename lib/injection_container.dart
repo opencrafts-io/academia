@@ -865,4 +865,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<ActivityDetailBloc>(
     () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
   );
+
+  sl.registerFactory(() => SettingsCubit());
 }

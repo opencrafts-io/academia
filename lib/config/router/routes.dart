@@ -1,6 +1,4 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/database/database.dart';
-import 'package:academia/features/streaks/streaks.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -468,9 +466,7 @@ class AchievementsHomePageRoute extends GoRouteData
   }
 }
 
-@TypedGoRoute<ActivitiesPageRoute>(
-  path: "/activities/:id",
-)
+@TypedGoRoute<ActivitiesPageRoute>(path: "/activities/:id")
 class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
   final String id;
   const ActivitiesPageRoute({required this.id});
@@ -481,7 +477,8 @@ class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
   }
 }
 
-class AchievementDetailPageRoute extends GoRouteData with _$AchievementDetailPageRoute {
+class AchievementDetailPageRoute extends GoRouteData
+    with _$AchievementDetailPageRoute {
   final String id;
   const AchievementDetailPageRoute({required this.id});
 
@@ -515,5 +512,35 @@ class ExamTimetableSearchRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ExamTimetableSearchScreen(institutionId: institutionId);
+  }
+}
+
+@TypedGoRoute<SettingsPageRoute>(path: "/settings")
+class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: SettingsPage(),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }
