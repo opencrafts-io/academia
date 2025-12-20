@@ -12,7 +12,12 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.large(title: const Text("Settings")),
+          SliverAppBar.large(
+            snap: true,
+            pinned: true,
+            floating: true,
+            title: const Text("Settings"),
+          ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: MultiSliver(
@@ -92,6 +97,7 @@ class SettingsPage extends StatelessWidget {
                                   .toggleEnableExtraDarkMode();
                             },
                           ),
+                          SizedBox(height: 24),
                         ],
                       );
                     },
