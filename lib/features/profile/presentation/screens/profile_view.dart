@@ -50,250 +50,286 @@ class _ProfileViewState extends State<ProfileView> {
           return Future.delayed(Duration(seconds: 2));
         },
         child: BlocBuilder<ProfileBloc, ProfileState>(
-          buildWhen: (stateA, stateB) => stateB is ProfileLoadedState,
-          builder: (context, state) => CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                snap: true,
-                pinned: true,
-                floating: true,
-                title: Text("Profile"),
-                actions: [
-                  Visibility(
-                    visible: kDebugMode,
-                    child: IconButton(
-                      icon: Icon(Icons.token),
-                      onPressed: () {
-                        final token =
-                            (BlocProvider.of<AuthBloc>(context).state
-                                    as AuthAuthenticated)
-                                .token;
-                        Clipboard.setData(
-                          ClipboardData(text: token.accessToken),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Debug token copied to system clipboard",
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
+          builder: (context, state) {
+            if (state is! ProfileLoadedState) {
+              return CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    snap: true,
+                    pinned: true,
+                    floating: true,
+                    title: Text("Profile"),
+                  ),
+                  SliverFillRemaining(
+                    child: Center(
+                      child: state is ProfileErrorState
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.error_outline, size: 48),
+                                SizedBox(height: 16),
+                                Text("Failed to load profile"),
+                                SizedBox(height: 16),
+                                TextButton(
+                                  onPressed: () {
+                                    context.read<ProfileBloc>().add(
+                                      RefreshProfileEvent(),
+                                    );
+                                  },
+                                  child: Text("Retry"),
+                                ),
+                              ],
+                            )
+                          : CircularProgressIndicator(),
                     ),
                   ),
                 ],
-              ),
-
-              SliverToBoxAdapter(
-                child: Center(
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    constraints: BoxConstraints(
-                      maxWidth: ResponsiveBreakPoints.mobile,
-                    ),
-                    child: Column(
-                      spacing: 0,
-                      children: [
-                        UserAvatar(radius: 60),
-                        SizedBox(height: 12),
-                        Text(
-                          (state as ProfileLoadedState).profile.name,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        Text(
-                          "@${state.profile.username?.toLowerCase() ?? 'anonymous'}",
-                        ),
-
-                        SizedBox(height: 12),
-                        SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Your Academia Profile",
-                            textAlign: TextAlign.start,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        Card.filled(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          margin: EdgeInsets.all(0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.vertical(
-                              top: Radius.circular(12),
-                              bottom: Radius.circular(0),
-                            ),
-                          ),
-                          elevation: 0,
-                          child: ListTile(
-                            leading: Icon(Symbols.person_filled),
-                            title: Text(state.profile.name),
-                            subtitle: Text(
-                              "Your full name",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-                        Card.filled(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          margin: EdgeInsets.all(0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.zero,
-                          ),
-                          elevation: 0,
-                          child: ListTile(
-                            leading: Icon(Symbols.numbers),
-                            title: Text(
-                              state.profile.nationalID ??
-                                  'Please update your national ID',
-                            ),
-                            subtitle: Text(
-                              "National Identification Number",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-                        Card.filled(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          margin: EdgeInsets.all(0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.all(
-                              Radius.circular(0),
-                            ),
-                          ),
-                          elevation: 0,
-                          child: ListTile(
-                            leading: Icon(Symbols.phone),
-                            title: Text(
-                              state.profile.phone ??
-                                  'Please update your phone number',
-                            ),
-                            subtitle: Text(
-                              "Your phone number",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-                        Card.filled(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.zero,
-                          ),
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          margin: EdgeInsets.all(0.5),
-                          elevation: 0,
-                          child: ListTile(
-                            leading: Icon(Symbols.email),
-                            title: Text(state.profile.email),
-                            subtitle: Text(
-                              "Your personal email",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-                        Card.filled(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          margin: EdgeInsets.all(0.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.vertical(
-                              bottom: Radius.circular(8),
-                            ),
-                          ),
-                          elevation: 0,
-                          child: ListTile(
-                            leading: Icon(Symbols.today),
-                            title: Text(timeSince(state.profile.createdAt)),
-                            subtitle: Text(
-                              "Time since you joined Academia",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 22),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Your Institutional Profiles",
-                            textAlign: TextAlign.start,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        ProfileInstitutionSection(),
-
-                        SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Account Management",
-                            textAlign: TextAlign.start,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            fixedSize: Size(480, 60),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(12),
-                            ),
-                          ),
-                          onPressed: () async {
-                            final logout = await showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog.adaptive(
-                                title: Text("Are you sure"),
-                                content: Text(
-                                  "Tapping yes im sure will delete all your data on device and you'll have to re-login",
-                                ),
-                                actions: [
-                                  FilledButton(
-                                    onPressed: () => context.pop(true),
-                                    child: Text("Yes, im sure"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => context.pop(false),
-                                    child: Text("Cancel"),
-                                  ),
-                                ],
+              );
+            }
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  snap: true,
+                  pinned: true,
+                  floating: true,
+                  title: Text("Profile"),
+                  actions: [
+                    Visibility(
+                      visible: kDebugMode,
+                      child: IconButton(
+                        icon: Icon(Icons.token),
+                        onPressed: () {
+                          final token =
+                              (BlocProvider.of<AuthBloc>(context).state
+                                      as AuthAuthenticated)
+                                  .token;
+                          Clipboard.setData(
+                            ClipboardData(text: token.accessToken),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Debug token copied to system clipboard",
                               ),
-                            );
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
 
-                            if (logout) {
-                              final appDb = sl.get<AppDataBase>();
-                              final tables = appDb.allTables;
-                              for (final table in tables) {
-                                table.deleteAll();
-                              }
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      constraints: BoxConstraints(
+                        maxWidth: ResponsiveBreakPoints.mobile,
+                      ),
+                      child: Column(
+                        spacing: 0,
+                        children: [
+                          UserAvatar(radius: 60),
+                          SizedBox(height: 12),
+                          Text(
+                            (state as ProfileLoadedState).profile.name,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          Text(
+                            "@${state.profile.username?.toLowerCase() ?? 'anonymous'}",
+                          ),
 
-                              if (!context.mounted) return;
-                              context.read<AuthBloc>().add(
-                                AuthCheckStatusEvent(),
+                          SizedBox(height: 12),
+                          SizedBox(height: 12),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Your Academia Profile",
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                          Card.filled(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            margin: EdgeInsets.all(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.vertical(
+                                top: Radius.circular(12),
+                                bottom: Radius.circular(0),
+                              ),
+                            ),
+                            elevation: 0,
+                            child: ListTile(
+                              leading: Icon(Symbols.person_filled),
+                              title: Text(state.profile.name),
+                              subtitle: Text(
+                                "Your full name",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                          Card.filled(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            margin: EdgeInsets.all(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.zero,
+                            ),
+                            elevation: 0,
+                            child: ListTile(
+                              leading: Icon(Symbols.numbers),
+                              title: Text(
+                                state.profile.nationalID ??
+                                    'Please update your national ID',
+                              ),
+                              subtitle: Text(
+                                "National Identification Number",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                          Card.filled(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            margin: EdgeInsets.all(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.all(
+                                Radius.circular(0),
+                              ),
+                            ),
+                            elevation: 0,
+                            child: ListTile(
+                              leading: Icon(Symbols.phone),
+                              title: Text(
+                                state.profile.phone ??
+                                    'Please update your phone number',
+                              ),
+                              subtitle: Text(
+                                "Your phone number",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                          Card.filled(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.zero,
+                            ),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            margin: EdgeInsets.all(0.5),
+                            elevation: 0,
+                            child: ListTile(
+                              leading: Icon(Symbols.email),
+                              title: Text(state.profile.email),
+                              subtitle: Text(
+                                "Your personal email",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                          Card.filled(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            margin: EdgeInsets.all(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.vertical(
+                                bottom: Radius.circular(8),
+                              ),
+                            ),
+                            elevation: 0,
+                            child: ListTile(
+                              leading: Icon(Symbols.today),
+                              title: Text(timeSince(state.profile.createdAt)),
+                              subtitle: Text(
+                                "Time since you joined Academia",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 22),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Your Institutional Profiles",
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                          ProfileInstitutionSection(),
+
+                          SizedBox(height: 12),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Account Management",
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          FilledButton(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              fixedSize: Size(480, 60),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(12),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final logout = await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog.adaptive(
+                                  title: Text("Are you sure"),
+                                  content: Text(
+                                    "Tapping yes im sure will delete all your data on device and you'll have to re-login",
+                                  ),
+                                  actions: [
+                                    FilledButton(
+                                      onPressed: () => context.pop(true),
+                                      child: Text("Yes, im sure"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => context.pop(false),
+                                      child: Text("Cancel"),
+                                    ),
+                                  ],
+                                ),
                               );
-                              AuthRoute().go(context);
-                            }
-                          },
-                          child: Text("Logout"),
-                        ),
 
-                        SizedBox(height: 22),
-                      ],
+                              if (logout) {
+                                final appDb = sl.get<AppDataBase>();
+                                final tables = appDb.allTables;
+                                for (final table in tables) {
+                                  table.deleteAll();
+                                }
+
+                                if (!context.mounted) return;
+                                context.read<AuthBloc>().add(
+                                  AuthCheckStatusEvent(),
+                                );
+                                AuthRoute().go(context);
+                              }
+                            },
+                            child: Text("Logout"),
+                          ),
+
+                          SizedBox(height: 22),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          },
         ),
       ),
     );
