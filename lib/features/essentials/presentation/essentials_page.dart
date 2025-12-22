@@ -130,6 +130,15 @@ class _EssentialsPageState extends State<EssentialsPage> {
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
             sliver: MultiSliver(
               children: [
+                Card.outlined(
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text("Settings & Preferences"),
+                    subtitle: Text("Theme"),
+                    onTap: () => SettingsPageRoute().push(context),
+                    subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
                 Text(
                   "Explore tools",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(

@@ -5,6 +5,7 @@ import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -82,6 +83,7 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
             signInAsReviewUsecase: sl(),
@@ -190,32 +192,63 @@ class _AcademiaState extends State<Academia> {
             ),
           ],
           child: SplashRemover(
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              showPerformanceOverlay: kProfileMode,
-              theme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                colorScheme:
-                    lightScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+            child: BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, state) {
+                final seedColor = Color(state.colorSeedValue);
+                final surfaceColor = state.extraDarkMode
+                    ? const Color(0xFF000000)
+                    : null;
+
+                ColorScheme buildColorScheme({
+                  required Brightness brightness,
+                  ColorScheme? preferredScheme,
+                }) {
+                  final baseScheme =
+                      preferredScheme ??
+                      ColorScheme.fromSeed(
+                        seedColor: seedColor,
+                        brightness: brightness,
+                      );
+
+                  return surfaceColor != null
+                      ? baseScheme.copyWith(
+                          surface: brightness == Brightness.light
+                              ? null
+                              : surfaceColor,
+                        )
+                      : baseScheme;
+                }
+
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  showPerformanceOverlay: kProfileMode,
+                  themeMode: state.themeMode,
+                  theme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.light,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.light,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? lightScheme
+                          : null,
                     ),
-                brightness: Brightness.light,
-              ),
-              darkTheme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                brightness: Brightness.dark,
-                colorScheme:
-                    darkScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+                  ),
+
+                  darkTheme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.dark,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.dark,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? darkScheme
+                          : null,
                     ),
-              ),
-              routerConfig: AppRouter.router,
+                  ),
+                  routerConfig: AppRouter.router,
+                );
+              },
             ),
           ),
         ),
