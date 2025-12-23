@@ -386,7 +386,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventDescription: _aboutController.text.trim(),
         eventLocation: _locationController.text.trim(),
         eventDate: _selectedDateTime!.toIso8601String(),
-        organizerId: organizerId!,
+        organizerId: organizerId ?? "N/A",
         eventCardImage: _selectedCardImage,
         eventPosterImage: _selectedPosterImage,
         eventBannerImage: _selectedBannerImage,
