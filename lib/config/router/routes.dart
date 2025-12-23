@@ -206,7 +206,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
   path: "/sherehe",
   routes: [
     TypedGoRoute<ShereheDetailsRoute>(
-      path: "get-event",
+      path: "get-event/:eventId",
       routes: [
         TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
         TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),

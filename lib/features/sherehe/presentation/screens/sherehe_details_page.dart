@@ -8,6 +8,7 @@ import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
   final String eventId;
@@ -135,11 +136,34 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
               icon: const Icon(Icons.arrow_back),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.qr_code_scanner),
-                onPressed: () {
-                  QrCodeScannerRoute(eventId: widget.event.id).push(context);
-                },
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.share),
+                    onPressed: () {
+                      final url =
+                          'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: widget.event.id).location}';
+
+                      Share.share(
+                        'You have been invited from Academia to the following event:\n\n '
+                        '🎉 ${widget.event.eventName}\n\n'
+                        '📍 Where: ${widget.event.eventLocation}\n'
+                        '⏰ When: ${ShereheUtils.formatDate(widget.event.eventDate)} at ${ShereheUtils.formatTime(widget.event.eventDate)}\n\n'
+                        'It’s going to be an amazing experience — don’t miss out!\n\n'
+                        '🎟 Get your ticket here:\n'
+                        '$url'
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.qr_code_scanner),
+                    onPressed: () {
+                      QrCodeScannerRoute(
+                        eventId: widget.event.id,
+                      ).push(context);
+                    },
+                  ),
+                ],
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(

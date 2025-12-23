@@ -323,7 +323,7 @@ RouteBase get $shereheRoute => GoRouteData.$route(
   factory: _$ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'get-event',
+      path: 'get-event/:eventId',
       factory: _$ShereheDetailsRoute._fromState,
       routes: [
         GoRouteData.$route(
@@ -362,14 +362,13 @@ mixin _$ShereheRoute on GoRouteData {
 
 mixin _$ShereheDetailsRoute on GoRouteData {
   static ShereheDetailsRoute _fromState(GoRouterState state) =>
-      ShereheDetailsRoute(eventId: state.uri.queryParameters['event-id']!);
+      ShereheDetailsRoute(eventId: state.pathParameters['eventId']!);
 
   ShereheDetailsRoute get _self => this as ShereheDetailsRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event',
-    queryParams: {'event-id': _self.eventId},
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}',
   );
 
   @override
@@ -388,14 +387,13 @@ mixin _$ShereheDetailsRoute on GoRouteData {
 
 mixin _$TicketFlowRoute on GoRouteData {
   static TicketFlowRoute _fromState(GoRouterState state) =>
-      TicketFlowRoute(eventId: state.uri.queryParameters['event-id']!);
+      TicketFlowRoute(eventId: state.pathParameters['eventId']!);
 
   TicketFlowRoute get _self => this as TicketFlowRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event/ticket-flow',
-    queryParams: {'event-id': _self.eventId},
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/ticket-flow',
   );
 
   @override
@@ -414,14 +412,13 @@ mixin _$TicketFlowRoute on GoRouteData {
 
 mixin _$QrCodeScannerRoute on GoRouteData {
   static QrCodeScannerRoute _fromState(GoRouterState state) =>
-      QrCodeScannerRoute(eventId: state.uri.queryParameters['event-id']!);
+      QrCodeScannerRoute(eventId: state.pathParameters['eventId']!);
 
   QrCodeScannerRoute get _self => this as QrCodeScannerRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event/qr-code-scanner',
-    queryParams: {'event-id': _self.eventId},
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/qr-code-scanner',
   );
 
   @override
