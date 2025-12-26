@@ -305,14 +305,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  cookie_jar:
-    dependency: transitive
-    description:
-      name: cookie_jar
-      sha256: a6ac027d3ed6ed756bfce8f3ff60cb479e266f3b0fdabd6242b804b6765e52de
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.8"
   cross_file:
     dependency: transitive
     description:
@@ -409,14 +401,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.0"
-  dio_cookie_manager:
-    dependency: transitive
-    description:
-      name: dio_cookie_manager
-      sha256: d39c16abcc711c871b7b29bd51c6b5f3059ef39503916c6a9df7e22c4fc595e0
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.0"
   dio_request_inspector:
     dependency: "direct main"
     description:
@@ -433,14 +417,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  dotenv:
-    dependency: transitive
-    description:
-      name: dotenv
-      sha256: "379e64b6fc82d3df29461d349a1796ecd2c436c480d4653f3af6872eccbc90e1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.0"
   drift:
     dependency: "direct main"
     description:
@@ -1224,21 +1200,10 @@ packages:
   magnet:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d53c78df4dc3f89a776511c8c17782926c61ccd2
-      url: "https://github.com/opencrafts-io/magnet.git"
-    source: git
-    version: "1.0.0"
-  magnet_daystar_university:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "12597e6c8cbb8ab6b7865c9b7c6b0dc66e6cd1fe"
-      url: "https://github.com/IamMuuo/magnet-daystar-university.git"
-    source: git
-    version: "1.0.0"
+      path: "packages/magnet"
+      relative: true
+    source: path
+    version: "0.0.1"
   matcher:
     dependency: transitive
     description:
@@ -2277,5 +2242,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.9.0 <4.0.0"
+  dart: ">=3.10.1 <4.0.0"
   flutter: ">=3.35.0"

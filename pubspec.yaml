@@ -80,14 +80,8 @@ dependencies:
 
   # Magnet for institutions
   magnet:
-    git:
-      url: https://github.com/opencrafts-io/magnet.git
-      ref: HEAD
+    path: ./packages/magnet
 
-  magnet_daystar_university:
-    git:
-      url: https://github.com/IamMuuo/magnet-daystar-university.git
-      ref: HEAD
   google_fonts: ^6.3.1
   rrule: ^0.2.17
   permission_handler: ^12.0.1

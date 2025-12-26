@@ -150,10 +150,6 @@ class _AcademiaState extends State<Academia> {
         ),
 
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
-        ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
       ],

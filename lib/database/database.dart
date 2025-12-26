@@ -9,10 +9,6 @@ import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
-import 'package:academia/features/magnet/data/models/magnet_course_info.dart';
-import 'package:academia/features/magnet/data/models/magnet_credentials.dart';
-import 'package:academia/features/magnet/data/models/magnet_financial_transaction.dart';
-import 'package:academia/features/magnet/data/models/magnet_student_profile.dart';
 import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
@@ -55,13 +51,6 @@ part 'database.g.dart';
 
     // Institution
     Institution,
-
-    // Magnet
-    MagnetStudentProfile,
-    MagnetCredentials,
-    MagnetCourseInfo,
-    MagnetFinancialTransaction,
-
     // Exam Timetable
     ExamTimetable,
 
