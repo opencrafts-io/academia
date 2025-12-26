@@ -210,6 +210,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
       routes: [
         TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
         TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
+        TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
       ],
     ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
@@ -281,9 +282,19 @@ class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
   }
 }
 
+class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
+  final String eventId;
+
+  const EventTicketsRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EventTicketsPage(eventId: eventId);
+  }
+}
+
 @TypedGoRoute<PurchasedTicketsRoute>(
   path: "/purchased-tickets/mine",
-  routes: [TypedGoRoute<QrCodeRoute>(path: "qr-code/:eventId")],
 )
 class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
   @override
@@ -292,13 +303,17 @@ class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
   }
 }
 
+
+@TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:ticketId")
 class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
   final String eventId;
+  final String ticketId;
   final String ticketName;
   final int quantity;
 
   const QrCodeRoute({
     required this.eventId,
+    required this.ticketId,
     required this.ticketName,
     required this.quantity,
   });

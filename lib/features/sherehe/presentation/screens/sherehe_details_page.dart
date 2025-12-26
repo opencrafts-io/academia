@@ -151,16 +151,22 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                         '⏰ When: ${ShereheUtils.formatDate(widget.event.eventDate)} at ${ShereheUtils.formatTime(widget.event.eventDate)}\n\n'
                         'It’s going to be an amazing experience — don’t miss out!\n\n'
                         '🎟 Get your ticket here:\n'
-                        '$url'
+                        '$url',
                       );
                     },
                   ),
+                  // IconButton(
+                  //   icon: const Icon(Icons.qr_code_scanner),
+                  //   onPressed: () {
+                  //     QrCodeScannerRoute(
+                  //       eventId: widget.event.id,
+                  //     ).push(context);
+                  //   },
+                  // ),
                   IconButton(
-                    icon: const Icon(Icons.qr_code_scanner),
+                    icon: const Icon(Icons.confirmation_number_outlined),
                     onPressed: () {
-                      QrCodeScannerRoute(
-                        eventId: widget.event.id,
-                      ).push(context);
+                      EventTicketsRoute(eventId: widget.event.id).push(context);
                     },
                   ),
                 ],

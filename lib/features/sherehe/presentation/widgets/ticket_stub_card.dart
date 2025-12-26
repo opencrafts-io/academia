@@ -86,6 +86,7 @@ class TicketStubCard extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: () => QrCodeRoute(
                   eventId: eventId!,
+                  ticketId: ticket.id!,
                   ticketName: ticket.ticketName,
                   quantity: quantity,
                 ).push(context),
