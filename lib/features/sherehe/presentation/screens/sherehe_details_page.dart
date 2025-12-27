@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,12 +13,9 @@ import 'package:share_plus/share_plus.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
   final String eventId;
-  final Event event;
-  const ShereheDetailsPage({
-    super.key,
-    required this.eventId,
-    required this.event,
-  });
+  final Event? event;
+
+  const ShereheDetailsPage({super.key, required this.eventId, this.event});
 
   @override
   State<ShereheDetailsPage> createState() => _ShereheDetailsPageState();
@@ -34,6 +32,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     if (profileState is ProfileLoadedState) {
       userId = profileState.profile.id;
     }
+
+    context.read<ShereheDetailsBloc>().add(
+      LoadShereheDetails(eventId: widget.eventId, initialEvent: widget.event),
+    );
   }
 
   double _getExpandedHeight(BuildContext context) {
@@ -44,21 +46,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     } else {
       return 500.0;
     }
-  }
-
-  void _handleShare() {
-    final url =
-        'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: widget.event.id).location}';
-
-    Share.share(
-      'You have been invited from Academia to the following event:\n\n '
-      '🎉 ${widget.event.eventName}\n\n'
-      '📍 Where: ${widget.event.eventLocation}\n'
-      '⏰ When: ${ShereheUtils.formatDate(widget.event.eventDate)} at ${ShereheUtils.formatTime(widget.event.eventDate)}\n\n'
-      'It’s going to be an amazing experience — don’t miss out!\n\n'
-      '🎟 Get your ticket here:\n'
-      '$url',
-    );
   }
 
   final List<Attendee> mockAttendees = [
@@ -140,254 +127,315 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: _getExpandedHeight(context),
-            pinned: true,
-            leading: IconButton(
-              onPressed: () => context.pop(),
-              icon: const Icon(Icons.arrow_back),
-            ),
-            actions: [
-              PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert),
-                onSelected: (value) {
-                  switch (value) {
-                    case 'share':
-                      _handleShare();
-                      break;
-                    case 'scan':
-                      QrCodeScannerRoute(
-                        eventId: widget.event.id,
-                      ).push(context);
-                      break;
-                    case 'tickets':
-                      EventTicketsRoute(eventId: widget.event.id).push(context);
-                      break;
-                  }
-                },
-                itemBuilder: (BuildContext context) => [
-                  PopupMenuItem(
-                    value: 'share',
-                    child: ListTile(
-                      leading: const Icon(Icons.share),
-                      title: const Text('Share Event'),
-                      contentPadding: EdgeInsets.zero,
-                      visualDensity: VisualDensity.compact,
-                    ),
+    return BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
+      builder: (context, state) {
+        if (state is ShereheDetailsLoading) {
+          return Scaffold(
+            body: const Center(child: SpinningScallopIndicator()),
+          );
+        } else if (state is ShereheDetailsError) {
+          return Scaffold(
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Failed to load event details. Please try again later.\n\n${state.message}",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  PopupMenuItem(
-                    value: 'scan',
-                    child: ListTile(
-                      leading: const Icon(Icons.qr_code_scanner),
-                      title: const Text('Scan my Event'),
-                      contentPadding: EdgeInsets.zero,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'tickets',
-                    child: ListTile(
-                      leading: const Icon(Icons.confirmation_number_outlined),
-                      title: const Text('My Tickets'),
-                      contentPadding: EdgeInsets.zero,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                widget.event.eventName,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: widget.event.eventBannerImage!,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, child, error) {
-                      return Container(
-                        width: double.infinity,
-                        color: Theme.of(context).colorScheme.errorContainer,
-                        child: const Icon(Icons.image_not_supported),
-                      );
-                    },
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: EdgeInsets.all(
-              ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
-            ),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'About Event',
-                        style:
-                            ResponsiveBreakPoints.isTablet(context) ||
-                                ResponsiveBreakPoints.isDesktop(context)
-                            ? Theme.of(
-                                context,
-                              ).textTheme.headlineMedium!.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              )
-                            : Theme.of(
-                                context,
-                              ).textTheme.headlineSmall!.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                      ),
-                      const SizedBox(height: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: widget.event.eventGenre!
-                                .map((e) => e.trim())
-                                .map(
-                                  (genre) => Chip(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.secondaryContainer,
-                                    label: Text(
-                                      genre,
-                                      style: TextStyle(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSecondaryContainer,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
-                      Text(
-                        widget.event.eventDescription,
-                        style:
-                            ResponsiveBreakPoints.isTablet(context) ||
-                                ResponsiveBreakPoints.isDesktop(context)
-                            ? Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                                height: 1.5,
-                              )
-                            : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                                height: 1.5,
-                              ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(widget.event.eventLocation)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    spacing: 16.0,
-                    children: [
-                      Row(
-                        spacing: 8.0,
-                        children: [
-                          const Icon(Icons.calendar_month),
-                          Text(ShereheUtils.formatDate(widget.event.eventDate)),
-                        ],
-                      ),
-                      Row(
-                        spacing: 8.0,
-                        children: [
-                          const Icon(Icons.access_time),
-                          Text(ShereheUtils.formatTime(widget.event.eventDate)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: EdgeInsets.all(
-              ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
-            ),
-            sliver: SliverToBoxAdapter(
-              child: Text(
-                "Who's Coming",
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-          ),
+          );
+        } else if (state is ShereheDetailsLoaded) {
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: _getExpandedHeight(context),
+                  pinned: true,
+                  leading: IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  actions: [
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'share':
+                            final url =
+                                'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: state.event.id).location}';
 
-          BlocProvider(
-            create: (_) => AttendeeBloc(getAttendee: sl()),
-            child: AttendeesList(
-              eventId: widget.event.id,
-              organizerId: widget.event.organizerId,
-              userId: userId,
-              attendees: mockAttendees,
+                            Share.share(
+                              'You have been invited from Academia to the following event:\n\n '
+                              '🎉 ${state.event.eventName}\n\n'
+                              '📍 Where: ${state.event.eventLocation}\n'
+                              '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
+                              'It’s going to be an amazing experience — don’t miss out!\n\n'
+                              '🎟 Get your ticket here:\n'
+                              '$url',
+                            );
+                            break;
+                          case 'scan':
+                            QrCodeScannerRoute(
+                              eventId: state.event.id,
+                            ).push(context);
+                            break;
+                          case 'tickets':
+                            EventTicketsRoute(
+                              eventId: state.event.id,
+                            ).push(context);
+                            break;
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          value: 'share',
+                          child: ListTile(
+                            leading: const Icon(Icons.share),
+                            title: const Text('Share Event'),
+                            contentPadding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'scan',
+                          child: ListTile(
+                            leading: const Icon(Icons.qr_code_scanner),
+                            title: const Text('Scan my Event'),
+                            contentPadding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'tickets',
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.confirmation_number_outlined,
+                            ),
+                            title: const Text('My Tickets'),
+                            contentPadding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(
+                      state.event.eventName,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: state.event.eventBannerImage!,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, child, error) {
+                            return Container(
+                              width: double.infinity,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.errorContainer,
+                              child: const Icon(Icons.image_not_supported),
+                            );
+                          },
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.all(
+                    ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'About Event',
+                              style:
+                                  ResponsiveBreakPoints.isTablet(context) ||
+                                      ResponsiveBreakPoints.isDesktop(context)
+                                  ? Theme.of(
+                                      context,
+                                    ).textTheme.headlineMedium!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    )
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.headlineSmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
+                            ),
+                            const SizedBox(height: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: state.event.eventGenre!
+                                      .map((e) => e.trim())
+                                      .map(
+                                        (genre) => Chip(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                          backgroundColor: Theme.of(
+                                            context,
+                                          ).colorScheme.secondaryContainer,
+                                          label: Text(
+                                            genre,
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
+                            Text(
+                              state.event.eventDescription,
+                              style:
+                                  ResponsiveBreakPoints.isTablet(context) ||
+                                      ResponsiveBreakPoints.isDesktop(context)
+                                  ? Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge!.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                      height: 1.5,
+                                    )
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                      height: 1.5,
+                                    ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on),
+                            const SizedBox(width: 8),
+                            Expanded(child: Text(state.event.eventLocation)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          spacing: 16.0,
+                          children: [
+                            Row(
+                              spacing: 8.0,
+                              children: [
+                                const Icon(Icons.calendar_month),
+                                Text(
+                                  ShereheUtils.formatDate(
+                                    state.event.eventDate,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              spacing: 8.0,
+                              children: [
+                                const Icon(Icons.access_time),
+                                Text(
+                                  ShereheUtils.formatTime(
+                                    state.event.eventDate,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.all(
+                    ResponsiveBreakPoints.isMobile(context) ? 16.0 : 32.0,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      "Who's Coming",
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                BlocProvider(
+                  create: (_) => AttendeeBloc(getAttendee: sl()),
+                  child: AttendeesList(
+                    eventId: state.event.id,
+                    organizerId: state.event.organizerId,
+                    userId: userId,
+                    attendees: mockAttendees,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
-            child: FilledButton(
-              onPressed: () {
-                TicketFlowRoute(eventId: widget.event.id).push(context);
-              },
-              child: const Text("I'm Going"),
+            bottomNavigationBar: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
+                  child: FilledButton(
+                    onPressed: () {
+                      TicketFlowRoute(eventId: state.event.id).push(context);
+                    },
+                    child: const Text("I'm Going"),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

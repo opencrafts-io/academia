@@ -90,20 +90,10 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
   sl.registerLazySingleton(() => GetUserPurchasedTicketsUseCase(sl()));
-  
 
-  sl.registerFactory(
-    () => ShereheHomeBloc(
-      getEvent: sl(),
-    ),
-  );
+  sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
-  sl.registerFactory(
-    () => ShereheDetailsBloc(
-      getSpecificEventUseCase: sl(),
-      getAttendeesUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory(

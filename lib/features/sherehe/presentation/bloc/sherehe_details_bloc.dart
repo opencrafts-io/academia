@@ -8,12 +8,9 @@ part 'sherehe_details_state.dart';
 class ShereheDetailsBloc
     extends Bloc<ShereheDetailsEvent, ShereheDetailsState> {
   final GetSpecificEvent getSpecificEventUseCase;
-  final GetAttendee getAttendeesUseCase;
 
-  ShereheDetailsBloc({
-    required this.getSpecificEventUseCase,
-    required this.getAttendeesUseCase,
-  }) : super(ShereheDetailsInitial()) {
+  ShereheDetailsBloc({required this.getSpecificEventUseCase})
+    : super(ShereheDetailsInitial()) {
     on<LoadShereheDetails>(_onLoadShereheDetails);
   }
 
@@ -21,56 +18,23 @@ class ShereheDetailsBloc
     LoadShereheDetails event,
     Emitter<ShereheDetailsState> emit,
   ) async {
-    emit(ShereheDetailsLoading());
-
-    final eventResult = await getSpecificEventUseCase.execute(
-      eventId: event.eventId,
-    );
-
-    // Handle event details result
-    if (eventResult.isLeft()) {
-      final failure = eventResult.swap().getOrElse(() => throw '');
-      emit(ShereheDetailsError(message: failure.message));
+    if (event.initialEvent != null) {
+      emit(ShereheDetailsLoaded(event: event.initialEvent!));
       return;
     }
 
-    final eventData = eventResult.getOrElse(() => throw '');
-    emit(
-      ShereheDetailsLoaded(
-        event: eventData,
-        attendees: const [],
-        isLoadingAttendees: true,
-      ),
-    );
+    emit(ShereheDetailsLoading());
 
-    // Load attendees
-    final attendeeResult = await getAttendeesUseCase.execute(
+    final result = await getSpecificEventUseCase.execute(
       eventId: event.eventId,
-      page: 1,
-      limit: 2,
     );
 
-    attendeeResult.fold(
+    result.fold(
       (failure) {
-        emit(
-          ShereheDetailsLoaded(
-            event: eventData,
-            attendees: const [],
-            isUserAttending: false,
-            isLoadingAttendees: false,
-            attendeeErrorMessage: failure.message,
-          ),
-        );
+        emit(ShereheDetailsError(message: failure.message));
       },
-      (attendeeList) {
-        emit(
-          ShereheDetailsLoaded(
-            event: eventData,
-            attendees: attendeeList.results,
-            isUserAttending: false,
-            isLoadingAttendees: false,
-          ),
-        );
+      (event) {
+        emit(ShereheDetailsLoaded(event: event));
       },
     );
   }
