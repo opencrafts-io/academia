@@ -10,3 +10,7 @@ export 'admob/admob.dart';
 export 'firebase_remote_config/firebase_remote_config.dart';
 export 'essentials/essentials.dart';
 export 'magnet/magnet.dart';
+export 'leaderboard/leaderboard.dart';
+export 'streaks/streaks.dart';
+export 'exam_timetable/exam_timetable.dart';
+export 'settings/settings.dart';

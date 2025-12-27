@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -10,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -22,6 +28,22 @@ class _AcademiaState extends State<Academia> {
   final Logger _logger = Logger();
   @override
   void initState() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString(
+        "user_activity",
+        jsonEncode({"last_app_launch_date": DateTime.now()}),
+      );
+    });
+
+    final DailyLoginBackgroundTask dailyLoginBackgroundTask =
+        DailyLoginBackgroundTask();
+    Workmanager().registerPeriodicTask(
+      dailyLoginBackgroundTask.taskName,
+      dailyLoginBackgroundTask.taskName,
+      frequency: dailyLoginBackgroundTask.frequency,
+      constraints: dailyLoginBackgroundTask.constraints
+          .toWorkManagerConstraints(),
+    );
     setOptimalDisplayMode();
     super.initState();
   }
@@ -61,8 +83,10 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
+            signInWithAppleUsecase: sl(),
             signInAsReviewUsecase: sl(),
             refreshVerisafeTokenUsecase: sl(),
             signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
@@ -77,6 +101,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
         BlocProvider(create: (context) => sl<FeedBloc>()),
         BlocProvider(create: (context) => sl<CommentBloc>()),
+        BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
             getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
@@ -107,13 +132,19 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) => sl<NotificationBloc>()
             ..add(
+              InitializeLocalNotificationEvent(
+                channels: [
+                  NotificationChannelConfig.reminders,
+                  NotificationChannelConfig.alerts,
+                  NotificationChannelConfig.updates,
+                ],
+              ),
+            )
+            ..add(
               InitializeOneSignalEvent(
                 appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
               ),
             ),
-        ),
-        BlocProvider(
-          create: (context) => sl<AdBloc>()..add(InitializeAdMobEvent()),
         ),
         BlocProvider(
           create: (context) =>
@@ -126,6 +157,7 @@ class _AcademiaState extends State<Academia> {
               sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
         ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
+        BlocProvider(create: (context) => sl<LeaderboardBloc>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -138,10 +170,7 @@ class _AcademiaState extends State<Academia> {
             BlocListener<NotificationBloc, NotificationState>(
               listener: (context, state) {
                 if (state is NotificationErrorState) {
-                  _logger.e(
-                    'OneSignal initialization failed: ${state.message}',
-                    error: state.message,
-                  );
+                  _logger.e(state.message);
                 }
               },
             ),
@@ -164,46 +193,65 @@ class _AcademiaState extends State<Academia> {
                 }
               },
             ),
-            BlocListener<AdBloc, AdState>(
-              listener: (context, state) {
-                if (state is AdInitializedState) {
-                  _logger.i('AdMob initialized successfully!');
-                } else if (state is AdErrorState) {
-                  _logger.e(
-                    'AdMob error: ${state.message}',
-                    error: state.message,
-                  );
-                }
-              },
-            ),
           ],
           child: SplashRemover(
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              showPerformanceOverlay: kProfileMode,
-              theme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                colorScheme:
-                    lightScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+            child: BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, state) {
+                final seedColor = Color(state.colorSeedValue);
+                final surfaceColor = state.extraDarkMode
+                    ? const Color(0xFF000000)
+                    : null;
+
+                ColorScheme buildColorScheme({
+                  required Brightness brightness,
+                  ColorScheme? preferredScheme,
+                }) {
+                  final baseScheme =
+                      preferredScheme ??
+                      ColorScheme.fromSeed(
+                        seedColor: seedColor,
+                        brightness: brightness,
+                      );
+
+                  return surfaceColor != null
+                      ? baseScheme.copyWith(
+                          surface: brightness == Brightness.light
+                              ? null
+                              : surfaceColor,
+                        )
+                      : baseScheme;
+                }
+
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  showPerformanceOverlay: kProfileMode,
+                  themeMode: state.themeMode,
+                  theme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.light,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.light,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? lightScheme
+                          : null,
                     ),
-                brightness: Brightness.light,
-              ),
-              darkTheme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                brightness: Brightness.dark,
-                colorScheme:
-                    darkScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+                  ),
+
+                  darkTheme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.dark,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.dark,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? darkScheme
+                          : null,
                     ),
-              ),
-              routerConfig: AppRouter.router,
+                  ),
+                  routerConfig: AppRouter.router,
+                );
+              },
             ),
           ),
         ),

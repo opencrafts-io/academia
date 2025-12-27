@@ -5,6 +5,7 @@ import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:time_since/time_since.dart';
 
 class PostContentWidget extends StatefulWidget {
   final Post post;
@@ -24,7 +25,7 @@ class PostContentWidget extends StatefulWidget {
 
 class _PostContentWidgetState extends State<PostContentWidget> {
   final ScrollController _scrollController = ScrollController();
-  int _currentPage = 1;
+  int _commentPage = 1;
 
   @override
   void initState() {
@@ -37,10 +38,10 @@ class _PostContentWidgetState extends State<PostContentWidget> {
         _scrollController.position.maxScrollExtent * 0.9) {
       final state = context.read<CommentBloc>().state;
       if (state is CommentsLoaded && state.hasMore) {
-        _currentPage++;
+        _commentPage++;
         context.read<CommentBloc>().add(
-          GetPostComments(postId: widget.post.id, page: _currentPage),
-        );
+              GetPostComments(postId: widget.post.id, page: _commentPage),
+            );
       }
     }
   }
@@ -72,7 +73,7 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                 IconButton.filled(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text("Opening Community"),
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -82,7 +83,7 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                       communityId: widget.post.community.id,
                     ).push(context);
                   },
-                  icon: Icon(Icons.groups, color: Colors.white),
+                  icon: const Icon(Icons.groups, color: Colors.white),
                 ),
               ],
             ),
@@ -94,18 +95,114 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                     create: (context) =>
                         sl<ChirpUserCubit>()
                           ..getChirpUserByID(widget.post.authorId),
-                    child: PostCard(post: widget.post),
+                    child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                      builder: (context, state) {
+                        String avatarUrl =
+                            'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                        String username = 'Unknown User';
+
+                        if (state is ChirpUserLoadedState) {
+                          avatarUrl = state.user.avatarUrl ??
+                              'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                          username = state.user.username ?? 'Unknown User';
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                ChirpUserAvatar(
+                                    avatarUrl: avatarUrl, numberOfScallops: 6),
+                                const SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'a/${widget.post.community.name}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "$username • ${timeSince(widget.post.createdAt)}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.post.title,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(widget.post.content),
+                            if (widget.post.attachments.isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: widget.post.attachments
+                                    .map((attachment) => AttachmentWidget(
+                                        attachment: attachment))
+                                    .toList(),
+                              ),
+                            ],
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.all(2),
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiaryContainer,
+                                  ),
+                                  icon: const Icon(Icons.chat),
+                                  onPressed: () {},
+                                  label: Text('${widget.post.commentCount}'),
+                                ),
+                                const SizedBox(width: 8),
+                                OutlinedButton.icon(
+                                  iconAlignment: IconAlignment.start,
+                                  onPressed: null,
+                                  label:
+                                      Text(widget.post.viewsCount.toString()),
+                                  icon: const Icon(Icons.visibility),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // Comments header with loading indicator
                   Row(
                     children: [
-                      Icon(Icons.comment_outlined, size: 20),
+                      const Icon(Icons.comment_outlined, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
-                        style: Theme.of(context).textTheme.titleMedium
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -127,19 +224,21 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                         padding: const EdgeInsets.all(32.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          spacing: 8,
                           children: [
                             Lottie.asset(
                               "assets/lotties/promotional-staff.json",
                               height: 240,
                             ),
+                            const SizedBox(height:8),
                             Text(
                               "No comments yet",
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             Text(
                               "Be the first to share your thoughts!",
-                              style: Theme.of(context).textTheme.bodyMedium
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
                                   ?.copyWith(
                                     color: Theme.of(
                                       context,
@@ -188,14 +287,14 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                           child: TextButton.icon(
                             onPressed: () {
                               context.read<CommentBloc>().add(
-                                GetPostComments(
-                                  postId: widget.post.id,
-                                  page: _currentPage,
-                                ),
-                              );
+                                    GetPostComments(
+                                      postId: widget.post.id,
+                                      page: _commentPage,
+                                    ),
+                                  );
                             },
                             icon: const Icon(Icons.refresh),
-                            label: Text("Retry loading more comments"),
+                            label: const Text("Retry loading more comments"),
                           ),
                         ),
                       ],
@@ -215,7 +314,9 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                             const SizedBox(height: 16),
                             Text(
                               "Failed to load comments",
-                              style: Theme.of(context).textTheme.bodyMedium
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
                                   ?.copyWith(
                                     color: Theme.of(context).colorScheme.error,
                                   ),

@@ -13,6 +13,11 @@ class AuthSignInWithGoogleEvent extends AuthEvent {
   const AuthSignInWithGoogleEvent();
 }
 
+/// Event dispatched to trigger a sign-in process, typically with Apple.
+class AuthSignInWithAppleEvent extends AuthEvent {
+  const AuthSignInWithAppleEvent();
+}
+
 /// Event dispatched to trigger a sign-in process as a reviewer
 class AuthSignInAsReviewerEvent extends AuthEvent {}
 

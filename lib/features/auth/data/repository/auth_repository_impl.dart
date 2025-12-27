@@ -13,6 +13,18 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
+  Future<Either<Failure, Token>> signInWithApple() async {
+    final result = await authRemoteDatasource.signInWithApple();
+    return result.fold((failure) => left(failure), (token) async {
+      final cacheRes = await authLocalDatasource.cacheOrUpdateToken(token);
+      return cacheRes.fold(
+        (error) => left(error),
+        (token) => right(token.toEntity()),
+      );
+    });
+  }
+
+  @override
   Future<Either<Failure, Token>> signInWithGoogle() async {
     final result = await authRemoteDatasource.signInWithGoogle();
     return result.fold((failure) => left(failure), (token) async {

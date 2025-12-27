@@ -530,3 +530,94 @@ class CommunityMembershipsRoute extends GoRouteData
     return CommunityMembershipPage();
   }
 }
+
+@TypedGoRoute<AchievementsHomePageRoute>(
+  path: "/achievements",
+  routes: [TypedGoRoute<AchievementDetailPageRoute>(path: ":id")],
+)
+class AchievementsHomePageRoute extends GoRouteData
+    with _$AchievementsHomePageRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AchievementsHomePage();
+  }
+}
+
+@TypedGoRoute<ActivitiesPageRoute>(path: "/activities/:id")
+class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
+  final String id;
+  const ActivitiesPageRoute({required this.id});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ActivityDetailPage(id: id);
+  }
+}
+
+class AchievementDetailPageRoute extends GoRouteData
+    with _$AchievementDetailPageRoute {
+  final String id;
+  const AchievementDetailPageRoute({required this.id});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AchievementDetailPage(id: id);
+  }
+}
+
+@TypedGoRoute<ExamTimetableRoute>(
+  path: "/exam-timetable/:institutionId",
+  routes: [TypedGoRoute<ExamTimetableSearchRoute>(path: "search")],
+)
+class ExamTimetableRoute extends GoRouteData with _$ExamTimetableRoute {
+  final String institutionId;
+
+  const ExamTimetableRoute({required this.institutionId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ExamTimetableHomeScreen(institutionId: institutionId);
+  }
+}
+
+class ExamTimetableSearchRoute extends GoRouteData
+    with _$ExamTimetableSearchRoute {
+  final String institutionId;
+
+  const ExamTimetableSearchRoute({required this.institutionId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ExamTimetableSearchScreen(institutionId: institutionId);
+  }
+}
+
+@TypedGoRoute<SettingsPageRoute>(path: "/settings")
+class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: SettingsPage(),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}

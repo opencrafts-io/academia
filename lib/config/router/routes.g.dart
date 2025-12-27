@@ -23,6 +23,10 @@ List<RouteBase> get $appRoutes => [
   $createCommunitiesRoute,
   $trimVideoRoute,
   $communityMembershipsRoute,
+  $achievementsHomePageRoute,
+  $activitiesPageRoute,
+  $examTimetableRoute,
+  $settingsPageRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -941,6 +945,180 @@ mixin _$CommunityMembershipsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/community/memberships/mine');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $achievementsHomePageRoute => GoRouteData.$route(
+  path: '/achievements',
+  factory: _$AchievementsHomePageRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: ':id',
+      factory: _$AchievementDetailPageRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$AchievementsHomePageRoute on GoRouteData {
+  static AchievementsHomePageRoute _fromState(GoRouterState state) =>
+      AchievementsHomePageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/achievements');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AchievementDetailPageRoute on GoRouteData {
+  static AchievementDetailPageRoute _fromState(GoRouterState state) =>
+      AchievementDetailPageRoute(id: state.pathParameters['id']!);
+
+  AchievementDetailPageRoute get _self => this as AchievementDetailPageRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/achievements/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $activitiesPageRoute => GoRouteData.$route(
+  path: '/activities/:id',
+  factory: _$ActivitiesPageRoute._fromState,
+);
+
+mixin _$ActivitiesPageRoute on GoRouteData {
+  static ActivitiesPageRoute _fromState(GoRouterState state) =>
+      ActivitiesPageRoute(id: state.pathParameters['id']!);
+
+  ActivitiesPageRoute get _self => this as ActivitiesPageRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/activities/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $examTimetableRoute => GoRouteData.$route(
+  path: '/exam-timetable/:institutionId',
+  factory: _$ExamTimetableRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'search',
+      factory: _$ExamTimetableSearchRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$ExamTimetableRoute on GoRouteData {
+  static ExamTimetableRoute _fromState(GoRouterState state) =>
+      ExamTimetableRoute(institutionId: state.pathParameters['institutionId']!);
+
+  ExamTimetableRoute get _self => this as ExamTimetableRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$ExamTimetableSearchRoute on GoRouteData {
+  static ExamTimetableSearchRoute _fromState(GoRouterState state) =>
+      ExamTimetableSearchRoute(
+        institutionId: state.pathParameters['institutionId']!,
+      );
+
+  ExamTimetableSearchRoute get _self => this as ExamTimetableSearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}/search',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsPageRoute => GoRouteData.$route(
+  path: '/settings',
+  factory: _$SettingsPageRoute._fromState,
+);
+
+mixin _$SettingsPageRoute on GoRouteData {
+  static SettingsPageRoute _fromState(GoRouterState state) =>
+      SettingsPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings');
 
   @override
   void go(BuildContext context) => context.go(location);

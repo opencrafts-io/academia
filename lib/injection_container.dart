@@ -24,6 +24,12 @@ Future<void> init(FlavorConfig flavor) async {
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
+  final AdService adService = AdService();
+  await adService.initialize();
+  adService.loadInterstitialAd();
+
+  sl.registerSingleton<AdService>(adService);
+
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
   );
@@ -48,6 +54,10 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<SignInWithGoogleUsecase>(
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SignInWithAppleUsecase>(
+    () => SignInWithAppleUsecase(sl.get<AuthRepositoryImpl>()),
   );
 
   sl.registerFactory<SignInAsReviewUsecase>(
@@ -488,6 +498,12 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<InitializeLocalNotificationsUsecase>(
+    () => InitializeLocalNotificationsUsecase(
+      notificationRepository: sl.get<NotificationRepository>(),
+    ),
+  );
+
   sl.registerFactory<InitializeOneSignalUsecase>(
     () => InitializeOneSignalUsecase(sl.get<NotificationRepository>()),
   );
@@ -527,6 +543,8 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
+      initializeLocalNotificationsUsecase: sl
+          .get<InitializeLocalNotificationsUsecase>(),
       initializeOneSignalUsecase: sl.get<InitializeOneSignalUsecase>(),
       getNotificationsUsecase: sl.get<GetNotificationsUsecase>(),
       markNotificationAsReadUsecase: sl.get<MarkNotificationAsReadUsecase>(),
@@ -641,6 +659,39 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  // Exam Timetable
+  // Data sources
+  sl.registerFactory(() => ExamTimetableLocalDataSource(localDB: sl()));
+  sl.registerFactory(
+    () => ExamTimetableRemoteDatasource(dioClient: sl(), flavor: sl()),
+  );
+
+  // Repository
+  sl.registerFactory<ExamTimetableRepository>(
+    () => ExamTimetableRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerFactory(() => GetCachedExamsUseCase(sl()));
+  sl.registerFactory(() => GetExamTimetableUseCase(sl()));
+  sl.registerFactory(() => CacheExamsUseCase(sl()));
+  sl.registerFactory(() => RefreshExamTimetableUseCase(sl()));
+  sl.registerFactory(() => DeleteExamByCourseCodeUseCase(sl()));
+
+  // BLoC
+  sl.registerFactory(
+    () => ExamTimetableBloc(
+      getCachedExamsUseCase: sl(),
+      getExamTimetableUseCase: sl(),
+      cacheExamsUseCase: sl(),
+      refreshExamTimetableUseCase: sl(),
+      deleteExamByCourseCodeUseCase: sl(),
+    ),
+  );
+
   // Magnet
   sl.registerFactory<MagnetCredentialsLocalDatasource>(
     () => MagnetCredentialsLocalDatasource(localDB: sl()),
@@ -721,51 +772,6 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // AdMob
-  sl.registerFactory<AdRemoteDataSource>(() => AdRemoteDataSourceImpl());
-
-  sl.registerFactory<AdRepository>(
-    () => AdRepositoryImpl(sl.get<AdRemoteDataSource>()),
-  );
-
-  sl.registerFactory<InitializeAdMobUsecase>(
-    () => InitializeAdMobUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadBannerAdUsecase>(
-    () => LoadBannerAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadInterstitialAdUsecase>(
-    () => LoadInterstitialAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<LoadRewardedAdUsecase>(
-    () => LoadRewardedAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<ShowInterstitialAdUsecase>(
-    () => ShowInterstitialAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<ShowRewardedAdUsecase>(
-    () => ShowRewardedAdUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<GetLoadedAdsUsecase>(
-    () => GetLoadedAdsUsecase(sl.get<AdRepository>()),
-  );
-  sl.registerFactory<SetTestModeUsecase>(
-    () => SetTestModeUsecase(sl.get<AdRepository>()),
-  );
-
-  sl.registerFactory<AdBloc>(
-    () => AdBloc(
-      initializeAdMobUsecase: sl.get<InitializeAdMobUsecase>(),
-      loadBannerAdUsecase: sl.get<LoadBannerAdUsecase>(),
-      loadInterstitialAdUsecase: sl.get<LoadInterstitialAdUsecase>(),
-      loadRewardedAdUsecase: sl.get<LoadRewardedAdUsecase>(),
-      showInterstitialAdUsecase: sl.get<ShowInterstitialAdUsecase>(),
-      showRewardedAdUsecase: sl.get<ShowRewardedAdUsecase>(),
-      getLoadedAdsUsecase: sl.get<GetLoadedAdsUsecase>(),
-      setTestModeUsecase: sl.get<SetTestModeUsecase>(),
-    ),
-  );
-
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(
@@ -783,4 +789,80 @@ Future<void> init(FlavorConfig flavor) async {
       requestPermissionUsecase: sl(),
     ),
   );
+
+  /**********************************************************************
+  *                               LEADERBOARD
+  **********************************************************************/
+  sl.registerFactory<LeaderboardLocalDataSource>(
+    () => LeaderboardLocalDataSource(localDB: sl()),
+  );
+  sl.registerFactory<LeaderboardRemoteDataSource>(
+    () => LeaderboardRemoteDataSource(dioClient: sl(), flavor: sl()),
+  );
+  sl.registerFactory<LeaderboardRepository>(
+    () => LeaderboardRepositoryImpl(
+      leaderboardRemoteDataSource: sl(),
+      leaderboardLocalDataSource: sl(),
+    ),
+  );
+  sl.registerFactory<GetGlobalLeaderboardUsecase>(
+    () => GetGlobalLeaderboardUsecase(leaderboardRepository: sl()),
+  );
+
+  sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
+
+  /**********************************************************************
+  *                               STREAKS
+  **********************************************************************/
+  sl.registerFactory<AchievementLocalDatasource>(
+    () => AchievementLocalDatasource(localDB: sl<AppDataBase>()),
+  );
+
+  sl.registerFactory<AchievementRemoteDatasource>(
+    () => AchievementRemoteDatasource(dioClient: sl(), flavor: sl()),
+  );
+
+  sl.registerFactory<AchievementRepository>(
+    () => AchievementRepositoryImpl(
+      remoteDatasource: sl<AchievementRemoteDatasource>(),
+      localDatasource: sl<AchievementLocalDatasource>(),
+    ),
+  );
+
+  sl.registerFactory<GetAchievements>(
+    () => GetAchievements(sl<AchievementRepository>()),
+  );
+
+  sl.registerFactory<GetAchievementById>(
+    () => GetAchievementById(sl<AchievementRepository>()),
+  );
+
+  sl.registerFactory<GetStreakActivities>(
+    () => GetStreakActivities(sl<AchievementRepository>()),
+  );
+
+  sl.registerFactory<GetActivityById>(
+    () => GetActivityById(sl<AchievementRepository>()),
+  );
+
+  sl.registerFactory<AchievementsBloc>(
+    () => AchievementsBloc(getAchievements: sl<GetAchievements>()),
+  );
+
+  sl.registerFactory<ActivitiesBloc>(
+    () => ActivitiesBloc(getStreakActivities: sl<GetStreakActivities>()),
+  );
+
+  sl.registerFactory<AchievementDetailBloc>(
+    () => AchievementDetailBloc(
+      getAchievementById: sl<GetAchievementById>(),
+      getActivityById: sl<GetActivityById>(),
+    ),
+  );
+
+  sl.registerFactory<ActivityDetailBloc>(
+    () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
+  );
+
+  sl.registerFactory(() => SettingsCubit());
 }

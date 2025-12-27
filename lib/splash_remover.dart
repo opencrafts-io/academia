@@ -1,5 +1,6 @@
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/profile/profile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -36,10 +37,10 @@ class _SplashRemoverState extends State<SplashRemover> {
   Widget build(BuildContext context) {
     return UpgradeAlert(
       upgrader: Upgrader(
-        minAppVersion: "2025.10.2",
-        durationUntilAlertAgain: Duration(hours: 12),
-        debugDisplayAlways: true,
-        debugLogging: true,
+        minAppVersion: "2025.11.27",
+        durationUntilAlertAgain: Duration(hours: 2),
+        debugDisplayAlways: kDebugMode,
+        debugLogging: kDebugMode,
       ),
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
