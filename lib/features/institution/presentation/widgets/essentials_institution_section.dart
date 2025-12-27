@@ -9,6 +9,11 @@ class EssentialsInstitutionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(child: Card(child: Text("Feature coming soon")));
+    return SliverPadding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+      sliver: SliverToBoxAdapter(
+        child: Card.outlined(child: ListTile(title: Text("Hello"))),
+      ),
+    );
   }
 }

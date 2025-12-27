@@ -82,5 +82,12 @@
 	<string>Keep track of app logs to ensure best performance possible for your device</string>
 	<key>PermissionGroupNotification</key>
 	<string>Bringing you notifications relevant to you</string>
+
+  <!--Disable transport security for in app webview for institutions using http-->
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key><true/>
+  </dict>
+  <!-- End of transport security -->
 </dict>
 </plist>
