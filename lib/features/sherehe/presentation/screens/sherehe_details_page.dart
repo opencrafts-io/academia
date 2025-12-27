@@ -46,6 +46,21 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     }
   }
 
+  void _handleShare() {
+    final url =
+        'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: widget.event.id).location}';
+
+    Share.share(
+      'You have been invited from Academia to the following event:\n\n '
+      '🎉 ${widget.event.eventName}\n\n'
+      '📍 Where: ${widget.event.eventLocation}\n'
+      '⏰ When: ${ShereheUtils.formatDate(widget.event.eventDate)} at ${ShereheUtils.formatTime(widget.event.eventDate)}\n\n'
+      'It’s going to be an amazing experience — don’t miss out!\n\n'
+      '🎟 Get your ticket here:\n'
+      '$url',
+    );
+  }
+
   final List<Attendee> mockAttendees = [
     Attendee(
       id: "att_001",
@@ -136,38 +151,50 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
               icon: const Icon(Icons.arrow_back),
             ),
             actions: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.share),
-                    onPressed: () {
-                      final url =
-                          'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: widget.event.id).location}';
-
-                      Share.share(
-                        'You have been invited from Academia to the following event:\n\n '
-                        '🎉 ${widget.event.eventName}\n\n'
-                        '📍 Where: ${widget.event.eventLocation}\n'
-                        '⏰ When: ${ShereheUtils.formatDate(widget.event.eventDate)} at ${ShereheUtils.formatTime(widget.event.eventDate)}\n\n'
-                        'It’s going to be an amazing experience — don’t miss out!\n\n'
-                        '🎟 Get your ticket here:\n'
-                        '$url',
-                      );
-                    },
-                  ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.qr_code_scanner),
-                  //   onPressed: () {
-                  //     QrCodeScannerRoute(
-                  //       eventId: widget.event.id,
-                  //     ).push(context);
-                  //   },
-                  // ),
-                  IconButton(
-                    icon: const Icon(Icons.confirmation_number_outlined),
-                    onPressed: () {
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'share':
+                      _handleShare();
+                      break;
+                    case 'scan':
+                      QrCodeScannerRoute(
+                        eventId: widget.event.id,
+                      ).push(context);
+                      break;
+                    case 'tickets':
                       EventTicketsRoute(eventId: widget.event.id).push(context);
-                    },
+                      break;
+                  }
+                },
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    value: 'share',
+                    child: ListTile(
+                      leading: const Icon(Icons.share),
+                      title: const Text('Share Event'),
+                      contentPadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'scan',
+                    child: ListTile(
+                      leading: const Icon(Icons.qr_code_scanner),
+                      title: const Text('Scan my Event'),
+                      contentPadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'tickets',
+                    child: ListTile(
+                      leading: const Icon(Icons.confirmation_number_outlined),
+                      title: const Text('My Tickets'),
+                      contentPadding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                    ),
                   ),
                 ],
               ),
