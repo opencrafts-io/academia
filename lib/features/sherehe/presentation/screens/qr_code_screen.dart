@@ -123,14 +123,14 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           ),
                         ),
                         pw.SizedBox(height: 20),
-                        _TicketInfoRow(
+                        _PdfTicketInfo(
                           label1: 'DATE',
                           value1: 'WED, 10 SEP 2025',
                           label2: 'TIME',
                           value2: '03:00 AM',
                         ),
                         pw.SizedBox(height: 15),
-                        _TicketInfoRow(
+                        _PdfTicketInfo(
                           label1: 'LOCATION',
                           value1: 'NAIROBI, KENYA',
                           label2: 'TICKET QUANTITY',
@@ -275,7 +275,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       appBar: AppBar(
         title: const Text("Your Ticket"),
         centerTitle: true,
-        elevation: 0,
         actions: [
           IconButton(
             icon: _isGenerating
@@ -290,111 +289,222 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            spacing: 30.0,
-            children: [
-              Column(
-                spacing: 4.0,
-                children: [
-                  Text(
-                    // eventName,
-                    'Sample Event Name',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                Container(
+                  width: (MediaQuery.sizeOf(context).width * 0.85).clamp(
+                    280.0,
+                    400.0,
                   ),
-                  // Text(
-                  //   '${ShereheUtils.formatDate(eventDate)} • '
-                  //   '${ShereheUtils.formatTime(eventDate)}',
-                  //   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  //     color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  //   ),
-                  // ),
-                  Text(
-                    '10 Sep 2025 • '
-                    '03:00 AM',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        blurRadius: 16,
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
-                  child: SizedBox(
-                    width: (MediaQuery.sizeOf(context).shortestSide * 0.65)
-                        .clamp(220.0, 320.0),
-                    height: (MediaQuery.sizeOf(context).shortestSide * 0.65)
-                        .clamp(220.0, 320.0),
-                    child: PrettyQrView.data(
-                      data: widget.eventId, //placeholder for now
-                      decoration: PrettyQrDecoration(
-                        shape: PrettyQrSmoothSymbol(
-                          color: Theme.of(context).colorScheme.onSurface,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
                         ),
-                        image: const PrettyQrDecorationImage(
-                          image: AssetImage("assets/icons/academia-v2.png"),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'OFFICIAL TICKET',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        letterSpacing: 1.2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                Text(
+                                  '#${widget.eventId.substring(0, 8).toUpperCase()}',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.outline,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Sample Event Name'.toUpperCase(),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer,
+                                  ),
+                            ),
+                            const SizedBox(height: 24),
+                            _TicketInfoWidget(
+                              label1: 'DATE',
+                              value1: 'WED, 10 SEP 2025',
+                              label2: 'TIME',
+                              value2: '03:00 AM',
+                            ),
+                            const SizedBox(height: 16),
+                            _TicketInfoWidget(
+                              label1: 'LOCATION',
+                              value1: 'NAIROBI, KENYA',
+                              label2: 'QUANTITY',
+                              value2: '${widget.quantity}',
+                            ),
+                          ],
                         ),
-                        quietZone: PrettyQrQuietZone.standart,
                       ),
-                    ),
+                      Container(
+                        height: 30,
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Bottom half background
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 15,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                              ),
+                            ),
+                            // Perforation dashes
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                              ),
+                              child: Row(
+                                children: List.generate(
+                                  20,
+                                  (index) => Expanded(
+                                    child: Container(
+                                      height: 1,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 2,
+                                      ),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.outlineVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Left Notch
+                            Positioned(
+                              left: -15,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surface,
+                              ),
+                            ),
+                            // Right Notch
+                            Positioned(
+                              right: -15,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //BOTTOM SECTION
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          borderRadius: const BorderRadius.vertical(
+                            bottom: Radius.circular(20),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: PrettyQrView.data(
+                                data: widget.eventId,
+                                decoration: const PrettyQrDecoration(
+                                  shape: PrettyQrSmoothSymbol(
+                                    color: Colors.black,
+                                  ),
+                                  quietZone: PrettyQrQuietZone.standart,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              widget.ticketName.toUpperCase(),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '18c7887-45b8679-568',
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.outline,
+                                    letterSpacing: 1,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Column(
-                spacing: 4.0,
-                children: [
-                  Text(
-                    widget.ticketName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'Quantity: ${widget.quantity}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-
-              const Spacer(),
-
-              Column(
-                spacing: 6.0,
-                children: [
-                  Text(
-                    "Present this QR code at the entrance",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    "This QR code is unique and can only be used once",
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    "This QR code is unique and can only be used once. Do not share your ticket with anyone.",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.error,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -402,13 +512,79 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   }
 }
 
-class _TicketInfoRow extends pw.StatelessWidget {
+class _TicketInfoWidget extends StatelessWidget {
   final String label1;
   final String value1;
   final String label2;
   final String value2;
 
-  _TicketInfoRow({
+  const _TicketInfoWidget({
+    required this.label1,
+    required this.value1,
+    required this.label2,
+    required this.value2,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label1,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
+                ),
+              ),
+              Text(
+                value1,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label2,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
+                ),
+              ),
+              Text(
+                value2,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PdfTicketInfo extends pw.StatelessWidget {
+  final String label1;
+  final String value1;
+  final String label2;
+  final String value2;
+
+  _PdfTicketInfo({
     required this.label1,
     required this.value1,
     required this.label2,
