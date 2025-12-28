@@ -38,7 +38,7 @@ class ReviewTicketPage extends StatelessWidget {
               ),
             ],
           ),
-          TicketStubCard(ticket: ticket, quantity: quantity),
+          TicketCardWidget(ticket: ticket, quantity: quantity, mode: TicketStubMode.purchasingTicket,),
           // Payment Summary
           Container(
             padding: const EdgeInsets.all(16.0),

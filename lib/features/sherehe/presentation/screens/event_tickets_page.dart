@@ -166,11 +166,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       itemBuilder: (context, index) {
                         final item = state.attendee[index];
 
-                        return TicketStubCard(
+                        return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
                           eventId: state.attendee[index].eventId,
-                          showQrCode: true,
+                          mode: TicketStubMode.eventTicketPurchased,
                         );
                       },
                     ),
@@ -197,10 +197,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
+                        mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
                   ),
@@ -221,10 +222,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
+                        mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
                   ),
@@ -263,11 +265,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = _mockAttendees[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: item.eventId,
-                        showQrCode: true,
+                        mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
                   ),

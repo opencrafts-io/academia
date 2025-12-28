@@ -27,7 +27,7 @@ export 'widgets/genre_selector_widget.dart';
 export 'widgets/create_event_page_builder.dart';
 export 'widgets/event_card_wrapper.dart';
 export 'widgets/event_card.dart';
-export 'widgets/ticket_stub_card.dart';
+export 'widgets/ticket_card_widget.dart';
 export 'utils/sherehe_utils.dart';
 
 

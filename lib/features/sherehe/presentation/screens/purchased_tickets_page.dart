@@ -86,7 +86,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
               SliverAppBar(
                 pinned: true,
                 floating: true,
-                title: const Text("My Tickets"),
+                title: const Text("All Tickets"),
               ),
 
               // Header text
@@ -94,7 +94,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "Here are the tickets you've purchased for this event.",
+                    "Here are all the tickets you've purchased.",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
@@ -147,7 +147,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           Icon(Icons.confirmation_number_outlined, size: 60),
                           SizedBox(height: 16),
                           Text(
-                            "You haven't purchased any tickets for this event yet.",
+                            "You haven’t purchased any tickets yet.",
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -164,11 +164,12 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       itemBuilder: (context, index) {
                         final item = state.attendee[index];
 
-                        return TicketStubCard(
+                        return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
                           eventId: state.attendee[index].eventId,
-                          showQrCode: true,
+                          mode: TicketStubMode.allTicketsPurchased,
+                          eventName: "Sample Event Name ", //placeholder for now
                         );
                       },
                     ),
@@ -195,10 +196,12 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
+                        mode: TicketStubMode.allTicketsPurchased,
+                        eventName: "Sample Event Name", //placeholder for now
                       );
                     },
                   ),
@@ -219,10 +222,12 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
+                        mode: TicketStubMode.allTicketsPurchased,
+                        eventName: "Sample Event Name", //placeholder for now
                       );
                     },
                   ),
@@ -261,11 +266,12 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     itemBuilder: (context, index) {
                       final item = _mockAttendees[index];
 
-                      return TicketStubCard(
+                      return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         eventId: item.eventId,
-                        showQrCode: true,
+                        mode: TicketStubMode.allTicketsPurchased,
+                        eventName: "Sample Event Name ", //placeholder for now
                       );
                     },
                   ),
