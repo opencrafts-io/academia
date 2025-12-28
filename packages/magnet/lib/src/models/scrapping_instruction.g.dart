@@ -10,6 +10,7 @@ _ScrapingInstruction _$ScrapingInstructionFromJson(Map<String, dynamic> json) =>
     _ScrapingInstruction(
       type: json['type'] as String,
       selector: json['selector'] as String?,
+      xpath: json['xpath'] as String?,
       attribute: json['attribute'] as String?,
       value: json['value'] as String?,
       waitMilliseconds: (json['waitMilliseconds'] as num?)?.toInt(),
@@ -25,6 +26,7 @@ Map<String, dynamic> _$ScrapingInstructionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'selector': instance.selector,
+  'xpath': instance.xpath,
   'attribute': instance.attribute,
   'value': instance.value,
   'waitMilliseconds': instance.waitMilliseconds,

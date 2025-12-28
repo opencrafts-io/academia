@@ -5,11 +5,17 @@ part 'scrapping_instruction.g.dart';
 
 @freezed
 abstract class ScrapingInstruction with _$ScrapingInstruction {
+  ScrapingInstruction._();
+
   const factory ScrapingInstruction({
     /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
     required String type,
 
+    /// CSS selector to be used
     String? selector,
+
+    /// The xpath of the element - used instead of the css selector
+    String? xpath,
     String? attribute,
     String? value,
 
@@ -25,6 +31,9 @@ abstract class ScrapingInstruction with _$ScrapingInstruction {
 
   factory ScrapingInstruction.fromJson(Map<String, dynamic> json) =>
       _$ScrapingInstructionFromJson(json);
+
+  String get selectorToUse => selector ?? xpath ?? '';
+  bool get isXPath => xpath != null && selector == null;
 }
 
 /// Extension to help with Duration conversion if needed by the Engine
