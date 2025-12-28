@@ -17,11 +17,13 @@ ScrappingResult _$ScrappingResultFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
+      error: json['error'] as String?,
     );
 
 Map<String, dynamic> _$ScrappingResultToJson(ScrappingResult instance) =>
     <String, dynamic>{
       'command_id': instance.commandID,
+      'error': instance.error,
       'success': instance.success,
       'data': instance.data,
       'execution_time': instance.executionTime.inMicroseconds,

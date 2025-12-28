@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScrappingResult {
 
- String? get commandID; bool get success; Map<String, dynamic> get data; Duration get executionTime; DateTime? get timestamp;
+ String? get commandID; String? get error; bool get success; Map<String, dynamic> get data; Duration get executionTime; DateTime? get timestamp;
 /// Create a copy of ScrappingResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $ScrappingResultCopyWith<ScrappingResult> get copyWith => _$ScrappingResultCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrappingResult&&(identical(other.commandID, commandID) || other.commandID == commandID)&&(identical(other.success, success) || other.success == success)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.executionTime, executionTime) || other.executionTime == executionTime)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrappingResult&&(identical(other.commandID, commandID) || other.commandID == commandID)&&(identical(other.error, error) || other.error == error)&&(identical(other.success, success) || other.success == success)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.executionTime, executionTime) || other.executionTime == executionTime)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,commandID,success,const DeepCollectionEquality().hash(data),executionTime,timestamp);
+int get hashCode => Object.hash(runtimeType,commandID,error,success,const DeepCollectionEquality().hash(data),executionTime,timestamp);
 
 @override
 String toString() {
-  return 'ScrappingResult(commandID: $commandID, success: $success, data: $data, executionTime: $executionTime, timestamp: $timestamp)';
+  return 'ScrappingResult(commandID: $commandID, error: $error, success: $success, data: $data, executionTime: $executionTime, timestamp: $timestamp)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ScrappingResultCopyWith<$Res>  {
   factory $ScrappingResultCopyWith(ScrappingResult value, $Res Function(ScrappingResult) _then) = _$ScrappingResultCopyWithImpl;
 @useResult
 $Res call({
- String? commandID, bool success, Map<String, dynamic> data, Duration executionTime, DateTime? timestamp
+ String? commandID, bool success, Map<String, dynamic> data, Duration executionTime, DateTime? timestamp, String? error
 });
 
 
@@ -63,14 +63,15 @@ class _$ScrappingResultCopyWithImpl<$Res>
 
 /// Create a copy of ScrappingResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? commandID = freezed,Object? success = null,Object? data = null,Object? executionTime = null,Object? timestamp = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? commandID = freezed,Object? success = null,Object? data = null,Object? executionTime = null,Object? timestamp = freezed,Object? error = freezed,}) {
   return _then(ScrappingResult(
 commandID: freezed == commandID ? _self.commandID : commandID // ignore: cast_nullable_to_non_nullable
 as String?,success: null == success ? _self.success : success // ignore: cast_nullable_to_non_nullable
 as bool,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,executionTime: null == executionTime ? _self.executionTime : executionTime // ignore: cast_nullable_to_non_nullable
 as Duration,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

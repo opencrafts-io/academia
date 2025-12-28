@@ -5,18 +5,22 @@ part 'scrapping_result.freezed.dart';
 
 @freezed
 @JsonSerializable()
-abstract class ScrappingResult with _$ScrappingResult {
+class ScrappingResult with _$ScrappingResult {
   const ScrappingResult({
     this.commandID,
     required this.success,
     required this.data,
     required this.executionTime,
     this.timestamp,
+    this.error,
   });
 
   @override
   @JsonKey(name: "command_id")
   final String? commandID;
+
+  @override
+  final String? error;
 
   @override
   final bool success;
