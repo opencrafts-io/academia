@@ -19,9 +19,39 @@ class ScrappingExecutor {
       case "extract":
         await _extract(instruction);
         break;
+      case "wait":
+        await _wait(instruction);
+        break;
+      case 'click':
+        await _click(instruction);
+        break;
+
       default:
         throw Exception("Unkown instruction type: [${instruction.type}]");
     }
+  }
+
+  /// Clicks an element specified by its selector
+  Future<void> _click(ScrapingInstruction instruction) async {
+    final selector = instruction.selector;
+    if (selector == null) throw Exception('Click requires selector');
+
+    await controller.evaluateJavascript(
+      source:
+          '''
+        (function() {
+          document.querySelector('$selector')?.click();
+        })()
+      ''',
+    );
+    logger.i('Clicked: $selector');
+  }
+
+  /// Waits for a specified instruction duration otherwise wait for a second
+  Future<void> _wait(ScrapingInstruction instruction) async {
+    final duration = instruction.waitDuration ?? const Duration(seconds: 1);
+    await Future.delayed(duration);
+    logger.i('Waited ${duration.inMilliseconds}ms');
   }
 
   Future<void> _extract(ScrapingInstruction instruction) async {
@@ -68,15 +98,15 @@ class ScrappingExecutor {
   String _buildXPathQueryExtractor(String xpath, String? attribute) {
     if (attribute == null) {
       return '''const el = (function getElementByXPath() {
-          return document.evaluate($xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+          return document.evaluate('$xpath', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
       })();
-      return el? el.innerText.trim(): null;
+      el? el.innerText.trim(): null;
       ''';
     }
     return '''const el = (function getElementByXPath() {
-          return document.evaluate($xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+          return document.evaluate('$xpath', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
       })();
-      return el ? el.getAttribute('$attribute') : null;
+      el ? el.getAttribute('$attribute') : null;
       ''';
   }
 }
