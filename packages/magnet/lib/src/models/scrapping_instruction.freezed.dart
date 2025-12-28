@@ -18,8 +18,7 @@ mixin _$ScrapingInstruction {
 /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
  String get type;/// CSS selector to be used
  String? get selector;/// The xpath of the element - used instead of the css selector
- String? get xpath; String? get attribute; String? get value; int? get waitMilliseconds; String? get jsCode; String? get outputKey;/// For conditional/nested operations
- List<ScrapingInstruction>? get steps;
+ String? get xpath; String? get attribute; String? get value; int? get waitMilliseconds; String? get jsCode; String? get outputKey;
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -32,16 +31,16 @@ $ScrapingInstructionCopyWith<ScrapingInstruction> get copyWith => _$ScrapingInst
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&const DeepCollectionEquality().equals(other.steps, steps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,jsCode,outputKey,const DeepCollectionEquality().hash(steps));
+int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,jsCode,outputKey);
 
 @override
 String toString() {
-  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, jsCode: $jsCode, outputKey: $outputKey, steps: $steps)';
+  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, jsCode: $jsCode, outputKey: $outputKey)';
 }
 
 
@@ -52,7 +51,7 @@ abstract mixin class $ScrapingInstructionCopyWith<$Res>  {
   factory $ScrapingInstructionCopyWith(ScrapingInstruction value, $Res Function(ScrapingInstruction) _then) = _$ScrapingInstructionCopyWithImpl;
 @useResult
 $Res call({
- String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, String? jsCode, String? outputKey, List<ScrapingInstruction>? steps
+ String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, String? jsCode, String? outputKey
 });
 
 
@@ -69,7 +68,7 @@ class _$ScrapingInstructionCopyWithImpl<$Res>
 
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? steps = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? jsCode = freezed,Object? outputKey = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,selector: freezed == selector ? _self.selector : selector // ignore: cast_nullable_to_non_nullable
@@ -79,8 +78,7 @@ as String?,value: freezed == value ? _self.value : value // ignore: cast_nullabl
 as String?,waitMilliseconds: freezed == waitMilliseconds ? _self.waitMilliseconds : waitMilliseconds // ignore: cast_nullable_to_non_nullable
 as int?,jsCode: freezed == jsCode ? _self.jsCode : jsCode // ignore: cast_nullable_to_non_nullable
 as String?,outputKey: freezed == outputKey ? _self.outputKey : outputKey // ignore: cast_nullable_to_non_nullable
-as String?,steps: freezed == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
-as List<ScrapingInstruction>?,
+as String?,
   ));
 }
 
@@ -165,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey,  List<ScrapingInstruction>? steps)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction() when $default != null:
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey,_that.steps);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey);case _:
   return orElse();
 
 }
@@ -186,10 +184,10 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey,  List<ScrapingInstruction>? steps)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey)  $default,) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction():
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey,_that.steps);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +204,10 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey,  List<ScrapingInstruction>? steps)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  String? jsCode,  String? outputKey)?  $default,) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction() when $default != null:
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey,_that.steps);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.jsCode,_that.outputKey);case _:
   return null;
 
 }
@@ -221,7 +219,7 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 @JsonSerializable()
 
 class _ScrapingInstruction extends ScrapingInstruction {
-  const _ScrapingInstruction({required this.type, this.selector, this.xpath, this.attribute, this.value, this.waitMilliseconds, this.jsCode, this.outputKey, final  List<ScrapingInstruction>? steps}): _steps = steps,super._();
+  const _ScrapingInstruction({required this.type, this.selector, this.xpath, this.attribute, this.value, this.waitMilliseconds, this.jsCode, this.outputKey}): super._();
   factory _ScrapingInstruction.fromJson(Map<String, dynamic> json) => _$ScrapingInstructionFromJson(json);
 
 /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
@@ -235,17 +233,6 @@ class _ScrapingInstruction extends ScrapingInstruction {
 @override final  int? waitMilliseconds;
 @override final  String? jsCode;
 @override final  String? outputKey;
-/// For conditional/nested operations
- final  List<ScrapingInstruction>? _steps;
-/// For conditional/nested operations
-@override List<ScrapingInstruction>? get steps {
-  final value = _steps;
-  if (value == null) return null;
-  if (_steps is EqualUnmodifiableListView) return _steps;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
 
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
@@ -260,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&const DeepCollectionEquality().equals(other._steps, _steps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,jsCode,outputKey,const DeepCollectionEquality().hash(_steps));
+int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,jsCode,outputKey);
 
 @override
 String toString() {
-  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, jsCode: $jsCode, outputKey: $outputKey, steps: $steps)';
+  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, jsCode: $jsCode, outputKey: $outputKey)';
 }
 
 
@@ -280,7 +267,7 @@ abstract mixin class _$ScrapingInstructionCopyWith<$Res> implements $ScrapingIns
   factory _$ScrapingInstructionCopyWith(_ScrapingInstruction value, $Res Function(_ScrapingInstruction) _then) = __$ScrapingInstructionCopyWithImpl;
 @override @useResult
 $Res call({
- String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, String? jsCode, String? outputKey, List<ScrapingInstruction>? steps
+ String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, String? jsCode, String? outputKey
 });
 
 
@@ -297,7 +284,7 @@ class __$ScrapingInstructionCopyWithImpl<$Res>
 
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? steps = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? jsCode = freezed,Object? outputKey = freezed,}) {
   return _then(_ScrapingInstruction(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,selector: freezed == selector ? _self.selector : selector // ignore: cast_nullable_to_non_nullable
@@ -307,8 +294,7 @@ as String?,value: freezed == value ? _self.value : value // ignore: cast_nullabl
 as String?,waitMilliseconds: freezed == waitMilliseconds ? _self.waitMilliseconds : waitMilliseconds // ignore: cast_nullable_to_non_nullable
 as int?,jsCode: freezed == jsCode ? _self.jsCode : jsCode // ignore: cast_nullable_to_non_nullable
 as String?,outputKey: freezed == outputKey ? _self.outputKey : outputKey // ignore: cast_nullable_to_non_nullable
-as String?,steps: freezed == steps ? _self._steps : steps // ignore: cast_nullable_to_non_nullable
-as List<ScrapingInstruction>?,
+as String?,
   ));
 }
 

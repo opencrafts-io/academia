@@ -6,7 +6,7 @@ part 'scrapping_command.freezed.dart';
 
 @freezed
 @JsonSerializable()
-abstract class ScrappingCommand with _$ScrappingCommand {
+class ScrappingCommand with _$ScrappingCommand {
   const ScrappingCommand({
     this.commandID,
     required this.instructions,

@@ -5,7 +5,7 @@ part 'scrapping_instruction.g.dart';
 
 @freezed
 abstract class ScrapingInstruction with _$ScrapingInstruction {
-  ScrapingInstruction._();
+  const ScrapingInstruction._();
 
   const factory ScrapingInstruction({
     /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
@@ -26,7 +26,7 @@ abstract class ScrapingInstruction with _$ScrapingInstruction {
     String? outputKey,
 
     /// For conditional/nested operations
-    List<ScrapingInstruction>? steps,
+    // List<ScrapingInstruction>? steps,
   }) = _ScrapingInstruction;
 
   factory ScrapingInstruction.fromJson(Map<String, dynamic> json) =>

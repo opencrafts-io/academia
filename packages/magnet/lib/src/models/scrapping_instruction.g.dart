@@ -16,9 +16,6 @@ _ScrapingInstruction _$ScrapingInstructionFromJson(Map<String, dynamic> json) =>
       waitMilliseconds: (json['waitMilliseconds'] as num?)?.toInt(),
       jsCode: json['jsCode'] as String?,
       outputKey: json['outputKey'] as String?,
-      steps: (json['steps'] as List<dynamic>?)
-          ?.map((e) => ScrapingInstruction.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$ScrapingInstructionToJson(
@@ -32,5 +29,4 @@ Map<String, dynamic> _$ScrapingInstructionToJson(
   'waitMilliseconds': instance.waitMilliseconds,
   'jsCode': instance.jsCode,
   'outputKey': instance.outputKey,
-  'steps': instance.steps,
 };
