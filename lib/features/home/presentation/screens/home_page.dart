@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
           NavigationDrawerDestination(
             icon: Icon(Icons.confirmation_number_outlined),
             selectedIcon: Icon(Icons.confirmation_number),
-            label: Text("My Tickets"),
+            label: Text("All Tickets"),
           ),
           NavigationDrawerDestination(
             icon: Icon(Icons.event_note_outlined),
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: DefaultTabController(
         initialIndex: 1,
-        length: 2,
+        length: 3,
         child: RefreshIndicator.adaptive(
           onRefresh: () async {},
           child: CustomScrollView(
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                   tabs: [
                     Tab(child: Text("Leaderboard")),
                     Tab(child: Text("For you")),
-                    // Tab(child: Text("Sherehe")),
+                    Tab(child: Text("Sherehe")),
                   ],
                 ),
               ),
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         LeaderboardHomepage(),
                         FeedPage(),
-                        // ShereheHome(),
+                        ShereheHome(),
                       ],
                     ),
                   ),
