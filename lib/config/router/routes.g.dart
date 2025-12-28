@@ -16,6 +16,7 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $purchasedTicketsRoute,
+  $ticketReceiptRoute,
   $qrCodeRoute,
   $todosRoute,
   $magnetRoute,
@@ -490,7 +491,7 @@ mixin _$CreateEventRoute on GoRouteData {
 }
 
 RouteBase get $purchasedTicketsRoute => GoRouteData.$route(
-  path: '/purchased-tickets/mine',
+  path: '/purchased-tickets/all',
   factory: _$PurchasedTicketsRoute._fromState,
 );
 
@@ -499,7 +500,44 @@ mixin _$PurchasedTicketsRoute on GoRouteData {
       PurchasedTicketsRoute();
 
   @override
-  String get location => GoRouteData.$location('/purchased-tickets/mine');
+  String get location => GoRouteData.$location('/purchased-tickets/all');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $ticketReceiptRoute => GoRouteData.$route(
+  path: '/ticket-receipt',
+  factory: _$TicketReceiptRoute._fromState,
+);
+
+mixin _$TicketReceiptRoute on GoRouteData {
+  static TicketReceiptRoute _fromState(GoRouterState state) =>
+      TicketReceiptRoute(
+        ticketPrice: int.parse(state.uri.queryParameters['ticket-price']!),
+        quantity: int.parse(state.uri.queryParameters['quantity']!),
+      );
+
+  TicketReceiptRoute get _self => this as TicketReceiptRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/ticket-receipt',
+    queryParams: {
+      'ticket-price': _self.ticketPrice.toString(),
+      'quantity': _self.quantity.toString(),
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

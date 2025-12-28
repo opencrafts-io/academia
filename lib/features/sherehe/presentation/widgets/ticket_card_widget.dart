@@ -108,7 +108,10 @@ class TicketCardWidget extends StatelessWidget {
                   const SizedBox(width: 12),
                   OutlinedButton.icon(
                     onPressed: () {
-                      // TODO: Navigate to receipt
+                      TicketReceiptRoute(
+                        ticketPrice: ticket.ticketPrice,
+                        quantity: quantity,
+                      ).push(context);
                     },
                     icon: const Icon(Icons.receipt_long),
                     label: const Text("Receipt"),

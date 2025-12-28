@@ -287,9 +287,7 @@ class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
   }
 }
 
-@TypedGoRoute<PurchasedTicketsRoute>(
-  path: "/purchased-tickets/mine",
-)
+@TypedGoRoute<PurchasedTicketsRoute>(path: "/purchased-tickets/all")
 class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -297,6 +295,18 @@ class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
   }
 }
 
+@TypedGoRoute<TicketReceiptRoute>(path: "/ticket-receipt")
+class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
+  final int ticketPrice;
+  final int quantity;
+
+  const TicketReceiptRoute({required this.ticketPrice, required this.quantity});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketReceiptScreen(ticketPrice: ticketPrice, quantity: quantity);
+  }
+}
 
 @TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:ticketId")
 class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
