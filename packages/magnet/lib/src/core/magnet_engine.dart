@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:logger/logger.dart';
+import 'package:magnet/src/executor/scrapping_executor.dart';
+import 'package:magnet/src/models/scrapping_command.dart';
+import 'package:magnet/src/models/scrapping_result.dart';
 import 'package:path_provider/path_provider.dart';
 
 import './magnet_config.dart';
@@ -60,35 +63,115 @@ class Magnet {
   /// Accessor for the initialization flag.
   bool get initialized => _isInitialized;
 
-  /// In your Magnet class
-  Future<String> testScrape(String url) async {
+  Future<ScrappingResult> execute(ScrappingCommand command) async {
     if (!_isInitialized) throw Exception("Initialize Magnet first");
 
-    final loadCompleter = Completer<void>();
+    final stopwatch = Stopwatch()..start();
 
-    // Create a headless webview
-    final headlessWebView = HeadlessInAppWebView(
-      webViewEnvironment: _environment,
-      initialUrlRequest: URLRequest(url: WebUri(url)),
-      onLoadStop: (controller, url) async {
-        _logger.i("Page Loaded: $url");
-        loadCompleter.complete();
-      },
-      onReceivedError: (controller, request, error) {
-        _logger.e(error.toJson());
-      },
+    try {
+      // For interactive commands, use on-screen browser
+      if (command.requiresInteraction ?? false) {
+        return await _executeInteractive(command, stopwatch);
+      }
+
+      // Otherwise use headless pool
+      return await _executeHeadless(command, stopwatch);
+    } catch (e) {
+      stopwatch.stop();
+      return ScrappingResult(
+        commandID: command.commandID,
+        success: false,
+        data: {},
+        error: e.toString(),
+        timestamp: DateTime.now(),
+        executionTime: stopwatch.elapsed,
+      );
+    }
+  }
+
+  Future<ScrappingResult> _executeHeadless(
+    ScrappingCommand command,
+    Stopwatch stopwatch,
+  ) async {
+    // Wait for available session slot
+    // while (_activeSessions >= config.maxConcurrentSessions) {
+    //   await Future.delayed(const Duration(milliseconds: 100));
+    // }
+    //
+    // _activeSessions++;
+
+    try {
+      final loadCompleter = Completer<void>();
+      HeadlessInAppWebView? headlessWebView;
+
+      headlessWebView = HeadlessInAppWebView(
+        initialUrlRequest: URLRequest(url: WebUri(command.url)),
+        onLoadStop: (controller, url) {
+          _logger.i("Headless page loaded: $url");
+          loadCompleter.complete();
+        },
+        onReceivedError: (controller, request, error) {
+          _logger.e("WebView error: ${error.description}");
+          if (!loadCompleter.isCompleted) {
+            loadCompleter.completeError(error);
+          }
+        },
+        onConsoleMessage: (controller, msg) {
+          if (config.debugMode) {
+            _logger.d("Console [${msg.messageLevel}]: ${msg.message}");
+          }
+        },
+      );
+
+      await headlessWebView.run();
+
+      // Wait for page load with timeout
+      await loadCompleter.future.timeout(
+        config.timeout,
+        onTimeout: () => _logger.w("Page load timeout for ${command.url}"),
+      );
+
+      // Execute instructions
+      final executor = ScrappingExecutor(
+        controller: headlessWebView.webViewController!,
+        logger: _logger,
+      );
+
+      for (final instruction in command.instructions) {
+        await executor.execute(instruction);
+      }
+
+      stopwatch.stop();
+
+      await headlessWebView.dispose();
+
+      return ScrappingResult(
+        commandID: command.commandID,
+        success: true,
+        data: executor.extractedData,
+        timestamp: DateTime.now(),
+        executionTime: stopwatch.elapsed,
+      );
+    } finally {
+      // _activeSessions--;
+    }
+  }
+
+  Future<ScrappingResult> _executeInteractive(
+    ScrappingCommand command,
+    Stopwatch stopwatch,
+  ) async {
+    // Placeholder for on-screen interactive scraping
+    // Would integrate with your widget layer
+    _logger.w("Interactive scraping not yet implemented");
+    stopwatch.stop();
+    return ScrappingResult(
+      commandID: command.commandID,
+      success: false,
+      data: {},
+      error: 'Interactive scraping not implemented',
+      timestamp: DateTime.now(),
+      executionTime: stopwatch.elapsed,
     );
-
-    await headlessWebView.run();
-    await loadCompleter.future;
-
-    // Give it a second to run JS
-    final title = await headlessWebView.webViewController?.getTitle();
-    _logger.i(await headlessWebView.webViewController?.getHtml());
-
-    // Cleanup
-    await headlessWebView.dispose();
-
-    return title ?? "No Title Found";
   }
 }
