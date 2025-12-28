@@ -36,12 +36,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
     try {
       final pdfFile = await _generateTicketPdf();
-
-      if (!mounted) return;
-
       await Share.shareXFiles([
         XFile(pdfFile.path),
       ], text: 'Here is your ticket for ${widget.ticketName}!');
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            Platform.isAndroid
+                ? 'Ticket saved to Downloads'
+                : 'Ticket saved to Files',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
 
@@ -53,6 +63,16 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         setState(() => _isGenerating = false);
       }
     }
+  }
+
+  Future<Directory> _getDownloadDirectory() async {
+    if (Platform.isAndroid) {
+      final dir = Directory('/storage/emulated/0/Download');
+      if (await dir.exists()) return dir;
+    }
+
+    // iOS or fallback
+    return await getApplicationDocumentsDirectory();
   }
 
   Future<File> _generateTicketPdf() async {
@@ -263,8 +283,10 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       ),
     );
 
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/ticket_${widget.eventId}.pdf');
+    final dir = await _getDownloadDirectory();
+    final file = File(
+      '${dir.path}/ticket_${widget.ticketName}_${widget.eventId}.pdf',
+    );
     await file.writeAsBytes(await pdf.save());
     return file;
   }
