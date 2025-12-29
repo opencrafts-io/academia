@@ -25,10 +25,37 @@ class ScrappingExecutor {
       case 'click':
         await _click(instruction);
         break;
-
+      case 'fill-form':
+        _fillForm(instruction);
+        break;
       default:
         throw Exception("Unkown instruction type: [${instruction.type}]");
     }
+  }
+
+  /// Fills a form widget selected by selector with a value
+  Future<void> _fillForm(ScrapingInstruction instruction) async {
+    final selector = instruction.selector;
+    final value = instruction.value;
+
+    if (selector == null || value == null) {
+      throw Exception('FillForm requires selector and value');
+    }
+
+    await controller.evaluateJavascript(
+      source:
+          '''
+        (function() {
+          const el = document.querySelector('$selector');
+          if (el) {
+            el.value = '$value';
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        })()
+      ''',
+    );
+    logger.i('Filled form: $selector');
   }
 
   /// Clicks an element specified by its selector
