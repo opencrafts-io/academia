@@ -33,8 +33,7 @@ jobs:
       - name: Analyze code
         id: analyze
         continue-on-error: true
-        # 2>&1 merges stdout and stderr so the report file contains EVERYTHING
-        run: flutter analyze > analyze_report.txt 2>&1
+        run: flutter analyze > analyze_report.txt 2>&1 || true 
       
       - name: Vuln scan (Trivy)
         id: trivy
@@ -76,9 +75,11 @@ jobs:
             trivy_report.txt
             secrets_report.txt
 
-      # This step ensures the PR actually blocks if there were linter errors
-      - name: Check final status
-        if: steps.analyze.outcome != 'success'
+
+      # This is the "Safety Net" that fails the PR after the Discord message is sent
+      - name: Fail if analysis found issues
         run: |
-          echo "Analysis failed with ${{ steps.analyze.outcome }}. Check Discord for the report."
-          exit 1
+          if ! grep -q "No issues found" analyze_report.txt; then
+            echo "Failing build because flutter analyze found issues."
+            exit 1
+          fi
