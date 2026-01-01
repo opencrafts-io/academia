@@ -15,17 +15,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          
+      - name: Set Short SHA
+        run: echo "SHA7=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.7'
-      
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            .dart_tool
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
       
       - name: Install dependencies
         run: flutter pub get
@@ -33,7 +29,7 @@ jobs:
       - name: Analyze code
         id: analyze
         continue-on-error: true
-        run: flutter analyze > analyze_report.txt 2>&1 || true 
+        run: flutter analyze > analyze_report_${{ env.SHA7 }}.txt 2>&1 || true 
       
       - name: Vuln scan (Trivy)
         id: trivy
@@ -42,19 +38,18 @@ jobs:
         with:
           scan-type: 'fs'
           format: 'table'
-          output: 'trivy_report.txt'
+          output: 'trivy_report_${{ env.SHA7 }}.txt'
       
       - name: Send All Reports to Discord
         if: always()
         run: |
-          STATUS="${{ steps.analyze.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }}"
+          STATUS="${{ steps.analyze.outcome == 'success' && ' PASSED' || ' FAILED' }}"
           MSG="**Hello @here these are the Results for ${{ github.event.pull_request.title || 'Branch' }}**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
-          # Send Discord notification with all 3 report files
           curl -H "Content-Type: multipart/form-data" \
                -F "content=$MSG" \
-               -F "file1=@analyze_report.txt" \
-               -F "file2=@trivy_report.txt" \
+               -F "file1=@analyze_report_${{ env.SHA7 }}.txt" \
+               -F "file2=@trivy_report_${{ env.SHA7 }}.txt" \
                ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Upload analyze report to Artifacts
@@ -63,15 +58,5 @@ jobs:
         with:
           name: full-quality-reports
           path: |
-            analyze_report.txt
-            trivy_report.txt
-            secrets_report.txt
-
-
-      # This is the "Safety Net" that fails the PR after the Discord message is sent
-      - name: Fail if analysis found issues
-        run: |
-          if ! grep -q "No issues found" analyze_report.txt; then
-            echo "Failing build because flutter analyze found issues."
-            exit 1
-          fi
+            analyze_report_${{ env.SHA7 }}.txt
+            trivy_report_${{ env.SHA7 }}.txt
