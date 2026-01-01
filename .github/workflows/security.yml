@@ -24,13 +24,43 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       
+      - name: Check formatting
+        run: flutter format --set-exit-if-changed .
+      
       - name: Analyze code
-        run: flutter analyze
+        id: analyze
+        run: flutter analyze --write=analyze.json --format=json
       
       - name: Upload coverage to Codecov
+        if: steps.analyze.outcome == 'success'
         uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
+      
+      - name: Process analyze report
+        id: report
+        run: |
+          TOTAL=$(jq '. | length' analyze.json 2>/dev/null || echo "0")
+          ERRORS=$(jq '[.[] | select(.kind=="error")] | length' analyze.json 2>/dev/null || echo "0")
+          WARNINGS=$(jq '[.[] | select(.kind=="warning")] | length' analyze.json 2>/dev/null || echo "0")
+          INFOS=$(jq '[.[] | select(.kind=="info")] | length' analyze.json 2>/dev/null || echo "0")
+          
+          TOP_ISSUES=$(jq -r '.[0:5] | "\(.location.file):\(.ruleId): \(.message)"' analyze.json 2>/dev/null || echo "No issues")
+          
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+          echo "infos=$INFOS" >> $GITHUB_OUTPUT
+          echo "top_issues<<EOF" >> $GITHUB_OUTPUT
+          echo "$TOP_ISSUES"
+          echo "EOF" >> $GITHUB_OUTPUT
+        shell: bash
+      
+      - name: Upload analyze report
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-analyze-report
+          path: analyze.json
       
       - name: Security audit deps
         run: flutter pub outdated
@@ -64,11 +94,14 @@ jobs:
         with:
           args: |
             **Flutter Quality & Security Check ${{ job.status }}** 
-            **Branch**: `${{ github.ref_name }}`
-            **Coverage**: [Codecov](https://codecov.io/gh/${{ github.repository }}/branch/${{ github.ref_name }}/src)
+            **Branch**: `${{ github.head_ref || github.ref_name }}`
+            **Analyze Issues**: ${{ steps.report.outputs.total }} (E:${{ steps.report.outputs.errors }} W:${{ steps.report.outputs.warnings }} I:${{ steps.report.outputs.infos }})
+            **Top Issues**:
+            ${{ steps.report.outputs.top_issues }}
+            **Coverage**: [Codecov](https://codecov.io/gh/${{ github.repository }}/branch/${{ github.head_ref || github.ref_name }}/src)
             **Security**: Trivy ${{ steps.trivy.outcome }}
-            **Analyze**: ${{ steps.analyze.outcome || 'Passed' }}
             [View Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            [Download Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
 
       - name: Detailed Discord Embed (Failures)
         if: failure()
@@ -77,6 +110,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
           args: |
-            **Flutter Check Failed!**
-            **Branch**: `${{ github.ref_name }}`
-            **Check out logs**: [Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            ** Flutter Check Failed!**
+            **Branch**: `${{ github.head_ref || github.ref_name }}`
+            **Total Issues**: ${{ steps.report.outputs.total }}
+            **Check logs & report**: [Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
