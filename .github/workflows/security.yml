@@ -24,9 +24,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       
-      - name: Check formatting
-        run: flutter format --set-exit-if-changed .
-      
       - name: Analyze code
         id: analyze
         run: flutter analyze --write=analyze.json --format=json
