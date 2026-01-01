@@ -48,14 +48,13 @@ jobs:
         if: always()
         run: |
           STATUS="${{ steps.analyze.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }}"
-          MSG="**CI Results for ${{ github.event.pull_request.title || 'Branch' }}**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          MSG="**Hello @here these are the Results for ${{ github.event.pull_request.title || 'Branch' }}**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           
           # Send Discord notification with all 3 report files
           curl -H "Content-Type: multipart/form-data" \
                -F "content=$MSG" \
                -F "file1=@analyze_report.txt" \
                -F "file2=@trivy_report.txt" \
-               -F "file3=@secrets_report.txt" \
                ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Upload analyze report to Artifacts
