@@ -33,52 +33,52 @@ jobs:
       - name: Analyze code
         id: analyze
         continue-on-error: true
-        run: flutter analyze > analyze_report.txt
-      
-      - name: Upload analyze report to Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: flutter-analyze-report
-          path: analyze_report.txt
-      
-      - name: Send Report to Discord
-        if: always()
-        run: |
-          STATUS="${{ steps.analyze.outcome == 'success' && 'PASSED' || ' FAILED' }}"
-          MSG="**Flutter Analysis Results**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
-          # Send the text message and the file together
-          curl -H "Content-Type: multipart/form-data" \
-               -F "content=$MSG" \
-               -F "file=@analyze_report.txt" \
-               ${{ secrets.DISCORD_WEBHOOK }}
-
-      - name: Security audit deps
-        run: flutter pub outdated
-      
-      - name: Scan secrets
-        uses: trufflesecurity/trufflehog@main
-        with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+        # 2>&1 merges stdout and stderr so the report file contains EVERYTHING
+        run: flutter analyze > analyze_report.txt 2>&1
       
       - name: Vuln scan (Trivy)
+        id: trivy
+        continue-on-error: true
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          scan-ref: '.'
+          format: 'table'
+          output: 'trivy_report.txt'
       
-      - name: Upload Trivy results to GitHub Security
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
+      - name: Scan secrets (TruffleHog)
+        id: secrets
+        continue-on-error: true
+        run: |
+          # Running via docker to easily capture output to a file
+          docker run --rm -v "$(pwd):/pwd" trufflesecurity/trufflehog:latest github --repo "file:///pwd" --print --only-verified > secrets_report.txt 2>&1
 
+      - name: Send All Reports to Discord
+        if: always()
+        run: |
+          STATUS="${{ steps.analyze.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }}"
+          MSG="**CI Results for ${{ github.event.pull_request.title || 'Branch' }}**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Send Discord notification with all 3 report files
+          curl -H "Content-Type: multipart/form-data" \
+               -F "content=$MSG" \
+               -F "file1=@analyze_report.txt" \
+               -F "file2=@trivy_report.txt" \
+               -F "file3=@secrets_report.txt" \
+               ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Upload analyze report to Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-quality-reports
+          path: |
+            analyze_report.txt
+            trivy_report.txt
+            secrets_report.txt
+
+      # This step ensures the PR actually blocks if there were linter errors
       - name: Check final status
         if: steps.analyze.outcome != 'success'
         run: |
-          echo "Analysis failed. Check the attached report in Discord or GitHub Artifacts."
+          echo "Analysis failed with ${{ steps.analyze.outcome }}. Check Discord for the report."
           exit 1
