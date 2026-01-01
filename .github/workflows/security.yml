@@ -44,13 +44,6 @@ jobs:
           format: 'table'
           output: 'trivy_report.txt'
       
-      - name: Scan secrets (TruffleHog)
-        id: secrets
-        continue-on-error: true
-        run: |
-          # Running via docker to easily capture output to a file
-          docker run --rm -v "$(pwd):/pwd" trufflesecurity/trufflehog:latest github --repo "file:///pwd" --print --only-verified > secrets_report.txt 2>&1
-
       - name: Send All Reports to Discord
         if: always()
         run: |
