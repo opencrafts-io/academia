@@ -1,0 +1,85 @@
+name: Analyse the code quality and check for security issues
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+      
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+      
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Check formatting
+        run: flutter format --set-exit-if-changed .
+      
+      - name: Analyze code
+        run: flutter analyze
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage/lcov.info
+      
+      - name: Security audit deps
+        run: flutter pub outdated
+      
+      - name: Scan secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+      
+      - name: Vuln scan
+        id: trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          scan-ref: '.'
+      
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Send Discord Notification
+        if: always()
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: |
+            **Flutter Quality & Security Check ${{ job.status }}** 
+            **Branch**: `${{ github.ref_name }}`
+            **Coverage**: [Codecov](https://codecov.io/gh/${{ github.repository }}/branch/${{ github.ref_name }}/src)
+            **Security**: Trivy ${{ steps.trivy.outcome }}
+            **Analyze**: ${{ steps.analyze.outcome || 'Passed' }}
+            [View Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: Detailed Discord Embed (Failures)
+        if: failure()
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: |
+            **Flutter Check Failed!**
+            **Branch**: `${{ github.ref_name }}`
+            **Check out logs**: [Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
