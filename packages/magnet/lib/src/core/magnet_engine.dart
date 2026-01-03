@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:logger/logger.dart';
+import 'package:magnet/src/executor/instruction_callback_manager.dart';
 import 'package:magnet/src/executor/scrapping_executor.dart';
 import 'package:magnet/src/models/scrapping_command.dart';
 import 'package:magnet/src/models/scrapping_result.dart';
@@ -122,6 +123,7 @@ class Magnet {
   Future<ScrappingResult> execute(
     ScrappingCommand command, {
     BuildContext? context,
+    InstructionCallbackManager? callbackManager,
   }) async {
     if (!_isInitialized) throw Exception("Initialize Magnet first");
 
@@ -139,7 +141,11 @@ class Magnet {
       }
 
       // Otherwise use headless pool
-      return await _executeHeadless(command, stopwatch);
+      return await _executeHeadless(
+        command,
+        stopwatch,
+        callbackManager: callbackManager,
+      );
     } catch (e) {
       stopwatch.stop();
       return ScrappingResult(
@@ -156,8 +162,9 @@ class Magnet {
   /// Execute headless scraping with proper redirect handling
   Future<ScrappingResult> _executeHeadless(
     ScrappingCommand command,
-    Stopwatch stopwatch,
-  ) async {
+    Stopwatch stopwatch, {
+    InstructionCallbackManager? callbackManager,
+  }) async {
     final sessionId =
         '${command.commandID}-${DateTime.now().millisecondsSinceEpoch}';
     HeadlessSession? session;
@@ -221,9 +228,14 @@ class Magnet {
         logger: _logger,
       );
 
+      executor.setExecutionContext(
+        commandId: command.commandID ?? sessionId,
+        totalInstructions: command.instructions.length,
+      );
+
       for (final (index, instruction) in command.instructions.indexed) {
         _logger.d('Executing instruction $index: ${instruction.type}');
-        await executor.execute(instruction);
+        await executor.execute(instruction, instructionIndex: index);
       }
 
       stopwatch.stop();

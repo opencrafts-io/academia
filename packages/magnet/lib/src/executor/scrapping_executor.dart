@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:logger/logger.dart';
+import 'package:magnet/src/executor/instruction_callback_manager.dart';
+import 'package:magnet/src/executor/instruction_progress_event.dart';
+import 'package:magnet/src/executor/instruction_status.dart';
 import 'package:magnet/src/models/scrapping_instruction.dart';
 
 /// The scrapping execution engine
@@ -13,36 +16,116 @@ class ScrappingExecutor {
   final Logger logger;
   final Map<String, dynamic> extractedData = {};
 
-  ScrappingExecutor({required this.controller, required this.logger});
+  /// A callback manager for instruction execution
+  final InstructionCallbackManager? instructionCallbackManager;
+
+  /// Current command ID (set by parent)
+  String? _currentCommandId;
+
+  /// Current instruction index (set by parent)
+  int _currentInstructionIndex = 0;
+
+  /// Total instructions (set by parent)
+  int _totalInstructions = 0;
+
+  void setExecutionContext({
+    required String commandId,
+    required int totalInstructions,
+  }) {
+    _currentCommandId = commandId;
+    _totalInstructions = totalInstructions;
+  }
+
+  ScrappingExecutor({
+    required this.controller,
+    required this.logger,
+    this.instructionCallbackManager,
+  });
 
   /// Runs [instruction] against the current webpage
-  Future<void> execute(ScrapingInstruction instruction) async {
-    switch (instruction.type) {
-      case "extract":
-        await _extract(instruction);
-        break;
-      case "wait":
-        if (instruction.waitStrategy != null) {
-          await _executeWaitStrategy(instruction.waitStrategy!);
-        } else if (instruction.waitDuration != null) {
-          await _wait(instruction);
-        }
-        break;
-      case 'click':
-        await _click(instruction);
-        if (instruction.shouldWaitAfterExecution) {
-          await _executeWaitStrategy(instruction.waitStrategy!);
-        }
-        break;
-      case 'fill-form':
-        _fillForm(instruction);
-        if (instruction.shouldWaitAfterExecution) {
-          await _executeWaitStrategy(instruction.waitStrategy!);
-        }
-        break;
-      default:
-        throw Exception("Unkown instruction type: [${instruction.type}]");
+  Future<void> execute(
+    ScrapingInstruction instruction, {
+    required int instructionIndex,
+  }) async {
+    _currentInstructionIndex = instructionIndex;
+
+    // Emit running event
+    _emitProgress(
+      status: InstructionStatus.running,
+      instructionType: instruction.type,
+    );
+
+    try {
+      final Stopwatch stopwatch = Stopwatch()..start();
+      switch (instruction.type) {
+        case "extract":
+          await _extract(instruction);
+          break;
+        case "wait":
+          if (instruction.waitStrategy != null) {
+            await _executeWaitStrategy(instruction.waitStrategy!);
+          } else if (instruction.waitDuration != null) {
+            await _wait(instruction);
+          }
+          break;
+        case 'click':
+          await _click(instruction);
+          if (instruction.shouldWaitAfterExecution) {
+            await _executeWaitStrategy(instruction.waitStrategy!);
+          }
+          break;
+        case 'fill-form':
+          _fillForm(instruction);
+          if (instruction.shouldWaitAfterExecution) {
+            await _executeWaitStrategy(instruction.waitStrategy!);
+          }
+          break;
+        default:
+          throw Exception("Unkown instruction type: [${instruction.type}]");
+      }
+      _emitProgress(
+        status: InstructionStatus.completed,
+        instructionType: instruction.type,
+        data: instruction.type == 'extract' && instruction.outputKey != null
+            ? {instruction.outputKey!: extractedData[instruction.outputKey!]}
+            : null,
+        executionTime: stopwatch.elapsed,
+      );
+    } catch (e) {
+      _emitProgress(
+        status: InstructionStatus.failed,
+        instructionType: instruction.type,
+        error: e.toString(),
+      );
+
+      rethrow;
     }
+  }
+
+  /// Emit progress event through callback manager
+  void _emitProgress({
+    required InstructionStatus status,
+    required String instructionType,
+    Map<String, dynamic>? data,
+    String? error,
+    Duration? executionTime,
+  }) {
+    if (instructionCallbackManager == null || _currentCommandId == null) return;
+
+    final event = InstructionProgressEvent(
+      commandId: _currentCommandId!,
+      instructionIndex: _currentInstructionIndex + 1,
+      totalInstructions: _totalInstructions,
+      instructionType: instructionType,
+      status: status,
+      data: data,
+      error: error,
+      timestamp: DateTime.now(),
+      executionTime: executionTime,
+    );
+
+    instructionCallbackManager!.emitProgress(event);
+    logger.d('Progress: ${event.toString()}');
   }
 
   /// Fills a form widget selected by selector with a value
