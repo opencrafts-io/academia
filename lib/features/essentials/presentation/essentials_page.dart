@@ -104,8 +104,11 @@ class _EssentialsPageState extends State<EssentialsPage> {
               ),
             ],
           ),
-          EssentialsInstitutionSection(),
 
+          SliverPadding(
+            padding: EdgeInsets.all(16),
+            sliver: SliverToBoxAdapter(child: EssentialsInstitutionSection()),
+          ),
           // Academia's tools
           SliverPadding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
