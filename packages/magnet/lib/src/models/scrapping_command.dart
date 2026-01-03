@@ -30,4 +30,6 @@ class ScrappingCommand with _$ScrappingCommand {
 
   factory ScrappingCommand.fromJson(Map<String, dynamic> json) =>
       _$ScrappingCommandFromJson(json);
+
+  Map<String, Object?> toJson() => _$ScrappingCommandToJson(this);
 }

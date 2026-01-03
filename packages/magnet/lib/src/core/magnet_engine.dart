@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:logger/logger.dart';
 import 'package:magnet/src/executor/scrapping_executor.dart';
@@ -11,13 +12,63 @@ import 'package:path_provider/path_provider.dart';
 
 import './magnet_config.dart';
 
+// ============================================================================
+// HEADLESS SESSION WRAPPER
+// ============================================================================
+
+class HeadlessSession {
+  final String sessionId;
+  final String commandId;
+  final String initialUrl;
+
+  late HeadlessInAppWebView webView;
+  late InAppWebViewController controller;
+
+  /// Completes when initial page load finishes
+  final Completer<void> initialLoadCompleter = Completer<void>();
+
+  /// Tracks if initial load has completed
+  bool _initialLoadDone = false;
+  bool get initialLoadDone => _initialLoadDone;
+
+  HeadlessSession({
+    required this.sessionId,
+    required this.commandId,
+    required this.initialUrl,
+  });
+
+  /// Mark initial load as complete (safe to call multiple times)
+  void markInitialLoadComplete() {
+    if (!_initialLoadDone && !initialLoadCompleter.isCompleted) {
+      _initialLoadDone = true;
+      initialLoadCompleter.complete();
+    }
+  }
+
+  /// Mark initial load as failed
+  void markInitialLoadFailed(Object error) {
+    if (!initialLoadCompleter.isCompleted) {
+      initialLoadCompleter.completeError(error);
+    }
+  }
+
+  /// Dispose resources
+  Future<void> dispose() async {
+    await webView.dispose();
+  }
+}
+
+// ============================================================================
+// MAGNET ENGINE
+// ============================================================================
+
 class Magnet {
   final Logger _logger = Logger();
   // Config holds user-defined settings (UserAgent, timeouts, etc.)
   late MagnetConfig config;
 
   /// The environment that shares cookies/cache between headless and on-screen
-  late WebViewEnvironment _environment;
+  WebViewEnvironment? _environment;
 
   /// Internal state to track if we are initialized
   bool _isInitialized = false;
@@ -63,7 +114,15 @@ class Magnet {
   /// Accessor for the initialization flag.
   bool get initialized => _isInitialized;
 
-  Future<ScrappingResult> execute(ScrappingCommand command) async {
+  /// Executes a command and its resulting instructions
+  ///
+  /// For commands which require interactivity please pass the
+  /// BuildContext to ensure that the browser can be pushed to the foreground
+  /// Otherwise the function will throw an exception.
+  Future<ScrappingResult> execute(
+    ScrappingCommand command, {
+    BuildContext? context,
+  }) async {
     if (!_isInitialized) throw Exception("Initialize Magnet first");
 
     final stopwatch = Stopwatch()..start();
@@ -71,7 +130,12 @@ class Magnet {
     try {
       // For interactive commands, use on-screen browser
       if (command.requiresInteraction ?? false) {
-        return await _executeInteractive(command, stopwatch);
+        assert(context != null);
+        return await _executeInteractive(
+          command: command,
+          stopwatch: stopwatch,
+          context: context!,
+        );
       }
 
       // Otherwise use headless pool
@@ -89,32 +153,43 @@ class Magnet {
     }
   }
 
+  /// Execute headless scraping with proper redirect handling
   Future<ScrappingResult> _executeHeadless(
     ScrappingCommand command,
     Stopwatch stopwatch,
   ) async {
-    // Wait for available session slot
-    // while (_activeSessions >= config.maxConcurrentSessions) {
-    //   await Future.delayed(const Duration(milliseconds: 100));
-    // }
-    //
-    // _activeSessions++;
+    final sessionId =
+        '${command.commandID}-${DateTime.now().millisecondsSinceEpoch}';
+    HeadlessSession? session;
 
     try {
-      final loadCompleter = Completer<void>();
-      HeadlessInAppWebView? headlessWebView;
+      // Create session
+      session = HeadlessSession(
+        sessionId: sessionId,
+        commandId: command.commandID ?? sessionId,
+        initialUrl: command.url,
+      );
 
-      headlessWebView = HeadlessInAppWebView(
+      _logger.i('Starting headless session: $sessionId');
+
+      // Create headless WebView with proper redirect handling
+      session.webView = HeadlessInAppWebView(
         initialUrlRequest: URLRequest(url: WebUri(command.url)),
+        onWebViewCreated: (controller) {
+          session!.controller = controller;
+          _logger.d('WebView controller created for session: $sessionId');
+        },
+        onLoadStart: (controller, url) {
+          _logger.d('Load start: $url');
+        },
         onLoadStop: (controller, url) {
-          _logger.i("Headless page loaded: $url");
-          loadCompleter.complete();
+          _logger.i('Page loaded: $url');
+          // Mark initial load as done - safe for multiple calls (handles redirects)
+          session!.markInitialLoadComplete();
         },
         onReceivedError: (controller, request, error) {
           _logger.e("WebView error: ${error.description}");
-          if (!loadCompleter.isCompleted) {
-            loadCompleter.completeError(error);
-          }
+          session!.markInitialLoadFailed(error);
         },
         onConsoleMessage: (controller, msg) {
           if (config.debugMode) {
@@ -123,27 +198,37 @@ class Magnet {
         },
       );
 
-      await headlessWebView.run();
+      await session.webView.run();
 
-      // Wait for page load with timeout
-      await loadCompleter.future.timeout(
-        config.timeout,
-        onTimeout: () => _logger.w("Page load timeout for ${command.url}"),
-      );
+      // Wait for initial page load with timeout
+      try {
+        await session.initialLoadCompleter.future.timeout(
+          config.timeout,
+          onTimeout: () {
+            _logger.w("Page load timeout for: ${command.url}");
+          },
+        );
+      } catch (e) {
+        _logger.w('Initial load failed: $e');
+        // Continue anyway - page might still be usable
+      }
+
+      _logger.i('Initial load complete, executing instructions');
 
       // Execute instructions
       final executor = ScrappingExecutor(
-        controller: headlessWebView.webViewController!,
+        controller: session.controller,
         logger: _logger,
       );
 
-      for (final instruction in command.instructions) {
+      for (final (index, instruction) in command.instructions.indexed) {
+        _logger.d('Executing instruction $index: ${instruction.type}');
         await executor.execute(instruction);
       }
 
       stopwatch.stop();
 
-      await headlessWebView.dispose();
+      _logger.i('✓ Headless execution completed: $sessionId');
 
       return ScrappingResult(
         commandID: command.commandID,
@@ -152,15 +237,45 @@ class Magnet {
         timestamp: DateTime.now(),
         executionTime: stopwatch.elapsed,
       );
+    } catch (e) {
+      stopwatch.stop();
+      _logger.e('✗ Headless execution failed: $e');
+      return ScrappingResult(
+        commandID: command.commandID,
+        success: false,
+        data: {},
+        error: 'Headless execution failed: $e',
+        timestamp: DateTime.now(),
+        executionTime: stopwatch.elapsed,
+      );
     } finally {
-      // _activeSessions--;
+      // Cleanup
+      try {
+        if (session != null) {
+          await session.dispose();
+        }
+      } catch (e) {
+        _logger.w('Error disposing session: $e');
+      }
     }
   }
 
-  Future<ScrappingResult> _executeInteractive(
-    ScrappingCommand command,
-    Stopwatch stopwatch,
-  ) async {
+  Future<ScrappingResult> _executeInteractive({
+    required ScrappingCommand command,
+    required Stopwatch stopwatch,
+    required BuildContext context,
+  }) async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: Text("Wait")),
+          body: InAppWebView(
+            webViewEnvironment: _environment,
+            initialUrlRequest: URLRequest(url: WebUri(command.url)),
+          ),
+        ),
+      ),
+    );
     // Placeholder for on-screen interactive scraping
     // Would integrate with your widget layer
     _logger.w("Interactive scraping not yet implemented");

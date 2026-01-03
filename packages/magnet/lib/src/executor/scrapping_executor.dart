@@ -435,9 +435,7 @@ class ScrappingExecutor {
       );
 
       stopwatch.stop();
-      logger.d(
-        'One strategy succeeded after ${stopwatch.elapsed.inSeconds}s',
-      );
+      logger.d('One strategy succeeded after ${stopwatch.elapsed.inSeconds}s');
     } on TimeoutException {
       stopwatch.stop();
       logger.w(
