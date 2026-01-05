@@ -36,7 +36,7 @@ class AdService {
           : "ca-app-pub-4838989029590048/1220011077";
     }
     if (Platform.isIOS) {
-      return null; // TODO (erick): Add iOS ad unit ID when available.
+      return 'ca-app-pub-4838989029590048/6199098250';
     }
     return null;
   }
@@ -47,7 +47,9 @@ class AdService {
     if (Platform.isAndroid) {
       return "ca-app-pub-4838989029590048/8324475478";
     }
-    if (Platform.isIOS) return null; // TODO (erick): Add iOS add unit ID
+    if (Platform.isIOS) {
+      return 'ca-app-pub-4838989029590048/2523593032';
+    }
     return null;
   }
 
