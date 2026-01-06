@@ -100,18 +100,41 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: event.eventBannerImage!,
-                  width: double.infinity,
-                  errorWidget: (context, child, error) {
-                    return Container(
-                      width: double.infinity,
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      child: const Icon(Icons.image_not_supported),
-                    );
-                  },
-                ),
+                child: (event.eventBannerImage != null)
+                    ? CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: event.eventBannerImage!,
+                        width: double.infinity,
+                        errorWidget: (context, child, error) {
+                          return Container(
+                            width: double.infinity,
+                            color: Theme.of(context).colorScheme.errorContainer,
+                            child: const Icon(Icons.image_not_supported),
+                          );
+                        },
+                      )
+                    : Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.primaryContainer,
+                              Theme.of(context).colorScheme.secondaryContainer,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.event,
+                            size: 40,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
               ),
 
               // Details section - takes remaining space
