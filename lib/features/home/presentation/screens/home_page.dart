@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedDrawerItem = 0;
+  String? userId;
   @override
   void initState() {
     super.initState();
@@ -39,6 +40,10 @@ class _HomePageState extends State<HomePage> {
             case 3:
               context.pop();
               PurchasedTicketsRoute().push(context);
+              break;
+            case 4:
+              context.pop();
+              OrganizedEventsRoute().push(context);
               break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(

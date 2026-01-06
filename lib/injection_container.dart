@@ -95,6 +95,7 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerSingleton<GetEvent>(GetEvent(sl()));
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
+  sl.registerLazySingleton(() => GetEventsByOrganizerIdUseCase(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
@@ -104,6 +105,8 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
+
+  sl.registerFactory(() => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()));
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory(

@@ -30,7 +30,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/event",
+        "https://api.opencrafts.io/qa-sherehe/event",
         // "$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
@@ -70,7 +70,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/event/$eventId",
+        "https://api.opencrafts.io/qa-sherehe/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -97,6 +97,42 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, List<EventData>>> getEventByOrganizerId({
+    required String organizerId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://api.opencrafts.io/qa-sherehe/event/organizer/$organizerId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(
+          (response.data['data'] as List)
+              .map((e) => EventData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected server response: ${response.statusCode}",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching event by Organizer ID", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error while fetching event by Organizer ID", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching Organized events",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, EventData>> createEvent({
     required String eventName,
     required String eventDescription,
@@ -111,7 +147,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required List<TicketData> tickets,
   }) async {
     try {
-      // Prepare multipart form data
       final formData = FormData.fromMap({
         'event_name': eventName,
         'event_description': eventDescription,
@@ -145,7 +180,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send request
       final response = await dioClient.dio.post(
-        "http://localhost:3000/event/",
+        "https://api.opencrafts.io/qa-sherehe/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
@@ -181,7 +216,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/attendee/event/$eventId",
+        "https://api.opencrafts.io/qa-sherehe/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -227,7 +262,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/attendee/$id",
+        "https://api.opencrafts.io/qa-sherehe/attendee/$id",
       );
 
       if (response.statusCode == 200) {
@@ -259,7 +294,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/ticket/event/$eventId",
+        "https://api.opencrafts.io/qa-sherehe/ticket/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -300,7 +335,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "http://localhost:3000/purchase/",
+        "https://api.opencrafts.io/qa-sherehe/purchase/",
         data: {"ticket_id": ticketId, "ticket_quantity": ticketQuantity},
       );
 
@@ -340,7 +375,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   getUserPurchasedTickets({required int page, required int limit}) async {
     try {
       final response = await dioClient.dio.get(
-        "http://localhost:3000/attendee/user/1",
+        "https://api.opencrafts.io/qa-sherehe/attendee/user/1",
         queryParameters: {"page": page, "limit": limit},
       );
 

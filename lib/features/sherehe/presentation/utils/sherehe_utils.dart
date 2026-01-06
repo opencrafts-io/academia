@@ -1,3 +1,5 @@
+import 'package:academia/constants/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ShereheUtils {
@@ -32,5 +34,15 @@ class ShereheUtils {
     } catch (_) {
       return isoString;
     }
+  }
+
+  static int getCrossAxisCount(BuildContext context) {
+    if (ResponsiveBreakPoints.isMobile(context)) return 1;
+    if (ResponsiveBreakPoints.isTablet(context)) return 2;
+    return 3;
+  }
+
+  static double getMainAxisExtent(BuildContext context) {
+    return ResponsiveBreakPoints.isMobile(context) ? 440 : 500;
   }
 }

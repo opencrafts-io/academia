@@ -11,6 +11,10 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, Event>> getEventById({required String eventId});
 
+  Future<Either<Failure, List<Event>>> getEventByOrganizerId({
+    required String organizerId,
+  });
+
   Future<Either<Failure, Event>> createEvent({
     required String eventName,
     required String eventDescription,

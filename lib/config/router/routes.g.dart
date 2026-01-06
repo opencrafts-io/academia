@@ -16,6 +16,7 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $purchasedTicketsRoute,
+  $organizedEventsRoute,
   $ticketReceiptRoute,
   $qrCodeRoute,
   $todosRoute,
@@ -501,6 +502,32 @@ mixin _$PurchasedTicketsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/purchased-tickets/all');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $organizedEventsRoute => GoRouteData.$route(
+  path: '/organized-events/mine',
+  factory: _$OrganizedEventsRoute._fromState,
+);
+
+mixin _$OrganizedEventsRoute on GoRouteData {
+  static OrganizedEventsRoute _fromState(GoRouterState state) =>
+      OrganizedEventsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/organized-events/mine');
 
   @override
   void go(BuildContext context) => context.go(location);

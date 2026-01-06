@@ -44,6 +44,19 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, List<Event>>> getEventByOrganizerId({
+    required String organizerId,
+  }) async {
+    final result = await remoteDataSource.getEventByOrganizerId(
+      organizerId: organizerId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (events) => right(events.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
   Future<Either<Failure, Event>> createEvent({
     required String eventName,
     required String eventDescription,

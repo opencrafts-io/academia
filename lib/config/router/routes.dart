@@ -295,6 +295,14 @@ class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
   }
 }
 
+@TypedGoRoute<OrganizedEventsRoute>(path: "/organized-events/mine")
+class OrganizedEventsRoute extends GoRouteData with _$OrganizedEventsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return OrganizedEventsScreen();
+  }
+}
+
 @TypedGoRoute<TicketReceiptRoute>(path: "/ticket-receipt")
 class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
   final int ticketPrice;

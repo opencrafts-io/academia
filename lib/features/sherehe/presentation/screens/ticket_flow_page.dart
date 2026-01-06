@@ -31,14 +31,6 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
     );
   }
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   selectedTicket = null;
-  //   print("people!!!!");
-  //   super.dispose();
-  // }
-
   void nextPage() {
     if (currentPage < 1) {
       setState(() => currentPage++);

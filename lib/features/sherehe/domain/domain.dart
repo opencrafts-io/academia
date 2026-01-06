@@ -1,5 +1,6 @@
 export 'entities/event.dart';
 export 'entities/attendee.dart';
+export 'entities/paginated_events.dart';
 export 'entities/ticket.dart';
 export 'repository/sherehe_repository.dart';
 export 'usecases/get_all_events.dart';
@@ -12,4 +13,4 @@ export 'usecases/get_cached_events_use_case.dart';
 export 'usecases/get_tickets_by_event_id_use_case.dart';
 export 'usecases/purchase_ticket_use_case.dart';
 export 'usecases/get_user_purchased_tickets_use_case.dart';
-export 'entities/paginated_events.dart';
+export 'usecases/get_events_by_organizer_id_use_case.dart';

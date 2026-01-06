@@ -1,11 +1,9 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/sherehe/presentation/widgets/event_card_wrapper.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/constants/constants.dart';
-import '../bloc/sherehe_home_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -22,16 +20,6 @@ class _ShereheHomeState extends State<ShereheHome>
 
   @override
   bool get wantKeepAlive => true;
-
-  int _getCrossAxisCount(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) return 1;
-    if (ResponsiveBreakPoints.isTablet(context)) return 2;
-    return 3;
-  }
-
-  double _getMainAxisExtent(BuildContext context) {
-    return ResponsiveBreakPoints.isMobile(context) ? 440 : 500;
-  }
 
   @override
   void initState() {
@@ -170,11 +158,15 @@ class _ShereheHomeState extends State<ShereheHome>
                     children: [
                       SliverGrid(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: _getCrossAxisCount(context),
+                          crossAxisCount: ShereheUtils.getCrossAxisCount(
+                            context,
+                          ),
                           mainAxisSpacing: 12,
                           crossAxisSpacing: 12,
                           childAspectRatio: 0.7,
-                          mainAxisExtent: _getMainAxisExtent(context),
+                          mainAxisExtent: ShereheUtils.getMainAxisExtent(
+                            context,
+                          ),
                         ),
                         delegate: SliverChildBuilderDelegate((context, index) {
                           return EventCardWrapper(event: events[index]);
