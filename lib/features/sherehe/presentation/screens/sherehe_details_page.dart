@@ -235,19 +235,47 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     background: Stack(
                       fit: StackFit.expand,
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: state.event.eventBannerImage!,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, child, error) {
-                            return Container(
-                              width: double.infinity,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.errorContainer,
-                              child: const Icon(Icons.image_not_supported),
-                            );
-                          },
-                        ),
+                        if (state.event.eventBannerImage != null)
+                          CachedNetworkImage(
+                            imageUrl: state.event.eventBannerImage!,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, child, error) {
+                              return Container(
+                                width: double.infinity,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.errorContainer,
+                                child: const Icon(Icons.image_not_supported),
+                              );
+                            },
+                          )
+                        else
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.secondaryContainer,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.event,
+                                size: 64,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                          ),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
