@@ -86,14 +86,13 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
-          } else if (state is UserTicketLoaded ||
-              state is UserTicketPurchaseInProgress) {
-            ticketTypes = state is UserTicketLoaded
-                ? state.tickets
-                : (state as UserTicketPurchaseInProgress).existingTickets;
+          } else if (state is UserTicketLoaded) {
+            ticketTypes = state.tickets;
             isFreeEvent =
                 ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
             selectedTicket = isFreeEvent ? ticketTypes.first : null;
+          } else if (state is UserTicketPurchaseInProgress) {
+            ticketTypes = state.existingTickets;
           }
         },
         builder: (context, state) {
