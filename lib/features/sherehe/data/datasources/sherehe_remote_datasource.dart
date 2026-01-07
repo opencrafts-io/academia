@@ -126,7 +126,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
       _logger.e("Unknown error while fetching event by Organizer ID", error: e);
       return left(
         ServerFailure(
-          message: "An unexpected error occurred while fetching Organized events",
+          message:
+              "An unexpected error occurred while fetching Organized events",
           error: e,
         ),
       );
@@ -351,14 +352,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
       }
     } on DioException catch (de) {
       _logger.e("DioException when purchasing ticket", error: de);
-
-      // this is to catch where tickets are sold out
-      if (de.response?.data?['message']?.toString().trim() ==
-          "Not enough tickets available") {
-        return left(
-          ServerFailure(message: "This ticket is sold out.", error: de),
-        );
-      }
       return handleDioError(de);
     } catch (e) {
       _logger.e("Unknown error when purchasing ticket", error: e);
@@ -371,11 +364,16 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
+  //To use a different endpoint once available
   Future<Either<Failure, PaginatedResult<AttendeeData>>>
-  getUserPurchasedTickets({required int page, required int limit}) async {
+  getUserPurchasedTicketsForEvent({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/user/1",
+        "https://api.opencrafts.io/qa-sherehe/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -407,6 +405,83 @@ class ShereheRemoteDataSource with DioErrorHandler {
         ServerFailure(
           message:
               "An unexpected error occurred when getting user's ticket for event",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>>
+  getAllUserPurchasedTickets({required int page, required int limit}) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://api.opencrafts.io/qa-sherehe/attendee/user/attended",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting user's tickets",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting user's tickets", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting user's tickets", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting user's tickets",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<AttendeeData>>> searchUserAttendedEvents({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://api.opencrafts.io/qa-sherehe/attendee/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List).map((e) => AttendeeData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when searching attended events",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching attended events", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching attended events", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when searching attended events",
           error: e,
         ),
       );

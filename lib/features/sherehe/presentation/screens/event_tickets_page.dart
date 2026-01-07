@@ -1,5 +1,4 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,64 +18,25 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
   @override
   void initState() {
     super.initState();
-
-    // Trigger loading on first build
-    // TEMPORARY: backend changes in progress
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<UserEventTicketsBloc>().add(
-    //     FetchUserEventTickets(page: _currentPage, limit: 10),
-    //   );
-    // });
+    context.read<UserEventTicketsBloc>().add(
+      FetchUserEventTickets(
+        eventId: widget.eventId,
+        page: _currentPage,
+        limit: 10,
+      ),
+    );
   }
 
   void _loadMore() {
     _currentPage++;
     context.read<UserEventTicketsBloc>().add(
-      FetchUserEventTickets(page: _currentPage, limit: 10),
+      FetchUserEventTickets(
+        eventId: widget.eventId,
+        page: _currentPage,
+        limit: 10,
+      ),
     );
   }
-
-  final List<Attendee> _mockAttendees = [
-    Attendee(
-      id: "att_001",
-      userId: "user_001",
-      eventId: "event_123",
-      ticketId: "ticket_01",
-      ticketQuantity: 2,
-      ticket: Ticket(
-        id: "ticket_01",
-        ticketName: "VIP Pass",
-        ticketPrice: 3000,
-        ticketQuantity: 300,
-      ),
-    ),
-    Attendee(
-      id: "att_002",
-      userId: "user_001",
-      eventId: "event_456",
-      ticketId: "ticket_02",
-      ticketQuantity: 1,
-      ticket: Ticket(
-        id: "ticket_02",
-        ticketName: "Regular",
-        ticketPrice: 1000,
-        ticketQuantity: 300,
-      ),
-    ),
-    Attendee(
-      id: "att_003",
-      userId: "user_001",
-      eventId: "event_789",
-      ticketId: "ticket_03",
-      ticketQuantity: 4,
-      ticket: Ticket(
-        id: "ticket_03",
-        ticketName: "Group Pass",
-        ticketPrice: 800,
-        ticketQuantity: 300,
-      ),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +86,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                             _currentPage = 1;
                             context.read<UserEventTicketsBloc>().add(
                               FetchUserEventTickets(
+                                eventId: widget.eventId,
                                 page: _currentPage,
                                 limit: 10,
                               ),
@@ -251,29 +212,8 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                     ),
                   ),
                 ),
-              ]
-              // else ...[
-              //   const SliverFillRemaining(child: SizedBox.shrink()),
-              // ],
-              //TEMPORARY FOR NOW WILL REVERT TO THE ABOVE AFTER BACKEND CHANGES
-              else ...[
-                SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
-                  sliver: SliverList.separated(
-                    itemCount: _mockAttendees.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 20),
-                    itemBuilder: (context, index) {
-                      final item = _mockAttendees[index];
-
-                      return TicketCardWidget(
-                        ticket: item.ticket!,
-                        quantity: item.ticketQuantity,
-                        eventId: item.eventId,
-                        mode: TicketStubMode.eventTicketPurchased,
-                      );
-                    },
-                  ),
-                ),
+              ] else ...[
+                const SliverFillRemaining(child: SizedBox.shrink()),
               ],
             ],
           );

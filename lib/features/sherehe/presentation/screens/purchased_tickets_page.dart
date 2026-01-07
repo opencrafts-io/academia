@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,73 +13,44 @@ class PurchasedTicketsPage extends StatefulWidget {
 
 class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
   int _currentPage = 1;
+  final TextEditingController _searchController = TextEditingController();
+
+  Timer? _searchDebounce;
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Trigger loading on first build
-    // TEMPORARY: backend changes in progress
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<UserEventTicketsBloc>().add(
-    //     FetchUserEventTickets(page: _currentPage, limit: 10),
-    //   );
-    // });
+    _fetchInitialTickets();
   }
 
-  void _loadMore() {
-    _currentPage++;
-    context.read<UserEventTicketsBloc>().add(
-      FetchUserEventTickets(page: _currentPage, limit: 10),
+  void _fetchInitialTickets() {
+    _currentPage = 1;
+    context.read<AllUserEventTicketsBloc>().add(
+      FetchAllUserTickets(page: _currentPage, limit: 10),
     );
   }
 
-  final List<Attendee> _mockAttendees = [
-    Attendee(
-      id: "att_001",
-      userId: "user_001",
-      eventId: "event_123",
-      ticketId: "ticket_01",
-      ticketQuantity: 2,
-      ticket: Ticket(
-        id: "ticket_01",
-        ticketName: "VIP Pass",
-        ticketPrice: 3000,
-        ticketQuantity: 300,
-      ),
-    ),
-    Attendee(
-      id: "att_002",
-      userId: "user_001",
-      eventId: "event_456",
-      ticketId: "ticket_02",
-      ticketQuantity: 1,
-      ticket: Ticket(
-        id: "ticket_02",
-        ticketName: "Regular",
-        ticketPrice: 1000,
-        ticketQuantity: 300,
-      ),
-    ),
-    Attendee(
-      id: "att_003",
-      userId: "user_001",
-      eventId: "event_789",
-      ticketId: "ticket_03",
-      ticketQuantity: 4,
-      ticket: Ticket(
-        id: "ticket_03",
-        ticketName: "Group Pass",
-        ticketPrice: 800,
-        ticketQuantity: 300,
-      ),
-    ),
-  ];
+  void _loadMore() {
+    if (_isSearching) return; // prevent pagination during search
+
+    _currentPage++;
+    context.read<AllUserEventTicketsBloc>().add(
+      FetchAllUserTickets(page: _currentPage, limit: 10),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<UserEventTicketsBloc, UserEventTicketsState>(
+      body: BlocBuilder<AllUserEventTicketsBloc, AllUserEventTicketsState>(
         builder: (context, state) {
           return CustomScrollView(
             slivers: [
@@ -87,6 +58,52 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                 pinned: true,
                 floating: true,
                 title: const Text("All Tickets"),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(76),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: SearchBar(
+                      controller: _searchController,
+                      backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.primaryContainer,
+                      ),
+                      hintText: 'Search by event or ticket name',
+                      leading: const Icon(Icons.search),
+                      onChanged: (value) {
+                        _searchDebounce?.cancel();
+
+                        _searchDebounce = Timer(
+                          const Duration(milliseconds: 500),
+                          () {
+                            final query = value.trim();
+
+                            if (query.isEmpty) {
+                              _isSearching = false;
+                              _fetchInitialTickets();
+                            } else {
+                              _isSearching = true;
+                              context.read<AllUserEventTicketsBloc>().add(
+                                SearchUserAttendedEvents(query: query),
+                              );
+                            }
+                          },
+                        );
+                      },
+
+                      trailing: [
+                        IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchDebounce?.cancel();
+                            _searchController.clear();
+                            _isSearching = false;
+                            _fetchInitialTickets();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
 
               // Header text
@@ -99,12 +116,12 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                   ),
                 ),
               ),
-              if (state is UserEventTicketLoading) ...[
+              if (state is UserAllTicketsLoading) ...[
                 const SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(child: SpinningScallopIndicator()),
                 ),
-              ] else if (state is UserEventTicketError) ...[
+              ] else if (state is UserAllTicketsError) ...[
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
@@ -122,8 +139,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         FilledButton(
                           onPressed: () {
                             _currentPage = 1;
-                            context.read<UserEventTicketsBloc>().add(
-                              FetchUserEventTickets(
+                            context.read<AllUserEventTicketsBloc>().add(
+                              FetchAllUserTickets(
                                 page: _currentPage,
                                 limit: 10,
                               ),
@@ -135,7 +152,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     ),
                   ),
                 ),
-              ] else if (state is UserEventTicketLoaded) ...[
+              ] else if (state is UserAllTicketsLoaded) ...[
                 if (state.attendee.isEmpty)
                   // EMPTY LIST UI
                   const SliverFillRemaining(
@@ -169,7 +186,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           quantity: item.ticketQuantity,
                           eventId: state.attendee[index].eventId,
                           mode: TicketStubMode.allTicketsPurchased,
-                          eventName: "Sample Event Name ", //placeholder for now
+                          eventName: item.event?.eventName,
                         );
                       },
                     ),
@@ -187,7 +204,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       ),
                     ),
                   ),
-              ] else if (state is UserEventTicketPaginationLoading) ...[
+              ] else if (state is UserAllTicketsPaginationLoading) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(16.0),
                   sliver: SliverList.separated(
@@ -201,7 +218,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
                         mode: TicketStubMode.allTicketsPurchased,
-                        eventName: "Sample Event Name", //placeholder for now
+                        eventName: item.event?.eventName,
                       );
                     },
                   ),
@@ -213,7 +230,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     child: Center(child: SpinningScallopIndicator()),
                   ),
                 ),
-              ] else if (state is UserEventTicketPaginationError) ...[
+              ] else if (state is UserAllTicketsPaginationError) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(16.0),
                   sliver: SliverList.separated(
@@ -227,7 +244,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         quantity: item.ticketQuantity,
                         eventId: state.existingAttendee[index].eventId,
                         mode: TicketStubMode.allTicketsPurchased,
-                        eventName: "Sample Event Name", //placeholder for now
+                        eventName: item.event?.eventName,
                       );
                     },
                   ),
@@ -252,30 +269,96 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     ),
                   ),
                 ),
-              ]
-              // else ...[
-              //   const SliverFillRemaining(child: SizedBox.shrink()),
-              // ],
-              //TEMPORARY FOR NOW WILL REVERT TO THE ABOVE AFTER BACKEND CHANGES
-              else ...[
-                SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
-                  sliver: SliverList.separated(
-                    itemCount: _mockAttendees.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 20),
-                    itemBuilder: (context, index) {
-                      final item = _mockAttendees[index];
-
-                      return TicketCardWidget(
-                        ticket: item.ticket!,
-                        quantity: item.ticketQuantity,
-                        eventId: item.eventId,
-                        mode: TicketStubMode.allTicketsPurchased,
-                        eventName: "Sample Event Name ", //placeholder for now
-                      );
-                    },
+              ] else if (state is UserAllAttendedEventsSearchLoading) ...[
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: SpinningScallopIndicator()),
+                ),
+              ] else if (state is UserAllAttendedEventsLoaded) ...[
+                if (state.attendee.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "No results found",
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Try searching with a different event or ticket name.",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverList.separated(
+                      itemCount: state.attendee.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 20),
+                      itemBuilder: (context, index) {
+                        final item = state.attendee[index];
+                        return TicketCardWidget(
+                          ticket: item.ticket!,
+                          quantity: item.ticketQuantity,
+                          eventId: item.eventId,
+                          mode: TicketStubMode.allTicketsPurchased,
+                          eventName: item.event?.eventName,
+                        );
+                      },
+                    ),
+                  ),
+              ] else if (state is UserAllAttendedEventsSearchError) ...[
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Something went wrong",
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            state.message,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+              ] else ...[
+                const SliverFillRemaining(child: SizedBox.shrink()),
               ],
             ],
           );

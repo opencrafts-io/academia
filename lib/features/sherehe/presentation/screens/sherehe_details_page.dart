@@ -1,5 +1,4 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -47,83 +46,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
       return 500.0;
     }
   }
-
-  final List<Attendee> mockAttendees = [
-    Attendee(
-      id: "att_001",
-      userId: "user_001",
-      eventId: "event_123",
-      ticketId: "ticket_01",
-      ticketQuantity: 2,
-      user: const ShereheUser(
-        id: "user_001",
-        username: "eugene_w",
-        email: "eugene@example.com",
-        name: "Eugene Wachira",
-        phone: "+254712345678",
-      ),
-    ),
-
-    Attendee(
-      id: "att_002",
-      userId: "user_002",
-      eventId: "event_123",
-      ticketId: "ticket_02",
-      ticketQuantity: 1,
-      user: const ShereheUser(
-        id: "user_002",
-        username: "mary_j",
-        email: "mary@example.com",
-        name: "Mary Jane",
-        phone: "+254711223344",
-      ),
-    ),
-
-    Attendee(
-      id: "att_003",
-      userId: "user_003",
-      eventId: "event_123",
-      ticketId: "ticket_01",
-      ticketQuantity: 3,
-      user: const ShereheUser(
-        id: "user_003",
-        username: "kevin_m",
-        email: "kevin@example.com",
-        name: "Kevin Mutua",
-        phone: "+254701122233",
-      ),
-    ),
-
-    Attendee(
-      id: "att_004",
-      userId: "user_004",
-      eventId: "event_123",
-      ticketId: "ticket_03",
-      ticketQuantity: 1,
-      user: const ShereheUser(
-        id: "user_004",
-        username: "sarah_k",
-        email: "sarah@example.com",
-        name: "Sarah Kimani",
-        phone: "+254719998877",
-      ),
-    ),
-
-    Attendee(
-      id: "att_005",
-      userId: "user_005",
-      eventId: "event_123",
-      ticketId: "ticket_02",
-      ticketQuantity: 2,
-      user: const ShereheUser(
-        id: "user_005",
-        username: "brian_o",
-        email: "brian@example.com",
-        name: "Brian Otieno",
-        phone: "+254700111222",
-      ),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -440,7 +362,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     eventId: state.event.id,
                     organizerId: state.event.organizerId,
                     userId: userId,
-                    attendees: mockAttendees,
                   ),
                 ),
               ],

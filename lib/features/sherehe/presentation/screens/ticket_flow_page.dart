@@ -86,21 +86,10 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
-          } else if (state is UserTicketSoldOut) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
           } else if (state is UserTicketLoaded ||
-              state is UserTicketPurchaseInProgress ||
-              state is UserTicketSoldOut) {
+              state is UserTicketPurchaseInProgress) {
             ticketTypes = state is UserTicketLoaded
                 ? state.tickets
-                : state is UserTicketSoldOut
-                ? state.existingTickets
                 : (state as UserTicketPurchaseInProgress).existingTickets;
             isFreeEvent =
                 ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
@@ -113,8 +102,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           } else if (state is UserTicketError) {
             return Center(child: Text(state.message));
           } else if (state is UserTicketLoaded ||
-              state is UserTicketPurchaseInProgress ||
-              state is UserTicketSoldOut) {
+              state is UserTicketPurchaseInProgress) {
             return CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(

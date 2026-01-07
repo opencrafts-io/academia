@@ -24,7 +24,7 @@ class EventCardWrapper extends StatelessWidget {
 
           if (state is AttendeeLoaded) {
             attendeeUserNames = state.attendees
-                .map((a) => a.user!.username)
+                .map((a) => a.user?.username ?? 'Guest')
                 .toList();
             isLoading = false;
           } else if (state is AttendeeError) {

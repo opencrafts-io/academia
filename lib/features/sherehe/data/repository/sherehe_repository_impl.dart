@@ -148,11 +148,14 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedResult<Attendee>>> getUserPurchasedTickets({
+  Future<Either<Failure, PaginatedResult<Attendee>>>
+  getUserPurchasedTicketsForEvent({
+    required String eventId,
     required int page,
     required int limit,
   }) async {
-    final result = await remoteDataSource.getUserPurchasedTickets(
+    final result = await remoteDataSource.getUserPurchasedTicketsForEvent(
+      eventId: eventId,
       page: page,
       limit: limit,
     );
@@ -166,6 +169,39 @@ class ShereheRepositoryImpl implements ShereheRepository {
           currentPage: paginatedData.currentPage,
         ),
       ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Attendee>>>
+  getAllUserPurchasedTickets({required int page, required int limit}) async {
+    final result = await remoteDataSource.getAllUserPurchasedTickets(
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<Attendee>>> searchUserAttendedEvents({
+    required String query,
+  }) async {
+    final result = await remoteDataSource.searchUserAttendedEvents(
+      query: query,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (attendees) => right(attendees.map((e) => e.toEntity()).toList()),
     );
   }
 }

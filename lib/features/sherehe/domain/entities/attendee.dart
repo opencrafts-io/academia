@@ -10,6 +10,7 @@ class Attendee extends Equatable {
   final int ticketQuantity;
   final ShereheUser? user;
   final Ticket? ticket;
+  final Event? event;
 
   const Attendee({
     required this.id,
@@ -19,6 +20,7 @@ class Attendee extends Equatable {
     required this.ticketQuantity,
     this.user,
     this.ticket,
+    this.event,
   });
 
   Attendee copyWith({
@@ -29,6 +31,7 @@ class Attendee extends Equatable {
     int? ticketQuantity,
     ShereheUser? user,
     Ticket? ticket,
+    Event? event,
   }) {
     return Attendee(
       id: id ?? this.id,
@@ -38,6 +41,7 @@ class Attendee extends Equatable {
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
       user: user ?? this.user,
       ticket: ticket ?? this.ticket,
+      event: event ?? this.event,
     );
   }
 
@@ -50,6 +54,7 @@ class Attendee extends Equatable {
     ticketQuantity,
     user,
     ticket,
+    event,
   ];
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:academia/features/sherehe/domain/entities/ticket.dart';
 import 'package:flutter/material.dart';
 
@@ -23,12 +25,9 @@ class UserTicketSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final int maxAllowedQuantity = selectedTicket == null
         ? 0
-        : selectedTicket!.ticketQuantity < 3
-        ? selectedTicket!.ticketQuantity
-        : 3;
+        : min(selectedTicket!.ticketQuantity ?? 0, 3);
 
     // Sort for normal paid event UI
     final sortedTickets = [...ticketTypes]
@@ -138,7 +137,7 @@ class UserTicketSelectionPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        quantity == 3 && selectedTicket!.ticketQuantity > 3
+                        quantity == 3 && (selectedTicket!.ticketQuantity ?? 0) > 3
                             ? "Maximum of 3 tickets per order"
                             : "Only ${selectedTicket!.ticketQuantity} tickets remaining",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(

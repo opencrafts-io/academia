@@ -14,7 +14,7 @@ class TicketTable extends Table {
   IntColumn get ticketPrice => integer()();
 
   @JsonKey('ticket_quantity')
-  IntColumn get ticketQuantity => integer()();
+  IntColumn get ticketQuantity => integer().nullable()();
 
   @JsonKey('delete_tag')
   BoolColumn get deleteTag => boolean().nullable()();

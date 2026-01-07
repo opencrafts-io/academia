@@ -8,13 +8,11 @@ class AttendeesList extends StatefulWidget {
   final String eventId;
   final String organizerId;
   final String? userId;
-  final List<Attendee> attendees; // temporary for demonstration purposes
 
   const AttendeesList({
     super.key,
     required this.eventId,
     required this.organizerId,
-    required this.attendees,
     this.userId,
   });
 
@@ -63,7 +61,7 @@ class _AttendeesListState extends State<AttendeesList> {
             ),
           );
         } else if (state is AttendeeLoaded) {
-          if (widget.attendees.isEmpty) {
+          if (state.attendees.isEmpty) {
             return SliverToBoxAdapter(
               child: Center(
                 child: Padding(
@@ -81,7 +79,7 @@ class _AttendeesListState extends State<AttendeesList> {
           } else {
             return SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                final attendee = widget.attendees[index];
+                final attendee = state.attendees[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
@@ -92,7 +90,7 @@ class _AttendeesListState extends State<AttendeesList> {
                     isHost: _isAttendeeHost(attendee),
                   ),
                 );
-              }, childCount: widget.attendees.length),
+              }, childCount: state.attendees.length),
             );
           }
         }

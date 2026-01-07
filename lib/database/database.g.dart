@@ -4982,6 +4982,15 @@ class $AttendeeTableTable extends AttendeeTable
     requiredDuringInsert: false,
   ).withConverter<Map<String, dynamic>?>($AttendeeTableTable.$converterticketn);
   @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  event = GeneratedColumn<String>(
+    'event',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Map<String, dynamic>?>($AttendeeTableTable.$convertereventn);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
@@ -4990,6 +4999,7 @@ class $AttendeeTableTable extends AttendeeTable
     ticketQuantity,
     user,
     ticket,
+    event,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5084,6 +5094,12 @@ class $AttendeeTableTable extends AttendeeTable
           data['${effectivePrefix}ticket'],
         ),
       ),
+      event: $AttendeeTableTable.$convertereventn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}event'],
+        ),
+      ),
     );
   }
 
@@ -5100,6 +5116,10 @@ class $AttendeeTableTable extends AttendeeTable
       JsonConverter();
   static TypeConverter<Map<String, dynamic>?, String?> $converterticketn =
       NullAwareTypeConverter.wrap($converterticket);
+  static TypeConverter<Map<String, dynamic>, String> $converterevent =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $convertereventn =
+      NullAwareTypeConverter.wrap($converterevent);
 }
 
 class AttendeeData extends DataClass implements Insertable<AttendeeData> {
@@ -5110,6 +5130,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final int ticketQuantity;
   final Map<String, dynamic>? user;
   final Map<String, dynamic>? ticket;
+  final Map<String, dynamic>? event;
   const AttendeeData({
     required this.id,
     required this.userId,
@@ -5118,6 +5139,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     required this.ticketQuantity,
     this.user,
     this.ticket,
+    this.event,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5137,6 +5159,11 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
         $AttendeeTableTable.$converterticketn.toSql(ticket),
       );
     }
+    if (!nullToAbsent || event != null) {
+      map['event'] = Variable<String>(
+        $AttendeeTableTable.$convertereventn.toSql(event),
+      );
+    }
     return map;
   }
 
@@ -5151,6 +5178,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       ticket: ticket == null && nullToAbsent
           ? const Value.absent()
           : Value(ticket),
+      event: event == null && nullToAbsent
+          ? const Value.absent()
+          : Value(event),
     );
   }
 
@@ -5167,6 +5197,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       ticketQuantity: serializer.fromJson<int>(json['ticket_quantity']),
       user: serializer.fromJson<Map<String, dynamic>?>(json['user']),
       ticket: serializer.fromJson<Map<String, dynamic>?>(json['ticket']),
+      event: serializer.fromJson<Map<String, dynamic>?>(json['event']),
     );
   }
   @override
@@ -5180,6 +5211,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'ticket_quantity': serializer.toJson<int>(ticketQuantity),
       'user': serializer.toJson<Map<String, dynamic>?>(user),
       'ticket': serializer.toJson<Map<String, dynamic>?>(ticket),
+      'event': serializer.toJson<Map<String, dynamic>?>(event),
     };
   }
 
@@ -5191,6 +5223,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     int? ticketQuantity,
     Value<Map<String, dynamic>?> user = const Value.absent(),
     Value<Map<String, dynamic>?> ticket = const Value.absent(),
+    Value<Map<String, dynamic>?> event = const Value.absent(),
   }) => AttendeeData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -5199,6 +5232,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     ticketQuantity: ticketQuantity ?? this.ticketQuantity,
     user: user.present ? user.value : this.user,
     ticket: ticket.present ? ticket.value : this.ticket,
+    event: event.present ? event.value : this.event,
   );
   AttendeeData copyWithCompanion(AttendeeTableCompanion data) {
     return AttendeeData(
@@ -5211,6 +5245,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           : this.ticketQuantity,
       user: data.user.present ? data.user.value : this.user,
       ticket: data.ticket.present ? data.ticket.value : this.ticket,
+      event: data.event.present ? data.event.value : this.event,
     );
   }
 
@@ -5223,14 +5258,23 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('ticketId: $ticketId, ')
           ..write('ticketQuantity: $ticketQuantity, ')
           ..write('user: $user, ')
-          ..write('ticket: $ticket')
+          ..write('ticket: $ticket, ')
+          ..write('event: $event')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, eventId, ticketId, ticketQuantity, user, ticket);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    eventId,
+    ticketId,
+    ticketQuantity,
+    user,
+    ticket,
+    event,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5241,7 +5285,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.ticketId == this.ticketId &&
           other.ticketQuantity == this.ticketQuantity &&
           other.user == this.user &&
-          other.ticket == this.ticket);
+          other.ticket == this.ticket &&
+          other.event == this.event);
 }
 
 class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
@@ -5252,6 +5297,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
   final Value<int> ticketQuantity;
   final Value<Map<String, dynamic>?> user;
   final Value<Map<String, dynamic>?> ticket;
+  final Value<Map<String, dynamic>?> event;
   final Value<int> rowid;
   const AttendeeTableCompanion({
     this.id = const Value.absent(),
@@ -5261,6 +5307,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     this.ticketQuantity = const Value.absent(),
     this.user = const Value.absent(),
     this.ticket = const Value.absent(),
+    this.event = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeTableCompanion.insert({
@@ -5271,6 +5318,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     required int ticketQuantity,
     this.user = const Value.absent(),
     this.ticket = const Value.absent(),
+    this.event = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -5285,6 +5333,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Expression<int>? ticketQuantity,
     Expression<String>? user,
     Expression<String>? ticket,
+    Expression<String>? event,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5295,6 +5344,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       if (ticketQuantity != null) 'ticket_quantity': ticketQuantity,
       if (user != null) 'user': user,
       if (ticket != null) 'ticket': ticket,
+      if (event != null) 'event': event,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5307,6 +5357,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
     Value<int>? ticketQuantity,
     Value<Map<String, dynamic>?>? user,
     Value<Map<String, dynamic>?>? ticket,
+    Value<Map<String, dynamic>?>? event,
     Value<int>? rowid,
   }) {
     return AttendeeTableCompanion(
@@ -5317,6 +5368,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
       user: user ?? this.user,
       ticket: ticket ?? this.ticket,
+      event: event ?? this.event,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5349,6 +5401,11 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
         $AttendeeTableTable.$converterticketn.toSql(ticket.value),
       );
     }
+    if (event.present) {
+      map['event'] = Variable<String>(
+        $AttendeeTableTable.$convertereventn.toSql(event.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5365,6 +5422,7 @@ class AttendeeTableCompanion extends UpdateCompanion<AttendeeData> {
           ..write('ticketQuantity: $ticketQuantity, ')
           ..write('user: $user, ')
           ..write('ticket: $ticket, ')
+          ..write('event: $event, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5426,9 +5484,9 @@ class $TicketTableTable extends TicketTable
   late final GeneratedColumn<int> ticketQuantity = GeneratedColumn<int>(
     'ticket_quantity',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _deleteTagMeta = const VerificationMeta(
     'deleteTag',
@@ -5525,8 +5583,6 @@ class $TicketTableTable extends TicketTable
           _ticketQuantityMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_ticketQuantityMeta);
     }
     if (data.containsKey('delete_tag')) {
       context.handle(
@@ -5574,7 +5630,7 @@ class $TicketTableTable extends TicketTable
       ticketQuantity: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ticket_quantity'],
-      )!,
+      ),
       deleteTag: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}delete_tag'],
@@ -5601,7 +5657,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
   final String? eventId;
   final String ticketName;
   final int ticketPrice;
-  final int ticketQuantity;
+  final int? ticketQuantity;
   final bool? deleteTag;
   final String? createdAt;
   final String? updatedAt;
@@ -5610,7 +5666,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     this.eventId,
     required this.ticketName,
     required this.ticketPrice,
-    required this.ticketQuantity,
+    this.ticketQuantity,
     this.deleteTag,
     this.createdAt,
     this.updatedAt,
@@ -5626,7 +5682,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     }
     map['ticket_name'] = Variable<String>(ticketName);
     map['ticket_price'] = Variable<int>(ticketPrice);
-    map['ticket_quantity'] = Variable<int>(ticketQuantity);
+    if (!nullToAbsent || ticketQuantity != null) {
+      map['ticket_quantity'] = Variable<int>(ticketQuantity);
+    }
     if (!nullToAbsent || deleteTag != null) {
       map['delete_tag'] = Variable<bool>(deleteTag);
     }
@@ -5647,7 +5705,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           : Value(eventId),
       ticketName: Value(ticketName),
       ticketPrice: Value(ticketPrice),
-      ticketQuantity: Value(ticketQuantity),
+      ticketQuantity: ticketQuantity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ticketQuantity),
       deleteTag: deleteTag == null && nullToAbsent
           ? const Value.absent()
           : Value(deleteTag),
@@ -5670,7 +5730,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       eventId: serializer.fromJson<String?>(json['event_id']),
       ticketName: serializer.fromJson<String>(json['ticket_name']),
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
-      ticketQuantity: serializer.fromJson<int>(json['ticket_quantity']),
+      ticketQuantity: serializer.fromJson<int?>(json['ticket_quantity']),
       deleteTag: serializer.fromJson<bool?>(json['delete_tag']),
       createdAt: serializer.fromJson<String?>(json['created_at']),
       updatedAt: serializer.fromJson<String?>(json['updatedAt']),
@@ -5684,7 +5744,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       'event_id': serializer.toJson<String?>(eventId),
       'ticket_name': serializer.toJson<String>(ticketName),
       'ticket_price': serializer.toJson<int>(ticketPrice),
-      'ticket_quantity': serializer.toJson<int>(ticketQuantity),
+      'ticket_quantity': serializer.toJson<int?>(ticketQuantity),
       'delete_tag': serializer.toJson<bool?>(deleteTag),
       'created_at': serializer.toJson<String?>(createdAt),
       'updatedAt': serializer.toJson<String?>(updatedAt),
@@ -5696,7 +5756,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     Value<String?> eventId = const Value.absent(),
     String? ticketName,
     int? ticketPrice,
-    int? ticketQuantity,
+    Value<int?> ticketQuantity = const Value.absent(),
     Value<bool?> deleteTag = const Value.absent(),
     Value<String?> createdAt = const Value.absent(),
     Value<String?> updatedAt = const Value.absent(),
@@ -5705,7 +5765,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     eventId: eventId.present ? eventId.value : this.eventId,
     ticketName: ticketName ?? this.ticketName,
     ticketPrice: ticketPrice ?? this.ticketPrice,
-    ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+    ticketQuantity: ticketQuantity.present
+        ? ticketQuantity.value
+        : this.ticketQuantity,
     deleteTag: deleteTag.present ? deleteTag.value : this.deleteTag,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -5774,7 +5836,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   final Value<String?> eventId;
   final Value<String> ticketName;
   final Value<int> ticketPrice;
-  final Value<int> ticketQuantity;
+  final Value<int?> ticketQuantity;
   final Value<bool?> deleteTag;
   final Value<String?> createdAt;
   final Value<String?> updatedAt;
@@ -5795,14 +5857,13 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     this.eventId = const Value.absent(),
     required String ticketName,
     required int ticketPrice,
-    required int ticketQuantity,
+    this.ticketQuantity = const Value.absent(),
     this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : ticketName = Value(ticketName),
-       ticketPrice = Value(ticketPrice),
-       ticketQuantity = Value(ticketQuantity);
+       ticketPrice = Value(ticketPrice);
   static Insertable<TicketData> custom({
     Expression<String>? id,
     Expression<String>? eventId,
@@ -5832,7 +5893,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Value<String?>? eventId,
     Value<String>? ticketName,
     Value<int>? ticketPrice,
-    Value<int>? ticketQuantity,
+    Value<int?>? ticketQuantity,
     Value<bool?>? deleteTag,
     Value<String?>? createdAt,
     Value<String?>? updatedAt,
@@ -5923,9 +5984,9 @@ class $ShereheUserTableTable extends ShereheUserTable
   late final GeneratedColumn<String> username = GeneratedColumn<String>(
     'username',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
@@ -5950,9 +6011,9 @@ class $ShereheUserTableTable extends ShereheUserTable
   late final GeneratedColumn<String> phone = GeneratedColumn<String>(
     'phone',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [id, username, email, name, phone];
@@ -5978,8 +6039,6 @@ class $ShereheUserTableTable extends ShereheUserTable
         _usernameMeta,
         username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_usernameMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -6002,8 +6061,6 @@ class $ShereheUserTableTable extends ShereheUserTable
         _phoneMeta,
         phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
       );
-    } else if (isInserting) {
-      context.missing(_phoneMeta);
     }
     return context;
   }
@@ -6021,7 +6078,7 @@ class $ShereheUserTableTable extends ShereheUserTable
       username: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}username'],
-      )!,
+      ),
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -6033,7 +6090,7 @@ class $ShereheUserTableTable extends ShereheUserTable
       phone: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}phone'],
-      )!,
+      ),
     );
   }
 
@@ -6045,35 +6102,43 @@ class $ShereheUserTableTable extends ShereheUserTable
 
 class ShereheUserData extends DataClass implements Insertable<ShereheUserData> {
   final String id;
-  final String username;
+  final String? username;
   final String email;
   final String name;
-  final String phone;
+  final String? phone;
   const ShereheUserData({
     required this.id,
-    required this.username,
+    this.username,
     required this.email,
     required this.name,
-    required this.phone,
+    this.phone,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['username'] = Variable<String>(username);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String>(username);
+    }
     map['email'] = Variable<String>(email);
     map['name'] = Variable<String>(name);
-    map['phone'] = Variable<String>(phone);
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
     return map;
   }
 
   ShereheUserTableCompanion toCompanion(bool nullToAbsent) {
     return ShereheUserTableCompanion(
       id: Value(id),
-      username: Value(username),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
       email: Value(email),
       name: Value(name),
-      phone: Value(phone),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
     );
   }
 
@@ -6084,10 +6149,10 @@ class ShereheUserData extends DataClass implements Insertable<ShereheUserData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ShereheUserData(
       id: serializer.fromJson<String>(json['id']),
-      username: serializer.fromJson<String>(json['username']),
+      username: serializer.fromJson<String?>(json['username']),
       email: serializer.fromJson<String>(json['email']),
       name: serializer.fromJson<String>(json['name']),
-      phone: serializer.fromJson<String>(json['phone']),
+      phone: serializer.fromJson<String?>(json['phone']),
     );
   }
   @override
@@ -6095,25 +6160,25 @@ class ShereheUserData extends DataClass implements Insertable<ShereheUserData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'username': serializer.toJson<String>(username),
+      'username': serializer.toJson<String?>(username),
       'email': serializer.toJson<String>(email),
       'name': serializer.toJson<String>(name),
-      'phone': serializer.toJson<String>(phone),
+      'phone': serializer.toJson<String?>(phone),
     };
   }
 
   ShereheUserData copyWith({
     String? id,
-    String? username,
+    Value<String?> username = const Value.absent(),
     String? email,
     String? name,
-    String? phone,
+    Value<String?> phone = const Value.absent(),
   }) => ShereheUserData(
     id: id ?? this.id,
-    username: username ?? this.username,
+    username: username.present ? username.value : this.username,
     email: email ?? this.email,
     name: name ?? this.name,
-    phone: phone ?? this.phone,
+    phone: phone.present ? phone.value : this.phone,
   );
   ShereheUserData copyWithCompanion(ShereheUserTableCompanion data) {
     return ShereheUserData(
@@ -6152,10 +6217,10 @@ class ShereheUserData extends DataClass implements Insertable<ShereheUserData> {
 
 class ShereheUserTableCompanion extends UpdateCompanion<ShereheUserData> {
   final Value<String> id;
-  final Value<String> username;
+  final Value<String?> username;
   final Value<String> email;
   final Value<String> name;
-  final Value<String> phone;
+  final Value<String?> phone;
   final Value<int> rowid;
   const ShereheUserTableCompanion({
     this.id = const Value.absent(),
@@ -6167,16 +6232,14 @@ class ShereheUserTableCompanion extends UpdateCompanion<ShereheUserData> {
   });
   ShereheUserTableCompanion.insert({
     required String id,
-    required String username,
+    this.username = const Value.absent(),
     required String email,
     required String name,
-    required String phone,
+    this.phone = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       username = Value(username),
        email = Value(email),
-       name = Value(name),
-       phone = Value(phone);
+       name = Value(name);
   static Insertable<ShereheUserData> custom({
     Expression<String>? id,
     Expression<String>? username,
@@ -6197,10 +6260,10 @@ class ShereheUserTableCompanion extends UpdateCompanion<ShereheUserData> {
 
   ShereheUserTableCompanion copyWith({
     Value<String>? id,
-    Value<String>? username,
+    Value<String?>? username,
     Value<String>? email,
     Value<String>? name,
-    Value<String>? phone,
+    Value<String?>? phone,
     Value<int>? rowid,
   }) {
     return ShereheUserTableCompanion(
@@ -20811,6 +20874,7 @@ typedef $$AttendeeTableTableCreateCompanionBuilder =
       required int ticketQuantity,
       Value<Map<String, dynamic>?> user,
       Value<Map<String, dynamic>?> ticket,
+      Value<Map<String, dynamic>?> event,
       Value<int> rowid,
     });
 typedef $$AttendeeTableTableUpdateCompanionBuilder =
@@ -20822,6 +20886,7 @@ typedef $$AttendeeTableTableUpdateCompanionBuilder =
       Value<int> ticketQuantity,
       Value<Map<String, dynamic>?> user,
       Value<Map<String, dynamic>?> ticket,
+      Value<Map<String, dynamic>?> event,
       Value<int> rowid,
     });
 
@@ -20878,6 +20943,16 @@ class $$AttendeeTableTableFilterComposer
     column: $table.ticket,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get event => $composableBuilder(
+    column: $table.event,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
 }
 
 class $$AttendeeTableTableOrderingComposer
@@ -20923,6 +20998,11 @@ class $$AttendeeTableTableOrderingComposer
     column: $table.ticket,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get event => $composableBuilder(
+    column: $table.event,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AttendeeTableTableAnnotationComposer
@@ -20956,6 +21036,9 @@ class $$AttendeeTableTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get ticket =>
       $composableBuilder(column: $table.ticket, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get event =>
+      $composableBuilder(column: $table.event, builder: (column) => column);
 }
 
 class $$AttendeeTableTableTableManager
@@ -20996,6 +21079,7 @@ class $$AttendeeTableTableTableManager
                 Value<int> ticketQuantity = const Value.absent(),
                 Value<Map<String, dynamic>?> user = const Value.absent(),
                 Value<Map<String, dynamic>?> ticket = const Value.absent(),
+                Value<Map<String, dynamic>?> event = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion(
                 id: id,
@@ -21005,6 +21089,7 @@ class $$AttendeeTableTableTableManager
                 ticketQuantity: ticketQuantity,
                 user: user,
                 ticket: ticket,
+                event: event,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -21016,6 +21101,7 @@ class $$AttendeeTableTableTableManager
                 required int ticketQuantity,
                 Value<Map<String, dynamic>?> user = const Value.absent(),
                 Value<Map<String, dynamic>?> ticket = const Value.absent(),
+                Value<Map<String, dynamic>?> event = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendeeTableCompanion.insert(
                 id: id,
@@ -21025,6 +21111,7 @@ class $$AttendeeTableTableTableManager
                 ticketQuantity: ticketQuantity,
                 user: user,
                 ticket: ticket,
+                event: event,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -21058,7 +21145,7 @@ typedef $$TicketTableTableCreateCompanionBuilder =
       Value<String?> eventId,
       required String ticketName,
       required int ticketPrice,
-      required int ticketQuantity,
+      Value<int?> ticketQuantity,
       Value<bool?> deleteTag,
       Value<String?> createdAt,
       Value<String?> updatedAt,
@@ -21070,7 +21157,7 @@ typedef $$TicketTableTableUpdateCompanionBuilder =
       Value<String?> eventId,
       Value<String> ticketName,
       Value<int> ticketPrice,
-      Value<int> ticketQuantity,
+      Value<int?> ticketQuantity,
       Value<bool?> deleteTag,
       Value<String?> createdAt,
       Value<String?> updatedAt,
@@ -21252,7 +21339,7 @@ class $$TicketTableTableTableManager
                 Value<String?> eventId = const Value.absent(),
                 Value<String> ticketName = const Value.absent(),
                 Value<int> ticketPrice = const Value.absent(),
-                Value<int> ticketQuantity = const Value.absent(),
+                Value<int?> ticketQuantity = const Value.absent(),
                 Value<bool?> deleteTag = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
@@ -21274,7 +21361,7 @@ class $$TicketTableTableTableManager
                 Value<String?> eventId = const Value.absent(),
                 required String ticketName,
                 required int ticketPrice,
-                required int ticketQuantity,
+                Value<int?> ticketQuantity = const Value.absent(),
                 Value<bool?> deleteTag = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
@@ -21318,19 +21405,19 @@ typedef $$TicketTableTableProcessedTableManager =
 typedef $$ShereheUserTableTableCreateCompanionBuilder =
     ShereheUserTableCompanion Function({
       required String id,
-      required String username,
+      Value<String?> username,
       required String email,
       required String name,
-      required String phone,
+      Value<String?> phone,
       Value<int> rowid,
     });
 typedef $$ShereheUserTableTableUpdateCompanionBuilder =
     ShereheUserTableCompanion Function({
       Value<String> id,
-      Value<String> username,
+      Value<String?> username,
       Value<String> email,
       Value<String> name,
-      Value<String> phone,
+      Value<String?> phone,
       Value<int> rowid,
     });
 
@@ -21467,10 +21554,10 @@ class $$ShereheUserTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> username = const Value.absent(),
+                Value<String?> username = const Value.absent(),
                 Value<String> email = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> phone = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ShereheUserTableCompanion(
                 id: id,
@@ -21483,10 +21570,10 @@ class $$ShereheUserTableTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String username,
+                Value<String?> username = const Value.absent(),
                 required String email,
                 required String name,
-                required String phone,
+                Value<String?> phone = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ShereheUserTableCompanion.insert(
                 id: id,

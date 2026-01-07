@@ -7,9 +7,9 @@ part 'user_event_tickets_state.dart';
 
 class UserEventTicketsBloc
     extends Bloc<UserEventTicketsEvent, UserEventTicketsState> {
-  final GetUserPurchasedTicketsUseCase getUserTicketsForEvent;
+  final GetUserPurchasedTicketsForEventUseCase getUserPurchasedTicketsForEvent;
 
-  UserEventTicketsBloc({required this.getUserTicketsForEvent})
+  UserEventTicketsBloc({required this.getUserPurchasedTicketsForEvent})
     : super(UserEventTicketInitial()) {
     on<FetchUserEventTickets>(_onFetchUserEventTickets);
   }
@@ -43,14 +43,14 @@ class UserEventTicketsBloc
       );
     }
 
-    final result = await getUserTicketsForEvent(
+    final result = await getUserPurchasedTicketsForEvent(
+      eventId: event.eventId,
       page: event.page,
       limit: event.limit,
     );
 
     result.fold(
       (failure) {
-        // Pagination failed, keep previous posts visible
         if (currentState is UserEventTicketLoaded && event.page > 1) {
           emit(
             UserEventTicketPaginationError(
@@ -59,8 +59,8 @@ class UserEventTicketsBloc
               hasMore: currentState.hasMore,
             ),
           );
-        } else if (currentState is UserEventTicketPaginationError && event.page > 1) {
-          // Retry after pagination error failed again
+        } else if (currentState is UserEventTicketPaginationError &&
+            event.page > 1) {
           emit(
             UserEventTicketPaginationError(
               existingAttendee: currentState.existingAttendee,
@@ -69,12 +69,10 @@ class UserEventTicketsBloc
             ),
           );
         } else {
-          // First load failed
           emit(UserEventTicketError(failure.message));
         }
       },
       (paginatedData) {
-        // Append or replace posts depending on the page
         if (currentState is UserEventTicketLoaded && event.page > 1) {
           emit(
             UserEventTicketLoaded(

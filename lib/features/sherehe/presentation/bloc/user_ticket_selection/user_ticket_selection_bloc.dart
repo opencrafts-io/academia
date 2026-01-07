@@ -53,23 +53,13 @@ class UserTicketSelectionBloc
 
     result.fold(
       (failure) {
-        if (failure.message == "This ticket is sold out.") {
-          emit(
-            UserTicketSoldOut(
-              existingTickets: currentState.tickets,
-              message:
-                  "Sorry the tickets for this event is currently sold out.",
-            ),
-          );
-        } else {
-          emit(
-            UserTicketPurchaseFailed(
-              existingTickets: currentState.tickets,
-              message: failure.message,
-            ),
-          );
-        }
-        emit(UserTicketLoaded(tickets: currentState.tickets));
+        emit(
+          UserTicketPurchaseFailed(
+            existingTickets: currentState.tickets,
+            message: failure.message,
+          ),
+        );
+        // emit(UserTicketLoaded(tickets: currentState.tickets));
       },
       (attendee) {
         emit(UserTicketPurchased(attendee: attendee));

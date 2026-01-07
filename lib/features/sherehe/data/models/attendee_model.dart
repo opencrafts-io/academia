@@ -20,4 +20,6 @@ class AttendeeTable extends Table {
   TextColumn get user => text().map(JsonConverter()).nullable()();
 
   TextColumn get ticket => text().map(JsonConverter()).nullable()();
+
+  TextColumn get event => text().map(JsonConverter()).nullable()();
 }

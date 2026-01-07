@@ -10,7 +10,7 @@ class AttendeeCard extends StatelessWidget {
 
   String _getInitials(String? userName) {
     if (userName == null || userName.isEmpty) {
-      return "?";
+      return "G"; // For unknown users
     }
     String initials = userName[0].toUpperCase();
     return initials;
@@ -32,11 +32,7 @@ class AttendeeCard extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           child: Text(_getInitials(attendee.user?.username)),
         ),
-        title: Text(
-          attendee.user!.username.isNotEmpty
-              ? attendee.user!.username
-              : "Anonymous",
-        ),
+        title: Text(attendee.user?.username ?? "Guest"),
         subtitle: Text(status),
         trailing: isHost ? Icon(Symbols.server_person) : null,
       ),

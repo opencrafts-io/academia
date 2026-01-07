@@ -5,7 +5,7 @@ class Ticket extends Equatable {
   final String? eventId;
   final String ticketName;
   final int ticketPrice;
-  final int ticketQuantity;
+  final int? ticketQuantity;
   final bool? deleteTag;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -15,7 +15,7 @@ class Ticket extends Equatable {
     this.eventId,
     required this.ticketName,
     required this.ticketPrice,
-    required this.ticketQuantity,
+    this.ticketQuantity,
     this.deleteTag,
     this.createdAt,
     this.updatedAt,
@@ -45,15 +45,15 @@ class Ticket extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        eventId,
-        ticketName,
-        ticketPrice,
-        ticketQuantity,
-        deleteTag,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    eventId,
+    ticketName,
+    ticketPrice,
+    ticketQuantity,
+    deleteTag,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   bool? get stringify => true;

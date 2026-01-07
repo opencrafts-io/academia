@@ -100,13 +100,18 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
-  sl.registerLazySingleton(() => GetUserPurchasedTicketsUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllUserPurchasedTicketsUseCase(sl()));
+  sl.registerLazySingleton(() => SearchUserAttendedEventsUseCase(sl()));
+
+  sl.registerLazySingleton(() => GetUserPurchasedTicketsForEventUseCase(sl()));
 
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
 
-  sl.registerFactory(() => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()));
+  sl.registerFactory(
+    () => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()),
+  );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory(
@@ -115,7 +120,15 @@ Future<void> init(FlavorConfig flavor) async {
       purchaseTicket: sl(),
     ),
   );
-  sl.registerFactory(() => UserEventTicketsBloc(getUserTicketsForEvent: sl()));
+  sl.registerFactory(
+    () => AllUserEventTicketsBloc(
+      getUserTicketsForEvent: sl(),
+      searchUserAttendedEvents: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => UserEventTicketsBloc(getUserPurchasedTicketsForEvent: sl()),
+  );
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

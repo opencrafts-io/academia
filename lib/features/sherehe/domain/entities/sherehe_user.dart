@@ -2,17 +2,17 @@ import 'package:equatable/equatable.dart';
 
 class ShereheUser extends Equatable {
   final String id;
-  final String username;
+  final String? username;
   final String email;
   final String name;
-  final String phone;
+  final String? phone;
 
   const ShereheUser({
     required this.id,
-    required this.username,
+    this.username,
     required this.email,
     required this.name,
-    required this.phone,
+    this.phone,
   });
 
   ShereheUser copyWith({

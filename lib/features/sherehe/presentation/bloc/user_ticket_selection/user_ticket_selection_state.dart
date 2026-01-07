@@ -60,16 +60,3 @@ class UserTicketPurchaseFailed extends UserTicketSelectionState {
   List<Object?> get props => [existingTickets, message];
 }
 
-class UserTicketSoldOut extends UserTicketSelectionState {
-  final List<Ticket> existingTickets;
-  final String message;
-
-  const UserTicketSoldOut({
-    required this.existingTickets,
-    required this.message,
-  });
-
-  @override
-  List<Object?> get props => [existingTickets, message];
-}
-
