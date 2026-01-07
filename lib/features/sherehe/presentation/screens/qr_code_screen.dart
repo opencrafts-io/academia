@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -8,16 +10,14 @@ import 'package:share_plus/share_plus.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final String eventId;
-  // final String eventName;
-  // final String eventDate;
+  final Event event;
   final String ticketName;
   final int quantity;
 
   const QrCodeScreen({
     super.key,
     required this.eventId,
-    // required this.eventName,
-    // required this.eventDate,
+    required this.event,
     required this.ticketName,
     required this.quantity,
   });
@@ -135,7 +135,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         ),
                         pw.SizedBox(height: 12),
                         pw.Text(
-                          'Sample Event Name'.toUpperCase(),
+                          widget.event.eventName.toUpperCase(),
                           style: pw.TextStyle(
                             fontSize: 22,
                             fontWeight: pw.FontWeight.bold,
@@ -145,14 +145,18 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         pw.SizedBox(height: 20),
                         _PdfTicketInfo(
                           label1: 'DATE',
-                          value1: 'WED, 10 SEP 2025',
+                          value1: ShereheUtils.formatDate(
+                            widget.event.eventDate,
+                          ),
                           label2: 'TIME',
-                          value2: '03:00 AM',
+                          value2: ShereheUtils.formatTime(
+                            widget.event.eventDate,
+                          ),
                         ),
                         pw.SizedBox(height: 15),
                         _PdfTicketInfo(
                           label1: 'LOCATION',
-                          value1: 'NAIROBI, KENYA',
+                          value1: widget.event.eventLocation,
                           label2: 'TICKET QUANTITY',
                           value2: '${widget.quantity}',
                         ),
@@ -265,7 +269,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
-                          '18c7887-45b8679-568',
+                          widget.eventId.substring(0,18).toLowerCase(),
                           style: pw.TextStyle(
                             fontSize: 7,
                             color: PdfColors.grey600,
@@ -372,7 +376,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Sample Event Name'.toUpperCase(),
+                              widget.event.eventName.toUpperCase(),
                               style: Theme.of(context).textTheme.headlineSmall
                                   ?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -384,14 +388,18 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             const SizedBox(height: 24),
                             _TicketInfoWidget(
                               label1: 'DATE',
-                              value1: 'WED, 10 SEP 2025',
+                              value1: ShereheUtils.formatDate(
+                                widget.event.eventDate,
+                              ),
                               label2: 'TIME',
-                              value2: '03:00 AM',
+                              value2: ShereheUtils.formatTime(
+                                widget.event.eventDate,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             _TicketInfoWidget(
                               label1: 'LOCATION',
-                              value1: 'NAIROBI, KENYA',
+                              value1: widget.event.eventLocation,
                               label2: 'QUANTITY',
                               value2: '${widget.quantity}',
                             ),
@@ -499,7 +507,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '18c7887-45b8679-568',
+                              widget.eventId.substring(0,18).toLowerCase(),
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
                                     color: Theme.of(

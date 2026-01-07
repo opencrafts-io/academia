@@ -373,7 +373,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/event/$eventId",
+        "https://api.opencrafts.io/qa-sherehe/attendee/event/user/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 

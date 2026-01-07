@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/features/sherehe/domain/entities/ticket.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 enum TicketStubMode {
   purchasingTicket,
@@ -11,8 +12,7 @@ enum TicketStubMode {
 class TicketCardWidget extends StatelessWidget {
   final Ticket ticket;
   final int quantity;
-  final String? eventId;
-  final String? eventName;
+  final Event? event;
   final TicketStubMode mode;
 
   const TicketCardWidget({
@@ -20,8 +20,7 @@ class TicketCardWidget extends StatelessWidget {
     required this.ticket,
     required this.quantity,
     required this.mode,
-    this.eventId,
-    this.eventName,
+    this.event,
   });
 
   @override
@@ -51,9 +50,9 @@ class TicketCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (mode == TicketStubMode.allTicketsPurchased &&
-                          eventName != null)
+                          event != null)
                         Text(
-                          eventName!,
+                          event!.eventName,
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       Text(
@@ -96,12 +95,15 @@ class TicketCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton.icon(
-                    onPressed: () => QrCodeRoute(
-                      eventId: eventId!,
-                      ticketId: ticket.id!,
-                      ticketName: ticket.ticketName,
-                      quantity: quantity,
-                    ).push(context),
+                    onPressed: () => context.push(
+                      QrCodeRoute(
+                        eventId: event!.id,
+                        ticketId: ticket.id!,
+                        ticketName: ticket.ticketName,
+                        quantity: quantity,
+                      ).location,
+                      extra: event,
+                    ),
                     icon: const Icon(Icons.qr_code),
                     label: const Text("View QR"),
                   ),

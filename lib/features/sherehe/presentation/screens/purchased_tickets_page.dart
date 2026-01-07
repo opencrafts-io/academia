@@ -184,9 +184,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
-                          eventId: state.attendee[index].eventId,
                           mode: TicketStubMode.allTicketsPurchased,
-                          eventName: item.event?.eventName,
+                          event: item.event,
                         );
                       },
                     ),
@@ -216,9 +215,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        eventId: state.existingAttendee[index].eventId,
                         mode: TicketStubMode.allTicketsPurchased,
-                        eventName: item.event?.eventName,
+                        event: item.event,
                       );
                     },
                   ),
@@ -242,9 +240,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        eventId: state.existingAttendee[index].eventId,
                         mode: TicketStubMode.allTicketsPurchased,
-                        eventName: item.event?.eventName,
+                        event: item.event,
                       );
                     },
                   ),
@@ -318,9 +315,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
-                          eventId: item.eventId,
                           mode: TicketStubMode.allTicketsPurchased,
-                          eventName: item.event?.eventName,
+                          event: item.event,
                         );
                       },
                     ),

@@ -283,7 +283,9 @@ class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EventTicketsPage(eventId: eventId);
+    final event = state.extra as Event;
+
+    return EventTicketsPage(eventId: eventId, event: event);
   }
 }
 
@@ -332,10 +334,13 @@ class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final event = state.extra as Event;
+
     return QrCodeScreen(
       eventId: eventId,
       ticketName: ticketName,
       quantity: quantity,
+      event: event,
     );
   }
 }

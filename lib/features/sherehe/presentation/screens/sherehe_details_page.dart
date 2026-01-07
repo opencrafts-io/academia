@@ -107,9 +107,12 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             ).push(context);
                             break;
                           case 'tickets':
-                            EventTicketsRoute(
-                              eventId: state.event.id,
-                            ).push(context);
+                            context.push(
+                              EventTicketsRoute(
+                                eventId: state.event.id,
+                              ).location,
+                              extra: state.event,
+                            );
                             break;
                         }
                       },

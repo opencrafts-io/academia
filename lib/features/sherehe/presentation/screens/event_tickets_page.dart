@@ -1,12 +1,18 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EventTicketsPage extends StatefulWidget {
   final String eventId;
+  final Event event;
 
-  const EventTicketsPage({super.key, required this.eventId});
+  const EventTicketsPage({
+    super.key,
+    required this.eventId,
+    required this.event,
+  });
 
   @override
   State<EventTicketsPage> createState() => _EventTicketsPageState();
@@ -130,7 +136,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
-                          eventId: state.attendee[index].eventId,
+                          event: widget.event,
                           mode: TicketStubMode.eventTicketPurchased,
                         );
                       },
@@ -161,7 +167,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        eventId: state.existingAttendee[index].eventId,
+                        event: widget.event,
                         mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
@@ -186,7 +192,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        eventId: state.existingAttendee[index].eventId,
+                        event: widget.event,
                         mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
