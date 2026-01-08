@@ -24,7 +24,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final PageController _pageController = PageController();
   final ScrollController _stage3ScrollController = ScrollController();
   double _progress = 0.25;
-  final int _numberOfStages = 6;
 
   final _stage1FormKey = GlobalKey<FormState>();
   final _stage2FormKey = GlobalKey<FormState>();
@@ -47,6 +46,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   String? organizerId;
   String? organizerName;
   late ConfettiController _confettiController;
+  bool get _isFreeEvent {
+    return _tickets.length == 1 && _tickets.first.ticketPrice == 0;
+  }
 
   @override
   void initState() {
@@ -397,9 +399,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   // Update progress based on the current page index
   void _updateProgress(int pageIndex) {
     setState(() {
-      if (pageIndex <= 3) {
-        _progress = (pageIndex + 1) / 5;
-      }
+      _progress = (pageIndex + 1) / _steps.length;
     });
 
     if (pageIndex == 2 && _stage3ScrollController.hasClients) {
@@ -419,6 +419,118 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       duration: Duration(milliseconds: 300),
       curve: Curves.elasticOut,
     );
+  }
+
+  List<Widget Function()> get _steps {
+    return [
+      () => BasicEventDetailsPage(
+        formKey: _stage1FormKey,
+        nameController: _nameController,
+        dateTimeController: _dateTimeController,
+        locationController: _locationController,
+        onSelectDateAndTime: () => _selectDateAndTime(context),
+        onNext: () {
+          if (_stage1FormKey.currentState!.validate()) {
+            if (_selectedDateTime == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Please select a date and time"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _moveToNextPage();
+          }
+        },
+        context: context,
+      ),
+      () => EventDescriptionPage(
+        formKey: _stage2FormKey,
+        aboutController: _aboutController,
+        selectedGenres: _selectedGenres,
+        onShowGenreSelectionDialog: _showGenreSelectionDialog,
+        onGenreDeleted: (genre) {
+          _selectedGenres.remove(genre);
+        },
+        onPrevious: _moveToPreviousPage,
+        onNext: () {
+          if (_stage2FormKey.currentState!.validate()) {
+            if (_selectedGenres.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Please select at least one genre"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _moveToNextPage();
+          }
+        },
+        context: context,
+      ),
+      () => ImageUploadPage(
+        controller: _stage3ScrollController,
+        selectedCardImage: _selectedCardImage,
+        onPickCardImage: _pickCardImage,
+        selectedBannerImage: _selectedBannerImage,
+        onPickBannerImage: _pickBannerImage,
+        selectedPosterImage: _selectedPosterImage,
+        onPickPosterImage: _pickPosterImage,
+        onPrevious: _moveToPreviousPage,
+        onNext: () {
+          _moveToNextPage();
+        },
+        context: context,
+      ),
+      () => TicketSelectionPage(
+        initialTickets: _tickets,
+        onContinue: (tickets) {
+          setState(() {
+            _tickets = tickets;
+            _selectedPaymentType = null; // reset payment if tickets changed
+          });
+
+          _moveToNextPage();
+        },
+        onSkip: _moveToNextPage,
+        onPrevious: _moveToPreviousPage,
+      ),
+
+      if (!_isFreeEvent)
+        () => PaymentTypeSelectionPage(
+          formKey: _stage5FormKey,
+          paybillNumberController: _paybillNumberController,
+          accountReferenceController: _accountReferenceController,
+          tillNumberController: _tillNumberController,
+          sendMoneyPhoneController: _sendMoneyPhoneController,
+          selectedPaymentType: _selectedPaymentType,
+          onPaymentTypeChanged: (type) {
+            setState(() {
+              _selectedPaymentType = type;
+
+              _paybillNumberController.clear();
+              _accountReferenceController.clear();
+              _tillNumberController.clear();
+              _sendMoneyPhoneController.clear();
+            });
+          },
+          onPrevious: _moveToPreviousPage,
+          onNext: () {
+            if (_stage5FormKey.currentState!.validate()) {
+              _moveToNextPage();
+            }
+          },
+        ),
+
+      () => Stage4ReviewAndSubmit(
+        onSubmit: _submitForm,
+        onPrevious: _moveToPreviousPage,
+        userName: organizerName ?? "Unknown",
+        context: context,
+      ),
+    ];
   }
 
   @override
@@ -472,7 +584,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     SnackBar(
                       content: Text('Failed to create event: ${state.message}'),
                       behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.red,
+                      backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );
                 }
@@ -486,62 +598,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       controller: _pageController,
                       onPageChanged: _updateProgress,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 12.0,
-                        ),
-                        child: CreateEventPageBuilder(
-                          pageIndex: index,
-                          stage1FormKey: _stage1FormKey,
-                          stage2FormKey: _stage2FormKey,
-                          stage5FormKey: _stage5FormKey,
-                          nameController: _nameController,
-                          dateTimeController: _dateTimeController,
-                          locationController: _locationController,
-                          aboutController: _aboutController,
-                          paybillNumberController: _paybillNumberController,
-                          accountReferenceController:
-                              _accountReferenceController,
-                          tillNumberController: _tillNumberController,
-                          sendMoneyPhoneController: _sendMoneyPhoneController,
-                          selectedPaymentType: _selectedPaymentType,
-                          selectedGenres: _selectedGenres,
-                          onSelectDateAndTime: () =>
-                              _selectDateAndTime(context),
-                          moveToNextPage: _moveToNextPage,
-                          moveToPreviousPage: _moveToPreviousPage,
-                          showGenreSelectionDialog: _showGenreSelectionDialog,
-                          stage3ScrollController: _stage3ScrollController,
-                          selectedTickets: _tickets,
-                          onTicketsSelected: (tickets) {
-                            setState(() {
-                              _tickets = tickets;
-                            });
-                          },
-                          selectedCardImage: _selectedCardImage,
-                          selectedBannerImage: _selectedBannerImage,
-                          selectedPosterImage: _selectedPosterImage,
-                          pickCardImage: _pickCardImage,
-                          pickBannerImage: _pickBannerImage,
-                          pickPosterImage: _pickPosterImage,
-                          submitForm: _submitForm,
-                          selectedDateTime: _selectedDateTime,
-                          organizerName: organizerName,
-                          onPaymentTypeChanged: (value) {
-                            setState(() {
-                              _selectedPaymentType = value;
-
-                              _paybillNumberController.clear();
-                              _accountReferenceController.clear();
-                              _tillNumberController.clear();
-                              _sendMoneyPhoneController.clear();
-                            });
-                          },
-                          context: context,
-                        ),
-                      ),
-                      itemCount: _numberOfStages + 1,
+                      itemBuilder: (context, index) => _steps[index](),
                     ),
                   ),
                 ),
