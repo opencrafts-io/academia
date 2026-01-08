@@ -20,6 +20,7 @@ class EventTicketsPage extends StatefulWidget {
 
 class _EventTicketsPageState extends State<EventTicketsPage> {
   int _currentPage = 1;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -31,17 +32,30 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
         limit: 10,
       ),
     );
+    _scrollController.addListener(_onScroll);
   }
 
-  void _loadMore() {
-    _currentPage++;
-    context.read<UserEventTicketsBloc>().add(
-      FetchUserEventTickets(
-        eventId: widget.eventId,
-        page: _currentPage,
-        limit: 10,
-      ),
-    );
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<UserEventTicketsBloc>().state;
+      if (state is UserEventTicketLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<UserEventTicketsBloc>().add(
+          FetchUserEventTickets(
+            eventId: widget.eventId,
+            page: _currentPage,
+            limit: 10,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,6 +64,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
       body: BlocBuilder<UserEventTicketsBloc, UserEventTicketsState>(
         builder: (context, state) {
           return CustomScrollView(
+            controller: _scrollController,
             slivers: [
               SliverAppBar(
                 pinned: true,
@@ -143,19 +158,6 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       },
                     ),
                   ),
-
-                if (state.hasMore)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(
-                        child: FilledButton(
-                          onPressed: _loadMore,
-                          child: const Text("Load More"),
-                        ),
-                      ),
-                    ),
-                  ),
               ] else if (state is UserEventTicketPaginationLoading) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(16.0),
@@ -214,7 +216,14 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         ),
                         const SizedBox(height: 10),
                         FilledButton(
-                          onPressed: _loadMore,
+                          onPressed: () =>
+                              context.read<UserEventTicketsBloc>().add(
+                                FetchUserEventTickets(
+                                  eventId: widget.eventId,
+                                  page: _currentPage,
+                                  limit: 10,
+                                ),
+                              ),
                           child: const Text("Try Again"),
                         ),
                       ],
