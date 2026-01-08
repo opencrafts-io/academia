@@ -47,4 +47,7 @@ class EventTable extends Table {
 
   @JsonKey('deleted_at')
   TextColumn get deletedAt => text().nullable()();
+
+  @JsonKey('payment_info')
+  TextColumn get paymentInfo => text().map(JsonConverter()).nullable()();
 }

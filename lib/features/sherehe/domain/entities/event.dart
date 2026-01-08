@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
 class Event extends Equatable {
@@ -16,6 +17,7 @@ class Event extends Equatable {
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
+  final PaymentInfo? paymentInfo;
 
   const Event({
     required this.id,
@@ -33,6 +35,7 @@ class Event extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    this.paymentInfo,
   });
 
   Event copyWith({
@@ -51,6 +54,7 @@ class Event extends Equatable {
     String? createdAt,
     String? updatedAt,
     String? deletedAt,
+    PaymentInfo? paymentInfo,
   }) {
     return Event(
       id: id ?? this.id,
@@ -67,7 +71,8 @@ class Event extends Equatable {
       eventGenre: eventGenre ?? this.eventGenre,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      deletedAt: deletedAt ?? this.deletedAt
+      deletedAt: deletedAt ?? this.deletedAt,
+      paymentInfo: paymentInfo ?? this.paymentInfo,
     );
   }
 
@@ -87,6 +92,8 @@ class Event extends Equatable {
     eventGenre,
     createdAt,
     updatedAt,
+    deletedAt,
+    paymentInfo,
   ];
 
   @override

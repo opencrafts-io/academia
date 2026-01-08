@@ -2,6 +2,7 @@ export 'entities/event.dart';
 export 'entities/attendee.dart';
 export 'entities/paginated_events.dart';
 export 'entities/ticket.dart';
+export 'entities/payment_info.dart';
 export 'repository/sherehe_repository.dart';
 export 'usecases/get_all_events.dart';
 export 'usecases/get_all_attendees.dart';

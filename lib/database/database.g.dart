@@ -4170,6 +4170,18 @@ class $EventTableTable extends EventTable
     requiredDuringInsert: false,
   );
   @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  paymentInfo =
+      GeneratedColumn<String>(
+        'payment_info',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $EventTableTable.$converterpaymentInfon,
+      );
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     eventName,
@@ -4186,6 +4198,7 @@ class $EventTableTable extends EventTable
     createdAt,
     updatedAt,
     deletedAt,
+    paymentInfo,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4390,6 +4403,12 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}deleted_at'],
       ),
+      paymentInfo: $EventTableTable.$converterpaymentInfon.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}payment_info'],
+        ),
+      ),
     );
   }
 
@@ -4402,6 +4421,10 @@ class $EventTableTable extends EventTable
       JsonListConverter();
   static TypeConverter<List<dynamic>?, String?> $convertereventGenren =
       NullAwareTypeConverter.wrap($convertereventGenre);
+  static TypeConverter<Map<String, dynamic>, String> $converterpaymentInfo =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterpaymentInfon =
+      NullAwareTypeConverter.wrap($converterpaymentInfo);
 }
 
 class EventData extends DataClass implements Insertable<EventData> {
@@ -4420,6 +4443,7 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
+  final Map<String, dynamic>? paymentInfo;
   const EventData({
     required this.id,
     required this.eventName,
@@ -4436,6 +4460,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    this.paymentInfo,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4469,6 +4494,11 @@ class EventData extends DataClass implements Insertable<EventData> {
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<String>(deletedAt);
     }
+    if (!nullToAbsent || paymentInfo != null) {
+      map['payment_info'] = Variable<String>(
+        $EventTableTable.$converterpaymentInfon.toSql(paymentInfo),
+      );
+    }
     return map;
   }
 
@@ -4501,6 +4531,9 @@ class EventData extends DataClass implements Insertable<EventData> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      paymentInfo: paymentInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paymentInfo),
     );
   }
 
@@ -4529,6 +4562,9 @@ class EventData extends DataClass implements Insertable<EventData> {
       createdAt: serializer.fromJson<String>(json['created_at']),
       updatedAt: serializer.fromJson<String>(json['updated_at']),
       deletedAt: serializer.fromJson<String?>(json['deleted_at']),
+      paymentInfo: serializer.fromJson<Map<String, dynamic>?>(
+        json['payment_info'],
+      ),
     );
   }
   @override
@@ -4550,6 +4586,7 @@ class EventData extends DataClass implements Insertable<EventData> {
       'created_at': serializer.toJson<String>(createdAt),
       'updated_at': serializer.toJson<String>(updatedAt),
       'deleted_at': serializer.toJson<String?>(deletedAt),
+      'payment_info': serializer.toJson<Map<String, dynamic>?>(paymentInfo),
     };
   }
 
@@ -4569,6 +4606,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? createdAt,
     String? updatedAt,
     Value<String?> deletedAt = const Value.absent(),
+    Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
   }) => EventData(
     id: id ?? this.id,
     eventName: eventName ?? this.eventName,
@@ -4591,6 +4629,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    paymentInfo: paymentInfo.present ? paymentInfo.value : this.paymentInfo,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
     return EventData(
@@ -4625,6 +4664,9 @@ class EventData extends DataClass implements Insertable<EventData> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      paymentInfo: data.paymentInfo.present
+          ? data.paymentInfo.value
+          : this.paymentInfo,
     );
   }
 
@@ -4645,7 +4687,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('eventGenre: $eventGenre, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('deletedAt: $deletedAt')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('paymentInfo: $paymentInfo')
           ..write(')'))
         .toString();
   }
@@ -4667,6 +4710,7 @@ class EventData extends DataClass implements Insertable<EventData> {
     createdAt,
     updatedAt,
     deletedAt,
+    paymentInfo,
   );
   @override
   bool operator ==(Object other) =>
@@ -4686,7 +4730,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.eventGenre == this.eventGenre &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.deletedAt == this.deletedAt);
+          other.deletedAt == this.deletedAt &&
+          other.paymentInfo == this.paymentInfo);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventData> {
@@ -4705,6 +4750,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> createdAt;
   final Value<String> updatedAt;
   final Value<String?> deletedAt;
+  final Value<Map<String, dynamic>?> paymentInfo;
   final Value<int> rowid;
   const EventTableCompanion({
     this.id = const Value.absent(),
@@ -4722,6 +4768,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.paymentInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   EventTableCompanion.insert({
@@ -4740,6 +4787,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String createdAt,
     required String updatedAt,
     this.deletedAt = const Value.absent(),
+    this.paymentInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        eventName = Value(eventName),
@@ -4766,6 +4814,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
     Expression<String>? deletedAt,
+    Expression<String>? paymentInfo,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4784,6 +4833,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (paymentInfo != null) 'payment_info': paymentInfo,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4804,6 +4854,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? createdAt,
     Value<String>? updatedAt,
     Value<String?>? deletedAt,
+    Value<Map<String, dynamic>?>? paymentInfo,
     Value<int>? rowid,
   }) {
     return EventTableCompanion(
@@ -4822,6 +4873,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      paymentInfo: paymentInfo ?? this.paymentInfo,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4876,6 +4928,11 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<String>(deletedAt.value);
     }
+    if (paymentInfo.present) {
+      map['payment_info'] = Variable<String>(
+        $EventTableTable.$converterpaymentInfon.toSql(paymentInfo.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4900,6 +4957,7 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
+          ..write('paymentInfo: $paymentInfo, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5956,6 +6014,604 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PaymentInfoTableTable extends PaymentInfoTable
+    with TableInfo<$PaymentInfoTableTable, PaymentInfoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PaymentInfoTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentTypeMeta = const VerificationMeta(
+    'paymentType',
+  );
+  @override
+  late final GeneratedColumn<String> paymentType = GeneratedColumn<String>(
+    'payment_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paybillNumberMeta = const VerificationMeta(
+    'paybillNumber',
+  );
+  @override
+  late final GeneratedColumn<String> paybillNumber = GeneratedColumn<String>(
+    'paybill_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _paybillAccountNumberMeta =
+      const VerificationMeta('paybillAccountNumber');
+  @override
+  late final GeneratedColumn<String> paybillAccountNumber =
+      GeneratedColumn<String>(
+        'paybill_account_number',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _tillNumberMeta = const VerificationMeta(
+    'tillNumber',
+  );
+  @override
+  late final GeneratedColumn<String> tillNumber = GeneratedColumn<String>(
+    'till_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneNumberMeta = const VerificationMeta(
+    'phoneNumber',
+  );
+  @override
+  late final GeneratedColumn<String> phoneNumber = GeneratedColumn<String>(
+    'phone_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<String> deletedAt = GeneratedColumn<String>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    paymentType,
+    paybillNumber,
+    paybillAccountNumber,
+    tillNumber,
+    phoneNumber,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'payment_info_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PaymentInfoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('payment_type')) {
+      context.handle(
+        _paymentTypeMeta,
+        paymentType.isAcceptableOrUnknown(
+          data['payment_type']!,
+          _paymentTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentTypeMeta);
+    }
+    if (data.containsKey('paybill_number')) {
+      context.handle(
+        _paybillNumberMeta,
+        paybillNumber.isAcceptableOrUnknown(
+          data['paybill_number']!,
+          _paybillNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('paybill_account_number')) {
+      context.handle(
+        _paybillAccountNumberMeta,
+        paybillAccountNumber.isAcceptableOrUnknown(
+          data['paybill_account_number']!,
+          _paybillAccountNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('till_number')) {
+      context.handle(
+        _tillNumberMeta,
+        tillNumber.isAcceptableOrUnknown(data['till_number']!, _tillNumberMeta),
+      );
+    }
+    if (data.containsKey('phone_number')) {
+      context.handle(
+        _phoneNumberMeta,
+        phoneNumber.isAcceptableOrUnknown(
+          data['phone_number']!,
+          _phoneNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  PaymentInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PaymentInfoData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      paymentType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_type'],
+      )!,
+      paybillNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}paybill_number'],
+      ),
+      paybillAccountNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}paybill_account_number'],
+      ),
+      tillNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}till_number'],
+      ),
+      phoneNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone_number'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $PaymentInfoTableTable createAlias(String alias) {
+    return $PaymentInfoTableTable(attachedDatabase, alias);
+  }
+}
+
+class PaymentInfoData extends DataClass implements Insertable<PaymentInfoData> {
+  final String id;
+  final String paymentType;
+  final String? paybillNumber;
+  final String? paybillAccountNumber;
+  final String? tillNumber;
+  final String? phoneNumber;
+  final String createdAt;
+  final String updatedAt;
+  final String? deletedAt;
+  const PaymentInfoData({
+    required this.id,
+    required this.paymentType,
+    this.paybillNumber,
+    this.paybillAccountNumber,
+    this.tillNumber,
+    this.phoneNumber,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['payment_type'] = Variable<String>(paymentType);
+    if (!nullToAbsent || paybillNumber != null) {
+      map['paybill_number'] = Variable<String>(paybillNumber);
+    }
+    if (!nullToAbsent || paybillAccountNumber != null) {
+      map['paybill_account_number'] = Variable<String>(paybillAccountNumber);
+    }
+    if (!nullToAbsent || tillNumber != null) {
+      map['till_number'] = Variable<String>(tillNumber);
+    }
+    if (!nullToAbsent || phoneNumber != null) {
+      map['phone_number'] = Variable<String>(phoneNumber);
+    }
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<String>(deletedAt);
+    }
+    return map;
+  }
+
+  PaymentInfoTableCompanion toCompanion(bool nullToAbsent) {
+    return PaymentInfoTableCompanion(
+      id: Value(id),
+      paymentType: Value(paymentType),
+      paybillNumber: paybillNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paybillNumber),
+      paybillAccountNumber: paybillAccountNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paybillAccountNumber),
+      tillNumber: tillNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tillNumber),
+      phoneNumber: phoneNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phoneNumber),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory PaymentInfoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PaymentInfoData(
+      id: serializer.fromJson<String>(json['id']),
+      paymentType: serializer.fromJson<String>(json['payment_type']),
+      paybillNumber: serializer.fromJson<String?>(json['paybill_number']),
+      paybillAccountNumber: serializer.fromJson<String?>(
+        json['paybill_account_number'],
+      ),
+      tillNumber: serializer.fromJson<String?>(json['till_number']),
+      phoneNumber: serializer.fromJson<String?>(json['phone_number']),
+      createdAt: serializer.fromJson<String>(json['created_at']),
+      updatedAt: serializer.fromJson<String>(json['updated_at']),
+      deletedAt: serializer.fromJson<String?>(json['deleted_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'payment_type': serializer.toJson<String>(paymentType),
+      'paybill_number': serializer.toJson<String?>(paybillNumber),
+      'paybill_account_number': serializer.toJson<String?>(
+        paybillAccountNumber,
+      ),
+      'till_number': serializer.toJson<String?>(tillNumber),
+      'phone_number': serializer.toJson<String?>(phoneNumber),
+      'created_at': serializer.toJson<String>(createdAt),
+      'updated_at': serializer.toJson<String>(updatedAt),
+      'deleted_at': serializer.toJson<String?>(deletedAt),
+    };
+  }
+
+  PaymentInfoData copyWith({
+    String? id,
+    String? paymentType,
+    Value<String?> paybillNumber = const Value.absent(),
+    Value<String?> paybillAccountNumber = const Value.absent(),
+    Value<String?> tillNumber = const Value.absent(),
+    Value<String?> phoneNumber = const Value.absent(),
+    String? createdAt,
+    String? updatedAt,
+    Value<String?> deletedAt = const Value.absent(),
+  }) => PaymentInfoData(
+    id: id ?? this.id,
+    paymentType: paymentType ?? this.paymentType,
+    paybillNumber: paybillNumber.present
+        ? paybillNumber.value
+        : this.paybillNumber,
+    paybillAccountNumber: paybillAccountNumber.present
+        ? paybillAccountNumber.value
+        : this.paybillAccountNumber,
+    tillNumber: tillNumber.present ? tillNumber.value : this.tillNumber,
+    phoneNumber: phoneNumber.present ? phoneNumber.value : this.phoneNumber,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  PaymentInfoData copyWithCompanion(PaymentInfoTableCompanion data) {
+    return PaymentInfoData(
+      id: data.id.present ? data.id.value : this.id,
+      paymentType: data.paymentType.present
+          ? data.paymentType.value
+          : this.paymentType,
+      paybillNumber: data.paybillNumber.present
+          ? data.paybillNumber.value
+          : this.paybillNumber,
+      paybillAccountNumber: data.paybillAccountNumber.present
+          ? data.paybillAccountNumber.value
+          : this.paybillAccountNumber,
+      tillNumber: data.tillNumber.present
+          ? data.tillNumber.value
+          : this.tillNumber,
+      phoneNumber: data.phoneNumber.present
+          ? data.phoneNumber.value
+          : this.phoneNumber,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PaymentInfoData(')
+          ..write('id: $id, ')
+          ..write('paymentType: $paymentType, ')
+          ..write('paybillNumber: $paybillNumber, ')
+          ..write('paybillAccountNumber: $paybillAccountNumber, ')
+          ..write('tillNumber: $tillNumber, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    paymentType,
+    paybillNumber,
+    paybillAccountNumber,
+    tillNumber,
+    phoneNumber,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PaymentInfoData &&
+          other.id == this.id &&
+          other.paymentType == this.paymentType &&
+          other.paybillNumber == this.paybillNumber &&
+          other.paybillAccountNumber == this.paybillAccountNumber &&
+          other.tillNumber == this.tillNumber &&
+          other.phoneNumber == this.phoneNumber &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class PaymentInfoTableCompanion extends UpdateCompanion<PaymentInfoData> {
+  final Value<String> id;
+  final Value<String> paymentType;
+  final Value<String?> paybillNumber;
+  final Value<String?> paybillAccountNumber;
+  final Value<String?> tillNumber;
+  final Value<String?> phoneNumber;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
+  final Value<String?> deletedAt;
+  final Value<int> rowid;
+  const PaymentInfoTableCompanion({
+    this.id = const Value.absent(),
+    this.paymentType = const Value.absent(),
+    this.paybillNumber = const Value.absent(),
+    this.paybillAccountNumber = const Value.absent(),
+    this.tillNumber = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PaymentInfoTableCompanion.insert({
+    required String id,
+    required String paymentType,
+    this.paybillNumber = const Value.absent(),
+    this.paybillAccountNumber = const Value.absent(),
+    this.tillNumber = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
+    required String createdAt,
+    required String updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       paymentType = Value(paymentType),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<PaymentInfoData> custom({
+    Expression<String>? id,
+    Expression<String>? paymentType,
+    Expression<String>? paybillNumber,
+    Expression<String>? paybillAccountNumber,
+    Expression<String>? tillNumber,
+    Expression<String>? phoneNumber,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
+    Expression<String>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (paymentType != null) 'payment_type': paymentType,
+      if (paybillNumber != null) 'paybill_number': paybillNumber,
+      if (paybillAccountNumber != null)
+        'paybill_account_number': paybillAccountNumber,
+      if (tillNumber != null) 'till_number': tillNumber,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PaymentInfoTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? paymentType,
+    Value<String?>? paybillNumber,
+    Value<String?>? paybillAccountNumber,
+    Value<String?>? tillNumber,
+    Value<String?>? phoneNumber,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
+    Value<String?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return PaymentInfoTableCompanion(
+      id: id ?? this.id,
+      paymentType: paymentType ?? this.paymentType,
+      paybillNumber: paybillNumber ?? this.paybillNumber,
+      paybillAccountNumber: paybillAccountNumber ?? this.paybillAccountNumber,
+      tillNumber: tillNumber ?? this.tillNumber,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (paymentType.present) {
+      map['payment_type'] = Variable<String>(paymentType.value);
+    }
+    if (paybillNumber.present) {
+      map['paybill_number'] = Variable<String>(paybillNumber.value);
+    }
+    if (paybillAccountNumber.present) {
+      map['paybill_account_number'] = Variable<String>(
+        paybillAccountNumber.value,
+      );
+    }
+    if (tillNumber.present) {
+      map['till_number'] = Variable<String>(tillNumber.value);
+    }
+    if (phoneNumber.present) {
+      map['phone_number'] = Variable<String>(phoneNumber.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<String>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PaymentInfoTableCompanion(')
+          ..write('id: $id, ')
+          ..write('paymentType: $paymentType, ')
+          ..write('paybillNumber: $paybillNumber, ')
+          ..write('paybillAccountNumber: $paybillAccountNumber, ')
+          ..write('tillNumber: $tillNumber, ')
+          ..write('phoneNumber: $phoneNumber, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18477,6 +19133,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
+  late final $PaymentInfoTableTable paymentInfoTable = $PaymentInfoTableTable(
+    this,
+  );
   late final $ShereheUserTableTable shereheUserTable = $ShereheUserTableTable(
     this,
   );
@@ -18520,6 +19179,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     eventTable,
     attendeeTable,
     ticketTable,
+    paymentInfoTable,
     shereheUserTable,
     groupTable,
     agendaEvent,
@@ -20477,6 +21137,7 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String createdAt,
       required String updatedAt,
       Value<String?> deletedAt,
+      Value<Map<String, dynamic>?> paymentInfo,
       Value<int> rowid,
     });
 typedef $$EventTableTableUpdateCompanionBuilder =
@@ -20496,6 +21157,7 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> createdAt,
       Value<String> updatedAt,
       Value<String?> deletedAt,
+      Value<Map<String, dynamic>?> paymentInfo,
       Value<int> rowid,
     });
 
@@ -20583,6 +21245,16 @@ class $$EventTableTableFilterComposer
     column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get paymentInfo => $composableBuilder(
+    column: $table.paymentInfo,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
 }
 
 class $$EventTableTableOrderingComposer
@@ -20668,6 +21340,11 @@ class $$EventTableTableOrderingComposer
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get paymentInfo => $composableBuilder(
+    column: $table.paymentInfo,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$EventTableTableAnnotationComposer
@@ -20740,6 +21417,12 @@ class $$EventTableTableAnnotationComposer
 
   GeneratedColumn<String> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  get paymentInfo => $composableBuilder(
+    column: $table.paymentInfo,
+    builder: (column) => column,
+  );
 }
 
 class $$EventTableTableTableManager
@@ -20788,6 +21471,7 @@ class $$EventTableTableTableManager
                 Value<String> createdAt = const Value.absent(),
                 Value<String> updatedAt = const Value.absent(),
                 Value<String?> deletedAt = const Value.absent(),
+                Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
                 id: id,
@@ -20805,6 +21489,7 @@ class $$EventTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                paymentInfo: paymentInfo,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -20824,6 +21509,7 @@ class $$EventTableTableTableManager
                 required String createdAt,
                 required String updatedAt,
                 Value<String?> deletedAt = const Value.absent(),
+                Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
                 id: id,
@@ -20841,6 +21527,7 @@ class $$EventTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                paymentInfo: paymentInfo,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -21400,6 +22087,298 @@ typedef $$TicketTableTableProcessedTableManager =
         BaseReferences<_$AppDataBase, $TicketTableTable, TicketData>,
       ),
       TicketData,
+      PrefetchHooks Function()
+    >;
+typedef $$PaymentInfoTableTableCreateCompanionBuilder =
+    PaymentInfoTableCompanion Function({
+      required String id,
+      required String paymentType,
+      Value<String?> paybillNumber,
+      Value<String?> paybillAccountNumber,
+      Value<String?> tillNumber,
+      Value<String?> phoneNumber,
+      required String createdAt,
+      required String updatedAt,
+      Value<String?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$PaymentInfoTableTableUpdateCompanionBuilder =
+    PaymentInfoTableCompanion Function({
+      Value<String> id,
+      Value<String> paymentType,
+      Value<String?> paybillNumber,
+      Value<String?> paybillAccountNumber,
+      Value<String?> tillNumber,
+      Value<String?> phoneNumber,
+      Value<String> createdAt,
+      Value<String> updatedAt,
+      Value<String?> deletedAt,
+      Value<int> rowid,
+    });
+
+class $$PaymentInfoTableTableFilterComposer
+    extends Composer<_$AppDataBase, $PaymentInfoTableTable> {
+  $$PaymentInfoTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentType => $composableBuilder(
+    column: $table.paymentType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paybillNumber => $composableBuilder(
+    column: $table.paybillNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paybillAccountNumber => $composableBuilder(
+    column: $table.paybillAccountNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tillNumber => $composableBuilder(
+    column: $table.tillNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PaymentInfoTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $PaymentInfoTableTable> {
+  $$PaymentInfoTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentType => $composableBuilder(
+    column: $table.paymentType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paybillNumber => $composableBuilder(
+    column: $table.paybillNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paybillAccountNumber => $composableBuilder(
+    column: $table.paybillAccountNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tillNumber => $composableBuilder(
+    column: $table.tillNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PaymentInfoTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PaymentInfoTableTable> {
+  $$PaymentInfoTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentType => $composableBuilder(
+    column: $table.paymentType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paybillNumber => $composableBuilder(
+    column: $table.paybillNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paybillAccountNumber => $composableBuilder(
+    column: $table.paybillAccountNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tillNumber => $composableBuilder(
+    column: $table.tillNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$PaymentInfoTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $PaymentInfoTableTable,
+          PaymentInfoData,
+          $$PaymentInfoTableTableFilterComposer,
+          $$PaymentInfoTableTableOrderingComposer,
+          $$PaymentInfoTableTableAnnotationComposer,
+          $$PaymentInfoTableTableCreateCompanionBuilder,
+          $$PaymentInfoTableTableUpdateCompanionBuilder,
+          (
+            PaymentInfoData,
+            BaseReferences<
+              _$AppDataBase,
+              $PaymentInfoTableTable,
+              PaymentInfoData
+            >,
+          ),
+          PaymentInfoData,
+          PrefetchHooks Function()
+        > {
+  $$PaymentInfoTableTableTableManager(
+    _$AppDataBase db,
+    $PaymentInfoTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PaymentInfoTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PaymentInfoTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PaymentInfoTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> paymentType = const Value.absent(),
+                Value<String?> paybillNumber = const Value.absent(),
+                Value<String?> paybillAccountNumber = const Value.absent(),
+                Value<String?> tillNumber = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
+                Value<String?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PaymentInfoTableCompanion(
+                id: id,
+                paymentType: paymentType,
+                paybillNumber: paybillNumber,
+                paybillAccountNumber: paybillAccountNumber,
+                tillNumber: tillNumber,
+                phoneNumber: phoneNumber,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String paymentType,
+                Value<String?> paybillNumber = const Value.absent(),
+                Value<String?> paybillAccountNumber = const Value.absent(),
+                Value<String?> tillNumber = const Value.absent(),
+                Value<String?> phoneNumber = const Value.absent(),
+                required String createdAt,
+                required String updatedAt,
+                Value<String?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PaymentInfoTableCompanion.insert(
+                id: id,
+                paymentType: paymentType,
+                paybillNumber: paybillNumber,
+                paybillAccountNumber: paybillAccountNumber,
+                tillNumber: tillNumber,
+                phoneNumber: phoneNumber,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PaymentInfoTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $PaymentInfoTableTable,
+      PaymentInfoData,
+      $$PaymentInfoTableTableFilterComposer,
+      $$PaymentInfoTableTableOrderingComposer,
+      $$PaymentInfoTableTableAnnotationComposer,
+      $$PaymentInfoTableTableCreateCompanionBuilder,
+      $$PaymentInfoTableTableUpdateCompanionBuilder,
+      (
+        PaymentInfoData,
+        BaseReferences<_$AppDataBase, $PaymentInfoTableTable, PaymentInfoData>,
+      ),
+      PaymentInfoData,
       PrefetchHooks Function()
     >;
 typedef $$ShereheUserTableTableCreateCompanionBuilder =
@@ -27827,6 +28806,8 @@ class $AppDataBaseManager {
       $$AttendeeTableTableTableManager(_db, _db.attendeeTable);
   $$TicketTableTableTableManager get ticketTable =>
       $$TicketTableTableTableManager(_db, _db.ticketTable);
+  $$PaymentInfoTableTableTableManager get paymentInfoTable =>
+      $$PaymentInfoTableTableTableManager(_db, _db.paymentInfoTable);
   $$ShereheUserTableTableTableManager get shereheUserTable =>
       $$ShereheUserTableTableTableManager(_db, _db.shereheUserTable);
   $$GroupTableTableTableManager get groupTable =>

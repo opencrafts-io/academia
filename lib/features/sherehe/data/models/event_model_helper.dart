@@ -1,4 +1,5 @@
 import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/entities/event.dart';
 
 extension EventModelHelper on EventData {
@@ -17,6 +18,9 @@ extension EventModelHelper on EventData {
     createdAt: createdAt,
     updatedAt: updatedAt,
     deletedAt: deletedAt,
+    paymentInfo: paymentInfo != null
+        ? PaymentInfoData.fromJson(paymentInfo!).toEntity()
+        : null,
   );
 }
 
@@ -36,5 +40,6 @@ extension EventEntityHelper on Event {
     createdAt: createdAt,
     updatedAt: updatedAt,
     deletedAt: deletedAt,
+    paymentInfo: paymentInfo?.toModel().toJson(),
   );
 }
