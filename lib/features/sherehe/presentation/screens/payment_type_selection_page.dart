@@ -71,9 +71,9 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
               validator: (value) =>
                   value == null ? 'Please select a payment type' : null,
             ),
-      
+
             const SizedBox(height: 16),
-      
+
             if (widget.selectedPaymentType == PaymentTypes.paybill) ...[
               TextFormField(
                 controller: widget.paybillNumberController,
@@ -82,9 +82,18 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter paybill number'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter paybill number';
+                  }
+                  if (!RegExp(r'^\d+$').hasMatch(value)) {
+                    return 'Digits only';
+                  }
+                  if (value.length < 5 || value.length > 6) {
+                    return 'Paybill must be 5–6 digits';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -93,12 +102,21 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
                   labelText: 'Account Reference',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter account reference'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter account reference';
+                  }
+                  if (value.length < 3) {
+                    return 'Reference too short';
+                  }
+                  if (value.length > 20) {
+                    return 'Reference too long';
+                  }
+                  return null;
+                },
               ),
             ],
-      
+
             if (widget.selectedPaymentType == PaymentTypes.till) ...[
               TextFormField(
                 controller: widget.tillNumberController,
@@ -107,12 +125,21 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter till number'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter till number';
+                  }
+                  if (!RegExp(r'^\d+$').hasMatch(value)) {
+                    return 'Digits only';
+                  }
+                  if (value.length < 5 || value.length > 6) {
+                    return 'Till number must be 5–6 digits';
+                  }
+                  return null;
+                },
               ),
             ],
-      
+
             if (widget.selectedPaymentType == PaymentTypes.sendMoney) ...[
               TextFormField(
                 controller: widget.sendMoneyPhoneController,
@@ -122,14 +149,23 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.phone,
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter phone number'
-                    : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter phone number';
+                  }
+                  if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                    return 'Phone number must be exactly 10 digits';
+                  }
+                  if (!value.startsWith('07') && !value.startsWith('01')) {
+                    return 'Must start with 07 or 01';
+                  }
+                  return null;
+                },
               ),
             ],
-      
+
             const Spacer(),
-      
+
             Row(
               spacing: 16.0,
               children: [
