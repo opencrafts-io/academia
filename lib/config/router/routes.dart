@@ -1,4 +1,5 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/presentation/presentation.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -415,7 +416,7 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 600),
+      transitionDuration: Duration(milliseconds: 300),
       transitionsBuilder:
           (
             BuildContext context,
@@ -426,11 +427,58 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
             var tween = Tween(
               begin: Offset(0.0, 1.0),
               end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInCubic));
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
             var offsetAnimation = animation.drive(tween);
 
             return SlideTransition(position: offsetAnimation, child: child);
           },
+    );
+  }
+}
+
+@TypedGoRoute<InstitutionHomePageRoute>(path: "/institution/:institutionID")
+class InstitutionHomePageRoute extends GoRouteData
+    with _$InstitutionHomePageRoute {
+  InstitutionHomePageRoute({required this.institutionID});
+
+  final int institutionID;
+
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: InstitutionHomePage(
+        institutionID: institutionID,
+      ),
+      transitionDuration: const Duration(
+        milliseconds: 400,
+      ),
+      reverseTransitionDuration: const Duration(
+        milliseconds: 200,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // 1. Scale Tween: Starts slightly zoomed out
+        final scaleTween = Tween<double>(
+          begin: 0.92,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOutCubicEmphasized));
+
+        // 2. Fade Tween: Smoothly brings the opacity up
+        final fadeTween = Tween<double>(begin: 0.0, end: 1.0).chain(
+          CurveTween(curve: const Interval(0.0, 0.5, curve: Curves.easeIn)),
+        );
+
+        return FadeTransition(
+          opacity: animation.drive(fadeTween),
+          child: ScaleTransition(
+            scale: animation.drive(scaleTween),
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

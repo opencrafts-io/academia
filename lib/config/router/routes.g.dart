@@ -24,6 +24,7 @@ List<RouteBase> get $appRoutes => [
   $activitiesPageRoute,
   $examTimetableRoute,
   $settingsPageRoute,
+  $institutionHomePageRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -786,6 +787,38 @@ mixin _$SettingsPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $institutionHomePageRoute => GoRouteData.$route(
+  path: '/institution/:institutionID',
+  factory: _$InstitutionHomePageRoute._fromState,
+);
+
+mixin _$InstitutionHomePageRoute on GoRouteData {
+  static InstitutionHomePageRoute _fromState(GoRouterState state) =>
+      InstitutionHomePageRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!),
+      );
+
+  InstitutionHomePageRoute get _self => this as InstitutionHomePageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

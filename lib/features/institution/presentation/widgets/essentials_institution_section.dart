@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +51,10 @@ class _InstitutionCard extends StatelessWidget {
     return Card.filled(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListTile(
-        onTap: () {},
+        onTap: () => InstitutionHomePageRoute(
+          institutionID: institution.institutionId,
+        ).push(context),
+
         leading: Icon(Icons.school),
         title: Text(institution.name),
         subtitle: Text(institution.domains?.first ?? ''),
