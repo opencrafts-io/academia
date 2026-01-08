@@ -218,9 +218,11 @@ class ShereheRepositoryImpl implements ShereheRepository {
 
   @override
   Future<Either<Failure, String>> validateAttendee({
+    required String eventId,
     required String attendeeId,
   }) async {
     final result = await remoteDataSource.validateAttendee(
+      eventId: eventId,
       attendeeId: attendeeId,
     );
     return result.fold((failure) => left(failure), (message) => right(message));

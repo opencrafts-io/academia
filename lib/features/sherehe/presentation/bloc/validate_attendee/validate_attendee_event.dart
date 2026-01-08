@@ -8,10 +8,11 @@ abstract class ValidateAttendeeEvent extends Equatable {
 }
 
 class ValidateAttendee extends ValidateAttendeeEvent {
+  final String eventId;
   final String attendeeId;
 
-  const ValidateAttendee({required this.attendeeId});
+  const ValidateAttendee({required this.eventId, required this.attendeeId});
 
   @override
-  List<Object> get props => [attendeeId];
+  List<Object> get props => [eventId, attendeeId];
 }

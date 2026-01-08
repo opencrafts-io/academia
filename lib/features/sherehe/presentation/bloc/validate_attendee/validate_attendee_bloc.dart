@@ -21,6 +21,7 @@ class ValidateAttendeeBloc
     emit(ValidateAttendeeLoading());
 
     final result = await validateAttendeeUseCase(
+      eventId: event.eventId,
       attendeeId: event.attendeeId,
     );
 
@@ -28,8 +29,8 @@ class ValidateAttendeeBloc
       (failure) {
         emit(ValidateAttendeeError(message: failure.message));
       },
-      (message) {
-        emit(ValidateAttendeeLoaded(message: message));
+      (status) {
+        emit(ValidateAttendeeLoaded(status: status));
       },
     );
   }

@@ -510,15 +510,22 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, String>> validateAttendee({required String attendeeId}) async {
+  Future<Either<Failure, String>> validateAttendee({
+    required String eventId,
+    required String attendeeId,
+  }) async {
     try {
-      final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/user/$attendeeId",
+      final response = await dioClient.dio.post(
+        "https://api.opencrafts.io/qa-sherehe/attendee/user/",
+        data: {"eventId": eventId, "attendeeId": attendeeId},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return right(response.data['status']);
       } else {
+        _logger.e(
+          "Unexpected response data when validating attendee: ${response.data}",
+        );
         return left(
           ServerFailure(
             message: "Unexpected response when validating attendee",

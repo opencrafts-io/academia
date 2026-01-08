@@ -31,25 +31,65 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
 
     setState(() => _isScanning = false);
 
-     _controller.stop();
+    _controller.stop();
 
     context.read<ValidateAttendeeBloc>().add(
-      ValidateAttendee(attendeeId: attendeeId),
+      ValidateAttendee(eventId: widget.eventId, attendeeId: attendeeId),
     );
   }
 
-  void _showResultDialog({required bool valid, required String message}) {
-    final color = valid
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.error;
+  void _handleAttendeeStatus(String status) {
+    final normalized = status.toUpperCase();
 
+    late final bool valid;
+    late final String title;
+    late final String message;
+
+    switch (normalized) {
+      case 'VALID':
+        valid = true;
+        title = 'Ticket Valid';
+        message = 'Attendance confirmed successfully.';
+        break;
+
+      case 'ALREADY_SCANNED':
+        valid = false;
+        title = 'Already Scanned';
+        message = 'This ticket has already been used.';
+        break;
+
+      case 'WRONG_EVENT':
+        valid = false;
+        title = 'Wrong Event';
+        message = 'This ticket does not belong to this event.';
+        break;
+
+      case 'INVALID':
+      default:
+        valid = false;
+        title = 'Invalid Ticket';
+        message = 'Invalid or unknown ticket.';
+    }
+
+    _showResultDialog(valid: valid, title: title, message: message);
+  }
+
+  void _showResultDialog({
+    required bool valid,
+    required String title,
+    required String message,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         title: Text(
-          valid ? "Ticket Valid" : "Invalid Ticket",
-          style: TextStyle(color: color),
+          title,
+          style: TextStyle(
+            color: valid
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.error,
+          ),
         ),
         content: Text(message),
         actions: [
@@ -73,7 +113,11 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   void _showInvalidFormat() {
     setState(() => _isScanning = false);
 
-    _showResultDialog(valid: false, message: "Invalid QR code format.");
+    _showResultDialog(
+      valid: false,
+      title: "Invalid QR Code",
+      message: "Invalid QR code format.",
+    );
   }
 
   @override
@@ -87,9 +131,13 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     return BlocListener<ValidateAttendeeBloc, ValidateAttendeeState>(
       listener: (context, state) {
         if (state is ValidateAttendeeLoaded) {
-          _showResultDialog(valid: true, message: state.message);
+          _handleAttendeeStatus(state.status);
         } else if (state is ValidateAttendeeError) {
-          _showResultDialog(valid: false, message: state.message);
+          _showResultDialog(
+            valid: false,
+            title: "Error",
+            message: state.message,
+          );
         }
       },
       child: Scaffold(

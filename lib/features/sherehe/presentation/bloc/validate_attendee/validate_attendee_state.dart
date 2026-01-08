@@ -12,12 +12,12 @@ class ValidateAttendeeInitial extends ValidateAttendeeState {}
 class ValidateAttendeeLoading extends ValidateAttendeeState {}
 
 class ValidateAttendeeLoaded extends ValidateAttendeeState {
-  final String message;
+  final String status;
 
-  const ValidateAttendeeLoaded({required this.message});
+  const ValidateAttendeeLoaded({required this.status});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [status];
 }
 
 class ValidateAttendeeError extends ValidateAttendeeState {

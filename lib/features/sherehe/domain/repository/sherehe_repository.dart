@@ -65,5 +65,8 @@ abstract class ShereheRepository {
     required String query,
   });
 
-  Future<Either<Failure, String>> validateAttendee({required String attendeeId});
+  Future<Either<Failure, String>> validateAttendee({
+    required String eventId,
+    required String attendeeId,
+  });
 }

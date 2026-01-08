@@ -30,3 +30,21 @@ final List<String> availableGenres = [
   'Health & Wellness',
   'Other',
 ];
+
+enum AttendeeStatus { valid, wrongEvent, alreadyScanned, invalid }
+
+extension AttendeeStatusMapper on String {
+  AttendeeStatus toAttendeeStatus() {
+    switch (toUpperCase()) {
+      case 'VALID':
+        return AttendeeStatus.valid;
+      case 'ALREADY_SCANNED':
+        return AttendeeStatus.alreadyScanned;
+      case 'WRONG_EVENT':
+        return AttendeeStatus.wrongEvent;
+      case 'INVALID':
+      default:
+        return AttendeeStatus.invalid;
+    }
+  }
+}
