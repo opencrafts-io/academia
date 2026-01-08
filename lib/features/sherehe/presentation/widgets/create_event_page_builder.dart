@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:flutter/material.dart';
 
@@ -7,10 +6,15 @@ class CreateEventPageBuilder extends StatelessWidget {
   final int pageIndex;
   final GlobalKey<FormState> stage1FormKey;
   final GlobalKey<FormState> stage2FormKey;
+  final GlobalKey<FormState> stage5FormKey;
   final TextEditingController nameController;
   final TextEditingController dateTimeController;
   final TextEditingController locationController;
   final TextEditingController aboutController;
+  final TextEditingController paybillNumberController;
+  final TextEditingController accountReferenceController;
+  final TextEditingController tillNumberController;
+  final TextEditingController sendMoneyPhoneController;
   final List<String> selectedGenres;
   final VoidCallback onSelectDateAndTime;
   final VoidCallback moveToNextPage;
@@ -28,6 +32,8 @@ class CreateEventPageBuilder extends StatelessWidget {
   final VoidCallback submitForm;
   final DateTime? selectedDateTime;
   final String? organizerName;
+  final PaymentTypes? selectedPaymentType;
+  final ValueChanged<PaymentTypes?> onPaymentTypeChanged;
   final BuildContext context;
 
   const CreateEventPageBuilder({
@@ -35,10 +41,15 @@ class CreateEventPageBuilder extends StatelessWidget {
     required this.pageIndex,
     required this.stage1FormKey,
     required this.stage2FormKey,
+    required this.stage5FormKey,
     required this.nameController,
     required this.dateTimeController,
     required this.locationController,
     required this.aboutController,
+    required this.paybillNumberController,
+    required this.accountReferenceController,
+    required this.tillNumberController,
+    required this.sendMoneyPhoneController,
     required this.selectedGenres,
     required this.onSelectDateAndTime,
     required this.moveToNextPage,
@@ -56,6 +67,8 @@ class CreateEventPageBuilder extends StatelessWidget {
     required this.submitForm,
     required this.selectedDateTime,
     required this.organizerName,
+    this.selectedPaymentType,
+    required this.onPaymentTypeChanged,
     required this.context,
   });
 
@@ -141,6 +154,23 @@ class CreateEventPageBuilder extends StatelessWidget {
         );
 
       case 4:
+        return PaymentTypeSelectionPage(
+          formKey: stage5FormKey,
+          paybillNumberController: paybillNumberController,
+          accountReferenceController: accountReferenceController,
+          tillNumberController: tillNumberController,
+          sendMoneyPhoneController: sendMoneyPhoneController,
+          selectedPaymentType: selectedPaymentType,
+          onPaymentTypeChanged: onPaymentTypeChanged,
+          onPrevious: moveToPreviousPage,
+          onNext: () {
+            if (stage5FormKey.currentState!.validate()) {
+              moveToNextPage();
+            }
+          },
+        );
+
+      case 5:
         return Stage4ReviewAndSubmit(
           onSubmit: submitForm,
           onPrevious: moveToPreviousPage,

@@ -19,6 +19,11 @@ class SubmitNewEvent extends CreateEventEvent {
   final File? eventPosterImage;
   final File? eventBannerImage;
   final List<Ticket> tickets;
+  final PaymentTypes? selectedPaymentType;
+  final String? paybillNumber;
+  final String? accountReference;
+  final String? tillNumber;
+  final String? sendMoneyPhoneNumber;
 
   const SubmitNewEvent({
     required this.eventName,
@@ -32,6 +37,11 @@ class SubmitNewEvent extends CreateEventEvent {
     this.eventPosterImage,
     this.eventBannerImage,
     required this.tickets,
+    this.selectedPaymentType,
+    this.paybillNumber,
+    this.accountReference,
+    this.tillNumber,
+    this.sendMoneyPhoneNumber,
   });
 
   @override
@@ -47,5 +57,10 @@ class SubmitNewEvent extends CreateEventEvent {
     eventPosterImage,
     eventBannerImage,
     tickets,
+    selectedPaymentType,
+    paybillNumber,
+    accountReference,
+    tillNumber,
+    sendMoneyPhoneNumber,
   ];
 }

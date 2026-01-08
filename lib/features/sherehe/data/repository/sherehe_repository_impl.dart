@@ -1,5 +1,6 @@
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 import 'dart:io';
@@ -69,6 +70,11 @@ class ShereheRepositoryImpl implements ShereheRepository {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<Ticket> tickets,
+    PaymentTypes? selectedPaymentType,
+    String? paybillNumber,
+    String? accountReference,
+    String? tillNumber,
+    String? sendMoneyPhoneNumber,
   }) async {
     final result = await remoteDataSource.createEvent(
       eventName: eventName,
@@ -81,6 +87,11 @@ class ShereheRepositoryImpl implements ShereheRepository {
       eventPosterImage: eventPosterImage,
       eventBannerImage: eventBannerImage,
       tickets: tickets.map((ticket) => ticket.toModel()).toList(),
+      selectedPaymentType: selectedPaymentType,
+      paybillNumber: paybillNumber,
+      accountReference: accountReference,
+      tillNumber: tillNumber,
+      sendMoneyPhoneNumber: sendMoneyPhoneNumber,
     );
     return result.fold(
       (failure) => left(failure),

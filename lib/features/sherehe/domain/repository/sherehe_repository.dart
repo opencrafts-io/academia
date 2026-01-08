@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
+
 import '../domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
@@ -27,6 +29,11 @@ abstract class ShereheRepository {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<Ticket> tickets,
+    PaymentTypes? selectedPaymentType,
+    String? paybillNumber,
+    String? accountReference,
+    String? tillNumber,
+    String? sendMoneyPhoneNumber,
   });
 
   Future<Either<Failure, PaginatedResult<Attendee>>> getAttendeesByEventId({

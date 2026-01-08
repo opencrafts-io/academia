@@ -68,7 +68,7 @@ class ImageUploadPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                'Please note that for any image not uploaded, a default image will be used instead.',
+                'Please note that for any image not uploaded, a default color palette will be used instead.',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: Theme.of(context).colorScheme.error,
                 ),

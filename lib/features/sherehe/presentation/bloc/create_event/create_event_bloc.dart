@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:academia/core/core.dart';
@@ -31,6 +32,11 @@ class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
       eventPosterImage: event.eventPosterImage,
       eventBannerImage: event.eventBannerImage,
       tickets: event.tickets,
+      selectedPaymentType: event.selectedPaymentType,
+      paybillNumber: event.paybillNumber,
+      accountReference: event.accountReference,
+      tillNumber: event.tillNumber,
+      sendMoneyPhoneNumber: event.sendMoneyPhoneNumber,
     );
 
     result.fold(

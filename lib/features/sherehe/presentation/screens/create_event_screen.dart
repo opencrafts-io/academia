@@ -24,45 +24,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final PageController _pageController = PageController();
   final ScrollController _stage3ScrollController = ScrollController();
   double _progress = 0.25;
-  final int _numberOfStages = 5;
+  final int _numberOfStages = 6;
 
-  // Form Keys for validation in each stage
   final _stage1FormKey = GlobalKey<FormState>();
   final _stage2FormKey = GlobalKey<FormState>();
+  final _stage5FormKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _dateTimeController = TextEditingController();
   final _locationController = TextEditingController();
   final _aboutController = TextEditingController();
+  final _paybillNumberController = TextEditingController();
+  final _accountReferenceController = TextEditingController();
+  final _tillNumberController = TextEditingController();
+  final _sendMoneyPhoneController = TextEditingController();
+  PaymentTypes? _selectedPaymentType;
   DateTime? _selectedDateTime;
   File? _selectedPosterImage;
   File? _selectedBannerImage;
   File? _selectedCardImage;
   List<String> _selectedGenres = [];
   List<Ticket> _tickets = [];
-  final List<String> _availableGenres = [
-    'Meetup',
-    'Party',
-    'Official',
-    'Physical',
-    'Social',
-    'Sports',
-    'Conference',
-    'Workshop',
-    'Seminar',
-    'Webinar',
-    'Festival',
-    'Exhibition',
-    'Charity',
-    'Gaming',
-    'Music',
-    'Arts & Culture',
-    'Food & Drink',
-    'Networking',
-    'Education',
-    'Technology',
-    'Health & Wellness',
-    'Other',
-  ];
   String? organizerId;
   String? organizerName;
   late ConfettiController _confettiController;
@@ -89,6 +70,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _dateTimeController.dispose();
     _aboutController.dispose();
     _locationController.dispose();
+    _paybillNumberController.dispose();
+    _accountReferenceController.dispose();
+    _tillNumberController.dispose();
+    _sendMoneyPhoneController.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -325,7 +310,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               title: const Text('Select Genres'),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: _availableGenres.map((genre) {
+                  children: availableGenres.map((genre) {
                     return CheckboxListTile(
                       value: tempSelectedGenres.contains(genre),
                       title: Text(genre),
@@ -392,6 +377,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventBannerImage: _selectedBannerImage,
         eventGenre: _selectedGenres,
         tickets: _tickets,
+        selectedPaymentType: _selectedPaymentType,
+        paybillNumber: _paybillNumberController.text.trim().isEmpty
+            ? null
+            : _paybillNumberController.text.trim(),
+        accountReference: _accountReferenceController.text.trim().isEmpty
+            ? null
+            : _accountReferenceController.text.trim(),
+        tillNumber: _tillNumberController.text.trim().isEmpty
+            ? null
+            : _tillNumberController.text.trim(),
+        sendMoneyPhoneNumber: _sendMoneyPhoneController.text.trim().isEmpty
+            ? null
+            : _sendMoneyPhoneController.text.trim(),
       ),
     );
   }
@@ -497,10 +495,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           pageIndex: index,
                           stage1FormKey: _stage1FormKey,
                           stage2FormKey: _stage2FormKey,
+                          stage5FormKey: _stage5FormKey,
                           nameController: _nameController,
                           dateTimeController: _dateTimeController,
                           locationController: _locationController,
                           aboutController: _aboutController,
+                          paybillNumberController: _paybillNumberController,
+                          accountReferenceController:
+                              _accountReferenceController,
+                          tillNumberController: _tillNumberController,
+                          sendMoneyPhoneController: _sendMoneyPhoneController,
+                          selectedPaymentType: _selectedPaymentType,
                           selectedGenres: _selectedGenres,
                           onSelectDateAndTime: () =>
                               _selectDateAndTime(context),
@@ -523,6 +528,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           submitForm: _submitForm,
                           selectedDateTime: _selectedDateTime,
                           organizerName: organizerName,
+                          onPaymentTypeChanged: (value) {
+                            setState(() {
+                              _selectedPaymentType = value;
+
+                              _paybillNumberController.clear();
+                              _accountReferenceController.clear();
+                              _tillNumberController.clear();
+                              _sendMoneyPhoneController.clear();
+                            });
+                          },
                           context: context,
                         ),
                       ),

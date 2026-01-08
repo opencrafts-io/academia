@@ -1,13 +1,8 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-enum TicketStubMode {
-  purchasingTicket,
-  allTicketsPurchased,
-  eventTicketPurchased,
-}
 
 class TicketCardWidget extends StatelessWidget {
   final Ticket ticket;

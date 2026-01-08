@@ -3,6 +3,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/sherehe/data/models/paginated_events_data_model.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -146,6 +147,11 @@ class ShereheRemoteDataSource with DioErrorHandler {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<TicketData> tickets,
+    PaymentTypes? selectedPaymentType,
+    String? paybillNumber,
+    String? accountReference,
+    String? tillNumber,
+    String? sendMoneyPhoneNumber,
   }) async {
     try {
       final formData = FormData.fromMap({
@@ -177,6 +183,20 @@ class ShereheRemoteDataSource with DioErrorHandler {
             eventBannerImage.path,
             filename: eventBannerImage.path.split('/').last,
           ),
+        if (selectedPaymentType == PaymentTypes.paybill) ...{
+          'payment_type': 'MPESA_PAYBILL',
+          if (paybillNumber?.isNotEmpty == true)
+            'paybill_number': paybillNumber,
+          if (accountReference?.isNotEmpty == true)
+            'account_reference': accountReference,
+        } else if (selectedPaymentType == PaymentTypes.till) ...{
+          'payment_type': 'MPESA_TILL',
+          if (tillNumber?.isNotEmpty == true) 'till_number': tillNumber,
+        } else if (selectedPaymentType == PaymentTypes.sendMoney) ...{
+          'payment_type': 'MPESA_SEND_MONEY',
+          if (sendMoneyPhoneNumber?.isNotEmpty == true)
+            'send_money_phone': sendMoneyPhoneNumber,
+        },
       });
 
       // Send request
@@ -199,8 +219,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       }
     } on DioException catch (de) {
+      _logger.e("DioException when creating event", error: de);
       return handleDioError(de);
     } catch (e) {
+      _logger.e("Unknown error while creating event", error: e);
       return left(
         ServerFailure(
           message: "An unexpected error occurred while creating the event",
