@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final String eventId;
+  final String attendeeId;
   final Event event;
   final String ticketName;
   final int quantity;
@@ -17,6 +18,7 @@ class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({
     super.key,
     required this.eventId,
+    required this.attendeeId,
     required this.event,
     required this.ticketName,
     required this.quantity,
@@ -251,7 +253,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                           ),
                           child: pw.BarcodeWidget(
-                            data: widget.eventId,
+                            data: 'attendee:${widget.eventId}', //placeholder for now
                             barcode: pw.Barcode.qrCode(),
                             width: 100,
                             height: 100,
@@ -490,7 +492,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PrettyQrView.data(
-                                data: widget.eventId,
+                                data:'attendee:${widget.eventId}', //placeholder for now
                                 decoration: const PrettyQrDecoration(
                                   shape: PrettyQrSmoothSymbol(
                                     color: Colors.black,

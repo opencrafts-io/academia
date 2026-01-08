@@ -581,14 +581,14 @@ mixin _$TicketReceiptRoute on GoRouteData {
 }
 
 RouteBase get $qrCodeRoute => GoRouteData.$route(
-  path: '/qr-code/:eventId/:ticketId',
+  path: '/qr-code/:eventId/:attendeeId',
   factory: _$QrCodeRoute._fromState,
 );
 
 mixin _$QrCodeRoute on GoRouteData {
   static QrCodeRoute _fromState(GoRouterState state) => QrCodeRoute(
     eventId: state.pathParameters['eventId']!,
-    ticketId: state.pathParameters['ticketId']!,
+    attendeeId: state.pathParameters['attendeeId']!,
     ticketName: state.uri.queryParameters['ticket-name']!,
     quantity: int.parse(state.uri.queryParameters['quantity']!),
   );
@@ -597,7 +597,7 @@ mixin _$QrCodeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location(
-    '/qr-code/${Uri.encodeComponent(_self.eventId)}/${Uri.encodeComponent(_self.ticketId)}',
+    '/qr-code/${Uri.encodeComponent(_self.eventId)}/${Uri.encodeComponent(_self.attendeeId)}',
     queryParams: {
       'ticket-name': _self.ticketName,
       'quantity': _self.quantity.toString(),

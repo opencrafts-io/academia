@@ -509,4 +509,34 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, String>> validateAttendee({required String attendeeId}) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://api.opencrafts.io/qa-sherehe/attendee/user/$attendeeId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['status']);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when validating attendee",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when validating attendee", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when validating attendee", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when validating attendee",
+          error: e,
+        ),
+      );
+    }
+  }
 }

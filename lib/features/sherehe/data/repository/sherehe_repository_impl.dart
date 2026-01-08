@@ -215,4 +215,14 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (attendees) => right(attendees.map((e) => e.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, String>> validateAttendee({
+    required String attendeeId,
+  }) async {
+    final result = await remoteDataSource.validateAttendee(
+      attendeeId: attendeeId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
 }

@@ -26,6 +26,7 @@ export 'bloc/user_ticket_selection/user_ticket_selection_bloc.dart';
 export 'bloc/all_user_event_tickets/all_user_event_tickets_bloc.dart';
 export 'bloc/user_event_tickets/user_event_tickets_bloc.dart';
 export 'bloc/attendee/attendee_bloc.dart';
+export 'bloc/validate_attendee/validate_attendee_bloc.dart';
 export 'widgets/modern_input_decoration.dart';
 export 'widgets/event_image_picker_widget.dart';
 export 'widgets/genre_selector_widget.dart';

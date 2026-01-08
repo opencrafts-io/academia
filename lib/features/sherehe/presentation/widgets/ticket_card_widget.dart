@@ -9,6 +9,7 @@ class TicketCardWidget extends StatelessWidget {
   final int quantity;
   final Event? event;
   final TicketStubMode mode;
+  final String? attendeeId;
 
   const TicketCardWidget({
     super.key,
@@ -16,6 +17,7 @@ class TicketCardWidget extends StatelessWidget {
     required this.quantity,
     required this.mode,
     this.event,
+    this.attendeeId,
   });
 
   @override
@@ -93,7 +95,7 @@ class TicketCardWidget extends StatelessWidget {
                     onPressed: () => context.push(
                       QrCodeRoute(
                         eventId: event!.id,
-                        ticketId: ticket.id!,
+                        attendeeId: attendeeId!,
                         ticketName: ticket.ticketName,
                         quantity: quantity,
                       ).location,

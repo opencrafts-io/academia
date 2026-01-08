@@ -1,5 +1,6 @@
-import 'dart:async';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrCodeScannerScreen extends StatefulWidget {
@@ -18,29 +19,26 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   void _onDetect(BarcodeCapture capture) {
     if (!_isScanning) return;
 
-    final barcode = capture.barcodes.first;
-    final qrValue = barcode.rawValue;
-
+    final qrValue = capture.barcodes.first.rawValue;
     if (qrValue == null) return;
 
-    // Lock scanner to prevent multiple scans
+    if (!qrValue.startsWith('attendee:')) {
+      _showInvalidFormat();
+      return;
+    }
+
+    final attendeeId = qrValue.replaceFirst('attendee:', '');
+
     setState(() => _isScanning = false);
 
-    _validateTicket(qrValue);
+     _controller.stop();
+
+    context.read<ValidateAttendeeBloc>().add(
+      ValidateAttendee(attendeeId: attendeeId),
+    );
   }
 
-  Future<void> _validateTicket(String token) async {
-    // TODO: call backend logic here
-    await Future.delayed(const Duration(seconds: 1));
-
-    final bool valid = token.contains(widget.eventId); // TEMP FAKE CHECK
-
-    if (!mounted) return;
-
-    _showResultDialog(valid, token);
-  }
-
-  void _showResultDialog(bool valid, String token) {
+  void _showResultDialog({required bool valid, required String message}) {
     final color = valid
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.error;
@@ -48,32 +46,34 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) {
-        return AlertDialog(
-          title: Text(
-            valid ? "Ticket Valid" : "Invalid Ticket",
-            style: TextStyle(color: color),
+      builder: (_) => AlertDialog(
+        title: Text(
+          valid ? "Ticket Valid" : "Invalid Ticket",
+          style: TextStyle(color: color),
+        ),
+        content: Text(message),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _resumeScanner();
+            },
+            child: const Text("Scan Another"),
           ),
-          content: valid
-              ? const Text("Access granted.")
-              : const Text("This QR code is not valid for this event."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _resumeScanner();
-              },
-              child: const Text("Scan Another"),
-            ),
-          ],
-        );
-      },
+        ],
+      ),
     );
   }
 
   void _resumeScanner() {
     setState(() => _isScanning = true);
     _controller.start();
+  }
+
+  void _showInvalidFormat() {
+    setState(() => _isScanning = false);
+
+    _showResultDialog(valid: false, message: "Invalid QR code format.");
   }
 
   @override
@@ -84,36 +84,42 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Scan Ticket"),
-        centerTitle: true,
-      ),
-      body: Stack(
-        children: [
-          MobileScanner(controller: _controller, onDetect: _onDetect),
+    return BlocListener<ValidateAttendeeBloc, ValidateAttendeeState>(
+      listener: (context, state) {
+        if (state is ValidateAttendeeLoaded) {
+          _showResultDialog(valid: true, message: state.message);
+        } else if (state is ValidateAttendeeError) {
+          _showResultDialog(valid: false, message: state.message);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Scan Ticket"), centerTitle: true),
+        body: Stack(
+          children: [
+            MobileScanner(controller: _controller, onDetect: _onDetect),
 
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _ScannerOverlayPainter(
-                color: Theme.of(context).colorScheme.primary,
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _ScannerOverlayPainter(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
-          ),
 
-          Positioned(
-            bottom: 40,
-            left: 0,
-            right: 0,
-            child: Text(
-              _isScanning ? "Align QR inside frame to scan" : "Processing...",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+            Positioned(
+              bottom: 40,
+              left: 0,
+              right: 0,
+              child: Text(
+                _isScanning ? "Align QR inside frame to scan" : "Processing...",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -318,16 +318,16 @@ class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
   }
 }
 
-@TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:ticketId")
+@TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:attendeeId")
 class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
   final String eventId;
-  final String ticketId;
+  final String attendeeId;
   final String ticketName;
   final int quantity;
 
   const QrCodeRoute({
     required this.eventId,
-    required this.ticketId,
+    required this.attendeeId,
     required this.ticketName,
     required this.quantity,
   });
@@ -338,6 +338,7 @@ class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
 
     return QrCodeScreen(
       eventId: eventId,
+      attendeeId: attendeeId,
       ticketName: ticketName,
       quantity: quantity,
       event: event,

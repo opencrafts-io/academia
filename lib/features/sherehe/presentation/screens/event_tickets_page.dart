@@ -137,6 +137,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
                           event: widget.event,
+                          attendeeId: item.id,
                           mode: TicketStubMode.eventTicketPurchased,
                         );
                       },
@@ -168,6 +169,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         event: widget.event,
+                        attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
                       );
                     },
@@ -193,6 +195,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
                         event: widget.event,
+                        attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
                       );
                     },

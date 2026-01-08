@@ -196,6 +196,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           quantity: item.ticketQuantity,
                           mode: TicketStubMode.allTicketsPurchased,
                           event: item.event,
+                          attendeeId: item.id,
                         );
                       },
                     ),
@@ -214,6 +215,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         quantity: item.ticketQuantity,
                         mode: TicketStubMode.allTicketsPurchased,
                         event: item.event,
+                        attendeeId: item.id,
                       );
                     },
                   ),
@@ -239,6 +241,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         quantity: item.ticketQuantity,
                         mode: TicketStubMode.allTicketsPurchased,
                         event: item.event,
+                        attendeeId: item.id,
                       );
                     },
                   ),
@@ -320,6 +323,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           quantity: item.ticketQuantity,
                           mode: TicketStubMode.allTicketsPurchased,
                           event: item.event,
+                          attendeeId: item.id,
                         );
                       },
                     ),

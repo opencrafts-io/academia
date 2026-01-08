@@ -101,6 +101,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<UserTicketSelectionBloc>()),
         BlocProvider(create: (context) => sl<AllUserEventTicketsBloc>()),
         BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
+        BlocProvider(create: (context) => sl<ValidateAttendeeBloc>()),
         BlocProvider(create: (context) => sl<FeedBloc>()),
         BlocProvider(create: (context) => sl<CommentBloc>()),
         BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
