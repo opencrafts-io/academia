@@ -29,7 +29,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
   void _fetchInitialTickets() {
     _currentPage = 1;
     context.read<AllUserEventTicketsBloc>().add(
-      FetchAllUserTickets(page: _currentPage, limit: 3),
+      FetchAllUserTickets(page: _currentPage, limit: 10),
     );
   }
 
