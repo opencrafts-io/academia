@@ -13,6 +13,7 @@ class PurchasedTicketsPage extends StatefulWidget {
 
 class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
   int _currentPage = 1;
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
   Timer? _searchDebounce;
@@ -22,28 +23,36 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
   void initState() {
     super.initState();
     _fetchInitialTickets();
+    _scrollController.addListener(_onScroll);
   }
 
   void _fetchInitialTickets() {
     _currentPage = 1;
     context.read<AllUserEventTicketsBloc>().add(
-      FetchAllUserTickets(page: _currentPage, limit: 10),
+      FetchAllUserTickets(page: _currentPage, limit: 3),
     );
   }
 
-  void _loadMore() {
-    if (_isSearching) return; // prevent pagination during search
+  void _onScroll() {
+    if (_isSearching) return;
 
-    _currentPage++;
-    context.read<AllUserEventTicketsBloc>().add(
-      FetchAllUserTickets(page: _currentPage, limit: 10),
-    );
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<AllUserEventTicketsBloc>().state;
+      if (state is UserAllTicketsLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<AllUserEventTicketsBloc>().add(
+          FetchAllUserTickets(page: _currentPage, limit: 10),
+        );
+      }
+    }
   }
 
   @override
   void dispose() {
     _searchDebounce?.cancel();
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -53,6 +62,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
       body: BlocBuilder<AllUserEventTicketsBloc, AllUserEventTicketsState>(
         builder: (context, state) {
           return CustomScrollView(
+            controller: _scrollController,
             slivers: [
               SliverAppBar(
                 pinned: true,
@@ -190,19 +200,6 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                       },
                     ),
                   ),
-
-                if (state.hasMore)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(
-                        child: FilledButton(
-                          onPressed: _loadMore,
-                          child: const Text("Load More"),
-                        ),
-                      ),
-                    ),
-                  ),
               ] else if (state is UserAllTicketsPaginationLoading) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(16.0),
@@ -259,7 +256,13 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         ),
                         const SizedBox(height: 10),
                         FilledButton(
-                          onPressed: _loadMore,
+                          onPressed: () =>
+                              context.read<AllUserEventTicketsBloc>().add(
+                                FetchAllUserTickets(
+                                  page: _currentPage,
+                                  limit: 10,
+                                ),
+                              ),
                           child: const Text("Try Again"),
                         ),
                       ],
