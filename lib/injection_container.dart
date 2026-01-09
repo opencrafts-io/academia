@@ -107,6 +107,8 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerLazySingleton(() => ValidateAttendeeUseCase(sl()));
 
+  sl.registerLazySingleton(() => SearchEventsUseCase(sl()));
+
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));

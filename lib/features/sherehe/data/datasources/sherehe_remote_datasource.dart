@@ -546,4 +546,40 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, List<EventData>>> searchEvents({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "https://api.opencrafts.io/qa-sherehe/event/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List).map((e) => EventData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when searching events",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching events", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching events", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when searching events",
+          error: e,
+        ),
+      );
+    }
+  }
 }

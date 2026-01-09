@@ -69,4 +69,8 @@ abstract class ShereheRepository {
     required String eventId,
     required String attendeeId,
   });
+
+  Future<Either<Failure, List<Event>>> searchEvents({
+    required String query,
+  });
 }

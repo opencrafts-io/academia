@@ -227,4 +227,15 @@ class ShereheRepositoryImpl implements ShereheRepository {
     );
     return result.fold((failure) => left(failure), (message) => right(message));
   }
+
+  @override
+  Future<Either<Failure, List<Event>>> searchEvents({
+    required String query,
+  }) async {
+    final result = await remoteDataSource.searchEvents(query: query);
+    return result.fold(
+      (failure) => left(failure),
+      (events) => right(events.map((e) => e.toEntity()).toList()),
+    );
+  }
 }
