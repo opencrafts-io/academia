@@ -39,6 +39,8 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
         return 'Till Number';
       case PaymentTypes.sendMoney:
         return 'Send Money';
+      case PaymentTypes.pochi:
+        return 'Pochi La Biashara';
     }
   }
 
@@ -140,7 +142,8 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
               ),
             ],
 
-            if (widget.selectedPaymentType == PaymentTypes.sendMoney) ...[
+            if (widget.selectedPaymentType == PaymentTypes.sendMoney ||
+                widget.selectedPaymentType == PaymentTypes.pochi) ...[
               TextFormField(
                 controller: widget.sendMoneyPhoneController,
                 decoration: const InputDecoration(

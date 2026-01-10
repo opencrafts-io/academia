@@ -196,6 +196,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
           'payment_type': 'MPESA_SEND_MONEY',
           if (sendMoneyPhoneNumber?.isNotEmpty == true)
             'send_money_phone': sendMoneyPhoneNumber,
+        } else if (selectedPaymentType == PaymentTypes.pochi) ...{
+          'payment_type': 'POSHI_LA_BIASHARA',
+          if (sendMoneyPhoneNumber?.isNotEmpty == true)
+            'send_money_phone': sendMoneyPhoneNumber,
         },
       });
 
@@ -575,8 +579,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       _logger.e("Unknown error when searching events", error: e);
       return left(
         ServerFailure(
-          message:
-              "An unexpected error occurred when searching events",
+          message: "An unexpected error occurred when searching events",
           error: e,
         ),
       );
