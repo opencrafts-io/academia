@@ -7,13 +7,15 @@ class PurchaseTicketUseCase {
 
   PurchaseTicketUseCase(this.repository);
 
-  Future<Either<Failure, Attendee>> call({
+  Future<Either<Failure, String>> call({
     required String ticketId,
     required int ticketQuantity,
+    required String phoneNumber,
   }) async {
     return repository.purchaseTicket(
       ticketId: ticketId,
       ticketQuantity: ticketQuantity,
+      phoneNumber: phoneNumber,
     );
   }
 }

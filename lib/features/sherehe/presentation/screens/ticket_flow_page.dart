@@ -1,4 +1,3 @@
-import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -15,37 +14,44 @@ class TicketFlowPage extends StatefulWidget {
 }
 
 class _TicketFlowPageState extends State<TicketFlowPage> {
-  Ticket? selectedTicket;
-  List<Ticket> ticketTypes = [];
-  bool isFreeEvent = false;
-  int quantity = 1;
-
+  final PageController _pageController = PageController();
+  final _paymentPageFormKey = GlobalKey<FormState>();
+  final _phoneController = TextEditingController();
   int currentPage = 0;
+  Ticket? _selectedTicket;
+  int _quantity = 1;
 
   @override
   void initState() {
     super.initState();
-
     context.read<UserTicketSelectionBloc>().add(
       FetchTicketsByEventId(eventId: widget.eventId),
     );
   }
 
-  void nextPage() {
-    if (currentPage < 1) {
-      setState(() => currentPage++);
-    }
+  void _nextPage() {
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
-  void previousPage() {
-    if (currentPage > 0) {
-      setState(() => currentPage--);
-    }
+  void _previousPage() {
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double progress = (currentPage + 1) / 2;
+    final progress = (currentPage + 1) / 3;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,82 +71,53 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           ),
         ),
       ),
-      body: BlocConsumer<UserTicketSelectionBloc, UserTicketSelectionState>(
-        listener: (context, state) {
-          if (state is UserTicketPurchased) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Ticket purchased successfully! See you at the event",
-                ),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-            );
-            context.pop();
-          } else if (state is UserTicketPurchaseFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Purchase failed: ${state.message}"),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
-          } else if (state is UserTicketLoaded) {
-            ticketTypes = state.tickets;
-            isFreeEvent =
-                ticketTypes.length == 1 && ticketTypes.first.ticketPrice == 0;
-            selectedTicket = isFreeEvent ? ticketTypes.first : null;
-          } else if (state is UserTicketPurchaseInProgress) {
-            ticketTypes = state.existingTickets;
-          }
-        },
-        builder: (context, state) {
-          if (state is UserTicketLoading) {
-            return const Center(child: SpinningScallopIndicator());
-          } else if (state is UserTicketError) {
-            return Center(child: Text(state.message));
-          } else if (state is UserTicketLoaded ||
-              state is UserTicketPurchaseInProgress) {
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: currentPage == 0
-                      ? UserTicketSelectionPage(
-                          ticketTypes: ticketTypes,
-                          selectedTicket: selectedTicket,
-                          quantity: quantity,
-                          onTicketSelected: (ticket) {
-                            setState(() => selectedTicket = ticket);
-                          },
-                          onQuantityChanged: (q) =>
-                              setState(() => quantity = q),
-                          onContinue: () {
-                            if (selectedTicket != null) nextPage();
-                          },
-                          isFreeEvent: isFreeEvent,
-                        )
-                      : ReviewTicketPage(
-                          ticket: selectedTicket!,
-                          quantity: quantity,
-                          onPurchase: () {
-                            if (selectedTicket != null) {
-                              context.read<UserTicketSelectionBloc>().add(
-                                PurchaseTicket(
-                                  ticketId: selectedTicket!.id!,
-                                  ticketQuantity: quantity,
-                                ),
-                              );
-                            }
-                          },
-                          onPrevious: () => previousPage(),
-                        ),
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (index) => setState(() => currentPage = index),
+        children: [
+          UserTicketSelectionPage(
+            eventId: widget.eventId,
+            selectedTicket: _selectedTicket,
+            quantity: _quantity,
+            onTicketSelected: (ticket) {
+              setState(() {
+                _selectedTicket = ticket;
+                _quantity = ticket == null ? 1 : _quantity;
+              });
+            },
+            onQuantityChanged: (qty) {
+              setState(() => _quantity = qty);
+            },
+            onContinue: _nextPage,
+          ),
+          if (_selectedTicket != null) ...[
+            ReviewTicketPage(
+              ticket: _selectedTicket!,
+              quantity: _quantity,
+              onPrevious: _previousPage,
+              onNext: _nextPage,
+            ),
+            TicketPaymentPage(
+              formKey: _paymentPageFormKey,
+              phoneNumberController: _phoneController,
+              amount: _selectedTicket!.ticketPrice * _quantity,
+              onBack: _previousPage,
+              onInitiateStk: (phone) {
+                if (_selectedTicket != null) {
+                  context.read<TicketPaymentBloc>().add(
+                    PurchaseTicket(
+                      ticketId: _selectedTicket!.id!,
+                      ticketQuantity: _quantity,
+                      phoneNumber: phone,
+                    ),
+                  );
+                }
+              },
+              onCompletePayment: () {},
+            ),
+          ],
+        ],
       ),
     );
   }

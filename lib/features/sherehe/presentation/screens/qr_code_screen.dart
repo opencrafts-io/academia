@@ -253,7 +253,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                           ),
                           child: pw.BarcodeWidget(
-                            data: 'attendee:${widget.eventId}', //placeholder for now
+                            data: 'attendee:${widget.attendeeId}',
                             barcode: pw.Barcode.qrCode(),
                             width: 100,
                             height: 100,
@@ -492,7 +492,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PrettyQrView.data(
-                                data:'attendee:${widget.eventId}', //placeholder for now
+                                data:'attendee:${widget.attendeeId}',
                                 decoration: const PrettyQrDecoration(
                                   shape: PrettyQrSmoothSymbol(
                                     color: Colors.black,

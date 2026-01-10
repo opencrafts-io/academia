@@ -144,18 +144,17 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, Attendee>> purchaseTicket({
+  Future<Either<Failure, String>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
+    required String phoneNumber,
   }) async {
     final result = await remoteDataSource.purchaseTicket(
       ticketId: ticketId,
       ticketQuantity: ticketQuantity,
+      phoneNumber: phoneNumber,
     );
-    return result.fold(
-      (failure) => left(failure),
-      (attendee) => right(attendee.toEntity()),
-    );
+    return result.fold((failure) => left(failure), (message) => right(message));
   }
 
   @override

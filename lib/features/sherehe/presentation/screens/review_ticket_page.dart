@@ -1,19 +1,18 @@
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReviewTicketPage extends StatelessWidget {
   final Ticket ticket;
   final int quantity;
-  final VoidCallback onPurchase;
+  final VoidCallback onNext;
   final VoidCallback onPrevious;
 
   const ReviewTicketPage({
     super.key,
     required this.ticket,
     required this.quantity,
-    required this.onPurchase,
+    required this.onNext,
     required this.onPrevious,
   });
 
@@ -33,12 +32,16 @@ class ReviewTicketPage extends StatelessWidget {
             children: [
               Text("2.", style: Theme.of(context).textTheme.headlineSmall),
               Text(
-                "Review & Purchase",
+                "Review Purchase",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ],
           ),
-          TicketCardWidget(ticket: ticket, quantity: quantity, mode: TicketStubMode.purchasingTicket,),
+          TicketCardWidget(
+            ticket: ticket,
+            quantity: quantity,
+            mode: TicketStubMode.purchasingTicket,
+          ),
           // Payment Summary
           Container(
             padding: const EdgeInsets.all(16.0),
@@ -85,34 +88,23 @@ class ReviewTicketPage extends StatelessWidget {
               ],
             ),
           ),
-          // Purchase Button
-          BlocBuilder<UserTicketSelectionBloc, UserTicketSelectionState>(
-            builder: (context, state) {
-              return Row(
-                spacing: 6.0,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: state is UserTicketPurchaseInProgress
-                          ? null
-                          : onPrevious,
-                      child: Text("Back"),
-                    ),
-                  ),
+          Row(
+            spacing: 6.0,
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: onPrevious,
+                  child: Text("Back"),
+                ),
+              ),
 
-                  Expanded(
-                    child: state is UserTicketPurchaseInProgress
-                        ? Center(child: const CircularProgressIndicator())
-                        : FilledButton(
-                            onPressed: state is UserTicketPurchaseInProgress
-                                ? null
-                                : onPurchase,
-                            child: Text("Purchase Ticket"),
-                          ),
-                  ),
-                ],
-              );
-            },
+              Expanded(
+                child: FilledButton(
+                  onPressed: onNext,
+                  child: Text("Proceed to Payment"),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -118,12 +118,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
-  sl.registerFactory(
-    () => UserTicketSelectionBloc(
-      getTicketsByEventId: sl(),
-      purchaseTicket: sl(),
-    ),
-  );
+  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
+  sl.registerFactory(() => TicketPaymentBloc(purchaseTicket: sl()));
   sl.registerFactory(
     () => AllUserEventTicketsBloc(
       getUserTicketsForEvent: sl(),

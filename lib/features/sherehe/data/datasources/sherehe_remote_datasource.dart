@@ -32,7 +32,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     try {
       final response = await dioClient.dio.get(
         "https://api.opencrafts.io/qa-sherehe/event",
-        // "$servicePrefix/event",
+        // "$/servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -356,18 +356,23 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, AttendeeData>> purchaseTicket({
+  Future<Either<Failure, String>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
+    required String phoneNumber,
   }) async {
     try {
       final response = await dioClient.dio.post(
         "https://api.opencrafts.io/qa-sherehe/purchase/",
-        data: {"ticket_id": ticketId, "ticket_quantity": ticketQuantity},
+        data: {
+          "ticket_id": ticketId,
+          "ticket_quantity": ticketQuantity,
+          "user_phone": phoneNumber,
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(AttendeeData.fromJson(response.data['attendee']));
+        return right(response.data['message']);
       } else {
         return left(
           ServerFailure(

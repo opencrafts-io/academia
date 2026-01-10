@@ -4,7 +4,7 @@ enum TicketStubMode {
   eventTicketPurchased,
 }
 
-enum PaymentTypes { paybill, till, sendMoney }
+enum PaymentTypes { paybill, till, sendMoney, pochi }
 
 final List<String> availableGenres = [
   'Meetup',
