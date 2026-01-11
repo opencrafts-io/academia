@@ -158,6 +158,14 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, String>> confirmPayment({
+    required String transId,
+  }) async {
+    final result = await remoteDataSource.confirmPayment(transId: transId);
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
   Future<Either<Failure, PaginatedResult<Attendee>>>
   getUserPurchasedTicketsForEvent({
     required String eventId,

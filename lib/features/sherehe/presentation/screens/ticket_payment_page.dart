@@ -8,7 +8,7 @@ class TicketPaymentPage extends StatefulWidget {
   final int amount;
   final VoidCallback onBack;
   final void Function(String phoneNumber) onInitiateStk;
-  final VoidCallback onCompletePayment;
+  final void Function(String transactionId) onCompletePayment;
 
   const TicketPaymentPage({
     super.key,
@@ -33,7 +33,77 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
         spacing: 16.0,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
+            builder: (context, state) {
+              Color borderColor;
+              IconData icon;
+              String message;
+
+              if (state is StkPushSent) {
+                borderColor = Colors.green;
+                icon = Icons.check_circle;
+                message =
+                    "M-Pesa prompt sent. Complete payment on your phone, then tap 'Complete Payment'.";
+              } else if (state is ConfirmPaymentLoading) {
+                borderColor = Colors.blue;
+                icon = Icons.hourglass_top;
+                message = "Confirming payment, please wait...";
+              } else if (state is ConfirmPaymentLoaded) {
+                switch (state.status) {
+                  case 'PENDING':
+                    borderColor = Colors.orange;
+                    icon = Icons.schedule;
+                    message =
+                        "Payment is still processing. Please wait a moment and try again.";
+                    break;
+
+                  case 'CANCELLED':
+                  case 'REVERSED':
+                    borderColor = Theme.of(context).colorScheme.error;
+                    icon = Icons.cancel;
+                    message =
+                        "Payment was cancelled or reversed. Please initiate payment again.";
+                    break;
+
+                  case 'FAILED':
+                    borderColor = Theme.of(context).colorScheme.error;
+                    icon = Icons.error;
+                    message =
+                        "Payment failed. If you were charged, please contact support.";
+                    break;
+
+                  case 'SUCCESS':
+                    return const SizedBox.shrink();
+                  default:
+                    return const SizedBox.shrink();
+                }
+              } else if (state is StkPushError) {
+                borderColor = Theme.of(context).colorScheme.error;
+                icon = Icons.error;
+                message = "Failed to send M-Pesa prompt. Please try again.";
+              } else {
+                return const SizedBox.shrink();
+              }
+
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: borderColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Row(
+                  children: [
+                    Icon(icon, color: borderColor),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(message)),
+                  ],
+                ),
+              );
+            },
+          ),
+
           Row(
             spacing: 10.0,
             children: [
@@ -78,20 +148,38 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                 ),
                 BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
                   builder: (context, state) {
-                    return FilledButton(
-                      onPressed: state is TicketPaymentLoading
-                          ? null
-                          : () {
-                              if (widget.formKey.currentState!.validate()) {
-                                widget.onInitiateStk(
-                                  widget.phoneNumberController.text.trim(),
-                                );
-                              }
-                            },
-                      child: state is TicketPaymentLoading
-                          ? const CircularProgressIndicator()
-                          : const Text("Pay Now"),
-                    );
+                    return state is StkPushLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : FilledButton(
+                            onPressed: state is StkPushLoading
+                                ? null
+                                : state is StkPushSent
+                                ? () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "An M-Pesa prompt has already been sent. Please complete payment.",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                : () {
+                                    if (widget.formKey.currentState!
+                                        .validate()) {
+                                      widget.onInitiateStk(
+                                        widget.phoneNumberController.text
+                                            .trim(),
+                                      );
+                                    }
+                                  },
+                            child: Text(
+                              state is StkPushError ? "Try Again" : "Pay Now",
+                            ),
+                          );
                   },
                 ),
               ],
@@ -153,24 +241,32 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: state is TicketPaymentLoading
-                          ? null
-                          : widget.onBack,
+                      onPressed: state is StkPushLoading ? null : widget.onBack,
                       child: const Text("Back"),
                     ),
                   ),
                   Expanded(
-                    child: FilledButton(
-                      onPressed: state is TicketPaymentLoading
-                          ? null
-                          : () {
-                              if (widget.formKey.currentState!.validate()) {
-                                widget.onCompletePayment();
-                              }
-                            },
-                      child: state is TicketPaymentLoading
-                          ? const CircularProgressIndicator()
-                          : const Text("Complete Payment"),
+                    child: BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
+                      builder: (context, state) {
+                        return state is ConfirmPaymentLoading
+                            ? Center(
+                              child: const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(),
+                                ),
+                            )
+                            : FilledButton(
+                                onPressed: state.transId != null
+                                    ? () {
+                                        widget.onCompletePayment(
+                                          state.transId!,
+                                        );
+                                      }
+                                    : null,
+                                child: const Text("Complete Payment"),
+                              );
+                      },
                     ),
                   ),
                 ],

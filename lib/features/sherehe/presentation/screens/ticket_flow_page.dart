@@ -71,53 +71,146 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: (index) => setState(() => currentPage = index),
-        children: [
-          UserTicketSelectionPage(
-            eventId: widget.eventId,
-            selectedTicket: _selectedTicket,
-            quantity: _quantity,
-            onTicketSelected: (ticket) {
-              setState(() {
-                _selectedTicket = ticket;
-                _quantity = ticket == null ? 1 : _quantity;
-              });
-            },
-            onQuantityChanged: (qty) {
-              setState(() => _quantity = qty);
-            },
-            onContinue: _nextPage,
-          ),
-          if (_selectedTicket != null) ...[
-            ReviewTicketPage(
-              ticket: _selectedTicket!,
-              quantity: _quantity,
-              onPrevious: _previousPage,
-              onNext: _nextPage,
-            ),
-            TicketPaymentPage(
-              formKey: _paymentPageFormKey,
-              phoneNumberController: _phoneController,
-              amount: _selectedTicket!.ticketPrice * _quantity,
-              onBack: _previousPage,
-              onInitiateStk: (phone) {
-                if (_selectedTicket != null) {
-                  context.read<TicketPaymentBloc>().add(
-                    PurchaseTicket(
-                      ticketId: _selectedTicket!.id!,
-                      ticketQuantity: _quantity,
-                      phoneNumber: phone,
+      body: BlocListener<TicketPaymentBloc, TicketPaymentState>(
+        listener: (context, state) {
+          if (state is StkPushError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "There was an error sending an Mpesa Prompt, please click Try Again to resend",
+                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+
+          if (state is ConfirmPaymentError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "There was an error confirming payment, please try again",
+                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+
+          if (state is ConfirmPaymentLoaded) {
+            switch (state.status) {
+              case 'SUCCESS':
+                context.pop();
+
+                // Delay snackbar so it shows after pop
+                Future.microtask(() {
+                  if (!context.mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Ticket purchased successfully 🎉"
+                        "Go to 'My Tickets' to view your ticket.",
+                      ),
                     ),
                   );
-                }
+                });
+                break;
+
+              case 'PENDING':
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Payment is still being processed. "
+                      "Please wait a moment and try again.",
+                    ),
+                  ),
+                );
+                break;
+
+              case 'CANCELLED':
+              case 'REVERSED':
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Payment was cancelled or reversed. "
+                      "Please initiate payment again.",
+                    ),
+                  ),
+                );
+                break;
+
+              case 'FAILED':
+              default:
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text("Payment Failed"),
+                    content: const Text(
+                      "The payment failed. If you were charged on your end, "
+                      "please contact our support team at info@opencrafts.io",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+            }
+          }
+        },
+        child: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          onPageChanged: (index) => setState(() => currentPage = index),
+          children: [
+            UserTicketSelectionPage(
+              eventId: widget.eventId,
+              selectedTicket: _selectedTicket,
+              quantity: _quantity,
+              onTicketSelected: (ticket) {
+                setState(() {
+                  _selectedTicket = ticket;
+                  _quantity = ticket == null ? 1 : _quantity;
+                });
               },
-              onCompletePayment: () {},
+              onQuantityChanged: (qty) {
+                setState(() => _quantity = qty);
+              },
+              onContinue: _nextPage,
             ),
+            if (_selectedTicket != null) ...[
+              ReviewTicketPage(
+                ticket: _selectedTicket!,
+                quantity: _quantity,
+                onPrevious: _previousPage,
+                onNext: _nextPage,
+              ),
+              TicketPaymentPage(
+                formKey: _paymentPageFormKey,
+                phoneNumberController: _phoneController,
+                amount: _selectedTicket!.ticketPrice * _quantity,
+                onBack: _previousPage,
+                onInitiateStk: (phone) {
+                  if (_selectedTicket != null) {
+                    context.read<TicketPaymentBloc>().add(
+                      PurchaseTicket(
+                        ticketId: _selectedTicket!.id!,
+                        ticketQuantity: _quantity,
+                        phoneNumber: phone,
+                      ),
+                    );
+                  }
+                },
+                onCompletePayment: (transactionID) {
+                  context.read<TicketPaymentBloc>().add(
+                    ConfirmPayment(transId: transactionID),
+                  );
+                },
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

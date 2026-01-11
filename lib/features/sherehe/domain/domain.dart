@@ -19,3 +19,4 @@ export 'usecases/get_user_purchased_tickets_for_event_use_case.dart';
 export 'usecases/get_events_by_organizer_id_use_case.dart';
 export 'usecases/validate_attendee_use_case.dart';
 export 'usecases/search_events_use_case.dart';
+export 'usecases/confirm_payment_use_case.dart';

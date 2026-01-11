@@ -100,6 +100,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
+  sl.registerLazySingleton(() => ConfirmPaymentUseCase(sl()));
   sl.registerLazySingleton(() => GetAllUserPurchasedTicketsUseCase(sl()));
   sl.registerLazySingleton(() => SearchUserAttendedEventsUseCase(sl()));
 
@@ -119,7 +120,9 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
   sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
-  sl.registerFactory(() => TicketPaymentBloc(purchaseTicket: sl()));
+  sl.registerFactory(
+    () => TicketPaymentBloc(purchaseTicket: sl(), confirmPayment: sl()),
+  );
   sl.registerFactory(
     () => AllUserEventTicketsBloc(
       getUserTicketsForEvent: sl(),

@@ -7,17 +7,21 @@ part 'ticket_payment_state.dart';
 
 class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
   final PurchaseTicketUseCase purchaseTicket;
+  final ConfirmPaymentUseCase confirmPayment;
 
-  TicketPaymentBloc({required this.purchaseTicket})
-    : super(TicketPaymentInitial()) {
+  TicketPaymentBloc({
+    required this.purchaseTicket,
+    required this.confirmPayment,
+  }) : super(StkPushInitial()) {
     on<PurchaseTicket>(_onPurchaseTicket);
+    on<ConfirmPayment>(_onConfirmPayment);
   }
 
   Future<void> _onPurchaseTicket(
     PurchaseTicket event,
     Emitter<TicketPaymentState> emit,
   ) async {
-    emit(TicketPaymentLoading());
+    emit(StkPushLoading());
 
     final result = await purchaseTicket(
       ticketId: event.ticketId,
@@ -27,14 +31,30 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
 
     result.fold(
       (failure) {
+        emit(StkPushError(message: failure.message));
+      },
+      (transId) {
+        emit(StkPushSent(transId: transId));
+      },
+    );
+  }
+
+  Future<void> _onConfirmPayment(
+    ConfirmPayment event,
+    Emitter<TicketPaymentState> emit,
+  ) async {
+    emit(ConfirmPaymentLoading(transId: event.transId));
+
+    final result = await confirmPayment(transId: event.transId);
+
+    result.fold(
+      (failure) {
         emit(
-          TicketPaymentError(
-            message: failure.message,
-          ),
+          ConfirmPaymentError(transId: event.transId, message: failure.message),
         );
       },
-      (message) {
-        emit(TicketPaymentLoaded(message: "Ticket purchased successfully."));
+      (status) {
+        emit(ConfirmPaymentLoaded(transId: event.transId, status: status));
       },
     );
   }

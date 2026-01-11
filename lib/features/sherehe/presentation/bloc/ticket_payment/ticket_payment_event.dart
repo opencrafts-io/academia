@@ -21,3 +21,12 @@ class PurchaseTicket extends TicketPaymentEvent {
   @override
   List<Object> get props => [ticketId, ticketQuantity, phoneNumber];
 }
+
+class ConfirmPayment extends TicketPaymentEvent {
+  final String transId;
+
+  const ConfirmPayment({required this.transId});
+
+  @override
+  List<Object> get props => [transId];
+}

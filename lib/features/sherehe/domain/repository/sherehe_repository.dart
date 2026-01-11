@@ -51,6 +51,10 @@ abstract class ShereheRepository {
     required String phoneNumber,
   });
 
+  Future<Either<Failure, String>> confirmPayment({
+    required String transId,
+  });
+
   Future<Either<Failure, PaginatedResult<Attendee>>>
   getUserPurchasedTicketsForEvent({
     required String eventId,

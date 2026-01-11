@@ -371,7 +371,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(response.data['message']);
+        return right(response.data['trans_id']);
       } else {
         return left(
           ServerFailure(
@@ -394,7 +394,38 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  //To use a different endpoint once available
+  Future<Either<Failure, String>> confirmPayment({
+    required String transId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/purchase/$transId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['status']);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when confirming payment",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when confirming payment", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when confirming payment", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while confirming the payment",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, PaginatedResult<AttendeeData>>>
   getUserPurchasedTicketsForEvent({
     required String eventId,
