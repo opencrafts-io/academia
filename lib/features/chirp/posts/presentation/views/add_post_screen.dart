@@ -158,7 +158,7 @@ class _AddPostPageState extends State<AddPostPage> {
       _selectedCommunity = null;
     });
 
-    context.pop();
+    context.pop(true); //TODO: route back to feed page
   }
 
   @override

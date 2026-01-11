@@ -497,6 +497,8 @@ class _CommunityActionSection extends StatelessWidget {
           return IconButton(
             onPressed: () {
               final cubit = context.read<ChirpCommunityMembershipCubit>();
+              final communityHomeBloc = context.read<CommunityHomeBloc>();
+              final feedBloc = context.read<FeedBloc>();
 
               showModalBottomSheet(
                 context: context,
@@ -531,14 +533,25 @@ class _CommunityActionSection extends StatelessWidget {
                         leading: Icon(Icons.add_box_outlined),
                         title: Text("Add post"),
                         onTap: () async {
-                          final communityState = context
-                              .read<CommunityHomeBloc>()
-                              .state;
+                          final communityState = communityHomeBloc.state;
+
+                          // Close modal
+                          Navigator.of(context).pop();
+
                           if (communityState is CommunityHomeLoaded) {
-                            context.push(
+                            final result = await context.push(
                               AddPostRoute().location,
                               extra: communityState.community,
                             );
+
+                            if (result == true) {
+                              feedBloc.add(
+                                LoadPostsForCommunityEvent(
+                                  communityID: communityID,
+                                  page: 1,
+                                ),
+                              );
+                            }
                           }
                         },
                       ),
