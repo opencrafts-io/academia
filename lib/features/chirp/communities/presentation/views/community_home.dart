@@ -527,6 +527,21 @@ class _CommunityActionSection extends StatelessWidget {
                           title: Text("Edit community information"),
                         ),
                       ),
+                      ListTile(
+                        leading: Icon(Icons.add_box_outlined),
+                        title: Text("Add post"),
+                        onTap: () async {
+                          final communityState = context
+                              .read<CommunityHomeBloc>()
+                              .state;
+                          if (communityState is CommunityHomeLoaded) {
+                            context.push(
+                              AddPostRoute().location,
+                              extra: communityState.community,
+                            );
+                          }
+                        },
+                      ),
 
                       ListTile(
                         leading: Icon(Icons.groups_2),

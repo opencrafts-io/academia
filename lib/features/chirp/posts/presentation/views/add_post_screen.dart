@@ -17,7 +17,9 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 
 class AddPostPage extends StatefulWidget {
-  const AddPostPage({super.key});
+  final Community? preselectedCommunity;
+
+  const AddPostPage({super.key, this.preselectedCommunity});
 
   @override
   State<AddPostPage> createState() => _AddPostPageState();
@@ -33,6 +35,7 @@ class _AddPostPageState extends State<AddPostPage> {
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
       TextEditingController();
+  final SearchController _searchController = SearchController();
 
   final formState = GlobalKey<FormState>();
 
@@ -132,10 +135,10 @@ class _AddPostPageState extends State<AddPostPage> {
   Future<void> _submitPost() async {
     if (!formState.currentState!.validate()) {
       _showSnackBar("Please provide required details before continuing");
-         }
+    }
     if (_selectedCommunity == null) {
       _showSnackBar("Please select a community to post in.");
-         }
+    }
     if (!mounted) return;
     context.read<FeedBloc>().add(
       CreatePostEvent(
@@ -169,6 +172,20 @@ class _AddPostPageState extends State<AddPostPage> {
     } else {
       authorId = null;
     }
+
+    if (widget.preselectedCommunity != null) {
+      _selectedCommunity = widget.preselectedCommunity;
+      _searchController.text = widget.preselectedCommunity!.name;
+    } else {
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _postTitleController.dispose();
+    _postDescriptionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -187,6 +204,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SearchAnchor.bar(
+                      searchController: _searchController,
                       barElevation: WidgetStateProperty.all(0),
                       barHintText: "Select community",
                       barHintStyle: WidgetStateProperty.all(
@@ -200,6 +218,12 @@ class _AddPostPageState extends State<AddPostPage> {
                       barTextStyle: WidgetStatePropertyAll(
                         Theme.of(context).textTheme.headlineSmall,
                       ),
+
+                      onTap: () {
+                        context
+                            .read<CommunityListingCubit>()
+                            .getPostableCommunities(page: 1);
+                      },
 
                       suggestionsBuilder: (context, controller) {
                         if (controller.text.trim().isNotEmpty) {

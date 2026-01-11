@@ -149,11 +149,22 @@ class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
   }
 }
 
+// @TypedGoRoute<AddPostRoute>(path: "/add-post")
+// class AddPostRoute extends GoRouteData with _$AddPostRoute {
+//   @override
+//   Widget build(BuildContext context, GoRouterState state) {
+//     return const AddPostPage();
+//   }
+// }
+
 @TypedGoRoute<AddPostRoute>(path: "/add-post")
 class AddPostRoute extends GoRouteData with _$AddPostRoute {
+  const AddPostRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const AddPostPage();
+    final community = state.extra as Community?;
+    return AddPostPage(preselectedCommunity: community);
   }
 }
 
