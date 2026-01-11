@@ -31,8 +31,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/event",
-        // "$/servicePrefix/event",
+        "/$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -71,7 +70,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/event/$eventId",
+        "/$servicePrefix/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -103,7 +102,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/event/organizer/$organizerId",
+        "/$servicePrefix/event/organizer/$organizerId",
       );
 
       if (response.statusCode == 200) {
@@ -205,7 +204,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Send request
       final response = await dioClient.dio.post(
-        "https://api.opencrafts.io/qa-sherehe/event/",
+        "/$servicePrefix/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
@@ -243,7 +242,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/event/$eventId",
+        "/$servicePrefix/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -289,7 +288,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/$id",
+        "/$servicePrefix/attendee/$id",
       );
 
       if (response.statusCode == 200) {
@@ -321,7 +320,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   ) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/ticket/event/$eventId",
+        "/$servicePrefix/ticket/event/$eventId",
       );
 
       if (response.statusCode == 200) {
@@ -363,7 +362,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "https://api.opencrafts.io/qa-sherehe/purchase/",
+        "/$servicePrefix/purchase/",
         data: {
           "ticket_id": ticketId,
           "ticket_quantity": ticketQuantity,
@@ -404,7 +403,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/event/user/$eventId",
+        "/$servicePrefix/attendee/event/user/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -446,7 +445,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   getAllUserPurchasedTickets({required int page, required int limit}) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/user/attended",
+        "/$servicePrefix/attendee/user/attended",
         queryParameters: {"page": page, "limit": limit},
       );
 
@@ -488,7 +487,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/attendee/search",
+        "/$servicePrefix/attendee/search",
         queryParameters: {"q": query},
       );
 
@@ -525,7 +524,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.post(
-        "https://api.opencrafts.io/qa-sherehe/attendee/user/",
+        "/$servicePrefix/attendee/user/",
         data: {"eventId": eventId, "attendeeId": attendeeId},
       );
 
@@ -561,7 +560,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        "https://api.opencrafts.io/qa-sherehe/event/search",
+        "/$servicePrefix/event/search",
         queryParameters: {"q": query},
       );
 
