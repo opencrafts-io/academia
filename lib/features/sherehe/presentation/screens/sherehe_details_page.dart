@@ -365,7 +365,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                 ),
 
                 BlocProvider(
-                  create: (_) => AttendeeBloc(getAttendee: sl()),
+                  key: ValueKey(state.event.id),
+                  create: (_) =>
+                      AttendeeBloc(getAttendee: sl())
+                        ..add(FetchAttendees(eventId: state.event.id)),
                   child: AttendeesList(
                     eventId: state.event.id,
                     organizerId: state.event.organizerId,

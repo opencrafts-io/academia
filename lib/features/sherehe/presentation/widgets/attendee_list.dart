@@ -1,8 +1,8 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/domain.dart';
-import '../presentation.dart';
 
 class AttendeesList extends StatefulWidget {
   final String eventId;
@@ -51,7 +51,7 @@ class _AttendeesListState extends State<AttendeesList> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Failed to load attendees. Please try again later.",
+                  "Failed to load attendees. You can still proceed to book a ticket.",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
