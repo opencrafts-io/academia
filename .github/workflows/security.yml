@@ -1,0 +1,62 @@
+name: Analyse the code quality and check for security issues
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set Short SHA
+        run: echo "SHA7=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+      
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Analyze code
+        id: analyze
+        continue-on-error: true
+        run: flutter analyze > analyze_report_${{ env.SHA7 }}.txt 2>&1 || true 
+      
+      - name: Vuln scan (Trivy)
+        id: trivy
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          output: 'trivy_report_${{ env.SHA7 }}.txt'
+      
+      - name: Send All Reports to Discord
+        if: always()
+        run: |
+          STATUS="${{ steps.analyze.outcome == 'success' && ' PASSED' || ' FAILED' }}"
+          MSG="**Hello @here these are the Results for ${{ github.event.pull_request.title || 'Branch' }}**\n**Status**: $STATUS\n**Branch**: \`${{ github.head_ref || github.ref_name }}\`\n**Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          curl -H "Content-Type: multipart/form-data" \
+               -F "content=$MSG" \
+               -F "file1=@analyze_report_${{ env.SHA7 }}.txt" \
+               -F "file2=@trivy_report_${{ env.SHA7 }}.txt" \
+               ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Upload analyze report to Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-quality-reports
+          path: |
+            analyze_report_${{ env.SHA7 }}.txt
+            trivy_report_${{ env.SHA7 }}.txt
