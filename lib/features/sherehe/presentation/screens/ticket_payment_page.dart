@@ -148,6 +148,11 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                 ),
                 BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
                   builder: (context, state) {
+                    final bool disablePayNow =
+                        state is StkPushLoading ||
+                        state is ConfirmPaymentLoading ||
+                        (state is ConfirmPaymentLoaded &&
+                            state.status == 'PENDING');
                     return state is StkPushLoading
                         ? const SizedBox(
                             width: 20,
@@ -155,7 +160,7 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                             child: CircularProgressIndicator(),
                           )
                         : FilledButton(
-                            onPressed: state is StkPushLoading
+                            onPressed: disablePayNow
                                 ? null
                                 : state is StkPushSent
                                 ? () {
@@ -250,12 +255,12 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                       builder: (context, state) {
                         return state is ConfirmPaymentLoading
                             ? Center(
-                              child: const SizedBox(
+                                child: const SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(),
                                 ),
-                            )
+                              )
                             : FilledButton(
                                 onPressed: state.transId != null
                                     ? () {

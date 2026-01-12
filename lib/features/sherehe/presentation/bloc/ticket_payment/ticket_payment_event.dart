@@ -30,3 +30,10 @@ class ConfirmPayment extends TicketPaymentEvent {
   @override
   List<Object> get props => [transId];
 }
+
+class ResetTicketPaymentState extends TicketPaymentEvent {
+  const ResetTicketPaymentState();
+
+  @override
+  List<Object> get props => [];
+}

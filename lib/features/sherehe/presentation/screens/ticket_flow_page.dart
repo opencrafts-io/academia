@@ -57,7 +57,33 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text("Quit Ticket Booking"),
+                content: const Text(
+                  "Are you sure you want to quit the ticket booking process?",
+                ),
+                actions: [
+                  FilledButton(
+                    onPressed: () {
+                      context.read<TicketPaymentBloc>().add(
+                        ResetTicketPaymentState(),
+                      );
+                      Navigator.pop(context);
+                      context.pop();
+                    },
+                    child: const Text("Quit"),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
         title: const Text("Ticket Booking"),
         bottom: PreferredSize(
