@@ -1,9 +1,10 @@
-import 'package:academia/features/sherehe/presentation/widgets/event_card.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../config/router/routes.dart';
 import '../../domain/domain.dart';
-import '../bloc/sherehe_home_bloc.dart';
 
 class EventCardWrapper extends StatelessWidget {
   final Event event;
@@ -12,45 +13,36 @@ class EventCardWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
-      buildWhen: (previous, current) {
-        if (current is! EventLoaded) return false;
-        if (previous is! EventLoaded) return true;
+    return BlocProvider(
+      create: (_) =>
+          AttendeeBloc(getAttendee: sl())
+            ..add(FetchAttendees(eventId: event.id)),
+      child: BlocBuilder<AttendeeBloc, AttendeeState>(
+        builder: (context, state) {
+          List<String> attendeeUserNames = [];
+          bool isLoading = true;
 
-        final oldAttendees = previous.attendeesMap[event.id];
-        final newAttendees = current.attendeesMap[event.id];
-
-        return oldAttendees != newAttendees;
-      },
-      builder: (context, state) {
-        List<String> attendeeNames = [];
-        int attendeeCount = event.numberOfAttendees;
-
-        bool isLoading = true;
-
-        if (state is EventLoaded) {
-          final attendees = state.attendeesMap[event.id];
-          if (attendees != null) {
-            attendeeNames = attendees
-                .map((a) => "${a.firstName} ${a.lastName}")
+          if (state is AttendeeLoaded) {
+            attendeeUserNames = state.attendees
+                .map((a) => a.user?.username ?? 'Guest')
                 .toList();
             isLoading = false;
+          } else if (state is AttendeeError) {
+            // Show empty avatar row + disable loading
+            isLoading = false;
           }
-        }
 
-        return EventCard(
-          imagePath: event.imageUrl,
-          title: event.name,
-          location: event.location,
-          date: event.date,
-          time: event.time,
-          genres: event.genre,
-          attendees: attendeeNames,
-          attendeesCount: attendeeCount,
-          isAttendeesLoading: isLoading,
-          onTap: () => ShereheDetailsRoute(eventId: event.id).push(context),
-        );
-      },
+          return EventCard(
+            event: event,
+            attendees: attendeeUserNames,
+            isAttendeesLoading: isLoading,
+            onTap: () => context.push(
+              ShereheDetailsRoute(eventId: event.id).location,
+              extra: event,
+            ),
+          );
+        },
+      ),
     );
   }
 }

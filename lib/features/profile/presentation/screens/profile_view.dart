@@ -1,10 +1,15 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/constants/constants.dart';
+import 'package:academia/database/database.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/injection_container.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
 
@@ -224,6 +229,64 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         ProfileInstitutionSection(),
+
+                        SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Account Management",
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            fixedSize: Size(480, 60),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(12),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final logout = await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog.adaptive(
+                                title: Text("Are you sure"),
+                                content: Text(
+                                  "Tapping yes im sure will delete all your data on device and you'll have to re-login",
+                                ),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () => context.pop(true),
+                                    child: Text("Yes, im sure"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => context.pop(false),
+                                    child: Text("Cancel"),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (logout) {
+                              final appDb = sl.get<AppDataBase>();
+                              final tables = appDb.allTables;
+                              for (final table in tables) {
+                                table.deleteAll();
+                              }
+
+                              if (!context.mounted) return;
+                              context.read<AuthBloc>().add(
+                                AuthCheckStatusEvent(),
+                              );
+                              AuthRoute().go(context);
+                            }
+                          },
+                          child: Text("Logout"),
+                        ),
+
+                        SizedBox(height: 22),
                       ],
                     ),
                   ),

@@ -15,12 +15,20 @@ List<RouteBase> get $appRoutes => [
   $profileRoute,
   $completeProfileRoute,
   $shereheRoute,
+  $purchasedTicketsRoute,
+  $organizedEventsRoute,
+  $ticketReceiptRoute,
+  $qrCodeRoute,
   $todosRoute,
   $magnetRoute,
   $communitiesRoute,
   $createCommunitiesRoute,
   $trimVideoRoute,
   $communityMembershipsRoute,
+  $achievementsHomePageRoute,
+  $activitiesPageRoute,
+  $examTimetableRoute,
+  $settingsPageRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -226,7 +234,7 @@ RouteBase get $addPostRoute =>
     GoRouteData.$route(path: '/add-post', factory: _$AddPostRoute._fromState);
 
 mixin _$AddPostRoute on GoRouteData {
-  static AddPostRoute _fromState(GoRouterState state) => AddPostRoute();
+  static AddPostRoute _fromState(GoRouterState state) => const AddPostRoute();
 
   @override
   String get location => GoRouteData.$location('/add-post');
@@ -322,8 +330,22 @@ RouteBase get $shereheRoute => GoRouteData.$route(
   factory: _$ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'get-event',
+      path: 'get-event/:eventId',
       factory: _$ShereheDetailsRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'ticket-flow',
+          factory: _$TicketFlowRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'qr-code-scanner',
+          factory: _$QrCodeScannerRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'event-tickets',
+          factory: _$EventTicketsRoute._fromState,
+        ),
+      ],
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
   ],
@@ -351,14 +373,88 @@ mixin _$ShereheRoute on GoRouteData {
 
 mixin _$ShereheDetailsRoute on GoRouteData {
   static ShereheDetailsRoute _fromState(GoRouterState state) =>
-      ShereheDetailsRoute(eventId: state.uri.queryParameters['event-id']!);
+      ShereheDetailsRoute(eventId: state.pathParameters['eventId']!);
 
   ShereheDetailsRoute get _self => this as ShereheDetailsRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event',
-    queryParams: {'event-id': _self.eventId},
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$TicketFlowRoute on GoRouteData {
+  static TicketFlowRoute _fromState(GoRouterState state) =>
+      TicketFlowRoute(eventId: state.pathParameters['eventId']!);
+
+  TicketFlowRoute get _self => this as TicketFlowRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/ticket-flow',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$QrCodeScannerRoute on GoRouteData {
+  static QrCodeScannerRoute _fromState(GoRouterState state) =>
+      QrCodeScannerRoute(eventId: state.pathParameters['eventId']!);
+
+  QrCodeScannerRoute get _self => this as QrCodeScannerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/qr-code-scanner',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$EventTicketsRoute on GoRouteData {
+  static EventTicketsRoute _fromState(GoRouterState state) =>
+      EventTicketsRoute(eventId: state.pathParameters['eventId']!);
+
+  EventTicketsRoute get _self => this as EventTicketsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/event-tickets',
   );
 
   @override
@@ -380,6 +476,133 @@ mixin _$CreateEventRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/sherehe/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $purchasedTicketsRoute => GoRouteData.$route(
+  path: '/purchased-tickets/all',
+  factory: _$PurchasedTicketsRoute._fromState,
+);
+
+mixin _$PurchasedTicketsRoute on GoRouteData {
+  static PurchasedTicketsRoute _fromState(GoRouterState state) =>
+      PurchasedTicketsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/purchased-tickets/all');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $organizedEventsRoute => GoRouteData.$route(
+  path: '/organized-events/mine',
+  factory: _$OrganizedEventsRoute._fromState,
+);
+
+mixin _$OrganizedEventsRoute on GoRouteData {
+  static OrganizedEventsRoute _fromState(GoRouterState state) =>
+      OrganizedEventsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/organized-events/mine');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $ticketReceiptRoute => GoRouteData.$route(
+  path: '/ticket-receipt',
+  factory: _$TicketReceiptRoute._fromState,
+);
+
+mixin _$TicketReceiptRoute on GoRouteData {
+  static TicketReceiptRoute _fromState(GoRouterState state) =>
+      TicketReceiptRoute(
+        ticketPrice: int.parse(state.uri.queryParameters['ticket-price']!),
+        quantity: int.parse(state.uri.queryParameters['quantity']!),
+      );
+
+  TicketReceiptRoute get _self => this as TicketReceiptRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/ticket-receipt',
+    queryParams: {
+      'ticket-price': _self.ticketPrice.toString(),
+      'quantity': _self.quantity.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $qrCodeRoute => GoRouteData.$route(
+  path: '/qr-code/:eventId/:attendeeId',
+  factory: _$QrCodeRoute._fromState,
+);
+
+mixin _$QrCodeRoute on GoRouteData {
+  static QrCodeRoute _fromState(GoRouterState state) => QrCodeRoute(
+    eventId: state.pathParameters['eventId']!,
+    attendeeId: state.pathParameters['attendeeId']!,
+    ticketName: state.uri.queryParameters['ticket-name']!,
+    quantity: int.parse(state.uri.queryParameters['quantity']!),
+  );
+
+  QrCodeRoute get _self => this as QrCodeRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/qr-code/${Uri.encodeComponent(_self.eventId)}/${Uri.encodeComponent(_self.attendeeId)}',
+    queryParams: {
+      'ticket-name': _self.ticketName,
+      'quantity': _self.quantity.toString(),
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -787,6 +1010,180 @@ mixin _$CommunityMembershipsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/community/memberships/mine');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $achievementsHomePageRoute => GoRouteData.$route(
+  path: '/achievements',
+  factory: _$AchievementsHomePageRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: ':id',
+      factory: _$AchievementDetailPageRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$AchievementsHomePageRoute on GoRouteData {
+  static AchievementsHomePageRoute _fromState(GoRouterState state) =>
+      AchievementsHomePageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/achievements');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AchievementDetailPageRoute on GoRouteData {
+  static AchievementDetailPageRoute _fromState(GoRouterState state) =>
+      AchievementDetailPageRoute(id: state.pathParameters['id']!);
+
+  AchievementDetailPageRoute get _self => this as AchievementDetailPageRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/achievements/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $activitiesPageRoute => GoRouteData.$route(
+  path: '/activities/:id',
+  factory: _$ActivitiesPageRoute._fromState,
+);
+
+mixin _$ActivitiesPageRoute on GoRouteData {
+  static ActivitiesPageRoute _fromState(GoRouterState state) =>
+      ActivitiesPageRoute(id: state.pathParameters['id']!);
+
+  ActivitiesPageRoute get _self => this as ActivitiesPageRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/activities/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $examTimetableRoute => GoRouteData.$route(
+  path: '/exam-timetable/:institutionId',
+  factory: _$ExamTimetableRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'search',
+      factory: _$ExamTimetableSearchRoute._fromState,
+    ),
+  ],
+);
+
+mixin _$ExamTimetableRoute on GoRouteData {
+  static ExamTimetableRoute _fromState(GoRouterState state) =>
+      ExamTimetableRoute(institutionId: state.pathParameters['institutionId']!);
+
+  ExamTimetableRoute get _self => this as ExamTimetableRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$ExamTimetableSearchRoute on GoRouteData {
+  static ExamTimetableSearchRoute _fromState(GoRouterState state) =>
+      ExamTimetableSearchRoute(
+        institutionId: state.pathParameters['institutionId']!,
+      );
+
+  ExamTimetableSearchRoute get _self => this as ExamTimetableSearchRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}/search',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsPageRoute => GoRouteData.$route(
+  path: '/settings',
+  factory: _$SettingsPageRoute._fromState,
+);
+
+mixin _$SettingsPageRoute on GoRouteData {
+  static SettingsPageRoute _fromState(GoRouterState state) =>
+      SettingsPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings');
 
   @override
   void go(BuildContext context) => context.go(location);

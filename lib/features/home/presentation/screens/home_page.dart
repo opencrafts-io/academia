@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedDrawerItem = 0;
+  String? userId;
   @override
   void initState() {
     super.initState();
@@ -35,6 +36,14 @@ class _HomePageState extends State<HomePage> {
             case 2:
               context.pop();
               CommunityMembershipsRoute().push(context);
+              break;
+            case 3:
+              context.pop();
+              PurchasedTicketsRoute().push(context);
+              break;
+            case 4:
+              context.pop();
+              OrganizedEventsRoute().push(context);
               break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(
@@ -69,11 +78,28 @@ class _HomePageState extends State<HomePage> {
             selectedIcon: Icon(Icons.view_comfy),
             label: Text("View your communities"),
           ),
+          Padding(
+            padding: EdgeInsetsGeometry.all(12),
+            child: Text(
+              "Sherehe",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(Icons.confirmation_number_outlined),
+            selectedIcon: Icon(Icons.confirmation_number),
+            label: Text("All Tickets"),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(Icons.event_note_outlined),
+            selectedIcon: Icon(Icons.event_note),
+            label: Text("My Organized Events"),
+          ),
         ],
       ),
       body: DefaultTabController(
-        initialIndex: 0,
-        length: 2,
+        initialIndex: 1,
+        length: 3,
         child: RefreshIndicator.adaptive(
           onRefresh: () async {},
           child: CustomScrollView(
@@ -97,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   isScrollable: true,
                   tabAlignment: TabAlignment.center,
                   tabs: [
-                    // Tab(child: Text("Leaderboard")),
+                    Tab(child: Text("Leaderboard")),
                     Tab(child: Text("For you")),
                     Tab(child: Text("Sherehe")),
                   ],
@@ -139,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: TabBarView(
                       children: [
-                        // Center(child: Text("Leaderboard")),
+                        LeaderboardHomepage(),
                         FeedPage(),
                         ShereheHome(),
                       ],

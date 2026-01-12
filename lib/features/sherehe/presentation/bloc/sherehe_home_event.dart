@@ -8,9 +8,19 @@ abstract class ShereheHomeEvent extends Equatable {
 }
 
 class FetchAllEvents extends ShereheHomeEvent {
+  final int page;
   final int limit;
-  final String? eventId;
   final bool isLoadMore;
 
-  const FetchAllEvents({this.eventId, this.limit = 10, this.isLoadMore = false,});
+  const FetchAllEvents({
+    required this.page,
+    this.limit = 10,
+    this.isLoadMore = false,
+  });
+}
+
+class FetchEventAttendees extends ShereheHomeEvent {
+  final Event event;
+
+  const FetchEventAttendees({required this.event});
 }

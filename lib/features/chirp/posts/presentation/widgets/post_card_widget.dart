@@ -38,8 +38,7 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
         ),
-        padding: EdgeInsets.all(12),
-
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,28 +49,30 @@ class _PostCardState extends State<PostCard> {
                 String username = 'Unknown User';
 
                 if (state is ChirpUserLoadedState) {
-                  avatarUrl =
-                      state.user.avatarUrl ??
+                  avatarUrl = state.user.avatarUrl ??
                       'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
                   username = state.user.username ?? 'Unknown User';
                 }
 
                 return Row(
-                  spacing: 8,
                   children: [
                     ChirpUserAvatar(avatarUrl: avatarUrl, numberOfScallops: 6),
+                    const SizedBox(width: 8),
                     Column(
-                      spacing: 2,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'a/${widget.post.community.name}',
-                          style: Theme.of(context).textTheme.bodySmall
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "$username • ${timeSince(widget.post.createdAt)}",
-                          style: Theme.of(context).textTheme.bodySmall
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
                               ?.copyWith(
                                 overflow: TextOverflow.ellipsis,
                                 // fontWeight: FontWeight.bold,
@@ -83,26 +84,23 @@ class _PostCardState extends State<PostCard> {
                 );
               },
             ),
-
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               widget.post.title,
               style: Theme.of(
                 context,
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-
+            const SizedBox(height: 8),
             Text(widget.post.content),
             if (widget.post.attachments.isNotEmpty) ...[
               const SizedBox(height: 8),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final double attachmentWidth = constraints.maxWidth;
-                  final double attachmentHeight = attachmentWidth / (16 / 9); 
+                  final double attachmentHeight = attachmentWidth / (4 / 5);
 
                   return SizedBox(
-                    // constraints: BoxConstraints(),
                     height: attachmentHeight,
                     child: PageView.builder(
                       controller: _pageController,
@@ -110,30 +108,35 @@ class _PostCardState extends State<PostCard> {
                       onPageChanged: (index) =>
                           setState(() => currentPage = index),
                       itemBuilder: (context, index) {
-                        return AttachmentWidget(
-                          attachment: widget.post.attachments[index],
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: AttachmentWidget(
+                              attachment: widget.post.attachments[index],
+                            ),
+                          ),
                         );
                       },
                     ),
                   );
                 },
               ),
-
               if (widget.post.attachments.length > 1)
                 Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(widget.post.attachments.length, (
                       index,
                     ) {
                       return AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: currentPage == index ? 6 : 4,
-                        height: currentPage == index ? 6 : 4,
+                        width: currentPage == index ? 24 : 8,
+                        height: 8,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(4),
                           color: currentPage == index
                               ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.outline,
@@ -143,63 +146,27 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
             ],
-
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
-                // SegmentedButton<Vote>(
-                //   selected: {}, // TODO: To be Removed
-                //   segments: [
-                //     ButtonSegment(
-                //       value: Vote.up,
-                //       icon: Icon(Icons.thumb_up_outlined),
-                //       label: Text(widget.post.upvotes.toString()),
-                //     ),
-                //     ButtonSegment(
-                //       value: Vote.down,
-                //       icon: Icon(Icons.thumb_down_outlined),
-                //     ),
-                //   ],
-                //   style: SegmentedButton.styleFrom(padding: EdgeInsets.all(2)),
-                //   emptySelectionAllowed: true,
-                //   //TODO: implement like functionality and uncomment the below
-                //   // selected: widget.post.isLiked ? {Vote.up} : <Vote>{},
-                //   // selectedIcon: widget.post.isLiked
-                //   //     ? Icon(Icons.thumb_up)
-                //   //     : Icon(Icons.thumb_down),
-                //   onSelectionChanged: (vote) {
-                //     // final isTogglingOff = vote.isEmpty && widget.post.isLiked;
-                //     // context.read<FeedBloc>().add(
-                //     //   ToggleLikePost(
-                //     //     postId: widget.post.id.toString(),
-                //     //     isCurrentlyLiked: isTogglingOff
-                //     //         ? true
-                //     //         : widget.post.isLiked,
-                //     //   ),
-                //     // );
-                //   },
-                // ),
-                // SizedBox(width: 16),
                 FilledButton.icon(
                   style: FilledButton.styleFrom(
-                    padding: EdgeInsets.all(2),
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.tertiaryContainer,
-                    foregroundColor: Theme.of(
-                      context,
-                    ).colorScheme.onTertiaryContainer,
+                    padding: const EdgeInsets.all(2),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.tertiaryContainer,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onTertiaryContainer,
                   ),
-                  icon: Icon(Icons.chat),
+                  icon: const Icon(Icons.chat),
                   onPressed: widget.onTap,
                   label: Text('${widget.post.commentCount}'),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 OutlinedButton.icon(
                   iconAlignment: IconAlignment.start,
                   onPressed: null,
                   label: Text(widget.post.viewsCount.toString()),
-                  icon: Icon(Icons.visibility),
+                  icon: const Icon(Icons.visibility),
                 ),
               ],
             ),
