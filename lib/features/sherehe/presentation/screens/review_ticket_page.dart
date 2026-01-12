@@ -7,6 +7,7 @@ class ReviewTicketPage extends StatelessWidget {
   final int quantity;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
+  final bool? isFreeEvent;
 
   const ReviewTicketPage({
     super.key,
@@ -14,6 +15,7 @@ class ReviewTicketPage extends StatelessWidget {
     required this.quantity,
     required this.onNext,
     required this.onPrevious,
+    this.isFreeEvent = false,
   });
 
   @override
@@ -100,8 +102,10 @@ class ReviewTicketPage extends StatelessWidget {
 
               Expanded(
                 child: FilledButton(
-                  onPressed: onNext,
-                  child: Text("Proceed to Payment"),
+                  onPressed: isFreeEvent == true ? () {} : onNext,
+                  child: Text(
+                    isFreeEvent == true ? "Book Ticket" : "Proceed to Payment",
+                  ),
                 ),
               ),
             ],

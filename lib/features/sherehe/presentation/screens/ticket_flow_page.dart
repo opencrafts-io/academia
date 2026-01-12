@@ -51,7 +51,10 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
 
   @override
   Widget build(BuildContext context) {
-    final progress = (currentPage + 1) / 3;
+    final progress =
+        _selectedTicket != null && _selectedTicket!.ticketPrice == 0
+        ? (currentPage + 1) / 2
+        : (currentPage + 1) / 3;
 
     return Scaffold(
       appBar: AppBar(
@@ -211,29 +214,31 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 quantity: _quantity,
                 onPrevious: _previousPage,
                 onNext: _nextPage,
+                isFreeEvent: _selectedTicket!.ticketPrice == 0,
               ),
-              TicketPaymentPage(
-                formKey: _paymentPageFormKey,
-                phoneNumberController: _phoneController,
-                amount: _selectedTicket!.ticketPrice * _quantity,
-                onBack: _previousPage,
-                onInitiateStk: (phone) {
-                  if (_selectedTicket != null) {
+              if (_selectedTicket!.ticketPrice > 0)
+                TicketPaymentPage(
+                  formKey: _paymentPageFormKey,
+                  phoneNumberController: _phoneController,
+                  amount: _selectedTicket!.ticketPrice * _quantity,
+                  onBack: _previousPage,
+                  onInitiateStk: (phone) {
+                    if (_selectedTicket != null) {
+                      context.read<TicketPaymentBloc>().add(
+                        PurchaseTicket(
+                          ticketId: _selectedTicket!.id!,
+                          ticketQuantity: _quantity,
+                          phoneNumber: phone,
+                        ),
+                      );
+                    }
+                  },
+                  onCompletePayment: (transactionID) {
                     context.read<TicketPaymentBloc>().add(
-                      PurchaseTicket(
-                        ticketId: _selectedTicket!.id!,
-                        ticketQuantity: _quantity,
-                        phoneNumber: phone,
-                      ),
+                      ConfirmPayment(transId: transactionID),
                     );
-                  }
-                },
-                onCompletePayment: (transactionID) {
-                  context.read<TicketPaymentBloc>().add(
-                    ConfirmPayment(transId: transactionID),
-                  );
-                },
-              ),
+                  },
+                ),
             ],
           ],
         ),
