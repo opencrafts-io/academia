@@ -135,9 +135,11 @@ class _AddPostPageState extends State<AddPostPage> {
   Future<void> _submitPost() async {
     if (!formState.currentState!.validate()) {
       _showSnackBar("Please provide required details before continuing");
+      return;
     }
     if (_selectedCommunity == null) {
       _showSnackBar("Please select a community to post in.");
+      return;
     }
     if (!mounted) return;
     context.read<FeedBloc>().add(
@@ -158,7 +160,7 @@ class _AddPostPageState extends State<AddPostPage> {
       _selectedCommunity = null;
     });
 
-    context.pop(true); //TODO: route back to feed page
+    context.pop(true);
   }
 
   @override
@@ -176,7 +178,6 @@ class _AddPostPageState extends State<AddPostPage> {
     if (widget.preselectedCommunity != null) {
       _selectedCommunity = widget.preselectedCommunity;
       _searchController.text = widget.preselectedCommunity!.name;
-    } else {
     }
   }
 
