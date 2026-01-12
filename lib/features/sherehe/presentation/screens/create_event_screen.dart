@@ -577,7 +577,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   );
                   context.read<ShereheHomeBloc>().add(FetchAllEvents(page: 1));
                   if (context.canPop()) {
-                    context.pop();
+                    context.pop(true);
                   }
                 } else if (state is CreateEventFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -41,6 +41,11 @@ class _ShereheHomeState extends State<ShereheHome>
     }
   }
 
+  void _resetAndReload() {
+    _currentPage = 1;
+    context.read<ShereheHomeBloc>().add(FetchAllEvents(page: _currentPage));
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -209,7 +214,13 @@ class _ShereheHomeState extends State<ShereheHome>
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => CreateEventRoute().push(context),
+        onPressed: () async {
+          final result = await CreateEventRoute().push(context);
+
+          if (result == true) {
+            _resetAndReload();
+          }
+        },
         tooltip: "Create Event",
         child: const Icon(Icons.add),
       ),
