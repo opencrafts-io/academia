@@ -234,7 +234,7 @@ RouteBase get $addPostRoute =>
     GoRouteData.$route(path: '/add-post', factory: _$AddPostRoute._fromState);
 
 mixin _$AddPostRoute on GoRouteData {
-  static AddPostRoute _fromState(GoRouterState state) => AddPostRoute();
+  static AddPostRoute _fromState(GoRouterState state) => const AddPostRoute();
 
   @override
   String get location => GoRouteData.$location('/add-post');
