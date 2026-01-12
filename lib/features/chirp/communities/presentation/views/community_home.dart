@@ -534,12 +534,13 @@ class _CommunityActionSection extends StatelessWidget {
                         title: Text("Add post"),
                         onTap: () async {
                           final communityState = communityHomeBloc.state;
+                          final router = GoRouter.of(context);
 
                           // Close modal
                           Navigator.of(context).pop();
 
                           if (communityState is CommunityHomeLoaded) {
-                            final result = await context.push(
+                            final result = await router.push(
                               AddPostRoute().location,
                               extra: communityState.community,
                             );
