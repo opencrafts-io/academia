@@ -38,6 +38,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
     try {
       final pdfFile = await _generateTicketPdf();
+
+      // Share the PDF
       await Share.shareXFiles([
         XFile(pdfFile.path),
       ], text: 'Here is your ticket for ${widget.ticketName}!');
@@ -45,12 +47,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            Platform.isAndroid
-                ? 'Ticket saved to Downloads'
-                : 'Ticket saved to Files',
-          ),
+        const SnackBar(
+          content: Text('Ticket Downloaded Successfully'),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -58,24 +56,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to generate ticket')),
+        const SnackBar(content: Text('Failed to generate ticket pdf')),
       );
     } finally {
-      if (mounted) {
-        setState(() => _isGenerating = false);
-      }
+      if (mounted) setState(() => _isGenerating = false);
     }
   }
 
-  Future<Directory> _getDownloadDirectory() async {
-    if (Platform.isAndroid) {
-      final dir = Directory('/storage/emulated/0/Download');
-      if (await dir.exists()) return dir;
-    }
+  // Future<Directory> _getDownloadDirectory() async {
+  //   if (Platform.isAndroid) {
+  //     final dir = Directory('/storage/emulated/0/Download');
+  //     if (await dir.exists()) return dir;
+  //   }
 
-    // iOS or fallback
-    return await getApplicationDocumentsDirectory();
-  }
+  //   // iOS or fallback
+  //   return await getApplicationDocumentsDirectory();
+  // }
 
   Future<File> _generateTicketPdf() async {
     final pdf = pw.Document();
@@ -271,7 +267,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
-                          widget.eventId.substring(0,18).toLowerCase(),
+                          widget.eventId.substring(0, 18).toLowerCase(),
                           style: pw.TextStyle(
                             fontSize: 7,
                             color: PdfColors.grey600,
@@ -289,9 +285,10 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       ),
     );
 
-    final dir = await _getDownloadDirectory();
+    // Save to **temporary directory**
+    final tempDir = await getTemporaryDirectory();
     final file = File(
-      '${dir.path}/ticket_${widget.ticketName}_${widget.eventId}.pdf',
+      '${tempDir.path}/ticket_${widget.ticketName}_${widget.eventId}.pdf',
     );
     await file.writeAsBytes(await pdf.save());
     return file;
@@ -492,7 +489,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PrettyQrView.data(
-                                data:'attendee:${widget.attendeeId}',
+                                data: 'attendee:${widget.attendeeId}',
                                 decoration: const PrettyQrDecoration(
                                   shape: PrettyQrSmoothSymbol(
                                     color: Colors.black,
@@ -509,7 +506,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              widget.eventId.substring(0,18).toLowerCase(),
+                              widget.eventId.substring(0, 18).toLowerCase(),
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
                                     color: Theme.of(
