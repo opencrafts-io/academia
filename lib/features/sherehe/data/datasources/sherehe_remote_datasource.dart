@@ -211,7 +211,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       // Handle success
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(EventData.fromJson(response.data['event']));
+        return right(EventData.fromJson(response.data['data']['event']));
       } else {
         return left(
           ServerFailure(
@@ -222,7 +222,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       }
     } on DioException catch (de) {
-      _logger.e("DioException when creating event", error: de);
+      _logger.e("DioException when creating event", error: de.response?.data);
       return handleDioError(de);
     } catch (e) {
       _logger.e("Unknown error while creating event", error: e);
