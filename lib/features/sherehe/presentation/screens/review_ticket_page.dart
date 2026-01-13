@@ -1,6 +1,7 @@
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReviewTicketPage extends StatelessWidget {
   final Ticket ticket;
@@ -101,11 +102,34 @@ class ReviewTicketPage extends StatelessWidget {
               ),
 
               Expanded(
-                child: FilledButton(
-                  onPressed: isFreeEvent == true ? () {} : onNext,
-                  child: Text(
-                    isFreeEvent == true ? "Book Ticket" : "Proceed to Payment",
-                  ),
+                child: BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
+                  builder: (context, state) {
+                    return (state is PurchaseLoading && isFreeEvent == true)
+                        ? Center(
+                            child: const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : FilledButton(
+                            onPressed: isFreeEvent == true
+                                ? () {
+                                    context.read<TicketPaymentBloc>().add(
+                                      PurchaseTicket(
+                                        ticketId: ticket.id!,
+                                        ticketQuantity: quantity,
+                                      ),
+                                    );
+                                  }
+                                : onNext,
+                            child: Text(
+                              isFreeEvent == true
+                                  ? "Book Ticket"
+                                  : "Proceed to Payment",
+                            ),
+                          );
+                  },
                 ),
               ),
             ],

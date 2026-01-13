@@ -144,10 +144,10 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, String>> purchaseTicket({
+  Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
-    required String phoneNumber,
+    required String? phoneNumber,
   }) async {
     final result = await remoteDataSource.purchaseTicket(
       ticketId: ticketId,

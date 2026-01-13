@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:academia/features/sherehe/data/models/purchase_ticket_result_model.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
@@ -45,10 +46,10 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, List<Ticket>>> getTicketByEventId(String eventId);
 
-  Future<Either<Failure, String>> purchaseTicket({
+  Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
-    required String phoneNumber,
+    required String? phoneNumber,
   });
 
   Future<Either<Failure, String>> confirmPayment({

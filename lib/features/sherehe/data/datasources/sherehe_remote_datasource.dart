@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:academia/config/config.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/data/models/paginated_events_data_model.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
@@ -287,9 +288,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
-      final response = await dioClient.dio.get(
-        "/$servicePrefix/attendee/$id",
-      );
+      final response = await dioClient.dio.get("/$servicePrefix/attendee/$id");
 
       if (response.statusCode == 200) {
         return right(AttendeeData.fromJson(response.data));
@@ -355,10 +354,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, String>> purchaseTicket({
+  Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
-    required String phoneNumber,
+    required String? phoneNumber,
   }) async {
     try {
       final response = await dioClient.dio.post(
@@ -366,12 +365,37 @@ class ShereheRemoteDataSource with DioErrorHandler {
         data: {
           "ticket_id": ticketId,
           "ticket_quantity": ticketQuantity,
-          "user_phone": phoneNumber,
+          if (phoneNumber != null) "user_phone": phoneNumber,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(response.data['trans_id']);
+        // FREE EVENT
+        if (response.data.containsKey('attendee_id')) {
+          return right(
+            FreeTicketSuccess(
+              message: response.data['message'],
+              attendeeId: response.data['attendee_id'],
+            ),
+          );
+        }
+
+        // PAID EVENT
+        if (response.data.containsKey('trans_id')) {
+          return right(
+            PaidTicketInitiated(
+              message: response.data['message'],
+              transactionId: response.data['trans_id'],
+            ),
+          );
+        }
+
+        return left(
+          ServerFailure(
+            message: "Unknown success response format",
+            error: response,
+          ),
+        );
       } else {
         return left(
           ServerFailure(

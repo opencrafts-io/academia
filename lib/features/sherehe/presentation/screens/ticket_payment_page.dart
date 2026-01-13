@@ -77,7 +77,7 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                   default:
                     return const SizedBox.shrink();
                 }
-              } else if (state is StkPushError) {
+              } else if (state is PurchaseError) {
                 borderColor = Theme.of(context).colorScheme.error;
                 icon = Icons.error;
                 message = "Failed to send M-Pesa prompt. Please try again.";
@@ -149,11 +149,11 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                 BlocBuilder<TicketPaymentBloc, TicketPaymentState>(
                   builder: (context, state) {
                     final bool disablePayNow =
-                        state is StkPushLoading ||
+                        state is PurchaseLoading ||
                         state is ConfirmPaymentLoading ||
                         (state is ConfirmPaymentLoaded &&
                             state.status == 'PENDING');
-                    return state is StkPushLoading
+                    return state is PurchaseLoading
                         ? const SizedBox(
                             width: 20,
                             height: 20,
@@ -182,7 +182,7 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                                     }
                                   },
                             child: Text(
-                              state is StkPushError ? "Try Again" : "Pay Now",
+                              state is PurchaseError ? "Try Again" : "Pay Now",
                             ),
                           );
                   },
@@ -246,7 +246,9 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: state is StkPushLoading ? null : widget.onBack,
+                      onPressed: state is PurchaseLoading
+                          ? null
+                          : widget.onBack,
                       child: const Text("Back"),
                     ),
                   ),

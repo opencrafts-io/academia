@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/data/models/purchase_ticket_result_model.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
   TicketPaymentBloc({
     required this.purchaseTicket,
     required this.confirmPayment,
-  }) : super(StkPushInitial()) {
+  }) : super(PurchaseInitial()) {
     on<PurchaseTicket>(_onPurchaseTicket);
     on<ConfirmPayment>(_onConfirmPayment);
     on<ResetTicketPaymentState>(_onReset);
@@ -22,7 +23,7 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
     PurchaseTicket event,
     Emitter<TicketPaymentState> emit,
   ) async {
-    emit(StkPushLoading());
+    emit(PurchaseLoading());
 
     final result = await purchaseTicket(
       ticketId: event.ticketId,
@@ -32,10 +33,27 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
 
     result.fold(
       (failure) {
-        emit(StkPushError(message: failure.message));
+        emit(
+          PurchaseError(
+            message: failure.message,
+          ),
+        );
       },
-      (transId) {
-        emit(StkPushSent(transId: transId));
+      (success) {
+        // FREE EVENT FLOW
+        if (success is FreeTicketSuccess) {
+          emit(
+            FreeTicketBooked(
+              attendeeId: success.attendeeId,
+              message: success.message,
+            ),
+          );
+        }
+
+        // PAID EVENT FLOW
+        if (success is PaidTicketInitiated) {
+          emit(StkPushSent(transId: success.transactionId));
+        }
       },
     );
   }
@@ -64,6 +82,6 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
     ResetTicketPaymentState event,
     Emitter<TicketPaymentState> emit,
   ) {
-    emit(const StkPushInitial());
+    emit(const PurchaseInitial());
   }
 }

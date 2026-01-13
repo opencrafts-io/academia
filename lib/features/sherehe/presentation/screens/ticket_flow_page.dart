@@ -102,7 +102,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
       ),
       body: BlocListener<TicketPaymentBloc, TicketPaymentState>(
         listener: (context, state) {
-          if (state is StkPushError) {
+          if (state is PurchaseError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -122,6 +122,24 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
+          }
+
+          if (state is FreeTicketBooked) {
+            context.pop();
+
+            // Delay snackbar so it shows after pop
+            Future.microtask(() {
+              if (!context.mounted) return;
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Ticket booked successfully 🎉"
+                    "Go to 'My Tickets' to view your ticket.",
+                  ),
+                ),
+              );
+            });
           }
 
           if (state is ConfirmPaymentLoaded) {
