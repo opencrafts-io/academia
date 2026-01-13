@@ -9315,6 +9315,564 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
+class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
+    with
+        TableInfo<
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionScrappingCommandTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _commandIDMeta = const VerificationMeta(
+    'commandID',
+  );
+  @override
+  late final GeneratedColumn<String> commandID = GeneratedColumn<String>(
+    'command_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _requiresInteractionMeta =
+      const VerificationMeta('requiresInteraction');
+  @override
+  late final GeneratedColumn<bool> requiresInteraction = GeneratedColumn<bool>(
+    'requires_interaction',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("requires_interaction" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<
+    List<Map<String, dynamic>>,
+    String
+  >
+  instructions =
+      GeneratedColumn<String>(
+        'instructions',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<List<Map<String, dynamic>>>(
+        $InstitutionScrappingCommandTable.$converterinstructions,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    institution,
+    commandID,
+    name,
+    url,
+    description,
+    requiresInteraction,
+    createdAt,
+    instructions,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_scrapping_command';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionScrappingCommandData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionMeta);
+    }
+    if (data.containsKey('command_i_d')) {
+      context.handle(
+        _commandIDMeta,
+        commandID.isAcceptableOrUnknown(data['command_i_d']!, _commandIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_commandIDMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('requires_interaction')) {
+      context.handle(
+        _requiresInteractionMeta,
+        requiresInteraction.isAcceptableOrUnknown(
+          data['requires_interaction']!,
+          _requiresInteractionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {commandID};
+  @override
+  InstitutionScrappingCommandData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionScrappingCommandData(
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      )!,
+      commandID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}command_i_d'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      requiresInteraction: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}requires_interaction'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      instructions: $InstitutionScrappingCommandTable.$converterinstructions
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}instructions'],
+            )!,
+          ),
+    );
+  }
+
+  @override
+  $InstitutionScrappingCommandTable createAlias(String alias) {
+    return $InstitutionScrappingCommandTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<Map<String, dynamic>>, String>
+  $converterinstructions = JsonMapListConverter();
+}
+
+class InstitutionScrappingCommandData extends DataClass
+    implements Insertable<InstitutionScrappingCommandData> {
+  final int institution;
+  final String commandID;
+  final String name;
+  final String? url;
+  final String? description;
+  final bool requiresInteraction;
+  final DateTime createdAt;
+  final List<Map<String, dynamic>> instructions;
+  const InstitutionScrappingCommandData({
+    required this.institution,
+    required this.commandID,
+    required this.name,
+    this.url,
+    this.description,
+    required this.requiresInteraction,
+    required this.createdAt,
+    required this.instructions,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['institution'] = Variable<int>(institution);
+    map['command_i_d'] = Variable<String>(commandID);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['requires_interaction'] = Variable<bool>(requiresInteraction);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    {
+      map['instructions'] = Variable<String>(
+        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+          instructions,
+        ),
+      );
+    }
+    return map;
+  }
+
+  InstitutionScrappingCommandCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionScrappingCommandCompanion(
+      institution: Value(institution),
+      commandID: Value(commandID),
+      name: Value(name),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      requiresInteraction: Value(requiresInteraction),
+      createdAt: Value(createdAt),
+      instructions: Value(instructions),
+    );
+  }
+
+  factory InstitutionScrappingCommandData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionScrappingCommandData(
+      institution: serializer.fromJson<int>(json['institution']),
+      commandID: serializer.fromJson<String>(json['command_id']),
+      name: serializer.fromJson<String>(json['name']),
+      url: serializer.fromJson<String?>(json['url']),
+      description: serializer.fromJson<String?>(json['description']),
+      requiresInteraction: serializer.fromJson<bool>(
+        json['requires_interaction'],
+      ),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      instructions: serializer.fromJson<List<Map<String, dynamic>>>(
+        json['instructions'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'institution': serializer.toJson<int>(institution),
+      'command_id': serializer.toJson<String>(commandID),
+      'name': serializer.toJson<String>(name),
+      'url': serializer.toJson<String?>(url),
+      'description': serializer.toJson<String?>(description),
+      'requires_interaction': serializer.toJson<bool>(requiresInteraction),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'instructions': serializer.toJson<List<Map<String, dynamic>>>(
+        instructions,
+      ),
+    };
+  }
+
+  InstitutionScrappingCommandData copyWith({
+    int? institution,
+    String? commandID,
+    String? name,
+    Value<String?> url = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    bool? requiresInteraction,
+    DateTime? createdAt,
+    List<Map<String, dynamic>>? instructions,
+  }) => InstitutionScrappingCommandData(
+    institution: institution ?? this.institution,
+    commandID: commandID ?? this.commandID,
+    name: name ?? this.name,
+    url: url.present ? url.value : this.url,
+    description: description.present ? description.value : this.description,
+    requiresInteraction: requiresInteraction ?? this.requiresInteraction,
+    createdAt: createdAt ?? this.createdAt,
+    instructions: instructions ?? this.instructions,
+  );
+  InstitutionScrappingCommandData copyWithCompanion(
+    InstitutionScrappingCommandCompanion data,
+  ) {
+    return InstitutionScrappingCommandData(
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      commandID: data.commandID.present ? data.commandID.value : this.commandID,
+      name: data.name.present ? data.name.value : this.name,
+      url: data.url.present ? data.url.value : this.url,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      requiresInteraction: data.requiresInteraction.present
+          ? data.requiresInteraction.value
+          : this.requiresInteraction,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      instructions: data.instructions.present
+          ? data.instructions.value
+          : this.instructions,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionScrappingCommandData(')
+          ..write('institution: $institution, ')
+          ..write('commandID: $commandID, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('description: $description, ')
+          ..write('requiresInteraction: $requiresInteraction, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('instructions: $instructions')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    institution,
+    commandID,
+    name,
+    url,
+    description,
+    requiresInteraction,
+    createdAt,
+    instructions,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionScrappingCommandData &&
+          other.institution == this.institution &&
+          other.commandID == this.commandID &&
+          other.name == this.name &&
+          other.url == this.url &&
+          other.description == this.description &&
+          other.requiresInteraction == this.requiresInteraction &&
+          other.createdAt == this.createdAt &&
+          other.instructions == this.instructions);
+}
+
+class InstitutionScrappingCommandCompanion
+    extends UpdateCompanion<InstitutionScrappingCommandData> {
+  final Value<int> institution;
+  final Value<String> commandID;
+  final Value<String> name;
+  final Value<String?> url;
+  final Value<String?> description;
+  final Value<bool> requiresInteraction;
+  final Value<DateTime> createdAt;
+  final Value<List<Map<String, dynamic>>> instructions;
+  final Value<int> rowid;
+  const InstitutionScrappingCommandCompanion({
+    this.institution = const Value.absent(),
+    this.commandID = const Value.absent(),
+    this.name = const Value.absent(),
+    this.url = const Value.absent(),
+    this.description = const Value.absent(),
+    this.requiresInteraction = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.instructions = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionScrappingCommandCompanion.insert({
+    required int institution,
+    required String commandID,
+    required String name,
+    this.url = const Value.absent(),
+    this.description = const Value.absent(),
+    this.requiresInteraction = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    required List<Map<String, dynamic>> instructions,
+    this.rowid = const Value.absent(),
+  }) : institution = Value(institution),
+       commandID = Value(commandID),
+       name = Value(name),
+       instructions = Value(instructions);
+  static Insertable<InstitutionScrappingCommandData> custom({
+    Expression<int>? institution,
+    Expression<String>? commandID,
+    Expression<String>? name,
+    Expression<String>? url,
+    Expression<String>? description,
+    Expression<bool>? requiresInteraction,
+    Expression<DateTime>? createdAt,
+    Expression<String>? instructions,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (institution != null) 'institution': institution,
+      if (commandID != null) 'command_i_d': commandID,
+      if (name != null) 'name': name,
+      if (url != null) 'url': url,
+      if (description != null) 'description': description,
+      if (requiresInteraction != null)
+        'requires_interaction': requiresInteraction,
+      if (createdAt != null) 'created_at': createdAt,
+      if (instructions != null) 'instructions': instructions,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionScrappingCommandCompanion copyWith({
+    Value<int>? institution,
+    Value<String>? commandID,
+    Value<String>? name,
+    Value<String?>? url,
+    Value<String?>? description,
+    Value<bool>? requiresInteraction,
+    Value<DateTime>? createdAt,
+    Value<List<Map<String, dynamic>>>? instructions,
+    Value<int>? rowid,
+  }) {
+    return InstitutionScrappingCommandCompanion(
+      institution: institution ?? this.institution,
+      commandID: commandID ?? this.commandID,
+      name: name ?? this.name,
+      url: url ?? this.url,
+      description: description ?? this.description,
+      requiresInteraction: requiresInteraction ?? this.requiresInteraction,
+      createdAt: createdAt ?? this.createdAt,
+      instructions: instructions ?? this.instructions,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
+    if (commandID.present) {
+      map['command_i_d'] = Variable<String>(commandID.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (requiresInteraction.present) {
+      map['requires_interaction'] = Variable<bool>(requiresInteraction.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (instructions.present) {
+      map['instructions'] = Variable<String>(
+        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+          instructions.value,
+        ),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionScrappingCommandCompanion(')
+          ..write('institution: $institution, ')
+          ..write('commandID: $commandID, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('description: $description, ')
+          ..write('requiresInteraction: $requiresInteraction, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('instructions: $instructions, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExamTimetableTable extends ExamTimetable
     with TableInfo<$ExamTimetableTable, ExamTimetableData> {
   @override
@@ -14345,6 +14903,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
   late final $InstitutionTable institution = $InstitutionTable(this);
+  late final $InstitutionScrappingCommandTable institutionScrappingCommand =
+      $InstitutionScrappingCommandTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -14375,6 +14935,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     agendaEvent,
     notificationTable,
     institution,
+    institutionScrappingCommand,
     examTimetable,
     chirpUser,
     community,
@@ -19433,6 +19994,297 @@ typedef $$InstitutionTableProcessedTableManager =
       InstitutionData,
       PrefetchHooks Function()
     >;
+typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
+    InstitutionScrappingCommandCompanion Function({
+      required int institution,
+      required String commandID,
+      required String name,
+      Value<String?> url,
+      Value<String?> description,
+      Value<bool> requiresInteraction,
+      Value<DateTime> createdAt,
+      required List<Map<String, dynamic>> instructions,
+      Value<int> rowid,
+    });
+typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
+    InstitutionScrappingCommandCompanion Function({
+      Value<int> institution,
+      Value<String> commandID,
+      Value<String> name,
+      Value<String?> url,
+      Value<String?> description,
+      Value<bool> requiresInteraction,
+      Value<DateTime> createdAt,
+      Value<List<Map<String, dynamic>>> instructions,
+      Value<int> rowid,
+    });
+
+class $$InstitutionScrappingCommandTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get commandID => $composableBuilder(
+    column: $table.commandID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    List<Map<String, dynamic>>,
+    List<Map<String, dynamic>>,
+    String
+  >
+  get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+}
+
+class $$InstitutionScrappingCommandTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get commandID => $composableBuilder(
+    column: $table.commandID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstitutionScrappingCommandTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get commandID =>
+      $composableBuilder(column: $table.commandID, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>, String>
+  get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => column,
+  );
+}
+
+class $$InstitutionScrappingCommandTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData,
+          $$InstitutionScrappingCommandTableFilterComposer,
+          $$InstitutionScrappingCommandTableOrderingComposer,
+          $$InstitutionScrappingCommandTableAnnotationComposer,
+          $$InstitutionScrappingCommandTableCreateCompanionBuilder,
+          $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+          (
+            InstitutionScrappingCommandData,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionScrappingCommandTable,
+              InstitutionScrappingCommandData
+            >,
+          ),
+          InstitutionScrappingCommandData,
+          PrefetchHooks Function()
+        > {
+  $$InstitutionScrappingCommandTableTableManager(
+    _$AppDataBase db,
+    $InstitutionScrappingCommandTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionScrappingCommandTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InstitutionScrappingCommandTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InstitutionScrappingCommandTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> institution = const Value.absent(),
+                Value<String> commandID = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<bool> requiresInteraction = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<List<Map<String, dynamic>>> instructions =
+                    const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionScrappingCommandCompanion(
+                institution: institution,
+                commandID: commandID,
+                name: name,
+                url: url,
+                description: description,
+                requiresInteraction: requiresInteraction,
+                createdAt: createdAt,
+                instructions: instructions,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int institution,
+                required String commandID,
+                required String name,
+                Value<String?> url = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<bool> requiresInteraction = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                required List<Map<String, dynamic>> instructions,
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionScrappingCommandCompanion.insert(
+                institution: institution,
+                commandID: commandID,
+                name: name,
+                url: url,
+                description: description,
+                requiresInteraction: requiresInteraction,
+                createdAt: createdAt,
+                instructions: instructions,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InstitutionScrappingCommandTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionScrappingCommandTable,
+      InstitutionScrappingCommandData,
+      $$InstitutionScrappingCommandTableFilterComposer,
+      $$InstitutionScrappingCommandTableOrderingComposer,
+      $$InstitutionScrappingCommandTableAnnotationComposer,
+      $$InstitutionScrappingCommandTableCreateCompanionBuilder,
+      $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+      (
+        InstitutionScrappingCommandData,
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData
+        >,
+      ),
+      InstitutionScrappingCommandData,
+      PrefetchHooks Function()
+    >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
       required String courseCode,
@@ -22359,6 +23211,12 @@ class $AppDataBaseManager {
       $$NotificationTableTableTableManager(_db, _db.notificationTable);
   $$InstitutionTableTableManager get institution =>
       $$InstitutionTableTableManager(_db, _db.institution);
+  $$InstitutionScrappingCommandTableTableManager
+  get institutionScrappingCommand =>
+      $$InstitutionScrappingCommandTableTableManager(
+        _db,
+        _db.institutionScrappingCommand,
+      );
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>

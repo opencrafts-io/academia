@@ -8,6 +8,7 @@ import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
 import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
@@ -51,6 +52,7 @@ part 'database.g.dart';
 
     // Institution
     Institution,
+    InstitutionScrappingCommand,
     // Exam Timetable
     ExamTimetable,
 
@@ -82,7 +84,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration {
@@ -94,6 +96,9 @@ class AppDataBase extends _$AppDataBase {
         _logger.i("Migrating from version $from to version $to");
         if (from < 15) {
           await m.createTable(examTimetable);
+        }
+        if (from < 16) {
+          await m.createTable(institutionScrappingCommand);
         }
       },
       beforeOpen: (details) async {
