@@ -1,8 +1,8 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/data.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
-import '../../domain/domain.dart';
-import '../data.dart';
 import 'dart:io';
 
 class ShereheRepositoryImpl implements ShereheRepository {
@@ -15,15 +15,6 @@ class ShereheRepositoryImpl implements ShereheRepository {
   });
 
   @override
-  Future<Either<Failure, List<Event>>> getCachedEvents() async {
-    final cachedResult = await localDataSource.getCachedEvents();
-    return cachedResult.fold(
-      (failure) => left(failure),
-      (cachedEvents) => right(cachedEvents.map((e) => e.toEntity()).toList()),
-    );
-  }
-
-  @override
   Future<Either<Failure, PaginatedEvents>> getAllEvents({
     required int page,
     required int limit,
@@ -33,96 +24,225 @@ class ShereheRepositoryImpl implements ShereheRepository {
       limit: limit,
     );
     return result.fold((failure) => Left(failure), (paginatedData) async {
-      await localDataSource.cacheEvents(paginatedData.events);
       return Right(
         PaginatedEvents(
           events: paginatedData.events.map((e) => e.toEntity()).toList(),
           nextPage: paginatedData.nextPage,
+          previousPage: paginatedData.previousPage,
+          totalEvents: paginatedData.totalEvents,
         ),
       );
     });
   }
 
   @override
-  Future<Either<Failure, Event>> getSpecificEvent(String id) async {
-    final localResult = await localDataSource.getCachedEventById(id);
-    if (localResult.isRight()) {
-      return right(((localResult as Right).value as EventData).toEntity());
-    }
-    final result = await remoteDataSource.getSpecificEvent(id);
-    return result.fold((failure) => Left(failure), (model) async {
-      await localDataSource.cacheEvents([model]);
-      return Right(model.toEntity());
-    });
+  Future<Either<Failure, Event>> getEventById({required String eventId}) async {
+    final result = await remoteDataSource.getEventById(eventId: eventId);
+    return result.fold(
+      (failure) => left(failure),
+      (event) => right(event.toEntity()),
+    );
   }
 
   @override
-  Future<Either<Failure, List<Attendee>>> getAttendeesByEventId({
+  Future<Either<Failure, List<Event>>> getEventByOrganizerId({
+    required String organizerId,
+  }) async {
+    final result = await remoteDataSource.getEventByOrganizerId(
+      organizerId: organizerId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (events) => right(events.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Event>> createEvent({
+    required String eventName,
+    required String eventDescription,
+    String? eventUrl,
+    required String eventLocation,
+    required String eventDate,
+    required String organizerId,
+    required List<String> eventGenre,
+    File? eventCardImage,
+    File? eventPosterImage,
+    File? eventBannerImage,
+    required List<Ticket> tickets,
+    PaymentTypes? selectedPaymentType,
+    String? paybillNumber,
+    String? accountReference,
+    String? tillNumber,
+    String? sendMoneyPhoneNumber,
+  }) async {
+    final result = await remoteDataSource.createEvent(
+      eventName: eventName,
+      eventDescription: eventDescription,
+      eventLocation: eventLocation,
+      eventDate: eventDate,
+      organizerId: organizerId,
+      eventGenre: eventGenre,
+      eventCardImage: eventCardImage,
+      eventPosterImage: eventPosterImage,
+      eventBannerImage: eventBannerImage,
+      tickets: tickets.map((ticket) => ticket.toModel()).toList(),
+      selectedPaymentType: selectedPaymentType,
+      paybillNumber: paybillNumber,
+      accountReference: accountReference,
+      tillNumber: tillNumber,
+      sendMoneyPhoneNumber: sendMoneyPhoneNumber,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (createdEvent) => right(createdEvent.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAttendeesByEventId({
     required String eventId,
     required int page,
     required int limit,
   }) async {
-    final remoteResult = await remoteDataSource.getAttendeesByEventId(
+    final result = await remoteDataSource.getAttendeesByEventId(
       eventId: eventId,
       page: page,
       limit: limit,
     );
-    return remoteResult.fold((failure) => left(failure), (
-      attendeeDataList,
-    ) async {
-      final cacheAttempt = await localDataSource.cacheAttendees(
-        attendeeDataList,
-      );
-      cacheAttempt.fold(
-        (cacheFailure) {
-          print(
-            "[WARNING] ShereheRepositoryImpl: Failed to cache attendees for event $eventId: $cacheFailure",
-          );
-        },
-        (_) {
-          print(
-            "[INFO] ShereheRepositoryImpl: Successfully cached attendees for event $eventId.",
-          );
-        },
-      );
-      return right(attendeeDataList.map((a) => a.toEntity()).toList());
-    });
-  }
-
-  @override
-  Future<Either<Failure, Attendee>> getSpecificAttendee(String id) async {
-    final remoteResult = await remoteDataSource.getSpecificAttendee(id);
-    if (remoteResult.isLeft()) return left((remoteResult as Left).value);
-    final attendeeModel = (remoteResult as Right).value;
-    final cacheResult = await localDataSource.cacheAttendees([attendeeModel]);
-    return cacheResult.fold(
+    return result.fold(
       (failure) => left(failure),
-      (_) => right(attendeeModel.toEntity()),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
     );
   }
 
   @override
-  Future<Either<Failure, Unit>> createEvent(
-    Event event,
-    File imageFile, {
-    required File bannerImageFile,
-    required File cardImageFile,
+  Future<Either<Failure, Attendee>> getAttendeeByID(String id) async {
+    final result = await remoteDataSource.getAttendeeByID(id);
+    return result.fold(
+      (failure) => left(failure),
+      (attendee) => right(attendee.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<Ticket>>> getTicketByEventId(
+    String eventId,
+  ) async {
+    final result = await remoteDataSource.getTicketByEventId(eventId);
+    return result.fold(
+      (failure) => left(failure),
+      (tickets) => right(tickets.map((ticket) => ticket.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> purchaseTicket({
+    required String ticketId,
+    required int ticketQuantity,
+    required String phoneNumber,
   }) async {
-    return await remoteDataSource.createEvent(
-      event,
-      eventImage: imageFile,
-      bannerImage: bannerImageFile,
-      cardImage: cardImageFile,
+    final result = await remoteDataSource.purchaseTicket(
+      ticketId: ticketId,
+      ticketQuantity: ticketQuantity,
+      phoneNumber: phoneNumber,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, String>> confirmPayment({
+    required String transId,
+  }) async {
+    final result = await remoteDataSource.confirmPayment(transId: transId);
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Attendee>>>
+  getUserPurchasedTicketsForEvent({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getUserPurchasedTicketsForEvent(
+      eventId: eventId,
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
     );
   }
 
   @override
-  Future<Either<Failure, Attendee>> createAttendee(Attendee attendee) async {
-    final result = await remoteDataSource.createAttendee(attendee);
-    return result.fold((failure) => left(failure), (attendeeModel) async {
-      await localDataSource.cacheAttendees([attendeeModel]);
-      return right(attendeeModel.toEntity());
-    });
+  Future<Either<Failure, PaginatedResult<Attendee>>>
+  getAllUserPurchasedTickets({required int page, required int limit}) async {
+    final result = await remoteDataSource.getAllUserPurchasedTickets(
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<Attendee>>> searchUserAttendedEvents({
+    required String query,
+  }) async {
+    final result = await remoteDataSource.searchUserAttendedEvents(
+      query: query,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (attendees) => right(attendees.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> validateAttendee({
+    required String eventId,
+    required String attendeeId,
+  }) async {
+    final result = await remoteDataSource.validateAttendee(
+      eventId: eventId,
+      attendeeId: attendeeId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, List<Event>>> searchEvents({
+    required String query,
+  }) async {
+    final result = await remoteDataSource.searchEvents(query: query);
+    return result.fold(
+      (failure) => left(failure),
+      (events) => right(events.map((e) => e.toEntity()).toList()),
+    );
   }
 }
-

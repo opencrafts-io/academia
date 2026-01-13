@@ -5,8 +5,6 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
-import 'package:academia/features/sherehe/data/data.dart';
-import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -87,7 +85,6 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
-  sl.registerLazySingleton(() => CreateAttendeeUseCase(sl()));
 
   sl.registerSingleton<ShereheRepository>(
     ShereheRepositoryImpl(
@@ -98,27 +95,44 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerSingleton<GetEvent>(GetEvent(sl()));
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
+  sl.registerLazySingleton(() => GetEventsByOrganizerIdUseCase(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
+  sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
+  sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
+  sl.registerLazySingleton(() => ConfirmPaymentUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllUserPurchasedTicketsUseCase(sl()));
+  sl.registerLazySingleton(() => SearchUserAttendedEventsUseCase(sl()));
+
+  sl.registerLazySingleton(() => GetUserPurchasedTicketsForEventUseCase(sl()));
+
+  sl.registerLazySingleton(() => ValidateAttendeeUseCase(sl()));
+
+  sl.registerLazySingleton(() => SearchEventsUseCase(sl()));
+
+  sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
+
+  sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
 
   sl.registerFactory(
-    () => ShereheHomeBloc(
-      getEvent: sl(),
-      getAttendee: sl(),
-      cacheEventsUseCase: sl(),
-    ),
-  );
-
-  sl.registerFactory(
-    () => ShereheDetailsBloc(
-      getSpecificEventUseCase: sl(),
-      getAttendeesUseCase: sl(),
-      createAttendeeUseCase: sl(),
-      getCachedUserProfileUseCase: sl(),
-    ),
+    () => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()),
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
+  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
+  sl.registerFactory(
+    () => TicketPaymentBloc(purchaseTicket: sl(), confirmPayment: sl()),
+  );
+  sl.registerFactory(
+    () => AllUserEventTicketsBloc(
+      getUserTicketsForEvent: sl(),
+      searchUserAttendedEvents: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => UserEventTicketsBloc(getUserPurchasedTicketsForEvent: sl()),
+  );
+  sl.registerFactory(() => ValidateAttendeeBloc(validateAttendeeUseCase: sl()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

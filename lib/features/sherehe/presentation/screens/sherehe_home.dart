@@ -1,9 +1,9 @@
-import 'package:academia/features/sherehe/presentation/widgets/event_card_wrapper.dart';
+import 'package:academia/config/config.dart';
+import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/constants/constants.dart';
-import '../../../../config/router/routes.dart';
-import '../bloc/sherehe_home_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -16,24 +16,7 @@ class ShereheHome extends StatefulWidget {
 class _ShereheHomeState extends State<ShereheHome>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
-
-  int _getCrossAxisCount(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return 1;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return 2;
-    } else {
-      return 3;
-    }
-  }
-
-  double _getMainAxisExtent(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return 440;
-    } else {
-      return 500; // large desktop
-    }
-  }
+  int _currentPage = 1;
 
   @override
   bool get wantKeepAlive => true;
@@ -41,17 +24,26 @@ class _ShereheHomeState extends State<ShereheHome>
   @override
   void initState() {
     super.initState();
-    context.read<ShereheHomeBloc>().add(FetchAllEvents());
+    context.read<ShereheHomeBloc>().add(FetchAllEvents(page: _currentPage));
+    _scrollController.addListener(_onScroll);
+  }
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
-        final state = context.read<ShereheHomeBloc>().state;
-        if (state is EventLoaded && !state.hasReachedEnd) {
-          context.read<ShereheHomeBloc>().add(FetchAllEvents(isLoadMore: true));
-        }
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      final state = context.read<ShereheHomeBloc>().state;
+      if (state is EventLoaded && state.hasMore) {
+        _currentPage++;
+        context.read<ShereheHomeBloc>().add(
+          FetchAllEvents(page: _currentPage, isLoadMore: true),
+        );
       }
-    });
+    }
+  }
+
+  void _resetAndReload() {
+    _currentPage = 1;
+    context.read<ShereheHomeBloc>().add(FetchAllEvents(page: _currentPage));
   }
 
   @override
@@ -62,192 +54,174 @@ class _ShereheHomeState extends State<ShereheHome>
 
   @override
   Widget build(BuildContext context) {
-    // Prevent home page from rebuilding this page every time
     super.build(context);
+
     return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverPinnedHeader(
-            child: Container(
-              color: Theme.of(context).colorScheme.surface,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10.0,
-              ),
-              child: Text(
-                'Upcoming Events',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  // fontWeight: FontWeight.bold,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _currentPage = 1;
+          context.read<ShereheHomeBloc>().add(
+            FetchAllEvents(page: _currentPage),
+          );
+          await Future.delayed(const Duration(seconds: 2));
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverPinnedHeader(
+              child: Container(
+                color: Theme.of(context).colorScheme.surface,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 10.0,
+                ),
+                child: Text(
+                  "Upcoming Events",
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: BlocConsumer<ShereheHomeBloc, ShereheHomeState>(
-              listener: (context, state) {
-                if (state is EventError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.message),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 5),
-                    ),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is EventLoading && state is! EventLoaded) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  );
-                } else if (state is EventLoaded) {
-                  final events = state.events;
 
-                  if (events.isEmpty) {
-                    return SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 64.0,
-                          horizontal: 16.0,
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.celebration,
-                                size: 80,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              const SizedBox(height: 24),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
+                builder: (context, state) {
+                  List<Event> events = [];
+                  if (state is EventLoaded) {
+                    events = state.events;
+                  } else if (state is EventsPaginationLoading) {
+                    events = state.existingEvents;
+                  } else if (state is EventsPaginationError) {
+                    events = state.existingEvents;
+                  }
+                  if (state is EventLoading) {
+                    return const SliverFillRemaining(
+                      child: Center(child: SpinningScallopIndicator()),
+                    );
+                  }
 
-                              Text(
-                                "It’s a little quiet here 🎶",
-                                style: Theme.of(context).textTheme.headlineSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 12),
-
-                              Text(
-                                "You've worked so hard during the week, just close that laptop na let's get started by creating a Sherehe",
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+                  if (state is EventsError && _currentPage == 1) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.error_outline, size: 48),
+                            const SizedBox(height: 12),
+                            Text(
+                              state.message,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<ShereheHomeBloc>().add(
+                                  FetchAllEvents(page: 1),
+                                );
+                              },
+                              child: const Text("Retry"),
+                            ),
+                          ],
                         ),
                       ),
                     );
                   }
 
-                  // If events exist, show grid
-                  return SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: _getCrossAxisCount(context),
-                      mainAxisSpacing: 12.0,
-                      crossAxisSpacing: 12.0,
-                      childAspectRatio: 0.7,
-                      mainAxisExtent: _getMainAxisExtent(context),
-                    ),
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final event = events[index];
-                      return EventCardWrapper(event: event);
-                    }, childCount: events.length),
-                  );
-                } else if (state is EventError) {
-                  return SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 48.0,
-                        horizontal: 16.0,
-                      ),
+                  // Empty events on first load
+                  if (events.isEmpty) {
+                    return SliverFillRemaining(
                       child: Center(
-                        child: Card(
-                          elevation: 2,
-                          color: Theme.of(context).colorScheme.errorContainer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.celebration,
+                              size: 80,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              "It’s a little quiet here 🎶",
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              "You've worked hard — now create your first Sherehe!",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return MultiSliver(
+                    children: [
+                      SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: ShereheUtils.getCrossAxisCount(
+                            context,
                           ),
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.7,
+                          mainAxisExtent: ShereheUtils.getMainAxisExtent(
+                            context,
+                          ),
+                        ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return EventCardWrapper(event: events[index]);
+                        }, childCount: events.length),
+                      ),
+                      if (state is EventsPaginationLoading)
+                        const SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.error_outline,
-                                  size: 48,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onErrorContainer,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  state.message,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onErrorContainer,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Something went wrong while fetching your events.\nPlease try again later.",
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onErrorContainer
-                                            .withValues(alpha: 0.9),
-                                      ),
-                                ),
-                              ],
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Center(child: SpinningScallopIndicator()),
+                          ),
+                        ),
+                      if (state is EventsPaginationError)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12, bottom: 24),
+                            child: Center(
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  context.read<ShereheHomeBloc>().add(
+                                    FetchAllEvents(
+                                      page: _currentPage,
+                                      isLoadMore: true,
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text("Retry loading more events"),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
+                    ],
                   );
-                } else {
-                  return const SliverToBoxAdapter(child: SizedBox.shrink());
-                }
-              },
+                },
+              ),
             ),
-          ),
-          BlocBuilder<ShereheHomeBloc, ShereheHomeState>(
-            builder: (context, state) {
-              if (state is EventLoaded && !state.hasReachedEnd) {
-                return const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                );
-              }
-              return const SliverToBoxAdapter(child: SizedBox.shrink());
-            },
-          ),
-        ],
+          ],
+        ),
       ),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () => CreateEventRoute().push(context),
-        tooltip: 'Create Event',
+        onPressed: () async {
+          final result = await CreateEventRoute().push(context);
+
+          if (result == true) {
+            _resetAndReload();
+          }
+        },
+        tooltip: "Create Event",
         child: const Icon(Icons.add),
       ),
     );
