@@ -9,25 +9,35 @@ abstract class TicketPaymentState extends Equatable {
   List<Object?> get props => [transId];
 }
 
-class StkPushInitial extends TicketPaymentState {
-  const StkPushInitial();
+class PurchaseInitial extends TicketPaymentState {
+  const PurchaseInitial();
 }
 
-class StkPushLoading extends TicketPaymentState {
-  const StkPushLoading();
+class PurchaseLoading extends TicketPaymentState {
+  const PurchaseLoading();
 }
 
 class StkPushSent extends TicketPaymentState {
   const StkPushSent({required String transId}) : super(transId: transId);
 }
 
-class StkPushError extends TicketPaymentState {
+class PurchaseError extends TicketPaymentState {
   final String message;
 
-  const StkPushError({required this.message});
+  const PurchaseError({required this.message});
 
   @override
   List<Object?> get props => [message];
+}
+
+class FreeTicketBooked extends TicketPaymentState {
+  final String attendeeId;
+  final String message;
+
+  const FreeTicketBooked({required this.attendeeId, required this.message});
+
+  @override
+  List<Object?> get props => [attendeeId, message];
 }
 
 class ConfirmPaymentLoading extends TicketPaymentState {

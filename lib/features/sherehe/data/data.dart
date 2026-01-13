@@ -8,4 +8,5 @@ export 'models/ticket_model_helper.dart';
 export 'models/ticket_model.dart';
 export 'models/payment_info_model.dart';
 export 'models/payment_info_model_helper.dart';
+export 'models/purchase_ticket_result_model.dart';
 export 'repository/sherehe_repository_impl.dart';
