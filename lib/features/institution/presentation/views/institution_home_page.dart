@@ -52,13 +52,12 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                       Text("Fetching institution configurations"),
                     ],
                   ),
-                  duration: Duration(seconds: 20),
+                  duration: Duration(seconds: 10),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             } else if (state is ScrappingCommandLoaded) {
               ScaffoldMessenger.of(context).clearSnackBars();
-              print(state.command?.toJson()??"Jeez luiz");
             } else if (state is ScrappingCommandError) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(

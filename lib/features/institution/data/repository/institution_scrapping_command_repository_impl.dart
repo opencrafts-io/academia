@@ -33,8 +33,12 @@ class InstitutionScrappingCommandRepositoryImpl
         .watchInstitutionCommandByInstitution(institutionID: institutionID)
         .map<Either<Failure, ScrappingCommand?>>(
           (data) => data.fold(
-            (error) => left(error),
-            (command) => right(command?.toEntity()),
+            (error) {
+              return left(error);
+            },
+            (command) {
+              return right(command?.toEntity());
+            },
           ),
         );
   }
