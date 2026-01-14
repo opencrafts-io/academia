@@ -1,9 +1,11 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/admob/admob.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -17,6 +19,7 @@ class _ShereheHomeState extends State<ShereheHome>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
+  static const int adInterval = 3;
 
   @override
   bool get wantKeepAlive => true;
@@ -159,8 +162,13 @@ class _ShereheHomeState extends State<ShereheHome>
                     );
                   }
 
-                  return MultiSliver(
-                    children: [
+                  final List<Widget> slivers = [];
+
+                  for (int i = 0; i < events.length; i += adInterval) {
+                    final chunk = events.skip(i).take(adInterval).toList();
+
+                    // Event Grid Chunk
+                    slivers.add(
                       SliverGrid(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: ShereheUtils.getCrossAxisCount(
@@ -174,38 +182,62 @@ class _ShereheHomeState extends State<ShereheHome>
                           ),
                         ),
                         delegate: SliverChildBuilderDelegate((context, index) {
-                          return EventCardWrapper(event: events[index]);
-                        }, childCount: events.length),
+                          return EventCardWrapper(event: chunk[index]);
+                        }, childCount: chunk.length),
                       ),
-                      if (state is EventsPaginationLoading)
+                    );
+
+                    // Banner Ad (skip after last chunk)
+                    if (i + adInterval < events.length) {
+                      slivers.add(
                         const SliverToBoxAdapter(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20),
-                            child: Center(child: SpinningScallopIndicator()),
-                          ),
-                        ),
-                      if (state is EventsPaginationError)
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 12, bottom: 24),
+                            padding: EdgeInsets.symmetric(vertical: 12),
                             child: Center(
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  context.read<ShereheHomeBloc>().add(
-                                    FetchAllEvents(
-                                      page: _currentPage,
-                                      isLoadMore: true,
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.refresh),
-                                label: const Text("Retry loading more events"),
-                              ),
+                              child: BannerAdWidget(size: AdSize.banner),
                             ),
                           ),
                         ),
-                    ],
-                  );
+                      );
+                    }
+                  }
+
+                  if (state is EventsPaginationLoading) {
+                    slivers.add(
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Center(child: SpinningScallopIndicator()),
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (state is EventsPaginationError) {
+                    slivers.add(
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 24),
+                          child: Center(
+                            child: TextButton.icon(
+                              onPressed: () {
+                                context.read<ShereheHomeBloc>().add(
+                                  FetchAllEvents(
+                                    page: _currentPage,
+                                    isLoadMore: true,
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.refresh),
+                              label: const Text("Retry loading more events"),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return MultiSliver(children: slivers);
                 },
               ),
             ),
