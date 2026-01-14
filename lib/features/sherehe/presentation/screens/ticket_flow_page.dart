@@ -1,8 +1,11 @@
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TicketFlowPage extends StatefulWidget {
   final String eventId;
@@ -103,9 +106,36 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  content: const Text(
-                    "If you experience any issues while purchasing or booking a ticket, "
-                    "please contact our support team at hello@opencrafts.io",
+                  content: RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      children: [
+                        const TextSpan(
+                          text:
+                              "If you experience any issues while purchasing or booking a ticket, "
+                              "please contact our support team at ",
+                        ),
+                        TextSpan(
+                          text: "hello@opencrafts.io",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              final uri = Uri(
+                                scheme: 'mailto',
+                                path: 'hello@opencrafts.io',
+                              );
+
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            },
+                        ),
+                      ],
+                    ),
                   ),
                   actions: [
                     FilledButton(
@@ -220,9 +250,36 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                   context: context,
                   builder: (_) => AlertDialog(
                     title: const Text("Payment Failed"),
-                    content: const Text(
-                      "The payment failed. If you were charged on your end, "
-                      "please contact our support team at hello@opencrafts.io",
+                    content: RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          const TextSpan(
+                            text:
+                                "The payment failed. If you were charged on your end, "
+                                "please contact our support team at ",
+                          ),
+                          TextSpan(
+                            text: "hello@opencrafts.io",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final uri = Uri(
+                                  scheme: 'mailto',
+                                  path: 'hello@opencrafts.io',
+                                );
+
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
+                                }
+                              },
+                          ),
+                        ],
+                      ),
                     ),
                     actions: [
                       TextButton(
