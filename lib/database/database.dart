@@ -14,6 +14,7 @@ import 'package:academia/features/chirp/posts/data/models/groups/group_model.dar
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
+import 'package:academia/features/sherehe/data/models/sherehe_user_model.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
@@ -42,6 +43,8 @@ part 'database.g.dart';
     EventTable,
     AttendeeTable,
     TicketTable,
+    PaymentInfoTable,
+    ShereheUserTable, //temporary
     GroupTable,
 
     // Agenda
