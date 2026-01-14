@@ -23,10 +23,10 @@ class InstitutionScrappingCommand extends Table {
 
   @JsonKey("created_at")
   DateTimeColumn get createdAt =>
-      dateTime().withDefault(Constant(DateTime.now()))();
+      dateTime().nullable().withDefault(Constant(DateTime.now()))();
 
   @JsonKey("instructions")
-  TextColumn get instructions => text().map(JsonMapListConverter())();
+  TextColumn get instructions => text().map(JsonListConverter())();
 
   @override
   Set<Column<Object>>? get primaryKey => {commandID};

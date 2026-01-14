@@ -31,13 +31,11 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          sl<ScrappingCommandBloc>()
-            ..add(GetScrappingCommandEvent(institutionID: -10000)),
+      create: (context) => sl<ScrappingCommandBloc>()
+        ..add(GetScrappingCommandEvent(institutionID: widget.institutionID)),
       child: Scaffold(
         body: BlocConsumer<ScrappingCommandBloc, ScrappingCommandState>(
           listener: (context, state) {
-            print(state.runtimeType);
             if (state is ScrappingCommandLoading) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -60,6 +58,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
               );
             } else if (state is ScrappingCommandLoaded) {
               ScaffoldMessenger.of(context).clearSnackBars();
+              print(state.command?.toJson()??"Jeez luiz");
             } else if (state is ScrappingCommandError) {
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(

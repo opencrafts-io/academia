@@ -10539,16 +10539,13 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
     defaultValue: Constant(DateTime.now()),
   );
   @override
-  late final GeneratedColumnWithTypeConverter<
-    List<Map<String, dynamic>>,
-    String
-  >
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String>
   instructions =
       GeneratedColumn<String>(
         'instructions',
@@ -10556,7 +10553,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<Map<String, dynamic>>>(
+      ).withConverter<List<dynamic>>(
         $InstitutionScrappingCommandTable.$converterinstructions,
       );
   @override
@@ -10678,7 +10675,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      )!,
+      ),
       instructions: $InstitutionScrappingCommandTable.$converterinstructions
           .fromSql(
             attachedDatabase.typeMapping.read(
@@ -10694,8 +10691,8 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
     return $InstitutionScrappingCommandTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<List<Map<String, dynamic>>, String>
-  $converterinstructions = JsonMapListConverter();
+  static TypeConverter<List<dynamic>, String> $converterinstructions =
+      JsonListConverter();
 }
 
 class InstitutionScrappingCommandData extends DataClass
@@ -10706,8 +10703,8 @@ class InstitutionScrappingCommandData extends DataClass
   final String? url;
   final String? description;
   final bool requiresInteraction;
-  final DateTime createdAt;
-  final List<Map<String, dynamic>> instructions;
+  final DateTime? createdAt;
+  final List<dynamic> instructions;
   const InstitutionScrappingCommandData({
     required this.institution,
     required this.commandID,
@@ -10715,7 +10712,7 @@ class InstitutionScrappingCommandData extends DataClass
     this.url,
     this.description,
     required this.requiresInteraction,
-    required this.createdAt,
+    this.createdAt,
     required this.instructions,
   });
   @override
@@ -10731,7 +10728,9 @@ class InstitutionScrappingCommandData extends DataClass
       map['description'] = Variable<String>(description);
     }
     map['requires_interaction'] = Variable<bool>(requiresInteraction);
-    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
     {
       map['instructions'] = Variable<String>(
         $InstitutionScrappingCommandTable.$converterinstructions.toSql(
@@ -10752,7 +10751,9 @@ class InstitutionScrappingCommandData extends DataClass
           ? const Value.absent()
           : Value(description),
       requiresInteraction: Value(requiresInteraction),
-      createdAt: Value(createdAt),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
       instructions: Value(instructions),
     );
   }
@@ -10771,10 +10772,8 @@ class InstitutionScrappingCommandData extends DataClass
       requiresInteraction: serializer.fromJson<bool>(
         json['requires_interaction'],
       ),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      instructions: serializer.fromJson<List<Map<String, dynamic>>>(
-        json['instructions'],
-      ),
+      createdAt: serializer.fromJson<DateTime?>(json['created_at']),
+      instructions: serializer.fromJson<List<dynamic>>(json['instructions']),
     );
   }
   @override
@@ -10787,10 +10786,8 @@ class InstitutionScrappingCommandData extends DataClass
       'url': serializer.toJson<String?>(url),
       'description': serializer.toJson<String?>(description),
       'requires_interaction': serializer.toJson<bool>(requiresInteraction),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'instructions': serializer.toJson<List<Map<String, dynamic>>>(
-        instructions,
-      ),
+      'created_at': serializer.toJson<DateTime?>(createdAt),
+      'instructions': serializer.toJson<List<dynamic>>(instructions),
     };
   }
 
@@ -10801,8 +10798,8 @@ class InstitutionScrappingCommandData extends DataClass
     Value<String?> url = const Value.absent(),
     Value<String?> description = const Value.absent(),
     bool? requiresInteraction,
-    DateTime? createdAt,
-    List<Map<String, dynamic>>? instructions,
+    Value<DateTime?> createdAt = const Value.absent(),
+    List<dynamic>? instructions,
   }) => InstitutionScrappingCommandData(
     institution: institution ?? this.institution,
     commandID: commandID ?? this.commandID,
@@ -10810,7 +10807,7 @@ class InstitutionScrappingCommandData extends DataClass
     url: url.present ? url.value : this.url,
     description: description.present ? description.value : this.description,
     requiresInteraction: requiresInteraction ?? this.requiresInteraction,
-    createdAt: createdAt ?? this.createdAt,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
     instructions: instructions ?? this.instructions,
   );
   InstitutionScrappingCommandData copyWithCompanion(
@@ -10884,8 +10881,8 @@ class InstitutionScrappingCommandCompanion
   final Value<String?> url;
   final Value<String?> description;
   final Value<bool> requiresInteraction;
-  final Value<DateTime> createdAt;
-  final Value<List<Map<String, dynamic>>> instructions;
+  final Value<DateTime?> createdAt;
+  final Value<List<dynamic>> instructions;
   final Value<int> rowid;
   const InstitutionScrappingCommandCompanion({
     this.institution = const Value.absent(),
@@ -10906,7 +10903,7 @@ class InstitutionScrappingCommandCompanion
     this.description = const Value.absent(),
     this.requiresInteraction = const Value.absent(),
     this.createdAt = const Value.absent(),
-    required List<Map<String, dynamic>> instructions,
+    required List<dynamic> instructions,
     this.rowid = const Value.absent(),
   }) : institution = Value(institution),
        commandID = Value(commandID),
@@ -10944,8 +10941,8 @@ class InstitutionScrappingCommandCompanion
     Value<String?>? url,
     Value<String?>? description,
     Value<bool>? requiresInteraction,
-    Value<DateTime>? createdAt,
-    Value<List<Map<String, dynamic>>>? instructions,
+    Value<DateTime?>? createdAt,
+    Value<List<dynamic>>? instructions,
     Value<int>? rowid,
   }) {
     return InstitutionScrappingCommandCompanion(
@@ -21107,8 +21104,8 @@ typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
       Value<String?> url,
       Value<String?> description,
       Value<bool> requiresInteraction,
-      Value<DateTime> createdAt,
-      required List<Map<String, dynamic>> instructions,
+      Value<DateTime?> createdAt,
+      required List<dynamic> instructions,
       Value<int> rowid,
     });
 typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
@@ -21119,8 +21116,8 @@ typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
       Value<String?> url,
       Value<String?> description,
       Value<bool> requiresInteraction,
-      Value<DateTime> createdAt,
-      Value<List<Map<String, dynamic>>> instructions,
+      Value<DateTime?> createdAt,
+      Value<List<dynamic>> instructions,
       Value<int> rowid,
     });
 
@@ -21168,11 +21165,7 @@ class $$InstitutionScrappingCommandTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<
-    List<Map<String, dynamic>>,
-    List<Map<String, dynamic>>,
-    String
-  >
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
   get instructions => $composableBuilder(
     column: $table.instructions,
     builder: (column) => ColumnWithTypeConverterFilters(column),
@@ -21265,11 +21258,11 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>, String>
-  get instructions => $composableBuilder(
-    column: $table.instructions,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get instructions =>
+      $composableBuilder(
+        column: $table.instructions,
+        builder: (column) => column,
+      );
 }
 
 class $$InstitutionScrappingCommandTableTableManager
@@ -21324,9 +21317,8 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<String?> url = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<bool> requiresInteraction = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<List<Map<String, dynamic>>> instructions =
-                    const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<List<dynamic>> instructions = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InstitutionScrappingCommandCompanion(
                 institution: institution,
@@ -21347,8 +21339,8 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<String?> url = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<bool> requiresInteraction = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                required List<Map<String, dynamic>> instructions,
+                Value<DateTime?> createdAt = const Value.absent(),
+                required List<dynamic> instructions,
                 Value<int> rowid = const Value.absent(),
               }) => InstitutionScrappingCommandCompanion.insert(
                 institution: institution,
