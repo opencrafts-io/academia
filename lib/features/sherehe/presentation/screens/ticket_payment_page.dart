@@ -69,7 +69,7 @@ class _TicketPaymentPageState extends State<TicketPaymentPage> {
                     borderColor = Theme.of(context).colorScheme.error;
                     icon = Icons.error;
                     message =
-                        "Payment failed. If you were charged, please contact support.";
+                        "Payment failed. If you were charged, please contact support at hello@opencrafts.io.";
                     break;
 
                   case 'SUCCESS':

@@ -89,6 +89,35 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           },
         ),
         title: const Text("Ticket Booking"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help),
+            tooltip: 'Need help?',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text(
+                    "Need Help?",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  content: const Text(
+                    "If you experience any issues while purchasing or booking a ticket, "
+                    "please contact our support team at hello@opencrafts.io",
+                  ),
+                  actions: [
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("OK"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -193,7 +222,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                     title: const Text("Payment Failed"),
                     content: const Text(
                       "The payment failed. If you were charged on your end, "
-                      "please contact our support team at info@opencrafts.io",
+                      "please contact our support team at hello@opencrafts.io",
                     ),
                     actions: [
                       TextButton(
