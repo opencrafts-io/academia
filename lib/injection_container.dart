@@ -625,10 +625,24 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
 
+  sl.registerFactory<InstitutionCommandLocalDatasource>(
+    () => InstitutionCommandLocalDatasource(appDataBase: sl()),
+  );
+  sl.registerFactory<InstitutionCommandRemoteDatasource>(
+    () => InstitutionCommandRemoteDatasource(flavor: flavor, dioClient: sl()),
+  );
+
   sl.registerFactory<InstitutionRepositoryImpl>(
     () => InstitutionRepositoryImpl(
       institutionLocalDatasource: sl(),
       institutionRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionCommandRepository>(
+    () => InstitutionScrappingCommandRepositoryImpl(
+      institutionCommandLocalDatasource: sl(),
+      institutionCommandRemoteDatasource: sl(),
     ),
   );
 
@@ -656,6 +670,10 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<GetInstitutionScrappingCommandUsecase>(
+    () => GetInstitutionScrappingCommandUsecase(repository: sl()),
+  );
+
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
       addAccountToInstitution: sl(),
@@ -663,6 +681,10 @@ Future<void> init(FlavorConfig flavor) async {
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
     ),
+  );
+
+  sl.registerFactory<ScrappingCommandBloc>(
+    () => ScrappingCommandBloc(getInstitutionScrappingCommandUsecase: sl()),
   );
 
   // Exam Timetable
