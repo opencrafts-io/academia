@@ -106,6 +106,9 @@ _ScrapingInstruction _$ScrapingInstructionFromJson(Map<String, dynamic> json) =>
           : WaitStrategy.fromJson(json['waitStrategy'] as Map<String, dynamic>),
       jsCode: json['jsCode'] as String?,
       outputKey: json['outputKey'] as String?,
+      valueKey: json['valueKey'] as String?,
+      inputType: json['inputType'] as String?,
+      inputLabel: json['inputLabel'] as String?,
       waitAfterExecution: json['waitAfterExecution'] as bool? ?? false,
     );
 
@@ -121,5 +124,8 @@ Map<String, dynamic> _$ScrapingInstructionToJson(
   'waitStrategy': instance.waitStrategy,
   'jsCode': instance.jsCode,
   'outputKey': instance.outputKey,
+  'valueKey': instance.valueKey,
+  'inputType': instance.inputType,
+  'inputLabel': instance.inputLabel,
   'waitAfterExecution': instance.waitAfterExecution,
 };

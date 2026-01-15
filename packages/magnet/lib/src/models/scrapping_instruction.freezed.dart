@@ -743,7 +743,10 @@ mixin _$ScrapingInstruction {
 /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
  String get type;/// CSS selector to be used
  String? get selector;/// The xpath of the element - used instead of the css selector
- String? get xpath; String? get attribute; String? get value; int? get waitMilliseconds; WaitStrategy? get waitStrategy; String? get jsCode; String? get outputKey;/// Whether to wait after execution completes
+ String? get xpath; String? get attribute; String? get value; int? get waitMilliseconds; WaitStrategy? get waitStrategy; String? get jsCode; String? get outputKey;/// The value key to be used
+ String? get valueKey;/// The input type, whether password, text, number etc
+ String? get inputType;/// Input label user facing
+ String? get inputLabel;/// Whether to wait after execution completes
  bool get waitAfterExecution;
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
@@ -757,16 +760,16 @@ $ScrapingInstructionCopyWith<ScrapingInstruction> get copyWith => _$ScrapingInst
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.waitStrategy, waitStrategy) || other.waitStrategy == waitStrategy)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&(identical(other.waitAfterExecution, waitAfterExecution) || other.waitAfterExecution == waitAfterExecution));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.waitStrategy, waitStrategy) || other.waitStrategy == waitStrategy)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&(identical(other.valueKey, valueKey) || other.valueKey == valueKey)&&(identical(other.inputType, inputType) || other.inputType == inputType)&&(identical(other.inputLabel, inputLabel) || other.inputLabel == inputLabel)&&(identical(other.waitAfterExecution, waitAfterExecution) || other.waitAfterExecution == waitAfterExecution));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,waitStrategy,jsCode,outputKey,waitAfterExecution);
+int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,waitStrategy,jsCode,outputKey,valueKey,inputType,inputLabel,waitAfterExecution);
 
 @override
 String toString() {
-  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, waitStrategy: $waitStrategy, jsCode: $jsCode, outputKey: $outputKey, waitAfterExecution: $waitAfterExecution)';
+  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, waitStrategy: $waitStrategy, jsCode: $jsCode, outputKey: $outputKey, valueKey: $valueKey, inputType: $inputType, inputLabel: $inputLabel, waitAfterExecution: $waitAfterExecution)';
 }
 
 
@@ -777,7 +780,7 @@ abstract mixin class $ScrapingInstructionCopyWith<$Res>  {
   factory $ScrapingInstructionCopyWith(ScrapingInstruction value, $Res Function(ScrapingInstruction) _then) = _$ScrapingInstructionCopyWithImpl;
 @useResult
 $Res call({
- String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, WaitStrategy? waitStrategy, String? jsCode, String? outputKey, bool waitAfterExecution
+ String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, WaitStrategy? waitStrategy, String? jsCode, String? outputKey, String? valueKey, String? inputType, String? inputLabel, bool waitAfterExecution
 });
 
 
@@ -794,7 +797,7 @@ class _$ScrapingInstructionCopyWithImpl<$Res>
 
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? waitStrategy = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? waitAfterExecution = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? waitStrategy = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? valueKey = freezed,Object? inputType = freezed,Object? inputLabel = freezed,Object? waitAfterExecution = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,selector: freezed == selector ? _self.selector : selector // ignore: cast_nullable_to_non_nullable
@@ -805,6 +808,9 @@ as String?,waitMilliseconds: freezed == waitMilliseconds ? _self.waitMillisecond
 as int?,waitStrategy: freezed == waitStrategy ? _self.waitStrategy : waitStrategy // ignore: cast_nullable_to_non_nullable
 as WaitStrategy?,jsCode: freezed == jsCode ? _self.jsCode : jsCode // ignore: cast_nullable_to_non_nullable
 as String?,outputKey: freezed == outputKey ? _self.outputKey : outputKey // ignore: cast_nullable_to_non_nullable
+as String?,valueKey: freezed == valueKey ? _self.valueKey : valueKey // ignore: cast_nullable_to_non_nullable
+as String?,inputType: freezed == inputType ? _self.inputType : inputType // ignore: cast_nullable_to_non_nullable
+as String?,inputLabel: freezed == inputLabel ? _self.inputLabel : inputLabel // ignore: cast_nullable_to_non_nullable
 as String?,waitAfterExecution: null == waitAfterExecution ? _self.waitAfterExecution : waitAfterExecution // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -903,10 +909,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  bool waitAfterExecution)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  String? valueKey,  String? inputType,  String? inputLabel,  bool waitAfterExecution)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction() when $default != null:
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.waitAfterExecution);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.valueKey,_that.inputType,_that.inputLabel,_that.waitAfterExecution);case _:
   return orElse();
 
 }
@@ -924,10 +930,10 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  bool waitAfterExecution)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  String? valueKey,  String? inputType,  String? inputLabel,  bool waitAfterExecution)  $default,) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction():
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.waitAfterExecution);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.valueKey,_that.inputType,_that.inputLabel,_that.waitAfterExecution);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -944,10 +950,10 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  bool waitAfterExecution)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  String? selector,  String? xpath,  String? attribute,  String? value,  int? waitMilliseconds,  WaitStrategy? waitStrategy,  String? jsCode,  String? outputKey,  String? valueKey,  String? inputType,  String? inputLabel,  bool waitAfterExecution)?  $default,) {final _that = this;
 switch (_that) {
 case _ScrapingInstruction() when $default != null:
-return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.waitAfterExecution);case _:
+return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.value,_that.waitMilliseconds,_that.waitStrategy,_that.jsCode,_that.outputKey,_that.valueKey,_that.inputType,_that.inputLabel,_that.waitAfterExecution);case _:
   return null;
 
 }
@@ -959,7 +965,7 @@ return $default(_that.type,_that.selector,_that.xpath,_that.attribute,_that.valu
 @JsonSerializable()
 
 class _ScrapingInstruction extends ScrapingInstruction {
-  const _ScrapingInstruction({required this.type, this.selector, this.xpath, this.attribute, this.value, this.waitMilliseconds, this.waitStrategy, this.jsCode, this.outputKey, this.waitAfterExecution = false}): super._();
+  const _ScrapingInstruction({required this.type, this.selector, this.xpath, this.attribute, this.value, this.waitMilliseconds, this.waitStrategy, this.jsCode, this.outputKey, this.valueKey, this.inputType, this.inputLabel, this.waitAfterExecution = false}): super._();
   factory _ScrapingInstruction.fromJson(Map<String, dynamic> json) => _$ScrapingInstructionFromJson(json);
 
 /// 'extract', 'click', 'fillForm', 'wait', 'executeJs', 'screenshot'
@@ -974,6 +980,12 @@ class _ScrapingInstruction extends ScrapingInstruction {
 @override final  WaitStrategy? waitStrategy;
 @override final  String? jsCode;
 @override final  String? outputKey;
+/// The value key to be used
+@override final  String? valueKey;
+/// The input type, whether password, text, number etc
+@override final  String? inputType;
+/// Input label user facing
+@override final  String? inputLabel;
 /// Whether to wait after execution completes
 @override@JsonKey() final  bool waitAfterExecution;
 
@@ -990,16 +1002,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.waitStrategy, waitStrategy) || other.waitStrategy == waitStrategy)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&(identical(other.waitAfterExecution, waitAfterExecution) || other.waitAfterExecution == waitAfterExecution));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScrapingInstruction&&(identical(other.type, type) || other.type == type)&&(identical(other.selector, selector) || other.selector == selector)&&(identical(other.xpath, xpath) || other.xpath == xpath)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.value, value) || other.value == value)&&(identical(other.waitMilliseconds, waitMilliseconds) || other.waitMilliseconds == waitMilliseconds)&&(identical(other.waitStrategy, waitStrategy) || other.waitStrategy == waitStrategy)&&(identical(other.jsCode, jsCode) || other.jsCode == jsCode)&&(identical(other.outputKey, outputKey) || other.outputKey == outputKey)&&(identical(other.valueKey, valueKey) || other.valueKey == valueKey)&&(identical(other.inputType, inputType) || other.inputType == inputType)&&(identical(other.inputLabel, inputLabel) || other.inputLabel == inputLabel)&&(identical(other.waitAfterExecution, waitAfterExecution) || other.waitAfterExecution == waitAfterExecution));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,waitStrategy,jsCode,outputKey,waitAfterExecution);
+int get hashCode => Object.hash(runtimeType,type,selector,xpath,attribute,value,waitMilliseconds,waitStrategy,jsCode,outputKey,valueKey,inputType,inputLabel,waitAfterExecution);
 
 @override
 String toString() {
-  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, waitStrategy: $waitStrategy, jsCode: $jsCode, outputKey: $outputKey, waitAfterExecution: $waitAfterExecution)';
+  return 'ScrapingInstruction(type: $type, selector: $selector, xpath: $xpath, attribute: $attribute, value: $value, waitMilliseconds: $waitMilliseconds, waitStrategy: $waitStrategy, jsCode: $jsCode, outputKey: $outputKey, valueKey: $valueKey, inputType: $inputType, inputLabel: $inputLabel, waitAfterExecution: $waitAfterExecution)';
 }
 
 
@@ -1010,7 +1022,7 @@ abstract mixin class _$ScrapingInstructionCopyWith<$Res> implements $ScrapingIns
   factory _$ScrapingInstructionCopyWith(_ScrapingInstruction value, $Res Function(_ScrapingInstruction) _then) = __$ScrapingInstructionCopyWithImpl;
 @override @useResult
 $Res call({
- String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, WaitStrategy? waitStrategy, String? jsCode, String? outputKey, bool waitAfterExecution
+ String type, String? selector, String? xpath, String? attribute, String? value, int? waitMilliseconds, WaitStrategy? waitStrategy, String? jsCode, String? outputKey, String? valueKey, String? inputType, String? inputLabel, bool waitAfterExecution
 });
 
 
@@ -1027,7 +1039,7 @@ class __$ScrapingInstructionCopyWithImpl<$Res>
 
 /// Create a copy of ScrapingInstruction
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? waitStrategy = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? waitAfterExecution = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? selector = freezed,Object? xpath = freezed,Object? attribute = freezed,Object? value = freezed,Object? waitMilliseconds = freezed,Object? waitStrategy = freezed,Object? jsCode = freezed,Object? outputKey = freezed,Object? valueKey = freezed,Object? inputType = freezed,Object? inputLabel = freezed,Object? waitAfterExecution = null,}) {
   return _then(_ScrapingInstruction(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,selector: freezed == selector ? _self.selector : selector // ignore: cast_nullable_to_non_nullable
@@ -1038,6 +1050,9 @@ as String?,waitMilliseconds: freezed == waitMilliseconds ? _self.waitMillisecond
 as int?,waitStrategy: freezed == waitStrategy ? _self.waitStrategy : waitStrategy // ignore: cast_nullable_to_non_nullable
 as WaitStrategy?,jsCode: freezed == jsCode ? _self.jsCode : jsCode // ignore: cast_nullable_to_non_nullable
 as String?,outputKey: freezed == outputKey ? _self.outputKey : outputKey // ignore: cast_nullable_to_non_nullable
+as String?,valueKey: freezed == valueKey ? _self.valueKey : valueKey // ignore: cast_nullable_to_non_nullable
+as String?,inputType: freezed == inputType ? _self.inputType : inputType // ignore: cast_nullable_to_non_nullable
+as String?,inputLabel: freezed == inputLabel ? _self.inputLabel : inputLabel // ignore: cast_nullable_to_non_nullable
 as String?,waitAfterExecution: null == waitAfterExecution ? _self.waitAfterExecution : waitAfterExecution // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

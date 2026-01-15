@@ -84,6 +84,15 @@ abstract class ScrapingInstruction with _$ScrapingInstruction {
 
     String? outputKey,
 
+    /// The value key to be used
+    String? valueKey,
+
+    /// The input type, whether password, text, number etc
+    String? inputType,
+
+    /// Input label user facing
+    String? inputLabel,
+
     /// Whether to wait after execution completes
     @Default(false) bool waitAfterExecution,
 
