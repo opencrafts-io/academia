@@ -19,16 +19,18 @@ class InstitutionScrappingCommandRepositoryImpl
   getInstitutionScrappingCommandByInstitutionID({
     required int institutionID,
   }) async* {
-    final result = await institutionCommandRemoteDatasource
+    institutionCommandRemoteDatasource
         .fetchInstitutionScrappingCommandByInstitution(
           institutionID: institutionID,
-        );
+        )
+        .then((result) {
+          result.fold(
+            (error) {},
+            (command) => institutionCommandLocalDatasource
+                .saveInstitutionCommand(institutionCommand: command),
+          );
+        });
 
-    result.fold((error) {}, (command) async {
-      await institutionCommandLocalDatasource.saveInstitutionCommand(
-        institutionCommand: command,
-      );
-    });
     yield* institutionCommandLocalDatasource
         .watchInstitutionCommandByInstitution(institutionID: institutionID)
         .map<Either<Failure, ScrappingCommand?>>(
