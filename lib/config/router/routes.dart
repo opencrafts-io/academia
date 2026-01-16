@@ -619,7 +619,6 @@ class InstitutionKeysViewRoute extends GoRouteData
         child: child,
       ),
       child: Sheet(
-        initialOffset: SheetOffset(0.5),
         child: InstitutionKeysView(),
       ),
     );
