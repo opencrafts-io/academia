@@ -8,7 +8,7 @@ part of 'scrapping_command.dart';
 
 _ScrappingCommand _$ScrappingCommandFromJson(Map<String, dynamic> json) =>
     _ScrappingCommand(
-      commandID: json['commandID'] as String?,
+      commandID: json['command_id'] as String?,
       url: json['url'] as String,
       requiresInteraction: json['requires_interaction'] as bool? ?? false,
       instructions: (json['instructions'] as List<dynamic>)
@@ -18,7 +18,7 @@ _ScrappingCommand _$ScrappingCommandFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ScrappingCommandToJson(_ScrappingCommand instance) =>
     <String, dynamic>{
-      'commandID': instance.commandID,
+      'command_id': instance.commandID,
       'url': instance.url,
       'requires_interaction': instance.requiresInteraction,
       'instructions': instance.instructions,

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScrappingCommand {
 
- String? get commandID; String get url;@JsonKey(name: "requires_interaction") bool? get requiresInteraction; List<ScrapingInstruction> get instructions;
+@JsonKey(name: "command_id") String? get commandID; String get url;@JsonKey(name: "requires_interaction") bool? get requiresInteraction; List<ScrapingInstruction> get instructions;
 /// Create a copy of ScrappingCommand
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ScrappingCommandCopyWith<$Res>  {
   factory $ScrappingCommandCopyWith(ScrappingCommand value, $Res Function(ScrappingCommand) _then) = _$ScrappingCommandCopyWithImpl;
 @useResult
 $Res call({
- String? commandID, String url,@JsonKey(name: "requires_interaction") bool? requiresInteraction, List<ScrapingInstruction> instructions
+@JsonKey(name: "command_id") String? commandID, String url,@JsonKey(name: "requires_interaction") bool? requiresInteraction, List<ScrapingInstruction> instructions
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "command_id")  String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScrappingCommand() when $default != null:
 return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instructions);case _:
@@ -177,7 +177,7 @@ return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instru
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "command_id")  String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)  $default,) {final _that = this;
 switch (_that) {
 case _ScrappingCommand():
 return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instructions);case _:
@@ -197,7 +197,7 @@ return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instru
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "command_id")  String? commandID,  String url, @JsonKey(name: "requires_interaction")  bool? requiresInteraction,  List<ScrapingInstruction> instructions)?  $default,) {final _that = this;
 switch (_that) {
 case _ScrappingCommand() when $default != null:
 return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instructions);case _:
@@ -212,10 +212,10 @@ return $default(_that.commandID,_that.url,_that.requiresInteraction,_that.instru
 @JsonSerializable()
 
 class _ScrappingCommand implements ScrappingCommand {
-  const _ScrappingCommand({this.commandID, required this.url, @JsonKey(name: "requires_interaction") this.requiresInteraction = false, required final  List<ScrapingInstruction> instructions}): _instructions = instructions;
+  const _ScrappingCommand({@JsonKey(name: "command_id") this.commandID, required this.url, @JsonKey(name: "requires_interaction") this.requiresInteraction = false, required final  List<ScrapingInstruction> instructions}): _instructions = instructions;
   factory _ScrappingCommand.fromJson(Map<String, dynamic> json) => _$ScrappingCommandFromJson(json);
 
-@override final  String? commandID;
+@override@JsonKey(name: "command_id") final  String? commandID;
 @override final  String url;
 @override@JsonKey(name: "requires_interaction") final  bool? requiresInteraction;
  final  List<ScrapingInstruction> _instructions;
@@ -259,7 +259,7 @@ abstract mixin class _$ScrappingCommandCopyWith<$Res> implements $ScrappingComma
   factory _$ScrappingCommandCopyWith(_ScrappingCommand value, $Res Function(_ScrappingCommand) _then) = __$ScrappingCommandCopyWithImpl;
 @override @useResult
 $Res call({
- String? commandID, String url,@JsonKey(name: "requires_interaction") bool? requiresInteraction, List<ScrapingInstruction> instructions
+@JsonKey(name: "command_id") String? commandID, String url,@JsonKey(name: "requires_interaction") bool? requiresInteraction, List<ScrapingInstruction> instructions
 });
 
 

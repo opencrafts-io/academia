@@ -7,7 +7,7 @@ part 'scrapping_command.freezed.dart';
 @freezed
 abstract class ScrappingCommand with _$ScrappingCommand {
   const factory ScrappingCommand({
-    String? commandID,
+    @JsonKey(name: "command_id") String? commandID,
     required String url,
     @JsonKey(name: "requires_interaction")
     @Default(false)
