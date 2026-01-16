@@ -646,6 +646,14 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionCommandRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
 
+  sl.registerFactory<InstitutionKeyLocalDatasource>(
+    () => InstitutionKeyLocalDatasource(appDataBase: sl()),
+  );
+
+  sl.registerFactory<InstitutionKeyRepository>(
+    () => InstitutionKeyRepositoryImpl(localDataSource: sl()),
+  );
+
   sl.registerFactory<InstitutionRepositoryImpl>(
     () => InstitutionRepositoryImpl(
       institutionLocalDatasource: sl(),
@@ -682,6 +690,13 @@ Future<void> init(FlavorConfig flavor) async {
     () => SearchForInstitutionByNameUsecase(
       institutionRepository: sl<InstitutionRepositoryImpl>(),
     ),
+  );
+
+  sl.registerFactory<GetInstitutionKeyUsecase>(
+    () => GetInstitutionKeyUsecase(repository: sl()),
+  );
+  sl.registerFactory<SaveInstitutionKeyUsecase>(
+    () => SaveInstitutionKeyUsecase(repository: sl()),
   );
 
   sl.registerFactory<GetInstitutionScrappingCommandUsecase>(
