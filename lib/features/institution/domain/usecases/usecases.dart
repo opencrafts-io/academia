@@ -3,3 +3,5 @@ export 'get_all_cached_institutions_usecase.dart';
 export 'get_all_user_account_institutions_usecase.dart';
 export 'search_for_institution_by_name_usecase.dart';
 export 'get_institution_scrapping_command_usecase.dart';
+export 'get_institution_key_usecase.dart';
+export 'save_institution_key_usecase.dart';
