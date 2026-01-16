@@ -28,7 +28,7 @@ List<RouteBase> get $appRoutes => [
   $activitiesPageRoute,
   $examTimetableRoute,
   $settingsPageRoute,
-  $institutionHomePageRoute,
+  $institutionShellRouteData,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -1021,10 +1021,26 @@ mixin _$SettingsPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $institutionHomePageRoute => GoRouteData.$route(
-  path: '/institution/:institutionID',
-  factory: _$InstitutionHomePageRoute._fromState,
+RouteBase get $institutionShellRouteData => ShellRouteData.$route(
+  factory: $InstitutionShellRouteDataExtension._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: '/institution/:institutionID',
+      factory: _$InstitutionHomePageRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'keys',
+          factory: _$InstitutionKeysViewRoute._fromState,
+        ),
+      ],
+    ),
+  ],
 );
+
+extension $InstitutionShellRouteDataExtension on InstitutionShellRouteData {
+  static InstitutionShellRouteData _fromState(GoRouterState state) =>
+      const InstitutionShellRouteData();
+}
 
 mixin _$InstitutionHomePageRoute on GoRouteData {
   static InstitutionHomePageRoute _fromState(GoRouterState state) =>
@@ -1037,6 +1053,33 @@ mixin _$InstitutionHomePageRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/institution/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$InstitutionKeysViewRoute on GoRouteData {
+  static InstitutionKeysViewRoute _fromState(GoRouterState state) =>
+      InstitutionKeysViewRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!),
+      );
+
+  InstitutionKeysViewRoute get _self => this as InstitutionKeysViewRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/keys',
   );
 
   @override

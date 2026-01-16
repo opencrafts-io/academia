@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'routes.g.dart';
 
@@ -540,7 +541,31 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
   }
 }
 
-@TypedGoRoute<InstitutionHomePageRoute>(path: "/institution/:institutionID")
+@TypedShellRoute<InstitutionShellRouteData>(
+  routes: [
+    TypedGoRoute<InstitutionHomePageRoute>(
+      path: "/institution/:institutionID",
+      routes: [TypedGoRoute<InstitutionKeysViewRoute>(path: "keys")],
+    ),
+  ],
+)
+class InstitutionShellRouteData extends ShellRouteData {
+  const InstitutionShellRouteData();
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
+    // Extract institutionID from state if needed for initialization
+    final institutionID = int.parse(state.pathParameters['institutionID']!);
+
+    return BlocProvider(
+      create: (context) =>
+          sl<ScrappingCommandBloc>()
+            ..add(GetScrappingCommandEvent(institutionID: institutionID)),
+      child: navigator, // This contains either the Home or Keys page
+    );
+  }
+}
+
 class InstitutionHomePageRoute extends GoRouteData
     with _$InstitutionHomePageRoute {
   InstitutionHomePageRoute({required this.institutionID});
@@ -554,15 +579,9 @@ class InstitutionHomePageRoute extends GoRouteData
   ) {
     return CustomTransitionPage<void>(
       key: state.pageKey,
-      child: InstitutionHomePage(
-        institutionID: institutionID,
-      ),
-      transitionDuration: const Duration(
-        milliseconds: 400,
-      ),
-      reverseTransitionDuration: const Duration(
-        milliseconds: 200,
-      ),
+      child: InstitutionHomePage(institutionID: institutionID),
+      transitionDuration: const Duration(milliseconds: 400),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         // 1. Scale Tween: Starts slightly zoomed out
         final scaleTween = Tween<double>(
@@ -583,6 +602,26 @@ class InstitutionHomePageRoute extends GoRouteData
           ),
         );
       },
+    );
+  }
+}
+
+class InstitutionKeysViewRoute extends GoRouteData
+    with _$InstitutionKeysViewRoute {
+  InstitutionKeysViewRoute({required this.institutionID});
+  final int institutionID;
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(
+        initialOffset: SheetOffset(0.5),
+        child: InstitutionKeysView(),
+      ),
     );
   }
 }
