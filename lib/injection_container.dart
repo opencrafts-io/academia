@@ -703,6 +703,13 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetInstitutionScrappingCommandUsecase(repository: sl()),
   );
 
+  sl.registerFactory<InstitutionKeyBloc>(
+    () => InstitutionKeyBloc(
+      getInstitutionKeyUsecase: sl(),
+      saveInstitutionKeyUsecase: sl(),
+    ),
+  );
+
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
       addAccountToInstitution: sl(),
