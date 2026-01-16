@@ -9,6 +9,7 @@ import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
+import 'package:academia/features/institution/data/models/institution_key.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
 import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
@@ -23,6 +24,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/core/core.dart';
+import 'migrations.dart';
 
 part 'database.g.dart';
 
@@ -56,6 +58,7 @@ part 'database.g.dart';
     // Institution
     Institution,
     InstitutionScrappingCommand,
+    InstitutionKey,
     // Exam Timetable
     ExamTimetable,
 
@@ -87,7 +90,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration {
@@ -97,11 +100,18 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
-        if (from < 15) {
-          await m.createTable(examTimetable);
-        }
-        if (from < 16) {
-          await m.createTable(institutionScrappingCommand);
+        for (int version = from; version < to; version++) {
+          switch (version) {
+            case 14:
+              await migrate14To15(m);
+              break;
+            case 15:
+              await migrate15To16(m);
+              break;
+            case 16:
+              await migrate16To17(m);
+              break;
+          }
         }
       },
       beforeOpen: (details) async {
