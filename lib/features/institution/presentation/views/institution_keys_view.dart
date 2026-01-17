@@ -1,6 +1,5 @@
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magnet/magnet.dart';
@@ -17,68 +16,42 @@ class InstitutionKeysView extends StatefulWidget {
 class _InstitutionKeysViewState extends State<InstitutionKeysView> {
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog.adaptive(
-              title: Text("Discard changes?"),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    context.pop();
-                    context.pop();
-                  },
-                  child: const Text("Discard"),
-                ),
-              ],
-            ),
-          );
-        }
-      },
-      child: BlocProvider.value(
-        value: context.read<ScrappingCommandBloc>(),
-        child: SheetContentScaffold(
-          topBar: AppBar(centerTitle: true, title: Text("Keys management")),
-          body: SafeArea(
-            minimum: EdgeInsets.all(16),
-            child: BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
-              builder: (context, state) {
-                if (state is ScrappingCommandLoading) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      LoadingIndicatorM3E(),
-                      SizedBox(height: 12),
-                      Text("Loading institution information"),
-                    ],
-                  );
-                } else if (state is ScrappingCommandError) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Holy molly ..."),
-                      SizedBox(height: 12),
-                      Text(state.message),
-                    ],
-                  );
-                } else if (state is ScrappingCommandInitial) {
-                  return SizedBox.shrink();
-                }
+    return BlocProvider.value(
+      value: context.read<ScrappingCommandBloc>(),
+      child: SheetContentScaffold(
+        topBar: AppBar(centerTitle: true, title: Text("Keys management")),
+        body: SafeArea(
+          minimum: EdgeInsets.all(16),
+          child: BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
+            builder: (context, state) {
+              if (state is ScrappingCommandLoading) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LoadingIndicatorM3E(),
+                    SizedBox(height: 12),
+                    Text("Loading institution information"),
+                  ],
+                );
+              } else if (state is ScrappingCommandError) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Holy molly ..."),
+                    SizedBox(height: 12),
+                    Text(state.message),
+                  ],
+                );
+              } else if (state is ScrappingCommandInitial) {
+                return SizedBox.shrink();
+              }
 
-                return (state as ScrappingCommandLoaded).command == null
-                    ? InstitutionNotSupportedView()
-                    : ScrappingCommandForm(command: state.command!);
-              },
-            ),
+              return (state as ScrappingCommandLoaded).command == null
+                  ? InstitutionNotSupportedView()
+                  : ScrappingCommandForm(command: state.command!);
+            },
           ),
         ),
       ),
@@ -97,6 +70,8 @@ class ScrappingCommandForm extends StatefulWidget {
 class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, TextEditingController> _controllers = {};
+  bool _hasUnsavedChanges = false;
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -106,7 +81,39 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
       (i) => i.type == 'fill-form',
     )) {
       final key = instruction.valueKey ?? instruction.selectorToUse;
-      _controllers[key] = TextEditingController(text: instruction.value ?? '');
+      final controller = TextEditingController(text: instruction.value ?? '');
+
+      // Add listener to track changes
+      controller.addListener(() {
+        if (!_hasUnsavedChanges) {
+          setState(() => _hasUnsavedChanges = true);
+        }
+      });
+
+      _controllers[key] = controller;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final institutionKeyState = context.read<InstitutionKeyBloc>().state;
+
+    if (institutionKeyState is InstitutionKeyLoaded) {
+      final keySets = institutionKeyState.key?.keySets;
+
+      if (keySets != null) {
+        for (final entry in keySets.entries) {
+          final key = entry.key;
+          final value = entry.value;
+
+          if (_controllers.containsKey(key)) {
+            _controllers[key]?.text = value ?? '';
+          }
+        }
+        // Reset unsaved changes flag after loading initial data
+        _hasUnsavedChanges = false;
+      }
     }
   }
 
@@ -118,72 +125,97 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
     super.dispose();
   }
 
+  Future<bool> _onWillPop() async {
+    if (!_hasUnsavedChanges) {
+      return true;
+    }
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog.adaptive(
+        title: Text("Discard changes?"),
+        content: Text(
+          "You have unsaved changes. Are you sure you want to leave?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text("Discard"),
+          ),
+        ],
+      ),
+    );
+
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    // Breeze: Filter once and use this list for everything in the build method
     final fillInstructions = widget.command.instructions
         .where((i) => i.type == 'fill-form')
         .toList();
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Provide the following details to allow the system to sync your data securely.",
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+    return PopScope(
+      canPop: !_hasUnsavedChanges,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Provide the following details to allow the system to sync your data securely.",
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          // Use ListView.separated for clean, expressive spacing
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: fillInstructions.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (context, index) {
-              return _buildExpressiveField(context, fillInstructions[index]);
-            },
-          ),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: fillInstructions.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                return _buildExpressiveField(context, fillInstructions[index]);
+              },
+            ),
 
-          const SizedBox(height: 32),
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: SizedBox(
-                  height: 64,
-                  child: FilledButton(
-                    onPressed: _handleSave,
-                    style: FilledButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: SizedBox(
+                    height: 64,
+                    child: FilledButton(
+                      onPressed: _handleSave,
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                       ),
+                      child: const Text("Save keys"),
                     ),
-                    child: const Text("Save keys"),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              IconButton.filled(
-                style: IconButton.styleFrom(
-                  backgroundColor: theme.colorScheme.errorContainer,
-                  foregroundColor: theme.colorScheme.error,
-                  fixedSize: const Size(64, 64),
-                  shape: const CircleBorder(),
-                ),
-                onPressed: _handleDelete,
-                icon: const Icon(Icons.delete_outline),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -202,16 +234,14 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
       style: theme.textTheme.bodyLarge,
       decoration: InputDecoration(
         filled: true,
-        fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
+          alpha: 50,
+        ),
         labelText: instruction.inputLabel ?? key,
         prefixIcon: Icon(_getIconForInput(instruction.inputType)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -226,13 +256,28 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
       final Map<String, String> updatedValues = _controllers.map(
         (key, controller) => MapEntry(key, controller.text),
       );
-      // TODO: Add your Bloc Event here
-    }
-  }
 
-  void _handleDelete() {
-    // Clear all fields or trigger a deletion event
-    _controllers.forEach((_, controller) => controller.clear());
+      final institutionKey = InstitutionKey(
+        institutionId: 5426,
+        commandId: widget.command.commandID!,
+        keySets: updatedValues,
+        createdAt: DateTime.now(),
+      );
+
+      context.read<InstitutionKeyBloc>().add(
+        SaveInstitutionKeyEvent(key: institutionKey),
+      );
+
+      // Reset unsaved changes flag
+      setState(() => _hasUnsavedChanges = false);
+
+      _scaffoldMessengerKey.currentState?.showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Keys saved successfully'),
+        ),
+      );
+    }
   }
 
   TextInputType _getKeyboardType(String? type) {

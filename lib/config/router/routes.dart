@@ -557,10 +557,19 @@ class InstitutionShellRouteData extends ShellRouteData {
     // Extract institutionID from state if needed for initialization
     final institutionID = int.parse(state.pathParameters['institutionID']!);
 
-    return BlocProvider(
-      create: (context) =>
-          sl<ScrappingCommandBloc>()
-            ..add(GetScrappingCommandEvent(institutionID: institutionID)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<ScrappingCommandBloc>()
+                ..add(GetScrappingCommandEvent(institutionID: institutionID)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<InstitutionKeyBloc>()
+                ..add(GetInstitutionKeyEvent(institutionID: institutionID)),
+        ),
+      ],
       child: navigator, // This contains either the Home or Keys page
     );
   }
@@ -618,9 +627,7 @@ class InstitutionKeysViewRoute extends GoRouteData
         padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
         child: child,
       ),
-      child: Sheet(
-        child: InstitutionKeysView(),
-      ),
+      child: Sheet(child: InstitutionKeysView()),
     );
   }
 }
