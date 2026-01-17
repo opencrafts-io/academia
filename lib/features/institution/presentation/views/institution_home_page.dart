@@ -225,7 +225,7 @@ class _InstitutionHomePageContent extends StatelessWidget {
         }
         return SliverPadding(
           padding: EdgeInsets.all(16),
-          sliver: SliverToBoxAdapter(child: Text(state.runtimeType.toString())),
+          sliver: SliverToBoxAdapter(child: InstitutionDashboard()),
         );
       },
     );
