@@ -3,6 +3,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 class InstitutionHomePage extends StatefulWidget {
@@ -75,10 +76,158 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
           child: CustomScrollView(
             slivers: [
               _InstitutionHomePageAppBar(institutionID: widget.institutionID),
+              _InstitutionHomePageContent(institutionID: widget.institutionID),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _InstitutionHomePageContent extends StatelessWidget {
+  final int institutionID;
+  const _InstitutionHomePageContent({required int this.institutionID});
+
+  Future<void> buildConfigSheet(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
+      ),
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 32,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Icon and Content
+                Icon(
+                  Icons.vpn_key_outlined,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "Setup Required",
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "You haven't added any institution keys yet. To access the dashboard and manage your data, you'll need to configure your security keys.",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Action Button
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      context.pop();
+
+                      // Close only when moving to setup
+                      InstitutionKeysViewRoute(
+                        institutionID: 5426,
+                      ).push(context);
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Keys Now"),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<InstitutionKeyBloc, InstitutionKeyState>(
+      listener: (context, state) {
+        if (state is InstitutionKeyLoaded && state.key == null) {
+          buildConfigSheet(context);
+        }
+      },
+      builder: (context, state) {
+        if (state is InstitutionKeyLoading) {
+          return SliverFillRemaining(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [LoadingIndicatorM3E(), Text("Retrieving cached keys")],
+            ),
+          );
+        }
+        if (state is InstitutionKeyError) {
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.pest_control_rodent_rounded,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Sewer apples...",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    state.message,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  FilledButton.tonalIcon(
+                    onPressed: () => context.read<InstitutionKeyBloc>().add(
+                      GetInstitutionKeyEvent(institutionID: institutionID),
+                    ),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text("Try Again"),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return SliverPadding(
+          padding: EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(child: Text(state.runtimeType.toString())),
+        );
+      },
     );
   }
 }
@@ -91,6 +240,10 @@ class _InstitutionHomePageAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InstitutionBloc, InstitutionState>(
       builder: (context, state) => SliverAppBar.large(
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back),
+        ),
         title: Text(
           state is InstitutionLoadedState
               ? state.institutions
