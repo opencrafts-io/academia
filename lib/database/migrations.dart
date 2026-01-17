@@ -13,4 +13,8 @@ extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate16To17(Migrator m) async {
     await m.createTable(institutionKey);
   }
+
+  Future<void> migrate17To18(Migrator m) async {
+    await m.createTable(institutionProfile);
+  }
 }

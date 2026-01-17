@@ -11347,6 +11347,1021 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
   }
 }
 
+class $InstitutionProfileTable extends InstitutionProfile
+    with TableInfo<$InstitutionProfileTable, InstitutionProfileData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionProfileTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  @override
+  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
+    'user_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _studentIdMeta = const VerificationMeta(
+    'studentId',
+  );
+  @override
+  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
+    'student_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
+    'nationalId',
+  );
+  @override
+  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+    'national_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nationalityMeta = const VerificationMeta(
+    'nationality',
+  );
+  @override
+  late final GeneratedColumn<String> nationality = GeneratedColumn<String>(
+    'nationality',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _programMeta = const VerificationMeta(
+    'program',
+  );
+  @override
+  late final GeneratedColumn<String> program = GeneratedColumn<String>(
+    'program',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _majorMeta = const VerificationMeta('major');
+  @override
+  late final GeneratedColumn<String> major = GeneratedColumn<String>(
+    'major',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _gpaMeta = const VerificationMeta('gpa');
+  @override
+  late final GeneratedColumn<double> gpa = GeneratedColumn<double>(
+    'gpa',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _disabilityStatusMeta = const VerificationMeta(
+    'disabilityStatus',
+  );
+  @override
+  late final GeneratedColumn<String> disabilityStatus = GeneratedColumn<String>(
+    'disability_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _schoolMeta = const VerificationMeta('school');
+  @override
+  late final GeneratedColumn<String> school = GeneratedColumn<String>(
+    'school',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _enrollmentDateMeta = const VerificationMeta(
+    'enrollmentDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> enrollmentDate =
+      GeneratedColumn<DateTime>(
+        'enrollment_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _expectedGraduationMeta =
+      const VerificationMeta('expectedGraduation');
+  @override
+  late final GeneratedColumn<DateTime> expectedGraduation =
+      GeneratedColumn<DateTime>(
+        'expected_graduation',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  rawData =
+      GeneratedColumn<String>(
+        'raw_data',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $InstitutionProfileTable.$converterrawDatan,
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userID,
+    studentId,
+    nationalId,
+    nationality,
+    program,
+    major,
+    year,
+    gpa,
+    disabilityStatus,
+    school,
+    phone,
+    address,
+    enrollmentDate,
+    expectedGraduation,
+    rawData,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_profile';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionProfileData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_i_d')) {
+      context.handle(
+        _userIDMeta,
+        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIDMeta);
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIdMeta,
+        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('national_id')) {
+      context.handle(
+        _nationalIdMeta,
+        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
+      );
+    }
+    if (data.containsKey('nationality')) {
+      context.handle(
+        _nationalityMeta,
+        nationality.isAcceptableOrUnknown(
+          data['nationality']!,
+          _nationalityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('program')) {
+      context.handle(
+        _programMeta,
+        program.isAcceptableOrUnknown(data['program']!, _programMeta),
+      );
+    }
+    if (data.containsKey('major')) {
+      context.handle(
+        _majorMeta,
+        major.isAcceptableOrUnknown(data['major']!, _majorMeta),
+      );
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    }
+    if (data.containsKey('gpa')) {
+      context.handle(
+        _gpaMeta,
+        gpa.isAcceptableOrUnknown(data['gpa']!, _gpaMeta),
+      );
+    }
+    if (data.containsKey('disability_status')) {
+      context.handle(
+        _disabilityStatusMeta,
+        disabilityStatus.isAcceptableOrUnknown(
+          data['disability_status']!,
+          _disabilityStatusMeta,
+        ),
+      );
+    }
+    if (data.containsKey('school')) {
+      context.handle(
+        _schoolMeta,
+        school.isAcceptableOrUnknown(data['school']!, _schoolMeta),
+      );
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    }
+    if (data.containsKey('enrollment_date')) {
+      context.handle(
+        _enrollmentDateMeta,
+        enrollmentDate.isAcceptableOrUnknown(
+          data['enrollment_date']!,
+          _enrollmentDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('expected_graduation')) {
+      context.handle(
+        _expectedGraduationMeta,
+        expectedGraduation.isAcceptableOrUnknown(
+          data['expected_graduation']!,
+          _expectedGraduationMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InstitutionProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionProfileData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_i_d'],
+      )!,
+      studentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_id'],
+      )!,
+      nationalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_id'],
+      ),
+      nationality: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nationality'],
+      ),
+      program: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}program'],
+      ),
+      major: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}major'],
+      ),
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      ),
+      gpa: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}gpa'],
+      ),
+      disabilityStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}disability_status'],
+      ),
+      school: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school'],
+      ),
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      ),
+      enrollmentDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}enrollment_date'],
+      ),
+      expectedGraduation: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}expected_graduation'],
+      ),
+      rawData: $InstitutionProfileTable.$converterrawDatan.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}raw_data'],
+        ),
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InstitutionProfileTable createAlias(String alias) {
+    return $InstitutionProfileTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterrawData =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterrawDatan =
+      NullAwareTypeConverter.wrap($converterrawData);
+}
+
+class InstitutionProfileData extends DataClass
+    implements Insertable<InstitutionProfileData> {
+  final int id;
+  final String userID;
+  final String studentId;
+  final String? nationalId;
+  final String? nationality;
+  final String? program;
+  final String? major;
+  final int? year;
+  final double? gpa;
+  final String? disabilityStatus;
+  final String? school;
+  final String? phone;
+  final String? address;
+  final DateTime? enrollmentDate;
+  final DateTime? expectedGraduation;
+  final Map<String, dynamic>? rawData;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const InstitutionProfileData({
+    required this.id,
+    required this.userID,
+    required this.studentId,
+    this.nationalId,
+    this.nationality,
+    this.program,
+    this.major,
+    this.year,
+    this.gpa,
+    this.disabilityStatus,
+    this.school,
+    this.phone,
+    this.address,
+    this.enrollmentDate,
+    this.expectedGraduation,
+    this.rawData,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_i_d'] = Variable<String>(userID);
+    map['student_id'] = Variable<String>(studentId);
+    if (!nullToAbsent || nationalId != null) {
+      map['national_id'] = Variable<String>(nationalId);
+    }
+    if (!nullToAbsent || nationality != null) {
+      map['nationality'] = Variable<String>(nationality);
+    }
+    if (!nullToAbsent || program != null) {
+      map['program'] = Variable<String>(program);
+    }
+    if (!nullToAbsent || major != null) {
+      map['major'] = Variable<String>(major);
+    }
+    if (!nullToAbsent || year != null) {
+      map['year'] = Variable<int>(year);
+    }
+    if (!nullToAbsent || gpa != null) {
+      map['gpa'] = Variable<double>(gpa);
+    }
+    if (!nullToAbsent || disabilityStatus != null) {
+      map['disability_status'] = Variable<String>(disabilityStatus);
+    }
+    if (!nullToAbsent || school != null) {
+      map['school'] = Variable<String>(school);
+    }
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || enrollmentDate != null) {
+      map['enrollment_date'] = Variable<DateTime>(enrollmentDate);
+    }
+    if (!nullToAbsent || expectedGraduation != null) {
+      map['expected_graduation'] = Variable<DateTime>(expectedGraduation);
+    }
+    if (!nullToAbsent || rawData != null) {
+      map['raw_data'] = Variable<String>(
+        $InstitutionProfileTable.$converterrawDatan.toSql(rawData),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  InstitutionProfileCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionProfileCompanion(
+      id: Value(id),
+      userID: Value(userID),
+      studentId: Value(studentId),
+      nationalId: nationalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationalId),
+      nationality: nationality == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationality),
+      program: program == null && nullToAbsent
+          ? const Value.absent()
+          : Value(program),
+      major: major == null && nullToAbsent
+          ? const Value.absent()
+          : Value(major),
+      year: year == null && nullToAbsent ? const Value.absent() : Value(year),
+      gpa: gpa == null && nullToAbsent ? const Value.absent() : Value(gpa),
+      disabilityStatus: disabilityStatus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(disabilityStatus),
+      school: school == null && nullToAbsent
+          ? const Value.absent()
+          : Value(school),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
+      address: address == null && nullToAbsent
+          ? const Value.absent()
+          : Value(address),
+      enrollmentDate: enrollmentDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentDate),
+      expectedGraduation: expectedGraduation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expectedGraduation),
+      rawData: rawData == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawData),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory InstitutionProfileData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionProfileData(
+      id: serializer.fromJson<int>(json['id']),
+      userID: serializer.fromJson<String>(json['user_id']),
+      studentId: serializer.fromJson<String>(json['student_id']),
+      nationalId: serializer.fromJson<String?>(json['national_id']),
+      nationality: serializer.fromJson<String?>(json['nationality']),
+      program: serializer.fromJson<String?>(json['program']),
+      major: serializer.fromJson<String?>(json['major']),
+      year: serializer.fromJson<int?>(json['year']),
+      gpa: serializer.fromJson<double?>(json['gpa']),
+      disabilityStatus: serializer.fromJson<String?>(json['disability_status']),
+      school: serializer.fromJson<String?>(json['school']),
+      phone: serializer.fromJson<String?>(json['phone']),
+      address: serializer.fromJson<String?>(json['address']),
+      enrollmentDate: serializer.fromJson<DateTime?>(json['enrollment_date']),
+      expectedGraduation: serializer.fromJson<DateTime?>(
+        json['expected_graduation'],
+      ),
+      rawData: serializer.fromJson<Map<String, dynamic>?>(json['raw_data']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'user_id': serializer.toJson<String>(userID),
+      'student_id': serializer.toJson<String>(studentId),
+      'national_id': serializer.toJson<String?>(nationalId),
+      'nationality': serializer.toJson<String?>(nationality),
+      'program': serializer.toJson<String?>(program),
+      'major': serializer.toJson<String?>(major),
+      'year': serializer.toJson<int?>(year),
+      'gpa': serializer.toJson<double?>(gpa),
+      'disability_status': serializer.toJson<String?>(disabilityStatus),
+      'school': serializer.toJson<String?>(school),
+      'phone': serializer.toJson<String?>(phone),
+      'address': serializer.toJson<String?>(address),
+      'enrollment_date': serializer.toJson<DateTime?>(enrollmentDate),
+      'expected_graduation': serializer.toJson<DateTime?>(expectedGraduation),
+      'raw_data': serializer.toJson<Map<String, dynamic>?>(rawData),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  InstitutionProfileData copyWith({
+    int? id,
+    String? userID,
+    String? studentId,
+    Value<String?> nationalId = const Value.absent(),
+    Value<String?> nationality = const Value.absent(),
+    Value<String?> program = const Value.absent(),
+    Value<String?> major = const Value.absent(),
+    Value<int?> year = const Value.absent(),
+    Value<double?> gpa = const Value.absent(),
+    Value<String?> disabilityStatus = const Value.absent(),
+    Value<String?> school = const Value.absent(),
+    Value<String?> phone = const Value.absent(),
+    Value<String?> address = const Value.absent(),
+    Value<DateTime?> enrollmentDate = const Value.absent(),
+    Value<DateTime?> expectedGraduation = const Value.absent(),
+    Value<Map<String, dynamic>?> rawData = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => InstitutionProfileData(
+    id: id ?? this.id,
+    userID: userID ?? this.userID,
+    studentId: studentId ?? this.studentId,
+    nationalId: nationalId.present ? nationalId.value : this.nationalId,
+    nationality: nationality.present ? nationality.value : this.nationality,
+    program: program.present ? program.value : this.program,
+    major: major.present ? major.value : this.major,
+    year: year.present ? year.value : this.year,
+    gpa: gpa.present ? gpa.value : this.gpa,
+    disabilityStatus: disabilityStatus.present
+        ? disabilityStatus.value
+        : this.disabilityStatus,
+    school: school.present ? school.value : this.school,
+    phone: phone.present ? phone.value : this.phone,
+    address: address.present ? address.value : this.address,
+    enrollmentDate: enrollmentDate.present
+        ? enrollmentDate.value
+        : this.enrollmentDate,
+    expectedGraduation: expectedGraduation.present
+        ? expectedGraduation.value
+        : this.expectedGraduation,
+    rawData: rawData.present ? rawData.value : this.rawData,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  InstitutionProfileData copyWithCompanion(InstitutionProfileCompanion data) {
+    return InstitutionProfileData(
+      id: data.id.present ? data.id.value : this.id,
+      userID: data.userID.present ? data.userID.value : this.userID,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      nationalId: data.nationalId.present
+          ? data.nationalId.value
+          : this.nationalId,
+      nationality: data.nationality.present
+          ? data.nationality.value
+          : this.nationality,
+      program: data.program.present ? data.program.value : this.program,
+      major: data.major.present ? data.major.value : this.major,
+      year: data.year.present ? data.year.value : this.year,
+      gpa: data.gpa.present ? data.gpa.value : this.gpa,
+      disabilityStatus: data.disabilityStatus.present
+          ? data.disabilityStatus.value
+          : this.disabilityStatus,
+      school: data.school.present ? data.school.value : this.school,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      address: data.address.present ? data.address.value : this.address,
+      enrollmentDate: data.enrollmentDate.present
+          ? data.enrollmentDate.value
+          : this.enrollmentDate,
+      expectedGraduation: data.expectedGraduation.present
+          ? data.expectedGraduation.value
+          : this.expectedGraduation,
+      rawData: data.rawData.present ? data.rawData.value : this.rawData,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionProfileData(')
+          ..write('id: $id, ')
+          ..write('userID: $userID, ')
+          ..write('studentId: $studentId, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('nationality: $nationality, ')
+          ..write('program: $program, ')
+          ..write('major: $major, ')
+          ..write('year: $year, ')
+          ..write('gpa: $gpa, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('school: $school, ')
+          ..write('phone: $phone, ')
+          ..write('address: $address, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('expectedGraduation: $expectedGraduation, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userID,
+    studentId,
+    nationalId,
+    nationality,
+    program,
+    major,
+    year,
+    gpa,
+    disabilityStatus,
+    school,
+    phone,
+    address,
+    enrollmentDate,
+    expectedGraduation,
+    rawData,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionProfileData &&
+          other.id == this.id &&
+          other.userID == this.userID &&
+          other.studentId == this.studentId &&
+          other.nationalId == this.nationalId &&
+          other.nationality == this.nationality &&
+          other.program == this.program &&
+          other.major == this.major &&
+          other.year == this.year &&
+          other.gpa == this.gpa &&
+          other.disabilityStatus == this.disabilityStatus &&
+          other.school == this.school &&
+          other.phone == this.phone &&
+          other.address == this.address &&
+          other.enrollmentDate == this.enrollmentDate &&
+          other.expectedGraduation == this.expectedGraduation &&
+          other.rawData == this.rawData &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class InstitutionProfileCompanion
+    extends UpdateCompanion<InstitutionProfileData> {
+  final Value<int> id;
+  final Value<String> userID;
+  final Value<String> studentId;
+  final Value<String?> nationalId;
+  final Value<String?> nationality;
+  final Value<String?> program;
+  final Value<String?> major;
+  final Value<int?> year;
+  final Value<double?> gpa;
+  final Value<String?> disabilityStatus;
+  final Value<String?> school;
+  final Value<String?> phone;
+  final Value<String?> address;
+  final Value<DateTime?> enrollmentDate;
+  final Value<DateTime?> expectedGraduation;
+  final Value<Map<String, dynamic>?> rawData;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const InstitutionProfileCompanion({
+    this.id = const Value.absent(),
+    this.userID = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.nationalId = const Value.absent(),
+    this.nationality = const Value.absent(),
+    this.program = const Value.absent(),
+    this.major = const Value.absent(),
+    this.year = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.school = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.address = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.expectedGraduation = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  InstitutionProfileCompanion.insert({
+    this.id = const Value.absent(),
+    required String userID,
+    required String studentId,
+    this.nationalId = const Value.absent(),
+    this.nationality = const Value.absent(),
+    this.program = const Value.absent(),
+    this.major = const Value.absent(),
+    this.year = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.school = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.address = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.expectedGraduation = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : userID = Value(userID),
+       studentId = Value(studentId);
+  static Insertable<InstitutionProfileData> custom({
+    Expression<int>? id,
+    Expression<String>? userID,
+    Expression<String>? studentId,
+    Expression<String>? nationalId,
+    Expression<String>? nationality,
+    Expression<String>? program,
+    Expression<String>? major,
+    Expression<int>? year,
+    Expression<double>? gpa,
+    Expression<String>? disabilityStatus,
+    Expression<String>? school,
+    Expression<String>? phone,
+    Expression<String>? address,
+    Expression<DateTime>? enrollmentDate,
+    Expression<DateTime>? expectedGraduation,
+    Expression<String>? rawData,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userID != null) 'user_i_d': userID,
+      if (studentId != null) 'student_id': studentId,
+      if (nationalId != null) 'national_id': nationalId,
+      if (nationality != null) 'nationality': nationality,
+      if (program != null) 'program': program,
+      if (major != null) 'major': major,
+      if (year != null) 'year': year,
+      if (gpa != null) 'gpa': gpa,
+      if (disabilityStatus != null) 'disability_status': disabilityStatus,
+      if (school != null) 'school': school,
+      if (phone != null) 'phone': phone,
+      if (address != null) 'address': address,
+      if (enrollmentDate != null) 'enrollment_date': enrollmentDate,
+      if (expectedGraduation != null) 'expected_graduation': expectedGraduation,
+      if (rawData != null) 'raw_data': rawData,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  InstitutionProfileCompanion copyWith({
+    Value<int>? id,
+    Value<String>? userID,
+    Value<String>? studentId,
+    Value<String?>? nationalId,
+    Value<String?>? nationality,
+    Value<String?>? program,
+    Value<String?>? major,
+    Value<int?>? year,
+    Value<double?>? gpa,
+    Value<String?>? disabilityStatus,
+    Value<String?>? school,
+    Value<String?>? phone,
+    Value<String?>? address,
+    Value<DateTime?>? enrollmentDate,
+    Value<DateTime?>? expectedGraduation,
+    Value<Map<String, dynamic>?>? rawData,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return InstitutionProfileCompanion(
+      id: id ?? this.id,
+      userID: userID ?? this.userID,
+      studentId: studentId ?? this.studentId,
+      nationalId: nationalId ?? this.nationalId,
+      nationality: nationality ?? this.nationality,
+      program: program ?? this.program,
+      major: major ?? this.major,
+      year: year ?? this.year,
+      gpa: gpa ?? this.gpa,
+      disabilityStatus: disabilityStatus ?? this.disabilityStatus,
+      school: school ?? this.school,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+      expectedGraduation: expectedGraduation ?? this.expectedGraduation,
+      rawData: rawData ?? this.rawData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userID.present) {
+      map['user_i_d'] = Variable<String>(userID.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<String>(studentId.value);
+    }
+    if (nationalId.present) {
+      map['national_id'] = Variable<String>(nationalId.value);
+    }
+    if (nationality.present) {
+      map['nationality'] = Variable<String>(nationality.value);
+    }
+    if (program.present) {
+      map['program'] = Variable<String>(program.value);
+    }
+    if (major.present) {
+      map['major'] = Variable<String>(major.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (gpa.present) {
+      map['gpa'] = Variable<double>(gpa.value);
+    }
+    if (disabilityStatus.present) {
+      map['disability_status'] = Variable<String>(disabilityStatus.value);
+    }
+    if (school.present) {
+      map['school'] = Variable<String>(school.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (enrollmentDate.present) {
+      map['enrollment_date'] = Variable<DateTime>(enrollmentDate.value);
+    }
+    if (expectedGraduation.present) {
+      map['expected_graduation'] = Variable<DateTime>(expectedGraduation.value);
+    }
+    if (rawData.present) {
+      map['raw_data'] = Variable<String>(
+        $InstitutionProfileTable.$converterrawDatan.toSql(rawData.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionProfileCompanion(')
+          ..write('id: $id, ')
+          ..write('userID: $userID, ')
+          ..write('studentId: $studentId, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('nationality: $nationality, ')
+          ..write('program: $program, ')
+          ..write('major: $major, ')
+          ..write('year: $year, ')
+          ..write('gpa: $gpa, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('school: $school, ')
+          ..write('phone: $phone, ')
+          ..write('address: $address, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('expectedGraduation: $expectedGraduation, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExamTimetableTable extends ExamTimetable
     with TableInfo<$ExamTimetableTable, ExamTimetableData> {
   @override
@@ -16386,6 +17401,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $InstitutionScrappingCommandTable institutionScrappingCommand =
       $InstitutionScrappingCommandTable(this);
   late final $InstitutionKeyTable institutionKey = $InstitutionKeyTable(this);
+  late final $InstitutionProfileTable institutionProfile =
+      $InstitutionProfileTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -16420,6 +17437,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     institution,
     institutionScrappingCommand,
     institutionKey,
+    institutionProfile,
     examTimetable,
     chirpUser,
     community,
@@ -22362,6 +23380,475 @@ typedef $$InstitutionKeyTableProcessedTableManager =
       InstitutionKeyData,
       PrefetchHooks Function({bool institutionID, bool commandID})
     >;
+typedef $$InstitutionProfileTableCreateCompanionBuilder =
+    InstitutionProfileCompanion Function({
+      Value<int> id,
+      required String userID,
+      required String studentId,
+      Value<String?> nationalId,
+      Value<String?> nationality,
+      Value<String?> program,
+      Value<String?> major,
+      Value<int?> year,
+      Value<double?> gpa,
+      Value<String?> disabilityStatus,
+      Value<String?> school,
+      Value<String?> phone,
+      Value<String?> address,
+      Value<DateTime?> enrollmentDate,
+      Value<DateTime?> expectedGraduation,
+      Value<Map<String, dynamic>?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$InstitutionProfileTableUpdateCompanionBuilder =
+    InstitutionProfileCompanion Function({
+      Value<int> id,
+      Value<String> userID,
+      Value<String> studentId,
+      Value<String?> nationalId,
+      Value<String?> nationality,
+      Value<String?> program,
+      Value<String?> major,
+      Value<int?> year,
+      Value<double?> gpa,
+      Value<String?> disabilityStatus,
+      Value<String?> school,
+      Value<String?> phone,
+      Value<String?> address,
+      Value<DateTime?> enrollmentDate,
+      Value<DateTime?> expectedGraduation,
+      Value<Map<String, dynamic>?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$InstitutionProfileTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get program => $composableBuilder(
+    column: $table.program,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get major => $composableBuilder(
+    column: $table.major,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InstitutionProfileTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get program => $composableBuilder(
+    column: $table.program,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get major => $composableBuilder(
+    column: $table.major,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstitutionProfileTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
+
+  GeneratedColumn<String> get studentId =>
+      $composableBuilder(column: $table.studentId, builder: (column) => column);
+
+  GeneratedColumn<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get program =>
+      $composableBuilder(column: $table.program, builder: (column) => column);
+
+  GeneratedColumn<String> get major =>
+      $composableBuilder(column: $table.major, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<double> get gpa =>
+      $composableBuilder(column: $table.gpa, builder: (column) => column);
+
+  GeneratedColumn<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get school =>
+      $composableBuilder(column: $table.school, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get rawData =>
+      $composableBuilder(column: $table.rawData, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$InstitutionProfileTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionProfileTable,
+          InstitutionProfileData,
+          $$InstitutionProfileTableFilterComposer,
+          $$InstitutionProfileTableOrderingComposer,
+          $$InstitutionProfileTableAnnotationComposer,
+          $$InstitutionProfileTableCreateCompanionBuilder,
+          $$InstitutionProfileTableUpdateCompanionBuilder,
+          (
+            InstitutionProfileData,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionProfileTable,
+              InstitutionProfileData
+            >,
+          ),
+          InstitutionProfileData,
+          PrefetchHooks Function()
+        > {
+  $$InstitutionProfileTableTableManager(
+    _$AppDataBase db,
+    $InstitutionProfileTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionProfileTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InstitutionProfileTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InstitutionProfileTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> userID = const Value.absent(),
+                Value<String> studentId = const Value.absent(),
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> nationality = const Value.absent(),
+                Value<String?> program = const Value.absent(),
+                Value<String?> major = const Value.absent(),
+                Value<int?> year = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<String?> school = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<DateTime?> enrollmentDate = const Value.absent(),
+                Value<DateTime?> expectedGraduation = const Value.absent(),
+                Value<Map<String, dynamic>?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => InstitutionProfileCompanion(
+                id: id,
+                userID: userID,
+                studentId: studentId,
+                nationalId: nationalId,
+                nationality: nationality,
+                program: program,
+                major: major,
+                year: year,
+                gpa: gpa,
+                disabilityStatus: disabilityStatus,
+                school: school,
+                phone: phone,
+                address: address,
+                enrollmentDate: enrollmentDate,
+                expectedGraduation: expectedGraduation,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String userID,
+                required String studentId,
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> nationality = const Value.absent(),
+                Value<String?> program = const Value.absent(),
+                Value<String?> major = const Value.absent(),
+                Value<int?> year = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<String?> school = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<DateTime?> enrollmentDate = const Value.absent(),
+                Value<DateTime?> expectedGraduation = const Value.absent(),
+                Value<Map<String, dynamic>?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => InstitutionProfileCompanion.insert(
+                id: id,
+                userID: userID,
+                studentId: studentId,
+                nationalId: nationalId,
+                nationality: nationality,
+                program: program,
+                major: major,
+                year: year,
+                gpa: gpa,
+                disabilityStatus: disabilityStatus,
+                school: school,
+                phone: phone,
+                address: address,
+                enrollmentDate: enrollmentDate,
+                expectedGraduation: expectedGraduation,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InstitutionProfileTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionProfileTable,
+      InstitutionProfileData,
+      $$InstitutionProfileTableFilterComposer,
+      $$InstitutionProfileTableOrderingComposer,
+      $$InstitutionProfileTableAnnotationComposer,
+      $$InstitutionProfileTableCreateCompanionBuilder,
+      $$InstitutionProfileTableUpdateCompanionBuilder,
+      (
+        InstitutionProfileData,
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionProfileTable,
+          InstitutionProfileData
+        >,
+      ),
+      InstitutionProfileData,
+      PrefetchHooks Function()
+    >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
       required String courseCode,
@@ -25300,6 +26787,8 @@ class $AppDataBaseManager {
       );
   $$InstitutionKeyTableTableManager get institutionKey =>
       $$InstitutionKeyTableTableManager(_db, _db.institutionKey);
+  $$InstitutionProfileTableTableManager get institutionProfile =>
+      $$InstitutionProfileTableTableManager(_db, _db.institutionProfile);
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>
