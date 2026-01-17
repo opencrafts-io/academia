@@ -1,0 +1,58 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:magnet/magnet.dart';
+
+part 'magnet_state.dart';
+part 'magnet_event.dart';
+
+class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
+  Magnet? _magnet;
+
+  MagnetBloc() : super(MagnetInitial()) {
+    on<InitializeMagnet>(_onInitialize);
+    on<ExecuteScrappingCommand>(_onExecute);
+  }
+
+  Future<void> _onInitialize(
+    InitializeMagnet event,
+    Emitter<MagnetState> emit,
+  ) async {
+    emit(MagnetInitializing());
+    try {
+      _magnet = await Magnet.init(config: event.config);
+      emit(MagnetReady(_magnet!));
+    } catch (e) {
+      emit(MagnetError("Failed to wake up the magnet: $e"));
+    }
+  }
+
+  Future<void> _onExecute(
+    ExecuteScrappingCommand event,
+    Emitter<MagnetState> emit,
+  ) async {
+    if (_magnet == null || !_magnet!.initialized) {
+      emit(const MagnetError("Magnet is not initialized. Check the pipes!"));
+      return;
+    }
+
+    // Keep track of the previous state so we can return to "Ready" after success
+    // final prevState = state;
+    emit(MagnetProcessing(event.command));
+
+    try {
+      final result = await _magnet!.execute(
+        event.command,
+        context: event.context,
+      );
+
+      if (result.success) {
+        emit(MagnetSuccess(result));
+        // Optionally revert to Ready state after a delay or user acknowledgement
+      } else {
+        emit(MagnetError(result.error ?? "Unknown scrapping error"));
+      }
+    } catch (e) {
+      emit(MagnetError("Sewer apples... Execution failed: $e"));
+    }
+  }
+}
