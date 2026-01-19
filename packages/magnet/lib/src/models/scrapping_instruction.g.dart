@@ -96,6 +96,13 @@ Map<String, dynamic> _$WaitForAllToJson(_WaitForAll instance) =>
 _ScrapingInstruction _$ScrapingInstructionFromJson(Map<String, dynamic> json) =>
     _ScrapingInstruction(
       type: json['type'] as String,
+      faultStrategy:
+          $enumDecodeNullable(_$FaultStrategyEnumMap, json['faultStrategy']) ??
+          FaultStrategy.abort,
+      maxRetries: (json['maxRetries'] as num?)?.toInt() ?? 0,
+      retryDelay: json['retryDelay'] == null
+          ? const Duration(seconds: 1)
+          : Duration(microseconds: (json['retryDelay'] as num).toInt()),
       selector: json['selector'] as String?,
       xpath: json['xpath'] as String?,
       attribute: json['attribute'] as String?,
@@ -116,6 +123,9 @@ Map<String, dynamic> _$ScrapingInstructionToJson(
   _ScrapingInstruction instance,
 ) => <String, dynamic>{
   'type': instance.type,
+  'faultStrategy': _$FaultStrategyEnumMap[instance.faultStrategy]!,
+  'maxRetries': instance.maxRetries,
+  'retryDelay': instance.retryDelay.inMicroseconds,
   'selector': instance.selector,
   'xpath': instance.xpath,
   'attribute': instance.attribute,
@@ -128,4 +138,10 @@ Map<String, dynamic> _$ScrapingInstructionToJson(
   'inputType': instance.inputType,
   'inputLabel': instance.inputLabel,
   'waitAfterExecution': instance.waitAfterExecution,
+};
+
+const _$FaultStrategyEnumMap = {
+  FaultStrategy.abort: 'abort',
+  FaultStrategy.ignore: 'ignore',
+  FaultStrategy.retry: 'retry',
 };
