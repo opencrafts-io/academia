@@ -1,8 +1,8 @@
 name: magnet
-description: "The Magnet school portal scraping engine"
+description: "A high-performance headless scraping engine for Flutter."
 version: 0.0.1
 homepage:
-
+license: GPL-3.0-or-later
 environment:
   sdk: ^3.10.1
   flutter: ">=1.17.0"
