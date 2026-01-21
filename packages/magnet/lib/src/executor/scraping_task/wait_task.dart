@@ -83,6 +83,8 @@ class WaitTask implements ScrapingTask {
     InAppWebViewController controller,
     String pattern,
   ) async {
+    // Grace period: allow the browser to process and start navigation
+    await Future.delayed(const Duration(milliseconds: 500));
     while (true) {
       final url = (await controller.getUrl())?.toString() ?? '';
       if (url.contains(pattern)) return;

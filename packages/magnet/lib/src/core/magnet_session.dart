@@ -61,9 +61,28 @@ class MagnetSession {
         logger.i('[$sessionId] Page synchronization complete: $url');
         if (!_loadCompleter.isCompleted) _loadCompleter.complete();
       },
+      onConsoleMessage: (controller, msg) {
+        if (config.debugMode) {
+          logger.d("Console [${msg.messageLevel}]: ${msg.message}");
+        }
+      },
       onReceivedError: (controller, request, error) {
-        logger.e('[$sessionId] Navigation Error: ${error.description}');
-        if (!_loadCompleter.isCompleted) _loadCompleter.completeError(error);
+        // Only trigger a hard failure if the error is for the main page navigation
+        // and not just a sub-resource (like a .gif or .js file)
+        if (request.isForMainFrame ?? false) {
+          logger.e('[$sessionId] Main Frame Error: ${error.description}');
+          if (!_loadCompleter.isCompleted) _loadCompleter.completeError(error);
+        } else {
+          // Just log sub-resource failures as warnings, don't kill the session
+          logger.w(
+            '[$sessionId] Sub-resource failed to load (Ignored): ${request.url}',
+          );
+        }
+      },
+      onReceivedServerTrustAuthRequest: (controller, challenge) async {
+        return ServerTrustAuthResponse(
+          action: ServerTrustAuthResponseAction.PROCEED,
+        );
       },
     );
 

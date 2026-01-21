@@ -43,6 +43,8 @@ class Magnet {
 
   bool _isInitialized = false;
 
+  bool get initialized => _isInitialized;
+
   /// Private constructor - use [Magnet.init]
   Magnet._(this.config);
 
