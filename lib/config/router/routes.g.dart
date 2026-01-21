@@ -345,6 +345,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
           path: 'event-tickets',
           factory: _$EventTicketsRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'organizer-dashboard',
+          factory: _$OrganizerDashboardRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
@@ -455,6 +459,31 @@ mixin _$EventTicketsRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/event-tickets',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$OrganizerDashboardRoute on GoRouteData {
+  static OrganizerDashboardRoute _fromState(GoRouterState state) =>
+      OrganizerDashboardRoute(eventId: state.pathParameters['eventId']!);
+
+  OrganizerDashboardRoute get _self => this as OrganizerDashboardRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard',
   );
 
   @override

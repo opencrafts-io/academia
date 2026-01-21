@@ -214,6 +214,7 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
         TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
         TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
         TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+        TypedGoRoute<OrganizerDashboardRoute>(path: "organizer-dashboard"),
       ],
     ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
@@ -289,6 +290,17 @@ class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
     final event = state.extra as Event;
 
     return EventTicketsPage(eventId: eventId, event: event);
+  }
+}
+
+class OrganizerDashboardRoute extends GoRouteData
+    with _$OrganizerDashboardRoute {
+  final String eventId;
+
+  const OrganizerDashboardRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return OrganizerDashboardPage();
   }
 }
 

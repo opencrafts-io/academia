@@ -110,6 +110,14 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             }
 
                             break;
+                          case 'dashboard':
+                            if (userId != null &&
+                                userId == state.event.organizerId) {
+                              OrganizerDashboardRoute(
+                                eventId: state.event.id,
+                              ).push(context);
+                            }
+                            break;
                           case 'tickets':
                             context.push(
                               EventTicketsRoute(
@@ -130,7 +138,8 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             visualDensity: VisualDensity.compact,
                           ),
                         ),
-                        if (userId != null && userId == state.event.organizerId)
+                        if (userId != null &&
+                            userId == state.event.organizerId) ...[
                           PopupMenuItem(
                             value: 'scan',
                             child: ListTile(
@@ -140,6 +149,17 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                               visualDensity: VisualDensity.compact,
                             ),
                           ),
+                          PopupMenuItem(
+                            value: 'dashboard',
+                            child: ListTile(
+                              leading: const Icon(Icons.dashboard),
+                              title: const Text('Dashboard'),
+                              contentPadding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          ),
+                        ],
+
                         PopupMenuItem(
                           value: 'tickets',
                           child: ListTile(

@@ -17,6 +17,7 @@ export 'screens/qr_code_scanner_screen.dart';
 export 'screens/ticket_receipt_screen.dart';
 export 'screens/organized_events_screen.dart';
 export 'screens/ticket_payment_page.dart';
+export 'screens/organizer_dashboard_page.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/attendee_list.dart';
