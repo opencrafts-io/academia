@@ -1,5 +1,6 @@
 export 'models/institution_model_helper.dart';
 export 'models/institution_key_model_helper.dart';
+export 'models/institution_profile_helper.dart';
 export 'repository/institution_repository_impl.dart';
 export 'repository/institution_key_repository_impl.dart';
 export 'repository/institution_scrapping_command_repository_impl.dart';
