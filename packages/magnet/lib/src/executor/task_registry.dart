@@ -24,6 +24,7 @@ class TaskRegistry {
     'wait': WaitTask(),
     'fill-form': FillFormTask(),
     'screenshot': ScreenshotTask(),
+    'js': JsTask(),
   };
 
   /// Returns the [ScrapingTask] associated with the given instruction [type],
