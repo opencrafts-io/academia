@@ -19,6 +19,7 @@ export './src/exceptions/magnet_exception.dart';
 export './src/models/scrapping_result.dart';
 export './src/models/scrapping_command.dart';
 export './src/models/scrapping_instruction.dart';
+export './src/executor/instruction_progress_event.dart';
 
 export './src/core/magnet_config.dart';
 export './src/core/magnet_engine.dart';
