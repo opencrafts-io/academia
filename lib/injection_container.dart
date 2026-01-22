@@ -653,6 +653,26 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<InstitutionKeyRepository>(
     () => InstitutionKeyRepositoryImpl(localDataSource: sl()),
   );
+  // --- Student Profile Datasources ---
+  sl.registerFactory<InstitutionProfileLocalDatasource>(
+    () => InstitutionProfileLocalDatasource(appDataBase: sl<AppDataBase>()),
+  );
+
+  sl.registerFactory<InstitutionProfileRemoteDatasource>(
+    () => InstitutionProfileRemoteDatasource(
+      dioClient: sl<DioClient>(),
+      flavor: flavor,
+    ),
+  );
+
+  // --- Student Profile Repository ---
+  sl.registerFactory<StudentProfileRepository>(
+    () => StudentProfileRepositoryImpl(
+      remoteDatasource: sl<InstitutionProfileRemoteDatasource>(),
+      localDatasource: sl<InstitutionProfileLocalDatasource>(),
+      connectivityChecker: sl<ConnectivityChecker>(),
+    ),
+  );
 
   sl.registerFactory<InstitutionRepositoryImpl>(
     () => InstitutionRepositoryImpl(
@@ -703,10 +723,88 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetInstitutionScrappingCommandUsecase(repository: sl()),
   );
 
+  // --- Student Profile Usecases ---
+  // Watch Usecases
+  sl.registerFactory<WatchProfileByIdUsecase>(
+    () => WatchProfileByIdUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchProfilesByUserUsecase>(
+    () =>
+        WatchProfilesByUserUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchLatestProfileByStudentUsecase>(
+    () => WatchLatestProfileByStudentUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
+  );
+
+  // Fetch Usecases
+  sl.registerFactory<FetchProfileByIdUsecase>(
+    () => FetchProfileByIdUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<FetchProfilesUsecase>(
+    () => FetchProfilesUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<FetchCurrentUserProfileUsecase>(
+    () => FetchCurrentUserProfileUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
+  );
+
+  // Create Usecase
+  sl.registerFactory<CreateProfileUsecase>(
+    () => CreateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  // Update Usecases
+  sl.registerFactory<UpdateProfileUsecase>(
+    () => UpdateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<PartialUpdateProfileUsecase>(
+    () =>
+        PartialUpdateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  // Delete Usecases
+  sl.registerFactory<DeleteProfileUsecase>(
+    () => DeleteProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<DeleteUserProfilesUsecase>(
+    () => DeleteUserProfilesUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<ClearProfileCacheUsecase>(
+    () => ClearProfileCacheUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
   sl.registerFactory<InstitutionKeyBloc>(
     () => InstitutionKeyBloc(
       getInstitutionKeyUsecase: sl(),
       saveInstitutionKeyUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory<StudentProfileBloc>(
+    () => StudentProfileBloc(
+      watchProfileByIdUsecase: sl<WatchProfileByIdUsecase>(),
+      watchProfilesByUserUsecase: sl<WatchProfilesByUserUsecase>(),
+      watchLatestProfileByStudentUsecase:
+          sl<WatchLatestProfileByStudentUsecase>(),
+      fetchProfileByIdUsecase: sl<FetchProfileByIdUsecase>(),
+      fetchProfilesUsecase: sl<FetchProfilesUsecase>(),
+      fetchCurrentUserProfileUsecase: sl<FetchCurrentUserProfileUsecase>(),
+      createProfileUsecase: sl<CreateProfileUsecase>(),
+      updateProfileUsecase: sl<UpdateProfileUsecase>(),
+      partialUpdateProfileUsecase: sl<PartialUpdateProfileUsecase>(),
+      deleteProfileUsecase: sl<DeleteProfileUsecase>(),
+      deleteUserProfilesUsecase: sl<DeleteUserProfilesUsecase>(),
+      clearProfileCacheUsecase: sl<ClearProfileCacheUsecase>(),
     ),
   );
 

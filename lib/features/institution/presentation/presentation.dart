@@ -2,6 +2,7 @@ export 'bloc/institution_bloc.dart';
 export 'bloc/scrapping_command_bloc.dart';
 export 'bloc/magnet_bloc.dart';
 export 'bloc/institution_key_bloc.dart';
+export 'bloc/student_profile_bloc.dart';
 export 'widgets/essentials_institution_section.dart';
 export 'widgets/institution_dashboard.dart';
 export 'views/institution_home_page.dart';
