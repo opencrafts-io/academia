@@ -710,6 +710,8 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<MagnetBloc>(() => MagnetBloc());
+
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
       addAccountToInstitution: sl(),

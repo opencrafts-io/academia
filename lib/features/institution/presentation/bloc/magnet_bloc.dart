@@ -1,6 +1,8 @@
+import 'package:academia/features/institution/institution.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:magnet/magnet.dart';
+import 'package:flutter/material.dart';
 
 part 'magnet_state.dart';
 part 'magnet_event.dart';
@@ -37,12 +39,21 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
 
     // Keep track of the previous state so we can return to "Ready" after success
     // final prevState = state;
-    emit(MagnetProcessing(event.command));
+    final cmd = _hydrateWithKeys(event.command, event.institutionKey);
+    emit(MagnetProcessing(command: cmd));
 
     try {
+      final callback = InstructionCallbackManager();
+      emit.forEach(
+        callback.progressStream,
+        onData: (data) => MagnetProcessing(command: cmd, progress: data),
+        onError: (error, stackTrace) => MagnetError("Stream error: $error"),
+      );
+
       final result = await _magnet!.execute(
-        event.command,
+        cmd,
         context: event.context,
+        callbackManager: callback,
       );
 
       if (result.success) {
@@ -54,5 +65,26 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     } catch (e) {
       emit(MagnetError("Sewer apples... Execution failed: $e"));
     }
+  }
+
+  ScrappingCommand _hydrateWithKeys(
+    ScrappingCommand command,
+    InstitutionKey key,
+  ) {
+    final updatedInstructions = command.instructions.map((instruction) {
+      if (instruction.type == 'fill-form') {
+        final lookupKey = instruction.valueKey ?? instruction.selectorToUse;
+
+        if (key.keySets.containsKey(lookupKey)) {
+          final newValue = key.keySets[lookupKey]?.toString();
+
+          return instruction.copyWith(value: newValue);
+        }
+      }
+
+      return instruction;
+    }).toList();
+
+    return command.copyWith(instructions: updatedInstructions);
   }
 }

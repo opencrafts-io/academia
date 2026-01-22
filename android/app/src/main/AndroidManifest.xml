@@ -1,6 +1,9 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:label="Academia" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
+<application android:label="Academia" 
+  android:usesCleartextTraffic="true"
+  android:name="${applicationName}"
+  android:icon="@mipmap/launcher_icon">
 		<activity android:name=".MainActivity"
         android:exported="true"
         android:launchMode="singleTop"

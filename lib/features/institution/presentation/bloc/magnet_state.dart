@@ -17,7 +17,8 @@ class MagnetReady extends MagnetState {
 
 class MagnetProcessing extends MagnetState {
   final ScrappingCommand command;
-  const MagnetProcessing(this.command);
+  final InstructionProgressEvent? progress;
+  const MagnetProcessing({required this.command, this.progress});
 }
 
 class MagnetSuccess extends MagnetState {

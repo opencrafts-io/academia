@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/institution/presentation/presentation.dart';
+import 'package:academia/features/institution/institution.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -569,6 +569,7 @@ class InstitutionShellRouteData extends ShellRouteData {
               sl<InstitutionKeyBloc>()
                 ..add(GetInstitutionKeyEvent(institutionID: institutionID)),
         ),
+        BlocProvider(create: (context) => sl<MagnetBloc>()),
       ],
       child: navigator, // This contains either the Home or Keys page
     );
