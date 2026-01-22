@@ -5,3 +5,4 @@ export 'fill_form_task.dart';
 export 'screenshot_task.dart';
 export 'wait_task.dart';
 export 'js_task.dart';
+export 'table_extract_task.dart';

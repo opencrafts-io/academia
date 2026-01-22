@@ -25,6 +25,7 @@ class TaskRegistry {
     'fill-form': FillFormTask(),
     'screenshot': ScreenshotTask(),
     'js': JsTask(),
+    'extract-table': TableExtractTask(),
   };
 
   /// Returns the [ScrapingTask] associated with the given instruction [type],
