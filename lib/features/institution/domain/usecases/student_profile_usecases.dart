@@ -18,6 +18,39 @@ class WatchProfileByIdUsecase
   }
 }
 
+class WatchProfileByUserAndInstitutionUsecaseParams {
+  final int institutionID;
+  final String userID;
+
+  WatchProfileByUserAndInstitutionUsecaseParams({
+    required this.userID,
+    required this.institutionID,
+  });
+}
+
+/// Watches a specific student profile by institutionID and userID.
+/// Returns a stream of either a failure or the profile.
+class WatchProfileByUserAndInstitutionUsecase
+    extends
+        StreamUseCase<
+          Either<Failure, InstitutionProfile?>,
+          WatchProfileByUserAndInstitutionUsecaseParams
+        > {
+  final StudentProfileRepository repository;
+
+  WatchProfileByUserAndInstitutionUsecase({required this.repository});
+
+  @override
+  Stream<Either<Failure, InstitutionProfile?>> call(
+    WatchProfileByUserAndInstitutionUsecaseParams params,
+  ) {
+    return repository.watchProfileByUserAndInstitution(
+      institutionID: params.institutionID,
+      userID: params.userID,
+    );
+  }
+}
+
 /// Watches all profiles for a specific user.
 /// Returns a stream of either a failure or a list of profiles.
 class WatchProfilesByUserUsecase

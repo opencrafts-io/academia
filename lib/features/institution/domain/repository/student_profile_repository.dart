@@ -9,6 +9,13 @@ abstract class StudentProfileRepository {
     required int profileId,
   });
 
+  /// Watches a specific student profile by
+  /// Returns a stream of either failure or profile domain model
+  Stream<Either<Failure, InstitutionProfile?>> watchProfileByUserAndInstitution({
+    required int institutionID,
+    required String userID,
+  });
+
   /// Watches all profiles for a specific user
   /// Returns a stream of either failure or list of profile domain models
   Stream<Either<Failure, List<InstitutionProfile>>> watchProfilesByUser({
@@ -65,4 +72,3 @@ abstract class StudentProfileRepository {
   /// Clears all cached profiles
   Future<Either<Failure, void>> clearCache();
 }
-

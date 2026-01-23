@@ -13,6 +13,8 @@ part 'student_profile_state.dart';
 class StudentProfileBloc
     extends Bloc<StudentProfileEvent, StudentProfileState> {
   final WatchProfileByIdUsecase watchProfileByIdUsecase;
+  final WatchProfileByUserAndInstitutionUsecase
+  watchProfilesByUserAndInstitutionUsecase;
   final WatchProfilesByUserUsecase watchProfilesByUserUsecase;
   final WatchLatestProfileByStudentUsecase watchLatestProfileByStudentUsecase;
   final FetchProfileByIdUsecase fetchProfileByIdUsecase;
@@ -34,6 +36,7 @@ class StudentProfileBloc
 
   StudentProfileBloc({
     required this.watchProfileByIdUsecase,
+    required this.watchProfilesByUserAndInstitutionUsecase,
     required this.watchProfilesByUserUsecase,
     required this.watchLatestProfileByStudentUsecase,
     required this.fetchProfileByIdUsecase,
@@ -47,6 +50,9 @@ class StudentProfileBloc
     required this.clearProfileCacheUsecase,
   }) : super(StudentProfileState.initial()) {
     on<WatchProfileByIdEvent>(_onWatchProfileById);
+    on<WatchProfileByUserAndInstitutionEvent>(
+      _onWatchProfileByUserAndInstitution,
+    );
     on<WatchProfilesByUserEvent>(_onWatchProfilesByUser);
     on<WatchLatestProfileByStudentEvent>(_onWatchLatestProfileByStudent);
     on<FetchProfileByIdEvent>(_onFetchProfileById);
@@ -71,6 +77,50 @@ class StudentProfileBloc
     await _watchProfileByIdSubscription?.cancel();
     _watchProfileByIdSubscription = watchProfileByIdUsecase
         .call(event.profileId)
+        .listen(
+          (either) {
+            either.fold(
+              (failure) {
+                add(
+                  StudentProfileErrorEvent(
+                    message: failure.message,
+                    failure: failure,
+                  ),
+                );
+              },
+              (profile) {
+                add(ProfileLoadedEvent(profile: profile));
+              },
+            );
+          },
+          onError: (error) {
+            add(
+              StudentProfileErrorEvent(
+                message: "Error watching profile",
+                failure: ServerFailure(
+                  message: "Error watching profile",
+                  error: error,
+                ),
+              ),
+            );
+          },
+        );
+  }
+
+  Future<void> _onWatchProfileByUserAndInstitution(
+    WatchProfileByUserAndInstitutionEvent event,
+    Emitter<StudentProfileState> emit,
+  ) async {
+    emit(state.copyWith(status: StudentProfileStatus.loading));
+
+    await _watchProfileByIdSubscription?.cancel();
+    _watchProfileByIdSubscription = watchProfilesByUserAndInstitutionUsecase
+        .call(
+          WatchProfileByUserAndInstitutionUsecaseParams(
+            userID: event.userID,
+            institutionID: event.institutionID,
+          ),
+        )
         .listen(
           (either) {
             either.fold(

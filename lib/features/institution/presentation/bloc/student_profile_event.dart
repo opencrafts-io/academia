@@ -18,6 +18,19 @@ class WatchProfileByIdEvent extends StudentProfileEvent {
   List<Object> get props => [profileId];
 }
 
+class WatchProfileByUserAndInstitutionEvent extends StudentProfileEvent {
+  final int institutionID;
+  final String userID;
+
+  const WatchProfileByUserAndInstitutionEvent({
+    required this.userID,
+    required this.institutionID,
+  });
+
+  @override
+  List<Object> get props => [institutionID, userID];
+}
+
 class WatchProfilesByUserEvent extends StudentProfileEvent {
   final String userId;
 

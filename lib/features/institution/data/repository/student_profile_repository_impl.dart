@@ -44,6 +44,33 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
         .map((either) => either.map((data) => data?.toEntity()));
   }
 
+  /// Watches a specific student profile by [userID] and [institutionID]
+  /// from the local cache.
+  ///
+  /// The returned stream emits:
+  /// - `Right<InstitutionProfile?>` containing the profile if it exists
+  /// - `Right(null)` if no profile with the given ID is found
+  ///
+  /// The stream will continue to emit updates whenever the underlying
+  /// cached data changes.
+  ///
+  /// If an error occurs while accessing the data source, a
+  /// `Left<Failure>` is emitted.
+
+  @override
+  Stream<Either<Failure, InstitutionProfile?>>
+  watchProfileByUserAndInstitution({
+    required int institutionID,
+    required String userID,
+  }) {
+    return localDatasource
+        .watchProfileByUserAndInstitution(
+          userID: userID,
+          institutionID: institutionID,
+        )
+        .map((either) => either.map((data) => data?.toEntity()));
+  }
+
   /// Watches all profiles for a specific user from the local cache.
   ///
   /// The returned stream emits:
@@ -356,4 +383,3 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
     return localDatasource.clearAllProfiles();
   }
 }
-
