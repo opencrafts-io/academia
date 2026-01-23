@@ -44,17 +44,17 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
 
     try {
       final callback = InstructionCallbackManager();
-      emit.forEach(
+      final magnetResult = _magnet!
+          .execute(cmd, context: event.context, callbackManager: callback)
+          .whenComplete(() => callback.dispose());
+
+      await emit.forEach(
         callback.progressStream,
         onData: (data) => MagnetProcessing(command: cmd, progress: data),
         onError: (error, stackTrace) => MagnetError("Stream error: $error"),
       );
 
-      final result = await _magnet!.execute(
-        cmd,
-        context: event.context,
-        callbackManager: callback,
-      );
+      final result = await magnetResult;
 
       if (result.success) {
         emit(MagnetSuccess(result));
