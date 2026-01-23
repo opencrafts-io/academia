@@ -38,6 +38,43 @@ class InstitutionProfileLocalDatasource {
         );
   }
 
+  /// Watches a specific [InstitutionProfileData] by its
+  /// linked [userID] and [institutionID].
+  ///
+  /// The stream emits:
+  /// - `Right<InstitutionProfile?>` containing the profile if it exists
+  /// - `Right(null)` if no profile with the given ID is found
+  ///
+  /// If a database or cache error occurs, the stream emits a
+  /// `Left<CacheFailure>` describing the failure.
+  ///
+  /// The stream remains active and will emit new values whenever the
+  /// profile is updated.
+
+  Stream<Either<Failure, InstitutionProfileData?>>
+  watchProfileByUserAndInstitution({
+    required String userID,
+    required int institutionID,
+  }) {
+    return (appDataBase.select(appDataBase.institutionProfile)..where(
+          (profile) =>
+              profile.userID.equals(userID) &
+              profile.institutionID.equals(institutionID),
+        ))
+        .watchSingleOrNull()
+        .map<Either<Failure, InstitutionProfileData?>>((data) {
+          return Right(data);
+        })
+        .handleError(
+          (err) => Left(
+            CacheFailure(
+              message: "Couldn't load profile with the specified ID",
+              error: err,
+            ),
+          ),
+        );
+  }
+
   /// Watches all [InstitutionProfileData]s for a given user.
   ///
   /// The stream emits:
@@ -89,7 +126,7 @@ class InstitutionProfileLocalDatasource {
     required String studentId,
   }) {
     return (appDataBase.select(appDataBase.institutionProfile)
-          ..where((profile) => profile.studentId.equals(studentId))
+          ..where((profile) => profile.studentID.equals(studentId))
           ..orderBy([(profile) => OrderingTerm.desc(profile.createdAt)])
           ..limit(1))
         .watchSingleOrNull()
