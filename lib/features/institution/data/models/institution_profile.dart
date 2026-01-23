@@ -2,16 +2,19 @@ import 'package:drift/drift.dart';
 import 'package:academia/core/core.dart';
 
 class InstitutionProfile extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  IntColumn get id => integer().nullable()();
 
   @JsonKey("user_id")
-  TextColumn get userID => text()();
+  TextColumn get userID => text().named("user_id")();
+
+  @JsonKey("institution")
+  IntColumn get institutionID => integer().named("institution_id")();
 
   @JsonKey("student_id")
-  TextColumn get studentId => text().unique()();
+  TextColumn get studentID => text().named("student_id").unique()();
 
   @JsonKey("national_id")
-  TextColumn get nationalId => text().nullable()();
+  TextColumn get nationalID => text().named("national_id").nullable()();
 
   @JsonKey("nationality")
   TextColumn get nationality => text().nullable()();
@@ -42,4 +45,7 @@ class InstitutionProfile extends Table {
 
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column<Object>>? get primaryKey => {institutionID, userID};
 }

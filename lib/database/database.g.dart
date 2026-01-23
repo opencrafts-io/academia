@@ -11358,28 +11358,35 @@ class $InstitutionProfileTable extends InstitutionProfile
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
-    false,
-    hasAutoIncrement: true,
+    true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
   );
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
   @override
   late final GeneratedColumn<String> userID = GeneratedColumn<String>(
-    'user_i_d',
+    'user_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _studentIdMeta = const VerificationMeta(
-    'studentId',
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
   );
   @override
-  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _studentIDMeta = const VerificationMeta(
+    'studentID',
+  );
+  @override
+  late final GeneratedColumn<String> studentID = GeneratedColumn<String>(
     'student_id',
     aliasedName,
     false,
@@ -11387,11 +11394,11 @@ class $InstitutionProfileTable extends InstitutionProfile
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
-    'nationalId',
+  static const VerificationMeta _nationalIDMeta = const VerificationMeta(
+    'nationalID',
   );
   @override
-  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> nationalID = GeneratedColumn<String>(
     'national_id',
     aliasedName,
     true,
@@ -11550,8 +11557,9 @@ class $InstitutionProfileTable extends InstitutionProfile
   List<GeneratedColumn> get $columns => [
     id,
     userID,
-    studentId,
-    nationalId,
+    institutionID,
+    studentID,
+    nationalID,
     nationality,
     program,
     major,
@@ -11582,26 +11590,37 @@ class $InstitutionProfileTable extends InstitutionProfile
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('user_i_d')) {
+    if (data.containsKey('user_id')) {
       context.handle(
         _userIDMeta,
-        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
+        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
       );
     } else if (isInserting) {
       context.missing(_userIDMeta);
     }
-    if (data.containsKey('student_id')) {
+    if (data.containsKey('institution_id')) {
       context.handle(
-        _studentIdMeta,
-        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_studentIdMeta);
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIDMeta,
+        studentID.isAcceptableOrUnknown(data['student_id']!, _studentIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIDMeta);
     }
     if (data.containsKey('national_id')) {
       context.handle(
-        _nationalIdMeta,
-        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
+        _nationalIDMeta,
+        nationalID.isAcceptableOrUnknown(data['national_id']!, _nationalIDMeta),
       );
     }
     if (data.containsKey('nationality')) {
@@ -11698,7 +11717,7 @@ class $InstitutionProfileTable extends InstitutionProfile
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {institutionID, userID};
   @override
   InstitutionProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -11706,16 +11725,20 @@ class $InstitutionProfileTable extends InstitutionProfile
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
-      )!,
+      ),
       userID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}user_i_d'],
+        data['${effectivePrefix}user_id'],
       )!,
-      studentId: attachedDatabase.typeMapping.read(
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      studentID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}student_id'],
       )!,
-      nationalId: attachedDatabase.typeMapping.read(
+      nationalID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}national_id'],
       ),
@@ -11793,10 +11816,11 @@ class $InstitutionProfileTable extends InstitutionProfile
 
 class InstitutionProfileData extends DataClass
     implements Insertable<InstitutionProfileData> {
-  final int id;
+  final int? id;
   final String userID;
-  final String studentId;
-  final String? nationalId;
+  final int institutionID;
+  final String studentID;
+  final String? nationalID;
   final String? nationality;
   final String? program;
   final String? major;
@@ -11812,10 +11836,11 @@ class InstitutionProfileData extends DataClass
   final DateTime createdAt;
   final DateTime updatedAt;
   const InstitutionProfileData({
-    required this.id,
+    this.id,
     required this.userID,
-    required this.studentId,
-    this.nationalId,
+    required this.institutionID,
+    required this.studentID,
+    this.nationalID,
     this.nationality,
     this.program,
     this.major,
@@ -11834,11 +11859,14 @@ class InstitutionProfileData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['user_i_d'] = Variable<String>(userID);
-    map['student_id'] = Variable<String>(studentId);
-    if (!nullToAbsent || nationalId != null) {
-      map['national_id'] = Variable<String>(nationalId);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['user_id'] = Variable<String>(userID);
+    map['institution_id'] = Variable<int>(institutionID);
+    map['student_id'] = Variable<String>(studentID);
+    if (!nullToAbsent || nationalID != null) {
+      map['national_id'] = Variable<String>(nationalID);
     }
     if (!nullToAbsent || nationality != null) {
       map['nationality'] = Variable<String>(nationality);
@@ -11885,12 +11913,13 @@ class InstitutionProfileData extends DataClass
 
   InstitutionProfileCompanion toCompanion(bool nullToAbsent) {
     return InstitutionProfileCompanion(
-      id: Value(id),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       userID: Value(userID),
-      studentId: Value(studentId),
-      nationalId: nationalId == null && nullToAbsent
+      institutionID: Value(institutionID),
+      studentID: Value(studentID),
+      nationalID: nationalID == null && nullToAbsent
           ? const Value.absent()
-          : Value(nationalId),
+          : Value(nationalID),
       nationality: nationality == null && nullToAbsent
           ? const Value.absent()
           : Value(nationality),
@@ -11934,10 +11963,11 @@ class InstitutionProfileData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return InstitutionProfileData(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<int?>(json['id']),
       userID: serializer.fromJson<String>(json['user_id']),
-      studentId: serializer.fromJson<String>(json['student_id']),
-      nationalId: serializer.fromJson<String?>(json['national_id']),
+      institutionID: serializer.fromJson<int>(json['institution']),
+      studentID: serializer.fromJson<String>(json['student_id']),
+      nationalID: serializer.fromJson<String?>(json['national_id']),
       nationality: serializer.fromJson<String?>(json['nationality']),
       program: serializer.fromJson<String?>(json['program']),
       major: serializer.fromJson<String?>(json['major']),
@@ -11960,10 +11990,11 @@ class InstitutionProfileData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<int?>(id),
       'user_id': serializer.toJson<String>(userID),
-      'student_id': serializer.toJson<String>(studentId),
-      'national_id': serializer.toJson<String?>(nationalId),
+      'institution': serializer.toJson<int>(institutionID),
+      'student_id': serializer.toJson<String>(studentID),
+      'national_id': serializer.toJson<String?>(nationalID),
       'nationality': serializer.toJson<String?>(nationality),
       'program': serializer.toJson<String?>(program),
       'major': serializer.toJson<String?>(major),
@@ -11982,10 +12013,11 @@ class InstitutionProfileData extends DataClass
   }
 
   InstitutionProfileData copyWith({
-    int? id,
+    Value<int?> id = const Value.absent(),
     String? userID,
-    String? studentId,
-    Value<String?> nationalId = const Value.absent(),
+    int? institutionID,
+    String? studentID,
+    Value<String?> nationalID = const Value.absent(),
     Value<String?> nationality = const Value.absent(),
     Value<String?> program = const Value.absent(),
     Value<String?> major = const Value.absent(),
@@ -12001,10 +12033,11 @@ class InstitutionProfileData extends DataClass
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => InstitutionProfileData(
-    id: id ?? this.id,
+    id: id.present ? id.value : this.id,
     userID: userID ?? this.userID,
-    studentId: studentId ?? this.studentId,
-    nationalId: nationalId.present ? nationalId.value : this.nationalId,
+    institutionID: institutionID ?? this.institutionID,
+    studentID: studentID ?? this.studentID,
+    nationalID: nationalID.present ? nationalID.value : this.nationalID,
     nationality: nationality.present ? nationality.value : this.nationality,
     program: program.present ? program.value : this.program,
     major: major.present ? major.value : this.major,
@@ -12030,10 +12063,13 @@ class InstitutionProfileData extends DataClass
     return InstitutionProfileData(
       id: data.id.present ? data.id.value : this.id,
       userID: data.userID.present ? data.userID.value : this.userID,
-      studentId: data.studentId.present ? data.studentId.value : this.studentId,
-      nationalId: data.nationalId.present
-          ? data.nationalId.value
-          : this.nationalId,
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      studentID: data.studentID.present ? data.studentID.value : this.studentID,
+      nationalID: data.nationalID.present
+          ? data.nationalID.value
+          : this.nationalID,
       nationality: data.nationality.present
           ? data.nationality.value
           : this.nationality,
@@ -12064,8 +12100,9 @@ class InstitutionProfileData extends DataClass
     return (StringBuffer('InstitutionProfileData(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
-          ..write('studentId: $studentId, ')
-          ..write('nationalId: $nationalId, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('studentID: $studentID, ')
+          ..write('nationalID: $nationalID, ')
           ..write('nationality: $nationality, ')
           ..write('program: $program, ')
           ..write('major: $major, ')
@@ -12088,8 +12125,9 @@ class InstitutionProfileData extends DataClass
   int get hashCode => Object.hash(
     id,
     userID,
-    studentId,
-    nationalId,
+    institutionID,
+    studentID,
+    nationalID,
     nationality,
     program,
     major,
@@ -12111,8 +12149,9 @@ class InstitutionProfileData extends DataClass
       (other is InstitutionProfileData &&
           other.id == this.id &&
           other.userID == this.userID &&
-          other.studentId == this.studentId &&
-          other.nationalId == this.nationalId &&
+          other.institutionID == this.institutionID &&
+          other.studentID == this.studentID &&
+          other.nationalID == this.nationalID &&
           other.nationality == this.nationality &&
           other.program == this.program &&
           other.major == this.major &&
@@ -12131,10 +12170,11 @@ class InstitutionProfileData extends DataClass
 
 class InstitutionProfileCompanion
     extends UpdateCompanion<InstitutionProfileData> {
-  final Value<int> id;
+  final Value<int?> id;
   final Value<String> userID;
-  final Value<String> studentId;
-  final Value<String?> nationalId;
+  final Value<int> institutionID;
+  final Value<String> studentID;
+  final Value<String?> nationalID;
   final Value<String?> nationality;
   final Value<String?> program;
   final Value<String?> major;
@@ -12149,11 +12189,13 @@ class InstitutionProfileCompanion
   final Value<Map<String, dynamic>?> rawData;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<int> rowid;
   const InstitutionProfileCompanion({
     this.id = const Value.absent(),
     this.userID = const Value.absent(),
-    this.studentId = const Value.absent(),
-    this.nationalId = const Value.absent(),
+    this.institutionID = const Value.absent(),
+    this.studentID = const Value.absent(),
+    this.nationalID = const Value.absent(),
     this.nationality = const Value.absent(),
     this.program = const Value.absent(),
     this.major = const Value.absent(),
@@ -12168,12 +12210,14 @@ class InstitutionProfileCompanion
     this.rawData = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   InstitutionProfileCompanion.insert({
     this.id = const Value.absent(),
     required String userID,
-    required String studentId,
-    this.nationalId = const Value.absent(),
+    required int institutionID,
+    required String studentID,
+    this.nationalID = const Value.absent(),
     this.nationality = const Value.absent(),
     this.program = const Value.absent(),
     this.major = const Value.absent(),
@@ -12188,13 +12232,16 @@ class InstitutionProfileCompanion
     this.rawData = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : userID = Value(userID),
-       studentId = Value(studentId);
+       institutionID = Value(institutionID),
+       studentID = Value(studentID);
   static Insertable<InstitutionProfileData> custom({
     Expression<int>? id,
     Expression<String>? userID,
-    Expression<String>? studentId,
-    Expression<String>? nationalId,
+    Expression<int>? institutionID,
+    Expression<String>? studentID,
+    Expression<String>? nationalID,
     Expression<String>? nationality,
     Expression<String>? program,
     Expression<String>? major,
@@ -12209,12 +12256,14 @@ class InstitutionProfileCompanion
     Expression<String>? rawData,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (userID != null) 'user_i_d': userID,
-      if (studentId != null) 'student_id': studentId,
-      if (nationalId != null) 'national_id': nationalId,
+      if (userID != null) 'user_id': userID,
+      if (institutionID != null) 'institution_id': institutionID,
+      if (studentID != null) 'student_id': studentID,
+      if (nationalID != null) 'national_id': nationalID,
       if (nationality != null) 'nationality': nationality,
       if (program != null) 'program': program,
       if (major != null) 'major': major,
@@ -12229,14 +12278,16 @@ class InstitutionProfileCompanion
       if (rawData != null) 'raw_data': rawData,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   InstitutionProfileCompanion copyWith({
-    Value<int>? id,
+    Value<int?>? id,
     Value<String>? userID,
-    Value<String>? studentId,
-    Value<String?>? nationalId,
+    Value<int>? institutionID,
+    Value<String>? studentID,
+    Value<String?>? nationalID,
     Value<String?>? nationality,
     Value<String?>? program,
     Value<String?>? major,
@@ -12251,12 +12302,14 @@ class InstitutionProfileCompanion
     Value<Map<String, dynamic>?>? rawData,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<int>? rowid,
   }) {
     return InstitutionProfileCompanion(
       id: id ?? this.id,
       userID: userID ?? this.userID,
-      studentId: studentId ?? this.studentId,
-      nationalId: nationalId ?? this.nationalId,
+      institutionID: institutionID ?? this.institutionID,
+      studentID: studentID ?? this.studentID,
+      nationalID: nationalID ?? this.nationalID,
       nationality: nationality ?? this.nationality,
       program: program ?? this.program,
       major: major ?? this.major,
@@ -12271,6 +12324,7 @@ class InstitutionProfileCompanion
       rawData: rawData ?? this.rawData,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -12281,13 +12335,16 @@ class InstitutionProfileCompanion
       map['id'] = Variable<int>(id.value);
     }
     if (userID.present) {
-      map['user_i_d'] = Variable<String>(userID.value);
+      map['user_id'] = Variable<String>(userID.value);
     }
-    if (studentId.present) {
-      map['student_id'] = Variable<String>(studentId.value);
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
     }
-    if (nationalId.present) {
-      map['national_id'] = Variable<String>(nationalId.value);
+    if (studentID.present) {
+      map['student_id'] = Variable<String>(studentID.value);
+    }
+    if (nationalID.present) {
+      map['national_id'] = Variable<String>(nationalID.value);
     }
     if (nationality.present) {
       map['nationality'] = Variable<String>(nationality.value);
@@ -12333,6 +12390,9 @@ class InstitutionProfileCompanion
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -12341,8 +12401,9 @@ class InstitutionProfileCompanion
     return (StringBuffer('InstitutionProfileCompanion(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
-          ..write('studentId: $studentId, ')
-          ..write('nationalId: $nationalId, ')
+          ..write('institutionID: $institutionID, ')
+          ..write('studentID: $studentID, ')
+          ..write('nationalID: $nationalID, ')
           ..write('nationality: $nationality, ')
           ..write('program: $program, ')
           ..write('major: $major, ')
@@ -12356,7 +12417,8 @@ class InstitutionProfileCompanion
           ..write('expectedGraduation: $expectedGraduation, ')
           ..write('rawData: $rawData, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -23382,10 +23444,11 @@ typedef $$InstitutionKeyTableProcessedTableManager =
     >;
 typedef $$InstitutionProfileTableCreateCompanionBuilder =
     InstitutionProfileCompanion Function({
-      Value<int> id,
+      Value<int?> id,
       required String userID,
-      required String studentId,
-      Value<String?> nationalId,
+      required int institutionID,
+      required String studentID,
+      Value<String?> nationalID,
       Value<String?> nationality,
       Value<String?> program,
       Value<String?> major,
@@ -23400,13 +23463,15 @@ typedef $$InstitutionProfileTableCreateCompanionBuilder =
       Value<Map<String, dynamic>?> rawData,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int> rowid,
     });
 typedef $$InstitutionProfileTableUpdateCompanionBuilder =
     InstitutionProfileCompanion Function({
-      Value<int> id,
+      Value<int?> id,
       Value<String> userID,
-      Value<String> studentId,
-      Value<String?> nationalId,
+      Value<int> institutionID,
+      Value<String> studentID,
+      Value<String?> nationalID,
       Value<String?> nationality,
       Value<String?> program,
       Value<String?> major,
@@ -23421,6 +23486,7 @@ typedef $$InstitutionProfileTableUpdateCompanionBuilder =
       Value<Map<String, dynamic>?> rawData,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int> rowid,
     });
 
 class $$InstitutionProfileTableFilterComposer
@@ -23442,13 +23508,18 @@ class $$InstitutionProfileTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get studentId => $composableBuilder(
-    column: $table.studentId,
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
+  ColumnFilters<String> get studentID => $composableBuilder(
+    column: $table.studentID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23547,13 +23618,18 @@ class $$InstitutionProfileTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get studentId => $composableBuilder(
-    column: $table.studentId,
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
+  ColumnOrderings<String> get studentID => $composableBuilder(
+    column: $table.studentID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23643,11 +23719,16 @@ class $$InstitutionProfileTableAnnotationComposer
   GeneratedColumn<String> get userID =>
       $composableBuilder(column: $table.userID, builder: (column) => column);
 
-  GeneratedColumn<String> get studentId =>
-      $composableBuilder(column: $table.studentId, builder: (column) => column);
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
+  GeneratedColumn<String> get studentID =>
+      $composableBuilder(column: $table.studentID, builder: (column) => column);
+
+  GeneratedColumn<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
     builder: (column) => column,
   );
 
@@ -23742,10 +23823,11 @@ class $$InstitutionProfileTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int?> id = const Value.absent(),
                 Value<String> userID = const Value.absent(),
-                Value<String> studentId = const Value.absent(),
-                Value<String?> nationalId = const Value.absent(),
+                Value<int> institutionID = const Value.absent(),
+                Value<String> studentID = const Value.absent(),
+                Value<String?> nationalID = const Value.absent(),
                 Value<String?> nationality = const Value.absent(),
                 Value<String?> program = const Value.absent(),
                 Value<String?> major = const Value.absent(),
@@ -23760,11 +23842,13 @@ class $$InstitutionProfileTableTableManager
                 Value<Map<String, dynamic>?> rawData = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => InstitutionProfileCompanion(
                 id: id,
                 userID: userID,
-                studentId: studentId,
-                nationalId: nationalId,
+                institutionID: institutionID,
+                studentID: studentID,
+                nationalID: nationalID,
                 nationality: nationality,
                 program: program,
                 major: major,
@@ -23779,13 +23863,15 @@ class $$InstitutionProfileTableTableManager
                 rawData: rawData,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int?> id = const Value.absent(),
                 required String userID,
-                required String studentId,
-                Value<String?> nationalId = const Value.absent(),
+                required int institutionID,
+                required String studentID,
+                Value<String?> nationalID = const Value.absent(),
                 Value<String?> nationality = const Value.absent(),
                 Value<String?> program = const Value.absent(),
                 Value<String?> major = const Value.absent(),
@@ -23800,11 +23886,13 @@ class $$InstitutionProfileTableTableManager
                 Value<Map<String, dynamic>?> rawData = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => InstitutionProfileCompanion.insert(
                 id: id,
                 userID: userID,
-                studentId: studentId,
-                nationalId: nationalId,
+                institutionID: institutionID,
+                studentID: studentID,
+                nationalID: nationalID,
                 nationality: nationality,
                 program: program,
                 major: major,
@@ -23819,6 +23907,7 @@ class $$InstitutionProfileTableTableManager
                 rawData: rawData,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

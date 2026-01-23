@@ -92,7 +92,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 18;
+  int get schemaVersion => 19;
 
   @override
   MigrationStrategy get migration {
@@ -115,6 +115,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 17:
               await migrate17To18(m);
+              break;
+            case 18:
+              await migrate18To19(m);
               break;
           }
         }
