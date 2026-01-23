@@ -1,4 +1,5 @@
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magnet/magnet.dart';
@@ -6,7 +7,8 @@ import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import './sync_required_card.dart';
 
 class InstitutionDashboard extends StatefulWidget {
-  const InstitutionDashboard({super.key});
+  const InstitutionDashboard({super.key, required this.institutionID});
+  final int institutionID;
 
   @override
   State<InstitutionDashboard> createState() => _InstitutionDashboardState();
@@ -20,6 +22,16 @@ class _InstitutionDashboardState extends State<InstitutionDashboard> {
     context.read<MagnetBloc>().add(
       InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
     );
+    //
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      context.read<StudentProfileBloc>().add(
+        WatchProfileByUserAndInstitutionEvent(
+          userID: profileState.profile.id,
+          institutionID: widget.institutionID,
+        ),
+      );
+    }
   }
 
   @override

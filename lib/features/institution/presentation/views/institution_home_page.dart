@@ -225,7 +225,9 @@ class _InstitutionHomePageContent extends StatelessWidget {
         }
         return SliverPadding(
           padding: EdgeInsets.all(16),
-          sliver: SliverToBoxAdapter(child: InstitutionDashboard()),
+          sliver: SliverToBoxAdapter(
+            child: InstitutionDashboard(institutionID: institutionID),
+          ),
         );
       },
     );

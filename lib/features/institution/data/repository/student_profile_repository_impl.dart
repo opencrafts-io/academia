@@ -13,15 +13,15 @@ import 'package:academia/core/network/network.dart';
 /// The repository uses the local data source for reactive streams and
 /// fallback reads, while the remote data source handles writes and
 /// populates the cache.
-class StudentProfileRepositoryImpl implements StudentProfileRepository {
+class StudentProfileRepositoryImpl
+    with ConnectivityChecker
+    implements StudentProfileRepository {
   final InstitutionProfileRemoteDatasource remoteDatasource;
   final InstitutionProfileLocalDatasource localDatasource;
-  final ConnectivityChecker connectivityChecker;
 
   StudentProfileRepositoryImpl({
     required this.remoteDatasource,
     required this.localDatasource,
-    required this.connectivityChecker,
   });
 
   /// Watches a specific student profile by ID from the local cache.
@@ -130,7 +130,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
   Future<Either<Failure, InstitutionProfile>> fetchProfileById({
     required int profileId,
   }) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -168,7 +168,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
     String? studentId,
     String? program,
   }) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -204,7 +204,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
   /// - `Left<Failure>` if no internet connection or remote fetch fails
   @override
   Future<Either<Failure, InstitutionProfile>> fetchCurrentUserProfile() async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -236,7 +236,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
   Future<Either<Failure, InstitutionProfile>> createProfile({
     required InstitutionProfile profile,
   }) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -271,7 +271,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
     required int profileId,
     required InstitutionProfile profile,
   }) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -306,7 +306,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
     required int profileId,
     required Map<String, dynamic> updates,
   }) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
@@ -338,7 +338,7 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
   /// - `Left<Failure>` if no internet connection or remote deletion fails
   @override
   Future<Either<Failure, void>> deleteProfile({required int profileId}) async {
-    if (!await connectivityChecker.isConnectedToInternet()) {
+    if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
           message: "No internet connection. Please check your network.",
