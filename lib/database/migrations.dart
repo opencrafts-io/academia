@@ -33,4 +33,19 @@ extension AppDatabaseExtension on AppDataBase {
       (profile) => profile.institutionID.equals(0),
     );
   }
+
+  Future<void> migrate19To20(Migrator m) async {
+    await m.alterTable(
+      TableMigration(
+        institutionProfile,
+        newColumns: [
+          institutionProfile.studentName,
+          institutionProfile.status,
+          institutionProfile.gender,
+          institutionProfile.email,
+          institutionProfile.profilePicture
+        ],
+      ),
+    );
+  }
 }

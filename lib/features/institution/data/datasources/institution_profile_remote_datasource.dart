@@ -16,11 +16,11 @@ class InstitutionProfileRemoteDatasource
     required this.flavor,
   }) {
     if (flavor.isProduction) {
-      servicePrefix = "professor";
+      servicePrefix = "professor/users";
     } else if (flavor.isStaging) {
-      servicePrefix = 'qa-professor';
+      servicePrefix = 'qa-professor/users';
     } else {
-      servicePrefix = "dev-professor";
+      servicePrefix = "dev-professor/users";
     }
   }
 

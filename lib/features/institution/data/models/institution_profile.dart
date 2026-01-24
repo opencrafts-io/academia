@@ -1,6 +1,36 @@
 import 'package:drift/drift.dart';
 import 'package:academia/core/core.dart';
 
+enum Gender {
+  male,
+
+  female,
+
+  nonBinary,
+
+  genderqueer,
+
+  genderfluid,
+
+  agender,
+
+  transgenderMale,
+
+  transgenderFemale,
+
+  intersex,
+
+  twoSpirit,
+
+  preferNotToSay,
+
+  other,
+
+  unknown,
+}
+
+enum AcademicStatus { active, suspended, completed, inactive, unknown }
+
 class InstitutionProfile extends Table {
   IntColumn get id => integer().nullable()();
 
@@ -12,6 +42,25 @@ class InstitutionProfile extends Table {
 
   @JsonKey("student_id")
   TextColumn get studentID => text().named("student_id").unique()();
+
+  @JsonKey("student_name")
+  TextColumn get studentName =>
+      text().named("student_name").withDefault(Constant(""))();
+
+  @JsonKey("gender")
+  TextColumn get gender =>
+      textEnum<Gender>().withDefault(Constant(Gender.unknown.name))();
+
+  @JsonKey("status")
+  TextColumn get status => textEnum<AcademicStatus>().withDefault(
+    Constant(AcademicStatus.unknown.name),
+  )();
+
+  @JsonKey("email")
+  TextColumn get email => text().nullable().unique()();
+
+  @JsonKey("profile_picture")
+  TextColumn get profilePicture => text().nullable()();
 
   @JsonKey("national_id")
   TextColumn get nationalID => text().named("national_id").nullable()();

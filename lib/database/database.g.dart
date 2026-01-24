@@ -11394,6 +11394,61 @@ class $InstitutionProfileTable extends InstitutionProfile
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
+  static const VerificationMeta _studentNameMeta = const VerificationMeta(
+    'studentName',
+  );
+  @override
+  late final GeneratedColumn<String> studentName = GeneratedColumn<String>(
+    'student_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: Constant(""),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Gender, String> gender =
+      GeneratedColumn<String>(
+        'gender',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(Gender.unknown.name),
+      ).withConverter<Gender>($InstitutionProfileTable.$convertergender);
+  @override
+  late final GeneratedColumnWithTypeConverter<AcademicStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(AcademicStatus.unknown.name),
+      ).withConverter<AcademicStatus>(
+        $InstitutionProfileTable.$converterstatus,
+      );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _profilePictureMeta = const VerificationMeta(
+    'profilePicture',
+  );
+  @override
+  late final GeneratedColumn<String> profilePicture = GeneratedColumn<String>(
+    'profile_picture',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _nationalIDMeta = const VerificationMeta(
     'nationalID',
   );
@@ -11559,6 +11614,11 @@ class $InstitutionProfileTable extends InstitutionProfile
     userID,
     institutionID,
     studentID,
+    studentName,
+    gender,
+    status,
+    email,
+    profilePicture,
     nationalID,
     nationality,
     program,
@@ -11616,6 +11676,30 @@ class $InstitutionProfileTable extends InstitutionProfile
       );
     } else if (isInserting) {
       context.missing(_studentIDMeta);
+    }
+    if (data.containsKey('student_name')) {
+      context.handle(
+        _studentNameMeta,
+        studentName.isAcceptableOrUnknown(
+          data['student_name']!,
+          _studentNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('profile_picture')) {
+      context.handle(
+        _profilePictureMeta,
+        profilePicture.isAcceptableOrUnknown(
+          data['profile_picture']!,
+          _profilePictureMeta,
+        ),
+      );
     }
     if (data.containsKey('national_id')) {
       context.handle(
@@ -11738,6 +11822,30 @@ class $InstitutionProfileTable extends InstitutionProfile
         DriftSqlType.string,
         data['${effectivePrefix}student_id'],
       )!,
+      studentName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_name'],
+      )!,
+      gender: $InstitutionProfileTable.$convertergender.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}gender'],
+        )!,
+      ),
+      status: $InstitutionProfileTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      profilePicture: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture'],
+      ),
       nationalID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}national_id'],
@@ -11808,6 +11916,10 @@ class $InstitutionProfileTable extends InstitutionProfile
     return $InstitutionProfileTable(attachedDatabase, alias);
   }
 
+  static JsonTypeConverter2<Gender, String, String> $convertergender =
+      const EnumNameConverter<Gender>(Gender.values);
+  static JsonTypeConverter2<AcademicStatus, String, String> $converterstatus =
+      const EnumNameConverter<AcademicStatus>(AcademicStatus.values);
   static TypeConverter<Map<String, dynamic>, String> $converterrawData =
       const JsonConverter();
   static TypeConverter<Map<String, dynamic>?, String?> $converterrawDatan =
@@ -11820,6 +11932,11 @@ class InstitutionProfileData extends DataClass
   final String userID;
   final int institutionID;
   final String studentID;
+  final String studentName;
+  final Gender gender;
+  final AcademicStatus status;
+  final String? email;
+  final String? profilePicture;
   final String? nationalID;
   final String? nationality;
   final String? program;
@@ -11840,6 +11957,11 @@ class InstitutionProfileData extends DataClass
     required this.userID,
     required this.institutionID,
     required this.studentID,
+    required this.studentName,
+    required this.gender,
+    required this.status,
+    this.email,
+    this.profilePicture,
     this.nationalID,
     this.nationality,
     this.program,
@@ -11865,6 +11987,23 @@ class InstitutionProfileData extends DataClass
     map['user_id'] = Variable<String>(userID);
     map['institution_id'] = Variable<int>(institutionID);
     map['student_id'] = Variable<String>(studentID);
+    map['student_name'] = Variable<String>(studentName);
+    {
+      map['gender'] = Variable<String>(
+        $InstitutionProfileTable.$convertergender.toSql(gender),
+      );
+    }
+    {
+      map['status'] = Variable<String>(
+        $InstitutionProfileTable.$converterstatus.toSql(status),
+      );
+    }
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || profilePicture != null) {
+      map['profile_picture'] = Variable<String>(profilePicture);
+    }
     if (!nullToAbsent || nationalID != null) {
       map['national_id'] = Variable<String>(nationalID);
     }
@@ -11917,6 +12056,15 @@ class InstitutionProfileData extends DataClass
       userID: Value(userID),
       institutionID: Value(institutionID),
       studentID: Value(studentID),
+      studentName: Value(studentName),
+      gender: Value(gender),
+      status: Value(status),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
+      profilePicture: profilePicture == null && nullToAbsent
+          ? const Value.absent()
+          : Value(profilePicture),
       nationalID: nationalID == null && nullToAbsent
           ? const Value.absent()
           : Value(nationalID),
@@ -11967,6 +12115,15 @@ class InstitutionProfileData extends DataClass
       userID: serializer.fromJson<String>(json['user_id']),
       institutionID: serializer.fromJson<int>(json['institution']),
       studentID: serializer.fromJson<String>(json['student_id']),
+      studentName: serializer.fromJson<String>(json['student_name']),
+      gender: $InstitutionProfileTable.$convertergender.fromJson(
+        serializer.fromJson<String>(json['gender']),
+      ),
+      status: $InstitutionProfileTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
+      email: serializer.fromJson<String?>(json['email']),
+      profilePicture: serializer.fromJson<String?>(json['profile_picture']),
       nationalID: serializer.fromJson<String?>(json['national_id']),
       nationality: serializer.fromJson<String?>(json['nationality']),
       program: serializer.fromJson<String?>(json['program']),
@@ -11994,6 +12151,15 @@ class InstitutionProfileData extends DataClass
       'user_id': serializer.toJson<String>(userID),
       'institution': serializer.toJson<int>(institutionID),
       'student_id': serializer.toJson<String>(studentID),
+      'student_name': serializer.toJson<String>(studentName),
+      'gender': serializer.toJson<String>(
+        $InstitutionProfileTable.$convertergender.toJson(gender),
+      ),
+      'status': serializer.toJson<String>(
+        $InstitutionProfileTable.$converterstatus.toJson(status),
+      ),
+      'email': serializer.toJson<String?>(email),
+      'profile_picture': serializer.toJson<String?>(profilePicture),
       'national_id': serializer.toJson<String?>(nationalID),
       'nationality': serializer.toJson<String?>(nationality),
       'program': serializer.toJson<String?>(program),
@@ -12017,6 +12183,11 @@ class InstitutionProfileData extends DataClass
     String? userID,
     int? institutionID,
     String? studentID,
+    String? studentName,
+    Gender? gender,
+    AcademicStatus? status,
+    Value<String?> email = const Value.absent(),
+    Value<String?> profilePicture = const Value.absent(),
     Value<String?> nationalID = const Value.absent(),
     Value<String?> nationality = const Value.absent(),
     Value<String?> program = const Value.absent(),
@@ -12037,6 +12208,13 @@ class InstitutionProfileData extends DataClass
     userID: userID ?? this.userID,
     institutionID: institutionID ?? this.institutionID,
     studentID: studentID ?? this.studentID,
+    studentName: studentName ?? this.studentName,
+    gender: gender ?? this.gender,
+    status: status ?? this.status,
+    email: email.present ? email.value : this.email,
+    profilePicture: profilePicture.present
+        ? profilePicture.value
+        : this.profilePicture,
     nationalID: nationalID.present ? nationalID.value : this.nationalID,
     nationality: nationality.present ? nationality.value : this.nationality,
     program: program.present ? program.value : this.program,
@@ -12067,6 +12245,15 @@ class InstitutionProfileData extends DataClass
           ? data.institutionID.value
           : this.institutionID,
       studentID: data.studentID.present ? data.studentID.value : this.studentID,
+      studentName: data.studentName.present
+          ? data.studentName.value
+          : this.studentName,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      status: data.status.present ? data.status.value : this.status,
+      email: data.email.present ? data.email.value : this.email,
+      profilePicture: data.profilePicture.present
+          ? data.profilePicture.value
+          : this.profilePicture,
       nationalID: data.nationalID.present
           ? data.nationalID.value
           : this.nationalID,
@@ -12102,6 +12289,11 @@ class InstitutionProfileData extends DataClass
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
           ..write('studentID: $studentID, ')
+          ..write('studentName: $studentName, ')
+          ..write('gender: $gender, ')
+          ..write('status: $status, ')
+          ..write('email: $email, ')
+          ..write('profilePicture: $profilePicture, ')
           ..write('nationalID: $nationalID, ')
           ..write('nationality: $nationality, ')
           ..write('program: $program, ')
@@ -12122,11 +12314,16 @@ class InstitutionProfileData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     userID,
     institutionID,
     studentID,
+    studentName,
+    gender,
+    status,
+    email,
+    profilePicture,
     nationalID,
     nationality,
     program,
@@ -12142,7 +12339,7 @@ class InstitutionProfileData extends DataClass
     rawData,
     createdAt,
     updatedAt,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -12151,6 +12348,11 @@ class InstitutionProfileData extends DataClass
           other.userID == this.userID &&
           other.institutionID == this.institutionID &&
           other.studentID == this.studentID &&
+          other.studentName == this.studentName &&
+          other.gender == this.gender &&
+          other.status == this.status &&
+          other.email == this.email &&
+          other.profilePicture == this.profilePicture &&
           other.nationalID == this.nationalID &&
           other.nationality == this.nationality &&
           other.program == this.program &&
@@ -12174,6 +12376,11 @@ class InstitutionProfileCompanion
   final Value<String> userID;
   final Value<int> institutionID;
   final Value<String> studentID;
+  final Value<String> studentName;
+  final Value<Gender> gender;
+  final Value<AcademicStatus> status;
+  final Value<String?> email;
+  final Value<String?> profilePicture;
   final Value<String?> nationalID;
   final Value<String?> nationality;
   final Value<String?> program;
@@ -12195,6 +12402,11 @@ class InstitutionProfileCompanion
     this.userID = const Value.absent(),
     this.institutionID = const Value.absent(),
     this.studentID = const Value.absent(),
+    this.studentName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.status = const Value.absent(),
+    this.email = const Value.absent(),
+    this.profilePicture = const Value.absent(),
     this.nationalID = const Value.absent(),
     this.nationality = const Value.absent(),
     this.program = const Value.absent(),
@@ -12217,6 +12429,11 @@ class InstitutionProfileCompanion
     required String userID,
     required int institutionID,
     required String studentID,
+    this.studentName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.status = const Value.absent(),
+    this.email = const Value.absent(),
+    this.profilePicture = const Value.absent(),
     this.nationalID = const Value.absent(),
     this.nationality = const Value.absent(),
     this.program = const Value.absent(),
@@ -12241,6 +12458,11 @@ class InstitutionProfileCompanion
     Expression<String>? userID,
     Expression<int>? institutionID,
     Expression<String>? studentID,
+    Expression<String>? studentName,
+    Expression<String>? gender,
+    Expression<String>? status,
+    Expression<String>? email,
+    Expression<String>? profilePicture,
     Expression<String>? nationalID,
     Expression<String>? nationality,
     Expression<String>? program,
@@ -12263,6 +12485,11 @@ class InstitutionProfileCompanion
       if (userID != null) 'user_id': userID,
       if (institutionID != null) 'institution_id': institutionID,
       if (studentID != null) 'student_id': studentID,
+      if (studentName != null) 'student_name': studentName,
+      if (gender != null) 'gender': gender,
+      if (status != null) 'status': status,
+      if (email != null) 'email': email,
+      if (profilePicture != null) 'profile_picture': profilePicture,
       if (nationalID != null) 'national_id': nationalID,
       if (nationality != null) 'nationality': nationality,
       if (program != null) 'program': program,
@@ -12287,6 +12514,11 @@ class InstitutionProfileCompanion
     Value<String>? userID,
     Value<int>? institutionID,
     Value<String>? studentID,
+    Value<String>? studentName,
+    Value<Gender>? gender,
+    Value<AcademicStatus>? status,
+    Value<String?>? email,
+    Value<String?>? profilePicture,
     Value<String?>? nationalID,
     Value<String?>? nationality,
     Value<String?>? program,
@@ -12309,6 +12541,11 @@ class InstitutionProfileCompanion
       userID: userID ?? this.userID,
       institutionID: institutionID ?? this.institutionID,
       studentID: studentID ?? this.studentID,
+      studentName: studentName ?? this.studentName,
+      gender: gender ?? this.gender,
+      status: status ?? this.status,
+      email: email ?? this.email,
+      profilePicture: profilePicture ?? this.profilePicture,
       nationalID: nationalID ?? this.nationalID,
       nationality: nationality ?? this.nationality,
       program: program ?? this.program,
@@ -12342,6 +12579,25 @@ class InstitutionProfileCompanion
     }
     if (studentID.present) {
       map['student_id'] = Variable<String>(studentID.value);
+    }
+    if (studentName.present) {
+      map['student_name'] = Variable<String>(studentName.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(
+        $InstitutionProfileTable.$convertergender.toSql(gender.value),
+      );
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(
+        $InstitutionProfileTable.$converterstatus.toSql(status.value),
+      );
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (profilePicture.present) {
+      map['profile_picture'] = Variable<String>(profilePicture.value);
     }
     if (nationalID.present) {
       map['national_id'] = Variable<String>(nationalID.value);
@@ -12403,6 +12659,11 @@ class InstitutionProfileCompanion
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
           ..write('studentID: $studentID, ')
+          ..write('studentName: $studentName, ')
+          ..write('gender: $gender, ')
+          ..write('status: $status, ')
+          ..write('email: $email, ')
+          ..write('profilePicture: $profilePicture, ')
           ..write('nationalID: $nationalID, ')
           ..write('nationality: $nationality, ')
           ..write('program: $program, ')
@@ -23448,6 +23709,11 @@ typedef $$InstitutionProfileTableCreateCompanionBuilder =
       required String userID,
       required int institutionID,
       required String studentID,
+      Value<String> studentName,
+      Value<Gender> gender,
+      Value<AcademicStatus> status,
+      Value<String?> email,
+      Value<String?> profilePicture,
       Value<String?> nationalID,
       Value<String?> nationality,
       Value<String?> program,
@@ -23471,6 +23737,11 @@ typedef $$InstitutionProfileTableUpdateCompanionBuilder =
       Value<String> userID,
       Value<int> institutionID,
       Value<String> studentID,
+      Value<String> studentName,
+      Value<Gender> gender,
+      Value<AcademicStatus> status,
+      Value<String?> email,
+      Value<String?> profilePicture,
       Value<String?> nationalID,
       Value<String?> nationality,
       Value<String?> program,
@@ -23515,6 +23786,33 @@ class $$InstitutionProfileTableFilterComposer
 
   ColumnFilters<String> get studentID => $composableBuilder(
     column: $table.studentID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentName => $composableBuilder(
+    column: $table.studentName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Gender, Gender, String> get gender =>
+      $composableBuilder(
+        column: $table.gender,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<AcademicStatus, AcademicStatus, String>
+  get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23628,6 +23926,31 @@ class $$InstitutionProfileTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get studentName => $composableBuilder(
+    column: $table.studentName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get nationalID => $composableBuilder(
     column: $table.nationalID,
     builder: (column) => ColumnOrderings(column),
@@ -23726,6 +24049,25 @@ class $$InstitutionProfileTableAnnotationComposer
 
   GeneratedColumn<String> get studentID =>
       $composableBuilder(column: $table.studentID, builder: (column) => column);
+
+  GeneratedColumn<String> get studentName => $composableBuilder(
+    column: $table.studentName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<Gender, String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<AcademicStatus, String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get nationalID => $composableBuilder(
     column: $table.nationalID,
@@ -23827,6 +24169,11 @@ class $$InstitutionProfileTableTableManager
                 Value<String> userID = const Value.absent(),
                 Value<int> institutionID = const Value.absent(),
                 Value<String> studentID = const Value.absent(),
+                Value<String> studentName = const Value.absent(),
+                Value<Gender> gender = const Value.absent(),
+                Value<AcademicStatus> status = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
                 Value<String?> nationalID = const Value.absent(),
                 Value<String?> nationality = const Value.absent(),
                 Value<String?> program = const Value.absent(),
@@ -23848,6 +24195,11 @@ class $$InstitutionProfileTableTableManager
                 userID: userID,
                 institutionID: institutionID,
                 studentID: studentID,
+                studentName: studentName,
+                gender: gender,
+                status: status,
+                email: email,
+                profilePicture: profilePicture,
                 nationalID: nationalID,
                 nationality: nationality,
                 program: program,
@@ -23871,6 +24223,11 @@ class $$InstitutionProfileTableTableManager
                 required String userID,
                 required int institutionID,
                 required String studentID,
+                Value<String> studentName = const Value.absent(),
+                Value<Gender> gender = const Value.absent(),
+                Value<AcademicStatus> status = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
                 Value<String?> nationalID = const Value.absent(),
                 Value<String?> nationality = const Value.absent(),
                 Value<String?> program = const Value.absent(),
@@ -23892,6 +24249,11 @@ class $$InstitutionProfileTableTableManager
                 userID: userID,
                 institutionID: institutionID,
                 studentID: studentID,
+                studentName: studentName,
+                gender: gender,
+                status: status,
+                email: email,
+                profilePicture: profilePicture,
                 nationalID: nationalID,
                 nationality: nationality,
                 program: program,
