@@ -43,6 +43,9 @@ class _InstitutionDashboardState extends State<InstitutionDashboard> {
             if (state is ScrappingCommandLoaded) {}
           },
         ),
+        BlocListener<StudentProfileBloc, StudentProfileState>(
+          listener: (context, state) {},
+        ),
         BlocListener<MagnetBloc, MagnetState>(
           listener: (context, state) {
             if (state is MagnetProcessing || state is MagnetInitializing) {

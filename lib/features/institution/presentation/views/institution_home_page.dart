@@ -1,10 +1,12 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:magnet/magnet.dart';
 
 class InstitutionHomePage extends StatefulWidget {
   const InstitutionHomePage({super.key, required this.institutionID});
@@ -17,10 +19,15 @@ class InstitutionHomePage extends StatefulWidget {
 class _InstitutionHomePageState extends State<InstitutionHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _showSyncCard = false;
 
   @override
   void initState() {
     super.initState();
+    context.read<MagnetBloc>().add(
+      InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
+    );
+
     _controller = AnimationController(vsync: this);
   }
 
@@ -33,203 +40,129 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ScrappingCommandBloc, ScrappingCommandState>(
-        listener: (context, state) {
-          if (state is ScrappingCommandLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LoadingIndicatorM3E(
-                      constraints: BoxConstraints(maxHeight: 10, minWidth: 10),
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ScrappingCommandBloc, ScrappingCommandState>(
+            listener: (context, state) {
+              if (state is ScrappingCommandLoading) {}
+            },
+          ),
+          BlocListener<InstitutionKeyBloc, InstitutionKeyState>(
+            listener: (context, state) {
+              if (state is InstitutionKeyError) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("We couldn't retrieve your keys"),
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: "Try again",
+                      onPressed: () => context.read<InstitutionKeyBloc>().add(
+                        GetInstitutionKeyEvent(
+                          institutionID: widget.institutionID,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 18),
-                    Text("Fetching institution configurations"),
-                  ],
-                ),
-                duration: Duration(seconds: 10),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          } else if (state is ScrappingCommandLoaded) {
-            ScaffoldMessenger.of(context).clearSnackBars();
-          } else if (state is ScrappingCommandError) {
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                duration: Duration(seconds: 20),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-
-        builder: (context, commandState) => RefreshIndicator.adaptive(
+                  ),
+                );
+              } else if (state is InstitutionKeyLoaded && state.key == null) {
+                showModalBottomSheet(
+                  context: context,
+                  isDismissible: false,
+                  enableDrag: false,
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(28.0),
+                    ),
+                  ),
+                  builder: (context) {
+                    return InstitutionSetupSheetContent();
+                  },
+                );
+              }
+            },
+          ),
+          BlocListener<MagnetBloc, MagnetState>(
+            listener: (context, state) {
+              if (state is MagnetProcessing || state is MagnetInitializing) {
+                setState(() {
+                  _showSyncCard = false;
+                });
+              } else if (state is MagnetError || state is MagnetInitial) {
+                setState(() {
+                  _showSyncCard = true;
+                });
+              } else if (state is MagnetSuccess) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("All synced — now saving offline…"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                final profileState = context.read<ProfileBloc>().state;
+                if (profileState is ProfileLoadedState) {
+                  final extra = {
+                    "user_id": profileState.profile.id,
+                    "institution": widget.institutionID,
+                    "created_at": DateTime.now().toIso8601String(),
+                    "updated_at": DateTime.now().toIso8601String(),
+                  };
+                  context.read<StudentProfileBloc>().add(
+                    CreateProfileEvent(
+                      profile: InstitutionProfile.fromJson(
+                        state.result.data..addEntries(extra.entries),
+                      ),
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ],
+        child: RefreshIndicator(
           onRefresh: () async {
             BlocProvider.of<ScrappingCommandBloc>(context).add(
               GetScrappingCommandEvent(institutionID: widget.institutionID),
             );
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(Duration(seconds: 3));
           },
           child: CustomScrollView(
             slivers: [
               _InstitutionHomePageAppBar(institutionID: widget.institutionID),
-              _InstitutionHomePageContent(institutionID: widget.institutionID),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                sliver: MultiSliver(
+                  children: [
+                    Visibility(
+                      visible: _showSyncCard,
+                      child: SyncRequiredCard(onSyncPressed: () {}),
+                    ),
+                    SyncStatusSection(),
+
+                    BlocBuilder<MagnetBloc, MagnetState>(
+                      builder: (context, state) => state is MagnetSuccess
+                          ? Text(state.result.data.toString())
+                          : Text(state.runtimeType.toString()),
+                    ),
+
+                    BlocBuilder<ProfileBloc, ProfileState>(
+                      builder: (context, state) =>
+                          InstitutionStudentProfileCard(
+                            userID: (state as ProfileLoadedState).profile.id,
+                            institutionID: widget.institutionID,
+                            onTap: () {},
+                          ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _InstitutionHomePageContent extends StatelessWidget {
-  final int institutionID;
-  const _InstitutionHomePageContent({required int this.institutionID});
-
-  Future<void> buildConfigSheet(BuildContext context) async {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
-      ),
-      builder: (context) {
-        return PopScope(
-          canPop: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 32,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Icon and Content
-                Icon(
-                  Icons.vpn_key_outlined,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "Setup Required",
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  "You haven't added any institution keys yet. To access the dashboard and manage your data, you'll need to configure your security keys.",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Action Button
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      context.pop();
-
-                      // Close only when moving to setup
-                      InstitutionKeysViewRoute(
-                        institutionID: 5426,
-                      ).push(context);
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add Keys Now"),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<InstitutionKeyBloc, InstitutionKeyState>(
-      listener: (context, state) {
-        if (state is InstitutionKeyLoaded && state.key == null) {
-          buildConfigSheet(context);
-        }
-      },
-      builder: (context, state) {
-        if (state is InstitutionKeyLoading) {
-          return SliverFillRemaining(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [LoadingIndicatorM3E(), Text("Retrieving cached keys")],
-            ),
-          );
-        }
-        if (state is InstitutionKeyError) {
-          return SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.pest_control_rodent_rounded,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Sewer apples...",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.tonalIcon(
-                    onPressed: () => context.read<InstitutionKeyBloc>().add(
-                      GetInstitutionKeyEvent(institutionID: institutionID),
-                    ),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text("Try Again"),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-        return SliverPadding(
-          padding: EdgeInsets.all(16),
-          sliver: SliverToBoxAdapter(
-            child: InstitutionDashboard(institutionID: institutionID),
-          ),
-        );
-      },
     );
   }
 }
@@ -267,6 +200,58 @@ class _InstitutionHomePageAppBar extends StatelessWidget {
                 : LoadingIndicatorM3E(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SyncStatusSection extends StatelessWidget {
+  const SyncStatusSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final scrappingState = context.watch<ScrappingCommandBloc>().state;
+    final magnetState = context.watch<MagnetBloc>().state;
+    final keyState = context.watch<InstitutionKeyBloc>().state;
+
+    // Condition logic moved here for readability
+    final bool canExecute =
+        (magnetState is MagnetReady || magnetState is MagnetSuccess) &&
+        scrappingState is ScrappingCommandLoaded &&
+        keyState is InstitutionKeyLoaded;
+
+    final bool shouldShow = canExecute && magnetState is! MagnetProcessing;
+
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      child: shouldShow
+          ? Card.filled(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: ListTile(
+                onTap: () => _handleSync(context, scrappingState, keyState),
+                leading: const Icon(Icons.sync_rounded),
+                title: const Text("Sync your information"),
+                subtitle: const Text("Update your profile and courses now"),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            )
+          : const SizedBox.shrink(),
+    );
+  }
+
+  void _handleSync(
+    BuildContext context,
+    ScrappingCommandLoaded scrappingState,
+    InstitutionKeyLoaded keyState,
+  ) {
+    context.read<MagnetBloc>().add(
+      ExecuteScrappingCommand(
+        command: scrappingState.command!,
+        institutionKey: keyState.key!,
       ),
     );
   }

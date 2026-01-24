@@ -570,6 +570,7 @@ class InstitutionShellRouteData extends ShellRouteData {
                 ..add(GetInstitutionKeyEvent(institutionID: institutionID)),
         ),
         BlocProvider(create: (context) => sl<MagnetBloc>()),
+        BlocProvider(create: (context) => sl<StudentProfileBloc>()),
       ],
       child: navigator, // This contains either the Home or Keys page
     );

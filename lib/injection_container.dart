@@ -670,7 +670,6 @@ Future<void> init(FlavorConfig flavor) async {
     () => StudentProfileRepositoryImpl(
       remoteDatasource: sl<InstitutionProfileRemoteDatasource>(),
       localDatasource: sl<InstitutionProfileLocalDatasource>(),
-      connectivityChecker: sl<ConnectivityChecker>(),
     ),
   );
 
@@ -727,6 +726,12 @@ Future<void> init(FlavorConfig flavor) async {
   // Watch Usecases
   sl.registerFactory<WatchProfileByIdUsecase>(
     () => WatchProfileByIdUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchProfileByUserAndInstitutionUsecase>(
+    () => WatchProfileByUserAndInstitutionUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
   );
 
   sl.registerFactory<WatchProfilesByUserUsecase>(
@@ -793,6 +798,8 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory<StudentProfileBloc>(
     () => StudentProfileBloc(
       watchProfileByIdUsecase: sl<WatchProfileByIdUsecase>(),
+      watchProfilesByUserAndInstitutionUsecase:
+          sl<WatchProfileByUserAndInstitutionUsecase>(),
       watchProfilesByUserUsecase: sl<WatchProfilesByUserUsecase>(),
       watchLatestProfileByStudentUsecase:
           sl<WatchLatestProfileByStudentUsecase>(),
