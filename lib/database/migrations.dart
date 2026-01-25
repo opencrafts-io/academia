@@ -43,7 +43,7 @@ extension AppDatabaseExtension on AppDataBase {
           institutionProfile.status,
           institutionProfile.gender,
           institutionProfile.email,
-          institutionProfile.profilePicture
+          institutionProfile.profilePicture,
         ],
       ),
     );

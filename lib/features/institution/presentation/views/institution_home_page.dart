@@ -28,6 +28,15 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
       InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
     );
 
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      context.read<StudentProfileBloc>().add(
+        WatchProfileByUserAndInstitutionEvent(
+          userID: profileState.profile.id,
+          institutionID: widget.institutionID,
+        ),
+      );
+    }
     _controller = AnimationController(vsync: this);
   }
 
@@ -142,18 +151,23 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     ),
                     SyncStatusSection(),
 
-                    BlocBuilder<MagnetBloc, MagnetState>(
-                      builder: (context, state) => state is MagnetSuccess
-                          ? Text(state.result.data.toString())
-                          : Text(state.runtimeType.toString()),
-                    ),
-
-                    BlocBuilder<ProfileBloc, ProfileState>(
+                    // BlocBuilder<MagnetBloc, MagnetState>(
+                    //   builder: (context, state) => state is MagnetSuccess
+                    //       ? Text(state.result.data.toString())
+                    //       : Text(state.runtimeType.toString()),
+                    // ),
+                    // BlocBuilder<ProfileBloc, ProfileState>(
+                    //   builder: (context, state) =>
+                    //       InstitutionStudentProfileCard(
+                    //       profile: state.,
+                    //         onTap: () {},
+                    //       ),
+                    // ),
+                    BlocBuilder<StudentProfileBloc, StudentProfileState>(
                       builder: (context, state) =>
                           InstitutionStudentProfileCard(
-                            userID: (state as ProfileLoadedState).profile.id,
-                            institutionID: widget.institutionID,
                             onTap: () {},
+                            profile: state.profile,
                           ),
                     ),
                   ],
@@ -226,6 +240,9 @@ class SyncStatusSection extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: shouldShow
           ? Card.filled(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
               color: Theme.of(context).colorScheme.primaryContainer,
               child: ListTile(
                 onTap: () => _handleSync(context, scrappingState, keyState),

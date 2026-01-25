@@ -236,25 +236,24 @@ class StudentProfileRepositoryImpl
   Future<Either<Failure, InstitutionProfile>> createProfile({
     required InstitutionProfile profile,
   }) async {
-    if (!await isConnectedToInternet()) {
-      return left(
-        NetworkFailure(
-          message: "No internet connection. Please check your network.",
-          error: Exception("No Internet Connection"),
-        ),
-      );
-    }
-
-    final result = await remoteDatasource.createInstitutionProfile(
-      profile: profile.toData(),
+    final result = await localDatasource.saveInstitutionProfile(
+      institutionProfile: profile.toData(),
     );
 
-    return result.fold((failure) => left(failure), (createdProfileData) async {
-      await localDatasource.saveInstitutionProfile(
-        institutionProfile: createdProfileData,
-      );
-      return right(createdProfileData.toEntity());
+    if (!await isConnectedToInternet()) {
+      return right(profile);
+    }
+
+    remoteDatasource.createInstitutionProfile(profile: profile.toData()).then((
+      result,
+    ) {
+      result.fold((error) {}, (createdProfileData) {
+        localDatasource.saveInstitutionProfile(
+          institutionProfile: createdProfileData,
+        );
+      });
     });
+    return result.fold((err) => left(err), (v) => right(profile));
   }
 
   /// Updates an existing student profile on the remote source and caches it locally.
