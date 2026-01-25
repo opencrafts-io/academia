@@ -151,18 +151,14 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     ),
                     SyncStatusSection(),
 
-                    // BlocBuilder<MagnetBloc, MagnetState>(
-                    //   builder: (context, state) => state is MagnetSuccess
-                    //       ? Text(state.result.data.toString())
-                    //       : Text(state.runtimeType.toString()),
-                    // ),
-                    // BlocBuilder<ProfileBloc, ProfileState>(
-                    //   builder: (context, state) =>
-                    //       InstitutionStudentProfileCard(
-                    //       profile: state.,
-                    //         onTap: () {},
-                    //       ),
-                    // ),
+                    SliverPinnedHeader(
+                      child: Container(
+                        color: Theme.of(context).colorScheme.surface,
+                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
+                        child: Text("Profile"),
+                      ),
+                    ),
+
                     BlocBuilder<StudentProfileBloc, StudentProfileState>(
                       builder: (context, state) =>
                           InstitutionStudentProfileCard(
@@ -170,6 +166,25 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                             profile: state.profile,
                           ),
                     ),
+
+                    SliverPinnedHeader(
+                      child: Container(
+                        color: Theme.of(context).colorScheme.surface,
+                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
+                        child: Text("Finances"),
+                      ),
+                    ),
+
+                    _FeesSectionCard(),
+
+                    SliverPinnedHeader(
+                      child: Container(
+                        color: Theme.of(context).colorScheme.surface,
+                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
+                        child: Text("Courses"),
+                      ),
+                    ),
+                    _CoursesSectionCard(),
                   ],
                 ),
               ),
@@ -240,6 +255,7 @@ class SyncStatusSection extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: shouldShow
           ? Card.filled(
+              margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
@@ -269,6 +285,56 @@ class SyncStatusSection extends StatelessWidget {
       ExecuteScrappingCommand(
         command: scrappingState.command!,
         institutionKey: keyState.key!,
+      ),
+    );
+  }
+}
+
+class _FeesSectionCard extends StatelessWidget {
+  const _FeesSectionCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+      child: ListTile(
+        leading: Icon(Icons.account_balance_rounded),
+        title: Text("Fees transactions"),
+        subtitle: Text("View your fees transactions"),
+        trailing: Icon(Icons.arrow_forward_rounded),
+      ),
+    );
+  }
+}
+
+class _CoursesSectionCard extends StatelessWidget {
+  const _CoursesSectionCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      clipBehavior: Clip.hardEdge,
+      color: Theme.of(context).colorScheme.tertiaryContainer,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      margin: EdgeInsets.zero,
+      child: ListView.separated(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(),
+            title: Text("CS ${(index + 1) * 100}"),
+            // subtitle: Text("Student"),
+            subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+          );
+        },
+        separatorBuilder: (context, index) => Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Divider(),
+        ),
+        itemCount: 6,
       ),
     );
   }
