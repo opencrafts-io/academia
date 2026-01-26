@@ -19,33 +19,12 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate18To19(Migrator m) async {
-    await m.alterTable(
-      TableMigration(
-        institutionProfile,
-        columnTransformer: {
-          institutionProfile.userID: const CustomExpression<String>('user_i_d'),
-          institutionProfile.institutionID: const Constant(1),
-        },
-        newColumns: [institutionProfile.institutionID],
-      ),
-    );
-    await institutionProfile.deleteWhere(
-      (profile) => profile.institutionID.equals(0),
-    );
+    m.drop(institutionProfile);
+    m.create(institutionProfile);
   }
 
   Future<void> migrate19To20(Migrator m) async {
-    await m.alterTable(
-      TableMigration(
-        institutionProfile,
-        newColumns: [
-          institutionProfile.studentName,
-          institutionProfile.status,
-          institutionProfile.gender,
-          institutionProfile.email,
-          institutionProfile.profilePicture,
-        ],
-      ),
-    );
+    m.drop(institutionProfile);
+    m.create(institutionProfile);
   }
 }
