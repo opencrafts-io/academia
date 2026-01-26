@@ -107,9 +107,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
       },
       builder: (context, state) {
         if (state.status == StudentProfileStatus.loading) {
-          return const Scaffold(
-            body: Center(child: LoadingIndicatorM3E()),
-          );
+          return const Scaffold(body: Center(child: LoadingIndicatorM3E()));
         }
 
         return Scaffold(
@@ -118,7 +116,7 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar.large(
-                  title: const Text("Edit Profile"),
+                  title: const Text("View & Edit Profile"),
                   actions: [
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
@@ -171,6 +169,18 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
                             ),
                           ),
                         ),
+
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          initialValue: _draftProfile?.major,
+                          decoration: const InputDecoration(
+                            labelText: "Major",
+                            prefixIcon: Icon(Icons.book_outlined),
+                          ),
+                          onChanged: (v) => _draftProfile = _draftProfile!
+                              .copyWith(major: v, program: v),
+                        ),
+
                         const SizedBox(height: 32),
 
                         _SectionHeader(title: "Academics"),
@@ -229,6 +239,18 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
                               _draftProfile = _draftProfile!.copyWith(phone: v),
                         ),
                         const SizedBox(height: 16),
+                        TextFormField(
+                          initialValue: _draftProfile?.email,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            labelText: "Email",
+                            prefixIcon: Icon(Icons.mail_outline_rounded),
+                          ),
+                          onChanged: (v) =>
+                              _draftProfile = _draftProfile!.copyWith(email: v),
+                        ),
+                        const SizedBox(height: 16),
+
                         TextFormField(
                           initialValue: _draftProfile?.address,
                           maxLines: 2,
