@@ -545,7 +545,10 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
   routes: [
     TypedGoRoute<InstitutionHomePageRoute>(
       path: "/institution/:institutionID",
-      routes: [TypedGoRoute<InstitutionKeysViewRoute>(path: "keys")],
+      routes: [
+        TypedGoRoute<EditStudentProfileRoute>(path: ":profileId"),
+        TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
+      ],
     ),
   ],
 )
@@ -631,5 +634,16 @@ class InstitutionKeysViewRoute extends GoRouteData
       ),
       child: Sheet(child: InstitutionKeysView()),
     );
+  }
+}
+
+class EditStudentProfileRoute extends GoRouteData
+    with _$EditStudentProfileRoute {
+  final int profileId;
+  final int? institutionID;
+  const EditStudentProfileRoute({required this.profileId, this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EditStudentProfilePage(profileId: profileId);
   }
 }

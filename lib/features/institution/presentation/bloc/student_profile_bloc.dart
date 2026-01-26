@@ -202,7 +202,7 @@ class StudentProfileBloc
           failure: f,
           errorMessage: f.message,
         ),
-        (p) => state.copyWith(status: StudentProfileStatus.success, profile: p),
+        (p) => state.copyWith(status: StudentProfileStatus.success),
       ),
     );
   }

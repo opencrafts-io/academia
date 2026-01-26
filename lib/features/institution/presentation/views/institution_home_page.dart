@@ -30,6 +30,8 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
 
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
+      context.read<StudentProfileBloc>().add(FetchCurrentUserProfileEvent());
+
       context.read<StudentProfileBloc>().add(
         WatchProfileByUserAndInstitutionEvent(
           userID: profileState.profile.id,
@@ -162,7 +164,24 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     BlocBuilder<StudentProfileBloc, StudentProfileState>(
                       builder: (context, state) =>
                           InstitutionStudentProfileCard(
-                            onTap: () {},
+                            onTap: () {
+                              if ((state.profile?.id) != null) {
+                                EditStudentProfileRoute(
+                                  profileId: state.profile!.id!,
+                                  institutionID: widget.institutionID,
+                                ).push(context);
+                                return;
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Can't update your profile at the moment"
+                                    " please try again later",
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            },
                             profile: state.profile,
                           ),
                     ),

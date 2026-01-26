@@ -11,3 +11,4 @@ export 'widgets/institution_student_profile_card.dart';
 export 'views/institution_home_page.dart';
 export 'views/institution_keys_view.dart';
 export 'views/institution_not_supported_view.dart';
+export 'views/edit_student_profile_page.dart';

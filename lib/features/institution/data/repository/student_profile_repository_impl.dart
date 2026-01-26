@@ -195,15 +195,14 @@ class StudentProfileRepositoryImpl
   ///
   /// This method follows an offline-first pattern:
   /// 1. Checks for internet connectivity
-  /// 2. Fetches the current user's profile from remote if connected
+  /// 2. Fetches the current user's profile(s) from remote if connected
   /// 3. Caches the result locally
-  /// 4. Returns the cached data as a domain entity
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` on success
+  /// - `Right<void>` on success
   /// - `Left<Failure>` if no internet connection or remote fetch fails
   @override
-  Future<Either<Failure, InstitutionProfile>> fetchCurrentUserProfile() async {
+  Future<Either<Failure, void>> fetchCurrentUserProfiles() async {
     if (!await isConnectedToInternet()) {
       return left(
         NetworkFailure(
@@ -213,14 +212,16 @@ class StudentProfileRepositoryImpl
       );
     }
 
-    final result = await remoteDatasource.fetchCurrentUserProfile();
-
-    return result.fold((failure) => left(failure), (profileData) async {
-      await localDatasource.saveInstitutionProfile(
-        institutionProfile: profileData,
-      );
-      return right(profileData.toEntity());
+    remoteDatasource.fetchCurrentUserProfiles().then((result) {
+      result.fold((failure) => left(failure), (profiles) async {
+        for (final profile in profiles) {
+          localDatasource.saveInstitutionProfile(institutionProfile: profile);
+        }
+        return right(null);
+      });
     });
+
+    return right(null);
   }
 
   /// Creates a new student profile on the remote source and caches it locally.

@@ -169,14 +169,14 @@ class FetchProfilesParams extends Equatable {
 
 /// Fetches the current authenticated user's profile.
 class FetchCurrentUserProfileUsecase
-    extends UseCase<InstitutionProfile, NoParams> {
+    extends UseCase<void, NoParams> {
   final StudentProfileRepository repository;
 
   FetchCurrentUserProfileUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, InstitutionProfile>> call(NoParams params) {
-    return repository.fetchCurrentUserProfile();
+  Future<Either<Failure, void>> call(NoParams params) {
+    return repository.fetchCurrentUserProfiles();
   }
 }
 

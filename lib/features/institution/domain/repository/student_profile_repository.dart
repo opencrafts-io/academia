@@ -44,7 +44,7 @@ abstract class StudentProfileRepository {
 
   /// Fetches the current authenticated user's profile
   /// and caches it locally
-  Future<Either<Failure, InstitutionProfile>> fetchCurrentUserProfile();
+  Future<Either<Failure, void>> fetchCurrentUserProfiles();
 
   /// Creates a new student profile
   Future<Either<Failure, InstitutionProfile>> createProfile({

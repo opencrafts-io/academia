@@ -34,7 +34,8 @@ class InstitutionProfileRemoteDatasource
   /// Returns:
   /// - `Right<List<InstitutionProfile>>` on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, List<InstitutionProfileData>>> fetchInstitutionProfiles({
+  Future<Either<Failure, List<InstitutionProfileData>>>
+  fetchInstitutionProfiles({
     int? institutionId,
     String? studentId,
     String? program,
@@ -46,15 +47,16 @@ class InstitutionProfileRemoteDatasource
       if (program != null) queryParams['program'] = program;
 
       final response = await dioClient.dio.get(
-        "/$servicePrefix/profile/",
+        "/$servicePrefix/profile",
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
       if (response.statusCode == 200) {
         final profiles = (response.data as List)
             .map(
-              (profile) =>
-                  InstitutionProfileData.fromJson(profile as Map<String, dynamic>),
+              (profile) => InstitutionProfileData.fromJson(
+                profile as Map<String, dynamic>,
+              ),
             )
             .toList();
         return right(profiles);
@@ -108,14 +110,23 @@ class InstitutionProfileRemoteDatasource
   /// Returns:
   /// - `Right<InstitutionProfile>` on success
   /// - `Left<Failure>` if no profile found or server error
-  Future<Either<Failure, InstitutionProfileData>> fetchCurrentUserProfile() async {
+  Future<Either<Failure, List<InstitutionProfileData>>>
+  fetchCurrentUserProfiles() async {
     try {
-      final response = await dioClient.dio.get(
-        "/$servicePrefix/profile/mine",
-      );
+      final response = await dioClient.dio.get("/$servicePrefix/profile/mine");
 
       if (response.statusCode == 200) {
-        return right(InstitutionProfileData.fromJson(response.data));
+        final List<dynamic> data = response.data as List<dynamic>;
+
+        // 2. Map the list items to your Data model
+        final profiles = data
+            .map(
+              (json) =>
+                  InstitutionProfileData.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
+
+        return right(profiles);
       }
 
       throw "Wrong status code returned from server expected 200 got ${response.statusCode}";
@@ -199,7 +210,8 @@ class InstitutionProfileRemoteDatasource
   /// Returns:
   /// - `Right<InstitutionProfile>` containing the updated profile on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, InstitutionProfileData>> partialUpdateInstitutionProfile({
+  Future<Either<Failure, InstitutionProfileData>>
+  partialUpdateInstitutionProfile({
     required int profileId,
     required Map<String, dynamic> updates,
   }) async {
