@@ -1,7 +1,13 @@
+import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrganizerDashboardPage extends StatelessWidget {
-  const OrganizerDashboardPage({super.key});
+  final String eventId;
+
+  const OrganizerDashboardPage({super.key, required this.eventId});
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +61,54 @@ class OrganizerDashboardPage extends StatelessWidget {
             ]),
           ),
           _SectionHeader(title: "Attendees", onAction: () {}),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _UserTile(
-                name: "John Doe",
-                subtitle: "VIP Ticket",
-                icon: Icons.person_outline,
-                onTap: () {},
-              ),
-              childCount: 6,
+          BlocProvider(
+            create: (_) =>
+                AttendeeBloc(getAttendee: sl())
+                  ..add(FetchAttendees(eventId: eventId)),
+            child: BlocBuilder<AttendeeBloc, AttendeeState>(
+              builder: (context, state) {
+                if (state is AttendeeLoaded) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _UserTile(
+                        name: state.attendees[index].user?.username ?? "Guest",
+                        subtitle:
+                            state.attendees[index].ticket?.ticketName ??
+                            "Unknown Ticket",
+                        icon: Icons.person_outline,
+                        onTap: () {},
+                      ),
+                      childCount: state.attendees.length,
+                    ),
+                  );
+                } else if (state is AttendeeLoading) {
+                  return const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: SpinningScallopIndicator()),
+                    ),
+                  );
+                } else if (state is AttendeeError) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Failed to load attendees.",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              },
             ),
           ),
           _SectionHeader(title: "Event Scanners", onAction: () {}),
@@ -276,10 +321,15 @@ class _AddScannerTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.person_add_alt_1, color: Theme.of(context).colorScheme.primary),
+                  child: Icon(
+                    Icons.person_add_alt_1,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -295,9 +345,10 @@ class _AddScannerTile extends StatelessWidget {
                       Text(
                         "Give someone permission to scan tickets",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(
-                            alpha: 0.75,
-                          ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimaryContainer
+                              .withValues(alpha: 0.75),
                         ),
                       ),
                     ],

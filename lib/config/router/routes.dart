@@ -300,7 +300,7 @@ class OrganizerDashboardRoute extends GoRouteData
   const OrganizerDashboardRoute({required this.eventId});
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizerDashboardPage();
+    return OrganizerDashboardPage(eventId: eventId);
   }
 }
 
