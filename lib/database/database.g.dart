@@ -153,6 +153,17 @@ class $UserProfileTable extends UserProfile
     requiredDuringInsert: false,
     defaultValue: Constant(0),
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -168,6 +179,7 @@ class $UserProfileTable extends UserProfile
     bio,
     phone,
     vibePoints,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -268,6 +280,12 @@ class $UserProfileTable extends UserProfile
         vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
       );
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -329,6 +347,10 @@ class $UserProfileTable extends UserProfile
         DriftSqlType.int,
         data['${effectivePrefix}vibe_points'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -352,6 +374,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
   final String? bio;
   final String? phone;
   final int vibePoints;
+  final DateTime? deletedAt;
   const UserProfileData({
     required this.id,
     required this.createdAt,
@@ -366,6 +389,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     this.bio,
     this.phone,
     required this.vibePoints,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -393,6 +417,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       map['phone'] = Variable<String>(phone);
     }
     map['vibe_points'] = Variable<int>(vibePoints);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -419,6 +446,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           ? const Value.absent()
           : Value(phone),
       vibePoints: Value(vibePoints),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -441,6 +471,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       bio: serializer.fromJson<String?>(json['bio']),
       phone: serializer.fromJson<String?>(json['phone']),
       vibePoints: serializer.fromJson<int>(json['vibe_points']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deleted_at']),
     );
   }
   @override
@@ -460,6 +491,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       'bio': serializer.toJson<String?>(bio),
       'phone': serializer.toJson<String?>(phone),
       'vibe_points': serializer.toJson<int>(vibePoints),
+      'deleted_at': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -477,6 +509,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     Value<String?> bio = const Value.absent(),
     Value<String?> phone = const Value.absent(),
     int? vibePoints,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => UserProfileData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -491,6 +524,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     bio: bio.present ? bio.value : this.bio,
     phone: phone.present ? phone.value : this.phone,
     vibePoints: vibePoints ?? this.vibePoints,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   UserProfileData copyWithCompanion(UserProfileCompanion data) {
     return UserProfileData(
@@ -513,6 +547,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       vibePoints: data.vibePoints.present
           ? data.vibePoints.value
           : this.vibePoints,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -531,7 +566,8 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           ..write('avatarUrl: $avatarUrl, ')
           ..write('bio: $bio, ')
           ..write('phone: $phone, ')
-          ..write('vibePoints: $vibePoints')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -551,6 +587,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     bio,
     phone,
     vibePoints,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -568,7 +605,8 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           other.avatarUrl == this.avatarUrl &&
           other.bio == this.bio &&
           other.phone == this.phone &&
-          other.vibePoints == this.vibePoints);
+          other.vibePoints == this.vibePoints &&
+          other.deletedAt == this.deletedAt);
 }
 
 class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
@@ -585,6 +623,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   final Value<String?> bio;
   final Value<String?> phone;
   final Value<int> vibePoints;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const UserProfileCompanion({
     this.id = const Value.absent(),
@@ -600,6 +639,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.bio = const Value.absent(),
     this.phone = const Value.absent(),
     this.vibePoints = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserProfileCompanion.insert({
@@ -616,6 +656,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.bio = const Value.absent(),
     this.phone = const Value.absent(),
     this.vibePoints = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -634,6 +675,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Expression<String>? bio,
     Expression<String>? phone,
     Expression<int>? vibePoints,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -650,6 +692,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       if (bio != null) 'bio': bio,
       if (phone != null) 'phone': phone,
       if (vibePoints != null) 'vibe_points': vibePoints,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -668,6 +711,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Value<String?>? bio,
     Value<String?>? phone,
     Value<int>? vibePoints,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return UserProfileCompanion(
@@ -684,6 +728,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       bio: bio ?? this.bio,
       phone: phone ?? this.phone,
       vibePoints: vibePoints ?? this.vibePoints,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -730,6 +775,9 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     if (vibePoints.present) {
       map['vibe_points'] = Variable<int>(vibePoints.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -752,6 +800,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
           ..write('bio: $bio, ')
           ..write('phone: $phone, ')
           ..write('vibePoints: $vibePoints, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -19214,6 +19263,7 @@ typedef $$UserProfileTableCreateCompanionBuilder =
       Value<String?> bio,
       Value<String?> phone,
       Value<int> vibePoints,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$UserProfileTableUpdateCompanionBuilder =
@@ -19231,6 +19281,7 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<String?> bio,
       Value<String?> phone,
       Value<int> vibePoints,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -19305,6 +19356,11 @@ class $$UserProfileTableFilterComposer
 
   ColumnFilters<int> get vibePoints => $composableBuilder(
     column: $table.vibePoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -19382,6 +19438,11 @@ class $$UserProfileTableOrderingComposer
     column: $table.vibePoints,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UserProfileTableAnnotationComposer
@@ -19437,6 +19498,9 @@ class $$UserProfileTableAnnotationComposer
     column: $table.vibePoints,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$UserProfileTableTableManager
@@ -19483,6 +19547,7 @@ class $$UserProfileTableTableManager
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion(
                 id: id,
@@ -19498,6 +19563,7 @@ class $$UserProfileTableTableManager
                 bio: bio,
                 phone: phone,
                 vibePoints: vibePoints,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -19515,6 +19581,7 @@ class $$UserProfileTableTableManager
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion.insert(
                 id: id,
@@ -19530,6 +19597,7 @@ class $$UserProfileTableTableManager
                 bio: bio,
                 phone: phone,
                 vibePoints: vibePoints,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
