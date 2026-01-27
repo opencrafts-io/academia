@@ -27,4 +27,8 @@ extension AppDatabaseExtension on AppDataBase {
     m.drop(institutionProfile);
     m.create(institutionProfile);
   }
+
+  Future<void> migrate20To21(Migrator m) async {
+    await m.createTable(institutionFeeTransaction);
+  }
 }

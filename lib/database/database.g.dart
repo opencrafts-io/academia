@@ -12685,6 +12685,666 @@ class InstitutionProfileCompanion
   }
 }
 
+class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
+    with
+        TableInfo<
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionFeeTransactionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
+    'referenceNumber',
+  );
+  @override
+  late final GeneratedColumn<String> referenceNumber = GeneratedColumn<String>(
+    'reference_number',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _runningBalanceMeta = const VerificationMeta(
+    'runningBalance',
+  );
+  @override
+  late final GeneratedColumn<double> runningBalance = GeneratedColumn<double>(
+    'running_balance',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _debitMeta = const VerificationMeta('debit');
+  @override
+  late final GeneratedColumn<double> debit = GeneratedColumn<double>(
+    'debit',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0.0),
+  );
+  static const VerificationMeta _creditMeta = const VerificationMeta('credit');
+  @override
+  late final GeneratedColumn<double> credit = GeneratedColumn<double>(
+    'credit',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0.0),
+  );
+  static const VerificationMeta _postingDateMeta = const VerificationMeta(
+    'postingDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> postingDate = GeneratedColumn<DateTime>(
+    'posting_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: Constant("KES"),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    institution,
+    referenceNumber,
+    runningBalance,
+    debit,
+    credit,
+    postingDate,
+    description,
+    title,
+    currency,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_fee_transaction';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionFeeTransactionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionMeta);
+    }
+    if (data.containsKey('reference_number')) {
+      context.handle(
+        _referenceNumberMeta,
+        referenceNumber.isAcceptableOrUnknown(
+          data['reference_number']!,
+          _referenceNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('running_balance')) {
+      context.handle(
+        _runningBalanceMeta,
+        runningBalance.isAcceptableOrUnknown(
+          data['running_balance']!,
+          _runningBalanceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('debit')) {
+      context.handle(
+        _debitMeta,
+        debit.isAcceptableOrUnknown(data['debit']!, _debitMeta),
+      );
+    }
+    if (data.containsKey('credit')) {
+      context.handle(
+        _creditMeta,
+        credit.isAcceptableOrUnknown(data['credit']!, _creditMeta),
+      );
+    }
+    if (data.containsKey('posting_date')) {
+      context.handle(
+        _postingDateMeta,
+        postingDate.isAcceptableOrUnknown(
+          data['posting_date']!,
+          _postingDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {institution, referenceNumber};
+  @override
+  InstitutionFeeTransactionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionFeeTransactionData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      ),
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      )!,
+      referenceNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference_number'],
+      ),
+      runningBalance: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}running_balance'],
+      ),
+      debit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}debit'],
+      ),
+      credit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}credit'],
+      ),
+      postingDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}posting_date'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      ),
+    );
+  }
+
+  @override
+  $InstitutionFeeTransactionTable createAlias(String alias) {
+    return $InstitutionFeeTransactionTable(attachedDatabase, alias);
+  }
+}
+
+class InstitutionFeeTransactionData extends DataClass
+    implements Insertable<InstitutionFeeTransactionData> {
+  final int? id;
+  final int institution;
+  final String? referenceNumber;
+  final double? runningBalance;
+  final double? debit;
+  final double? credit;
+  final DateTime? postingDate;
+  final String? description;
+  final String? title;
+  final String? currency;
+  const InstitutionFeeTransactionData({
+    this.id,
+    required this.institution,
+    this.referenceNumber,
+    this.runningBalance,
+    this.debit,
+    this.credit,
+    this.postingDate,
+    this.description,
+    this.title,
+    this.currency,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['institution'] = Variable<int>(institution);
+    if (!nullToAbsent || referenceNumber != null) {
+      map['reference_number'] = Variable<String>(referenceNumber);
+    }
+    if (!nullToAbsent || runningBalance != null) {
+      map['running_balance'] = Variable<double>(runningBalance);
+    }
+    if (!nullToAbsent || debit != null) {
+      map['debit'] = Variable<double>(debit);
+    }
+    if (!nullToAbsent || credit != null) {
+      map['credit'] = Variable<double>(credit);
+    }
+    if (!nullToAbsent || postingDate != null) {
+      map['posting_date'] = Variable<DateTime>(postingDate);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || currency != null) {
+      map['currency'] = Variable<String>(currency);
+    }
+    return map;
+  }
+
+  InstitutionFeeTransactionCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionFeeTransactionCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      institution: Value(institution),
+      referenceNumber: referenceNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(referenceNumber),
+      runningBalance: runningBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(runningBalance),
+      debit: debit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(debit),
+      credit: credit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(credit),
+      postingDate: postingDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(postingDate),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      currency: currency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currency),
+    );
+  }
+
+  factory InstitutionFeeTransactionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionFeeTransactionData(
+      id: serializer.fromJson<int?>(json['id']),
+      institution: serializer.fromJson<int>(json['institution']),
+      referenceNumber: serializer.fromJson<String?>(json['reference_number']),
+      runningBalance: serializer.fromJson<double?>(json['running_balance']),
+      debit: serializer.fromJson<double?>(json['debit']),
+      credit: serializer.fromJson<double?>(json['credit']),
+      postingDate: serializer.fromJson<DateTime?>(json['posting_date']),
+      description: serializer.fromJson<String?>(json['description']),
+      title: serializer.fromJson<String?>(json['title']),
+      currency: serializer.fromJson<String?>(json['currency']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int?>(id),
+      'institution': serializer.toJson<int>(institution),
+      'reference_number': serializer.toJson<String?>(referenceNumber),
+      'running_balance': serializer.toJson<double?>(runningBalance),
+      'debit': serializer.toJson<double?>(debit),
+      'credit': serializer.toJson<double?>(credit),
+      'posting_date': serializer.toJson<DateTime?>(postingDate),
+      'description': serializer.toJson<String?>(description),
+      'title': serializer.toJson<String?>(title),
+      'currency': serializer.toJson<String?>(currency),
+    };
+  }
+
+  InstitutionFeeTransactionData copyWith({
+    Value<int?> id = const Value.absent(),
+    int? institution,
+    Value<String?> referenceNumber = const Value.absent(),
+    Value<double?> runningBalance = const Value.absent(),
+    Value<double?> debit = const Value.absent(),
+    Value<double?> credit = const Value.absent(),
+    Value<DateTime?> postingDate = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> title = const Value.absent(),
+    Value<String?> currency = const Value.absent(),
+  }) => InstitutionFeeTransactionData(
+    id: id.present ? id.value : this.id,
+    institution: institution ?? this.institution,
+    referenceNumber: referenceNumber.present
+        ? referenceNumber.value
+        : this.referenceNumber,
+    runningBalance: runningBalance.present
+        ? runningBalance.value
+        : this.runningBalance,
+    debit: debit.present ? debit.value : this.debit,
+    credit: credit.present ? credit.value : this.credit,
+    postingDate: postingDate.present ? postingDate.value : this.postingDate,
+    description: description.present ? description.value : this.description,
+    title: title.present ? title.value : this.title,
+    currency: currency.present ? currency.value : this.currency,
+  );
+  InstitutionFeeTransactionData copyWithCompanion(
+    InstitutionFeeTransactionCompanion data,
+  ) {
+    return InstitutionFeeTransactionData(
+      id: data.id.present ? data.id.value : this.id,
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      referenceNumber: data.referenceNumber.present
+          ? data.referenceNumber.value
+          : this.referenceNumber,
+      runningBalance: data.runningBalance.present
+          ? data.runningBalance.value
+          : this.runningBalance,
+      debit: data.debit.present ? data.debit.value : this.debit,
+      credit: data.credit.present ? data.credit.value : this.credit,
+      postingDate: data.postingDate.present
+          ? data.postingDate.value
+          : this.postingDate,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      title: data.title.present ? data.title.value : this.title,
+      currency: data.currency.present ? data.currency.value : this.currency,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionFeeTransactionData(')
+          ..write('id: $id, ')
+          ..write('institution: $institution, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('runningBalance: $runningBalance, ')
+          ..write('debit: $debit, ')
+          ..write('credit: $credit, ')
+          ..write('postingDate: $postingDate, ')
+          ..write('description: $description, ')
+          ..write('title: $title, ')
+          ..write('currency: $currency')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    institution,
+    referenceNumber,
+    runningBalance,
+    debit,
+    credit,
+    postingDate,
+    description,
+    title,
+    currency,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionFeeTransactionData &&
+          other.id == this.id &&
+          other.institution == this.institution &&
+          other.referenceNumber == this.referenceNumber &&
+          other.runningBalance == this.runningBalance &&
+          other.debit == this.debit &&
+          other.credit == this.credit &&
+          other.postingDate == this.postingDate &&
+          other.description == this.description &&
+          other.title == this.title &&
+          other.currency == this.currency);
+}
+
+class InstitutionFeeTransactionCompanion
+    extends UpdateCompanion<InstitutionFeeTransactionData> {
+  final Value<int?> id;
+  final Value<int> institution;
+  final Value<String?> referenceNumber;
+  final Value<double?> runningBalance;
+  final Value<double?> debit;
+  final Value<double?> credit;
+  final Value<DateTime?> postingDate;
+  final Value<String?> description;
+  final Value<String?> title;
+  final Value<String?> currency;
+  final Value<int> rowid;
+  const InstitutionFeeTransactionCompanion({
+    this.id = const Value.absent(),
+    this.institution = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.runningBalance = const Value.absent(),
+    this.debit = const Value.absent(),
+    this.credit = const Value.absent(),
+    this.postingDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.title = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionFeeTransactionCompanion.insert({
+    this.id = const Value.absent(),
+    required int institution,
+    this.referenceNumber = const Value.absent(),
+    this.runningBalance = const Value.absent(),
+    this.debit = const Value.absent(),
+    this.credit = const Value.absent(),
+    this.postingDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.title = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : institution = Value(institution);
+  static Insertable<InstitutionFeeTransactionData> custom({
+    Expression<int>? id,
+    Expression<int>? institution,
+    Expression<String>? referenceNumber,
+    Expression<double>? runningBalance,
+    Expression<double>? debit,
+    Expression<double>? credit,
+    Expression<DateTime>? postingDate,
+    Expression<String>? description,
+    Expression<String>? title,
+    Expression<String>? currency,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (institution != null) 'institution': institution,
+      if (referenceNumber != null) 'reference_number': referenceNumber,
+      if (runningBalance != null) 'running_balance': runningBalance,
+      if (debit != null) 'debit': debit,
+      if (credit != null) 'credit': credit,
+      if (postingDate != null) 'posting_date': postingDate,
+      if (description != null) 'description': description,
+      if (title != null) 'title': title,
+      if (currency != null) 'currency': currency,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionFeeTransactionCompanion copyWith({
+    Value<int?>? id,
+    Value<int>? institution,
+    Value<String?>? referenceNumber,
+    Value<double?>? runningBalance,
+    Value<double?>? debit,
+    Value<double?>? credit,
+    Value<DateTime?>? postingDate,
+    Value<String?>? description,
+    Value<String?>? title,
+    Value<String?>? currency,
+    Value<int>? rowid,
+  }) {
+    return InstitutionFeeTransactionCompanion(
+      id: id ?? this.id,
+      institution: institution ?? this.institution,
+      referenceNumber: referenceNumber ?? this.referenceNumber,
+      runningBalance: runningBalance ?? this.runningBalance,
+      debit: debit ?? this.debit,
+      credit: credit ?? this.credit,
+      postingDate: postingDate ?? this.postingDate,
+      description: description ?? this.description,
+      title: title ?? this.title,
+      currency: currency ?? this.currency,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
+    if (referenceNumber.present) {
+      map['reference_number'] = Variable<String>(referenceNumber.value);
+    }
+    if (runningBalance.present) {
+      map['running_balance'] = Variable<double>(runningBalance.value);
+    }
+    if (debit.present) {
+      map['debit'] = Variable<double>(debit.value);
+    }
+    if (credit.present) {
+      map['credit'] = Variable<double>(credit.value);
+    }
+    if (postingDate.present) {
+      map['posting_date'] = Variable<DateTime>(postingDate.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionFeeTransactionCompanion(')
+          ..write('id: $id, ')
+          ..write('institution: $institution, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('runningBalance: $runningBalance, ')
+          ..write('debit: $debit, ')
+          ..write('credit: $credit, ')
+          ..write('postingDate: $postingDate, ')
+          ..write('description: $description, ')
+          ..write('title: $title, ')
+          ..write('currency: $currency, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExamTimetableTable extends ExamTimetable
     with TableInfo<$ExamTimetableTable, ExamTimetableData> {
   @override
@@ -17726,6 +18386,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $InstitutionKeyTable institutionKey = $InstitutionKeyTable(this);
   late final $InstitutionProfileTable institutionProfile =
       $InstitutionProfileTable(this);
+  late final $InstitutionFeeTransactionTable institutionFeeTransaction =
+      $InstitutionFeeTransactionTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -17761,6 +18423,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     institutionScrappingCommand,
     institutionKey,
     institutionProfile,
+    institutionFeeTransaction,
     examTimetable,
     chirpUser,
     community,
@@ -22581,6 +23244,39 @@ final class $$InstitutionTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $InstitutionFeeTransactionTable,
+    List<InstitutionFeeTransactionData>
+  >
+  _institutionFeeTransactionRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.institutionFeeTransaction,
+        aliasName: $_aliasNameGenerator(
+          db.institution.institutionId,
+          db.institutionFeeTransaction.institution,
+        ),
+      );
+
+  $$InstitutionFeeTransactionTableProcessedTableManager
+  get institutionFeeTransactionRefs {
+    final manager =
+        $$InstitutionFeeTransactionTableTableManager(
+          $_db,
+          $_db.institutionFeeTransaction,
+        ).filter(
+          (f) => f.institution.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _institutionFeeTransactionRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InstitutionTableFilterComposer
@@ -22651,6 +23347,33 @@ class $$InstitutionTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> institutionFeeTransactionRefs(
+    Expression<bool> Function($$InstitutionFeeTransactionTableFilterComposer f)
+    f,
+  ) {
+    final $$InstitutionFeeTransactionTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionFeeTransaction,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionFeeTransactionTableFilterComposer(
+                $db: $db,
+                $table: $db.institutionFeeTransaction,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -22760,6 +23483,33 @@ class $$InstitutionTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> institutionFeeTransactionRefs<T extends Object>(
+    Expression<T> Function($$InstitutionFeeTransactionTableAnnotationComposer a)
+    f,
+  ) {
+    final $$InstitutionFeeTransactionTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionFeeTransaction,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionFeeTransactionTableAnnotationComposer(
+                $db: $db,
+                $table: $db.institutionFeeTransaction,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$InstitutionTableTableManager
@@ -22775,7 +23525,10 @@ class $$InstitutionTableTableManager
           $$InstitutionTableUpdateCompanionBuilder,
           (InstitutionData, $$InstitutionTableReferences),
           InstitutionData,
-          PrefetchHooks Function({bool institutionKeyRefs})
+          PrefetchHooks Function({
+            bool institutionKeyRefs,
+            bool institutionFeeTransactionRefs,
+          })
         > {
   $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
     : super(
@@ -22832,40 +23585,67 @@ class $$InstitutionTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({institutionKeyRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (institutionKeyRefs) db.institutionKey,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (institutionKeyRefs)
-                    await $_getPrefetchedData<
-                      InstitutionData,
-                      $InstitutionTable,
-                      InstitutionKeyData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$InstitutionTableReferences
-                          ._institutionKeyRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$InstitutionTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).institutionKeyRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.institutionID == item.institutionId,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({
+                institutionKeyRefs = false,
+                institutionFeeTransactionRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (institutionKeyRefs) db.institutionKey,
+                    if (institutionFeeTransactionRefs)
+                      db.institutionFeeTransaction,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (institutionKeyRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          InstitutionKeyData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._institutionKeyRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).institutionKeyRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionID == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (institutionFeeTransactionRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          InstitutionFeeTransactionData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._institutionFeeTransactionRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).institutionFeeTransactionRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -22882,7 +23662,10 @@ typedef $$InstitutionTableProcessedTableManager =
       $$InstitutionTableUpdateCompanionBuilder,
       (InstitutionData, $$InstitutionTableReferences),
       InstitutionData,
-      PrefetchHooks Function({bool institutionKeyRefs})
+      PrefetchHooks Function({
+        bool institutionKeyRefs,
+        bool institutionFeeTransactionRefs,
+      })
     >;
 typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
     InstitutionScrappingCommandCompanion Function({
@@ -24299,6 +25082,459 @@ typedef $$InstitutionProfileTableProcessedTableManager =
       ),
       InstitutionProfileData,
       PrefetchHooks Function()
+    >;
+typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
+    InstitutionFeeTransactionCompanion Function({
+      Value<int?> id,
+      required int institution,
+      Value<String?> referenceNumber,
+      Value<double?> runningBalance,
+      Value<double?> debit,
+      Value<double?> credit,
+      Value<DateTime?> postingDate,
+      Value<String?> description,
+      Value<String?> title,
+      Value<String?> currency,
+      Value<int> rowid,
+    });
+typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
+    InstitutionFeeTransactionCompanion Function({
+      Value<int?> id,
+      Value<int> institution,
+      Value<String?> referenceNumber,
+      Value<double?> runningBalance,
+      Value<double?> debit,
+      Value<double?> credit,
+      Value<DateTime?> postingDate,
+      Value<String?> description,
+      Value<String?> title,
+      Value<String?> currency,
+      Value<int> rowid,
+    });
+
+final class $$InstitutionFeeTransactionTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData
+        > {
+  $$InstitutionFeeTransactionTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.institutionFeeTransaction.institution,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager get institution {
+    final $_column = $_itemColumn<int>('institution')!;
+
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$InstitutionFeeTransactionTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get debit => $composableBuilder(
+    column: $table.debit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get credit => $composableBuilder(
+    column: $table.credit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institution {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get debit => $composableBuilder(
+    column: $table.debit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get credit => $composableBuilder(
+    column: $table.credit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institution {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get debit =>
+      $composableBuilder(column: $table.debit, builder: (column) => column);
+
+  GeneratedColumn<double> get credit =>
+      $composableBuilder(column: $table.credit, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institution {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData,
+          $$InstitutionFeeTransactionTableFilterComposer,
+          $$InstitutionFeeTransactionTableOrderingComposer,
+          $$InstitutionFeeTransactionTableAnnotationComposer,
+          $$InstitutionFeeTransactionTableCreateCompanionBuilder,
+          $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+          (
+            InstitutionFeeTransactionData,
+            $$InstitutionFeeTransactionTableReferences,
+          ),
+          InstitutionFeeTransactionData,
+          PrefetchHooks Function({bool institution})
+        > {
+  $$InstitutionFeeTransactionTableTableManager(
+    _$AppDataBase db,
+    $InstitutionFeeTransactionTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionFeeTransactionTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InstitutionFeeTransactionTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InstitutionFeeTransactionTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                Value<int> institution = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<double?> runningBalance = const Value.absent(),
+                Value<double?> debit = const Value.absent(),
+                Value<double?> credit = const Value.absent(),
+                Value<DateTime?> postingDate = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> currency = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionFeeTransactionCompanion(
+                id: id,
+                institution: institution,
+                referenceNumber: referenceNumber,
+                runningBalance: runningBalance,
+                debit: debit,
+                credit: credit,
+                postingDate: postingDate,
+                description: description,
+                title: title,
+                currency: currency,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                required int institution,
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<double?> runningBalance = const Value.absent(),
+                Value<double?> debit = const Value.absent(),
+                Value<double?> credit = const Value.absent(),
+                Value<DateTime?> postingDate = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> currency = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionFeeTransactionCompanion.insert(
+                id: id,
+                institution: institution,
+                referenceNumber: referenceNumber,
+                runningBalance: runningBalance,
+                debit: debit,
+                credit: credit,
+                postingDate: postingDate,
+                description: description,
+                title: title,
+                currency: currency,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionFeeTransactionTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institution = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institution) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institution,
+                                referencedTable:
+                                    $$InstitutionFeeTransactionTableReferences
+                                        ._institutionTable(db),
+                                referencedColumn:
+                                    $$InstitutionFeeTransactionTableReferences
+                                        ._institutionTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$InstitutionFeeTransactionTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionFeeTransactionTable,
+      InstitutionFeeTransactionData,
+      $$InstitutionFeeTransactionTableFilterComposer,
+      $$InstitutionFeeTransactionTableOrderingComposer,
+      $$InstitutionFeeTransactionTableAnnotationComposer,
+      $$InstitutionFeeTransactionTableCreateCompanionBuilder,
+      $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+      (
+        InstitutionFeeTransactionData,
+        $$InstitutionFeeTransactionTableReferences,
+      ),
+      InstitutionFeeTransactionData,
+      PrefetchHooks Function({bool institution})
     >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
@@ -27240,6 +28476,11 @@ class $AppDataBaseManager {
       $$InstitutionKeyTableTableManager(_db, _db.institutionKey);
   $$InstitutionProfileTableTableManager get institutionProfile =>
       $$InstitutionProfileTableTableManager(_db, _db.institutionProfile);
+  $$InstitutionFeeTransactionTableTableManager get institutionFeeTransaction =>
+      $$InstitutionFeeTransactionTableTableManager(
+        _db,
+        _db.institutionFeeTransaction,
+      );
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>

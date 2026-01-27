@@ -1033,7 +1033,7 @@ RouteBase get $institutionShellRouteData => ShellRouteData.$route(
           factory: _$InstitutionKeysViewRoute._fromState,
         ),
         GoRouteData.$route(
-          path: ':profileId',
+          path: 'profile/:profileId',
           factory: _$EditStudentProfileRoute._fromState,
         ),
       ],
@@ -1113,7 +1113,7 @@ mixin _$EditStudentProfileRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location(
-    '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/${Uri.encodeComponent(_self.profileId.toString())}',
+    '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/profile/${Uri.encodeComponent(_self.profileId.toString())}',
   );
 
   @override
