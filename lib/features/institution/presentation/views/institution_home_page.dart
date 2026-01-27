@@ -310,7 +310,7 @@ class SyncStatusSection extends StatelessWidget {
 }
 
 class _FeesSectionCard extends StatelessWidget {
-  const _FeesSectionCard({super.key});
+  const _FeesSectionCard();
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +328,7 @@ class _FeesSectionCard extends StatelessWidget {
 }
 
 class _CoursesSectionCard extends StatelessWidget {
-  const _CoursesSectionCard({super.key});
+  const _CoursesSectionCard();
 
   @override
   Widget build(BuildContext context) {
