@@ -6,3 +6,4 @@ export 'get_institution_scrapping_command_usecase.dart';
 export 'get_institution_key_usecase.dart';
 export 'save_institution_key_usecase.dart';
 export 'student_profile_usecases.dart';
+export 'institution_fees_usecases.dart';

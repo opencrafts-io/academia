@@ -796,6 +796,12 @@ Future<void> init(FlavorConfig flavor) async {
     () => ClearProfileCacheUsecase(repository: sl<StudentProfileRepository>()),
   );
 
+  sl.registerFactory<WatchInstitutionFees>(() => WatchInstitutionFees(sl()));
+
+  sl.registerFactory<WatchAllFees>(() => WatchAllFees(sl()));
+
+  sl.registerFactory<SaveFeeTransaction>(() => SaveFeeTransaction(sl()));
+
   sl.registerFactory<InstitutionKeyBloc>(
     () => InstitutionKeyBloc(
       getInstitutionKeyUsecase: sl(),
