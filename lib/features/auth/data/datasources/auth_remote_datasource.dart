@@ -8,8 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/injection_container.dart';
 
 class AuthRemoteDatasource with DioErrorHandler {
   final FlavorConfig flavor;
@@ -84,18 +82,6 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
-
-      // Log successfull login
-      if (sl<FlavorConfig>().isProduction) {
-        await Posthog().capture(
-          eventName: "user_login",
-          properties: {
-            'login_type': 'Apple',
-            "platform": platform,
-            "successful": 1,
-          },
-        );
-      }
 
       return right(
         TokenData(
@@ -175,18 +161,6 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
-
-      if (sl<FlavorConfig>().isProduction) {
-        await Posthog().capture(
-          eventName: "user_login",
-          properties: {
-            'login_type': 'Google',
-            "platform": platform,
-            "successful": 1,
-          },
-        );
-      }
-
       return right(
         TokenData(
           id: 1,
@@ -261,17 +235,6 @@ class AuthRemoteDatasource with DioErrorHandler {
 
       final token = Uri.parse(result).queryParameters['token'];
       final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
-
-      if (sl<FlavorConfig>().isProduction) {
-        await Posthog().capture(
-          eventName: "user_login",
-          properties: {
-            'login_type': 'Spotify',
-            "platform": platform,
-            "successful": 1,
-          },
-        );
-      }
 
       return right(
         TokenData(

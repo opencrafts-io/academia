@@ -1,6 +1,9 @@
+import 'package:academia/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
+import 'package:academia/injection_container.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -14,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetPreviousAuthState getPreviousAuthState;
   final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
   final SignInAsReviewUsecase signInAsReviewUsecase;
+  final Posthog posthog = Posthog();
 
   AuthBloc({
     required this.signInWithGoogle,
@@ -44,7 +48,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) => emit(AuthAuthenticated(token: token)),
+      (token) {
+        // Log successfull login
+        if (sl<FlavorConfig>().isProduction) {
+          posthog.capture(
+            eventName: "user_login",
+            properties: {'login_type': 'Google', "successful": 1},
+          );
+        }
+
+        emit(AuthAuthenticated(token: token));
+      },
     );
   }
 
@@ -59,7 +73,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) => emit(AuthAuthenticated(token: token)),
+      (token) {
+        // Log successfull login
+        if (sl<FlavorConfig>().isProduction) {
+          posthog.capture(
+            eventName: "user_login",
+            properties: {'login_type': 'Review Sign In', "successful": 1},
+          );
+        }
+
+        emit(AuthAuthenticated(token: token));
+      },
     );
   }
 
@@ -74,7 +98,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) => emit(AuthAuthenticated(token: token)),
+      (token) {
+        // Log successfull login
+        if (sl<FlavorConfig>().isProduction) {
+          posthog.capture(
+            eventName: "user_login",
+            properties: {'login_type': 'Google', "successful": 1},
+          );
+        }
+
+        emit(AuthAuthenticated(token: token));
+      },
     );
   }
 
@@ -89,7 +123,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) => emit(AuthAuthenticated(token: token)),
+      (token) {
+        // Log successfull login
+        if (sl<FlavorConfig>().isProduction) {
+          posthog.capture(
+            eventName: "user_login",
+            properties: {'login_type': 'Apple', "successful": 1},
+          );
+        }
+
+        emit(AuthAuthenticated(token: token));
+      },
     );
   }
 
