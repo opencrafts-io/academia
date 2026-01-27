@@ -665,6 +665,14 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<InstitutionFeesLocalDatasource>(
+    () => InstitutionFeesLocalDatasourceImpl(sl()),
+  );
+
+  sl.registerFactory<InstitutionFeesRepository>(
+    () => InstitutionFeesRepositoryImpl(localDatasource: sl()),
+  );
+
   // --- Student Profile Repository ---
   sl.registerFactory<StudentProfileRepository>(
     () => StudentProfileRepositoryImpl(
