@@ -547,6 +547,7 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
       path: "/institution/:institutionID",
       routes: [
         TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
+        TypedGoRoute<InstitutionFeesTransactionRoute>(path: "fees"),
         TypedGoRoute<EditStudentProfileRoute>(path: "profile/:profileId"),
       ],
     ),
@@ -574,6 +575,10 @@ class InstitutionShellRouteData extends ShellRouteData {
         ),
         BlocProvider(create: (context) => sl<MagnetBloc>()),
         BlocProvider(create: (context) => sl<StudentProfileBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<InstitutionFeesBloc>()..add(WatchFeesStarted(institutionID)),
+        ),
       ],
       child: navigator, // This contains either the Home or Keys page
     );
@@ -645,5 +650,17 @@ class EditStudentProfileRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EditStudentProfilePage(profileId: profileId);
+  }
+}
+
+class InstitutionFeesTransactionRoute extends GoRouteData
+    with _$InstitutionFeesTransactionRoute {
+  InstitutionFeesTransactionRoute({required this.institutionID});
+
+  final int institutionID;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const InstitutionFeesTransactionPage();
   }
 }

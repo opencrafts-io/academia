@@ -802,6 +802,13 @@ Future<void> init(FlavorConfig flavor) async {
 
   sl.registerFactory<SaveFeeTransaction>(() => SaveFeeTransaction(sl()));
 
+  sl.registerFactory<InstitutionFeesBloc>(
+    () => InstitutionFeesBloc(
+      watchInstitutionFees: sl(),
+      saveFeeTransaction: sl(),
+    ),
+  );
+
   sl.registerFactory<InstitutionKeyBloc>(
     () => InstitutionKeyBloc(
       getInstitutionKeyUsecase: sl(),

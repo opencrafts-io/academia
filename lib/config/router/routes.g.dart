@@ -1033,6 +1033,10 @@ RouteBase get $institutionShellRouteData => ShellRouteData.$route(
           factory: _$InstitutionKeysViewRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'fees',
+          factory: _$InstitutionFeesTransactionRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'profile/:profileId',
           factory: _$EditStudentProfileRoute._fromState,
         ),
@@ -1084,6 +1088,34 @@ mixin _$InstitutionKeysViewRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/keys',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$InstitutionFeesTransactionRoute on GoRouteData {
+  static InstitutionFeesTransactionRoute _fromState(GoRouterState state) =>
+      InstitutionFeesTransactionRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!),
+      );
+
+  InstitutionFeesTransactionRoute get _self =>
+      this as InstitutionFeesTransactionRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/fees',
   );
 
   @override

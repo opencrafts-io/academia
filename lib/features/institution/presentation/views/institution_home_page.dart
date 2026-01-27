@@ -194,7 +194,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                       ),
                     ),
 
-                    _FeesSectionCard(),
+                    _FeesSectionCard(institutionID: widget.institutionID),
 
                     SliverPinnedHeader(
                       child: Container(
@@ -310,14 +310,21 @@ class SyncStatusSection extends StatelessWidget {
 }
 
 class _FeesSectionCard extends StatelessWidget {
-  const _FeesSectionCard();
+  const _FeesSectionCard({required this.institutionID});
+  final int institutionID;
 
   @override
   Widget build(BuildContext context) {
     return Card.filled(
+      clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
       child: ListTile(
+        onTap: () {
+          InstitutionFeesTransactionRoute(
+            institutionID: institutionID,
+          ).push(context);
+        },
         leading: Icon(Icons.account_balance_rounded),
         title: Text("Fees transactions"),
         subtitle: Text("View your fees transactions"),
