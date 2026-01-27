@@ -1029,12 +1029,12 @@ RouteBase get $institutionShellRouteData => ShellRouteData.$route(
       factory: _$InstitutionHomePageRoute._fromState,
       routes: [
         GoRouteData.$route(
-          path: ':profileId',
-          factory: _$EditStudentProfileRoute._fromState,
-        ),
-        GoRouteData.$route(
           path: 'keys',
           factory: _$InstitutionKeysViewRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: ':profileId',
+          factory: _$EditStudentProfileRoute._fromState,
         ),
       ],
     ),
@@ -1073,20 +1073,17 @@ mixin _$InstitutionHomePageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EditStudentProfileRoute on GoRouteData {
-  static EditStudentProfileRoute _fromState(GoRouterState state) =>
-      EditStudentProfileRoute(
-        profileId: int.parse(state.pathParameters['profileId']!),
-        institutionID: int.tryParse(
-          state.pathParameters['institutionID'] ?? '',
-        )!,
+mixin _$InstitutionKeysViewRoute on GoRouteData {
+  static InstitutionKeysViewRoute _fromState(GoRouterState state) =>
+      InstitutionKeysViewRoute(
+        institutionID: int.parse(state.pathParameters['institutionID']!),
       );
 
-  EditStudentProfileRoute get _self => this as EditStudentProfileRoute;
+  InstitutionKeysViewRoute get _self => this as InstitutionKeysViewRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/${Uri.encodeComponent(_self.profileId.toString())}',
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/keys',
   );
 
   @override
@@ -1103,17 +1100,20 @@ mixin _$EditStudentProfileRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$InstitutionKeysViewRoute on GoRouteData {
-  static InstitutionKeysViewRoute _fromState(GoRouterState state) =>
-      InstitutionKeysViewRoute(
-        institutionID: int.parse(state.pathParameters['institutionID']!),
+mixin _$EditStudentProfileRoute on GoRouteData {
+  static EditStudentProfileRoute _fromState(GoRouterState state) =>
+      EditStudentProfileRoute(
+        profileId: int.parse(state.pathParameters['profileId']!),
+        institutionID: int.tryParse(
+          state.pathParameters['institutionID'] ?? '',
+        )!,
       );
 
-  InstitutionKeysViewRoute get _self => this as InstitutionKeysViewRoute;
+  EditStudentProfileRoute get _self => this as EditStudentProfileRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/keys',
+    '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/${Uri.encodeComponent(_self.profileId.toString())}',
   );
 
   @override

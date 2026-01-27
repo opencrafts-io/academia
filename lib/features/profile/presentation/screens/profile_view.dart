@@ -164,7 +164,6 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Column(
                               children: [
                                 ListTile(
-                                minVerticalPadding: 0,
                                   leading: Icon(Symbols.person_filled),
                                   title: Text(state.profile.name),
                                   subtitle: Text(

@@ -546,8 +546,8 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
     TypedGoRoute<InstitutionHomePageRoute>(
       path: "/institution/:institutionID",
       routes: [
-        TypedGoRoute<EditStudentProfileRoute>(path: ":profileId"),
         TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
+        TypedGoRoute<EditStudentProfileRoute>(path: "profile/:profileId"),
       ],
     ),
   ],
