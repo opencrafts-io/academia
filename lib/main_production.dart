@@ -16,12 +16,27 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:workmanager/workmanager.dart';
 import './background_callback_dispatcher.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 
 void main(args) async {
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+      // PostHog Configuration
+      final config = PostHogConfig(
+        'phc_32udm2EGDp8WC0DylStvkmMCvezSDVkDIRKhSMz0IYH',
+      );
+      config.host = 'https://eu.i.posthog.com';
+      config.debug = kDebugMode;
+      config.flushAt = 10;
+      config.captureApplicationLifecycleEvents = true;
+      config.sessionReplay = true;
+      config.sessionReplayConfig.maskAllTexts = false;
+      config.sessionReplayConfig.maskAllImages = false;
+      await Posthog().setup(config);
+
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorageDirectory.web
@@ -55,9 +70,11 @@ void main(args) async {
       );
 
       runApp(
-        DioRequestInspectorMain(
-          inspector: di.sl<DioRequestInspector>(),
-          child: Academia(),
+        PostHogWidget(
+          child: DioRequestInspectorMain(
+            inspector: di.sl<DioRequestInspector>(),
+            child: Academia(),
+          ),
         ),
       );
     },

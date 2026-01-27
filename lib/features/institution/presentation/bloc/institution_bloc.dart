@@ -1,6 +1,9 @@
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
+import 'package:academia/config/config.dart';
+import 'package:academia/injection_container.dart';
 
 part 'institution_event.dart';
 part 'institution_state.dart';
@@ -11,6 +14,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
   final GetAllCachedInstitutionsUsecase getAllCachedInstitutionsUsecase;
   final GetAllUserAccountInstitutionsUsecase
   getAllUserAccountInstitutionsUsecase;
+  final Posthog posthog = Posthog();
 
   InstitutionBloc({
     required this.searchForInstitutionByNameUsecase,
@@ -32,11 +36,18 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     final result = await searchForInstitutionByNameUsecase(
       event.nameSearchTerm,
     );
-    result.fold(
-      (error) => emit(InstitutionErrorState(error: error.message)),
-      (institutions) =>
-          emit(InstitutionLoadedState(institutions: institutions)),
-    );
+    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
+      institutions,
+    ) {
+      if (sl<FlavorConfig>().isProduction) {
+        posthog.capture(
+          eventName: "institution_search",
+          properties: {"institution": event.nameSearchTerm},
+        );
+      }
+
+      emit(InstitutionLoadedState(institutions: institutions));
+    });
   }
 
   Future<void> _onLinkAccountToInstitution(
@@ -51,10 +62,20 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
       ),
     );
 
-    result.fold(
-      (error) => emit(InstitutionErrorState(error: error.message)),
-      (_) => emit(InstitutionLinkedState()),
-    );
+    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
+      link,
+    ) {
+      if (sl<FlavorConfig>().isProduction) {
+        posthog.capture(
+          eventName: "institution_link",
+          properties: {
+            "institution": event.institutionID,
+            "user": event.accountID,
+          },
+        );
+      }
+      emit(InstitutionLinkedState());
+    });
   }
 
   Future<void> _onGetCachedUserInstitutions(
