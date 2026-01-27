@@ -131,7 +131,7 @@ class _ProfileViewState extends State<ProfileView> {
                         spacing: 0,
                         children: [
                           UserAvatar(radius: 60),
-                          SizedBox(height: 12),
+                          SizedBox(height: 18),
                           Text(
                             (state as ProfileLoadedState).profile.name,
                             style: Theme.of(context).textTheme.headlineMedium,
@@ -141,7 +141,6 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
 
                           SizedBox(height: 12),
-                          SizedBox(height: 12),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -150,107 +149,99 @@ class _ProfileViewState extends State<ProfileView> {
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ),
+
+                          SizedBox(height: 18),
+
                           Card.filled(
                             color: Theme.of(
                               context,
                             ).colorScheme.secondaryContainer,
                             margin: EdgeInsets.all(0.5),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.vertical(
-                                top: Radius.circular(12),
-                                bottom: Radius.circular(0),
-                              ),
+                              borderRadius: BorderRadius.circular(32),
                             ),
                             elevation: 0,
-                            child: ListTile(
-                              leading: Icon(Symbols.person_filled),
-                              title: Text(state.profile.name),
-                              subtitle: Text(
-                                "Your full name",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          ),
-                          Card.filled(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.secondaryContainer,
-                            margin: EdgeInsets.all(0.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.zero,
-                            ),
-                            elevation: 0,
-                            child: ListTile(
-                              leading: Icon(Symbols.numbers),
-                              title: Text(
-                                state.profile.nationalID ??
-                                    'Please update your national ID',
-                              ),
-                              subtitle: Text(
-                                "National Identification Number",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          ),
-                          Card.filled(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.secondaryContainer,
-                            margin: EdgeInsets.all(0.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.all(
-                                Radius.circular(0),
-                              ),
-                            ),
-                            elevation: 0,
-                            child: ListTile(
-                              leading: Icon(Symbols.phone),
-                              title: Text(
-                                state.profile.phone ??
-                                    'Please update your phone number',
-                              ),
-                              subtitle: Text(
-                                "Your phone number",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          ),
-                          Card.filled(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.zero,
-                            ),
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.secondaryContainer,
-                            margin: EdgeInsets.all(0.5),
-                            elevation: 0,
-                            child: ListTile(
-                              leading: Icon(Symbols.email),
-                              title: Text(state.profile.email),
-                              subtitle: Text(
-                                "Your personal email",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          ),
-                          Card.filled(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.secondaryContainer,
-                            margin: EdgeInsets.all(0.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.vertical(
-                                bottom: Radius.circular(8),
-                              ),
-                            ),
-                            elevation: 0,
-                            child: ListTile(
-                              leading: Icon(Symbols.today),
-                              title: Text(timeSince(state.profile.createdAt)),
-                              subtitle: Text(
-                                "Time since you joined Academia",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                minVerticalPadding: 0,
+                                  leading: Icon(Symbols.person_filled),
+                                  title: Text(state.profile.name),
+                                  subtitle: Text(
+                                    "Your full name",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Divider(),
+                                ),
+                                ListTile(
+                                  leading: Icon(Symbols.numbers),
+                                  title: Text(
+                                    state.profile.nationalID ??
+                                        'Please update your national ID',
+                                  ),
+                                  subtitle: Text(
+                                    "National Identification Number",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Divider(),
+                                ),
+
+                                ListTile(
+                                  leading: Icon(Symbols.phone),
+                                  title: Text(
+                                    state.profile.phone ??
+                                        'Please update your phone number',
+                                  ),
+                                  subtitle: Text(
+                                    "Your phone number",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Divider(),
+                                ),
+
+                                ListTile(
+                                  leading: Icon(Symbols.email),
+                                  title: Text(state.profile.email),
+                                  subtitle: Text(
+                                    "Your personal email",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Divider(),
+                                ),
+
+                                ListTile(
+                                  leading: Icon(Symbols.today),
+                                  title: Text(
+                                    timeSince(state.profile.createdAt),
+                                  ),
+                                  subtitle: Text(
+                                    "Time since you joined Academia",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
 
