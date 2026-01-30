@@ -52,9 +52,7 @@ abstract class ShereheRepository {
     required String? phoneNumber,
   });
 
-  Future<Either<Failure, String>> confirmPayment({
-    required String transId,
-  });
+  Future<Either<Failure, String>> confirmPayment({required String transId});
 
   Future<Either<Failure, PaginatedResult<Attendee>>>
   getUserPurchasedTicketsForEvent({
@@ -75,7 +73,13 @@ abstract class ShereheRepository {
     required String attendeeId,
   });
 
-  Future<Either<Failure, List<Event>>> searchEvents({
-    required String query,
+  Future<Either<Failure, List<Event>>> searchEvents({required String query});
+
+  Future<Either<Failure, DashboardStats>> getAttendeesAndScanners({
+    required String eventId,
+  });
+
+  Future<Either<Failure, List<TicketStats>>> getDashboardTicketStats({
+    required String eventId,
   });
 }

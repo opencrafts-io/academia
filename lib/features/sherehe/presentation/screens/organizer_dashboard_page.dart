@@ -4,10 +4,27 @@ import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class OrganizerDashboardPage extends StatelessWidget {
+class OrganizerDashboardPage extends StatefulWidget {
   final String eventId;
 
   const OrganizerDashboardPage({super.key, required this.eventId});
+
+  @override
+  State<OrganizerDashboardPage> createState() => _OrganizerDashboardPageState();
+}
+
+class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<AttendeesAndScannerStatsBloc>().add(
+      GetAttendeesAndScanners(eventId: widget.eventId),
+    );
+    context.read<TicketStatsBloc>().add(
+      GetTicketStats(eventId: widget.eventId),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,53 +35,119 @@ class OrganizerDashboardPage extends StatelessWidget {
             pinned: true,
             title: const Text("Event Dashboard"),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.0,
-              ),
-              delegate: SliverChildListDelegate.fixed([
-                _SummaryCard(
-                  icon: Icons.people_outline,
-                  title: "Attendees",
-                  value: "124",
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                _SummaryCard(
-                  icon: Icons.qr_code_scanner,
-                  title: "Scanners",
-                  value: "5",
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ]),
-            ),
+          BlocBuilder<
+            AttendeesAndScannerStatsBloc,
+            AttendeesAndScannerStatsState
+          >(
+            builder: (context, state) {
+              if (state is LoadedState) {
+                return SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1.0,
+                        ),
+                    delegate: SliverChildListDelegate.fixed([
+                      _SummaryCard(
+                        icon: Icons.people_outline,
+                        title: "Attendees",
+                        value: state.stats.attendees.toString(),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      _SummaryCard(
+                        icon: Icons.qr_code_scanner,
+                        title: "Scanners",
+                        value: state.stats.scanners.toString(),
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ]),
+                  ),
+                );
+              } else if (state is LoadingState) {
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: SpinningScallopIndicator()),
+                  ),
+                );
+              } else if (state is ErrorState) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Failed to load stats.",
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
+            },
           ),
           _SectionHeader(title: "Ticket Availability", onAction: () {}),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              _TicketTypeTile(
-                type: "VIP",
-                sold: 40,
-                remaining: 10,
-                onTap: () {},
-              ),
-              _TicketTypeTile(
-                type: "Regular",
-                sold: 84,
-                remaining: 76,
-                onTap: () {},
-              ),
-            ]),
+          BlocBuilder<TicketStatsBloc, TicketStatsState>(
+            builder: (context, state) {
+              if (state is StatsLoadedState) {
+                return SliverList(
+                  delegate: SliverChildListDelegate(
+                    state.stats
+                        .map(
+                          (stats) => _TicketTypeTile(
+                            type: stats.ticketName,
+                            sold: stats.ticketsSold,
+                            remaining: stats.ticketsRemaining,
+                            onTap: () {},
+                          ),
+                        )
+                        .toList(),
+                  ),
+                );
+              } else if (state is StatsLoadingState) {
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: SpinningScallopIndicator()),
+                  ),
+                );
+              } else if (state is StatsErrorState) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Failed to load ticket stats.",
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
+            },
           ),
           _SectionHeader(title: "Attendees", onAction: () {}),
           BlocProvider(
             create: (_) =>
                 AttendeeBloc(getAttendee: sl())
-                  ..add(FetchAttendees(eventId: eventId)),
+                  ..add(FetchAttendees(eventId: widget.eventId)),
             child: BlocBuilder<AttendeeBloc, AttendeeState>(
               builder: (context, state) {
                 if (state is AttendeeLoaded) {

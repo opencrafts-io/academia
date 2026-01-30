@@ -245,4 +245,30 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (events) => right(events.map((e) => e.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, DashboardStats>> getAttendeesAndScanners({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getAttendeesAndScanners(
+      eventId: eventId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (dashboardStats) => right(dashboardStats.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<TicketStats>>> getDashboardTicketStats({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getDashboardTicketStats(
+      eventId: eventId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (ticketStats) => right(ticketStats.map((e) => e.toEntity()).toList()),
+    );
+  }
 }

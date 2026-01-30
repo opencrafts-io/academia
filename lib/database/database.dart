@@ -48,6 +48,8 @@ part 'database.g.dart';
     TicketTable,
     PaymentInfoTable,
     ShereheUserTable, //temporary
+    DashboardStatsTable,
+    TicketStatsTable,
     GroupTable,
 
     // Agenda

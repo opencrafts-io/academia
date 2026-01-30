@@ -644,4 +644,72 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, DashboardStatsData>> getAttendeesAndScanners({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/dashboard/events/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(DashboardStatsData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting stats",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting stats", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting stats", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting stats",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<TicketStatsData>>> getDashboardTicketStats({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/dashboard/tickets/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List)
+              .map((e) => TicketStatsData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting stats",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting stats", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting stats", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting stats",
+          error: e,
+        ),
+      );
+    }
+  }
 }
