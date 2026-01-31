@@ -501,6 +501,46 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  //     ---Block and Report----
+
+  sl.registerFactory(
+    () => BlockBloc(
+      blockUser: sl(),
+      blockCommunity: sl(),
+      unblockById: sl(),
+      getBlocks: sl(),
+      checkBlockStatus: sl(),
+    ),
+  );
+
+  sl.registerFactory(() => ReportBloc(reportContent: sl(), getReports: sl()));
+
+  //Use Cases
+  sl.registerFactory(() => BlockUser(sl()));
+  sl.registerFactory(() => BlockCommunity(sl()));
+  sl.registerFactory(() => UnblockById(sl()));
+  sl.registerFactory(() => GetBlocks(sl()));
+  sl.registerFactory(() => CheckBlockStatus(sl()));
+  sl.registerFactory(() => ReportContent(sl()));
+  sl.registerFactory(() => GetReports(sl()));
+
+  // Repository
+  sl.registerFactory<InteractionsRepository>(
+    () => InteractionsRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+    ),
+  );
+
+  //Data Sources
+  sl.registerFactory<InteractionsRemoteDataSource>(
+    () => InteractionsRemoteDataSource(dioClient: sl(), flavor: sl()),
+  );
+
+  sl.registerFactory<InteractionsLocalDataSource>(
+    () => InteractionsLocalDataSource(db: sl()),
+  );
+
   /*************************************************************************
                               // NOTIFICATIONS
   *************************************************************************/
