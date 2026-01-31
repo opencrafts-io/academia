@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $feedRoute,
   $postDetailRoute,
   $addPostRoute,
+  $blockedItemsRoute,
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
@@ -238,6 +239,32 @@ mixin _$AddPostRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/add-post');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $blockedItemsRoute => GoRouteData.$route(
+  path: '/blocked-items',
+  factory: _$BlockedItemsRoute._fromState,
+);
+
+mixin _$BlockedItemsRoute on GoRouteData {
+  static BlockedItemsRoute _fromState(GoRouterState state) =>
+      BlockedItemsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/blocked-items');
 
   @override
   void go(BuildContext context) => context.go(location);
