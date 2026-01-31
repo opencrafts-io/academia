@@ -114,6 +114,8 @@ class AppDataBase extends _$AppDataBase {
         _logger.i("Migrating from version $from to version $to");
         if (from < 15) {
           await m.createTable(examTimetable);
+        } else if (from < 16) {
+          await m.addColumn(userProfile, userProfile.deletedAt);
         }
       },
       beforeOpen: (details) async {

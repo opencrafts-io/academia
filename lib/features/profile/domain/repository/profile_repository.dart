@@ -11,7 +11,11 @@ abstract class ProfileRepository {
   Future<Either<Failure, UserProfile>> updateUserProfile(
     UserProfile userprofile,
   );
-  Future<Either<Failure, UserProfile>> updateUserPhone(
-    UserProfile userprofile,
-  );
+  Future<Either<Failure, UserProfile>> updateUserPhone(UserProfile userprofile);
+
+  // TODO: (Jess) please familiarize yourself with the implementation of these methods
+  // TODO: (Jess) create neccessarry  usecases for these methods
+  // TODO: (Jess) add the ui layer for this feature 
+  Future<Either<Failure, String>> requestAccountDeletion();
+  Future<Either<Failure, String>> requestAccountRecovery();
 }

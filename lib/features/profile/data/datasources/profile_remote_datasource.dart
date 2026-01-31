@@ -86,4 +86,68 @@ class ProfileRemoteDatasource with DioErrorHandler {
       );
     }
   }
+
+  /// Requests for account deletion
+  /// An account is marked as deleted on the server and will be fully deleted
+  /// in 14 days.
+  Future<Either<Failure, String>> requestAccountDeletion() async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/accounts/deletion-request",
+      );
+
+      if (response.statusCode == 200) {
+        return right(response.data["message"]);
+      }
+      return Left(
+        ServerFailure(
+          message:
+              "Wrong server response expected 200 instead got ${response.statusCode}",
+          error: "",
+        ),
+      );
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        NetworkFailure(
+          message:
+              "Something went wrong while attempting to send account deletion request",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  /// Requests account recovery
+  /// Not if the account has been dormant for more than 14 days the account might 
+  /// have been deleted and cannot be recovered
+  Future<Either<Failure, String>> requestAccountRecovery() async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/accounts/recovery",
+      );
+
+      if (response.statusCode == 200) {
+        return right(response.data["message"]);
+      }
+      return Left(
+        ServerFailure(
+          message:
+              "Wrong server response expected 200 instead got ${response.statusCode}",
+          error: "",
+        ),
+      );
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        NetworkFailure(
+          message:
+              "Something went wrong while attempting to send account recovery request",
+          error: e,
+        ),
+      );
+    }
+  }
 }
