@@ -84,5 +84,7 @@
 	<string>Keep track of app logs to ensure best performance possible for your device</string>
 	<key>PermissionGroupNotification</key>
 	<string>Bringing you notifications relevant to you</string>
+  <key>com.posthog.posthog.AUTO_INIT</key>
+  <false/>
 </dict>
 </plist>
