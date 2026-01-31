@@ -463,8 +463,242 @@ class _CommunityHomeState extends State<CommunityHome>
 }
 
 class _CommunityActionSection extends StatelessWidget {
-  const _CommunityActionSection({super.key, required this.communityID});
+  const _CommunityActionSection({required this.communityID});
   final int communityID;
+
+  void _showBlockCommunityDialog(BuildContext context, String communityName) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Block Community?'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Are you sure you want to block $communityName?'),
+            const SizedBox(height: 16),
+            Text(
+              '• You won\'t see posts from this community\n'
+              '• You can unblock it anytime from settings',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<BlockBloc>().add(
+                BlockCommunityEvent(communityId: communityID),
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Blocked $communityName'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+
+              //Navigate to home page
+              context.go('/');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            child: const Text('Block'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showReportCommunityDialog(BuildContext context) {
+    String? selectedReason;
+    final TextEditingController customReasonController =
+        TextEditingController();
+
+    final reasons = [
+      'Inappropriate content',
+      'Harassment or hate speech',
+      'Spam community',
+      'Violates platform rules',
+      'Other',
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) => StatefulBuilder(
+        builder: (context, setState) => DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.5,
+          maxChildSize: 1.0,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).dividerColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.flag_outlined,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Report Community',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Expanded(
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(20),
+                      children: [
+                        Text(
+                          'Why are you reporting this community?',
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 16),
+                        ...reasons.map((reason) {
+                          final isSelected = selectedReason == reason;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              title: Text(reason),
+                              leading: Radio<String>(
+                                value: reason,
+                                groupValue: selectedReason,
+                                onChanged: (value) {
+                                  setState(() => selectedReason = value);
+                                },
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: isSelected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).dividerColor,
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() => selectedReason = reason);
+                              },
+                            ),
+                          );
+                        }),
+                        if (selectedReason == 'Other') ...[
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: customReasonController,
+                            maxLines: 4,
+                            maxLength: 500,
+                            decoration: InputDecoration(
+                              hintText: 'Please provide more details...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      border: Border(
+                        top: BorderSide(color: Theme.of(context).dividerColor),
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: selectedReason == null
+                            ? null
+                            : () {
+                                final reason = selectedReason == 'Other'
+                                    ? customReasonController.text.trim()
+                                    : selectedReason!;
+
+                                if (reason.isEmpty) return;
+
+                                context.read<ReportBloc>().add(
+                                  ReportContentEvent(
+                                    reportType: 'community',
+                                    entityId: communityID.toString(),
+                                    reason: reason,
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+
+                                ScaffoldMessenger.of(
+                                  bottomSheetContext,
+                                ).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Thank you for your report. Our team will review it.',
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onError,
+                        ),
+                        child: const Text('Submit Report'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -500,11 +734,16 @@ class _CommunityActionSection extends StatelessWidget {
               final communityHomeBloc = context.read<CommunityHomeBloc>();
               final feedBloc = context.read<FeedBloc>();
 
+              final communityState = communityHomeBloc.state;
+              final communityName = communityState is CommunityHomeLoaded
+                  ? communityState.community.name
+                  : 'this community';
+
               showModalBottomSheet(
                 context: context,
                 showDragHandle: true,
-                builder: (context) => Container(
-                  height: 320,
+                builder: (modalContext) => Container(
+                  height: 380,
                   padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -537,7 +776,7 @@ class _CommunityActionSection extends StatelessWidget {
                           final router = GoRouter.of(context);
 
                           // Close modal
-                          Navigator.of(context).pop();
+                          Navigator.of(modalContext).pop();
 
                           if (communityState is CommunityHomeLoaded) {
                             final result = await router.push(
@@ -554,6 +793,30 @@ class _CommunityActionSection extends StatelessWidget {
                               );
                             }
                           }
+                        },
+                      ),
+
+                      // Block Community
+                      ListTile(
+                        leading: Icon(
+                          Icons.block_outlined,
+                        ),
+                        title: const Text("Block Community"),
+                        onTap: () {
+                          Navigator.pop(modalContext);
+                          _showBlockCommunityDialog(context, communityName);
+                        },
+                      ),
+
+                      // Report Community
+                      ListTile(
+                        leading: Icon(
+                          Icons.flag_outlined,
+                        ),
+                        title: const Text("Report Community"),
+                        onTap: () {
+                          Navigator.pop(modalContext);
+                          _showReportCommunityDialog(context);
                         },
                       ),
 
