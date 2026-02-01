@@ -6,6 +6,8 @@ export 'models/event_model.dart';
 export 'models/event_model_helper.dart';
 export 'models/ticket_model_helper.dart';
 export 'models/ticket_model.dart';
+export 'models/sherehe_user_model.dart';
+export 'models/sherehe_user_model_helper.dart';
 export 'models/payment_info_model.dart';
 export 'models/payment_info_model_helper.dart';
 export 'models/purchase_ticket_result_model.dart';

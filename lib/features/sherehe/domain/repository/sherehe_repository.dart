@@ -82,4 +82,13 @@ abstract class ShereheRepository {
   Future<Either<Failure, List<TicketStats>>> getDashboardTicketStats({
     required String eventId,
   });
+
+  Future<Either<Failure, Ticket>> updateTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  });
+
+  Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
+    required String query,
+  });
 }

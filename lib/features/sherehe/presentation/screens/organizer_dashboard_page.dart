@@ -26,158 +26,207 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
     );
   }
 
+  void _showMoreActionsBottomSheet({
+    required BuildContext context,
+    required String title,
+    required String ticketId,
+    required int currentQuantity,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => Container(
+        height: 280,
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.headlineSmall),
+            Divider(),
+            SizedBox(height: 12),
+            ListTile(
+              leading: Icon(Icons.add_circle_outline),
+              title: Text("Increase Ticket Quantity"),
+              onTap: () {
+                Navigator.pop(context); // close bottom sheet
+                _showIncreaseQuantityDialog(
+                  context: context,
+                  ticketName: title,
+                  ticketId: ticketId,
+                  currentQuantity: currentQuantity,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showIncreaseQuantityDialog({
+    required BuildContext context,
+    required String ticketName,
+    required String ticketId,
+    required int currentQuantity,
+  }) {
+    final controller = TextEditingController();
+    String? errorText;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Increase $ticketName Tickets"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Enter how many tickets you want to add."),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: controller,
+                    keyboardType: TextInputType.number,
+                    onChanged: (_) {
+                      if (errorText != null) {
+                        setState(() => errorText = null);
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Quantity",
+                      hintText: "e.g. 50",
+                      border: OutlineInputBorder(),
+                      errorText: errorText,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
+                BlocBuilder<TicketStatsBloc, TicketStatsState>(
+                  builder: (context, state) {
+                    return state is UpdateTicketLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : FilledButton(
+                            onPressed: () {
+                              final qty = int.tryParse(controller.text);
+
+                              if (qty == null || qty <= 0) {
+                                setState(() {
+                                  errorText = "Enter a number greater than 0";
+                                });
+                                return;
+                              }
+
+                              context.read<TicketStatsBloc>().add(
+                                UpdateTicketQuantity(
+                                  ticketId: ticketId,
+                                  ticketQuantity: currentQuantity + qty,
+                                ),
+                              );
+
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Confirm"),
+                          );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar.large(
-            pinned: true,
-            title: const Text("Event Dashboard"),
-          ),
-          BlocBuilder<
-            AttendeesAndScannerStatsBloc,
-            AttendeesAndScannerStatsState
-          >(
-            builder: (context, state) {
-              if (state is LoadedState) {
-                return SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 1.0,
-                        ),
-                    delegate: SliverChildListDelegate.fixed([
-                      _SummaryCard(
-                        icon: Icons.people_outline,
-                        title: "Attendees",
-                        value: state.stats.attendees.toString(),
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      _SummaryCard(
-                        icon: Icons.qr_code_scanner,
-                        title: "Scanners",
-                        value: state.stats.scanners.toString(),
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ]),
-                  ),
-                );
-              } else if (state is LoadingState) {
-                return const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: SpinningScallopIndicator()),
-                  ),
-                );
-              } else if (state is ErrorState) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Failed to load stats.",
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return const SliverToBoxAdapter(child: SizedBox.shrink());
-            },
-          ),
-          _SectionHeader(title: "Ticket Availability", onAction: () {}),
-          BlocBuilder<TicketStatsBloc, TicketStatsState>(
-            builder: (context, state) {
-              if (state is StatsLoadedState) {
-                return SliverList(
-                  delegate: SliverChildListDelegate(
-                    state.stats
-                        .map(
-                          (stats) => _TicketTypeTile(
-                            type: stats.ticketName,
-                            sold: stats.ticketsSold,
-                            remaining: stats.ticketsRemaining,
-                            onTap: () {},
-                          ),
-                        )
-                        .toList(),
-                  ),
-                );
-              } else if (state is StatsLoadingState) {
-                return const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: SpinningScallopIndicator()),
-                  ),
-                );
-              } else if (state is StatsErrorState) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Failed to load ticket stats.",
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return const SliverToBoxAdapter(child: SizedBox.shrink());
-            },
-          ),
-          _SectionHeader(title: "Attendees", onAction: () {}),
-          BlocProvider(
-            create: (_) =>
-                AttendeeBloc(getAttendee: sl())
-                  ..add(FetchAttendees(eventId: widget.eventId)),
-            child: BlocBuilder<AttendeeBloc, AttendeeState>(
+    return BlocListener<TicketStatsBloc, TicketStatsState>(
+      listener: (context, state) {
+        if (state is UpdateTicketSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Ticket updated successfully."),
+              behavior: SnackBarBehavior.floating,
+              dismissDirection: DismissDirection.horizontal,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+          // Refresh ticket stats
+          context.read<TicketStatsBloc>().add(
+            GetTicketStats(eventId: widget.eventId),
+          );
+        } else if (state is UpdateTicketError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error: ${state.message}"),
+              behavior: SnackBarBehavior.floating,
+              dismissDirection: DismissDirection.horizontal,
+              backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar.large(
+              pinned: true,
+              title: const Text("Event Dashboard"),
+            ),
+            BlocBuilder<
+              AttendeesAndScannerStatsBloc,
+              AttendeesAndScannerStatsState
+            >(
               builder: (context, state) {
-                if (state is AttendeeLoaded) {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _UserTile(
-                        name: state.attendees[index].user?.username ?? "Guest",
-                        subtitle:
-                            state.attendees[index].ticket?.ticketName ??
-                            "Unknown Ticket",
-                        icon: Icons.person_outline,
-                        onTap: () {},
-                      ),
-                      childCount: state.attendees.length,
+                if (state is LoadedState) {
+                  return SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 1.0,
+                          ),
+                      delegate: SliverChildListDelegate.fixed([
+                        _SummaryCard(
+                          icon: Icons.people_outline,
+                          title: "Attendees",
+                          value: state.stats.attendees.toString(),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        _SummaryCard(
+                          icon: Icons.qr_code_scanner,
+                          title: "Scanners",
+                          value: state.stats.scanners.toString(),
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ]),
                     ),
                   );
-                } else if (state is AttendeeLoading) {
+                } else if (state is LoadingState) {
                   return const SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 24),
                       child: Center(child: SpinningScallopIndicator()),
                     ),
                   );
-                } else if (state is AttendeeError) {
+                } else if (state is ErrorState) {
                   return SliverToBoxAdapter(
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "Failed to load attendees.",
+                          "Failed to load stats.",
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
                                 fontStyle: FontStyle.italic,
@@ -193,30 +242,134 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                 return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
-          ),
-          _SectionHeader(title: "Event Scanners", onAction: () {}),
-          SliverToBoxAdapter(
-            child: _AddScannerTile(
-              onTap: () {
-                // Navigate to add scanner screen
-                // Navigator.push(...)
+            _SectionHeader(title: "Ticket Availability"),
+            BlocBuilder<TicketStatsBloc, TicketStatsState>(
+              builder: (context, state) {
+                if (state is StatsLoadedState) {
+                  return SliverList(
+                    delegate: SliverChildListDelegate(
+                      state.stats
+                          .map(
+                            (stats) => _TicketTypeTile(
+                              type: stats.ticketName,
+                              sold: stats.ticketsSold,
+                              remaining: stats.ticketsRemaining,
+                              onTap: () => _showMoreActionsBottomSheet(
+                                context: context,
+                                title: stats.ticketName,
+                                ticketId: stats.ticketId,
+                                currentQuantity: stats.ticketsRemaining,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  );
+                } else if (state is StatsLoadingState) {
+                  return const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: SpinningScallopIndicator()),
+                    ),
+                  );
+                } else if (state is StatsErrorState) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Failed to load ticket stats.",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _UserTile(
-                name: "Scanner Admin",
-                subtitle: "Can scan tickets",
-                icon: Icons.qr_code,
-                onTap: () {},
+            _SectionHeader(title: "Attendees", onAction: () {}),
+            BlocProvider(
+              create: (_) =>
+                  AttendeeBloc(getAttendee: sl())
+                    ..add(FetchAttendees(eventId: widget.eventId)),
+              child: BlocBuilder<AttendeeBloc, AttendeeState>(
+                builder: (context, state) {
+                  if (state is AttendeeLoaded) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => _UserTile(
+                          name:
+                              state.attendees[index].user?.username ?? "Guest",
+                          subtitle:
+                              state.attendees[index].ticket?.ticketName ??
+                              "Unknown Ticket",
+                          icon: Icons.person_outline,
+                          onTap: () {},
+                        ),
+                        childCount: state.attendees.length,
+                      ),
+                    );
+                  } else if (state is AttendeeLoading) {
+                    return const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: Center(child: SpinningScallopIndicator()),
+                      ),
+                    );
+                  } else if (state is AttendeeError) {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Failed to load attendees.",
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                },
               ),
-              childCount: 3,
             ),
-          ),
+            _SectionHeader(title: "Event Scanners", onAction: () {}),
+            SliverToBoxAdapter(
+              child: _AddScannerTile(
+                onTap: () {
+                  // Navigate to add scanner screen
+                  // Navigator.push(...)
+                },
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _UserTile(
+                  name: "Scanner Admin",
+                  subtitle: "Can scan tickets",
+                  icon: Icons.qr_code,
+                  onTap: () {},
+                ),
+                childCount: 3,
+              ),
+            ),
 
-          const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-        ],
+            const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
+          ],
+        ),
       ),
     );
   }
@@ -548,9 +701,9 @@ class _UserTile extends StatelessWidget {
 
 class _SectionHeader extends StatelessWidget {
   final String title;
-  final VoidCallback onAction;
+  final VoidCallback? onAction;
 
-  const _SectionHeader({required this.title, required this.onAction});
+  const _SectionHeader({required this.title, this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -566,7 +719,8 @@ class _SectionHeader extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            TextButton(onPressed: onAction, child: const Text("View all")),
+            if (onAction != null)
+              TextButton(onPressed: onAction, child: const Text("View all")),
           ],
         ),
       ),

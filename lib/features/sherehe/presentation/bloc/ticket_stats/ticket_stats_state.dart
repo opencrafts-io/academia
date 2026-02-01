@@ -28,3 +28,23 @@ class StatsErrorState extends TicketStatsState {
   @override
   List<Object?> get props => [message];
 }
+
+class UpdateTicketLoading extends TicketStatsState {}
+
+class UpdateTicketSuccess extends TicketStatsState {
+  final Ticket ticket;
+
+  const UpdateTicketSuccess({required this.ticket});
+
+  @override
+  List<Object?> get props => [ticket];
+}
+
+class UpdateTicketError extends TicketStatsState {
+  final String message;
+
+  const UpdateTicketError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

@@ -712,4 +712,76 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
+
+  //for now only update ticket quantity
+  Future<Either<Failure, TicketData>> updateTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  }) async {
+    try {
+      final response = await dioClient.dio.put(
+        "/$servicePrefix/ticket/$ticketId",
+        data: {"ticket_quantity": ticketQuantity},
+      );
+
+      if (response.statusCode == 200) {
+        return right(TicketData.fromJson(response.data['ticket']));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when updating ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when updating ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when updating ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while updating ticket",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<ShereheUserData>>> searchUsersByUsername({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/user/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List)
+              .map((e) => ShereheUserData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when searching users",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching users", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching users", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when searching users",
+          error: e,
+        ),
+      );
+    }
+  }
 }

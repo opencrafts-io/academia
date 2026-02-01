@@ -15,3 +15,15 @@ class GetTicketStats extends TicketStatsEvent {
   @override
   List<Object> get props => [eventId];
 }
+
+class UpdateTicketQuantity extends TicketStatsEvent {
+  final String ticketId;
+  final int ticketQuantity;
+
+  const UpdateTicketQuantity({
+    required this.ticketId,
+    required this.ticketQuantity,
+  });
+  @override
+  List<Object> get props => [ticketId, ticketQuantity];
+}

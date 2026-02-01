@@ -1,5 +1,4 @@
 import 'package:academia/features/sherehe/domain/domain.dart';
-import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:equatable/equatable.dart';
 
 class Attendee extends Equatable {
