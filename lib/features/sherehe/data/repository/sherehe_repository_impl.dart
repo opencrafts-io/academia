@@ -312,6 +312,55 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, Scanner>> addEventScanner({
+    required String eventId,
+    required String userId,
+  }) async {
+    final result = await remoteDataSource.addEventScanner(
+      eventId: eventId,
+      userId: userId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (scanner) => right(scanner.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Scanner>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getEventScanners(
+      eventId: eventId,
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteEventScanner({
+    required String scannerId,
+  }) async {
+    final result = await remoteDataSource.deleteEventScanner(
+      scannerId: scannerId,
+    );
+    return result.fold((failure) => left(failure), (success) => right(success));
+  }
+
+  @override
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   }) async {

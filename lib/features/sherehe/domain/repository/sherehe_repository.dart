@@ -94,6 +94,21 @@ abstract class ShereheRepository {
     required int limit,
   });
 
+  Future<Either<Failure, Scanner>> addEventScanner({
+    required String eventId,
+    required String userId,
+  });
+
+  Future<Either<Failure, PaginatedResult<Scanner>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  });
+
+  Future<Either<Failure, void>> deleteEventScanner({
+    required String scannerId,
+  });
+
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   });

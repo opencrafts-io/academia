@@ -264,7 +264,6 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                     return SliverList(
                       delegate: SliverChildListDelegate(
                         state.stats
-                            .take(5)
                             .map(
                               (stats) => _TicketTypeTile(
                                 type: stats.ticketName,
@@ -318,19 +317,43 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
               BlocBuilder<AllAttendeesBloc, AllAttendeesState>(
                 builder: (context, state) {
                   if (state is AllAttendeesStateLoaded) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => UserTile(
-                          name:
-                              state.attendees[index].user?.username ?? "Guest",
-                          subtitle:
-                              state.attendees[index].ticket?.ticketName ??
-                              "Unknown Ticket",
-                          icon: Icons.person_outline,
+                    if (state.attendees.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.person_off, size: 60),
+                                SizedBox(height: 16),
+                                Text(
+                                  "No attendees yet",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        childCount: state.attendees.length,
-                      ),
-                    );
+                      );
+                    } else {
+                      return SliverList(
+                        delegate: SliverChildListDelegate(
+                          state.attendees
+                              .take(5)
+                              .map(
+                                (attendee) => UserTile(
+                                  name: attendee.user?.username ?? "Guest",
+                                  subtitle:
+                                      attendee.ticket?.ticketName ??
+                                      "Unknown Ticket",
+                                  icon: Icons.person_outline,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      );
+                    }
                   } else if (state is AllAttendeesStateLoading ||
                       state is AllAttendeesStatePaginationLoading) {
                     return const SliverToBoxAdapter(
@@ -361,25 +384,86 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                   return const SliverToBoxAdapter(child: SizedBox.shrink());
                 },
               ),
-              _SectionHeader(title: "Event Scanners", onAction: () {}),
+              _SectionHeader(
+                title: "Event Scanners",
+                onAction: () =>
+                    AllScannersRoute(eventId: widget.eventId).push(context),
+              ),
               SliverToBoxAdapter(
                 child: _AddScannerTile(
                   onTap: () {
-                    // Navigate to add scanner screen
-                    // Navigator.push(...)
+                    // AllScannersRoute(eventId: widget.eventId).push(context);
                   },
                 ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => UserTile(
-                    name: "Scanner Admin",
-                    subtitle: "Can scan tickets",
-                    icon: Icons.qr_code,
-                    onTap: () {},
-                  ),
-                  childCount: 3,
-                ),
+              BlocBuilder<AllScannersBloc, AllScannersState>(
+                builder: (context, state) {
+                  if (state is AllScannersStateLoaded) {
+                    if (state.scanners.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.qr_code_scanner, size: 60),
+                                SizedBox(height: 16),
+                                Text(
+                                  "No scanners yet",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SliverList(
+                        delegate: SliverChildListDelegate(
+                          state.scanners
+                              .take(5)
+                              .map(
+                                (scanner) => UserTile(
+                                  name: scanner.role,
+                                  subtitle: "Can scan tickets",
+                                  icon: Icons.qr_code,
+                                  onTap: () {},
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      );
+                    }
+                  } else if (state is AllScannersStateLoading ||
+                      state is AllScannersStatePaginationLoading) {
+                    return const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: Center(child: SpinningScallopIndicator()),
+                      ),
+                    );
+                  } else if (state is AllScannersStateError) {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Failed to load scanners.",
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                },
               ),
 
               const SliverPadding(padding: EdgeInsets.only(bottom: 32)),

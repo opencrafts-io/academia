@@ -792,6 +792,118 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, ScannerData>> addEventScanner({
+    required String eventId,
+    required String userId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/eventscanner/",
+        data: {"event_id": eventId, "user_id": userId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(ScannerData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when adding event scanner",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when adding event scanner", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when adding event scanner", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when adding event scanner",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<ScannerData>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/eventscanner/event/$eventId",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => ScannerData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting all event scanners",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting all event scanners", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting all event scanners", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when getting all event scanners",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, void>> deleteEventScanner({
+    required String scannerId,
+  }) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "/$servicePrefix/eventscanner/$scannerId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return right(null);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when deleting event scanner",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when deleting event scanner", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when deleting event scanner", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when deleting the event scanner",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<ShereheUserData>>> searchUsersByUsername({
     required String query,
   }) async {

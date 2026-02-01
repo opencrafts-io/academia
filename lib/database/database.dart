@@ -50,6 +50,7 @@ part 'database.g.dart';
     ShereheUserTable, //temporary
     DashboardStatsTable,
     TicketStatsTable,
+    ScannerTable,
     GroupTable,
 
     // Agenda

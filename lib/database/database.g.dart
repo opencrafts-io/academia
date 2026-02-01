@@ -7579,6 +7579,515 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
   }
 }
 
+class $ScannerTableTable extends ScannerTable
+    with TableInfo<$ScannerTableTable, ScannerData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ScannerTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _grantedByMeta = const VerificationMeta(
+    'grantedBy',
+  );
+  @override
+  late final GeneratedColumn<String> grantedBy = GeneratedColumn<String>(
+    'granted_by',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<String> deletedAt = GeneratedColumn<String>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    eventId,
+    userId,
+    role,
+    grantedBy,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'scanner_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ScannerData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
+    if (data.containsKey('granted_by')) {
+      context.handle(
+        _grantedByMeta,
+        grantedBy.isAcceptableOrUnknown(data['granted_by']!, _grantedByMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_grantedByMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  ScannerData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ScannerData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
+      grantedBy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}granted_by'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $ScannerTableTable createAlias(String alias) {
+    return $ScannerTableTable(attachedDatabase, alias);
+  }
+}
+
+class ScannerData extends DataClass implements Insertable<ScannerData> {
+  final String id;
+  final String eventId;
+  final String userId;
+  final String role;
+  final String grantedBy;
+  final String createdAt;
+  final String updatedAt;
+  final String? deletedAt;
+  const ScannerData({
+    required this.id,
+    required this.eventId,
+    required this.userId,
+    required this.role,
+    required this.grantedBy,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['event_id'] = Variable<String>(eventId);
+    map['user_id'] = Variable<String>(userId);
+    map['role'] = Variable<String>(role);
+    map['granted_by'] = Variable<String>(grantedBy);
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<String>(deletedAt);
+    }
+    return map;
+  }
+
+  ScannerTableCompanion toCompanion(bool nullToAbsent) {
+    return ScannerTableCompanion(
+      id: Value(id),
+      eventId: Value(eventId),
+      userId: Value(userId),
+      role: Value(role),
+      grantedBy: Value(grantedBy),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory ScannerData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ScannerData(
+      id: serializer.fromJson<String>(json['id']),
+      eventId: serializer.fromJson<String>(json['event_id']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      role: serializer.fromJson<String>(json['role']),
+      grantedBy: serializer.fromJson<String>(json['granted_by']),
+      createdAt: serializer.fromJson<String>(json['created_at']),
+      updatedAt: serializer.fromJson<String>(json['updated_at']),
+      deletedAt: serializer.fromJson<String?>(json['deleted_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'event_id': serializer.toJson<String>(eventId),
+      'user_id': serializer.toJson<String>(userId),
+      'role': serializer.toJson<String>(role),
+      'granted_by': serializer.toJson<String>(grantedBy),
+      'created_at': serializer.toJson<String>(createdAt),
+      'updated_at': serializer.toJson<String>(updatedAt),
+      'deleted_at': serializer.toJson<String?>(deletedAt),
+    };
+  }
+
+  ScannerData copyWith({
+    String? id,
+    String? eventId,
+    String? userId,
+    String? role,
+    String? grantedBy,
+    String? createdAt,
+    String? updatedAt,
+    Value<String?> deletedAt = const Value.absent(),
+  }) => ScannerData(
+    id: id ?? this.id,
+    eventId: eventId ?? this.eventId,
+    userId: userId ?? this.userId,
+    role: role ?? this.role,
+    grantedBy: grantedBy ?? this.grantedBy,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  ScannerData copyWithCompanion(ScannerTableCompanion data) {
+    return ScannerData(
+      id: data.id.present ? data.id.value : this.id,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      role: data.role.present ? data.role.value : this.role,
+      grantedBy: data.grantedBy.present ? data.grantedBy.value : this.grantedBy,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScannerData(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('grantedBy: $grantedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    eventId,
+    userId,
+    role,
+    grantedBy,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ScannerData &&
+          other.id == this.id &&
+          other.eventId == this.eventId &&
+          other.userId == this.userId &&
+          other.role == this.role &&
+          other.grantedBy == this.grantedBy &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
+  final Value<String> id;
+  final Value<String> eventId;
+  final Value<String> userId;
+  final Value<String> role;
+  final Value<String> grantedBy;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
+  final Value<String?> deletedAt;
+  final Value<int> rowid;
+  const ScannerTableCompanion({
+    this.id = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.role = const Value.absent(),
+    this.grantedBy = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ScannerTableCompanion.insert({
+    required String id,
+    required String eventId,
+    required String userId,
+    required String role,
+    required String grantedBy,
+    required String createdAt,
+    required String updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       eventId = Value(eventId),
+       userId = Value(userId),
+       role = Value(role),
+       grantedBy = Value(grantedBy),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ScannerData> custom({
+    Expression<String>? id,
+    Expression<String>? eventId,
+    Expression<String>? userId,
+    Expression<String>? role,
+    Expression<String>? grantedBy,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
+    Expression<String>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (eventId != null) 'event_id': eventId,
+      if (userId != null) 'user_id': userId,
+      if (role != null) 'role': role,
+      if (grantedBy != null) 'granted_by': grantedBy,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ScannerTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? eventId,
+    Value<String>? userId,
+    Value<String>? role,
+    Value<String>? grantedBy,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
+    Value<String?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return ScannerTableCompanion(
+      id: id ?? this.id,
+      eventId: eventId ?? this.eventId,
+      userId: userId ?? this.userId,
+      role: role ?? this.role,
+      grantedBy: grantedBy ?? this.grantedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
+    }
+    if (grantedBy.present) {
+      map['granted_by'] = Variable<String>(grantedBy.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<String>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScannerTableCompanion(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('grantedBy: $grantedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $GroupTableTable extends GroupTable
     with TableInfo<$GroupTableTable, GroupEntity> {
   @override
@@ -19753,6 +20262,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $TicketStatsTableTable ticketStatsTable = $TicketStatsTableTable(
     this,
   );
+  late final $ScannerTableTable scannerTable = $ScannerTableTable(this);
   late final $GroupTableTable groupTable = $GroupTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $NotificationTableTable notificationTable =
@@ -19797,6 +20307,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     shereheUserTable,
     dashboardStatsTable,
     ticketStatsTable,
+    scannerTable,
     groupTable,
     agendaEvent,
     notificationTable,
@@ -23574,6 +24085,263 @@ typedef $$TicketStatsTableTableProcessedTableManager =
         BaseReferences<_$AppDataBase, $TicketStatsTableTable, TicketStatsData>,
       ),
       TicketStatsData,
+      PrefetchHooks Function()
+    >;
+typedef $$ScannerTableTableCreateCompanionBuilder =
+    ScannerTableCompanion Function({
+      required String id,
+      required String eventId,
+      required String userId,
+      required String role,
+      required String grantedBy,
+      required String createdAt,
+      required String updatedAt,
+      Value<String?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$ScannerTableTableUpdateCompanionBuilder =
+    ScannerTableCompanion Function({
+      Value<String> id,
+      Value<String> eventId,
+      Value<String> userId,
+      Value<String> role,
+      Value<String> grantedBy,
+      Value<String> createdAt,
+      Value<String> updatedAt,
+      Value<String?> deletedAt,
+      Value<int> rowid,
+    });
+
+class $$ScannerTableTableFilterComposer
+    extends Composer<_$AppDataBase, $ScannerTableTable> {
+  $$ScannerTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get grantedBy => $composableBuilder(
+    column: $table.grantedBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ScannerTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ScannerTableTable> {
+  $$ScannerTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get grantedBy => $composableBuilder(
+    column: $table.grantedBy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ScannerTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ScannerTableTable> {
+  $$ScannerTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<String> get grantedBy =>
+      $composableBuilder(column: $table.grantedBy, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$ScannerTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ScannerTableTable,
+          ScannerData,
+          $$ScannerTableTableFilterComposer,
+          $$ScannerTableTableOrderingComposer,
+          $$ScannerTableTableAnnotationComposer,
+          $$ScannerTableTableCreateCompanionBuilder,
+          $$ScannerTableTableUpdateCompanionBuilder,
+          (
+            ScannerData,
+            BaseReferences<_$AppDataBase, $ScannerTableTable, ScannerData>,
+          ),
+          ScannerData,
+          PrefetchHooks Function()
+        > {
+  $$ScannerTableTableTableManager(_$AppDataBase db, $ScannerTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ScannerTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ScannerTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ScannerTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> role = const Value.absent(),
+                Value<String> grantedBy = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
+                Value<String?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ScannerTableCompanion(
+                id: id,
+                eventId: eventId,
+                userId: userId,
+                role: role,
+                grantedBy: grantedBy,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String eventId,
+                required String userId,
+                required String role,
+                required String grantedBy,
+                required String createdAt,
+                required String updatedAt,
+                Value<String?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ScannerTableCompanion.insert(
+                id: id,
+                eventId: eventId,
+                userId: userId,
+                role: role,
+                grantedBy: grantedBy,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ScannerTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ScannerTableTable,
+      ScannerData,
+      $$ScannerTableTableFilterComposer,
+      $$ScannerTableTableOrderingComposer,
+      $$ScannerTableTableAnnotationComposer,
+      $$ScannerTableTableCreateCompanionBuilder,
+      $$ScannerTableTableUpdateCompanionBuilder,
+      (
+        ScannerData,
+        BaseReferences<_$AppDataBase, $ScannerTableTable, ScannerData>,
+      ),
+      ScannerData,
       PrefetchHooks Function()
     >;
 typedef $$GroupTableTableCreateCompanionBuilder =
@@ -29803,6 +30571,8 @@ class $AppDataBaseManager {
       $$DashboardStatsTableTableTableManager(_db, _db.dashboardStatsTable);
   $$TicketStatsTableTableTableManager get ticketStatsTable =>
       $$TicketStatsTableTableTableManager(_db, _db.ticketStatsTable);
+  $$ScannerTableTableTableManager get scannerTable =>
+      $$ScannerTableTableTableManager(_db, _db.scannerTable);
   $$GroupTableTableTableManager get groupTable =>
       $$GroupTableTableTableManager(_db, _db.groupTable);
   $$AgendaEventTableTableManager get agendaEvent =>

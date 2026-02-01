@@ -216,7 +216,10 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
         TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
         TypedGoRoute<OrganizerDashboardRoute>(
           path: "organizer-dashboard",
-          routes: [TypedGoRoute<AllAttendeesRoute>(path: "all-attendees")],
+          routes: [
+            TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
+            TypedGoRoute<AllScannersRoute>(path: "all-scanners"),
+          ],
         ),
       ],
     ),
@@ -314,6 +317,16 @@ class AllAttendeesRoute extends GoRouteData with _$AllAttendeesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AllAttendeesScreen(eventId: eventId);
+  }
+}
+
+class AllScannersRoute extends GoRouteData with _$AllScannersRoute {
+  final String eventId;
+
+  const AllScannersRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AllScannersScreen(eventId: eventId);
   }
 }
 
