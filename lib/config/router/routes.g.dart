@@ -357,6 +357,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
               path: 'all-scanners',
               factory: _$AllScannersRoute._fromState,
             ),
+            GoRouteData.$route(
+              path: 'add-event-scanner',
+              factory: _$AddEventScannerRoute._fromState,
+            ),
           ],
         ),
       ],
@@ -544,6 +548,31 @@ mixin _$AllScannersRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddEventScannerRoute on GoRouteData {
+  static AddEventScannerRoute _fromState(GoRouterState state) =>
+      AddEventScannerRoute(eventId: state.pathParameters['eventId']!);
+
+  AddEventScannerRoute get _self => this as AddEventScannerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/add-event-scanner',
   );
 
   @override

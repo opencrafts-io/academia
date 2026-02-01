@@ -27,6 +27,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
     context.read<AllAttendeesBloc>().add(
       FetchAllAttendees(eventId: widget.eventId, page: 1, limit: 20),
     );
+    context.read<AllScannersBloc>().add(
+      FetchAllScanners(eventId: widget.eventId, page: 1, limit: 20),
+    );
   }
 
   void _showMoreActionsBottomSheet({
@@ -172,7 +175,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
               content: Text("Error: ${state.message}"),
               behavior: SnackBarBehavior.floating,
               dismissDirection: DismissDirection.horizontal,
-              backgroundColor: Theme.of(context).colorScheme.errorContainer,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }
@@ -188,6 +191,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
             );
             context.read<AllAttendeesBloc>().add(
               FetchAllAttendees(eventId: widget.eventId, page: 1, limit: 20),
+            );
+            context.read<AllScannersBloc>().add(
+              FetchAllScanners(eventId: widget.eventId, page: 1, limit: 20),
             );
           },
           child: CustomScrollView(
@@ -392,7 +398,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
               SliverToBoxAdapter(
                 child: _AddScannerTile(
                   onTap: () {
-                    // AllScannersRoute(eventId: widget.eventId).push(context);
+                    AddEventScannerRoute(eventId: widget.eventId).push(context);
                   },
                 ),
               ),

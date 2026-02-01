@@ -19,9 +19,9 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AllScannersBloc>().add(
-      FetchAllScanners(eventId: widget.eventId, page: _currentPage, limit: 20),
-    );
+    // context.read<AllScannersBloc>().add(
+    //   FetchAllScanners(eventId: widget.eventId, page: _currentPage, limit: 20),
+    // );
     _scrollController.addListener(_onScroll);
   }
 

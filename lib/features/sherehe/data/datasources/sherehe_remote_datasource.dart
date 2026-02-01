@@ -915,7 +915,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return right(
-          (response.data as List)
+          (response.data['data'] as List)
               .map((e) => ShereheUserData.fromJson(e))
               .toList(),
         );
