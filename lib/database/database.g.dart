@@ -7630,10 +7630,19 @@ class $ScannerTableTable extends ScannerTable
   late final GeneratedColumn<String> grantedBy = GeneratedColumn<String>(
     'granted_by',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  user = GeneratedColumn<String>(
+    'user',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Map<String, dynamic>?>($ScannerTableTable.$converterusern);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -7674,6 +7683,7 @@ class $ScannerTableTable extends ScannerTable
     userId,
     role,
     grantedBy,
+    user,
     createdAt,
     updatedAt,
     deletedAt,
@@ -7724,8 +7734,6 @@ class $ScannerTableTable extends ScannerTable
         _grantedByMeta,
         grantedBy.isAcceptableOrUnknown(data['granted_by']!, _grantedByMeta),
       );
-    } else if (isInserting) {
-      context.missing(_grantedByMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -7777,7 +7785,13 @@ class $ScannerTableTable extends ScannerTable
       grantedBy: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}granted_by'],
-      )!,
+      ),
+      user: $ScannerTableTable.$converterusern.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}user'],
+        ),
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -7797,6 +7811,11 @@ class $ScannerTableTable extends ScannerTable
   $ScannerTableTable createAlias(String alias) {
     return $ScannerTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, dynamic>, String> $converteruser =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterusern =
+      NullAwareTypeConverter.wrap($converteruser);
 }
 
 class ScannerData extends DataClass implements Insertable<ScannerData> {
@@ -7804,7 +7823,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
   final String eventId;
   final String userId;
   final String role;
-  final String grantedBy;
+  final String? grantedBy;
+  final Map<String, dynamic>? user;
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
@@ -7813,7 +7833,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
     required this.eventId,
     required this.userId,
     required this.role,
-    required this.grantedBy,
+    this.grantedBy,
+    this.user,
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
@@ -7825,7 +7846,14 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
     map['event_id'] = Variable<String>(eventId);
     map['user_id'] = Variable<String>(userId);
     map['role'] = Variable<String>(role);
-    map['granted_by'] = Variable<String>(grantedBy);
+    if (!nullToAbsent || grantedBy != null) {
+      map['granted_by'] = Variable<String>(grantedBy);
+    }
+    if (!nullToAbsent || user != null) {
+      map['user'] = Variable<String>(
+        $ScannerTableTable.$converterusern.toSql(user),
+      );
+    }
     map['created_at'] = Variable<String>(createdAt);
     map['updated_at'] = Variable<String>(updatedAt);
     if (!nullToAbsent || deletedAt != null) {
@@ -7840,7 +7868,10 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
       eventId: Value(eventId),
       userId: Value(userId),
       role: Value(role),
-      grantedBy: Value(grantedBy),
+      grantedBy: grantedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(grantedBy),
+      user: user == null && nullToAbsent ? const Value.absent() : Value(user),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       deletedAt: deletedAt == null && nullToAbsent
@@ -7859,7 +7890,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
       eventId: serializer.fromJson<String>(json['event_id']),
       userId: serializer.fromJson<String>(json['user_id']),
       role: serializer.fromJson<String>(json['role']),
-      grantedBy: serializer.fromJson<String>(json['granted_by']),
+      grantedBy: serializer.fromJson<String?>(json['granted_by']),
+      user: serializer.fromJson<Map<String, dynamic>?>(json['user']),
       createdAt: serializer.fromJson<String>(json['created_at']),
       updatedAt: serializer.fromJson<String>(json['updated_at']),
       deletedAt: serializer.fromJson<String?>(json['deleted_at']),
@@ -7873,7 +7905,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
       'event_id': serializer.toJson<String>(eventId),
       'user_id': serializer.toJson<String>(userId),
       'role': serializer.toJson<String>(role),
-      'granted_by': serializer.toJson<String>(grantedBy),
+      'granted_by': serializer.toJson<String?>(grantedBy),
+      'user': serializer.toJson<Map<String, dynamic>?>(user),
       'created_at': serializer.toJson<String>(createdAt),
       'updated_at': serializer.toJson<String>(updatedAt),
       'deleted_at': serializer.toJson<String?>(deletedAt),
@@ -7885,7 +7918,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
     String? eventId,
     String? userId,
     String? role,
-    String? grantedBy,
+    Value<String?> grantedBy = const Value.absent(),
+    Value<Map<String, dynamic>?> user = const Value.absent(),
     String? createdAt,
     String? updatedAt,
     Value<String?> deletedAt = const Value.absent(),
@@ -7894,7 +7928,8 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
     eventId: eventId ?? this.eventId,
     userId: userId ?? this.userId,
     role: role ?? this.role,
-    grantedBy: grantedBy ?? this.grantedBy,
+    grantedBy: grantedBy.present ? grantedBy.value : this.grantedBy,
+    user: user.present ? user.value : this.user,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
@@ -7906,6 +7941,7 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
       userId: data.userId.present ? data.userId.value : this.userId,
       role: data.role.present ? data.role.value : this.role,
       grantedBy: data.grantedBy.present ? data.grantedBy.value : this.grantedBy,
+      user: data.user.present ? data.user.value : this.user,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
@@ -7920,6 +7956,7 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
           ..write('userId: $userId, ')
           ..write('role: $role, ')
           ..write('grantedBy: $grantedBy, ')
+          ..write('user: $user, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -7934,6 +7971,7 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
     userId,
     role,
     grantedBy,
+    user,
     createdAt,
     updatedAt,
     deletedAt,
@@ -7947,6 +7985,7 @@ class ScannerData extends DataClass implements Insertable<ScannerData> {
           other.userId == this.userId &&
           other.role == this.role &&
           other.grantedBy == this.grantedBy &&
+          other.user == this.user &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.deletedAt == this.deletedAt);
@@ -7957,7 +7996,8 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
   final Value<String> eventId;
   final Value<String> userId;
   final Value<String> role;
-  final Value<String> grantedBy;
+  final Value<String?> grantedBy;
+  final Value<Map<String, dynamic>?> user;
   final Value<String> createdAt;
   final Value<String> updatedAt;
   final Value<String?> deletedAt;
@@ -7968,6 +8008,7 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
     this.userId = const Value.absent(),
     this.role = const Value.absent(),
     this.grantedBy = const Value.absent(),
+    this.user = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
@@ -7978,7 +8019,8 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
     required String eventId,
     required String userId,
     required String role,
-    required String grantedBy,
+    this.grantedBy = const Value.absent(),
+    this.user = const Value.absent(),
     required String createdAt,
     required String updatedAt,
     this.deletedAt = const Value.absent(),
@@ -7987,7 +8029,6 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
        eventId = Value(eventId),
        userId = Value(userId),
        role = Value(role),
-       grantedBy = Value(grantedBy),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
   static Insertable<ScannerData> custom({
@@ -7996,6 +8037,7 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
     Expression<String>? userId,
     Expression<String>? role,
     Expression<String>? grantedBy,
+    Expression<String>? user,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
     Expression<String>? deletedAt,
@@ -8007,6 +8049,7 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
       if (userId != null) 'user_id': userId,
       if (role != null) 'role': role,
       if (grantedBy != null) 'granted_by': grantedBy,
+      if (user != null) 'user': user,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
@@ -8019,7 +8062,8 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
     Value<String>? eventId,
     Value<String>? userId,
     Value<String>? role,
-    Value<String>? grantedBy,
+    Value<String?>? grantedBy,
+    Value<Map<String, dynamic>?>? user,
     Value<String>? createdAt,
     Value<String>? updatedAt,
     Value<String?>? deletedAt,
@@ -8031,6 +8075,7 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
       userId: userId ?? this.userId,
       role: role ?? this.role,
       grantedBy: grantedBy ?? this.grantedBy,
+      user: user ?? this.user,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -8056,6 +8101,11 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
     if (grantedBy.present) {
       map['granted_by'] = Variable<String>(grantedBy.value);
     }
+    if (user.present) {
+      map['user'] = Variable<String>(
+        $ScannerTableTable.$converterusern.toSql(user.value),
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -8079,6 +8129,7 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
           ..write('userId: $userId, ')
           ..write('role: $role, ')
           ..write('grantedBy: $grantedBy, ')
+          ..write('user: $user, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
@@ -24093,7 +24144,8 @@ typedef $$ScannerTableTableCreateCompanionBuilder =
       required String eventId,
       required String userId,
       required String role,
-      required String grantedBy,
+      Value<String?> grantedBy,
+      Value<Map<String, dynamic>?> user,
       required String createdAt,
       required String updatedAt,
       Value<String?> deletedAt,
@@ -24105,7 +24157,8 @@ typedef $$ScannerTableTableUpdateCompanionBuilder =
       Value<String> eventId,
       Value<String> userId,
       Value<String> role,
-      Value<String> grantedBy,
+      Value<String?> grantedBy,
+      Value<Map<String, dynamic>?> user,
       Value<String> createdAt,
       Value<String> updatedAt,
       Value<String?> deletedAt,
@@ -24144,6 +24197,16 @@ class $$ScannerTableTableFilterComposer
   ColumnFilters<String> get grantedBy => $composableBuilder(
     column: $table.grantedBy,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get user => $composableBuilder(
+    column: $table.user,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get createdAt => $composableBuilder(
@@ -24196,6 +24259,11 @@ class $$ScannerTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get user => $composableBuilder(
+    column: $table.user,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -24235,6 +24303,9 @@ class $$ScannerTableTableAnnotationComposer
 
   GeneratedColumn<String> get grantedBy =>
       $composableBuilder(column: $table.grantedBy, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get user =>
+      $composableBuilder(column: $table.user, builder: (column) => column);
 
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -24281,7 +24352,8 @@ class $$ScannerTableTableTableManager
                 Value<String> eventId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> role = const Value.absent(),
-                Value<String> grantedBy = const Value.absent(),
+                Value<String?> grantedBy = const Value.absent(),
+                Value<Map<String, dynamic>?> user = const Value.absent(),
                 Value<String> createdAt = const Value.absent(),
                 Value<String> updatedAt = const Value.absent(),
                 Value<String?> deletedAt = const Value.absent(),
@@ -24292,6 +24364,7 @@ class $$ScannerTableTableTableManager
                 userId: userId,
                 role: role,
                 grantedBy: grantedBy,
+                user: user,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
@@ -24303,7 +24376,8 @@ class $$ScannerTableTableTableManager
                 required String eventId,
                 required String userId,
                 required String role,
-                required String grantedBy,
+                Value<String?> grantedBy = const Value.absent(),
+                Value<Map<String, dynamic>?> user = const Value.absent(),
                 required String createdAt,
                 required String updatedAt,
                 Value<String?> deletedAt = const Value.absent(),
@@ -24314,6 +24388,7 @@ class $$ScannerTableTableTableManager
                 userId: userId,
                 role: role,
                 grantedBy: grantedBy,
+                user: user,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,

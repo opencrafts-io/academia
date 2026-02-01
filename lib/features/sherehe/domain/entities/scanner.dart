@@ -1,3 +1,4 @@
+import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
 class Scanner extends Equatable {
@@ -5,20 +6,22 @@ class Scanner extends Equatable {
   final String eventId;
   final String userId;
   final String role;
-  final String grantedBy;
+  final String? grantedBy;
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
+  final ShereheUser? user;
 
   const Scanner({
     required this.id,
     required this.eventId,
     required this.userId,
     required this.role,
-    required this.grantedBy,
+    this.grantedBy,
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    this.user,
   });
 
   Scanner copyWith({
@@ -30,6 +33,7 @@ class Scanner extends Equatable {
     String? createdAt,
     String? updatedAt,
     String? deletedAt,
+    ShereheUser? user,
   }) {
     return Scanner(
       id: id ?? this.id,
@@ -40,6 +44,7 @@ class Scanner extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      user: user ?? this.user,
     );
   }
 

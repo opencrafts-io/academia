@@ -904,6 +904,46 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, String>> getEventScannerByUserId({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/eventscanner/user/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                "Unexpected response when getting event scanner by user id",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e(
+        "DioException when getting event scanner by user id",
+        error: de,
+      );
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e(
+        "Unknown error when getting event scanner by user id",
+        error: e,
+      );
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when getting event scanner by user id",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<ShereheUserData>>> searchUsersByUsername({
     required String query,
   }) async {

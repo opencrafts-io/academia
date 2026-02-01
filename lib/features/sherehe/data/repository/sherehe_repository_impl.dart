@@ -361,6 +361,16 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, String>> getEventScannerByUserId({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getEventScannerByUserId(
+      eventId: eventId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   }) async {

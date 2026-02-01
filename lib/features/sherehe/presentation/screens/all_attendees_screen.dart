@@ -111,7 +111,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.confirmation_number_outlined, size: 60),
+                          Icon(Icons.person_off, size: 60),
                           SizedBox(height: 16),
                           Text("No attendees yet", textAlign: TextAlign.center),
                         ],
@@ -124,7 +124,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                     separatorBuilder: (_, __) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final attendee = state.attendees[index];
-                  
+
                       return UserTile(
                         name: attendee.user?.username ?? "Guest",
                         subtitle:
@@ -141,11 +141,10 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
-                
+
                     return UserTile(
                       name: attendee.user?.username ?? "Guest",
-                      subtitle:
-                          attendee.ticket?.ticketName ?? "Unknown Ticket",
+                      subtitle: attendee.ticket?.ticketName ?? "Unknown Ticket",
                       icon: Icons.person_outline,
                     );
                   },
@@ -164,11 +163,10 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
-                
+
                     return UserTile(
                       name: attendee.user?.username ?? "Guest",
-                      subtitle:
-                          attendee.ticket?.ticketName ?? "Unknown Ticket",
+                      subtitle: attendee.ticket?.ticketName ?? "Unknown Ticket",
                       icon: Icons.person_outline,
                     );
                   },

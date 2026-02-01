@@ -431,9 +431,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                               .take(5)
                               .map(
                                 (scanner) => UserTile(
-                                  name: scanner.role,
-                                  subtitle: "Can scan tickets",
-                                  icon: Icons.qr_code,
+                                  name: scanner.user?.username ?? "Guest",
+                                  subtitle: scanner.role,
+                                  icon: Icons.qr_code_scanner,
                                   onTap: () {},
                                 ),
                               )

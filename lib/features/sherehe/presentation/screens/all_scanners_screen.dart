@@ -87,10 +87,10 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                         FilledButton(
                           onPressed: () {
                             _currentPage = 1;
-                            context.read<AllAttendeesBloc>().add(
-                              FetchAllAttendees(
+                            context.read<AllScannersBloc>().add(
+                              FetchAllScanners(
                                 eventId: widget.eventId,
-                                page: 1,
+                                page: _currentPage,
                                 limit: 20,
                               ),
                             );
@@ -126,9 +126,9 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                       final scanner = state.scanners[index];
 
                       return UserTile(
-                        name: scanner.role,
-                        subtitle: "Can scan tickets",
-                        icon: Icons.scanner_outlined,
+                        name: scanner.user?.username ?? "Guest",
+                        subtitle: scanner.role,
+                        icon: Icons.qr_code_scanner,
                       );
                     },
                   ),
@@ -142,9 +142,9 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                     final scanner = state.existingScanners[index];
 
                     return UserTile(
-                      name: scanner.role,
-                      subtitle: "Can scan tickets",
-                      icon: Icons.scanner_outlined,
+                      name: scanner.user?.username ?? "Guest",
+                      subtitle: scanner.role,
+                      icon: Icons.qr_code_scanner,
                     );
                   },
                 ),
@@ -164,9 +164,9 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                     final scanner = state.existingScanners[index];
 
                     return UserTile(
-                      name: scanner.role,
-                      subtitle: "Can scan tickets",
-                      icon: Icons.scanner_outlined,
+                      name: scanner.user?.username ?? "Guest",
+                      subtitle: scanner.role,
+                      icon: Icons.qr_code_scanner,
                     );
                   },
                 ),
@@ -183,8 +183,8 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                         ),
                         const SizedBox(height: 10),
                         FilledButton(
-                          onPressed: () => context.read<AllAttendeesBloc>().add(
-                            FetchAllAttendees(
+                          onPressed: () => context.read<AllScannersBloc>().add(
+                            FetchAllScanners(
                               eventId: widget.eventId,
                               page: _currentPage,
                               limit: 20,
