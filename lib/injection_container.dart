@@ -97,6 +97,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
   sl.registerLazySingleton(() => GetEventsByOrganizerIdUseCase(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
+  sl.registerLazySingleton(() => GetAllAttendees(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
@@ -145,6 +146,7 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(
     () => TicketStatsBloc(getDashboardTicketStats: sl(), updateTicket: sl()),
   );
+  sl.registerFactory(() => AllAttendeesBloc(getAllAttendees: sl()));
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

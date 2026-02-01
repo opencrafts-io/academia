@@ -2,17 +2,17 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/core.dart';
 
-class GetAllAttendees {
+class GetAttendee {
   final ShereheRepository repository;
 
-  GetAllAttendees(this.repository);
+  GetAttendee(this.repository);
 
-  Future<Either<Failure, PaginatedResult<Attendee>>> call({
+  Future<Either<Failure, PaginatedResult<Attendee>>> execute({
     required String eventId,
     required int page,
     required int limit,
   }) async {
-    return repository.getAllAttendees(
+    return repository.getAttendeesByEventId(
       eventId: eventId,
       page: page,
       limit: limit,

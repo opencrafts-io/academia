@@ -88,6 +88,12 @@ abstract class ShereheRepository {
     required int ticketQuantity,
   });
 
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAllAttendees({
+    required String eventId,
+    required int page,
+    required int limit,
+  });
+
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   });

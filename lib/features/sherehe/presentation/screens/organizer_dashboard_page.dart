@@ -1,6 +1,6 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
-import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +23,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
     );
     context.read<TicketStatsBloc>().add(
       GetTicketStats(eventId: widget.eventId),
+    );
+    context.read<AllAttendeesBloc>().add(
+      FetchAllAttendees(eventId: widget.eventId, page: 1, limit: 20),
     );
   }
 
@@ -248,7 +251,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                 if (state is StatsLoadedState) {
                   return SliverList(
                     delegate: SliverChildListDelegate(
-                      state.stats
+                      state.stats.take(5)
                           .map(
                             (stats) => _TicketTypeTile(
                               type: stats.ticketName,
@@ -294,57 +297,55 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                 return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
-            _SectionHeader(title: "Attendees", onAction: () {}),
-            BlocProvider(
-              create: (_) =>
-                  AttendeeBloc(getAttendee: sl())
-                    ..add(FetchAttendees(eventId: widget.eventId)),
-              child: BlocBuilder<AttendeeBloc, AttendeeState>(
-                builder: (context, state) {
-                  if (state is AttendeeLoaded) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => _UserTile(
-                          name:
-                              state.attendees[index].user?.username ?? "Guest",
-                          subtitle:
-                              state.attendees[index].ticket?.ticketName ??
-                              "Unknown Ticket",
-                          icon: Icons.person_outline,
-                          onTap: () {},
-                        ),
-                        childCount: state.attendees.length,
+            _SectionHeader(
+              title: "Attendees",
+              onAction: () =>
+                  AllAttendeesRoute(eventId: widget.eventId).push(context),
+            ),
+            BlocBuilder<AllAttendeesBloc, AllAttendeesState>(
+              builder: (context, state) {
+                if (state is AllAttendeesStateLoaded) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => UserTile(
+                        name: state.attendees[index].user?.username ?? "Guest",
+                        subtitle:
+                            state.attendees[index].ticket?.ticketName ??
+                            "Unknown Ticket",
+                        icon: Icons.person_outline,
                       ),
-                    );
-                  } else if (state is AttendeeLoading) {
-                    return const SliverToBoxAdapter(
+                      childCount: state.attendees.length,
+                    ),
+                  );
+                } else if (state is AllAttendeesStateLoading ||
+                    state is AllAttendeesStatePaginationLoading) {
+                  return const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: SpinningScallopIndicator()),
+                    ),
+                  );
+                } else if (state is AllAttendeesStateError) {
+                  return SliverToBoxAdapter(
+                    child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child: Center(child: SpinningScallopIndicator()),
-                      ),
-                    );
-                  } else if (state is AttendeeError) {
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "Failed to load attendees.",
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Failed to load attendees.",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ),
-                    );
-                  }
-                  return const SliverToBoxAdapter(child: SizedBox.shrink());
-                },
-              ),
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              },
             ),
             _SectionHeader(title: "Event Scanners", onAction: () {}),
             SliverToBoxAdapter(
@@ -357,7 +358,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => _UserTile(
+                (context, index) => UserTile(
                   name: "Scanner Admin",
                   subtitle: "Can scan tickets",
                   icon: Icons.qr_code,
@@ -621,101 +622,6 @@ class _AddScannerTile extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   size: 18,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UserTile extends StatelessWidget {
-  final String name;
-  final String subtitle;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _UserTile({
-    required this.name,
-    required this.subtitle,
-    required this.icon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Material(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
-              children: [
-                // Avatar with subtle ring
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.15),
-                  ),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.primaryContainer,
-                    child: Icon(
-                      icon,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                // Name + subtitle
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Right side affordance
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.chevron_right,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
                 ),
               ],
             ),
