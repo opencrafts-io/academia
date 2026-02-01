@@ -375,8 +375,6 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
   }
 }
 
-// ───────────────────────── Components ─────────────────────────
-
 class _SummaryCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -462,66 +460,65 @@ class _TicketTypeTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.all(16),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Ticket type badge
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
-                    type,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: Icon(
+                    Icons.confirmation_number_outlined,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
 
                 const SizedBox(width: 12),
 
-                // Sold info
+                // Main content
                 Expanded(
-                  child: Text(
-                    "$sold sold",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Ticket name
+                      Text(
+                        type,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
 
-                // Remaining chip
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: remaining > 0
-                        ? Theme.of(context).colorScheme.secondaryContainer
-                        : Theme.of(context).colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    "$remaining left",
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: remaining > 0
-                          ? Theme.of(context).colorScheme.onSecondaryContainer
-                          : Theme.of(context).colorScheme.onErrorContainer,
-                      fontWeight: FontWeight.w600,
-                    ),
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          _StatPill(
+                            label: "Sold",
+                            value: sold.toString(),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          _StatPill(
+                            label: "Remaining",
+                            value: remaining.toString(),
+                            color: remaining > 0
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).colorScheme.error,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
 
                 const SizedBox(width: 8),
 
-                // Chevron affordance
                 Icon(
                   Icons.chevron_right,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -529,6 +526,36 @@ class _TicketTypeTile extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatPill extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+
+  const _StatPill({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        "$label: $value",
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
