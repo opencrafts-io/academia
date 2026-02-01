@@ -32,4 +32,4 @@ export 'usecases/update_ticket_usecase.dart';
 export 'usecases/add_event_scanner_usecase.dart';
 export 'usecases/delete_event_scanner_usecase.dart';
 export 'usecases/get_all_event_scanners_usecase.dart';
-export 'usecases/get_event_scanner_by_user_id.dart';
+export 'usecases/get_event_scanner_by_user_id_usecase.dart';

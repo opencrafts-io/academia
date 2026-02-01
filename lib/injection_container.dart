@@ -119,10 +119,14 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerLazySingleton(() => GetAllEventScannersUsecase(sl()));
   sl.registerLazySingleton(() => SearchUsersByUsernameUsecase(sl()));
   sl.registerLazySingleton(() => AddEventScannerUsecase(sl()));
+  sl.registerLazySingleton(() => GetEventScannerByUserIdUsecase(sl()));
 
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
+  sl.registerFactory(
+    () => GetEventScannerByUserIdBloc(getEventScannerByUserId: sl()),
+  );
 
   sl.registerFactory(
     () => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()),
