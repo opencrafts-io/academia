@@ -12,6 +12,10 @@ class ReportContent implements UseCase<Report, ReportContentParams> {
 
   @override
   Future<Either<Failure, Report>> call(ReportContentParams params) async {
+    if (params.entityId == null || params.entityId!.isEmpty) {
+      return Left(ServerFailure(message: 'Entity ID is required', error: 'Failed'));
+    }
+
     switch (params.reportType) {
       case 'user':
         return await repository.reportUser(
@@ -19,18 +23,30 @@ class ReportContent implements UseCase<Report, ReportContentParams> {
           reason: params.reason,
         );
       case 'post':
+        final postId = int.tryParse(params.entityId!);
+        if (postId == null) {
+          return Left(ServerFailure(message: 'Invalid post ID', error: 'Failed'));
+        }
         return await repository.reportPost(
-          postId: int.parse(params.entityId!),
+          postId: postId,
           reason: params.reason,
         );
       case 'comment':
+        final commentId = int.tryParse(params.entityId!);
+        if (commentId == null) {
+          return Left(ServerFailure(message: 'Invalid comment ID', error: 'Failed'));
+        }
         return await repository.reportComment(
-          commentId: int.parse(params.entityId!),
+          commentId: commentId,
           reason: params.reason,
         );
       case 'community':
+        final communityId = int.tryParse(params.entityId!);
+        if (communityId == null) {
+          return Left(ServerFailure(message: 'Invalid community ID', error: 'Failed'));
+        }
         return await repository.reportCommunity(
-          communityId: int.parse(params.entityId!),
+          communityId: communityId,
           reason: params.reason,
         );
       default:
