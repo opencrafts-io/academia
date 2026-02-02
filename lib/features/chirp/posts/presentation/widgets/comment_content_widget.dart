@@ -153,7 +153,7 @@ class CommentContentWidget extends StatelessWidget {
 
     final reasons = [
       'Spam or misleading',
-      'Harassmenttt or hate speech',
+      'Harassment or hate speech',
       'Violence or dangerous content',
       'Nudity or sexual content',
       'Misinformation',
