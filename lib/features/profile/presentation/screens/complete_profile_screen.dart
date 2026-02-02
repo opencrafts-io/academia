@@ -113,7 +113,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             // Refresh profile
             context.read<ProfileBloc>().add(RefreshProfileEvent());
           } else if (state is ProfileLoadedState) {
-            HomeRoute().go(context);
+            // Only navigate home after recovery, not during normal onboarding
+            if (_initialPage == -1) {
+              HomeRoute().go(context);
+            }
           }
         },
         child: SafeArea(
