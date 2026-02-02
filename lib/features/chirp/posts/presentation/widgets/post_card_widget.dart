@@ -311,11 +311,11 @@ class _PostCardState extends State<PostCard> {
                                   ),
                                 );
 
+                                final scaffoldMessenger = ScaffoldMessenger.of(context);
+
                                 Navigator.pop(context);
 
-                                ScaffoldMessenger.of(
-                                  bottomSheetContext,
-                                ).showSnackBar(
+                                scaffoldMessenger.showSnackBar(
                                   const SnackBar(
                                     content: Text(
                                       'Thank you for your report. Our team will review it.',
