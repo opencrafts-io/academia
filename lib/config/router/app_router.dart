@@ -34,14 +34,14 @@ class AppRouter {
           // Check if account is marked for deletion
           if (profile.deletedAt != null) {
             final expiryDate = profile.deletedAt!.add(Duration(days: 14));
-            final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
+            final now = DateTime.now();
 
-            if (daysRemaining > 0) {
+            if (now.isBefore(expiryDate)) {
               // Account can be recovered - go to complete profile
               return CompleteProfileRoute().location;
             } else {
               // Account deletion expired - force logout
-              // context.read<AuthBloc>().add(AuthLogoutEvent());
+              context.read<AuthBloc>().add(AuthLogoutEvent());
               return AuthRoute().location;
             }
           }
