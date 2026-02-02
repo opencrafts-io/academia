@@ -295,47 +295,44 @@ class _ProfileViewState extends State<ProfileView> {
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ),
-                            SizedBox(height: 12),
 
-                            // Logout Button
-                            FilledButton.icon(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.errorContainer,
-                                foregroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.onErrorContainer,
-                                fixedSize: Size(480, 60),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                            Card.filled(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.errorContainer,
+                              clipBehavior: Clip.hardEdge,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              onPressed: () => _showLogoutConfirmation(context),
-                              icon: Icon(Symbols.logout),
-                              label: Text("Logout"),
-                            ),
-
-                            SizedBox(height: 12),
-
-                            // Delete Account Button
-                            FilledButton.icon(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.errorContainer,
-                                foregroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.onErrorContainer,
-                                fixedSize: Size(480, 60),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                              child: Column(
+                                children: [
+                                  // Logout Button
+                                  ListTile(
+                                    leading: Icon(Icons.logout_outlined),
+                                    title: Text("Logout"),
+                                    subtitle: Text(
+                                      "Clears your data from this device",
+                                    ),
+                                    onTap: () =>
+                                        _showLogoutConfirmation(context),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
+                                    child: Divider(),
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.delete_outlined),
+                                    title: Text("Delete account"),
+                                    subtitle: Text(
+                                      "Deletes your account permanently.",
+                                    ),
+                                    onTap: () =>
+                                        _showDeletionConfirmation(context),
+                                  ),
+                                ],
                               ),
-                              onPressed: () =>
-                                  _showDeletionConfirmation(context),
-                              icon: Icon(Symbols.delete_forever),
-                              label: Text("Delete Account"),
                             ),
 
                             SizedBox(height: 22),
@@ -359,14 +356,17 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (dialogContext) => AlertDialog.adaptive(
         title: Text("Are you sure?"),
         content: Text(
-          "Logging out will delete all your data on this device and you'll have to re-login.",
+          "Logging out will delete all your data on this device "
+          "and you'll have to re-login.",
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text("Cancel"),
           ),
-          FilledButton(
+          TextButton.icon(
+            icon: Icon(Icons.check_rounded),
+
             onPressed: () async {
               Navigator.pop(dialogContext);
 
@@ -380,7 +380,7 @@ class _ProfileViewState extends State<ProfileView> {
               context.read<AuthBloc>().add(AuthCheckStatusEvent());
               AuthRoute().go(context);
             },
-            child: Text("Yes, I'm sure"),
+            label: Text("Yes, I'm sure"),
           ),
         ],
       ),
@@ -448,15 +448,16 @@ class _ProfileViewState extends State<ProfileView> {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text('Cancel'),
           ),
-          FilledButton(
+          TextButton.icon(
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () {
               Navigator.pop(dialogContext);
               context.read<ProfileBloc>().add(RequestAccountDeletionEvent());
             },
-            child: Text('Delete My Account'),
+            icon: Icon(Icons.delete_forever_outlined),
+            label: Text('Delete My Account'),
           ),
         ],
       ),

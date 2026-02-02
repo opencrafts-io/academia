@@ -41,7 +41,7 @@ class AppRouter {
               return CompleteProfileRoute().location;
             } else {
               // Account deletion expired - force logout
-              context.read<AuthBloc>().add(AuthLogoutEvent());
+              context.read<AuthBloc>().add(AuthSignOutEvent());
               return AuthRoute().location;
             }
           }
