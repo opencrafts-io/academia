@@ -20,11 +20,20 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   final PageController _pageController = PageController();
   double _progress = 0.0;
   int _initialPage = 0;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    _determineInitialPage();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      _determineInitialPage();
+    }
   }
 
   void _determineInitialPage() {
@@ -34,24 +43,13 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
       final profile = profileState.profile;
 
       if (profile.deletedAt != null) {
-        // start at recovery page
         _initialPage = -1;
         _progress = 0.0;
       } else {
-        // Normal onboarding flow
         _initialPage = 0;
         _progress = 1 / 5;
       }
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_initialPage == -1) {
-        // Don't update progress bar for recovery page
-        setState(() {
-          _progress = 0.0;
-        });
-      }
-    });
   }
 
   void _updateProgress(int pageIndex) {
