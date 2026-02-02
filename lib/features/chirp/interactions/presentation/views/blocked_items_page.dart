@@ -290,9 +290,8 @@ class BlockedCommunitiesTab extends StatelessWidget {
               itemCount: communityBlocks.length,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
-                final communityId = int.tryParse(
-                  communityBlocks[index].blockedId ?? '0',
-                );
+                final block = communityBlocks[index];
+                final communityId = int.tryParse(block.blockedId ?? '0');
 
                 return BlocProvider(
                   create: (context) => CommunityHomeBloc(
@@ -300,13 +299,32 @@ class BlockedCommunitiesTab extends StatelessWidget {
                     deleteCommunityUseCase: sl(),
                     addCommunityGuidelinesUsecase: sl(),
                   )..add(FetchCommunityById(communityId: communityId ?? 0)),
-                  child: BlockedCommunityCard(
-                    block: communityBlocks[index],
-                    onUnblock: () {
-                      _showUnblockConfirmation(
-                        context,
-                        communityBlocks[index].id,
-                        communityBlocks[index].blockedId ?? 'this community',
+                  child: BlocBuilder<CommunityHomeBloc, CommunityHomeState>(
+                    builder: (context, communityState) {
+                      String? communityImage;
+                      String? communityName;
+                      bool isLoading = communityState is CommunityHomeLoading;
+
+                      if (communityState is CommunityHomeLoaded) {
+                        communityImage =
+                            communityState.community.profilePictureUrl;
+                        communityName = communityState.community.name;
+                      } else if (communityState is CommunityHomeFailure) {
+                        communityName = 'Unknown Community';
+                      }
+
+                      return BlockedCommunityCard(
+                        block: block,
+                        communityName: communityName,
+                        communityImage: communityImage,
+                        isLoading: isLoading,
+                        onUnblock: () {
+                          _showUnblockConfirmation(
+                            context,
+                            block.id,
+                            block.blockedId ?? 'this community',
+                          );
+                        },
                       );
                     },
                   ),

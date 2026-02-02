@@ -167,14 +167,6 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  // CHECK BLOCK STATUS
-  Future<Either<Failure, bool>> checkBlockStatus({
-    required String entityType,
-    required String entityId,
-  }) async {
-    return const Right(false);
-  }
-
   // REPORT USER
   Future<Either<Failure, ReportData>> reportUser({
     required String userId,

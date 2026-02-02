@@ -288,6 +288,8 @@ class CommentContentWidget extends StatelessWidget {
 
                                 if (reason.isEmpty) return;
 
+                                final messenger = ScaffoldMessenger.of(context);
+
                                 context.read<ReportBloc>().add(
                                   ReportContentEvent(
                                     reportType: 'comment',
@@ -295,12 +297,8 @@ class CommentContentWidget extends StatelessWidget {
                                     reason: reason,
                                   ),
                                 );
-
                                 Navigator.pop(context);
-
-                                ScaffoldMessenger.of(
-                                  bottomSheetContext,
-                                ).showSnackBar(
+                                messenger.showSnackBar(
                                   const SnackBar(
                                     content: Text(
                                       'Thank you for your report. Our team will review it.',
