@@ -27,7 +27,7 @@ class _PostCardState extends State<PostCard> {
     super.dispose();
   }
 
- void _showPostOptions(String username) {
+  void _showPostOptions(String username) {
     final currentUserId =
         context.read<ProfileBloc>().state is ProfileLoadedState
         ? (context.read<ProfileBloc>().state as ProfileLoadedState).profile.id
@@ -311,14 +311,16 @@ class _PostCardState extends State<PostCard> {
                                   ),
                                 );
 
-                                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                final scaffoldMessenger = ScaffoldMessenger.of(
+                                  context,
+                                );
 
                                 Navigator.pop(context);
 
                                 scaffoldMessenger.showSnackBar(
                                   const SnackBar(
                                     content: Text(
-                                      'Thank you for your report. Our team will review it.',
+                                      'Post reported successfully.',
                                     ),
                                     behavior: SnackBarBehavior.floating,
                                   ),
@@ -378,7 +380,6 @@ class _PostCardState extends State<PostCard> {
       ),
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -430,8 +431,7 @@ class _PostCardState extends State<PostCard> {
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.more_vert),
-                      onPressed: () =>
-                          _showPostOptions(username),
+                      onPressed: () => _showPostOptions(username),
                     ),
                   ],
                 );

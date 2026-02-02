@@ -54,7 +54,6 @@ part 'database.g.dart';
 
     BlockTable,
     ReportTable,
-    
 
     // Agenda
     AgendaEvent,
@@ -102,7 +101,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration {
@@ -112,11 +111,15 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
-        if (from < 15) {
-          await m.createTable(examTimetable);
-        } else if (from < 16) {
-          await m.addColumn(userProfile, userProfile.deletedAt);
-        }
+        await m.createAll();
+        // if (from < 15) {
+        //   await m.createTable(examTimetable);
+        // } else if (from < 16) {
+        //   await m.addColumn(userProfile, userProfile.deletedAt);
+        // } else if (from < 17) {
+        //   await m.createTable(blockTable);
+        //   await m.createTable(reportTable);
+        // }
       },
       beforeOpen: (details) async {
         _logger.i(

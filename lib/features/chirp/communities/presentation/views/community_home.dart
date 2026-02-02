@@ -674,7 +674,7 @@ class _CommunityActionSection extends StatelessWidget {
                                 ).showSnackBar(
                                   const SnackBar(
                                     content: Text(
-                                      'Thank you for your report. Our team will review it.',
+                                      'Post reported successfully.',
                                     ),
                                     behavior: SnackBarBehavior.floating,
                                   ),
@@ -798,9 +798,7 @@ class _CommunityActionSection extends StatelessWidget {
 
                       // Block Community
                       ListTile(
-                        leading: Icon(
-                          Icons.block_outlined,
-                        ),
+                        leading: Icon(Icons.block_outlined),
                         title: const Text("Block Community"),
                         onTap: () {
                           Navigator.pop(modalContext);
@@ -810,9 +808,7 @@ class _CommunityActionSection extends StatelessWidget {
 
                       // Report Community
                       ListTile(
-                        leading: Icon(
-                          Icons.flag_outlined,
-                        ),
+                        leading: Icon(Icons.flag_outlined),
                         title: const Text("Report Community"),
                         onTap: () {
                           Navigator.pop(modalContext);
