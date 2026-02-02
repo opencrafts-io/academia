@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
+//
 
 class AppRouter {
   static GlobalKey<NavigatorState> get globalNavigatorKey =>
@@ -28,14 +29,30 @@ class AppRouter {
       if (state.matchedLocation == AuthRoute().location &&
           authState is AuthAuthenticated) {
         if (profileState is ProfileLoadedState) {
-          if (profileState.profile.onboarded &&
-              profileState.profile.termsAccepted) {
+          final profile = profileState.profile;
+
+          // Check if account is marked for deletion
+          if (profile.deletedAt != null) {
+            final expiryDate = profile.deletedAt!.add(Duration(days: 14));
+            final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
+
+            if (daysRemaining > 0) {
+              // Account can be recovered - go to complete profile
+              return CompleteProfileRoute().location;
+            } else {
+              // Account deletion expired - force logout
+              // context.read<AuthBloc>().add(AuthLogoutEvent());
+              return AuthRoute().location;
+            }
+          }
+
+          // Normal flow
+          if (profile.onboarded && profile.termsAccepted) {
             return HomeRoute().location;
           } else {
             return CompleteProfileRoute().location;
           }
         }
-        // If profile not loaded yet, stay on auth screen
         return null;
       }
 
