@@ -167,6 +167,16 @@ Future<void> init(FlavorConfig flavor) async {
       profileRepository: sl.get<ProfileRepositoryImpl>(),
     ),
   );
+  sl.registerFactory<RequestAccountDeletionUsecase>(
+    () => RequestAccountDeletionUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
+  sl.registerFactory<RequestAccountRecoveryUsecase>(
+    () => RequestAccountRecoveryUsecase(
+      profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
 
   // Todos
   sl.registerFactory<TodoLocalDatasource>(

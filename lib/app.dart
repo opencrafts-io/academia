@@ -125,6 +125,8 @@ class _AcademiaState extends State<Academia> {
                 .get<RefreshCurrentUserProfileUsecase>(),
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
+            requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
+            requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
           )..add(GetCachedProfileEvent()),
         ),
         BlocProvider(
