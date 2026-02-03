@@ -24,11 +24,14 @@ class InstitutionFeesTransactionPage extends StatelessWidget {
             slivers: [
               SliverAppBar.large(title: const Text('Statement of Account')),
 
-              SliverToBoxAdapter(
-                child: _FeesSummaryCard(
-                  balance: state.currentBalance,
-                  isInDebt: state.isInDebt,
-                  currency: state.transactions.firstOrNull?.currency ?? "KES",
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                sliver: SliverToBoxAdapter(
+                  child: _FeesSummaryCard(
+                    balance: state.currentBalance,
+                    isInDebt: state.isInDebt,
+                    currency: state.transactions.firstOrNull?.currency ?? "KES",
+                  ),
                 ),
               ),
 
@@ -86,13 +89,7 @@ class _FeesSummaryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(24),
-      ),
+    return Card.outlined(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
