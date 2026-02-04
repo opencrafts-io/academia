@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import 'package:academia/features/institution/institution.dart';
 
 class InstitutionFeesTransactionPage extends StatelessWidget {
@@ -12,7 +13,7 @@ class InstitutionFeesTransactionPage extends StatelessWidget {
       body: BlocBuilder<InstitutionFeesBloc, InstitutionFeesState>(
         builder: (context, state) {
           if (state.status == FeesStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingIndicatorM3E());
           }
 
           if (state.status == FeesStatus.failure) {
@@ -39,7 +40,7 @@ class InstitutionFeesTransactionPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   child: Text(
-                    "All Postings",
+                    "All fees transactions",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,
@@ -153,6 +154,10 @@ class _LedgerEntryTile extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                transaction.description ?? '',
+                style: theme.textTheme.bodySmall,
+              ),
               Text(
                 transaction.postingDate != null
                     ? DateFormat(

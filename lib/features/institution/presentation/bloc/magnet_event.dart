@@ -13,11 +13,15 @@ class InitializeMagnet extends MagnetEvent {
 
 class ExecuteScrappingCommand extends MagnetEvent {
   final InstitutionKey institutionKey;
+  final String userID;
+  final int institutionID;
   final ScrappingCommand command;
   final BuildContext? context; // Required for interactive commands
 
   const ExecuteScrappingCommand({
     required this.command,
+    required this.userID,
+    required this.institutionID,
     this.context,
     required this.institutionKey,
   });

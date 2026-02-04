@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
+import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:magnet/magnet.dart';
 
@@ -96,7 +100,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
             },
           ),
           BlocListener<MagnetBloc, MagnetState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is MagnetProcessing || state is MagnetInitializing) {
                 setState(() {
                   _showSyncCard = false;
@@ -113,23 +117,38 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
-                final profileState = context.read<ProfileBloc>().state;
-                if (profileState is ProfileLoadedState) {
-                  final extra = {
-                    "user_id": profileState.profile.id,
-                    "institution": widget.institutionID,
-                    "created_at": DateTime.now().toIso8601String(),
-                    "updated_at": DateTime.now().toIso8601String(),
-                  };
-                  context.read<StudentProfileBloc>().add(
-                    CreateProfileEvent(
-                      profile: InstitutionProfile.fromJson(
-                        state.result.data..addEntries(extra.entries),
-                      ),
-                    ),
-                  );
-                }
+                Logger().i(state.result.data);
+                // final profileState = context.read<ProfileBloc>().state;
+                // if (profileState is ProfileLoadedState) {
+                //   final extra = {
+                //     "user_id": profileState.profile.id,
+                //     "institution": widget.institutionID,
+                //     "created_at": DateTime.now().toIso8601String(),
+                //     "updated_at": DateTime.now().toIso8601String(),
+                //   };
+                //   context.read<StudentProfileBloc>().add(
+                //     CreateProfileEvent(
+                //       profile: InstitutionProfile.fromJson(
+                //         state.result.data..addEntries(extra.entries),
+                //       ),
+                //     ),
+                //   );
+                //   final String rawJson = jsonEncode(state.result.data);
+                //   final Map<String, dynamic> computableData = jsonDecode(
+                //     rawJson,
+                //   );
+                //
+                //   final List<InstitutionFeeTransaction> transactions =
+                //       await compute(_parseTransactions, computableData);
+                //
+                //   if (context.mounted) {
+                //     final feesBloc = context.read<InstitutionFeesBloc>();
+                //     for (var transaction in transactions) {
+                //       feesBloc.add(TransactionSaved(transaction));
+                //     }
+                //   }
               }
+              // }
             },
           ),
         ],
@@ -300,12 +319,17 @@ class SyncStatusSection extends StatelessWidget {
     ScrappingCommandLoaded scrappingState,
     InstitutionKeyLoaded keyState,
   ) {
-    context.read<MagnetBloc>().add(
-      ExecuteScrappingCommand(
-        command: scrappingState.command!,
-        institutionKey: keyState.key!,
-      ),
-    );
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      context.read<MagnetBloc>().add(
+        ExecuteScrappingCommand(
+          institutionID: keyState.key?.institutionId ?? 0,
+          userID: profileState.profile.id,
+          command: scrappingState.command!,
+          institutionKey: keyState.key!,
+        ),
+      );
+    }
   }
 }
 
@@ -364,4 +388,24 @@ class _CoursesSectionCard extends StatelessWidget {
       ),
     );
   }
+}
+
+List<InstitutionFeeTransaction> _parseTransactions(Map<String, dynamic> data) {
+  final List<dynamic> rawList = data['fees_fees_statements'] ?? [];
+  return rawList.map((json) {
+    final Map<String, dynamic> map = Map<String, dynamic>.from(json);
+    return InstitutionFeeTransaction(
+      title: map['title'],
+      institution: int.tryParse(map['institution'].toString()) ?? 0,
+      referenceNumber: map['reference_number'],
+      runningBalance: double.tryParse(
+        map['balance'].toString().replaceAll(',', ''),
+      ),
+      debit: double.tryParse(map['debit'].toString().replaceAll(',', '')),
+      credit: double.tryParse(map['credit'].toString().replaceAll(',', '')),
+      postingDate: DateTime.tryParse(map['posting_date']),
+      description: map['description'],
+      currency: map['currency'],
+    );
+  }).toList();
 }

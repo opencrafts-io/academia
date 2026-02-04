@@ -3,11 +3,31 @@ import 'package:academia/features/institution/institution.dart';
 
 extension InstitutionFeeTransactionModelHelper
     on InstitutionFeeTransactionData {
-  InstitutionFeeTransaction toEntity() =>
-      InstitutionFeeTransaction.fromJson(toJson());
+  InstitutionFeeTransaction toEntity() => InstitutionFeeTransaction(
+    id: id,
+    institution: institution,
+    referenceNumber: referenceNumber,
+    runningBalance: runningBalance,
+    debit: debit,
+    credit: credit,
+    postingDate: postingDate,
+    description: description,
+    title: title,
+    currency: currency,
+  );
 }
 
 extension InstitutionFeeTransactionHelper on InstitutionFeeTransaction {
-  InstitutionFeeTransactionData toData() =>
-      InstitutionFeeTransactionData.fromJson(toJson());
+  InstitutionFeeTransactionData toData() => InstitutionFeeTransactionData(
+    id: id,
+    institution: institution,
+    referenceNumber: referenceNumber,
+    runningBalance: runningBalance ?? 0.0,
+    debit: debit ?? 0.0,
+    credit: credit ?? 0.0,
+    postingDate: postingDate,
+    description: description,
+    title: title,
+    currency: currency ?? "KES",
+  );
 }

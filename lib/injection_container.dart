@@ -773,6 +773,10 @@ Future<void> init(FlavorConfig flavor) async {
     () => CreateProfileUsecase(repository: sl<StudentProfileRepository>()),
   );
 
+  sl.registerFactory<SyncInstitutionProfileUsecase>(
+    () => SyncInstitutionProfileUsecase(createProfileUsecase: sl()),
+  );
+
   // Update Usecases
   sl.registerFactory<UpdateProfileUsecase>(
     () => UpdateProfileUsecase(repository: sl<StudentProfileRepository>()),
@@ -836,7 +840,9 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerFactory<MagnetBloc>(() => MagnetBloc());
+  sl.registerFactory<MagnetBloc>(
+    () => MagnetBloc(syncInstitutionProfileUsecase: sl()),
+  );
 
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(

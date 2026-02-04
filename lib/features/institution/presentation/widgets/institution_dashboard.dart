@@ -99,26 +99,26 @@ class _InstitutionDashboardState extends State<InstitutionDashboard> {
                 ),
               FilledButton(
                 onPressed: () {
-                  final scrappingCommandState = context
-                      .read<ScrappingCommandBloc>()
-                      .state;
-                  final magnetState = context.read<MagnetBloc>().state;
-                  final institutionKeyState = context
-                      .read<InstitutionKeyBloc>()
-                      .state;
+                  // final scrappingCommandState = context
+                  //     .read<ScrappingCommandBloc>()
+                  //     .state;
+                  // final magnetState = context.read<MagnetBloc>().state;
+                  // final institutionKeyState = context
+                  //     .read<InstitutionKeyBloc>()
+                  //     .state;
 
-                  if ((magnetState is MagnetReady ||
-                          magnetState is MagnetSuccess) &&
-                      scrappingCommandState is ScrappingCommandLoaded &&
-                      institutionKeyState is InstitutionKeyLoaded) {
-                    context.read<MagnetBloc>().add(
-                      ExecuteScrappingCommand(
-                        command: scrappingCommandState.command!,
-                        institutionKey: institutionKeyState.key!,
-                      ),
-                    );
-                    return;
-                  }
+                  // if ((magnetState is MagnetReady ||
+                  //         magnetState is MagnetSuccess) &&
+                  //     scrappingCommandState is ScrappingCommandLoaded &&
+                  //     institutionKeyState is InstitutionKeyLoaded) {
+                  //   context.read<MagnetBloc>().add(
+                  //     ExecuteScrappingCommand(
+                  //       command: scrappingCommandState.command!,
+                  //       institutionKey: institutionKeyState.key!,
+                  //     ),
+                  //   );
+                  //   return;
+                  // }
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Institution not supported"),

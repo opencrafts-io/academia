@@ -13,7 +13,6 @@ class InstitutionFeesState extends Equatable {
     this.failure,
   });
 
-  // Helper getters for the "Expressive" UI
   double get totalDebit =>
       transactions.fold(0, (sum, item) => sum + (item?.debit ?? 0));
   double get totalCredit =>

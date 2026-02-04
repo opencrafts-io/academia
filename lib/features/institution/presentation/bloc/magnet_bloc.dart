@@ -9,8 +9,10 @@ part 'magnet_event.dart';
 
 class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   Magnet? _magnet;
+  final SyncInstitutionProfileUsecase syncInstitutionProfileUsecase;
 
-  MagnetBloc() : super(MagnetInitial()) {
+  MagnetBloc({required this.syncInstitutionProfileUsecase})
+    : super(MagnetInitial()) {
     on<InitializeMagnet>(_onInitialize);
     on<ExecuteScrappingCommand>(_onExecute);
   }
@@ -57,8 +59,14 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       final result = await magnetResult;
 
       if (result.success) {
+        await syncInstitutionProfileUsecase(
+          SyncProfileParams(
+            rawData: result.data,
+            userId: event.userID,
+            institutionId: event.institutionID,
+          ),
+        );
         emit(MagnetSuccess(result));
-        // Optionally revert to Ready state after a delay or user acknowledgement
       } else {
         emit(MagnetError(result.error ?? "Unknown scrapping error"));
       }
