@@ -105,7 +105,7 @@ abstract class ShereheRepository {
     required int limit,
   });
 
-  Future<Either<Failure, void>> deleteEventScanner({required String scannerId});
+  Future<Either<Failure, String>> deleteEventScanner({required String scannerId});
 
   Future<Either<Failure, String>> getEventScannerByUserId({
     required String eventId,

@@ -154,32 +154,66 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TicketStatsBloc, TicketStatsState>(
-      listener: (context, state) {
-        if (state is UpdateTicketSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Ticket updated successfully."),
-              behavior: SnackBarBehavior.floating,
-              dismissDirection: DismissDirection.horizontal,
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-          );
-          // Refresh ticket stats
-          context.read<TicketStatsBloc>().add(
-            GetTicketStats(eventId: widget.eventId),
-          );
-        } else if (state is UpdateTicketError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Error: ${state.message}"),
-              behavior: SnackBarBehavior.floating,
-              dismissDirection: DismissDirection.horizontal,
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TicketStatsBloc, TicketStatsState>(
+          listener: (context, state) {
+            if (state is UpdateTicketSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Ticket updated successfully."),
+                  behavior: SnackBarBehavior.floating,
+                  dismissDirection: DismissDirection.horizontal,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              );
+              // Refresh ticket stats
+              context.read<TicketStatsBloc>().add(
+                GetTicketStats(eventId: widget.eventId),
+              );
+            } else if (state is UpdateTicketError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Error: ${state.message}"),
+                  behavior: SnackBarBehavior.floating,
+                  dismissDirection: DismissDirection.horizontal,
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<ScannerActionsBloc, ScannerActionsState>(
+          listener: (context, state) {
+            if (state is DeleteScannerSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  behavior: SnackBarBehavior.floating,
+                  dismissDirection: DismissDirection.horizontal,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              );
+              // Refresh scanners list
+              context.read<AllScannersBloc>().add(
+                FetchAllScanners(eventId: widget.eventId, page: 1, limit: 20),
+              );
+              context.read<AttendeesAndScannerStatsBloc>().add(
+                GetAttendeesAndScanners(eventId: widget.eventId),
+              );
+            } else if (state is DeleteScannerError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Error: ${state.message}"),
+                  behavior: SnackBarBehavior.floating,
+                  dismissDirection: DismissDirection.horizontal,
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
@@ -434,7 +468,13 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                                   name: scanner.user?.username ?? "Guest",
                                   subtitle: scanner.role,
                                   icon: Icons.qr_code_scanner,
-                                  onTap: () {},
+                                  onTap: () =>
+                                      ShereheUtils.showScannerActionsBottomSheet(
+                                        context: context,
+                                        scannerName:
+                                            scanner.user?.username ?? "Guest",
+                                        scannerId: scanner.id,
+                                      ),
                                 ),
                               )
                               .toList(),

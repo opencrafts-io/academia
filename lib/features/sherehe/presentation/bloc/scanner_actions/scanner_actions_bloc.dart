@@ -2,24 +2,27 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'add_scanner_event.dart';
-part 'add_scanner_state.dart';
+part 'scanner_actions_event.dart';
+part 'scanner_actions_state.dart';
 
-class AddScannerBloc extends Bloc<AddScannerEvent, AddScannerState> {
+class ScannerActionsBloc extends Bloc<ScannerActionsEvent, ScannerActionsState> {
   final SearchUsersByUsernameUsecase searchUsersByUsername;
   final AddEventScannerUsecase addEventScanner;
+  final DeleteEventScannerUsecase deleteEventScanner;
 
-  AddScannerBloc({
+  ScannerActionsBloc({
     required this.searchUsersByUsername,
     required this.addEventScanner,
-  }) : super(AddScannerStateInitial()) {
+    required this.deleteEventScanner,
+  }) : super(ScannerActionsStateInitial()) {
     on<SearchUser>(_onSearchUser);
     on<AddScanner>(_onAddScanner);
+    on<DeleteScanner>(_onDeleteScanner);
   }
 
   Future<void> _onSearchUser(
     SearchUser event,
-    Emitter<AddScannerState> emit,
+    Emitter<ScannerActionsState> emit,
   ) async {
     emit(SearchUserLoading());
 
@@ -37,7 +40,7 @@ class AddScannerBloc extends Bloc<AddScannerEvent, AddScannerState> {
 
   Future<void> _onAddScanner(
     AddScanner event,
-    Emitter<AddScannerState> emit,
+    Emitter<ScannerActionsState> emit,
   ) async {
     emit(AddScannerStateLoading());
 
@@ -52,6 +55,23 @@ class AddScannerBloc extends Bloc<AddScannerEvent, AddScannerState> {
       },
       (scanner) {
         emit(AddScannerSuccess(scanner: scanner));
+      },
+    );
+  }
+
+  Future<void> _onDeleteScanner(
+    DeleteScanner event,
+    Emitter<ScannerActionsState> emit,
+  ) async {
+    emit(DeleteScannerLoading());
+    final result = await deleteEventScanner(scannerId: event.scannerId);
+
+    result.fold(
+      (failure) {
+        emit(DeleteScannerError(failure.message));
+      },
+      (message) {
+        emit(DeleteScannerSuccess(message: message));
       },
     );
   }

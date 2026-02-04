@@ -351,7 +351,7 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteEventScanner({
+  Future<Either<Failure, String>> deleteEventScanner({
     required String scannerId,
   }) async {
     final result = await remoteDataSource.deleteEventScanner(

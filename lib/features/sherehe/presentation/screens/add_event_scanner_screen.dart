@@ -39,7 +39,7 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
             onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
-          BlocBuilder<AddScannerBloc, AddScannerState>(
+          BlocBuilder<ScannerActionsBloc, ScannerActionsState>(
             builder: (context, state) {
               return state is AddScannerStateLoading
                   ? const SizedBox(
@@ -49,7 +49,7 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
                     )
                   : FilledButton(
                       onPressed: () {
-                        context.read<AddScannerBloc>().add(
+                        context.read<ScannerActionsBloc>().add(
                           AddScanner(eventId: widget.eventId, userId: userId),
                         );
                       },
@@ -71,11 +71,14 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddScannerBloc, AddScannerState>(
+    return BlocListener<ScannerActionsBloc, ScannerActionsState>(
       listener: (context, state) {
         if (state is AddScannerSuccess) {
           context.read<AllScannersBloc>().add(
             FetchAllScanners(eventId: widget.eventId, page: 1, limit: 20),
+          );
+          context.read<AttendeesAndScannerStatsBloc>().add(
+            GetAttendeesAndScanners(eventId: widget.eventId),
           );
           Navigator.pop(context); // close dialog
           Navigator.pop(context); // close screen
@@ -123,7 +126,7 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
                     _debounce = Timer(const Duration(milliseconds: 450), () {
                       final query = value.trim();
                       if (query.isNotEmpty) {
-                        context.read<AddScannerBloc>().add(
+                        context.read<ScannerActionsBloc>().add(
                           SearchUser(query: query),
                         );
                       }
@@ -144,7 +147,7 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
               ),
             ),
 
-            BlocBuilder<AddScannerBloc, AddScannerState>(
+            BlocBuilder<ScannerActionsBloc, ScannerActionsState>(
               builder: (context, state) {
                 if (state is SearchUserLoading) {
                   return const SliverFillRemaining(

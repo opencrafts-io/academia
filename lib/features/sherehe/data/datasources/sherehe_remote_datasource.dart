@@ -871,7 +871,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, void>> deleteEventScanner({
+  Future<Either<Failure, String>> deleteEventScanner({
     required String scannerId,
   }) async {
     try {
@@ -880,7 +880,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
-        return right(null);
+        return right(response.data['message']);
       } else {
         return left(
           ServerFailure(

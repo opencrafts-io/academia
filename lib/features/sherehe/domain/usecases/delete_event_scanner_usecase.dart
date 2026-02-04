@@ -7,7 +7,7 @@ class DeleteEventScannerUsecase {
 
   DeleteEventScannerUsecase(this.repository);
 
-  Future<Either<Failure, void>> call({required String scannerId}) async {
+  Future<Either<Failure, String>> call({required String scannerId}) async {
     return repository.deleteEventScanner(scannerId: scannerId);
   }
 }

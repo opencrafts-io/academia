@@ -37,7 +37,7 @@ export 'bloc/validate_attendee/validate_attendee_bloc.dart';
 export 'bloc/ticket_payment/ticket_payment_bloc.dart';
 export 'bloc/attendees_and_scanner_stats/attendees_and_scanner_stats_bloc.dart';
 export 'bloc/ticket_stats/ticket_stats_bloc.dart';
-export 'bloc/add_scanner/add_scanner_bloc.dart';
+export 'bloc/scanner_actions/scanner_actions_bloc.dart';
 export 'bloc/get_event_scanner_by_user_id/get_event_scanner_by_user_id_bloc.dart';
 export 'widgets/modern_input_decoration.dart';
 export 'widgets/event_image_picker_widget.dart';
