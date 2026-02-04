@@ -350,24 +350,105 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 Column(
                   children: _tickets.map((t) {
                     final index = _tickets.indexOf(t);
+                    final isPublic = index == 0 ? _isPublic : true;
+                    final institutions = _selectedInstitutions.toList();
+
                     return Card(
-                      child: ListTile(
-                        title: Text(t.ticketName),
-                        subtitle: Text(
-                          "Price: ${t.ticketPrice} • Qty: ${t.ticketQuantity}",
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => _editTicketDialog(index),
+                            // Ticket main info
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  t.ticketName,
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _editTicketDialog(index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => setState(
+                                        () => _tickets.removeAt(index),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                setState(() => _tickets.removeAt(index));
-                              },
+                            const SizedBox(height: 4),
+                            Text(
+                              "Price: ${t.ticketPrice} • Qty: ${t.ticketQuantity}",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            const SizedBox(height: 8),
+
+                            // Visibility info
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Chip(
+                                  label: Text(
+                                    isPublic ? "Everyone" : "Restricted",
+                                  ),
+                                  backgroundColor: isPublic
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.primaryContainer
+                                      : Theme.of(
+                                          context,
+                                        ).colorScheme.secondaryContainer,
+                                  labelStyle: TextStyle(
+                                    color: isPublic
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimaryContainer
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSecondaryContainer,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                if (!isPublic && institutions.isNotEmpty)
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 6,
+                                    children: institutions.map((inst) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.tertiaryContainer,
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          inst,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onTertiaryContainer,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                              ],
                             ),
                           ],
                         ),
