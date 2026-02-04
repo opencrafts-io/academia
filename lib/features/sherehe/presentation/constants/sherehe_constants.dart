@@ -48,3 +48,17 @@ extension AttendeeStatusMapper on String {
     }
   }
 }
+
+//mock data
+final List<String> mockUniversityData = [
+  'Daystar University',
+  'University of London',
+  'Kenyatta University',
+  'University of Nairobi',
+  'Strathmore University',
+  'United States International University',
+  'Jomo Kenyatta University of Agriculture and Technology',
+  'Dedan Kimathi University of Technology',
+  'Moi University',
+  'Maseno University',
+];

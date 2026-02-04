@@ -1,4 +1,5 @@
 import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 class TicketSelectionPage extends StatefulWidget {
@@ -27,6 +28,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   final _ticketQtyController = TextEditingController();
 
   late List<Ticket> _tickets;
+  bool _isPublic = true;
+  final Set<String> _selectedInstitutions = {};
 
   @override
   void initState() {
@@ -55,6 +58,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         _ticketNameController.clear();
         _ticketPriceController.clear();
         _ticketQtyController.clear();
+        _isPublic = true;
+        _selectedInstitutions.clear();
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -192,7 +197,6 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     }
   }
 
-  // Submit paid tickets
   void _submit() {
     if (_tickets.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -208,172 +212,201 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     return Scaffold(
       body: Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_tickets.any((t) => t.ticketPrice == 0)) ...[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Text(
-                  "This is a FREE event.\nDelete the free ticket to add more tickets(if you wish to change it to a Paid event).",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_tickets.any((t) => t.ticketPrice == 0)) ...[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Text(
+                    "This is a FREE event.\nDelete the free ticket to add more tickets(if you wish to change it to a Paid event).",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ] else ...[
+              ] else ...[
+                Text(
+                  "Create Ticket Types",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Add different ticket categories such as VIP, Regular, Early Bird, etc.",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        controller: _ticketNameController,
+                        decoration: const InputDecoration(
+                          labelText: "Ticket Name",
+                        ),
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Enter name" : null,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: TextFormField(
+                        controller: _ticketPriceController,
+                        decoration: const InputDecoration(labelText: "Price"),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          final num? parsed = num.tryParse(value ?? "");
+                          if (parsed == null) return "Price?";
+                          if (parsed <= 0) return "Invalid";
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: TextFormField(
+                        controller: _ticketQtyController,
+                        decoration: const InputDecoration(
+                          labelText: "Quantity",
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          final int? parsed = int.tryParse(value ?? "");
+                          if (parsed == null || parsed <= 0) return "Qty?";
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TicketVisibilitySelector(
+                  isPublic: _isPublic,
+                  selectedInstitutions: _selectedInstitutions.toList(),
+
+                  onVisibilityChanged: (isPublic) {
+                    setState(() {
+                      _isPublic = isPublic ?? true;
+                      if (_isPublic) _selectedInstitutions.clear();
+                    });
+                  },
+
+                  onInstitutionSelected: (inst, selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedInstitutions.add(inst);
+                      } else {
+                        _selectedInstitutions.remove(inst);
+                      }
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    icon: const Icon(Icons.add),
+                    onPressed: _addTicket,
+                    label: const Text("Add Ticket"),
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 24),
+
               Text(
-                "Create Ticket Types",
-                style: Theme.of(context).textTheme.headlineSmall,
+                "Added Tickets",
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              Text(
-                "Add different ticket categories such as VIP, Regular, Early Bird, etc.",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+
+              if (_tickets.isEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.confirmation_number_outlined, size: 64),
+                        SizedBox(height: 12),
+                        Text("No tickets added yet"),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
+              ] else
+                Column(
+                  children: _tickets.map((t) {
+                    final index = _tickets.indexOf(t);
+                    return Card(
+                      child: ListTile(
+                        title: Text(t.ticketName),
+                        subtitle: Text(
+                          "Price: ${t.ticketPrice} • Qty: ${t.ticketQuantity}",
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => _editTicketDialog(index),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() => _tickets.removeAt(index));
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+              const SizedBox(height: 24),
 
               Row(
-                spacing: 8.0,
+                spacing: 12.0,
                 children: [
                   Expanded(
-                    flex: 3,
-                    child: TextFormField(
-                      controller: _ticketNameController,
-                      decoration: const InputDecoration(
-                        labelText: "Ticket Name",
-                        hintText: "VIP / Regular",
-                      ),
-                      validator: (value) =>
-                          value == null || value.trim().isEmpty
-                          ? "Enter name"
-                          : null,
+                    child: OutlinedButton(
+                      onPressed: widget.onPrevious,
+                      child: const Text("Back"),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: TextFormField(
-                      controller: _ticketPriceController,
-                      decoration: const InputDecoration(
-                        labelText: "Price",
-                        hintText: "0",
+
+                  if (_tickets.isEmpty)
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _showFreeTicketQuantityDialog,
+                        child: const Text("Skip (Free Event)"),
                       ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        final num? parsed = num.tryParse(value ?? "");
-                        if (parsed == null) return "Price?";
-                        if (parsed <= 0) return "Invalid";
-                        return null;
-                      },
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: TextFormField(
-                      controller: _ticketQtyController,
-                      decoration: const InputDecoration(
-                        labelText: "Quantity",
-                        hintText: "0",
+
+                  if (_tickets.isNotEmpty)
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _submit,
+                        child: const Text("Continue"),
                       ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        final int? parsed = int.tryParse(value ?? "");
-                        if (parsed == null || parsed <= 0) return "Qty?";
-                        return null;
-                      },
                     ),
-                  ),
-                  FilledButton(onPressed: _addTicket, child: const Text("Add")),
                 ],
               ),
             ],
-
-            const SizedBox(height: 20),
-
-            Text(
-              "Added Tickets",
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-
-            Expanded(
-              child: _tickets.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No tickets added yet",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _tickets.length,
-                      itemBuilder: (context, index) {
-                        final ticket = _tickets[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text(ticket.ticketName),
-                            subtitle: Text(
-                              "Price: ${ticket.ticketPrice}  •  Qty: ${ticket.ticketQuantity}",
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => _editTicketDialog(index),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    setState(() => _tickets.removeAt(index));
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Row(
-              spacing: 12.0,
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: widget.onPrevious,
-                    child: const Text("Back"),
-                  ),
-                ),
-
-                // FREE EVENT → Skip → Ask for quantity
-                if (_tickets.isEmpty)
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: _showFreeTicketQuantityDialog,
-                      child: const Text("Skip (Free Event)"),
-                    ),
-                  ),
-
-                // PAID EVENT → Continue
-                if (_tickets.isNotEmpty)
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: _submit,
-                      child: const Text("Continue"),
-                    ),
-                  ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
