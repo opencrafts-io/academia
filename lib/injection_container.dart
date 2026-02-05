@@ -841,7 +841,10 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory<MagnetBloc>(
-    () => MagnetBloc(syncInstitutionProfileUsecase: sl()),
+    () => MagnetBloc(
+      syncInstitutionProfileUsecase: sl(),
+      saveFeeTransaction: sl(),
+    ),
   );
 
   sl.registerFactory<InstitutionBloc>(

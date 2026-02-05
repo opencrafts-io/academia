@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
-import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:magnet/magnet.dart';
 
@@ -23,7 +19,6 @@ class InstitutionHomePage extends StatefulWidget {
 class _InstitutionHomePageState extends State<InstitutionHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  bool _showSyncCard = false;
 
   @override
   void initState() {
@@ -101,15 +96,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
           ),
           BlocListener<MagnetBloc, MagnetState>(
             listener: (context, state) async {
-              if (state is MagnetProcessing || state is MagnetInitializing) {
-                setState(() {
-                  _showSyncCard = false;
-                });
-              } else if (state is MagnetError || state is MagnetInitial) {
-                setState(() {
-                  _showSyncCard = true;
-                });
-              } else if (state is MagnetSuccess) {
+              if (state is MagnetSuccess) {
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -117,36 +104,6 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
-                Logger().i(state.result.data);
-                // final profileState = context.read<ProfileBloc>().state;
-                // if (profileState is ProfileLoadedState) {
-                //   final extra = {
-                //     "user_id": profileState.profile.id,
-                //     "institution": widget.institutionID,
-                //     "created_at": DateTime.now().toIso8601String(),
-                //     "updated_at": DateTime.now().toIso8601String(),
-                //   };
-                //   context.read<StudentProfileBloc>().add(
-                //     CreateProfileEvent(
-                //       profile: InstitutionProfile.fromJson(
-                //         state.result.data..addEntries(extra.entries),
-                //       ),
-                //     ),
-                //   );
-                //   final String rawJson = jsonEncode(state.result.data);
-                //   final Map<String, dynamic> computableData = jsonDecode(
-                //     rawJson,
-                //   );
-                //
-                //   final List<InstitutionFeeTransaction> transactions =
-                //       await compute(_parseTransactions, computableData);
-                //
-                //   if (context.mounted) {
-                //     final feesBloc = context.read<InstitutionFeesBloc>();
-                //     for (var transaction in transactions) {
-                //       feesBloc.add(TransactionSaved(transaction));
-                //     }
-                //   }
               }
               // }
             },
@@ -160,18 +117,14 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
             await Future.delayed(Duration(seconds: 3));
           },
           child: CustomScrollView(
+            physics: BouncingScrollPhysics(),
             slivers: [
               _InstitutionHomePageAppBar(institutionID: widget.institutionID),
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: MultiSliver(
                   children: [
-                    Visibility(
-                      visible: _showSyncCard,
-                      child: SyncRequiredCard(onSyncPressed: () {}),
-                    ),
                     SyncStatusSection(),
-
                     SliverPinnedHeader(
                       child: Container(
                         color: Theme.of(context).colorScheme.surface,
@@ -223,6 +176,8 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                       ),
                     ),
                     _CoursesSectionCard(),
+
+                    SizedBox(height: 22),
                   ],
                 ),
               ),

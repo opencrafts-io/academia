@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:magnet/magnet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 part 'magnet_state.dart';
 part 'magnet_event.dart';
@@ -10,9 +13,12 @@ part 'magnet_event.dart';
 class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   Magnet? _magnet;
   final SyncInstitutionProfileUsecase syncInstitutionProfileUsecase;
+  final SaveFeeTransaction saveFeeTransaction;
 
-  MagnetBloc({required this.syncInstitutionProfileUsecase})
-    : super(MagnetInitial()) {
+  MagnetBloc({
+    required this.syncInstitutionProfileUsecase,
+    required this.saveFeeTransaction,
+  }) : super(MagnetInitial()) {
     on<InitializeMagnet>(_onInitialize);
     on<ExecuteScrappingCommand>(_onExecute);
   }
@@ -59,6 +65,18 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       final result = await magnetResult;
 
       if (result.success) {
+        final String rawJson = jsonEncode(result.data);
+        final Map<String, dynamic> computableData = jsonDecode(rawJson);
+
+        final List<InstitutionFeeTransaction> transactions = await compute(
+          _parseRawFeesTransactions,
+          computableData,
+        );
+
+        for (var transaction in transactions) {
+          saveFeeTransaction(transaction);
+        }
+
         await syncInstitutionProfileUsecase(
           SyncProfileParams(
             rawData: result.data,
@@ -95,4 +113,26 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
 
     return command.copyWith(instructions: updatedInstructions);
   }
+}
+
+List<InstitutionFeeTransaction> _parseRawFeesTransactions(
+  Map<String, dynamic> data,
+) {
+  final List<dynamic> rawList = data['fees_fees_statements'] ?? [];
+  return rawList.map((json) {
+    final Map<String, dynamic> map = Map<String, dynamic>.from(json);
+    return InstitutionFeeTransaction(
+      title: map['title'],
+      institution: int.tryParse(map['institution'].toString()) ?? 0,
+      referenceNumber: map['reference_number'],
+      runningBalance: double.tryParse(
+        map['balance'].toString().replaceAll(',', ''),
+      ),
+      debit: double.tryParse(map['debit'].toString().replaceAll(',', '')),
+      credit: double.tryParse(map['credit'].toString().replaceAll(',', '')),
+      postingDate: DateTime.tryParse(map['posting_date']),
+      description: map['description'],
+      currency: map['currency'],
+    );
+  }).toList();
 }
