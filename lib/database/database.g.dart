@@ -13345,6 +13345,876 @@ class InstitutionFeeTransactionCompanion
   }
 }
 
+class $InstitutionCourseTimetableEntryTable
+    extends InstitutionCourseTimetableEntry
+    with
+        TableInfo<
+          $InstitutionCourseTimetableEntryTable,
+          InstitutionCourseTimetableEntryData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionCourseTimetableEntryTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
+    'courseCode',
+  );
+  @override
+  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
+    'course_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseNameMeta = const VerificationMeta(
+    'courseName',
+  );
+  @override
+  late final GeneratedColumn<String> courseName = GeneratedColumn<String>(
+    'course_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dayOfWeekMeta = const VerificationMeta(
+    'dayOfWeek',
+  );
+  @override
+  late final GeneratedColumn<String> dayOfWeek = GeneratedColumn<String>(
+    'day_of_week',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+    'start_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endTime = GeneratedColumn<DateTime>(
+    'end_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roomMeta = const VerificationMeta('room');
+  @override
+  late final GeneratedColumn<String> room = GeneratedColumn<String>(
+    'room',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _buildingMeta = const VerificationMeta(
+    'building',
+  );
+  @override
+  late final GeneratedColumn<String> building = GeneratedColumn<String>(
+    'building',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _instructorMeta = const VerificationMeta(
+    'instructor',
+  );
+  @override
+  late final GeneratedColumn<String> instructor = GeneratedColumn<String>(
+    'instructor',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isRecurringMeta = const VerificationMeta(
+    'isRecurring',
+  );
+  @override
+  late final GeneratedColumn<bool> isRecurring = GeneratedColumn<bool>(
+    'is_recurring',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_recurring" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _recurrencePatternMeta = const VerificationMeta(
+    'recurrencePattern',
+  );
+  @override
+  late final GeneratedColumn<String> recurrencePattern =
+      GeneratedColumn<String>(
+        'recurrence_pattern',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _rawDataMeta = const VerificationMeta(
+    'rawData',
+  );
+  @override
+  late final GeneratedColumn<String> rawData = GeneratedColumn<String>(
+    'raw_data',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    courseCode,
+    courseName,
+    dayOfWeek,
+    startTime,
+    endTime,
+    location,
+    room,
+    building,
+    instructor,
+    isRecurring,
+    recurrencePattern,
+    rawData,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_course_timetable_entry';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionCourseTimetableEntryData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('course_code')) {
+      context.handle(
+        _courseCodeMeta,
+        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseCodeMeta);
+    }
+    if (data.containsKey('course_name')) {
+      context.handle(
+        _courseNameMeta,
+        courseName.isAcceptableOrUnknown(data['course_name']!, _courseNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseNameMeta);
+    }
+    if (data.containsKey('day_of_week')) {
+      context.handle(
+        _dayOfWeekMeta,
+        dayOfWeek.isAcceptableOrUnknown(data['day_of_week']!, _dayOfWeekMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayOfWeekMeta);
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startTimeMeta);
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endTimeMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('room')) {
+      context.handle(
+        _roomMeta,
+        room.isAcceptableOrUnknown(data['room']!, _roomMeta),
+      );
+    }
+    if (data.containsKey('building')) {
+      context.handle(
+        _buildingMeta,
+        building.isAcceptableOrUnknown(data['building']!, _buildingMeta),
+      );
+    }
+    if (data.containsKey('instructor')) {
+      context.handle(
+        _instructorMeta,
+        instructor.isAcceptableOrUnknown(data['instructor']!, _instructorMeta),
+      );
+    }
+    if (data.containsKey('is_recurring')) {
+      context.handle(
+        _isRecurringMeta,
+        isRecurring.isAcceptableOrUnknown(
+          data['is_recurring']!,
+          _isRecurringMeta,
+        ),
+      );
+    }
+    if (data.containsKey('recurrence_pattern')) {
+      context.handle(
+        _recurrencePatternMeta,
+        recurrencePattern.isAcceptableOrUnknown(
+          data['recurrence_pattern']!,
+          _recurrencePatternMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_data')) {
+      context.handle(
+        _rawDataMeta,
+        rawData.isAcceptableOrUnknown(data['raw_data']!, _rawDataMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InstitutionCourseTimetableEntryData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionCourseTimetableEntryData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      courseCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_code'],
+      )!,
+      courseName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_name'],
+      )!,
+      dayOfWeek: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day_of_week'],
+      )!,
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_time'],
+      )!,
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_time'],
+      )!,
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      room: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room'],
+      ),
+      building: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}building'],
+      ),
+      instructor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructor'],
+      ),
+      isRecurring: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_recurring'],
+      )!,
+      recurrencePattern: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recurrence_pattern'],
+      ),
+      rawData: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_data'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InstitutionCourseTimetableEntryTable createAlias(String alias) {
+    return $InstitutionCourseTimetableEntryTable(attachedDatabase, alias);
+  }
+}
+
+class InstitutionCourseTimetableEntryData extends DataClass
+    implements Insertable<InstitutionCourseTimetableEntryData> {
+  final int id;
+  final String courseCode;
+  final String courseName;
+  final String dayOfWeek;
+  final DateTime startTime;
+  final DateTime endTime;
+  final String? location;
+  final String? room;
+  final String? building;
+  final String? instructor;
+  final bool isRecurring;
+  final String? recurrencePattern;
+  final String? rawData;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const InstitutionCourseTimetableEntryData({
+    required this.id,
+    required this.courseCode,
+    required this.courseName,
+    required this.dayOfWeek,
+    required this.startTime,
+    required this.endTime,
+    this.location,
+    this.room,
+    this.building,
+    this.instructor,
+    required this.isRecurring,
+    this.recurrencePattern,
+    this.rawData,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['course_code'] = Variable<String>(courseCode);
+    map['course_name'] = Variable<String>(courseName);
+    map['day_of_week'] = Variable<String>(dayOfWeek);
+    map['start_time'] = Variable<DateTime>(startTime);
+    map['end_time'] = Variable<DateTime>(endTime);
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || room != null) {
+      map['room'] = Variable<String>(room);
+    }
+    if (!nullToAbsent || building != null) {
+      map['building'] = Variable<String>(building);
+    }
+    if (!nullToAbsent || instructor != null) {
+      map['instructor'] = Variable<String>(instructor);
+    }
+    map['is_recurring'] = Variable<bool>(isRecurring);
+    if (!nullToAbsent || recurrencePattern != null) {
+      map['recurrence_pattern'] = Variable<String>(recurrencePattern);
+    }
+    if (!nullToAbsent || rawData != null) {
+      map['raw_data'] = Variable<String>(rawData);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  InstitutionCourseTimetableEntryCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionCourseTimetableEntryCompanion(
+      id: Value(id),
+      courseCode: Value(courseCode),
+      courseName: Value(courseName),
+      dayOfWeek: Value(dayOfWeek),
+      startTime: Value(startTime),
+      endTime: Value(endTime),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      room: room == null && nullToAbsent ? const Value.absent() : Value(room),
+      building: building == null && nullToAbsent
+          ? const Value.absent()
+          : Value(building),
+      instructor: instructor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(instructor),
+      isRecurring: Value(isRecurring),
+      recurrencePattern: recurrencePattern == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrencePattern),
+      rawData: rawData == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawData),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory InstitutionCourseTimetableEntryData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionCourseTimetableEntryData(
+      id: serializer.fromJson<int>(json['id']),
+      courseCode: serializer.fromJson<String>(json['course_code']),
+      courseName: serializer.fromJson<String>(json['course_code']),
+      dayOfWeek: serializer.fromJson<String>(json['day_of_week']),
+      startTime: serializer.fromJson<DateTime>(json['start_time']),
+      endTime: serializer.fromJson<DateTime>(json['end_time']),
+      location: serializer.fromJson<String?>(json['location']),
+      room: serializer.fromJson<String?>(json['room']),
+      building: serializer.fromJson<String?>(json['building']),
+      instructor: serializer.fromJson<String?>(json['instructor']),
+      isRecurring: serializer.fromJson<bool>(json['is_recurring']),
+      recurrencePattern: serializer.fromJson<String?>(
+        json['recurrence_pattern'],
+      ),
+      rawData: serializer.fromJson<String?>(json['raw_data']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'course_code': serializer.toJson<String>(courseCode),
+      'course_code': serializer.toJson<String>(courseName),
+      'day_of_week': serializer.toJson<String>(dayOfWeek),
+      'start_time': serializer.toJson<DateTime>(startTime),
+      'end_time': serializer.toJson<DateTime>(endTime),
+      'location': serializer.toJson<String?>(location),
+      'room': serializer.toJson<String?>(room),
+      'building': serializer.toJson<String?>(building),
+      'instructor': serializer.toJson<String?>(instructor),
+      'is_recurring': serializer.toJson<bool>(isRecurring),
+      'recurrence_pattern': serializer.toJson<String?>(recurrencePattern),
+      'raw_data': serializer.toJson<String?>(rawData),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  InstitutionCourseTimetableEntryData copyWith({
+    int? id,
+    String? courseCode,
+    String? courseName,
+    String? dayOfWeek,
+    DateTime? startTime,
+    DateTime? endTime,
+    Value<String?> location = const Value.absent(),
+    Value<String?> room = const Value.absent(),
+    Value<String?> building = const Value.absent(),
+    Value<String?> instructor = const Value.absent(),
+    bool? isRecurring,
+    Value<String?> recurrencePattern = const Value.absent(),
+    Value<String?> rawData = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => InstitutionCourseTimetableEntryData(
+    id: id ?? this.id,
+    courseCode: courseCode ?? this.courseCode,
+    courseName: courseName ?? this.courseName,
+    dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
+    location: location.present ? location.value : this.location,
+    room: room.present ? room.value : this.room,
+    building: building.present ? building.value : this.building,
+    instructor: instructor.present ? instructor.value : this.instructor,
+    isRecurring: isRecurring ?? this.isRecurring,
+    recurrencePattern: recurrencePattern.present
+        ? recurrencePattern.value
+        : this.recurrencePattern,
+    rawData: rawData.present ? rawData.value : this.rawData,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  InstitutionCourseTimetableEntryData copyWithCompanion(
+    InstitutionCourseTimetableEntryCompanion data,
+  ) {
+    return InstitutionCourseTimetableEntryData(
+      id: data.id.present ? data.id.value : this.id,
+      courseCode: data.courseCode.present
+          ? data.courseCode.value
+          : this.courseCode,
+      courseName: data.courseName.present
+          ? data.courseName.value
+          : this.courseName,
+      dayOfWeek: data.dayOfWeek.present ? data.dayOfWeek.value : this.dayOfWeek,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      location: data.location.present ? data.location.value : this.location,
+      room: data.room.present ? data.room.value : this.room,
+      building: data.building.present ? data.building.value : this.building,
+      instructor: data.instructor.present
+          ? data.instructor.value
+          : this.instructor,
+      isRecurring: data.isRecurring.present
+          ? data.isRecurring.value
+          : this.isRecurring,
+      recurrencePattern: data.recurrencePattern.present
+          ? data.recurrencePattern.value
+          : this.recurrencePattern,
+      rawData: data.rawData.present ? data.rawData.value : this.rawData,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionCourseTimetableEntryData(')
+          ..write('id: $id, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseName: $courseName, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('location: $location, ')
+          ..write('room: $room, ')
+          ..write('building: $building, ')
+          ..write('instructor: $instructor, ')
+          ..write('isRecurring: $isRecurring, ')
+          ..write('recurrencePattern: $recurrencePattern, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    courseCode,
+    courseName,
+    dayOfWeek,
+    startTime,
+    endTime,
+    location,
+    room,
+    building,
+    instructor,
+    isRecurring,
+    recurrencePattern,
+    rawData,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionCourseTimetableEntryData &&
+          other.id == this.id &&
+          other.courseCode == this.courseCode &&
+          other.courseName == this.courseName &&
+          other.dayOfWeek == this.dayOfWeek &&
+          other.startTime == this.startTime &&
+          other.endTime == this.endTime &&
+          other.location == this.location &&
+          other.room == this.room &&
+          other.building == this.building &&
+          other.instructor == this.instructor &&
+          other.isRecurring == this.isRecurring &&
+          other.recurrencePattern == this.recurrencePattern &&
+          other.rawData == this.rawData &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class InstitutionCourseTimetableEntryCompanion
+    extends UpdateCompanion<InstitutionCourseTimetableEntryData> {
+  final Value<int> id;
+  final Value<String> courseCode;
+  final Value<String> courseName;
+  final Value<String> dayOfWeek;
+  final Value<DateTime> startTime;
+  final Value<DateTime> endTime;
+  final Value<String?> location;
+  final Value<String?> room;
+  final Value<String?> building;
+  final Value<String?> instructor;
+  final Value<bool> isRecurring;
+  final Value<String?> recurrencePattern;
+  final Value<String?> rawData;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const InstitutionCourseTimetableEntryCompanion({
+    this.id = const Value.absent(),
+    this.courseCode = const Value.absent(),
+    this.courseName = const Value.absent(),
+    this.dayOfWeek = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.location = const Value.absent(),
+    this.room = const Value.absent(),
+    this.building = const Value.absent(),
+    this.instructor = const Value.absent(),
+    this.isRecurring = const Value.absent(),
+    this.recurrencePattern = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  InstitutionCourseTimetableEntryCompanion.insert({
+    this.id = const Value.absent(),
+    required String courseCode,
+    required String courseName,
+    required String dayOfWeek,
+    required DateTime startTime,
+    required DateTime endTime,
+    this.location = const Value.absent(),
+    this.room = const Value.absent(),
+    this.building = const Value.absent(),
+    this.instructor = const Value.absent(),
+    this.isRecurring = const Value.absent(),
+    this.recurrencePattern = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : courseCode = Value(courseCode),
+       courseName = Value(courseName),
+       dayOfWeek = Value(dayOfWeek),
+       startTime = Value(startTime),
+       endTime = Value(endTime);
+  static Insertable<InstitutionCourseTimetableEntryData> custom({
+    Expression<int>? id,
+    Expression<String>? courseCode,
+    Expression<String>? courseName,
+    Expression<String>? dayOfWeek,
+    Expression<DateTime>? startTime,
+    Expression<DateTime>? endTime,
+    Expression<String>? location,
+    Expression<String>? room,
+    Expression<String>? building,
+    Expression<String>? instructor,
+    Expression<bool>? isRecurring,
+    Expression<String>? recurrencePattern,
+    Expression<String>? rawData,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (courseCode != null) 'course_code': courseCode,
+      if (courseName != null) 'course_name': courseName,
+      if (dayOfWeek != null) 'day_of_week': dayOfWeek,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+      if (location != null) 'location': location,
+      if (room != null) 'room': room,
+      if (building != null) 'building': building,
+      if (instructor != null) 'instructor': instructor,
+      if (isRecurring != null) 'is_recurring': isRecurring,
+      if (recurrencePattern != null) 'recurrence_pattern': recurrencePattern,
+      if (rawData != null) 'raw_data': rawData,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  InstitutionCourseTimetableEntryCompanion copyWith({
+    Value<int>? id,
+    Value<String>? courseCode,
+    Value<String>? courseName,
+    Value<String>? dayOfWeek,
+    Value<DateTime>? startTime,
+    Value<DateTime>? endTime,
+    Value<String?>? location,
+    Value<String?>? room,
+    Value<String?>? building,
+    Value<String?>? instructor,
+    Value<bool>? isRecurring,
+    Value<String?>? recurrencePattern,
+    Value<String?>? rawData,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return InstitutionCourseTimetableEntryCompanion(
+      id: id ?? this.id,
+      courseCode: courseCode ?? this.courseCode,
+      courseName: courseName ?? this.courseName,
+      dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      location: location ?? this.location,
+      room: room ?? this.room,
+      building: building ?? this.building,
+      instructor: instructor ?? this.instructor,
+      isRecurring: isRecurring ?? this.isRecurring,
+      recurrencePattern: recurrencePattern ?? this.recurrencePattern,
+      rawData: rawData ?? this.rawData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (courseCode.present) {
+      map['course_code'] = Variable<String>(courseCode.value);
+    }
+    if (courseName.present) {
+      map['course_name'] = Variable<String>(courseName.value);
+    }
+    if (dayOfWeek.present) {
+      map['day_of_week'] = Variable<String>(dayOfWeek.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<DateTime>(endTime.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (room.present) {
+      map['room'] = Variable<String>(room.value);
+    }
+    if (building.present) {
+      map['building'] = Variable<String>(building.value);
+    }
+    if (instructor.present) {
+      map['instructor'] = Variable<String>(instructor.value);
+    }
+    if (isRecurring.present) {
+      map['is_recurring'] = Variable<bool>(isRecurring.value);
+    }
+    if (recurrencePattern.present) {
+      map['recurrence_pattern'] = Variable<String>(recurrencePattern.value);
+    }
+    if (rawData.present) {
+      map['raw_data'] = Variable<String>(rawData.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionCourseTimetableEntryCompanion(')
+          ..write('id: $id, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseName: $courseName, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('location: $location, ')
+          ..write('room: $room, ')
+          ..write('building: $building, ')
+          ..write('instructor: $instructor, ')
+          ..write('isRecurring: $isRecurring, ')
+          ..write('recurrencePattern: $recurrencePattern, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExamTimetableTable extends ExamTimetable
     with TableInfo<$ExamTimetableTable, ExamTimetableData> {
   @override
@@ -18388,6 +19258,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
       $InstitutionProfileTable(this);
   late final $InstitutionFeeTransactionTable institutionFeeTransaction =
       $InstitutionFeeTransactionTable(this);
+  late final $InstitutionCourseTimetableEntryTable
+  institutionCourseTimetableEntry = $InstitutionCourseTimetableEntryTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -18424,6 +19296,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     institutionKey,
     institutionProfile,
     institutionFeeTransaction,
+    institutionCourseTimetableEntry,
     examTimetable,
     chirpUser,
     community,
@@ -25536,6 +26409,419 @@ typedef $$InstitutionFeeTransactionTableProcessedTableManager =
       InstitutionFeeTransactionData,
       PrefetchHooks Function({bool institution})
     >;
+typedef $$InstitutionCourseTimetableEntryTableCreateCompanionBuilder =
+    InstitutionCourseTimetableEntryCompanion Function({
+      Value<int> id,
+      required String courseCode,
+      required String courseName,
+      required String dayOfWeek,
+      required DateTime startTime,
+      required DateTime endTime,
+      Value<String?> location,
+      Value<String?> room,
+      Value<String?> building,
+      Value<String?> instructor,
+      Value<bool> isRecurring,
+      Value<String?> recurrencePattern,
+      Value<String?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder =
+    InstitutionCourseTimetableEntryCompanion Function({
+      Value<int> id,
+      Value<String> courseCode,
+      Value<String> courseName,
+      Value<String> dayOfWeek,
+      Value<DateTime> startTime,
+      Value<DateTime> endTime,
+      Value<String?> location,
+      Value<String?> room,
+      Value<String?> building,
+      Value<String?> instructor,
+      Value<bool> isRecurring,
+      Value<String?> recurrencePattern,
+      Value<String?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$InstitutionCourseTimetableEntryTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionCourseTimetableEntryTable> {
+  $$InstitutionCourseTimetableEntryTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get room => $composableBuilder(
+    column: $table.room,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get building => $composableBuilder(
+    column: $table.building,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recurrencePattern => $composableBuilder(
+    column: $table.recurrencePattern,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InstitutionCourseTimetableEntryTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionCourseTimetableEntryTable> {
+  $$InstitutionCourseTimetableEntryTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get room => $composableBuilder(
+    column: $table.room,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get building => $composableBuilder(
+    column: $table.building,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recurrencePattern => $composableBuilder(
+    column: $table.recurrencePattern,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstitutionCourseTimetableEntryTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionCourseTimetableEntryTable> {
+  $$InstitutionCourseTimetableEntryTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get dayOfWeek =>
+      $composableBuilder(column: $table.dayOfWeek, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get room =>
+      $composableBuilder(column: $table.room, builder: (column) => column);
+
+  GeneratedColumn<String> get building =>
+      $composableBuilder(column: $table.building, builder: (column) => column);
+
+  GeneratedColumn<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get recurrencePattern => $composableBuilder(
+    column: $table.recurrencePattern,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawData =>
+      $composableBuilder(column: $table.rawData, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$InstitutionCourseTimetableEntryTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionCourseTimetableEntryTable,
+          InstitutionCourseTimetableEntryData,
+          $$InstitutionCourseTimetableEntryTableFilterComposer,
+          $$InstitutionCourseTimetableEntryTableOrderingComposer,
+          $$InstitutionCourseTimetableEntryTableAnnotationComposer,
+          $$InstitutionCourseTimetableEntryTableCreateCompanionBuilder,
+          $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder,
+          (
+            InstitutionCourseTimetableEntryData,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionCourseTimetableEntryTable,
+              InstitutionCourseTimetableEntryData
+            >,
+          ),
+          InstitutionCourseTimetableEntryData,
+          PrefetchHooks Function()
+        > {
+  $$InstitutionCourseTimetableEntryTableTableManager(
+    _$AppDataBase db,
+    $InstitutionCourseTimetableEntryTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionCourseTimetableEntryTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InstitutionCourseTimetableEntryTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InstitutionCourseTimetableEntryTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> courseCode = const Value.absent(),
+                Value<String> courseName = const Value.absent(),
+                Value<String> dayOfWeek = const Value.absent(),
+                Value<DateTime> startTime = const Value.absent(),
+                Value<DateTime> endTime = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> room = const Value.absent(),
+                Value<String?> building = const Value.absent(),
+                Value<String?> instructor = const Value.absent(),
+                Value<bool> isRecurring = const Value.absent(),
+                Value<String?> recurrencePattern = const Value.absent(),
+                Value<String?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => InstitutionCourseTimetableEntryCompanion(
+                id: id,
+                courseCode: courseCode,
+                courseName: courseName,
+                dayOfWeek: dayOfWeek,
+                startTime: startTime,
+                endTime: endTime,
+                location: location,
+                room: room,
+                building: building,
+                instructor: instructor,
+                isRecurring: isRecurring,
+                recurrencePattern: recurrencePattern,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String courseCode,
+                required String courseName,
+                required String dayOfWeek,
+                required DateTime startTime,
+                required DateTime endTime,
+                Value<String?> location = const Value.absent(),
+                Value<String?> room = const Value.absent(),
+                Value<String?> building = const Value.absent(),
+                Value<String?> instructor = const Value.absent(),
+                Value<bool> isRecurring = const Value.absent(),
+                Value<String?> recurrencePattern = const Value.absent(),
+                Value<String?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => InstitutionCourseTimetableEntryCompanion.insert(
+                id: id,
+                courseCode: courseCode,
+                courseName: courseName,
+                dayOfWeek: dayOfWeek,
+                startTime: startTime,
+                endTime: endTime,
+                location: location,
+                room: room,
+                building: building,
+                instructor: instructor,
+                isRecurring: isRecurring,
+                recurrencePattern: recurrencePattern,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InstitutionCourseTimetableEntryTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionCourseTimetableEntryTable,
+      InstitutionCourseTimetableEntryData,
+      $$InstitutionCourseTimetableEntryTableFilterComposer,
+      $$InstitutionCourseTimetableEntryTableOrderingComposer,
+      $$InstitutionCourseTimetableEntryTableAnnotationComposer,
+      $$InstitutionCourseTimetableEntryTableCreateCompanionBuilder,
+      $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder,
+      (
+        InstitutionCourseTimetableEntryData,
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionCourseTimetableEntryTable,
+          InstitutionCourseTimetableEntryData
+        >,
+      ),
+      InstitutionCourseTimetableEntryData,
+      PrefetchHooks Function()
+    >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
       required String courseCode,
@@ -28480,6 +29766,12 @@ class $AppDataBaseManager {
       $$InstitutionFeeTransactionTableTableManager(
         _db,
         _db.institutionFeeTransaction,
+      );
+  $$InstitutionCourseTimetableEntryTableTableManager
+  get institutionCourseTimetableEntry =>
+      $$InstitutionCourseTimetableEntryTableTableManager(
+        _db,
+        _db.institutionCourseTimetableEntry,
       );
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
