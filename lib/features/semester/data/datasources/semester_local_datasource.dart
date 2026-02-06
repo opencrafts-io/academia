@@ -1,6 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
+import 'package:drift/drift.dart';
 
 abstract class SemesterLocalDatasource {
   /// Creates or updates a semester specified by [semester]
@@ -29,8 +30,8 @@ class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
 
   @override
   Stream<Either<Failure, List<SemesterData>>> watchAllSemesters() {
-    return appDataBase
-        .select(appDataBase.semester)
+    return (appDataBase.select(appDataBase.semester)
+          ..orderBy([(sem) => OrderingTerm.desc(sem.endDate)]))
         .watch()
         .map<Either<Failure, List<SemesterData>>>(
           (semesters) => right(semesters),
@@ -50,7 +51,9 @@ class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
     required int institutionId,
   }) async {
     try {
-      final result = await appDataBase.select(appDataBase.semester).get();
+      final result = await (appDataBase.select(
+        appDataBase.semester,
+      )..orderBy([(sem) => OrderingTerm.desc(sem.endDate)])).get();
       return right(result);
     } catch (error) {
       return left(
@@ -94,8 +97,7 @@ class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
     } catch (error) {
       return left(
         CacheFailure(
-          message:
-              "We ran into an issue while attempting to create semester",
+          message: "We ran into an issue while attempting to create semester",
           error: error,
         ),
       );
