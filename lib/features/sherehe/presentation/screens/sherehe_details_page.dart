@@ -51,6 +51,11 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     }
   }
 
+  String _normalizeDescription(String text) {
+    // Replace 3+ line breaks with just 2
+    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
@@ -326,7 +331,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                               ],
                             ),
                             Text(
-                              state.event.eventDescription,
+                              _normalizeDescription(
+                                state.event.eventDescription,
+                              ),
                               style:
                                   ResponsiveBreakPoints.isTablet(context) ||
                                       ResponsiveBreakPoints.isDesktop(context)

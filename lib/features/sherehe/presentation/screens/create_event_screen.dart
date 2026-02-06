@@ -527,7 +527,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       () => Stage4ReviewAndSubmit(
         onSubmit: _submitForm,
         onPrevious: _moveToPreviousPage,
-        userName: organizerName ?? "Unknown",
+        userName: organizerName ?? "Guest",
         context: context,
       ),
     ];
