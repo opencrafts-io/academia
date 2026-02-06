@@ -35,4 +35,8 @@ extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate21To22(Migrator m) async {
     await m.createTable(institutionCourseTimetableEntry);
   }
+
+  Future<void> migrate22To23(Migrator m) async {
+    await m.createTable(semester);
+  }
 }

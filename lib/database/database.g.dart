@@ -14285,6 +14285,417 @@ class InstitutionCourseTimetableEntryCompanion
   }
 }
 
+class $SemesterTable extends Semester
+    with TableInfo<$SemesterTable, SemesterData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SemesterTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    description,
+    institutionId,
+    startDate,
+    endDate,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'semester';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SemesterData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SemesterData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SemesterData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+    );
+  }
+
+  @override
+  $SemesterTable createAlias(String alias) {
+    return $SemesterTable(attachedDatabase, alias);
+  }
+}
+
+class SemesterData extends DataClass implements Insertable<SemesterData> {
+  final int id;
+  final String name;
+  final String? description;
+  final int? institutionId;
+  final DateTime startDate;
+  final DateTime endDate;
+  const SemesterData({
+    required this.id,
+    required this.name,
+    this.description,
+    this.institutionId,
+    required this.startDate,
+    required this.endDate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || institutionId != null) {
+      map['institution_id'] = Variable<int>(institutionId);
+    }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    return map;
+  }
+
+  SemesterCompanion toCompanion(bool nullToAbsent) {
+    return SemesterCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      institutionId: institutionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institutionId),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+    );
+  }
+
+  factory SemesterData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SemesterData(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      institutionId: serializer.fromJson<int?>(json['institutionId']),
+      startDate: serializer.fromJson<DateTime>(json['start_date']),
+      endDate: serializer.fromJson<DateTime>(json['end_date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'institutionId': serializer.toJson<int?>(institutionId),
+      'start_date': serializer.toJson<DateTime>(startDate),
+      'end_date': serializer.toJson<DateTime>(endDate),
+    };
+  }
+
+  SemesterData copyWith({
+    int? id,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<int?> institutionId = const Value.absent(),
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => SemesterData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    institutionId: institutionId.present
+        ? institutionId.value
+        : this.institutionId,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+  );
+  SemesterData copyWithCompanion(SemesterCompanion data) {
+    return SemesterData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SemesterData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, description, institutionId, startDate, endDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SemesterData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.institutionId == this.institutionId &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
+}
+
+class SemesterCompanion extends UpdateCompanion<SemesterData> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<int?> institutionId;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  const SemesterCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  });
+  SemesterCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.description = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<SemesterData> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? institutionId,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (institutionId != null) 'institution_id': institutionId,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+    });
+  }
+
+  SemesterCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<int?>? institutionId,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+  }) {
+    return SemesterCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      institutionId: institutionId ?? this.institutionId,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SemesterCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ExamTimetableTable extends ExamTimetable
     with TableInfo<$ExamTimetableTable, ExamTimetableData> {
   @override
@@ -19330,6 +19741,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
       $InstitutionFeeTransactionTable(this);
   late final $InstitutionCourseTimetableEntryTable
   institutionCourseTimetableEntry = $InstitutionCourseTimetableEntryTable(this);
+  late final $SemesterTable semester = $SemesterTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -19367,6 +19779,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     institutionProfile,
     institutionFeeTransaction,
     institutionCourseTimetableEntry,
+    semester,
     examTimetable,
     chirpUser,
     community,
@@ -24253,6 +24666,28 @@ final class $$InstitutionTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$SemesterTable, List<SemesterData>>
+  _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.semester,
+    aliasName: $_aliasNameGenerator(
+      db.institution.institutionId,
+      db.semester.institutionId,
+    ),
+  );
+
+  $$SemesterTableProcessedTableManager get semesterRefs {
+    final manager = $$SemesterTableTableManager($_db, $_db.semester).filter(
+      (f) => f.institutionId.institutionId.sqlEquals(
+        $_itemColumn<int>('institution_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_semesterRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InstitutionTableFilterComposer
@@ -24379,6 +24814,31 @@ class $$InstitutionTableFilterComposer
                     $removeJoinBuilderFromRootComposer,
               ),
         );
+    return f(composer);
+  }
+
+  Expression<bool> semesterRefs(
+    Expression<bool> Function($$SemesterTableFilterComposer f) f,
+  ) {
+    final $$SemesterTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableFilterComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return f(composer);
   }
 }
@@ -24544,6 +25004,31 @@ class $$InstitutionTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> semesterRefs<T extends Object>(
+    Expression<T> Function($$SemesterTableAnnotationComposer a) f,
+  ) {
+    final $$SemesterTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableAnnotationComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$InstitutionTableTableManager
@@ -24563,6 +25048,7 @@ class $$InstitutionTableTableManager
             bool institutionKeyRefs,
             bool institutionFeeTransactionRefs,
             bool institutionCourseTimetableEntryRefs,
+            bool semesterRefs,
           })
         > {
   $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
@@ -24625,6 +25111,7 @@ class $$InstitutionTableTableManager
                 institutionKeyRefs = false,
                 institutionFeeTransactionRefs = false,
                 institutionCourseTimetableEntryRefs = false,
+                semesterRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -24634,6 +25121,7 @@ class $$InstitutionTableTableManager
                       db.institutionFeeTransaction,
                     if (institutionCourseTimetableEntryRefs)
                       db.institutionCourseTimetableEntry,
+                    if (semesterRefs) db.semester,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -24701,6 +25189,27 @@ class $$InstitutionTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (semesterRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          SemesterData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._semesterRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).semesterRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionId == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -24725,6 +25234,7 @@ typedef $$InstitutionTableProcessedTableManager =
         bool institutionKeyRefs,
         bool institutionFeeTransactionRefs,
         bool institutionCourseTimetableEntryRefs,
+        bool semesterRefs,
       })
     >;
 typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
@@ -27163,6 +27673,343 @@ typedef $$InstitutionCourseTimetableEntryTableProcessedTableManager =
       ),
       InstitutionCourseTimetableEntryData,
       PrefetchHooks Function({bool institution})
+    >;
+typedef $$SemesterTableCreateCompanionBuilder =
+    SemesterCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<String?> description,
+      Value<int?> institutionId,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+typedef $$SemesterTableUpdateCompanionBuilder =
+    SemesterCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<int?> institutionId,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+
+final class $$SemesterTableReferences
+    extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
+  $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $InstitutionTable _institutionIdTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.semester.institutionId,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager? get institutionId {
+    final $_column = $_itemColumn<int>('institution_id');
+    if ($_column == null) return null;
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SemesterTableFilterComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institutionId {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SemesterTableOrderingComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institutionId {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SemesterTableAnnotationComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institutionId {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SemesterTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $SemesterTable,
+          SemesterData,
+          $$SemesterTableFilterComposer,
+          $$SemesterTableOrderingComposer,
+          $$SemesterTableAnnotationComposer,
+          $$SemesterTableCreateCompanionBuilder,
+          $$SemesterTableUpdateCompanionBuilder,
+          (SemesterData, $$SemesterTableReferences),
+          SemesterData,
+          PrefetchHooks Function({bool institutionId})
+        > {
+  $$SemesterTableTableManager(_$AppDataBase db, $SemesterTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SemesterTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SemesterTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SemesterTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int?> institutionId = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => SemesterCompanion(
+                id: id,
+                name: name,
+                description: description,
+                institutionId: institutionId,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<int?> institutionId = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => SemesterCompanion.insert(
+                id: id,
+                name: name,
+                description: description,
+                institutionId: institutionId,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SemesterTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institutionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institutionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institutionId,
+                                referencedTable: $$SemesterTableReferences
+                                    ._institutionIdTable(db),
+                                referencedColumn: $$SemesterTableReferences
+                                    ._institutionIdTable(db)
+                                    .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SemesterTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $SemesterTable,
+      SemesterData,
+      $$SemesterTableFilterComposer,
+      $$SemesterTableOrderingComposer,
+      $$SemesterTableAnnotationComposer,
+      $$SemesterTableCreateCompanionBuilder,
+      $$SemesterTableUpdateCompanionBuilder,
+      (SemesterData, $$SemesterTableReferences),
+      SemesterData,
+      PrefetchHooks Function({bool institutionId})
     >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
@@ -30115,6 +30962,8 @@ class $AppDataBaseManager {
         _db,
         _db.institutionCourseTimetableEntry,
       );
+  $$SemesterTableTableManager get semester =>
+      $$SemesterTableTableManager(_db, _db.semester);
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>
