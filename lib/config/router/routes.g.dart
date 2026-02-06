@@ -29,6 +29,7 @@ List<RouteBase> get $appRoutes => [
   $examTimetableRoute,
   $settingsPageRoute,
   $institutionShellRouteData,
+  $semestersPageRoute,
 ];
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
@@ -1147,6 +1148,55 @@ mixin _$EditStudentProfileRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/profile/${Uri.encodeComponent(_self.profileId.toString())}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $semestersPageRoute => GoRouteData.$route(
+  path: '/semesters',
+  factory: _$SemestersPageRoute._fromState,
+  routes: [
+    GoRouteData.$route(path: 'add', factory: _$AddSemesterRoute._fromState),
+  ],
+);
+
+mixin _$SemestersPageRoute on GoRouteData {
+  static SemestersPageRoute _fromState(GoRouterState state) =>
+      SemestersPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/semesters');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$AddSemesterRoute on GoRouteData {
+  static AddSemesterRoute _fromState(GoRouterState state) => AddSemesterRoute();
+
+  @override
+  String get location => GoRouteData.$location('/semesters/add');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -662,5 +663,51 @@ class InstitutionFeesTransactionRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const InstitutionFeesTransactionPage();
+  }
+}
+
+@TypedGoRoute<SemestersPageRoute>(
+  path: "/semesters",
+  routes: [TypedGoRoute<AddSemesterRoute>(path: "add")],
+)
+class SemestersPageRoute extends GoRouteData with _$SemestersPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: SemestersPage(),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+class AddSemesterRoute extends GoRouteData with _$AddSemesterRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(child: const AddSemesterSheet()),
+    );
   }
 }

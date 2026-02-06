@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/semester/domain/domain.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +13,8 @@ class SemesterCubit extends Cubit<SemesterState> {
   final GetSemestersForInstituionUsecase getSemestersForInstitutionUsecase;
   final UpdateSemesterUsecase updateSemesterUsecase;
   final WatchAllSemestersUsecase watchAllSemestersUsecase;
+
+  StreamSubscription? _semesterSubscription;
 
   SemesterCubit({
     required this.createSemesterUsecase,
@@ -56,13 +60,24 @@ class SemesterCubit extends Cubit<SemesterState> {
     );
   }
 
-  Stream<void> watchAllSemesters() async* {
+  void watchAllSemesters() {
     emit(SemesterLoadingState());
-    await for (final result in watchAllSemestersUsecase(NoParams())) {
+
+    _semesterSubscription?.cancel();
+
+    _semesterSubscription = watchAllSemestersUsecase(NoParams()).listen((
+      result,
+    ) {
       result.fold(
         (failure) => emit(SemesterErrorState(error: failure.message)),
         (semesters) => emit(SemesterLoadedState(semesters: semesters)),
       );
-    }
+    }, onError: (error) => emit(SemesterErrorState(error: error.toString())));
+  }
+
+  @override
+  Future<void> close() {
+    _semesterSubscription?.cancel();
+    return super.close();
   }
 }

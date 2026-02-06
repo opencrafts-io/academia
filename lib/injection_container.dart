@@ -921,7 +921,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetSemestersForInstituionUsecase(semesterRepository: sl()),
   );
 
-  sl.registerFactory(
+  sl.registerFactory<SemesterCubit>(
     () => SemesterCubit(
       createSemesterUsecase: sl(),
       deleteSemesterUsecase: sl(),

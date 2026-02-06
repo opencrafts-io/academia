@@ -71,10 +71,7 @@ class InstitutionCourseTimetableEntryLocalDatasourceImpl
   Stream<Either<Failure, List<InstitutionCourseTimetableEntryData>>>
   watchInstitutionCourseTimetableEntries(int institutionID) {
     return (localCache.select(localCache.institutionCourseTimetableEntry)
-          ..where((entry) => entry.institution.equals(institutionID))
-
-          )
-
+          ..where((entry) => entry.institution.equals(institutionID)))
         .watch()
         .map<Either<Failure, List<InstitutionCourseTimetableEntryData>>>((
           entry,
