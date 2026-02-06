@@ -5,6 +5,7 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -892,6 +893,34 @@ Future<void> init(FlavorConfig flavor) async {
       deleteExamByCourseCodeUseCase: sl(),
     ),
   );
+
+  /***************************************************************************************
+  *                                     SEMESTER
+  ***************************************************************************************/
+  sl.registerFactory<SemesterLocalDatasource>(
+    () => SemesterLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<SemesterRepository>(
+    () => SemesterRepositoryImpl(semesterLocalDatasource: sl()),
+  );
+
+  sl.registerFactory<CreateSemesterUsecase>(
+    () => CreateSemesterUsecase(semesterRepository: sl()),
+  );
+  sl.registerFactory<DeleteSemesterUsecase>(
+    () => DeleteSemesterUsecase(semesterRepository: sl()),
+  );
+  sl.registerFactory<UpdateSemesterUsecase>(
+    () => UpdateSemesterUsecase(semesterRepository: sl()),
+  );
+  sl.registerFactory<WatchAllSemestersUsecase>(
+    () => WatchAllSemestersUsecase(semesterRepository: sl()),
+  );
+  sl.registerFactory<GetSemestersForInstituionUsecase>(
+    () => GetSemestersForInstituionUsecase(semesterRepository: sl()),
+  );
+
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(
