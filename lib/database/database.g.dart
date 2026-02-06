@@ -14296,7 +14296,7 @@ class $SemesterTable extends Semester
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
-    false,
+    true,
     hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
@@ -14436,7 +14436,7 @@ class $SemesterTable extends Semester
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
-      )!,
+      ),
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -14467,14 +14467,14 @@ class $SemesterTable extends Semester
 }
 
 class SemesterData extends DataClass implements Insertable<SemesterData> {
-  final int id;
+  final int? id;
   final String name;
   final String? description;
   final int? institutionId;
   final DateTime startDate;
   final DateTime endDate;
   const SemesterData({
-    required this.id,
+    this.id,
     required this.name,
     this.description,
     this.institutionId,
@@ -14484,7 +14484,9 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
@@ -14499,7 +14501,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
 
   SemesterCompanion toCompanion(bool nullToAbsent) {
     return SemesterCompanion(
-      id: Value(id),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       name: Value(name),
       description: description == null && nullToAbsent
           ? const Value.absent()
@@ -14518,7 +14520,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SemesterData(
-      id: serializer.fromJson<int>(json['id']),
+      id: serializer.fromJson<int?>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
       institutionId: serializer.fromJson<int?>(json['institutionId']),
@@ -14530,7 +14532,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<int?>(id),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
       'institutionId': serializer.toJson<int?>(institutionId),
@@ -14540,14 +14542,14 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   }
 
   SemesterData copyWith({
-    int? id,
+    Value<int?> id = const Value.absent(),
     String? name,
     Value<String?> description = const Value.absent(),
     Value<int?> institutionId = const Value.absent(),
     DateTime? startDate,
     DateTime? endDate,
   }) => SemesterData(
-    id: id ?? this.id,
+    id: id.present ? id.value : this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
     institutionId: institutionId.present
@@ -14600,7 +14602,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
 }
 
 class SemesterCompanion extends UpdateCompanion<SemesterData> {
-  final Value<int> id;
+  final Value<int?> id;
   final Value<String> name;
   final Value<String?> description;
   final Value<int?> institutionId;
@@ -14641,7 +14643,7 @@ class SemesterCompanion extends UpdateCompanion<SemesterData> {
   }
 
   SemesterCompanion copyWith({
-    Value<int>? id,
+    Value<int?>? id,
     Value<String>? name,
     Value<String?>? description,
     Value<int?>? institutionId,
@@ -27676,7 +27678,7 @@ typedef $$InstitutionCourseTimetableEntryTableProcessedTableManager =
     >;
 typedef $$SemesterTableCreateCompanionBuilder =
     SemesterCompanion Function({
-      Value<int> id,
+      Value<int?> id,
       required String name,
       Value<String?> description,
       Value<int?> institutionId,
@@ -27685,7 +27687,7 @@ typedef $$SemesterTableCreateCompanionBuilder =
     });
 typedef $$SemesterTableUpdateCompanionBuilder =
     SemesterCompanion Function({
-      Value<int> id,
+      Value<int?> id,
       Value<String> name,
       Value<String?> description,
       Value<int?> institutionId,
@@ -27914,7 +27916,7 @@ class $$SemesterTableTableManager
               $$SemesterTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int?> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<int?> institutionId = const Value.absent(),
@@ -27930,7 +27932,7 @@ class $$SemesterTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int?> id = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
                 Value<int?> institutionId = const Value.absent(),

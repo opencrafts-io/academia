@@ -5,7 +5,7 @@ part 'semester_entity.freezed.dart';
 @freezed
 abstract class SemesterEntity with _$SemesterEntity {
   const factory SemesterEntity({
-    required int id, 
+    int? id, 
     required String name,
     String? description,
     int? institutionId,

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SemesterEntity {
 
- int get id; String get name; String? get description; int? get institutionId; DateTime get startDate; DateTime get endDate;
+ int? get id; String get name; String? get description; int? get institutionId; DateTime get startDate; DateTime get endDate;
 /// Create a copy of SemesterEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $SemesterEntityCopyWith<$Res>  {
   factory $SemesterEntityCopyWith(SemesterEntity value, $Res Function(SemesterEntity) _then) = _$SemesterEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String? description, int? institutionId, DateTime startDate, DateTime endDate
+ int? id, String name, String? description, int? institutionId, DateTime startDate, DateTime endDate
 });
 
 
@@ -62,10 +62,10 @@ class _$SemesterEntityCopyWithImpl<$Res>
 
 /// Create a copy of SemesterEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? institutionId = freezed,Object? startDate = null,Object? endDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? description = freezed,Object? institutionId = freezed,Object? startDate = null,Object? endDate = null,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,institutionId: freezed == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as int?,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SemesterEntity() when $default != null:
 return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.startDate,_that.endDate);case _:
@@ -176,7 +176,7 @@ return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)  $default,) {final _that = this;
 switch (_that) {
 case _SemesterEntity():
 return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.startDate,_that.endDate);case _:
@@ -196,7 +196,7 @@ return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  String? description,  int? institutionId,  DateTime startDate,  DateTime endDate)?  $default,) {final _that = this;
 switch (_that) {
 case _SemesterEntity() when $default != null:
 return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.startDate,_that.endDate);case _:
@@ -211,10 +211,10 @@ return $default(_that.id,_that.name,_that.description,_that.institutionId,_that.
 
 
 class _SemesterEntity implements SemesterEntity {
-  const _SemesterEntity({required this.id, required this.name, this.description, this.institutionId, required this.startDate, required this.endDate});
+  const _SemesterEntity({this.id, required this.name, this.description, this.institutionId, required this.startDate, required this.endDate});
   
 
-@override final  int id;
+@override final  int? id;
 @override final  String name;
 @override final  String? description;
 @override final  int? institutionId;
@@ -251,7 +251,7 @@ abstract mixin class _$SemesterEntityCopyWith<$Res> implements $SemesterEntityCo
   factory _$SemesterEntityCopyWith(_SemesterEntity value, $Res Function(_SemesterEntity) _then) = __$SemesterEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String? description, int? institutionId, DateTime startDate, DateTime endDate
+ int? id, String name, String? description, int? institutionId, DateTime startDate, DateTime endDate
 });
 
 
@@ -268,10 +268,10 @@ class __$SemesterEntityCopyWithImpl<$Res>
 
 /// Create a copy of SemesterEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? institutionId = freezed,Object? startDate = null,Object? endDate = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? description = freezed,Object? institutionId = freezed,Object? startDate = null,Object? endDate = null,}) {
   return _then(_SemesterEntity(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,institutionId: freezed == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as int?,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable

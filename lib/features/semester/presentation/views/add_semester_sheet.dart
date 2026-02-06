@@ -120,7 +120,6 @@ class _AddSemesterSheetState extends State<AddSemesterSheet> {
         _startDate != null &&
         _endDate != null) {
       final newSemester = SemesterEntity(
-        id: 0,
         name: _nameController.text,
         description: _descController.text,
         startDate: _startDate!,
