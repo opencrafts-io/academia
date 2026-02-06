@@ -1,16 +1,22 @@
 import 'package:drift/drift.dart';
+import './institution.dart';
+
+enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
 
 class InstitutionCourseTimetableEntry extends Table {
   IntColumn get id => integer().autoIncrement()();
 
+  IntColumn get institution =>
+      integer().nullable().references(Institution, #institutionId)();
+
   @JsonKey("course_code")
   TextColumn get courseCode => text()();
 
-  @JsonKey("course_code")
+  @JsonKey("course_name")
   TextColumn get courseName => text()();
 
   @JsonKey("day_of_week")
-  TextColumn get dayOfWeek => text()();
+  IntColumn get dayOfWeek => intEnum<Weekday>()();
 
   @JsonKey("start_time")
   DateTimeColumn get startTime => dateTime()();

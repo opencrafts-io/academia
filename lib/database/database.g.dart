@@ -13369,6 +13369,20 @@ class $InstitutionCourseTimetableEntryTable
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
   static const VerificationMeta _courseCodeMeta = const VerificationMeta(
     'courseCode',
   );
@@ -13391,17 +13405,17 @@ class $InstitutionCourseTimetableEntryTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _dayOfWeekMeta = const VerificationMeta(
-    'dayOfWeek',
-  );
   @override
-  late final GeneratedColumn<String> dayOfWeek = GeneratedColumn<String>(
-    'day_of_week',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<Weekday, int> dayOfWeek =
+      GeneratedColumn<int>(
+        'day_of_week',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<Weekday>(
+        $InstitutionCourseTimetableEntryTable.$converterdayOfWeek,
+      );
   static const VerificationMeta _startTimeMeta = const VerificationMeta(
     'startTime',
   );
@@ -13531,6 +13545,7 @@ class $InstitutionCourseTimetableEntryTable
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    institution,
     courseCode,
     courseName,
     dayOfWeek,
@@ -13561,6 +13576,15 @@ class $InstitutionCourseTimetableEntryTable
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    }
     if (data.containsKey('course_code')) {
       context.handle(
         _courseCodeMeta,
@@ -13576,14 +13600,6 @@ class $InstitutionCourseTimetableEntryTable
       );
     } else if (isInserting) {
       context.missing(_courseNameMeta);
-    }
-    if (data.containsKey('day_of_week')) {
-      context.handle(
-        _dayOfWeekMeta,
-        dayOfWeek.isAcceptableOrUnknown(data['day_of_week']!, _dayOfWeekMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dayOfWeekMeta);
     }
     if (data.containsKey('start_time')) {
       context.handle(
@@ -13677,6 +13693,10 @@ class $InstitutionCourseTimetableEntryTable
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      ),
       courseCode: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}course_code'],
@@ -13685,10 +13705,13 @@ class $InstitutionCourseTimetableEntryTable
         DriftSqlType.string,
         data['${effectivePrefix}course_name'],
       )!,
-      dayOfWeek: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}day_of_week'],
-      )!,
+      dayOfWeek: $InstitutionCourseTimetableEntryTable.$converterdayOfWeek
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.int,
+              data['${effectivePrefix}day_of_week'],
+            )!,
+          ),
       startTime: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}start_time'],
@@ -13740,14 +13763,18 @@ class $InstitutionCourseTimetableEntryTable
   $InstitutionCourseTimetableEntryTable createAlias(String alias) {
     return $InstitutionCourseTimetableEntryTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<Weekday, int, int> $converterdayOfWeek =
+      const EnumIndexConverter<Weekday>(Weekday.values);
 }
 
 class InstitutionCourseTimetableEntryData extends DataClass
     implements Insertable<InstitutionCourseTimetableEntryData> {
   final int id;
+  final int? institution;
   final String courseCode;
   final String courseName;
-  final String dayOfWeek;
+  final Weekday dayOfWeek;
   final DateTime startTime;
   final DateTime endTime;
   final String? location;
@@ -13761,6 +13788,7 @@ class InstitutionCourseTimetableEntryData extends DataClass
   final DateTime updatedAt;
   const InstitutionCourseTimetableEntryData({
     required this.id,
+    this.institution,
     required this.courseCode,
     required this.courseName,
     required this.dayOfWeek,
@@ -13780,9 +13808,18 @@ class InstitutionCourseTimetableEntryData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || institution != null) {
+      map['institution'] = Variable<int>(institution);
+    }
     map['course_code'] = Variable<String>(courseCode);
     map['course_name'] = Variable<String>(courseName);
-    map['day_of_week'] = Variable<String>(dayOfWeek);
+    {
+      map['day_of_week'] = Variable<int>(
+        $InstitutionCourseTimetableEntryTable.$converterdayOfWeek.toSql(
+          dayOfWeek,
+        ),
+      );
+    }
     map['start_time'] = Variable<DateTime>(startTime);
     map['end_time'] = Variable<DateTime>(endTime);
     if (!nullToAbsent || location != null) {
@@ -13812,6 +13849,9 @@ class InstitutionCourseTimetableEntryData extends DataClass
   InstitutionCourseTimetableEntryCompanion toCompanion(bool nullToAbsent) {
     return InstitutionCourseTimetableEntryCompanion(
       id: Value(id),
+      institution: institution == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institution),
       courseCode: Value(courseCode),
       courseName: Value(courseName),
       dayOfWeek: Value(dayOfWeek),
@@ -13846,9 +13886,11 @@ class InstitutionCourseTimetableEntryData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return InstitutionCourseTimetableEntryData(
       id: serializer.fromJson<int>(json['id']),
+      institution: serializer.fromJson<int?>(json['institution']),
       courseCode: serializer.fromJson<String>(json['course_code']),
-      courseName: serializer.fromJson<String>(json['course_code']),
-      dayOfWeek: serializer.fromJson<String>(json['day_of_week']),
+      courseName: serializer.fromJson<String>(json['course_name']),
+      dayOfWeek: $InstitutionCourseTimetableEntryTable.$converterdayOfWeek
+          .fromJson(serializer.fromJson<int>(json['day_of_week'])),
       startTime: serializer.fromJson<DateTime>(json['start_time']),
       endTime: serializer.fromJson<DateTime>(json['end_time']),
       location: serializer.fromJson<String?>(json['location']),
@@ -13869,9 +13911,14 @@ class InstitutionCourseTimetableEntryData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'institution': serializer.toJson<int?>(institution),
       'course_code': serializer.toJson<String>(courseCode),
-      'course_code': serializer.toJson<String>(courseName),
-      'day_of_week': serializer.toJson<String>(dayOfWeek),
+      'course_name': serializer.toJson<String>(courseName),
+      'day_of_week': serializer.toJson<int>(
+        $InstitutionCourseTimetableEntryTable.$converterdayOfWeek.toJson(
+          dayOfWeek,
+        ),
+      ),
       'start_time': serializer.toJson<DateTime>(startTime),
       'end_time': serializer.toJson<DateTime>(endTime),
       'location': serializer.toJson<String?>(location),
@@ -13888,9 +13935,10 @@ class InstitutionCourseTimetableEntryData extends DataClass
 
   InstitutionCourseTimetableEntryData copyWith({
     int? id,
+    Value<int?> institution = const Value.absent(),
     String? courseCode,
     String? courseName,
-    String? dayOfWeek,
+    Weekday? dayOfWeek,
     DateTime? startTime,
     DateTime? endTime,
     Value<String?> location = const Value.absent(),
@@ -13904,6 +13952,7 @@ class InstitutionCourseTimetableEntryData extends DataClass
     DateTime? updatedAt,
   }) => InstitutionCourseTimetableEntryData(
     id: id ?? this.id,
+    institution: institution.present ? institution.value : this.institution,
     courseCode: courseCode ?? this.courseCode,
     courseName: courseName ?? this.courseName,
     dayOfWeek: dayOfWeek ?? this.dayOfWeek,
@@ -13926,6 +13975,9 @@ class InstitutionCourseTimetableEntryData extends DataClass
   ) {
     return InstitutionCourseTimetableEntryData(
       id: data.id.present ? data.id.value : this.id,
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
       courseCode: data.courseCode.present
           ? data.courseCode.value
           : this.courseCode,
@@ -13957,6 +14009,7 @@ class InstitutionCourseTimetableEntryData extends DataClass
   String toString() {
     return (StringBuffer('InstitutionCourseTimetableEntryData(')
           ..write('id: $id, ')
+          ..write('institution: $institution, ')
           ..write('courseCode: $courseCode, ')
           ..write('courseName: $courseName, ')
           ..write('dayOfWeek: $dayOfWeek, ')
@@ -13978,6 +14031,7 @@ class InstitutionCourseTimetableEntryData extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
+    institution,
     courseCode,
     courseName,
     dayOfWeek,
@@ -13998,6 +14052,7 @@ class InstitutionCourseTimetableEntryData extends DataClass
       identical(this, other) ||
       (other is InstitutionCourseTimetableEntryData &&
           other.id == this.id &&
+          other.institution == this.institution &&
           other.courseCode == this.courseCode &&
           other.courseName == this.courseName &&
           other.dayOfWeek == this.dayOfWeek &&
@@ -14017,9 +14072,10 @@ class InstitutionCourseTimetableEntryData extends DataClass
 class InstitutionCourseTimetableEntryCompanion
     extends UpdateCompanion<InstitutionCourseTimetableEntryData> {
   final Value<int> id;
+  final Value<int?> institution;
   final Value<String> courseCode;
   final Value<String> courseName;
-  final Value<String> dayOfWeek;
+  final Value<Weekday> dayOfWeek;
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
   final Value<String?> location;
@@ -14033,6 +14089,7 @@ class InstitutionCourseTimetableEntryCompanion
   final Value<DateTime> updatedAt;
   const InstitutionCourseTimetableEntryCompanion({
     this.id = const Value.absent(),
+    this.institution = const Value.absent(),
     this.courseCode = const Value.absent(),
     this.courseName = const Value.absent(),
     this.dayOfWeek = const Value.absent(),
@@ -14050,9 +14107,10 @@ class InstitutionCourseTimetableEntryCompanion
   });
   InstitutionCourseTimetableEntryCompanion.insert({
     this.id = const Value.absent(),
+    this.institution = const Value.absent(),
     required String courseCode,
     required String courseName,
-    required String dayOfWeek,
+    required Weekday dayOfWeek,
     required DateTime startTime,
     required DateTime endTime,
     this.location = const Value.absent(),
@@ -14071,9 +14129,10 @@ class InstitutionCourseTimetableEntryCompanion
        endTime = Value(endTime);
   static Insertable<InstitutionCourseTimetableEntryData> custom({
     Expression<int>? id,
+    Expression<int>? institution,
     Expression<String>? courseCode,
     Expression<String>? courseName,
-    Expression<String>? dayOfWeek,
+    Expression<int>? dayOfWeek,
     Expression<DateTime>? startTime,
     Expression<DateTime>? endTime,
     Expression<String>? location,
@@ -14088,6 +14147,7 @@ class InstitutionCourseTimetableEntryCompanion
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (institution != null) 'institution': institution,
       if (courseCode != null) 'course_code': courseCode,
       if (courseName != null) 'course_name': courseName,
       if (dayOfWeek != null) 'day_of_week': dayOfWeek,
@@ -14107,9 +14167,10 @@ class InstitutionCourseTimetableEntryCompanion
 
   InstitutionCourseTimetableEntryCompanion copyWith({
     Value<int>? id,
+    Value<int?>? institution,
     Value<String>? courseCode,
     Value<String>? courseName,
-    Value<String>? dayOfWeek,
+    Value<Weekday>? dayOfWeek,
     Value<DateTime>? startTime,
     Value<DateTime>? endTime,
     Value<String?>? location,
@@ -14124,6 +14185,7 @@ class InstitutionCourseTimetableEntryCompanion
   }) {
     return InstitutionCourseTimetableEntryCompanion(
       id: id ?? this.id,
+      institution: institution ?? this.institution,
       courseCode: courseCode ?? this.courseCode,
       courseName: courseName ?? this.courseName,
       dayOfWeek: dayOfWeek ?? this.dayOfWeek,
@@ -14147,6 +14209,9 @@ class InstitutionCourseTimetableEntryCompanion
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
     if (courseCode.present) {
       map['course_code'] = Variable<String>(courseCode.value);
     }
@@ -14154,7 +14219,11 @@ class InstitutionCourseTimetableEntryCompanion
       map['course_name'] = Variable<String>(courseName.value);
     }
     if (dayOfWeek.present) {
-      map['day_of_week'] = Variable<String>(dayOfWeek.value);
+      map['day_of_week'] = Variable<int>(
+        $InstitutionCourseTimetableEntryTable.$converterdayOfWeek.toSql(
+          dayOfWeek.value,
+        ),
+      );
     }
     if (startTime.present) {
       map['start_time'] = Variable<DateTime>(startTime.value);
@@ -14196,6 +14265,7 @@ class InstitutionCourseTimetableEntryCompanion
   String toString() {
     return (StringBuffer('InstitutionCourseTimetableEntryCompanion(')
           ..write('id: $id, ')
+          ..write('institution: $institution, ')
           ..write('courseCode: $courseCode, ')
           ..write('courseName: $courseName, ')
           ..write('dayOfWeek: $dayOfWeek, ')
@@ -24150,6 +24220,39 @@ final class $$InstitutionTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $InstitutionCourseTimetableEntryTable,
+    List<InstitutionCourseTimetableEntryData>
+  >
+  _institutionCourseTimetableEntryRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.institutionCourseTimetableEntry,
+        aliasName: $_aliasNameGenerator(
+          db.institution.institutionId,
+          db.institutionCourseTimetableEntry.institution,
+        ),
+      );
+
+  $$InstitutionCourseTimetableEntryTableProcessedTableManager
+  get institutionCourseTimetableEntryRefs {
+    final manager =
+        $$InstitutionCourseTimetableEntryTableTableManager(
+          $_db,
+          $_db.institutionCourseTimetableEntry,
+        ).filter(
+          (f) => f.institution.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _institutionCourseTimetableEntryRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InstitutionTableFilterComposer
@@ -24241,6 +24344,35 @@ class $$InstitutionTableFilterComposer
               }) => $$InstitutionFeeTransactionTableFilterComposer(
                 $db: $db,
                 $table: $db.institutionFeeTransaction,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> institutionCourseTimetableEntryRefs(
+    Expression<bool> Function(
+      $$InstitutionCourseTimetableEntryTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$InstitutionCourseTimetableEntryTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionCourseTimetableEntry,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionCourseTimetableEntryTableFilterComposer(
+                $db: $db,
+                $table: $db.institutionCourseTimetableEntry,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -24383,6 +24515,35 @@ class $$InstitutionTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> institutionCourseTimetableEntryRefs<T extends Object>(
+    Expression<T> Function(
+      $$InstitutionCourseTimetableEntryTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$InstitutionCourseTimetableEntryTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionCourseTimetableEntry,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionCourseTimetableEntryTableAnnotationComposer(
+                $db: $db,
+                $table: $db.institutionCourseTimetableEntry,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$InstitutionTableTableManager
@@ -24401,6 +24562,7 @@ class $$InstitutionTableTableManager
           PrefetchHooks Function({
             bool institutionKeyRefs,
             bool institutionFeeTransactionRefs,
+            bool institutionCourseTimetableEntryRefs,
           })
         > {
   $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
@@ -24462,6 +24624,7 @@ class $$InstitutionTableTableManager
               ({
                 institutionKeyRefs = false,
                 institutionFeeTransactionRefs = false,
+                institutionCourseTimetableEntryRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -24469,6 +24632,8 @@ class $$InstitutionTableTableManager
                     if (institutionKeyRefs) db.institutionKey,
                     if (institutionFeeTransactionRefs)
                       db.institutionFeeTransaction,
+                    if (institutionCourseTimetableEntryRefs)
+                      db.institutionCourseTimetableEntry,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -24515,6 +24680,27 @@ class $$InstitutionTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (institutionCourseTimetableEntryRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          InstitutionCourseTimetableEntryData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._institutionCourseTimetableEntryRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).institutionCourseTimetableEntryRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -24538,6 +24724,7 @@ typedef $$InstitutionTableProcessedTableManager =
       PrefetchHooks Function({
         bool institutionKeyRefs,
         bool institutionFeeTransactionRefs,
+        bool institutionCourseTimetableEntryRefs,
       })
     >;
 typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
@@ -26412,9 +26599,10 @@ typedef $$InstitutionFeeTransactionTableProcessedTableManager =
 typedef $$InstitutionCourseTimetableEntryTableCreateCompanionBuilder =
     InstitutionCourseTimetableEntryCompanion Function({
       Value<int> id,
+      Value<int?> institution,
       required String courseCode,
       required String courseName,
-      required String dayOfWeek,
+      required Weekday dayOfWeek,
       required DateTime startTime,
       required DateTime endTime,
       Value<String?> location,
@@ -26430,9 +26618,10 @@ typedef $$InstitutionCourseTimetableEntryTableCreateCompanionBuilder =
 typedef $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder =
     InstitutionCourseTimetableEntryCompanion Function({
       Value<int> id,
+      Value<int?> institution,
       Value<String> courseCode,
       Value<String> courseName,
-      Value<String> dayOfWeek,
+      Value<Weekday> dayOfWeek,
       Value<DateTime> startTime,
       Value<DateTime> endTime,
       Value<String?> location,
@@ -26445,6 +26634,42 @@ typedef $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
+
+final class $$InstitutionCourseTimetableEntryTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionCourseTimetableEntryTable,
+          InstitutionCourseTimetableEntryData
+        > {
+  $$InstitutionCourseTimetableEntryTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.institutionCourseTimetableEntry.institution,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager? get institution {
+    final $_column = $_itemColumn<int>('institution');
+    if ($_column == null) return null;
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$InstitutionCourseTimetableEntryTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionCourseTimetableEntryTable> {
@@ -26470,10 +26695,11 @@ class $$InstitutionCourseTimetableEntryTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get dayOfWeek => $composableBuilder(
-    column: $table.dayOfWeek,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<Weekday, Weekday, int> get dayOfWeek =>
+      $composableBuilder(
+        column: $table.dayOfWeek,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get startTime => $composableBuilder(
     column: $table.startTime,
@@ -26529,6 +26755,29 @@ class $$InstitutionCourseTimetableEntryTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$InstitutionTableFilterComposer get institution {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InstitutionCourseTimetableEntryTableOrderingComposer
@@ -26555,7 +26804,7 @@ class $$InstitutionCourseTimetableEntryTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get dayOfWeek => $composableBuilder(
+  ColumnOrderings<int> get dayOfWeek => $composableBuilder(
     column: $table.dayOfWeek,
     builder: (column) => ColumnOrderings(column),
   );
@@ -26614,6 +26863,29 @@ class $$InstitutionCourseTimetableEntryTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$InstitutionTableOrderingComposer get institution {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InstitutionCourseTimetableEntryTableAnnotationComposer
@@ -26638,7 +26910,7 @@ class $$InstitutionCourseTimetableEntryTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get dayOfWeek =>
+  GeneratedColumnWithTypeConverter<Weekday, int> get dayOfWeek =>
       $composableBuilder(column: $table.dayOfWeek, builder: (column) => column);
 
   GeneratedColumn<DateTime> get startTime =>
@@ -26679,6 +26951,29 @@ class $$InstitutionCourseTimetableEntryTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institution {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$InstitutionCourseTimetableEntryTableTableManager
@@ -26694,14 +26989,10 @@ class $$InstitutionCourseTimetableEntryTableTableManager
           $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder,
           (
             InstitutionCourseTimetableEntryData,
-            BaseReferences<
-              _$AppDataBase,
-              $InstitutionCourseTimetableEntryTable,
-              InstitutionCourseTimetableEntryData
-            >,
+            $$InstitutionCourseTimetableEntryTableReferences,
           ),
           InstitutionCourseTimetableEntryData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool institution})
         > {
   $$InstitutionCourseTimetableEntryTableTableManager(
     _$AppDataBase db,
@@ -26728,9 +27019,10 @@ class $$InstitutionCourseTimetableEntryTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> institution = const Value.absent(),
                 Value<String> courseCode = const Value.absent(),
                 Value<String> courseName = const Value.absent(),
-                Value<String> dayOfWeek = const Value.absent(),
+                Value<Weekday> dayOfWeek = const Value.absent(),
                 Value<DateTime> startTime = const Value.absent(),
                 Value<DateTime> endTime = const Value.absent(),
                 Value<String?> location = const Value.absent(),
@@ -26744,6 +27036,7 @@ class $$InstitutionCourseTimetableEntryTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => InstitutionCourseTimetableEntryCompanion(
                 id: id,
+                institution: institution,
                 courseCode: courseCode,
                 courseName: courseName,
                 dayOfWeek: dayOfWeek,
@@ -26762,9 +27055,10 @@ class $$InstitutionCourseTimetableEntryTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> institution = const Value.absent(),
                 required String courseCode,
                 required String courseName,
-                required String dayOfWeek,
+                required Weekday dayOfWeek,
                 required DateTime startTime,
                 required DateTime endTime,
                 Value<String?> location = const Value.absent(),
@@ -26778,6 +27072,7 @@ class $$InstitutionCourseTimetableEntryTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => InstitutionCourseTimetableEntryCompanion.insert(
                 id: id,
+                institution: institution,
                 courseCode: courseCode,
                 courseName: courseName,
                 dayOfWeek: dayOfWeek,
@@ -26794,9 +27089,60 @@ class $$InstitutionCourseTimetableEntryTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionCourseTimetableEntryTableReferences(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({institution = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institution) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institution,
+                                referencedTable:
+                                    $$InstitutionCourseTimetableEntryTableReferences
+                                        ._institutionTable(db),
+                                referencedColumn:
+                                    $$InstitutionCourseTimetableEntryTableReferences
+                                        ._institutionTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -26813,14 +27159,10 @@ typedef $$InstitutionCourseTimetableEntryTableProcessedTableManager =
       $$InstitutionCourseTimetableEntryTableUpdateCompanionBuilder,
       (
         InstitutionCourseTimetableEntryData,
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionCourseTimetableEntryTable,
-          InstitutionCourseTimetableEntryData
-        >,
+        $$InstitutionCourseTimetableEntryTableReferences,
       ),
       InstitutionCourseTimetableEntryData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool institution})
     >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
