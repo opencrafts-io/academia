@@ -21,6 +21,10 @@ abstract class SemesterLocalDatasource {
   /// Deletes a semester from the local cache either returning a failure
   /// explaining what went wrong or nothing if everything was successful.
   Future<Either<Failure, Unit>> deleteSemesterByID({required int semesterId});
+
+  Future<Either<Failure, SemesterData>> getSemesterById({
+    required int semesterId,
+  });
 }
 
 class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
@@ -98,6 +102,26 @@ class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
       return left(
         CacheFailure(
           message: "We ran into an issue while attempting to create semester",
+          error: error,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, SemesterData>> getSemesterById({
+    required int semesterId,
+  }) async {
+    try {
+      final result = await (
+        appDataBase.select(appDataBase.semester)
+        ..where((sem)=> sem.id.equals(semesterId))
+      ).getSingle();
+      return right(result);
+    } catch (error) {
+      return left(
+        CacheFailure(
+          message: "We ran into an issue while retrieving semester",
           error: error,
         ),
       );

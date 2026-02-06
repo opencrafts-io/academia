@@ -53,4 +53,18 @@ class SemesterRepositoryImpl implements SemesterRepository {
       (semesters) => right(semesters.map((sem) => sem.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, SemesterEntity>> getSemesterById({
+    required int semesterId,
+  }) async {
+    final result = await semesterLocalDatasource.getSemesterById(
+      semesterId: semesterId,
+    );
+
+    return result.fold(
+      (error) => left(error),
+      (semester) => right(semester.toEntity()),
+    );
+  }
 }

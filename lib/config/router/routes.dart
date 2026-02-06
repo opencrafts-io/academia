@@ -668,7 +668,10 @@ class InstitutionFeesTransactionRoute extends GoRouteData
 
 @TypedGoRoute<SemestersPageRoute>(
   path: "/semesters",
-  routes: [TypedGoRoute<AddSemesterRoute>(path: "add")],
+  routes: [
+    TypedGoRoute<AddSemesterRoute>(path: "add"),
+    TypedGoRoute<EditSemesterRoute>(path: "edit/:id"),
+  ],
 )
 class SemestersPageRoute extends GoRouteData with _$SemestersPageRoute {
   @override
@@ -708,6 +711,23 @@ class AddSemesterRoute extends GoRouteData with _$AddSemesterRoute {
         child: child,
       ),
       child: Sheet(child: const AddSemesterSheet()),
+    );
+  }
+}
+
+class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
+  final int id;
+  const EditSemesterRoute({required this.id});
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+
+      child: Sheet(child: EditSemesterSheet(semesterId: id)),
     );
   }
 }

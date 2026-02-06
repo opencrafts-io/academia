@@ -24,7 +24,12 @@ abstract class SemesterRepository {
   Stream<Either<Failure, List<SemesterEntity>>> watchAllSemsters();
 
   /// Should return a list of semesters which are linked to institution specified
-  /// by [institutionId] 
-  Future<Either<Failure, List<SemesterEntity>>>
-  getSemestersForInstitution({required int institutionId});
+  /// by [institutionId]
+  Future<Either<Failure, List<SemesterEntity>>> getSemestersForInstitution({
+    required int institutionId,
+  });
+
+  Future<Either<Failure, SemesterEntity>> getSemesterById({
+    required int semesterId,
+  });
 }

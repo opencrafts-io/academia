@@ -1168,6 +1168,10 @@ RouteBase get $semestersPageRoute => GoRouteData.$route(
   factory: _$SemestersPageRoute._fromState,
   routes: [
     GoRouteData.$route(path: 'add', factory: _$AddSemesterRoute._fromState),
+    GoRouteData.$route(
+      path: 'edit/:id',
+      factory: _$EditSemesterRoute._fromState,
+    ),
   ],
 );
 
@@ -1197,6 +1201,31 @@ mixin _$AddSemesterRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/semesters/add');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$EditSemesterRoute on GoRouteData {
+  static EditSemesterRoute _fromState(GoRouterState state) =>
+      EditSemesterRoute(id: int.parse(state.pathParameters['id']!));
+
+  EditSemesterRoute get _self => this as EditSemesterRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/semesters/edit/${Uri.encodeComponent(_self.id.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

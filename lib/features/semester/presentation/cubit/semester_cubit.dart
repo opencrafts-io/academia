@@ -13,6 +13,7 @@ class SemesterCubit extends Cubit<SemesterState> {
   final GetSemestersForInstituionUsecase getSemestersForInstitutionUsecase;
   final UpdateSemesterUsecase updateSemesterUsecase;
   final WatchAllSemestersUsecase watchAllSemestersUsecase;
+  final GetSemesterByIdUsecase getSemesterByIdUsecase;
 
   StreamSubscription? _semesterSubscription;
 
@@ -22,6 +23,7 @@ class SemesterCubit extends Cubit<SemesterState> {
     required this.getSemestersForInstitutionUsecase,
     required this.updateSemesterUsecase,
     required this.watchAllSemestersUsecase,
+    required this.getSemesterByIdUsecase,
   }) : super(SemesterInitialState());
 
   Future<void> createSemester(SemesterEntity semester) async {
@@ -58,6 +60,11 @@ class SemesterCubit extends Cubit<SemesterState> {
       (failure) => emit(SemesterErrorState(error: failure.message)),
       (_) {},
     );
+  }
+
+  Future<SemesterEntity?> getSemesterById(int id) async {
+    final result = await getSemesterByIdUsecase(id);
+    return result.fold((failure) => null, (semester) => semester);
   }
 
   void watchAllSemesters() {

@@ -59,6 +59,9 @@ class _SemestersPageState extends State<SemestersPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              onTap: () => EditSemesterRoute(
+                                id: semester.id!,
+                              ).push(context),
                               subtitle: Text(
                                 "${DateFormat('MMM dd, yyyy').format(semester.startDate)} - ${DateFormat('MMM dd, yyyy').format(semester.endDate)}",
                               ),
