@@ -300,7 +300,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
               onTicketSelected: (ticket) {
                 setState(() {
                   _selectedTicket = ticket;
-                  _quantity = ticket == null ? 1 : _quantity;
+                  _quantity = 1;
                 });
               },
               onQuantityChanged: (qty) {

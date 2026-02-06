@@ -47,7 +47,7 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
 
           final int maxAllowedQuantity = widget.selectedTicket == null
               ? 0
-              : min(widget.selectedTicket!.ticketQuantity ?? 0, 3);
+              : min(widget.selectedTicket!.ticketQuantity ?? 0, 2);
 
           if (isFreeEvent && widget.selectedTicket == null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -184,12 +184,12 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
-                              widget.quantity == 3 &&
+                              widget.quantity == 2 &&
                                       (widget.selectedTicket!.ticketQuantity ??
                                               0) >
-                                          3
-                                  ? "Maximum of 3 tickets per order"
-                                  : "Only ${widget.selectedTicket!.ticketQuantity} tickets remaining",
+                                          2
+                                  ? "Maximum of 2 tickets can be purchased"
+                                  : "Only ${widget.selectedTicket!.ticketQuantity} ${widget.selectedTicket!.ticketQuantity == 1 ? "ticket" : "tickets"} remaining",
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: Theme.of(context).colorScheme.error,
