@@ -921,6 +921,16 @@ Future<void> init(FlavorConfig flavor) async {
     () => GetSemestersForInstituionUsecase(semesterRepository: sl()),
   );
 
+  sl.registerFactory(
+    () => SemesterCubit(
+      createSemesterUsecase: sl(),
+      deleteSemesterUsecase: sl(),
+      getSemestersForInstitutionUsecase: sl(),
+      updateSemesterUsecase: sl(),
+      watchAllSemestersUsecase: sl(),
+    ),
+  );
+
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(
