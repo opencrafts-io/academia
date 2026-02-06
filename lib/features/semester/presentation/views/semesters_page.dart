@@ -66,7 +66,11 @@ class _SemestersPageState extends State<SemestersPage> {
                                 "${DateFormat('MMM dd, yyyy').format(semester.startDate)} - ${DateFormat('MMM dd, yyyy').format(semester.endDate)}",
                               ),
                               trailing: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.read<SemesterCubit>().deleteSemester(
+                                    semester.id!,
+                                  );
+                                },
                                 icon: Icon(
                                   Icons.delete_outline,
                                   color: Theme.of(context).colorScheme.primary,
