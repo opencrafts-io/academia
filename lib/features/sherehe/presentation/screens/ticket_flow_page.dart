@@ -164,9 +164,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           if (state is PurchaseError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "There was an error sending an Mpesa Prompt, please click Try Again to resend",
-                ),
+                content: Text(state.message),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -175,9 +173,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           if (state is ConfirmPaymentError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "There was an error confirming payment, please try again",
-                ),
+                content: Text(state.message),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );

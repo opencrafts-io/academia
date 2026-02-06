@@ -49,7 +49,13 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       } else {
         return left(
-          ServerFailure(message: "Unexpected server response", error: response),
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
+            error: response,
+          ),
         );
       }
     } on DioException catch (de) {
@@ -79,7 +85,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected server response: ${response.statusCode}",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -115,7 +124,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected server response: ${response.statusCode}",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -217,7 +229,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
         return left(
           ServerFailure(
             message:
-                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -261,7 +275,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching attendees",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching attendees",
             error: response,
           ),
         );
@@ -295,7 +312,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching attendee",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching attendee",
             error: response,
           ),
         );
@@ -329,7 +349,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching ticket by event ID",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching ticket by event ID",
             error: response,
           ),
         );
@@ -389,7 +412,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
             ),
           );
         }
-
         return left(
           ServerFailure(
             message: "Unknown success response format",
@@ -399,7 +421,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when purchasing ticket",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when purchasing ticket",
             error: response,
           ),
         );
@@ -431,7 +456,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when confirming payment",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when confirming payment",
             error: response,
           ),
         );
@@ -476,7 +504,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting user's ticket for event",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting user's ticket for event",
             error: response,
           ),
         );
@@ -518,7 +549,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting user's tickets",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting user's tickets",
             error: response,
           ),
         );
@@ -553,7 +587,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when searching attended events",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching attended events",
             error: response,
           ),
         );
@@ -591,7 +628,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
         return left(
           ServerFailure(
-            message: "Unexpected response when validating attendee",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when validating attendee",
             error: response,
           ),
         );
@@ -626,7 +666,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when searching events",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching events",
             error: response,
           ),
         );
@@ -658,7 +701,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting stats",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting stats",
             error: response,
           ),
         );
@@ -694,7 +740,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting stats",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting stats",
             error: response,
           ),
         );
@@ -729,7 +778,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when updating ticket",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when updating ticket",
             error: response,
           ),
         );
@@ -773,7 +825,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting all attendees",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting all attendees",
             error: response,
           ),
         );
@@ -807,7 +862,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when adding event scanner",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when adding event scanner",
             error: response,
           ),
         );
@@ -851,7 +909,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting all event scanners",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting all event scanners",
             error: response,
           ),
         );
@@ -884,7 +945,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when deleting event scanner",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when deleting event scanner",
             error: response,
           ),
         );
@@ -918,6 +982,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
         return left(
           ServerFailure(
             message:
+                response.data['message'] ??
+                response.data["error"] ??
                 "Unexpected response when getting event scanner by user id",
             error: response,
           ),
@@ -962,7 +1028,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when searching users",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching users",
             error: response,
           ),
         );
