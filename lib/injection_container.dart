@@ -950,6 +950,16 @@ Future<void> init(FlavorConfig flavor) async {
     () => CourseRepositoryImpl(localDatasource: sl()),
   );
 
+  sl.registerFactory<WatchAllCoursesUsecase>(
+    () => WatchAllCoursesUsecase(sl()),
+  );
+  sl.registerFactory<SaveCourseUsecase>(() => SaveCourseUsecase(sl()));
+  sl.registerFactory<DeleteCourseUsecase>(() => DeleteCourseUsecase(sl()));
+  sl.registerFactory<WatchInstitutionCoursesUsecase>(
+    () => WatchInstitutionCoursesUsecase(sl()),
+  );
+  sl.registerFactory<GetCourseUsecase>(() => GetCourseUsecase(sl()));
+
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(
