@@ -2,6 +2,8 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/course/course.dart';
+import 'package:academia/features/course/domain/domain.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -934,6 +936,18 @@ Future<void> init(FlavorConfig flavor) async {
       updateSemesterUsecase: sl(),
       watchAllSemestersUsecase: sl(),
     ),
+  );
+
+  /**********************************************************************
+  *                               Courses
+  **********************************************************************/
+
+  sl.registerFactory<CourseLocalDatasource>(
+    () => CourseLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<CourseRepository>(
+    () => CourseRepositoryImpl(localDatasource: sl()),
   );
 
   // Permissions
