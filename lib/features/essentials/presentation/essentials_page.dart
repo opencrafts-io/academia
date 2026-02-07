@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import '../widgets/essential_category_tile.dart';
-import 'package:academia/injection_container.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -40,16 +39,17 @@ class _EssentialsPageState extends State<EssentialsPage> {
       iconPath: "assets/icons/medal.png",
     ),
     _EssentialItem(
+      title: "Courses",
+      ontap: () => CoursesPageRoute().push(context),
+      iconPath: "assets/icons/card.png",
+    ),
+
+    _EssentialItem(
       title: "To-Dos",
       ontap: () => TodosRoute().push(context),
       iconPath: "assets/icons/todos.png",
     ),
 
-    // _EssentialItem(
-    //   title: "Identity",
-    //   ontap: null,
-    //   iconPath: "assets/icons/card.png",
-    // ),
     _EssentialItem(
       title: "Exam timetable",
       ontap: _navigateToExamTimetable,

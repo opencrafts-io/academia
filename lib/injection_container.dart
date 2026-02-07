@@ -960,6 +960,16 @@ Future<void> init(FlavorConfig flavor) async {
   );
   sl.registerFactory<GetCourseUsecase>(() => GetCourseUsecase(sl()));
 
+  sl.registerFactory<CourseCubit>(
+    () => CourseCubit(
+      getCourse: sl(),
+      watchInstitutionCourses: sl(),
+      watchAllCourses: sl(),
+      saveCourse: sl(),
+      deleteCourse: sl(),
+    ),
+  );
+
   // Permissions
   sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
   sl.registerFactory<PermissionRepository>(

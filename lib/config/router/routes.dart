@@ -1,4 +1,5 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
@@ -728,6 +729,36 @@ class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
       ),
 
       child: Sheet(child: EditSemesterSheet(semesterId: id)),
+    );
+  }
+}
+
+@TypedGoRoute<CoursesPageRoute>(path: "/courses")
+class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: CourseListPage(),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
     );
   }
 }

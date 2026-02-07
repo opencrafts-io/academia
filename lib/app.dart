@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -158,6 +159,7 @@ class _AcademiaState extends State<Academia> {
         ),
 
         BlocProvider(create: (context) => sl<SemesterCubit>()),
+        BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
