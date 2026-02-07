@@ -1,14 +1,13 @@
 import 'package:academia/features/course/data/models/course.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
+import 'package:academia/core/core.dart';
+
 
 import './timetable.dart';
 
-final _uuid = Uuid();
-
 class TimetableEntry extends Table {
   @JsonKey("cache_id")
-  TextColumn get id => text().nullable().clientDefault(() => _uuid.v4())();
+  TextColumn get id => text().clientDefault(generateUuid)();
 
   @JsonKey("id")
   IntColumn get serverId => integer().unique().nullable()();
@@ -17,6 +16,7 @@ class TimetableEntry extends Table {
   TextColumn get userId => text()();
 
   @JsonKey("institution_id")
+  // 1. Define uuid as a top-level global so the genera
   IntColumn get institutionId => integer()();
 
   @JsonKey("course_id")

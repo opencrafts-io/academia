@@ -32,7 +32,7 @@ extension CourseEntityX on CourseEntity {
       courseCode: courseCode,
       courseName: courseName,
       instructor: instructor,
-      id: id,
+      id: id ?? '',
       color: color,
       serverId: serverId,
       semester: semesterId,

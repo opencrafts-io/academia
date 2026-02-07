@@ -1,12 +1,10 @@
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
-
-final _uuid = Uuid();
+import 'package:academia/core/core.dart';
 
 class Timetable extends Table {
   @JsonKey("cache_id")
-  TextColumn get id => text().nullable().clientDefault(() => _uuid.v4())();
+  TextColumn get id => text().clientDefault(generateUuid)();
 
   @JsonKey("id")
   IntColumn get serverId => integer().unique().nullable()();

@@ -13356,7 +13356,7 @@ class $SemesterTable extends Semester
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
     'id',
     aliasedName,
-    true,
+    false,
     hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
@@ -13496,7 +13496,7 @@ class $SemesterTable extends Semester
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
-      ),
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -13527,14 +13527,14 @@ class $SemesterTable extends Semester
 }
 
 class SemesterData extends DataClass implements Insertable<SemesterData> {
-  final int? id;
+  final int id;
   final String name;
   final String? description;
   final int? institutionId;
   final DateTime startDate;
   final DateTime endDate;
   const SemesterData({
-    this.id,
+    required this.id,
     required this.name,
     this.description,
     this.institutionId,
@@ -13544,9 +13544,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
+    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
@@ -13561,7 +13559,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
 
   SemesterCompanion toCompanion(bool nullToAbsent) {
     return SemesterCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       name: Value(name),
       description: description == null && nullToAbsent
           ? const Value.absent()
@@ -13580,7 +13578,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SemesterData(
-      id: serializer.fromJson<int?>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
       institutionId: serializer.fromJson<int?>(json['institutionId']),
@@ -13592,7 +13590,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int?>(id),
+      'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
       'institutionId': serializer.toJson<int?>(institutionId),
@@ -13602,14 +13600,14 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
   }
 
   SemesterData copyWith({
-    Value<int?> id = const Value.absent(),
+    int? id,
     String? name,
     Value<String?> description = const Value.absent(),
     Value<int?> institutionId = const Value.absent(),
     DateTime? startDate,
     DateTime? endDate,
   }) => SemesterData(
-    id: id.present ? id.value : this.id,
+    id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
     institutionId: institutionId.present
@@ -13662,7 +13660,7 @@ class SemesterData extends DataClass implements Insertable<SemesterData> {
 }
 
 class SemesterCompanion extends UpdateCompanion<SemesterData> {
-  final Value<int?> id;
+  final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
   final Value<int?> institutionId;
@@ -13703,7 +13701,7 @@ class SemesterCompanion extends UpdateCompanion<SemesterData> {
   }
 
   SemesterCompanion copyWith({
-    Value<int?>? id,
+    Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
     Value<int?>? institutionId,
@@ -13768,10 +13766,10 @@ class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    clientDefault: () => _uuid.v4(),
+    clientDefault: generateUuid,
   );
   static const VerificationMeta _serverIdMeta = const VerificationMeta(
     'serverId',
@@ -14021,7 +14019,7 @@ class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
-      ),
+      )!,
       serverId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}server_id'],
@@ -14082,7 +14080,7 @@ class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
 }
 
 class CourseData extends DataClass implements Insertable<CourseData> {
-  final String? id;
+  final String id;
   final int? serverId;
   final int? institution;
   final int? semester;
@@ -14095,7 +14093,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
   final DateTime createdAt;
   final DateTime updatedAt;
   const CourseData({
-    this.id,
+    required this.id,
     this.serverId,
     this.institution,
     this.semester,
@@ -14111,9 +14109,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
+    map['id'] = Variable<String>(id);
     if (!nullToAbsent || serverId != null) {
       map['server_id'] = Variable<int>(serverId);
     }
@@ -14138,7 +14134,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
 
   CourseCompanion toCompanion(bool nullToAbsent) {
     return CourseCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       serverId: serverId == null && nullToAbsent
           ? const Value.absent()
           : Value(serverId),
@@ -14167,7 +14163,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CourseData(
-      id: serializer.fromJson<String?>(json['cache_id']),
+      id: serializer.fromJson<String>(json['cache_id']),
       serverId: serializer.fromJson<int?>(json['id']),
       institution: serializer.fromJson<int?>(json['institution']),
       semester: serializer.fromJson<int?>(json['semester']),
@@ -14185,7 +14181,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'cache_id': serializer.toJson<String?>(id),
+      'cache_id': serializer.toJson<String>(id),
       'id': serializer.toJson<int?>(serverId),
       'institution': serializer.toJson<int?>(institution),
       'semester': serializer.toJson<int?>(semester),
@@ -14201,7 +14197,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
   }
 
   CourseData copyWith({
-    Value<String?> id = const Value.absent(),
+    String? id,
     Value<int?> serverId = const Value.absent(),
     Value<int?> institution = const Value.absent(),
     Value<int?> semester = const Value.absent(),
@@ -14214,7 +14210,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => CourseData(
-    id: id.present ? id.value : this.id,
+    id: id ?? this.id,
     serverId: serverId.present ? serverId.value : this.serverId,
     institution: institution.present ? institution.value : this.institution,
     semester: semester.present ? semester.value : this.semester,
@@ -14305,7 +14301,7 @@ class CourseData extends DataClass implements Insertable<CourseData> {
 }
 
 class CourseCompanion extends UpdateCompanion<CourseData> {
-  final Value<String?> id;
+  final Value<String> id;
   final Value<int?> serverId;
   final Value<int?> institution;
   final Value<int?> semester;
@@ -14383,7 +14379,7 @@ class CourseCompanion extends UpdateCompanion<CourseData> {
   }
 
   CourseCompanion copyWith({
-    Value<String?>? id,
+    Value<String>? id,
     Value<int?>? serverId,
     Value<int?>? institution,
     Value<int?>? semester,
@@ -14493,10 +14489,10 @@ class $TimetableTable extends Timetable
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    clientDefault: () => _uuid.v4(),
+    clientDefault: generateUuid,
   );
   static const VerificationMeta _serverIdMeta = const VerificationMeta(
     'serverId',
@@ -14690,7 +14686,7 @@ class $TimetableTable extends Timetable
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
-      ),
+      )!,
       serverId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}server_id'],
@@ -14733,7 +14729,7 @@ class $TimetableTable extends Timetable
 }
 
 class TimetableData extends DataClass implements Insertable<TimetableData> {
-  final String? id;
+  final String id;
   final int? serverId;
   final String name;
   final String userId;
@@ -14743,7 +14739,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   final DateTime createdAt;
   final DateTime updatedAt;
   const TimetableData({
-    this.id,
+    required this.id,
     this.serverId,
     required this.name,
     required this.userId,
@@ -14756,9 +14752,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
+    map['id'] = Variable<String>(id);
     if (!nullToAbsent || serverId != null) {
       map['server_id'] = Variable<int>(serverId);
     }
@@ -14776,7 +14770,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
 
   TimetableCompanion toCompanion(bool nullToAbsent) {
     return TimetableCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       serverId: serverId == null && nullToAbsent
           ? const Value.absent()
           : Value(serverId),
@@ -14798,7 +14792,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TimetableData(
-      id: serializer.fromJson<String?>(json['cache_id']),
+      id: serializer.fromJson<String>(json['cache_id']),
       serverId: serializer.fromJson<int?>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       userId: serializer.fromJson<String>(json['user_id']),
@@ -14813,7 +14807,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'cache_id': serializer.toJson<String?>(id),
+      'cache_id': serializer.toJson<String>(id),
       'id': serializer.toJson<int?>(serverId),
       'name': serializer.toJson<String>(name),
       'user_id': serializer.toJson<String>(userId),
@@ -14826,7 +14820,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   }
 
   TimetableData copyWith({
-    Value<String?> id = const Value.absent(),
+    String? id,
     Value<int?> serverId = const Value.absent(),
     String? name,
     String? userId,
@@ -14836,7 +14830,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => TimetableData(
-    id: id.present ? id.value : this.id,
+    id: id ?? this.id,
     serverId: serverId.present ? serverId.value : this.serverId,
     name: name ?? this.name,
     userId: userId ?? this.userId,
@@ -14906,7 +14900,7 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
 }
 
 class TimetableCompanion extends UpdateCompanion<TimetableData> {
-  final Value<String?> id;
+  final Value<String> id;
   final Value<int?> serverId;
   final Value<String> name;
   final Value<String> userId;
@@ -14968,7 +14962,7 @@ class TimetableCompanion extends UpdateCompanion<TimetableData> {
   }
 
   TimetableCompanion copyWith({
-    Value<String?>? id,
+    Value<String>? id,
     Value<int?>? serverId,
     Value<String>? name,
     Value<String>? userId,
@@ -15058,10 +15052,10 @@ class $TimetableEntryTable extends TimetableEntry
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    clientDefault: () => _uuid.v4(),
+    clientDefault: generateUuid,
   );
   static const VerificationMeta _serverIdMeta = const VerificationMeta(
     'serverId',
@@ -15380,7 +15374,7 @@ class $TimetableEntryTable extends TimetableEntry
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
-      ),
+      )!,
       serverId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}server_id'],
@@ -15448,7 +15442,7 @@ class $TimetableEntryTable extends TimetableEntry
 
 class TimetableEntryData extends DataClass
     implements Insertable<TimetableEntryData> {
-  final String? id;
+  final String id;
   final int? serverId;
   final String userId;
   final int institutionId;
@@ -15470,7 +15464,7 @@ class TimetableEntryData extends DataClass
   final bool isDeleted;
   final DateTime lastUpdated;
   const TimetableEntryData({
-    this.id,
+    required this.id,
     this.serverId,
     required this.userId,
     required this.institutionId,
@@ -15489,9 +15483,7 @@ class TimetableEntryData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
+    map['id'] = Variable<String>(id);
     if (!nullToAbsent || serverId != null) {
       map['server_id'] = Variable<int>(serverId);
     }
@@ -15521,7 +15513,7 @@ class TimetableEntryData extends DataClass
 
   TimetableEntryCompanion toCompanion(bool nullToAbsent) {
     return TimetableEntryCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       serverId: serverId == null && nullToAbsent
           ? const Value.absent()
           : Value(serverId),
@@ -15553,7 +15545,7 @@ class TimetableEntryData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TimetableEntryData(
-      id: serializer.fromJson<String?>(json['cache_id']),
+      id: serializer.fromJson<String>(json['cache_id']),
       serverId: serializer.fromJson<int?>(json['id']),
       userId: serializer.fromJson<String>(json['user_id']),
       institutionId: serializer.fromJson<int>(json['institution_id']),
@@ -15574,7 +15566,7 @@ class TimetableEntryData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'cache_id': serializer.toJson<String?>(id),
+      'cache_id': serializer.toJson<String>(id),
       'id': serializer.toJson<int?>(serverId),
       'user_id': serializer.toJson<String>(userId),
       'institution_id': serializer.toJson<int>(institutionId),
@@ -15593,7 +15585,7 @@ class TimetableEntryData extends DataClass
   }
 
   TimetableEntryData copyWith({
-    Value<String?> id = const Value.absent(),
+    String? id,
     Value<int?> serverId = const Value.absent(),
     String? userId,
     int? institutionId,
@@ -15609,7 +15601,7 @@ class TimetableEntryData extends DataClass
     bool? isDeleted,
     DateTime? lastUpdated,
   }) => TimetableEntryData(
-    id: id.present ? id.value : this.id,
+    id: id ?? this.id,
     serverId: serverId.present ? serverId.value : this.serverId,
     userId: userId ?? this.userId,
     institutionId: institutionId ?? this.institutionId,
@@ -15715,7 +15707,7 @@ class TimetableEntryData extends DataClass
 }
 
 class TimetableEntryCompanion extends UpdateCompanion<TimetableEntryData> {
-  final Value<String?> id;
+  final Value<String> id;
   final Value<int?> serverId;
   final Value<String> userId;
   final Value<int> institutionId;
@@ -15811,7 +15803,7 @@ class TimetableEntryCompanion extends UpdateCompanion<TimetableEntryData> {
   }
 
   TimetableEntryCompanion copyWith({
-    Value<String?>? id,
+    Value<String>? id,
     Value<int?>? serverId,
     Value<String>? userId,
     Value<int>? institutionId,
@@ -28419,7 +28411,7 @@ typedef $$InstitutionFeeTransactionTableProcessedTableManager =
     >;
 typedef $$SemesterTableCreateCompanionBuilder =
     SemesterCompanion Function({
-      Value<int?> id,
+      Value<int> id,
       required String name,
       Value<String?> description,
       Value<int?> institutionId,
@@ -28428,7 +28420,7 @@ typedef $$SemesterTableCreateCompanionBuilder =
     });
 typedef $$SemesterTableUpdateCompanionBuilder =
     SemesterCompanion Function({
-      Value<int?> id,
+      Value<int> id,
       Value<String> name,
       Value<String?> description,
       Value<int?> institutionId,
@@ -28473,7 +28465,7 @@ final class $$SemesterTableReferences
     final manager = $$CourseTableTableManager(
       $_db,
       $_db.course,
-    ).filter((f) => f.semester.id.sqlEquals($_itemColumn<int>('id')));
+    ).filter((f) => f.semester.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_courseRefsTable($_db));
     return ProcessedTableManager(
@@ -28726,7 +28718,7 @@ class $$SemesterTableTableManager
               $$SemesterTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int?> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<int?> institutionId = const Value.absent(),
@@ -28742,7 +28734,7 @@ class $$SemesterTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<int?> id = const Value.absent(),
+                Value<int> id = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
                 Value<int?> institutionId = const Value.absent(),
@@ -28841,7 +28833,7 @@ typedef $$SemesterTableProcessedTableManager =
     >;
 typedef $$CourseTableCreateCompanionBuilder =
     CourseCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       Value<int?> institution,
       Value<int?> semester,
@@ -28857,7 +28849,7 @@ typedef $$CourseTableCreateCompanionBuilder =
     });
 typedef $$CourseTableUpdateCompanionBuilder =
     CourseCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       Value<int?> institution,
       Value<int?> semester,
@@ -28925,7 +28917,7 @@ final class $$CourseTableReferences
     final manager = $$TimetableEntryTableTableManager(
       $_db,
       $_db.timetableEntry,
-    ).filter((f) => f.courseId.id.sqlEquals($_itemColumn<String>('id')));
+    ).filter((f) => f.courseId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
     return ProcessedTableManager(
@@ -29321,7 +29313,7 @@ class $$CourseTableTableManager
               $$CourseTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 Value<int?> institution = const Value.absent(),
                 Value<int?> semester = const Value.absent(),
@@ -29351,7 +29343,7 @@ class $$CourseTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 Value<int?> institution = const Value.absent(),
                 Value<int?> semester = const Value.absent(),
@@ -29492,7 +29484,7 @@ typedef $$CourseTableProcessedTableManager =
     >;
 typedef $$TimetableTableCreateCompanionBuilder =
     TimetableCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       required String name,
       required String userId,
@@ -29505,7 +29497,7 @@ typedef $$TimetableTableCreateCompanionBuilder =
     });
 typedef $$TimetableTableUpdateCompanionBuilder =
     TimetableCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       Value<String> name,
       Value<String> userId,
@@ -29556,7 +29548,7 @@ final class $$TimetableTableReferences
     final manager = $$TimetableEntryTableTableManager(
       $_db,
       $_db.timetableEntry,
-    ).filter((f) => f.timetableId.id.sqlEquals($_itemColumn<String>('id')));
+    ).filter((f) => f.timetableId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
     return ProcessedTableManager(
@@ -29846,7 +29838,7 @@ class $$TimetableTableTableManager
               $$TimetableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> userId = const Value.absent(),
@@ -29870,7 +29862,7 @@ class $$TimetableTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 required String name,
                 required String userId,
@@ -29986,7 +29978,7 @@ typedef $$TimetableTableProcessedTableManager =
     >;
 typedef $$TimetableEntryTableCreateCompanionBuilder =
     TimetableEntryCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       required String userId,
       required int institutionId,
@@ -30005,7 +29997,7 @@ typedef $$TimetableEntryTableCreateCompanionBuilder =
     });
 typedef $$TimetableEntryTableUpdateCompanionBuilder =
     TimetableEntryCompanion Function({
-      Value<String?> id,
+      Value<String> id,
       Value<int?> serverId,
       Value<String> userId,
       Value<int> institutionId,
@@ -30447,7 +30439,7 @@ class $$TimetableEntryTableTableManager
               $$TimetableEntryTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<int> institutionId = const Value.absent(),
@@ -30483,7 +30475,7 @@ class $$TimetableEntryTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<String?> id = const Value.absent(),
+                Value<String> id = const Value.absent(),
                 Value<int?> serverId = const Value.absent(),
                 required String userId,
                 required int institutionId,

@@ -2,13 +2,10 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
-
-final _uuid = Uuid();
 
 class Course extends Table {
   @JsonKey("cache_id")
-  TextColumn get id => text().nullable().clientDefault(() => _uuid.v4())();
+  TextColumn get id => text().clientDefault(generateUuid)();
 
   @JsonKey("id")
   IntColumn get serverId => integer().unique().nullable()();

@@ -22,7 +22,7 @@ class SemesterRepositoryImpl implements SemesterRepository {
     required SemesterEntity semester,
   }) {
     return semesterLocalDatasource.createOrUpdateSemester(
-      semester: semester.toData(),
+      semester: semester.toCompanion(),
     );
   }
 
@@ -36,7 +36,7 @@ class SemesterRepositoryImpl implements SemesterRepository {
     required SemesterEntity semester,
   }) {
     return semesterLocalDatasource.createOrUpdateSemester(
-      semester: semester.toData(),
+      semester: semester.toCompanion(),
     );
   }
 

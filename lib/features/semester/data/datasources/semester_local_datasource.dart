@@ -6,7 +6,7 @@ import 'package:drift/drift.dart';
 abstract class SemesterLocalDatasource {
   /// Creates or updates a semester specified by [semester]
   Future<Either<Failure, Unit>> createOrUpdateSemester({
-    required SemesterData semester,
+    required SemesterCompanion semester,
   });
 
   /// Returns a stream of all semesters
@@ -91,7 +91,7 @@ class SemesterLocalDatasourceImpl implements SemesterLocalDatasource {
 
   @override
   Future<Either<Failure, Unit>> createOrUpdateSemester({
-    required SemesterData semester,
+    required SemesterCompanion semester,
   }) async {
     try {
       await (appDataBase.into(

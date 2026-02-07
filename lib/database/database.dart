@@ -26,6 +26,7 @@ import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
+import 'package:flutter/material.dart' show Color;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
