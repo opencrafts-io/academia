@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/features/course/course.dart';
@@ -20,26 +21,18 @@ class _CourseListPageState extends State<CourseListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // M3 standard uses a FAB for the primary action
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => /* Navigate to Add Course */ {},
+        onPressed: () => AddCoursesRoute().push(context),
         icon: const Icon(Icons.add),
         label: const Text('Add Course'),
       ),
       body: BlocBuilder<CourseCubit, CourseState>(
         builder: (context, state) {
           return CustomScrollView(
+            physics: BouncingScrollPhysics(),
             slivers: [
-              // 1. Expressive M3 Large App Bar
-              const SliverAppBar.large(
-                title: Text('My Courses'),
-                actions: [
-                  IconButton(onPressed: null, icon: Icon(Icons.search)),
-                  IconButton(onPressed: null, icon: Icon(Icons.more_vert)),
-                ],
-              ),
+              const SliverAppBar.large(title: Text('Courses')),
 
-              // 2. Handle States
               state.when(
                 initial: () =>
                     const SliverToBoxAdapter(child: SizedBox.shrink()),
@@ -61,10 +54,7 @@ class _CourseListPageState extends State<CourseListPage> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final course = courses[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _CourseCard(course: course),
-                        );
+                        return _CourseCard(course: course);
                       }, childCount: courses.length),
                     ),
                   );
@@ -84,32 +74,33 @@ class _CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Card.outlined(
       elevation: 0,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      color: course.color?.withAlpha(32),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
         title: Text(
           course.courseName,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        subtitle: Text(
-          course.courseCode,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        trailing: Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: course.color, // Color from our converter
-            shape: BoxShape.circle,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        leading: CircleAvatar(child: Icon(Icons.school_outlined)),
+        isThreeLine: true,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              course.courseCode,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+        trailing: IconButton.outlined(
+          onPressed: () => context.read<CourseCubit>().removeCourse(course.id!),
+          icon: Icon(Icons.delete_outline, color: Colors.red),
         ),
       ),
     );

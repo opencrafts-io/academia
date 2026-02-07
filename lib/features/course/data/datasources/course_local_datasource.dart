@@ -18,7 +18,7 @@ abstract class CourseLocalDatasource {
   ///
   /// Returns [Unit] on success or a [Failure] on database write errors.
   Future<Either<Failure, Unit>> createOrUpdateCourse({
-    required CourseData course,
+    required CourseCompanion course,
   });
 
   /// Provides a real-time [Stream] of all courses currently stored in the
@@ -63,7 +63,7 @@ class CourseLocalDatasourceImpl extends CourseLocalDatasource {
 
   @override
   Future<Either<Failure, Unit>> createOrUpdateCourse({
-    required CourseData course,
+    required CourseCompanion course,
   }) async {
     try {
       // into() creates an insert statement.
@@ -162,6 +162,7 @@ class CourseLocalDatasourceImpl extends CourseLocalDatasource {
   /// Hard Delete: Actually removes the row from SQLite.
   /// Call this ONLY after the server confirms deletion OR for
   /// local-only cache cleanup.
+  @override
   Future<Either<Failure, Unit>> hardDeleteCourse(String id) async {
     try {
       await (appDataBase.delete(

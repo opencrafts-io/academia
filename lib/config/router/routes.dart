@@ -733,7 +733,10 @@ class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
   }
 }
 
-@TypedGoRoute<CoursesPageRoute>(path: "/courses")
+@TypedGoRoute<CoursesPageRoute>(
+  path: "/courses",
+  routes: [TypedGoRoute<AddCoursesRoute>(path: "create")],
+)
 class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
   @override
   CustomTransitionPage<void> buildPage(
@@ -759,6 +762,19 @@ class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
 
             return SlideTransition(position: offsetAnimation, child: child);
           },
+    );
+  }
+}
+
+class AddCoursesRoute extends GoRouteData with _$AddCoursesRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(child: const AddCourseSheet()),
     );
   }
 }

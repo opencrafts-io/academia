@@ -1,6 +1,5 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/features/course/course.dart';
-import 'package:academia/features/course/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 
 class CourseRepositoryImpl implements CourseRepository {
@@ -20,7 +19,9 @@ class CourseRepositoryImpl implements CourseRepository {
 
   @override
   Future<Either<Failure, Unit>> saveCourse(CourseEntity course) async {
-    return await localDatasource.createOrUpdateCourse(course: course.toData());
+    return await localDatasource.createOrUpdateCourse(
+      course: course.toCompanion(),
+    );
   }
 
   @override
@@ -52,4 +53,3 @@ class CourseRepositoryImpl implements CourseRepository {
         });
   }
 }
-
