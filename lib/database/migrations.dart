@@ -33,10 +33,19 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate21To22(Migrator m) async {
-    await m.createTable(institutionCourseTimetableEntry);
+    // await m.createTable(institutionCourseTimetableEntry);
+    // skip creation of institutionCourseTimetableEntry it'll
+    // be deleted in migration 24
   }
 
   Future<void> migrate22To23(Migrator m) async {
     await m.createTable(semester);
+  }
+
+  Future<void> migrate23To24(Migrator m) async {
+    await m.deleteTable('institution_course_timetable_entry');
+    await m.createTable(course);
+    await m.createTable(timetable);
+    await m.createTable(timetableEntry);
   }
 }

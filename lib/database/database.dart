@@ -6,6 +6,7 @@ import 'package:academia/features/chirp/memberships/data/models/chirp_community_
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
+import 'package:academia/features/course/data/models/course.dart';
 import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
 import 'package:academia/features/institution/data/models/institution_course_timetable_entry.dart';
@@ -20,6 +21,8 @@ import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/sherehe/data/models/sherehe_user_model.dart';
+import 'package:academia/features/timetable/data/models/timetable.dart';
+import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
@@ -65,12 +68,21 @@ part 'database.g.dart';
     InstitutionKey,
     InstitutionProfile,
     InstitutionFeeTransaction,
-    InstitutionCourseTimetableEntry,
 
     /************************************************************
     *                           SEMESTER
     ************************************************************/
     Semester,
+    /************************************************************
+    *                           COURSE
+    ************************************************************/
+    Course,
+    /************************************************************
+    *                         TIMETABLE
+    ************************************************************/
+    Timetable,
+    TimetableEntry,
+
     // Exam Timetable
     ExamTimetable,
 
@@ -102,7 +114,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 23;
+  int get schemaVersion => 24;
 
   @override
   MigrationStrategy get migration {
@@ -140,6 +152,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 22:
               await migrate22To23(m);
+              break;
+            case 23:
+              await migrate23To24(m);
               break;
           }
         }
