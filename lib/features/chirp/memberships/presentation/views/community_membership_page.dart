@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -211,12 +212,10 @@ class CommunityCard extends StatelessWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl: community.banner ?? '',
-                  errorWidget: (context, error, child) => Image.asset(
-                    "assets/illustrations/community.jpg",
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  // height: 200,
+                  errorWidget: (context, error, child) => Assets
+                      .illustrations
+                      .community
+                      .image(width: double.infinity, fit: BoxFit.cover),
                   fit: BoxFit.fill,
                 ),
               ),

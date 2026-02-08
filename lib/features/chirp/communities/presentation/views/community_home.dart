@@ -2,6 +2,7 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,10 +98,7 @@ class _CommunityHomeState extends State<CommunityHome>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset(
-                      "assets/lotties/under-maintenance.json",
-                      height: 300,
-                    ),
+                    Lottie.asset(Assets.lotties.underMaintenance, height: 300),
                     Text(
                       "Ooops!",
                       style: Theme.of(context).textTheme.headlineSmall,
@@ -283,7 +281,7 @@ class _CommunityHomeState extends State<CommunityHome>
                                             MainAxisAlignment.center,
                                         children: [
                                           Lottie.asset(
-                                            "assets/lotties/chat.json",
+                                            Assets.lotties.chat,
                                             height: 300,
                                           ),
                                           Text(
@@ -427,7 +425,7 @@ class _CommunityHomeState extends State<CommunityHome>
                                           MainAxisAlignment.center,
                                       children: [
                                         Lottie.asset(
-                                          "assets/lotties/chat.json",
+                                          Assets.lotties.chat,
                                           height: 300,
                                         ),
                                         Text(

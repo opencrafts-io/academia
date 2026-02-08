@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,10 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Visibility(
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: Image.asset(
-                            "assets/icons/academia.png",
-                            width: 60,
-                          ),
+                          child: Assets.icons.academia.image(width: 60),
                         ),
                       ),
                     ),
@@ -275,10 +273,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   CircleAvatar(
                     backgroundColor: Colors.white,
-                    child: Image.asset(
-                      "assets/icons/opencrafts.png",
-                      height: 40,
-                    ),
+                    child: Assets.icons.opencrafts.image(height: 40),
                   ),
 
                   Align(

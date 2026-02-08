@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './welcome_page.dart';
@@ -77,16 +78,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _initialPage == -1
-          ? null
-          : AppBar(
-              centerTitle: true,
-              leading: Padding(
-                padding: EdgeInsetsGeometry.all(8),
-                child: Image.asset("assets/icons/academia.png"),
-              ),
-              title: Text("Setup your profile"),
-            ),
+      appBar: AppBar(
+        centerTitle: true,
+        leading: Padding(
+          padding: EdgeInsetsGeometry.all(8),
+          child: Assets.icons.academia.image(),
+        ),
+        title: Text("Setup your profile"),
+      ),
       resizeToAvoidBottomInset: true,
       body: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {

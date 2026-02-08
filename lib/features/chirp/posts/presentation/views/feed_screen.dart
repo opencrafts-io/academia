@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -167,10 +168,7 @@ class _FeedPageState extends State<FeedPage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Lottie.asset(
-                              "assets/lotties/chat.json",
-                              height: 300,
-                            ),
+                            Lottie.asset(Assets.lotties.chat, height: 300),
                             Text(
                               "It's a little quiet in here... "
                               "Let's make some noise! Start following "
