@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:magnet/magnet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:academia/features/course/course.dart';
+import 'package:logger/logger.dart';
 
 part 'magnet_state.dart';
 part 'magnet_event.dart';
@@ -14,10 +16,12 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   Magnet? _magnet;
   final SyncInstitutionProfileUsecase syncInstitutionProfileUsecase;
   final SaveFeeTransaction saveFeeTransaction;
+  final SaveCourseUsecase saveCourseUsecase;
 
   MagnetBloc({
     required this.syncInstitutionProfileUsecase,
     required this.saveFeeTransaction,
+    required this.saveCourseUsecase,
   }) : super(MagnetInitial()) {
     on<InitializeMagnet>(_onInitialize);
     on<ExecuteScrappingCommand>(_onExecute);
@@ -68,14 +72,19 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
         final String rawJson = jsonEncode(result.data);
         final Map<String, dynamic> computableData = jsonDecode(rawJson);
 
-        final List<InstitutionFeeTransaction> transactions = await compute(
-          _parseRawFeesTransactions,
-          computableData,
-        );
+        Logger().i(computableData);
 
-        for (var transaction in transactions) {
-          saveFeeTransaction(transaction);
-        }
+        compute(_parseRawFeesTransactions, computableData).then((transactions) {
+          for (final transaction in transactions) {
+            saveFeeTransaction(transaction);
+          }
+        });
+
+        compute(_parseRawCourses, computableData).then((courses) {
+          for (final course in courses) {
+            saveCourseUsecase(course);
+          }
+        });
 
         await syncInstitutionProfileUsecase(
           SyncProfileParams(
@@ -130,9 +139,37 @@ List<InstitutionFeeTransaction> _parseRawFeesTransactions(
       ),
       debit: double.tryParse(map['debit'].toString().replaceAll(',', '')),
       credit: double.tryParse(map['credit'].toString().replaceAll(',', '')),
-      postingDate: DateTime.tryParse(map['posting_date']),
+      postingDate: DateTime.tryParse(map['posting_date'] ?? map['date']),
       description: map['description'],
       currency: map['currency'],
+    );
+  }).toList();
+}
+
+List<CourseEntity> _parseRawCourses(Map<String, dynamic> data) {
+  final List<dynamic> rawList = data['courses'] ?? [];
+  return rawList.map((json) {
+    final Map<String, dynamic> map = Map<String, dynamic>.from(json);
+    return CourseEntity(
+      courseCode: map["course_code"],
+      courseName: map['course_name'] ?? map['course_code'],
+      instructor: map['instructor'] ?? '',
+      isSynced: false,
+      color: Color(
+        int.tryParse(
+              map['color']
+                      ?.toString()
+                      .replaceAll('0x', '')
+                      .replaceAll('0X', '') ??
+                  '',
+              radix: 16,
+            ) ??
+            0xFFCBA6F7,
+      ),
+      isDeleted: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      institutionId: map["institution_id"],
     );
   }).toList();
 }

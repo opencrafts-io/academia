@@ -3,7 +3,6 @@ import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/course/course.dart';
-import 'package:academia/features/course/domain/domain.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -843,13 +842,6 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  sl.registerFactory<MagnetBloc>(
-    () => MagnetBloc(
-      syncInstitutionProfileUsecase: sl(),
-      saveFeeTransaction: sl(),
-    ),
-  );
-
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
       addAccountToInstitution: sl(),
@@ -967,6 +959,14 @@ Future<void> init(FlavorConfig flavor) async {
       watchAllCourses: sl(),
       saveCourse: sl(),
       deleteCourse: sl(),
+    ),
+  );
+
+  sl.registerFactory<MagnetBloc>(
+    () => MagnetBloc(
+      saveCourseUsecase: sl(),
+      syncInstitutionProfileUsecase: sl(),
+      saveFeeTransaction: sl(),
     ),
   );
 
