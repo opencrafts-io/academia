@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/features/agenda/agenda.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -263,7 +264,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Lottie.asset(
-                              "assets/lotties/painting.json",
+                            Assets.lotties.painting,
                               height: 250,
                             ),
                             const SizedBox(height: 16),

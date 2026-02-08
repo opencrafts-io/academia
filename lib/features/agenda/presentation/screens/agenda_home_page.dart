@@ -2,6 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/todos/presensentation/widgets/create_todo_bottom_sheet.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,7 +126,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Lottie.asset(
-                                      "assets/lotties/organize.json",
+                                      Assets.lotties.organize,
                                       width: 300,
                                     ),
                                     const SizedBox(height: 16),

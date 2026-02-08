@@ -1,6 +1,7 @@
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/magnet/presentation/views/widget/magnet_profile_widget.dart';
 import 'package:academia/features/profile/profile.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -111,7 +112,7 @@ class _MagnetProfilePageState extends State<MagnetProfilePage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               LottieBuilder.asset(
-                                "assets/lotties/digital-marketing.json",
+                                Assets.lotties.digitalMarketing,
                                 height: 240,
                               ),
                               Text(

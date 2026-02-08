@@ -3,6 +3,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/magnet/data/models/magnet_credential_extension.dart';
 import 'package:academia/features/magnet/magnet.dart';
 import 'package:academia/features/profile/profile.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -39,7 +40,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
         ontap: (BuildContext context, int institutionID) {
           MagnetProfileRoute(institutionID: institutionID).push(context);
         },
-        assetImagePath: "assets/illustrations/authenticate.jpg",
+        assetImagePath: Assets.illustrations.authenticate.keyName,
       ),
       MagnetHomeScreenAction(
         title: "Classes",
@@ -47,7 +48,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
         ontap: (BuildContext context, int institutionID) {
           MagnetCoursesRoute(institutionID: institutionID).push(context);
         },
-        assetImagePath: "assets/illustrations/classes.jpg",
+        assetImagePath: Assets.illustrations.classes.keyName,
       ),
       MagnetHomeScreenAction(
         title: "Your grades",
@@ -62,7 +63,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
             ),
           );
         },
-        assetImagePath: "assets/illustrations/grades.jpg",
+        assetImagePath: Assets.illustrations.grades.keyName,
       ),
       MagnetHomeScreenAction(
         title: "Fees statements",
@@ -70,7 +71,7 @@ class _MagnetHomeScreenState extends State<MagnetHomeScreen> {
         ontap: (BuildContext context, int institutionID) {
           MagnetFeesRoute(institutionID: institutionID).push(context);
         },
-        assetImagePath: "assets/illustrations/school-fees.jpg",
+        assetImagePath: Assets.illustrations.schoolFees.keyName,
       ),
     ];
   }
