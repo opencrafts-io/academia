@@ -26,16 +26,18 @@ class $AssetsIconsGen {
   AssetGenImage get academiaLogoVariant1 =>
       const AssetGenImage('assets/icons/academia-logo-variant-1.png');
 
-  /// File path: assets/icons/academia-v2.png
-  AssetGenImage get academiaV2 =>
-      const AssetGenImage('assets/icons/academia-v2.png');
-
   /// File path: assets/icons/academia.png
   AssetGenImage get academia =>
       const AssetGenImage('assets/icons/academia.png');
 
+  /// File path: assets/icons/book.png
+  AssetGenImage get book => const AssetGenImage('assets/icons/book.png');
+
   /// File path: assets/icons/card.png
   AssetGenImage get card => const AssetGenImage('assets/icons/card.png');
+
+  /// File path: assets/icons/dash.png
+  AssetGenImage get dash => const AssetGenImage('assets/icons/dash.png');
 
   /// File path: assets/icons/dodge.jpg
   AssetGenImage get dodge => const AssetGenImage('assets/icons/dodge.jpg');
@@ -45,9 +47,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/fire.png
   AssetGenImage get fire => const AssetGenImage('assets/icons/fire.png');
-
-  /// File path: assets/icons/gopher.png
-  AssetGenImage get gopher => const AssetGenImage('assets/icons/gopher.png');
 
   /// File path: assets/icons/locked-badge.png
   AssetGenImage get lockedBadge =>
@@ -60,22 +59,32 @@ class $AssetsIconsGen {
   AssetGenImage get opencrafts =>
       const AssetGenImage('assets/icons/opencrafts.png');
 
+  /// File path: assets/icons/semester.png
+  AssetGenImage get semester =>
+      const AssetGenImage('assets/icons/semester.png');
+
+  /// File path: assets/icons/study-time.png
+  AssetGenImage get studyTime =>
+      const AssetGenImage('assets/icons/study-time.png');
+
   /// File path: assets/icons/todos.png
   AssetGenImage get todos => const AssetGenImage('assets/icons/todos.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [
     academiaLogoVariant1,
-    academiaV2,
     academia,
+    book,
     card,
+    dash,
     dodge,
     exam,
     fire,
-    gopher,
     lockedBadge,
     medal,
     opencrafts,
+    semester,
+    studyTime,
     todos,
   ];
 }
@@ -83,134 +92,12 @@ class $AssetsIconsGen {
 class $AssetsIllustrationsGen {
   const $AssetsIllustrationsGen();
 
-  /// File path: assets/illustrations/authenticate.jpg
-  AssetGenImage get authenticate =>
-      const AssetGenImage('assets/illustrations/authenticate.jpg');
-
-  /// File path: assets/illustrations/classes.jpg
-  AssetGenImage get classes =>
-      const AssetGenImage('assets/illustrations/classes.jpg');
-
-  /// File path: assets/illustrations/community.jpg
-  AssetGenImage get community =>
-      const AssetGenImage('assets/illustrations/community.jpg');
-
   /// File path: assets/illustrations/exam_timetable.png
   AssetGenImage get examTimetable =>
       const AssetGenImage('assets/illustrations/exam_timetable.png');
 
-  /// File path: assets/illustrations/grades.jpg
-  AssetGenImage get grades =>
-      const AssetGenImage('assets/illustrations/grades.jpg');
-
-  /// File path: assets/illustrations/scene 1.png
-  AssetGenImage get scene1 =>
-      const AssetGenImage('assets/illustrations/scene 1.png');
-
-  /// File path: assets/illustrations/scene 10.png
-  AssetGenImage get scene10 =>
-      const AssetGenImage('assets/illustrations/scene 10.png');
-
-  /// File path: assets/illustrations/scene 11.png
-  AssetGenImage get scene11 =>
-      const AssetGenImage('assets/illustrations/scene 11.png');
-
-  /// File path: assets/illustrations/scene 12.png
-  AssetGenImage get scene12 =>
-      const AssetGenImage('assets/illustrations/scene 12.png');
-
-  /// File path: assets/illustrations/scene 13.png
-  AssetGenImage get scene13 =>
-      const AssetGenImage('assets/illustrations/scene 13.png');
-
-  /// File path: assets/illustrations/scene 14.png
-  AssetGenImage get scene14 =>
-      const AssetGenImage('assets/illustrations/scene 14.png');
-
-  /// File path: assets/illustrations/scene 15.png
-  AssetGenImage get scene15 =>
-      const AssetGenImage('assets/illustrations/scene 15.png');
-
-  /// File path: assets/illustrations/scene 2.png
-  AssetGenImage get scene2 =>
-      const AssetGenImage('assets/illustrations/scene 2.png');
-
-  /// File path: assets/illustrations/scene 3.png
-  AssetGenImage get scene3 =>
-      const AssetGenImage('assets/illustrations/scene 3.png');
-
-  /// File path: assets/illustrations/scene 4.png
-  AssetGenImage get scene4 =>
-      const AssetGenImage('assets/illustrations/scene 4.png');
-
-  /// File path: assets/illustrations/scene 5.png
-  AssetGenImage get scene5 =>
-      const AssetGenImage('assets/illustrations/scene 5.png');
-
-  /// File path: assets/illustrations/scene 6.png
-  AssetGenImage get scene6 =>
-      const AssetGenImage('assets/illustrations/scene 6.png');
-
-  /// File path: assets/illustrations/scene 7.png
-  AssetGenImage get scene7 =>
-      const AssetGenImage('assets/illustrations/scene 7.png');
-
-  /// File path: assets/illustrations/scene 8.png
-  AssetGenImage get scene8 =>
-      const AssetGenImage('assets/illustrations/scene 8.png');
-
-  /// File path: assets/illustrations/scene 9.png
-  AssetGenImage get scene9 =>
-      const AssetGenImage('assets/illustrations/scene 9.png');
-
-  /// File path: assets/illustrations/school-fees.jpg
-  AssetGenImage get schoolFees =>
-      const AssetGenImage('assets/illustrations/school-fees.jpg');
-
-  /// File path: assets/illustrations/timetable.jpg
-  AssetGenImage get timetable =>
-      const AssetGenImage('assets/illustrations/timetable.jpg');
-
   /// List of all assets
-  List<AssetGenImage> get values => [
-    authenticate,
-    classes,
-    community,
-    examTimetable,
-    grades,
-    scene1,
-    scene10,
-    scene11,
-    scene12,
-    scene13,
-    scene14,
-    scene15,
-    scene2,
-    scene3,
-    scene4,
-    scene5,
-    scene6,
-    scene7,
-    scene8,
-    scene9,
-    schoolFees,
-    timetable,
-  ];
-}
-
-class $AssetsImagesGen {
-  const $AssetsImagesGen();
-
-  /// File path: assets/images/statue.jpg
-  AssetGenImage get statue => const AssetGenImage('assets/images/statue.jpg');
-
-  /// File path: assets/images/tsuyoshi-kozu-pJ_yqFKXHds-unsplash.jpg
-  AssetGenImage get tsuyoshiKozuPJYqFKXHdsUnsplash => const AssetGenImage(
-    'assets/images/tsuyoshi-kozu-pJ_yqFKXHds-unsplash.jpg',
-  );
-
-  /// List of all assets
-  List<AssetGenImage> get values => [statue, tsuyoshiKozuPJYqFKXHdsUnsplash];
+  List<AssetGenImage> get values => [examTimetable];
 }
 
 class $AssetsLottiesGen {
@@ -343,7 +230,6 @@ class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsIllustrationsGen illustrations =
       $AssetsIllustrationsGen();
-  static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
   static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
   static const $PackagesGen packages = $PackagesGen();
