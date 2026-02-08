@@ -7,6 +7,8 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
+import 'package:academia/features/timetable/data/data.dart';
+import 'package:academia/features/timetable/domain/domain.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -959,6 +961,104 @@ Future<void> init(FlavorConfig flavor) async {
       watchAllCourses: sl(),
       saveCourse: sl(),
       deleteCourse: sl(),
+    ),
+  );
+
+  /***************************************************************
+  *                       Timetable
+  ***************************************************************/
+
+  sl.registerFactory<TimetableEntryLocalDatasource>(
+    () => TimetableEntryLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<TimetableLocalDatasource>(
+    () => TimetableLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<TimetableRepository>(
+    () => TimetableRepositoryImpl(localDatasource: sl()),
+  );
+
+  sl.registerFactory<TimetableEntryRepository>(
+    () => TimetableEntryRepositoryImpl(localDatasource: sl()),
+  );
+
+  sl.registerFactory<CreateOrUpdateTimetableEntry>(
+    () => CreateOrUpdateTimetableEntry(sl()),
+  );
+  sl.registerFactory<CreateOrUpdateTimetableEntries>(
+    () => CreateOrUpdateTimetableEntries(sl()),
+  );
+  sl.registerFactory<GetTimetableEntryById>(() => GetTimetableEntryById(sl()));
+  sl.registerFactory<WatchAllTimetableEntries>(
+    () => WatchAllTimetableEntries(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByTimetableId>(
+    () => WatchTimetableEntriesByTimetableId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByCourseId>(
+    () => WatchTimetableEntriesByCourseId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByUserId>(
+    () => WatchTimetableEntriesByUserId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByInstitutionId>(
+    () => WatchTimetableEntriesByInstitutionId(sl()),
+  );
+  sl.registerFactory<DeleteTimetableEntry>(() => DeleteTimetableEntry(sl()));
+  sl.registerFactory<DeleteTimetableEntries>(
+    () => DeleteTimetableEntries(sl()),
+  );
+  sl.registerFactory<SyncTimetableEntries>(() => SyncTimetableEntries(sl()));
+  sl.registerFactory<FetchTimetableEntriesFromRemote>(
+    () => FetchTimetableEntriesFromRemote(sl()),
+  );
+
+  sl.registerFactory<CreateOrUpdateTimetable>(
+    () => CreateOrUpdateTimetable(sl()),
+  );
+  sl.registerFactory<GetTimetableById>(() => GetTimetableById(sl()));
+  sl.registerFactory<WatchAllTimetables>(() => WatchAllTimetables(sl()));
+  sl.registerFactory<WatchTimetablesByUserId>(
+    () => WatchTimetablesByUserId(sl()),
+  );
+  sl.registerFactory<WatchTimetablesByInstitutionId>(
+    () => WatchTimetablesByInstitutionId(sl()),
+  );
+  sl.registerFactory<DeleteTimetable>(() => DeleteTimetable(sl()));
+  sl.registerFactory<SyncTimetables>(() => SyncTimetables(sl()));
+  sl.registerFactory<FetchTimetablesFromRemote>(
+    () => FetchTimetablesFromRemote(sl()),
+  );
+
+  sl.registerFactory<TimetableBloc>(
+    () => TimetableBloc(
+      watchAllTimetables: sl(),
+      watchTimetablesByUserId: sl(),
+      watchTimetablesByInstitutionId: sl(),
+      createOrUpdateTimetable: sl(),
+      getTimetableById: sl(),
+      deleteTimetable: sl(),
+      syncTimetables: sl(),
+      fetchTimetablesFromRemote: sl(),
+    ),
+  );
+
+  sl.registerFactory<TimetableEntryBloc>(
+    () => TimetableEntryBloc(
+      watchAllTimetableEntries: sl(),
+      watchTimetableEntriesByTimetableId: sl(),
+      watchTimetableEntriesByCourseId: sl(),
+      watchTimetableEntriesByUserId: sl(),
+      watchTimetableEntriesByInstitutionId: sl(),
+      createOrUpdateTimetableEntry: sl(),
+      createOrUpdateTimetableEntries: sl(),
+      getTimetableEntryById: sl(),
+      deleteTimetableEntry: sl(),
+      deleteTimetableEntries: sl(),
+      syncTimetableEntries: sl(),
+      fetchTimetableEntriesFromRemote: sl(),
     ),
   );
 
