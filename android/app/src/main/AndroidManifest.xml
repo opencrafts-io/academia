@@ -77,6 +77,8 @@
         android:name="android.support.FILE_PROVIDER_PATHS"
         android:resource="@xml/provider_paths" />
     </provider>
+
+    <meta-data android:name="com.posthog.posthog.AUTO_INIT" android:value="false" />
 	</application>
 	<!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

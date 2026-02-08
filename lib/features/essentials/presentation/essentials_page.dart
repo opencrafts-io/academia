@@ -3,6 +3,7 @@ import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/admob/admob.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,13 +53,13 @@ class _EssentialsPageState extends State<EssentialsPage> {
     _EssentialItem(
       title: "To-Dos",
       ontap: () => TodosRoute().push(context),
-      iconPath: "assets/icons/todos.png",
+      iconPath: Assets.icons.todos.keyName,
     ),
 
     _EssentialItem(
       title: "Exam timetable",
       ontap: _navigateToExamTimetable,
-      iconPath: "assets/icons/exam.png",
+      iconPath: Assets.icons.exam.keyName,
     ),
   ];
 
