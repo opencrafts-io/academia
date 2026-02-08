@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/communities/communities.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -232,11 +233,10 @@ class CommunitySearchCard extends StatelessWidget {
               width: double.infinity,
               child: CachedNetworkImage(
                 imageUrl: community.banner ?? '',
-                errorWidget: (context, error, child) => Image.asset(
-                  "assets/illustrations/community.jpg",
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                errorWidget: (context, error, child) => Assets
+                    .illustrations
+                    .community
+                    .image(width: double.infinity, fit: BoxFit.cover),
                 height: 200,
                 fit: BoxFit.fill,
               ),

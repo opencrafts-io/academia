@@ -128,6 +128,7 @@ dev_dependencies:
   drift_dev: ^2.27.0
   json_serializable: ^6.8.0
   freezed: ^3.2.3
+  flutter_gen_runner: ^5.12.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
