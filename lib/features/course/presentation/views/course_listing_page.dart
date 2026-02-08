@@ -54,7 +54,7 @@ class _CourseListPageState extends State<CourseListPage> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final course = courses[index];
-                        return _CourseCard(course: course);
+                        return CourseCard(course: course);
                       }, childCount: courses.length),
                     ),
                   );
@@ -63,45 +63,6 @@ class _CourseListPageState extends State<CourseListPage> {
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _CourseCard extends StatelessWidget {
-  final CourseEntity course;
-  const _CourseCard({required this.course});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card.outlined(
-      elevation: 0,
-      color: course.color?.withAlpha(32),
-      child: ListTile(
-        title: Text(
-          course.courseName,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: CircleAvatar(child: Icon(Icons.school_outlined)),
-        isThreeLine: true,
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              course.courseCode,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ),
-        trailing: IconButton.outlined(
-          onPressed: () => context.read<CourseCubit>().removeCourse(course.id!),
-          icon: Icon(Icons.delete_outline, color: Colors.red),
-        ),
       ),
     );
   }

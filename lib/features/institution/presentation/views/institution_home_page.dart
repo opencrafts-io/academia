@@ -1,4 +1,5 @@
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
@@ -175,8 +176,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                         child: Text("Courses"),
                       ),
                     ),
-                    _CoursesSectionCard(),
-
+                    _CoursesSectionCard(institutionId: widget.institutionID),
                     SizedBox(height: 22),
                   ],
                 ),
@@ -314,53 +314,38 @@ class _FeesSectionCard extends StatelessWidget {
 }
 
 class _CoursesSectionCard extends StatelessWidget {
-  const _CoursesSectionCard();
+  const _CoursesSectionCard({required this.institutionId});
+  final int institutionId;
 
   @override
   Widget build(BuildContext context) {
-    return Card.filled(
-      clipBehavior: Clip.hardEdge,
-      color: Theme.of(context).colorScheme.tertiaryContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      margin: EdgeInsets.zero,
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: CircleAvatar(),
-            title: Text("CS ${(index + 1) * 100}"),
-            // subtitle: Text("Student"),
-            subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-          );
-        },
-        separatorBuilder: (context, index) => Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Divider(),
-        ),
-        itemCount: 6,
-      ),
+    context.read<CourseCubit>().watchByInstitution(institutionId);
+    return BlocBuilder<CourseCubit, CourseState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => Center(child: LoadingIndicatorM3E()),
+          loading: () => Center(child: LoadingIndicatorM3E()),
+          success: (courses) {
+            if (courses.isEmpty) {
+              return Column(children: [Icon(Icons.emoji_people), Text("We")]);
+            }
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.emoji_people), Text("We")],
+            );
+
+            // return ListView.builder(
+            //   padding: EdgeInsets.zero,
+            //   itemCount: courses.length,
+            //   shrinkWrap: true,
+            //   physics: NeverScrollableScrollPhysics(),
+            //   itemBuilder: (context, index) =>
+            //       CourseCard(course: courses[index]),
+            // );
+          },
+          error: (message) => Column(children: [Text(message)]),
+        );
+      },
     );
   }
-}
-
-List<InstitutionFeeTransaction> _parseTransactions(Map<String, dynamic> data) {
-  final List<dynamic> rawList = data['fees_fees_statements'] ?? [];
-  return rawList.map((json) {
-    final Map<String, dynamic> map = Map<String, dynamic>.from(json);
-    return InstitutionFeeTransaction(
-      title: map['title'],
-      institution: int.tryParse(map['institution'].toString()) ?? 0,
-      referenceNumber: map['reference_number'],
-      runningBalance: double.tryParse(
-        map['balance'].toString().replaceAll(',', ''),
-      ),
-      debit: double.tryParse(map['debit'].toString().replaceAll(',', '')),
-      credit: double.tryParse(map['credit'].toString().replaceAll(',', '')),
-      postingDate: DateTime.tryParse(map['posting_date']),
-      description: map['description'],
-      currency: map['currency'],
-    );
-  }).toList();
 }
