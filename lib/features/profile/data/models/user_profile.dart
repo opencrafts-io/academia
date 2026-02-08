@@ -21,8 +21,10 @@ class UserProfile extends Table with TableMixin {
   TextColumn get phone => text().nullable()();
   @JsonKey("vibe_points")
   IntColumn get vibePoints => integer().withDefault(Constant(0))();
+  @JsonKey('deleted_at')
+  DateTimeColumn get deletedAt =>
+      dateTime().nullable()();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
-

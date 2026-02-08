@@ -153,6 +153,17 @@ class $UserProfileTable extends UserProfile
     requiredDuringInsert: false,
     defaultValue: Constant(0),
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -168,6 +179,7 @@ class $UserProfileTable extends UserProfile
     bio,
     phone,
     vibePoints,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -268,6 +280,12 @@ class $UserProfileTable extends UserProfile
         vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
       );
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -329,6 +347,10 @@ class $UserProfileTable extends UserProfile
         DriftSqlType.int,
         data['${effectivePrefix}vibe_points'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -352,6 +374,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
   final String? bio;
   final String? phone;
   final int vibePoints;
+  final DateTime? deletedAt;
   const UserProfileData({
     required this.id,
     required this.createdAt,
@@ -366,6 +389,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     this.bio,
     this.phone,
     required this.vibePoints,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -393,6 +417,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       map['phone'] = Variable<String>(phone);
     }
     map['vibe_points'] = Variable<int>(vibePoints);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -419,6 +446,9 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           ? const Value.absent()
           : Value(phone),
       vibePoints: Value(vibePoints),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -441,6 +471,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       bio: serializer.fromJson<String?>(json['bio']),
       phone: serializer.fromJson<String?>(json['phone']),
       vibePoints: serializer.fromJson<int>(json['vibe_points']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deleted_at']),
     );
   }
   @override
@@ -460,6 +491,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       'bio': serializer.toJson<String?>(bio),
       'phone': serializer.toJson<String?>(phone),
       'vibe_points': serializer.toJson<int>(vibePoints),
+      'deleted_at': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -477,6 +509,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     Value<String?> bio = const Value.absent(),
     Value<String?> phone = const Value.absent(),
     int? vibePoints,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => UserProfileData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -491,6 +524,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     bio: bio.present ? bio.value : this.bio,
     phone: phone.present ? phone.value : this.phone,
     vibePoints: vibePoints ?? this.vibePoints,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   UserProfileData copyWithCompanion(UserProfileCompanion data) {
     return UserProfileData(
@@ -513,6 +547,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
       vibePoints: data.vibePoints.present
           ? data.vibePoints.value
           : this.vibePoints,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -531,7 +566,8 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           ..write('avatarUrl: $avatarUrl, ')
           ..write('bio: $bio, ')
           ..write('phone: $phone, ')
-          ..write('vibePoints: $vibePoints')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -551,6 +587,7 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
     bio,
     phone,
     vibePoints,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -568,7 +605,8 @@ class UserProfileData extends DataClass implements Insertable<UserProfileData> {
           other.avatarUrl == this.avatarUrl &&
           other.bio == this.bio &&
           other.phone == this.phone &&
-          other.vibePoints == this.vibePoints);
+          other.vibePoints == this.vibePoints &&
+          other.deletedAt == this.deletedAt);
 }
 
 class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
@@ -585,6 +623,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   final Value<String?> bio;
   final Value<String?> phone;
   final Value<int> vibePoints;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const UserProfileCompanion({
     this.id = const Value.absent(),
@@ -600,6 +639,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.bio = const Value.absent(),
     this.phone = const Value.absent(),
     this.vibePoints = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserProfileCompanion.insert({
@@ -616,6 +656,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     this.bio = const Value.absent(),
     this.phone = const Value.absent(),
     this.vibePoints = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -634,6 +675,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Expression<String>? bio,
     Expression<String>? phone,
     Expression<int>? vibePoints,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -650,6 +692,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       if (bio != null) 'bio': bio,
       if (phone != null) 'phone': phone,
       if (vibePoints != null) 'vibe_points': vibePoints,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -668,6 +711,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     Value<String?>? bio,
     Value<String?>? phone,
     Value<int>? vibePoints,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return UserProfileCompanion(
@@ -684,6 +728,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
       bio: bio ?? this.bio,
       phone: phone ?? this.phone,
       vibePoints: vibePoints ?? this.vibePoints,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -730,6 +775,9 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
     if (vibePoints.present) {
       map['vibe_points'] = Variable<int>(vibePoints.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -752,6 +800,7 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
           ..write('bio: $bio, ')
           ..write('phone: $phone, ')
           ..write('vibePoints: $vibePoints, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8333,6 +8382,1209 @@ class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
           ..write('canModerate: $canModerate, ')
           ..write('canAdmin: $canAdmin, ')
           ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BlockTableTable extends BlockTable
+    with TableInfo<$BlockTableTable, BlockData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BlockTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _blockTypeMeta = const VerificationMeta(
+    'blockType',
+  );
+  @override
+  late final GeneratedColumn<String> blockType = GeneratedColumn<String>(
+    'block_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 20,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _blockedUserMeta = const VerificationMeta(
+    'blockedUser',
+  );
+  @override
+  late final GeneratedColumn<String> blockedUser = GeneratedColumn<String>(
+    'blocked_user',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _blockedCommunityMeta = const VerificationMeta(
+    'blockedCommunity',
+  );
+  @override
+  late final GeneratedColumn<int> blockedCommunity = GeneratedColumn<int>(
+    'blocked_community',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _blockedNameMeta = const VerificationMeta(
+    'blockedName',
+  );
+  @override
+  late final GeneratedColumn<String> blockedName = GeneratedColumn<String>(
+    'blocked_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _blockedImageMeta = const VerificationMeta(
+    'blockedImage',
+  );
+  @override
+  late final GeneratedColumn<String> blockedImage = GeneratedColumn<String>(
+    'blocked_image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    blockType,
+    blockedUser,
+    blockedCommunity,
+    blockedName,
+    blockedImage,
+    createdAt,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'block_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BlockData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('block_type')) {
+      context.handle(
+        _blockTypeMeta,
+        blockType.isAcceptableOrUnknown(data['block_type']!, _blockTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_blockTypeMeta);
+    }
+    if (data.containsKey('blocked_user')) {
+      context.handle(
+        _blockedUserMeta,
+        blockedUser.isAcceptableOrUnknown(
+          data['blocked_user']!,
+          _blockedUserMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blocked_community')) {
+      context.handle(
+        _blockedCommunityMeta,
+        blockedCommunity.isAcceptableOrUnknown(
+          data['blocked_community']!,
+          _blockedCommunityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blocked_name')) {
+      context.handle(
+        _blockedNameMeta,
+        blockedName.isAcceptableOrUnknown(
+          data['blocked_name']!,
+          _blockedNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blocked_image')) {
+      context.handle(
+        _blockedImageMeta,
+        blockedImage.isAcceptableOrUnknown(
+          data['blocked_image']!,
+          _blockedImageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BlockData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BlockData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      blockType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}block_type'],
+      )!,
+      blockedUser: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}blocked_user'],
+      ),
+      blockedCommunity: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}blocked_community'],
+      ),
+      blockedName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}blocked_name'],
+      ),
+      blockedImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}blocked_image'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
+    );
+  }
+
+  @override
+  $BlockTableTable createAlias(String alias) {
+    return $BlockTableTable(attachedDatabase, alias);
+  }
+}
+
+class BlockData extends DataClass implements Insertable<BlockData> {
+  final int id;
+  final String blockType;
+  final String? blockedUser;
+  final int? blockedCommunity;
+  final String? blockedName;
+  final String? blockedImage;
+  final DateTime createdAt;
+  final DateTime? cachedAt;
+  const BlockData({
+    required this.id,
+    required this.blockType,
+    this.blockedUser,
+    this.blockedCommunity,
+    this.blockedName,
+    this.blockedImage,
+    required this.createdAt,
+    this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['block_type'] = Variable<String>(blockType);
+    if (!nullToAbsent || blockedUser != null) {
+      map['blocked_user'] = Variable<String>(blockedUser);
+    }
+    if (!nullToAbsent || blockedCommunity != null) {
+      map['blocked_community'] = Variable<int>(blockedCommunity);
+    }
+    if (!nullToAbsent || blockedName != null) {
+      map['blocked_name'] = Variable<String>(blockedName);
+    }
+    if (!nullToAbsent || blockedImage != null) {
+      map['blocked_image'] = Variable<String>(blockedImage);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
+    return map;
+  }
+
+  BlockTableCompanion toCompanion(bool nullToAbsent) {
+    return BlockTableCompanion(
+      id: Value(id),
+      blockType: Value(blockType),
+      blockedUser: blockedUser == null && nullToAbsent
+          ? const Value.absent()
+          : Value(blockedUser),
+      blockedCommunity: blockedCommunity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(blockedCommunity),
+      blockedName: blockedName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(blockedName),
+      blockedImage: blockedImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(blockedImage),
+      createdAt: Value(createdAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
+    );
+  }
+
+  factory BlockData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BlockData(
+      id: serializer.fromJson<int>(json['id']),
+      blockType: serializer.fromJson<String>(json['block_type']),
+      blockedUser: serializer.fromJson<String?>(json['blocked_user']),
+      blockedCommunity: serializer.fromJson<int?>(json['blocked_community']),
+      blockedName: serializer.fromJson<String?>(json['blocked_name']),
+      blockedImage: serializer.fromJson<String?>(json['blocked_image']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'block_type': serializer.toJson<String>(blockType),
+      'blocked_user': serializer.toJson<String?>(blockedUser),
+      'blocked_community': serializer.toJson<int?>(blockedCommunity),
+      'blocked_name': serializer.toJson<String?>(blockedName),
+      'blocked_image': serializer.toJson<String?>(blockedImage),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
+    };
+  }
+
+  BlockData copyWith({
+    int? id,
+    String? blockType,
+    Value<String?> blockedUser = const Value.absent(),
+    Value<int?> blockedCommunity = const Value.absent(),
+    Value<String?> blockedName = const Value.absent(),
+    Value<String?> blockedImage = const Value.absent(),
+    DateTime? createdAt,
+    Value<DateTime?> cachedAt = const Value.absent(),
+  }) => BlockData(
+    id: id ?? this.id,
+    blockType: blockType ?? this.blockType,
+    blockedUser: blockedUser.present ? blockedUser.value : this.blockedUser,
+    blockedCommunity: blockedCommunity.present
+        ? blockedCommunity.value
+        : this.blockedCommunity,
+    blockedName: blockedName.present ? blockedName.value : this.blockedName,
+    blockedImage: blockedImage.present ? blockedImage.value : this.blockedImage,
+    createdAt: createdAt ?? this.createdAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
+  );
+  BlockData copyWithCompanion(BlockTableCompanion data) {
+    return BlockData(
+      id: data.id.present ? data.id.value : this.id,
+      blockType: data.blockType.present ? data.blockType.value : this.blockType,
+      blockedUser: data.blockedUser.present
+          ? data.blockedUser.value
+          : this.blockedUser,
+      blockedCommunity: data.blockedCommunity.present
+          ? data.blockedCommunity.value
+          : this.blockedCommunity,
+      blockedName: data.blockedName.present
+          ? data.blockedName.value
+          : this.blockedName,
+      blockedImage: data.blockedImage.present
+          ? data.blockedImage.value
+          : this.blockedImage,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BlockData(')
+          ..write('id: $id, ')
+          ..write('blockType: $blockType, ')
+          ..write('blockedUser: $blockedUser, ')
+          ..write('blockedCommunity: $blockedCommunity, ')
+          ..write('blockedName: $blockedName, ')
+          ..write('blockedImage: $blockedImage, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    blockType,
+    blockedUser,
+    blockedCommunity,
+    blockedName,
+    blockedImage,
+    createdAt,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BlockData &&
+          other.id == this.id &&
+          other.blockType == this.blockType &&
+          other.blockedUser == this.blockedUser &&
+          other.blockedCommunity == this.blockedCommunity &&
+          other.blockedName == this.blockedName &&
+          other.blockedImage == this.blockedImage &&
+          other.createdAt == this.createdAt &&
+          other.cachedAt == this.cachedAt);
+}
+
+class BlockTableCompanion extends UpdateCompanion<BlockData> {
+  final Value<int> id;
+  final Value<String> blockType;
+  final Value<String?> blockedUser;
+  final Value<int?> blockedCommunity;
+  final Value<String?> blockedName;
+  final Value<String?> blockedImage;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> cachedAt;
+  const BlockTableCompanion({
+    this.id = const Value.absent(),
+    this.blockType = const Value.absent(),
+    this.blockedUser = const Value.absent(),
+    this.blockedCommunity = const Value.absent(),
+    this.blockedName = const Value.absent(),
+    this.blockedImage = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  });
+  BlockTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String blockType,
+    this.blockedUser = const Value.absent(),
+    this.blockedCommunity = const Value.absent(),
+    this.blockedName = const Value.absent(),
+    this.blockedImage = const Value.absent(),
+    required DateTime createdAt,
+    this.cachedAt = const Value.absent(),
+  }) : blockType = Value(blockType),
+       createdAt = Value(createdAt);
+  static Insertable<BlockData> custom({
+    Expression<int>? id,
+    Expression<String>? blockType,
+    Expression<String>? blockedUser,
+    Expression<int>? blockedCommunity,
+    Expression<String>? blockedName,
+    Expression<String>? blockedImage,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? cachedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (blockType != null) 'block_type': blockType,
+      if (blockedUser != null) 'blocked_user': blockedUser,
+      if (blockedCommunity != null) 'blocked_community': blockedCommunity,
+      if (blockedName != null) 'blocked_name': blockedName,
+      if (blockedImage != null) 'blocked_image': blockedImage,
+      if (createdAt != null) 'created_at': createdAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
+    });
+  }
+
+  BlockTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? blockType,
+    Value<String?>? blockedUser,
+    Value<int?>? blockedCommunity,
+    Value<String?>? blockedName,
+    Value<String?>? blockedImage,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? cachedAt,
+  }) {
+    return BlockTableCompanion(
+      id: id ?? this.id,
+      blockType: blockType ?? this.blockType,
+      blockedUser: blockedUser ?? this.blockedUser,
+      blockedCommunity: blockedCommunity ?? this.blockedCommunity,
+      blockedName: blockedName ?? this.blockedName,
+      blockedImage: blockedImage ?? this.blockedImage,
+      createdAt: createdAt ?? this.createdAt,
+      cachedAt: cachedAt ?? this.cachedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (blockType.present) {
+      map['block_type'] = Variable<String>(blockType.value);
+    }
+    if (blockedUser.present) {
+      map['blocked_user'] = Variable<String>(blockedUser.value);
+    }
+    if (blockedCommunity.present) {
+      map['blocked_community'] = Variable<int>(blockedCommunity.value);
+    }
+    if (blockedName.present) {
+      map['blocked_name'] = Variable<String>(blockedName.value);
+    }
+    if (blockedImage.present) {
+      map['blocked_image'] = Variable<String>(blockedImage.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BlockTableCompanion(')
+          ..write('id: $id, ')
+          ..write('blockType: $blockType, ')
+          ..write('blockedUser: $blockedUser, ')
+          ..write('blockedCommunity: $blockedCommunity, ')
+          ..write('blockedName: $blockedName, ')
+          ..write('blockedImage: $blockedImage, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ReportTableTable extends ReportTable
+    with TableInfo<$ReportTableTable, ReportData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReportTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reportTypeMeta = const VerificationMeta(
+    'reportType',
+  );
+  @override
+  late final GeneratedColumn<String> reportType = GeneratedColumn<String>(
+    'report_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 20,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reportedUserMeta = const VerificationMeta(
+    'reportedUser',
+  );
+  @override
+  late final GeneratedColumn<String> reportedUser = GeneratedColumn<String>(
+    'reported_user',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reportedPostMeta = const VerificationMeta(
+    'reportedPost',
+  );
+  @override
+  late final GeneratedColumn<int> reportedPost = GeneratedColumn<int>(
+    'reported_post',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reportedCommentMeta = const VerificationMeta(
+    'reportedComment',
+  );
+  @override
+  late final GeneratedColumn<int> reportedComment = GeneratedColumn<int>(
+    'reported_comment',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reportedCommunityMeta = const VerificationMeta(
+    'reportedCommunity',
+  );
+  @override
+  late final GeneratedColumn<int> reportedCommunity = GeneratedColumn<int>(
+    'reported_community',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    reportType,
+    reportedUser,
+    reportedPost,
+    reportedComment,
+    reportedCommunity,
+    reason,
+    status,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'report_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReportData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('report_type')) {
+      context.handle(
+        _reportTypeMeta,
+        reportType.isAcceptableOrUnknown(data['report_type']!, _reportTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reportTypeMeta);
+    }
+    if (data.containsKey('reported_user')) {
+      context.handle(
+        _reportedUserMeta,
+        reportedUser.isAcceptableOrUnknown(
+          data['reported_user']!,
+          _reportedUserMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reported_post')) {
+      context.handle(
+        _reportedPostMeta,
+        reportedPost.isAcceptableOrUnknown(
+          data['reported_post']!,
+          _reportedPostMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reported_comment')) {
+      context.handle(
+        _reportedCommentMeta,
+        reportedComment.isAcceptableOrUnknown(
+          data['reported_comment']!,
+          _reportedCommentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reported_community')) {
+      context.handle(
+        _reportedCommunityMeta,
+        reportedCommunity.isAcceptableOrUnknown(
+          data['reported_community']!,
+          _reportedCommunityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ReportData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReportData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      reportType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}report_type'],
+      )!,
+      reportedUser: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reported_user'],
+      ),
+      reportedPost: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reported_post'],
+      ),
+      reportedComment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reported_comment'],
+      ),
+      reportedCommunity: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reported_community'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      ),
+    );
+  }
+
+  @override
+  $ReportTableTable createAlias(String alias) {
+    return $ReportTableTable(attachedDatabase, alias);
+  }
+}
+
+class ReportData extends DataClass implements Insertable<ReportData> {
+  final int id;
+  final String reportType;
+  final String? reportedUser;
+  final int? reportedPost;
+  final int? reportedComment;
+  final int? reportedCommunity;
+  final String reason;
+  final String status;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? cachedAt;
+  const ReportData({
+    required this.id,
+    required this.reportType,
+    this.reportedUser,
+    this.reportedPost,
+    this.reportedComment,
+    this.reportedCommunity,
+    required this.reason,
+    required this.status,
+    required this.createdAt,
+    this.updatedAt,
+    this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['report_type'] = Variable<String>(reportType);
+    if (!nullToAbsent || reportedUser != null) {
+      map['reported_user'] = Variable<String>(reportedUser);
+    }
+    if (!nullToAbsent || reportedPost != null) {
+      map['reported_post'] = Variable<int>(reportedPost);
+    }
+    if (!nullToAbsent || reportedComment != null) {
+      map['reported_comment'] = Variable<int>(reportedComment);
+    }
+    if (!nullToAbsent || reportedCommunity != null) {
+      map['reported_community'] = Variable<int>(reportedCommunity);
+    }
+    map['reason'] = Variable<String>(reason);
+    map['status'] = Variable<String>(status);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || cachedAt != null) {
+      map['cached_at'] = Variable<DateTime>(cachedAt);
+    }
+    return map;
+  }
+
+  ReportTableCompanion toCompanion(bool nullToAbsent) {
+    return ReportTableCompanion(
+      id: Value(id),
+      reportType: Value(reportType),
+      reportedUser: reportedUser == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reportedUser),
+      reportedPost: reportedPost == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reportedPost),
+      reportedComment: reportedComment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reportedComment),
+      reportedCommunity: reportedCommunity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reportedCommunity),
+      reason: Value(reason),
+      status: Value(status),
+      createdAt: Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      cachedAt: cachedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cachedAt),
+    );
+  }
+
+  factory ReportData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReportData(
+      id: serializer.fromJson<int>(json['id']),
+      reportType: serializer.fromJson<String>(json['report_type']),
+      reportedUser: serializer.fromJson<String?>(json['reported_user']),
+      reportedPost: serializer.fromJson<int?>(json['reported_post']),
+      reportedComment: serializer.fromJson<int?>(json['reported_comment']),
+      reportedCommunity: serializer.fromJson<int?>(json['reported_community']),
+      reason: serializer.fromJson<String>(json['reason']),
+      status: serializer.fromJson<String>(json['status']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updated_at']),
+      cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'report_type': serializer.toJson<String>(reportType),
+      'reported_user': serializer.toJson<String?>(reportedUser),
+      'reported_post': serializer.toJson<int?>(reportedPost),
+      'reported_comment': serializer.toJson<int?>(reportedComment),
+      'reported_community': serializer.toJson<int?>(reportedCommunity),
+      'reason': serializer.toJson<String>(reason),
+      'status': serializer.toJson<String>(status),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime?>(updatedAt),
+      'cached_at': serializer.toJson<DateTime?>(cachedAt),
+    };
+  }
+
+  ReportData copyWith({
+    int? id,
+    String? reportType,
+    Value<String?> reportedUser = const Value.absent(),
+    Value<int?> reportedPost = const Value.absent(),
+    Value<int?> reportedComment = const Value.absent(),
+    Value<int?> reportedCommunity = const Value.absent(),
+    String? reason,
+    String? status,
+    DateTime? createdAt,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    Value<DateTime?> cachedAt = const Value.absent(),
+  }) => ReportData(
+    id: id ?? this.id,
+    reportType: reportType ?? this.reportType,
+    reportedUser: reportedUser.present ? reportedUser.value : this.reportedUser,
+    reportedPost: reportedPost.present ? reportedPost.value : this.reportedPost,
+    reportedComment: reportedComment.present
+        ? reportedComment.value
+        : this.reportedComment,
+    reportedCommunity: reportedCommunity.present
+        ? reportedCommunity.value
+        : this.reportedCommunity,
+    reason: reason ?? this.reason,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
+  );
+  ReportData copyWithCompanion(ReportTableCompanion data) {
+    return ReportData(
+      id: data.id.present ? data.id.value : this.id,
+      reportType: data.reportType.present
+          ? data.reportType.value
+          : this.reportType,
+      reportedUser: data.reportedUser.present
+          ? data.reportedUser.value
+          : this.reportedUser,
+      reportedPost: data.reportedPost.present
+          ? data.reportedPost.value
+          : this.reportedPost,
+      reportedComment: data.reportedComment.present
+          ? data.reportedComment.value
+          : this.reportedComment,
+      reportedCommunity: data.reportedCommunity.present
+          ? data.reportedCommunity.value
+          : this.reportedCommunity,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      status: data.status.present ? data.status.value : this.status,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReportData(')
+          ..write('id: $id, ')
+          ..write('reportType: $reportType, ')
+          ..write('reportedUser: $reportedUser, ')
+          ..write('reportedPost: $reportedPost, ')
+          ..write('reportedComment: $reportedComment, ')
+          ..write('reportedCommunity: $reportedCommunity, ')
+          ..write('reason: $reason, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    reportType,
+    reportedUser,
+    reportedPost,
+    reportedComment,
+    reportedCommunity,
+    reason,
+    status,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReportData &&
+          other.id == this.id &&
+          other.reportType == this.reportType &&
+          other.reportedUser == this.reportedUser &&
+          other.reportedPost == this.reportedPost &&
+          other.reportedComment == this.reportedComment &&
+          other.reportedCommunity == this.reportedCommunity &&
+          other.reason == this.reason &&
+          other.status == this.status &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
+}
+
+class ReportTableCompanion extends UpdateCompanion<ReportData> {
+  final Value<int> id;
+  final Value<String> reportType;
+  final Value<String?> reportedUser;
+  final Value<int?> reportedPost;
+  final Value<int?> reportedComment;
+  final Value<int?> reportedCommunity;
+  final Value<String> reason;
+  final Value<String> status;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<DateTime?> cachedAt;
+  const ReportTableCompanion({
+    this.id = const Value.absent(),
+    this.reportType = const Value.absent(),
+    this.reportedUser = const Value.absent(),
+    this.reportedPost = const Value.absent(),
+    this.reportedComment = const Value.absent(),
+    this.reportedCommunity = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.status = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  });
+  ReportTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String reportType,
+    this.reportedUser = const Value.absent(),
+    this.reportedPost = const Value.absent(),
+    this.reportedComment = const Value.absent(),
+    this.reportedCommunity = const Value.absent(),
+    required String reason,
+    this.status = const Value.absent(),
+    required DateTime createdAt,
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  }) : reportType = Value(reportType),
+       reason = Value(reason),
+       createdAt = Value(createdAt);
+  static Insertable<ReportData> custom({
+    Expression<int>? id,
+    Expression<String>? reportType,
+    Expression<String>? reportedUser,
+    Expression<int>? reportedPost,
+    Expression<int>? reportedComment,
+    Expression<int>? reportedCommunity,
+    Expression<String>? reason,
+    Expression<String>? status,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (reportType != null) 'report_type': reportType,
+      if (reportedUser != null) 'reported_user': reportedUser,
+      if (reportedPost != null) 'reported_post': reportedPost,
+      if (reportedComment != null) 'reported_comment': reportedComment,
+      if (reportedCommunity != null) 'reported_community': reportedCommunity,
+      if (reason != null) 'reason': reason,
+      if (status != null) 'status': status,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
+    });
+  }
+
+  ReportTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? reportType,
+    Value<String?>? reportedUser,
+    Value<int?>? reportedPost,
+    Value<int?>? reportedComment,
+    Value<int?>? reportedCommunity,
+    Value<String>? reason,
+    Value<String>? status,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<DateTime?>? cachedAt,
+  }) {
+    return ReportTableCompanion(
+      id: id ?? this.id,
+      reportType: reportType ?? this.reportType,
+      reportedUser: reportedUser ?? this.reportedUser,
+      reportedPost: reportedPost ?? this.reportedPost,
+      reportedComment: reportedComment ?? this.reportedComment,
+      reportedCommunity: reportedCommunity ?? this.reportedCommunity,
+      reason: reason ?? this.reason,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (reportType.present) {
+      map['report_type'] = Variable<String>(reportType.value);
+    }
+    if (reportedUser.present) {
+      map['reported_user'] = Variable<String>(reportedUser.value);
+    }
+    if (reportedPost.present) {
+      map['reported_post'] = Variable<int>(reportedPost.value);
+    }
+    if (reportedComment.present) {
+      map['reported_comment'] = Variable<int>(reportedComment.value);
+    }
+    if (reportedCommunity.present) {
+      map['reported_community'] = Variable<int>(reportedCommunity.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReportTableCompanion(')
+          ..write('id: $id, ')
+          ..write('reportType: $reportType, ')
+          ..write('reportedUser: $reportedUser, ')
+          ..write('reportedPost: $reportedPost, ')
+          ..write('reportedComment: $reportedComment, ')
+          ..write('reportedCommunity: $reportedCommunity, ')
+          ..write('reason: $reason, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
           ..write(')'))
         .toString();
   }
@@ -19140,6 +20392,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $GroupTableTable groupTable = $GroupTableTable(this);
+  late final $BlockTableTable blockTable = $BlockTableTable(this);
+  late final $ReportTableTable reportTable = $ReportTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
@@ -19182,6 +20436,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     paymentInfoTable,
     shereheUserTable,
     groupTable,
+    blockTable,
+    reportTable,
     agendaEvent,
     notificationTable,
     institution,
@@ -19214,6 +20470,7 @@ typedef $$UserProfileTableCreateCompanionBuilder =
       Value<String?> bio,
       Value<String?> phone,
       Value<int> vibePoints,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$UserProfileTableUpdateCompanionBuilder =
@@ -19231,6 +20488,7 @@ typedef $$UserProfileTableUpdateCompanionBuilder =
       Value<String?> bio,
       Value<String?> phone,
       Value<int> vibePoints,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -19305,6 +20563,11 @@ class $$UserProfileTableFilterComposer
 
   ColumnFilters<int> get vibePoints => $composableBuilder(
     column: $table.vibePoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -19382,6 +20645,11 @@ class $$UserProfileTableOrderingComposer
     column: $table.vibePoints,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UserProfileTableAnnotationComposer
@@ -19437,6 +20705,9 @@ class $$UserProfileTableAnnotationComposer
     column: $table.vibePoints,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$UserProfileTableTableManager
@@ -19483,6 +20754,7 @@ class $$UserProfileTableTableManager
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion(
                 id: id,
@@ -19498,6 +20770,7 @@ class $$UserProfileTableTableManager
                 bio: bio,
                 phone: phone,
                 vibePoints: vibePoints,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -19515,6 +20788,7 @@ class $$UserProfileTableTableManager
                 Value<String?> bio = const Value.absent(),
                 Value<String?> phone = const Value.absent(),
                 Value<int> vibePoints = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UserProfileCompanion.insert(
                 id: id,
@@ -19530,6 +20804,7 @@ class $$UserProfileTableTableManager
                 bio: bio,
                 phone: phone,
                 vibePoints: vibePoints,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23183,6 +24458,580 @@ typedef $$GroupTableTableProcessedTableManager =
         BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
       ),
       GroupEntity,
+      PrefetchHooks Function()
+    >;
+typedef $$BlockTableTableCreateCompanionBuilder =
+    BlockTableCompanion Function({
+      Value<int> id,
+      required String blockType,
+      Value<String?> blockedUser,
+      Value<int?> blockedCommunity,
+      Value<String?> blockedName,
+      Value<String?> blockedImage,
+      required DateTime createdAt,
+      Value<DateTime?> cachedAt,
+    });
+typedef $$BlockTableTableUpdateCompanionBuilder =
+    BlockTableCompanion Function({
+      Value<int> id,
+      Value<String> blockType,
+      Value<String?> blockedUser,
+      Value<int?> blockedCommunity,
+      Value<String?> blockedName,
+      Value<String?> blockedImage,
+      Value<DateTime> createdAt,
+      Value<DateTime?> cachedAt,
+    });
+
+class $$BlockTableTableFilterComposer
+    extends Composer<_$AppDataBase, $BlockTableTable> {
+  $$BlockTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get blockType => $composableBuilder(
+    column: $table.blockType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get blockedUser => $composableBuilder(
+    column: $table.blockedUser,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get blockedCommunity => $composableBuilder(
+    column: $table.blockedCommunity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get blockedName => $composableBuilder(
+    column: $table.blockedName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get blockedImage => $composableBuilder(
+    column: $table.blockedImage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BlockTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $BlockTableTable> {
+  $$BlockTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get blockType => $composableBuilder(
+    column: $table.blockType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get blockedUser => $composableBuilder(
+    column: $table.blockedUser,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get blockedCommunity => $composableBuilder(
+    column: $table.blockedCommunity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get blockedName => $composableBuilder(
+    column: $table.blockedName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get blockedImage => $composableBuilder(
+    column: $table.blockedImage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BlockTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $BlockTableTable> {
+  $$BlockTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get blockType =>
+      $composableBuilder(column: $table.blockType, builder: (column) => column);
+
+  GeneratedColumn<String> get blockedUser => $composableBuilder(
+    column: $table.blockedUser,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get blockedCommunity => $composableBuilder(
+    column: $table.blockedCommunity,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get blockedName => $composableBuilder(
+    column: $table.blockedName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get blockedImage => $composableBuilder(
+    column: $table.blockedImage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$BlockTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $BlockTableTable,
+          BlockData,
+          $$BlockTableTableFilterComposer,
+          $$BlockTableTableOrderingComposer,
+          $$BlockTableTableAnnotationComposer,
+          $$BlockTableTableCreateCompanionBuilder,
+          $$BlockTableTableUpdateCompanionBuilder,
+          (
+            BlockData,
+            BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>,
+          ),
+          BlockData,
+          PrefetchHooks Function()
+        > {
+  $$BlockTableTableTableManager(_$AppDataBase db, $BlockTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BlockTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BlockTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BlockTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> blockType = const Value.absent(),
+                Value<String?> blockedUser = const Value.absent(),
+                Value<int?> blockedCommunity = const Value.absent(),
+                Value<String?> blockedName = const Value.absent(),
+                Value<String?> blockedImage = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+              }) => BlockTableCompanion(
+                id: id,
+                blockType: blockType,
+                blockedUser: blockedUser,
+                blockedCommunity: blockedCommunity,
+                blockedName: blockedName,
+                blockedImage: blockedImage,
+                createdAt: createdAt,
+                cachedAt: cachedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String blockType,
+                Value<String?> blockedUser = const Value.absent(),
+                Value<int?> blockedCommunity = const Value.absent(),
+                Value<String?> blockedName = const Value.absent(),
+                Value<String?> blockedImage = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> cachedAt = const Value.absent(),
+              }) => BlockTableCompanion.insert(
+                id: id,
+                blockType: blockType,
+                blockedUser: blockedUser,
+                blockedCommunity: blockedCommunity,
+                blockedName: blockedName,
+                blockedImage: blockedImage,
+                createdAt: createdAt,
+                cachedAt: cachedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BlockTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $BlockTableTable,
+      BlockData,
+      $$BlockTableTableFilterComposer,
+      $$BlockTableTableOrderingComposer,
+      $$BlockTableTableAnnotationComposer,
+      $$BlockTableTableCreateCompanionBuilder,
+      $$BlockTableTableUpdateCompanionBuilder,
+      (BlockData, BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>),
+      BlockData,
+      PrefetchHooks Function()
+    >;
+typedef $$ReportTableTableCreateCompanionBuilder =
+    ReportTableCompanion Function({
+      Value<int> id,
+      required String reportType,
+      Value<String?> reportedUser,
+      Value<int?> reportedPost,
+      Value<int?> reportedComment,
+      Value<int?> reportedCommunity,
+      required String reason,
+      Value<String> status,
+      required DateTime createdAt,
+      Value<DateTime?> updatedAt,
+      Value<DateTime?> cachedAt,
+    });
+typedef $$ReportTableTableUpdateCompanionBuilder =
+    ReportTableCompanion Function({
+      Value<int> id,
+      Value<String> reportType,
+      Value<String?> reportedUser,
+      Value<int?> reportedPost,
+      Value<int?> reportedComment,
+      Value<int?> reportedCommunity,
+      Value<String> reason,
+      Value<String> status,
+      Value<DateTime> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<DateTime?> cachedAt,
+    });
+
+class $$ReportTableTableFilterComposer
+    extends Composer<_$AppDataBase, $ReportTableTable> {
+  $$ReportTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reportType => $composableBuilder(
+    column: $table.reportType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reportedUser => $composableBuilder(
+    column: $table.reportedUser,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reportedPost => $composableBuilder(
+    column: $table.reportedPost,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reportedComment => $composableBuilder(
+    column: $table.reportedComment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reportedCommunity => $composableBuilder(
+    column: $table.reportedCommunity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ReportTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $ReportTableTable> {
+  $$ReportTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reportType => $composableBuilder(
+    column: $table.reportType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reportedUser => $composableBuilder(
+    column: $table.reportedUser,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get reportedPost => $composableBuilder(
+    column: $table.reportedPost,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get reportedComment => $composableBuilder(
+    column: $table.reportedComment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get reportedCommunity => $composableBuilder(
+    column: $table.reportedCommunity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ReportTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ReportTableTable> {
+  $$ReportTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get reportType => $composableBuilder(
+    column: $table.reportType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reportedUser => $composableBuilder(
+    column: $table.reportedUser,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get reportedPost => $composableBuilder(
+    column: $table.reportedPost,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get reportedComment => $composableBuilder(
+    column: $table.reportedComment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get reportedCommunity => $composableBuilder(
+    column: $table.reportedCommunity,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$ReportTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $ReportTableTable,
+          ReportData,
+          $$ReportTableTableFilterComposer,
+          $$ReportTableTableOrderingComposer,
+          $$ReportTableTableAnnotationComposer,
+          $$ReportTableTableCreateCompanionBuilder,
+          $$ReportTableTableUpdateCompanionBuilder,
+          (
+            ReportData,
+            BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
+          ),
+          ReportData,
+          PrefetchHooks Function()
+        > {
+  $$ReportTableTableTableManager(_$AppDataBase db, $ReportTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ReportTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReportTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ReportTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> reportType = const Value.absent(),
+                Value<String?> reportedUser = const Value.absent(),
+                Value<int?> reportedPost = const Value.absent(),
+                Value<int?> reportedComment = const Value.absent(),
+                Value<int?> reportedCommunity = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+              }) => ReportTableCompanion(
+                id: id,
+                reportType: reportType,
+                reportedUser: reportedUser,
+                reportedPost: reportedPost,
+                reportedComment: reportedComment,
+                reportedCommunity: reportedCommunity,
+                reason: reason,
+                status: status,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String reportType,
+                Value<String?> reportedUser = const Value.absent(),
+                Value<int?> reportedPost = const Value.absent(),
+                Value<int?> reportedComment = const Value.absent(),
+                Value<int?> reportedCommunity = const Value.absent(),
+                required String reason,
+                Value<String> status = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime?> cachedAt = const Value.absent(),
+              }) => ReportTableCompanion.insert(
+                id: id,
+                reportType: reportType,
+                reportedUser: reportedUser,
+                reportedPost: reportedPost,
+                reportedComment: reportedComment,
+                reportedCommunity: reportedCommunity,
+                reason: reason,
+                status: status,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ReportTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $ReportTableTable,
+      ReportData,
+      $$ReportTableTableFilterComposer,
+      $$ReportTableTableOrderingComposer,
+      $$ReportTableTableAnnotationComposer,
+      $$ReportTableTableCreateCompanionBuilder,
+      $$ReportTableTableUpdateCompanionBuilder,
+      (
+        ReportData,
+        BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
+      ),
+      ReportData,
       PrefetchHooks Function()
     >;
 typedef $$AgendaEventTableCreateCompanionBuilder =
@@ -28812,6 +30661,10 @@ class $AppDataBaseManager {
       $$ShereheUserTableTableTableManager(_db, _db.shereheUserTable);
   $$GroupTableTableTableManager get groupTable =>
       $$GroupTableTableTableManager(_db, _db.groupTable);
+  $$BlockTableTableTableManager get blockTable =>
+      $$BlockTableTableTableManager(_db, _db.blockTable);
+  $$ReportTableTableTableManager get reportTable =>
+      $$ReportTableTableTableManager(_db, _db.reportTable);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
   $$NotificationTableTableTableManager get notificationTable =>

@@ -39,9 +39,12 @@ class _HomePageState extends State<HomePage> {
               break;
             case 3:
               context.pop();
+              BlockedItemsRoute().push(context);
+            case 4:
+              context.pop();
               PurchasedTicketsRoute().push(context);
               break;
-            case 4:
+            case 5:
               context.pop();
               OrganizedEventsRoute().push(context);
               break;
@@ -77,6 +80,12 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.view_comfy_outlined),
             selectedIcon: Icon(Icons.view_comfy),
             label: Text("View your communities"),
+          ),
+
+          NavigationDrawerDestination(
+            icon: Icon(Icons.block_outlined),
+            selectedIcon: Icon(Icons.block),
+            label: Text("View your block list"),
           ),
           Padding(
             padding: EdgeInsetsGeometry.all(12),

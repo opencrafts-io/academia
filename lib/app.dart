@@ -105,7 +105,18 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<TicketPaymentBloc>()),
 
         BlocProvider(create: (context) => sl<FeedBloc>()),
+
         BlocProvider(create: (context) => sl<CommentBloc>()),
+        BlocProvider(
+          create: (context) => BlockBloc(
+            blockUser: sl.get<BlockUser>(),
+            blockCommunity: sl.get<BlockCommunity>(),
+            unblockById: sl.get<UnblockById>(),
+            getBlocks: sl.get<GetBlocks>(),
+            checkBlockStatus: sl.get<CheckBlockStatus>(),
+          ),
+        ),
+        BlocProvider(create: (context) => sl<ReportBloc>()),
         BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
@@ -114,6 +125,8 @@ class _AcademiaState extends State<Academia> {
                 .get<RefreshCurrentUserProfileUsecase>(),
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
+            requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
+            requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
           )..add(GetCachedProfileEvent()),
         ),
         BlocProvider(

@@ -2,6 +2,8 @@ import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
+import 'package:academia/features/chirp/interactions/data/models/block_model.dart';
+import 'package:academia/features/chirp/interactions/data/models/report_model.dart';
 import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
@@ -50,6 +52,9 @@ part 'database.g.dart';
     ShereheUserTable, //temporary
     GroupTable,
 
+    BlockTable,
+    ReportTable,
+
     // Agenda
     AgendaEvent,
 
@@ -96,7 +101,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration {
@@ -106,9 +111,15 @@ class AppDataBase extends _$AppDataBase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         _logger.i("Migrating from version $from to version $to");
-        if (from < 15) {
-          await m.createTable(examTimetable);
-        }
+        await m.createAll();
+        // if (from < 15) {
+        //   await m.createTable(examTimetable);
+        // } else if (from < 16) {
+        //   await m.addColumn(userProfile, userProfile.deletedAt);
+        // } else if (from < 17) {
+        //   await m.createTable(blockTable);
+        //   await m.createTable(reportTable);
+        // }
       },
       beforeOpen: (details) async {
         _logger.i(
