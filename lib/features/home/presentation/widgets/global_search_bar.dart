@@ -234,8 +234,8 @@ class CommunitySearchCard extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: community.banner ?? '',
                 errorWidget: (context, error, child) => Assets
-                    .illustrations
-                    .community
+                    .icons
+                    .userIconAvatar
                     .image(width: double.infinity, fit: BoxFit.cover),
                 height: 200,
                 fit: BoxFit.fill,

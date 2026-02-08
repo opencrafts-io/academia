@@ -212,9 +212,7 @@ class CommunityCard extends StatelessWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl: community.banner ?? '',
-                  errorWidget: (context, error, child) => Assets
-                      .illustrations
-                      .community
+                  errorWidget: (context, error, child) => Assets.icons.cloud
                       .image(width: double.infinity, fit: BoxFit.cover),
                   fit: BoxFit.fill,
                 ),

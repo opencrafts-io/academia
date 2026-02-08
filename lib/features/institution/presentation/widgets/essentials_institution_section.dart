@@ -49,6 +49,7 @@ class _InstitutionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card.filled(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListTile(
         onTap: () => InstitutionHomePageRoute(
