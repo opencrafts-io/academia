@@ -7,7 +7,6 @@ import 'package:magnet/magnet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:academia/features/course/course.dart';
-import 'package:logger/logger.dart';
 
 part 'magnet_state.dart';
 part 'magnet_event.dart';
@@ -71,8 +70,6 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       if (result.success) {
         final String rawJson = jsonEncode(result.data);
         final Map<String, dynamic> computableData = jsonDecode(rawJson);
-
-        Logger().i(computableData);
 
         compute(_parseRawFeesTransactions, computableData).then((transactions) {
           for (final transaction in transactions) {
@@ -169,7 +166,7 @@ List<CourseEntity> _parseRawCourses(Map<String, dynamic> data) {
       isDeleted: false,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      institutionId: map["institution_id"],
+      institutionId: int.tryParse(map["institution_id"]),
     );
   }).toList();
 }
