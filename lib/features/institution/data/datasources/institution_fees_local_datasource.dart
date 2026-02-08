@@ -28,17 +28,10 @@ class InstitutionFeesLocalDatasourceImpl
       ..where((t) => t.institution.equals(institutionID))
       ..orderBy([
         (t) => OrderingTerm(expression: t.postingDate, mode: OrderingMode.desc),
-        // (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc),
       ]);
 
     return query.watch().map((rows) {
       try {
-        for (var row in rows) {
-          // This will tell us if the milliseconds survived the database trip
-          print(
-            "DB Row: ${row.referenceNumber} | MS: ${row.postingDate?.millisecondsSinceEpoch}",
-          );
-        }
         return Right(rows);
       } catch (e) {
         return Left(CacheFailure(error: e, message: e.toString()));
@@ -52,17 +45,10 @@ class InstitutionFeesLocalDatasourceImpl
     final query = db.select(db.institutionFeeTransaction)
       ..orderBy([
         (t) => OrderingTerm(expression: t.postingDate, mode: OrderingMode.desc),
-        // (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc),
       ]);
 
     return query.watch().map((rows) {
       try {
-        for (var row in rows) {
-          // This will tell us if the milliseconds survived the database trip
-          print(
-            "DB Row: ${row.referenceNumber} | MS: ${row.postingDate?.millisecondsSinceEpoch}",
-          );
-        }
         return Right(rows);
       } catch (e) {
         return Left(CacheFailure(error: e, message: e.toString()));

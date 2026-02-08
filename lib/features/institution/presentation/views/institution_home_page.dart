@@ -329,19 +329,14 @@ class _CoursesSectionCard extends StatelessWidget {
             if (courses.isEmpty) {
               return Column(children: [Icon(Icons.emoji_people), Text("We")]);
             }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(Icons.emoji_people), Text("We")],
+            return ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: courses.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) =>
+                  CourseCard(course: courses[index]),
             );
-
-            // return ListView.builder(
-            //   padding: EdgeInsets.zero,
-            //   itemCount: courses.length,
-            //   shrinkWrap: true,
-            //   physics: NeverScrollableScrollPhysics(),
-            //   itemBuilder: (context, index) =>
-            //       CourseCard(course: courses[index]),
-            // );
           },
           error: (message) => Column(children: [Text(message)]),
         );
