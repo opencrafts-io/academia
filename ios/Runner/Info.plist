@@ -86,5 +86,7 @@
 	<string>Bringing you notifications relevant to you</string>
   <key>com.posthog.posthog.AUTO_INIT</key>
   <false/>
+  <key>NSUserTrackingUsageDescription</key>
+  <string>This identifier will be used to deliver personalized ads to you.</string>
 </dict>
 </plist>
