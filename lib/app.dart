@@ -5,6 +5,7 @@ import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -82,6 +83,7 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
             signInWithAppleUsecase: sl(),
@@ -94,9 +96,27 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
+        BlocProvider(create: (context) => sl<OrganizedEventsBloc>()),
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
+        BlocProvider(create: (context) => sl<UserTicketSelectionBloc>()),
+        BlocProvider(create: (context) => sl<AllUserEventTicketsBloc>()),
+        BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
+        BlocProvider(create: (context) => sl<ValidateAttendeeBloc>()),
+        BlocProvider(create: (context) => sl<TicketPaymentBloc>()),
+
         BlocProvider(create: (context) => sl<FeedBloc>()),
+
         BlocProvider(create: (context) => sl<CommentBloc>()),
+        BlocProvider(
+          create: (context) => BlockBloc(
+            blockUser: sl.get<BlockUser>(),
+            blockCommunity: sl.get<BlockCommunity>(),
+            unblockById: sl.get<UnblockById>(),
+            getBlocks: sl.get<GetBlocks>(),
+            checkBlockStatus: sl.get<CheckBlockStatus>(),
+          ),
+        ),
+        BlocProvider(create: (context) => sl<ReportBloc>()),
         BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
           create: (context) => ProfileBloc(
@@ -105,6 +125,8 @@ class _AcademiaState extends State<Academia> {
                 .get<RefreshCurrentUserProfileUsecase>(),
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
+            requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
+            requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
           )..add(GetCachedProfileEvent()),
         ),
         BlocProvider(
@@ -191,32 +213,63 @@ class _AcademiaState extends State<Academia> {
             ),
           ],
           child: SplashRemover(
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              showPerformanceOverlay: kProfileMode,
-              theme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                colorScheme:
-                    lightScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+            child: BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, state) {
+                final seedColor = Color(state.colorSeedValue);
+                final surfaceColor = state.extraDarkMode
+                    ? const Color(0xFF000000)
+                    : null;
+
+                ColorScheme buildColorScheme({
+                  required Brightness brightness,
+                  ColorScheme? preferredScheme,
+                }) {
+                  final baseScheme =
+                      preferredScheme ??
+                      ColorScheme.fromSeed(
+                        seedColor: seedColor,
+                        brightness: brightness,
+                      );
+
+                  return surfaceColor != null
+                      ? baseScheme.copyWith(
+                          surface: brightness == Brightness.light
+                              ? null
+                              : surfaceColor,
+                        )
+                      : baseScheme;
+                }
+
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  showPerformanceOverlay: kProfileMode,
+                  themeMode: state.themeMode,
+                  theme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.light,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.light,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? lightScheme
+                          : null,
                     ),
-                brightness: Brightness.light,
-              ),
-              darkTheme: ThemeData(
-                fontFamily: 'ProductSans',
-                useMaterial3: true,
-                brightness: Brightness.dark,
-                colorScheme:
-                    darkScheme ??
-                    ColorScheme.fromSeed(
-                      seedColor: Color(0xFF5865F2),
+                  ),
+
+                  darkTheme: ThemeData(
+                    fontFamily: 'ProductSans',
+                    useMaterial3: state.enableMaterialYou,
+                    brightness: Brightness.dark,
+                    colorScheme: buildColorScheme(
                       brightness: Brightness.dark,
+                      preferredScheme: state.automaticallyPickAccentColor
+                          ? darkScheme
+                          : null,
                     ),
-              ),
-              routerConfig: AppRouter.router,
+                  ),
+                  routerConfig: AppRouter.router,
+                );
+              },
             ),
           ),
         ),

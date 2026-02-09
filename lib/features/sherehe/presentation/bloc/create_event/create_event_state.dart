@@ -13,7 +13,8 @@ class CreateEventLoading extends CreateEventState {}
 
 class CreateEventSuccess extends CreateEventState {
   final Event event;
-  const CreateEventSuccess({required this.event});
+
+  const CreateEventSuccess(this.event);
 
   @override
   List<Object> get props => [event];

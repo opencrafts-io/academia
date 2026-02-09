@@ -7,7 +7,7 @@ class GetEvent{
 
   GetEvent(this.repository);
 
-  Future<Either<Failure, List<Event>>> execute() async {
-    return repository.getCachedEvents();
+  Future<Either<Failure, PaginatedEvents>> execute({required int page, required int limit}) async {
+    return repository.getAllEvents(page: page, limit: limit);
   }
 }

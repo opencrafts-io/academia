@@ -2,6 +2,7 @@ import 'package:academia/features/streaks/streaks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:academia/gen/assets.gen.dart';
 
 class AchievementsTabView extends StatefulWidget {
   const AchievementsTabView({super.key});
@@ -10,7 +11,8 @@ class AchievementsTabView extends StatefulWidget {
   State<AchievementsTabView> createState() => _AchievementsTabViewState();
 }
 
-class _AchievementsTabViewState extends State<AchievementsTabView> with AutomaticKeepAliveClientMixin {
+class _AchievementsTabViewState extends State<AchievementsTabView>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -56,14 +58,12 @@ class _AchievementsTabViewState extends State<AchievementsTabView> with Automati
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(
-                                "assets/icons/locked-badge.png",
-                                height: 120,
-                              ),
+                              Assets.icons.lockedBadge.image(height: 120),
                               const SizedBox(height: 12),
                               Text(
                                 achievement.title,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

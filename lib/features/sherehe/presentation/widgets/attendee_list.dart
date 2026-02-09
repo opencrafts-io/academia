@@ -1,91 +1,101 @@
+import 'package:academia/core/core.dart';
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
-import '../../../profile/data/models/user_profile.dart';
-import '../../domain/domain.dart';
-import '../presentation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AttendeesList extends StatelessWidget {
-  final Event event;
-  final List<Attendee> allAttendees;
-  final UserProfile? currentUserProfile;
+class AttendeesList extends StatefulWidget {
+  final String eventId;
+  final String organizerId;
+  final String? userId;
 
   const AttendeesList({
-    Key? key,
-    required this.event,
-    required this.allAttendees,
-    this.currentUserProfile,
-  }) : super(key: key);
+    super.key,
+    required this.eventId,
+    required this.organizerId,
+    this.userId,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  State<AttendeesList> createState() => _AttendeesListState();
+}
 
-    if (allAttendees.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Who's Coming",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "Don't be boring,be the first to say you're going!",
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
+class _AttendeesListState extends State<AttendeesList> {
+  @override
+  void initState() {
+    super.initState();
 
-    List<Attendee> sortedAttendees = List.from(allAttendees);
-    sortedAttendees.sort((a, b) {
-      bool aIsHost = _isAttendeeHost(a);
-      bool bIsHost = _isAttendeeHost(b);
-      if (aIsHost && !bIsHost) return -1;
-      if (!aIsHost && bIsHost) return 1;
-      return (a.firstName).compareTo(b.firstName);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AttendeeBloc>().add(FetchAttendees(eventId: widget.eventId));
     });
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Who's Coming (${sortedAttendees.length})",
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ...sortedAttendees.map((attendee) {
-          final bool isHost = _isAttendeeHost(attendee);
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: AttendeeCard(attendee: attendee, isHost: isHost),
-          );
-        }).toList(),
-      ],
-    );
   }
 
   bool _isAttendeeHost(Attendee attendee) {
-    if (currentUserProfile != null &&
-        currentUserProfile!.id.hashCode == event.organizerId &&
-        attendee.email == currentUserProfile!.email) {
-      return true;
-    }
-
-    String attendeeFullName = (attendee.firstName).trim();
-    if (event.organizer.trim().toLowerCase() == attendeeFullName.toLowerCase()) {
+    if (widget.userId != null && widget.userId == widget.organizerId) {
       return true;
     }
     return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AttendeeBloc, AttendeeState>(
+      builder: (context, state) {
+        if (state is AttendeeLoading) {
+          return const SliverToBoxAdapter(
+            child: Center(child: SpinningScallopIndicator()),
+          );
+        } else if (state is AttendeeError) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Failed to load attendees. You can still proceed to book a ticket.",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else if (state is AttendeeLoaded) {
+          if (state.attendees.isEmpty) {
+            return SliverToBoxAdapter(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Don't be boring,be the first to say you're going!",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final attendee = state.attendees[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  child: AttendeeCard(
+                    attendee: attendee,
+                    isHost: _isAttendeeHost(attendee),
+                  ),
+                );
+              }, childCount: state.attendees.length),
+            );
+          }
+        }
+        return const SliverToBoxAdapter(child: SizedBox.shrink());
+      },
+    );
   }
 }

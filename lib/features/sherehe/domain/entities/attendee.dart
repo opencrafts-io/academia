@@ -1,58 +1,60 @@
+import 'package:academia/features/sherehe/domain/domain.dart';
+import 'package:academia/features/sherehe/domain/entities/sherehe_user.dart';
 import 'package:equatable/equatable.dart';
 
 class Attendee extends Equatable {
   final String id;
-  final String firstName;
-  final String? middleName;
-  final String lastName;
+  final String userId;
   final String eventId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String email;
+  final String ticketId;
+  final int ticketQuantity;
+  final ShereheUser? user;
+  final Ticket? ticket;
+  final Event? event;
 
   const Attendee({
     required this.id,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
+    required this.userId,
     required this.eventId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.email
+    required this.ticketId,
+    required this.ticketQuantity,
+    this.user,
+    this.ticket,
+    this.event,
   });
 
   Attendee copyWith({
     String? id,
-    String? firstName,
-    String? middleName,
-    String? lastName,
+    String? userId,
     String? eventId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? email,
+    String? ticketId,
+    int? ticketQuantity,
+    ShereheUser? user,
+    Ticket? ticket,
+    Event? event,
   }) {
     return Attendee(
       id: id ?? this.id,
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
-      lastName: lastName ?? this.lastName,
+      userId: userId ?? this.userId,
       eventId: eventId ?? this.eventId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      email: email ?? this.email,
+      ticketId: ticketId ?? this.ticketId,
+      ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+      user: user ?? this.user,
+      ticket: ticket ?? this.ticket,
+      event: event ?? this.event,
     );
   }
 
   @override
   List<Object?> get props => [
     id,
-    firstName,
-    middleName,
-    lastName,
+    userId,
     eventId,
-    createdAt,
-    updatedAt,
-    email,
+    ticketId,
+    ticketQuantity,
+    user,
+    ticket,
+    event,
   ];
 
   @override

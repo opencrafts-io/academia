@@ -4,6 +4,7 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/admob/admob.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/magnet/presentation/bloc/magnet_bloc.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,29 +34,16 @@ class _EssentialItem {
 
 class _EssentialsPageState extends State<EssentialsPage> {
   late List<_EssentialItem> essentialItems = <_EssentialItem>[
-    // _EssentialItem(
-    //   title: "Achievements",
-    //   ontap: () {
-    //     sl<AdService>().showInterstitialAd();
-    //     AchievementsHomePageRoute().push(context);
-    //   },
-    //   iconPath: "assets/icons/medal.png",
-    // ),
     _EssentialItem(
       title: "To-Dos",
       ontap: () => TodosRoute().push(context),
-      iconPath: "assets/icons/todos.png",
+      iconPath: Assets.icons.todos.keyName,
     ),
 
-    // _EssentialItem(
-    //   title: "Identity",
-    //   ontap: null,
-    //   iconPath: "assets/icons/card.png",
-    // ),
     _EssentialItem(
       title: "Exam timetable",
       ontap: _navigateToExamTimetable,
-      iconPath: "assets/icons/exam.png",
+      iconPath: Assets.icons.exam.keyName,
     ),
   ];
 
@@ -130,6 +118,15 @@ class _EssentialsPageState extends State<EssentialsPage> {
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
             sliver: MultiSliver(
               children: [
+                Card.outlined(
+                  child: ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text("Settings & Preferences"),
+                    subtitle: Text("Theme"),
+                    onTap: () => SettingsPageRoute().push(context),
+                    subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
                 Text(
                   "Explore tools",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(

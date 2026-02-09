@@ -4,7 +4,7 @@ abstract class ShereheHomeState extends Equatable {
   const ShereheHomeState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class EventInitial extends ShereheHomeState {}
@@ -13,26 +13,78 @@ class EventLoading extends ShereheHomeState {}
 
 class EventLoaded extends ShereheHomeState {
   final List<Event> events;
-  final Map<String, List<Attendee>> attendeesMap;
-  final bool hasReachedEnd;
-  final int currentPage;
+  final bool hasMore;
+  final int count;
+  final int? nextPage;
+  final int? previousPage;
 
   const EventLoaded({
     required this.events,
-    required this.attendeesMap,
-    required this.hasReachedEnd,
-    required this.currentPage,
+    required this.hasMore,
+    required this.count,
+    this.nextPage,
+    this.previousPage,
+  });
+
+  EventLoaded copyWith({
+    List<Event>? events,
+    bool? hasMore,
+    int? count,
+    int? nextPage,
+    int? previousPage,
+  }) {
+    return EventLoaded(
+      events: events ?? this.events,
+      hasMore: hasMore ?? this.hasMore,
+      count: count ?? this.count,
+      nextPage: nextPage ?? this.nextPage,
+      previousPage: previousPage ?? this.previousPage,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    events,
+    hasMore,
+    count,
+    nextPage,
+    previousPage,
+  ];
+}
+
+class EventsError extends ShereheHomeState {
+  final String message;
+
+  const EventsError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class EventsPaginationLoading extends ShereheHomeState {
+  final List<Event> existingEvents;
+  final bool hasMore;
+
+  const EventsPaginationLoading({
+    required this.existingEvents,
+    required this.hasMore,
   });
 
   @override
-  List<Object> get props => [events, attendeesMap, hasReachedEnd, currentPage];
+  List<Object?> get props => [existingEvents, hasMore];
 }
 
-class EventError extends ShereheHomeState {
+class EventsPaginationError extends ShereheHomeState {
+  final List<Event> existingEvents;
   final String message;
+  final bool hasMore;
 
-  const EventError(this.message);
+  const EventsPaginationError({
+    required this.existingEvents,
+    required this.message,
+    required this.hasMore,
+  });
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [existingEvents, message, hasMore];
 }

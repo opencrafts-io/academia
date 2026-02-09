@@ -1,6 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/database/database.dart';
-import 'package:academia/features/streaks/streaks.dart';
+import 'package:academia/features/chirp/interactions/presentation/views/blocked_items_page.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,9 +152,20 @@ class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
 
 @TypedGoRoute<AddPostRoute>(path: "/add-post")
 class AddPostRoute extends GoRouteData with _$AddPostRoute {
+  const AddPostRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const AddPostPage();
+    final community = state.extra as Community?;
+    return AddPostPage(preselectedCommunity: community);
+  }
+}
+
+@TypedGoRoute<BlockedItemsRoute>(path: "/blocked-items")
+class BlockedItemsRoute extends GoRouteData with _$BlockedItemsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const BlockedItemsPage();
   }
 }
 
@@ -207,7 +217,14 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
-    TypedGoRoute<ShereheDetailsRoute>(path: "get-event"),
+    TypedGoRoute<ShereheDetailsRoute>(
+      path: "get-event/:eventId",
+      routes: [
+        TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
+        TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
+        TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+      ],
+    ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
   ],
 )
@@ -235,9 +252,11 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
     BuildContext context,
     GoRouterState state,
   ) {
+    final event = state.extra is Event ? state.extra as Event : null;
+
     return CustomTransitionPage<void>(
       key: state.pageKey,
-      child: ShereheDetailsPage(eventId: eventId),
+      child: ShereheDetailsPage(eventId: eventId, event: event),
 
       transitionsBuilder:
           (
@@ -255,6 +274,98 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
             return SlideTransition(position: offsetAnimation, child: child);
           },
     );
+  }
+}
+
+class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
+  final String eventId;
+
+  const TicketFlowRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketFlowPage(eventId: eventId);
+  }
+}
+
+class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
+  final String eventId;
+
+  const EventTicketsRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final event = state.extra as Event;
+
+    return EventTicketsPage(eventId: eventId, event: event);
+  }
+}
+
+@TypedGoRoute<PurchasedTicketsRoute>(path: "/purchased-tickets/all")
+class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PurchasedTicketsPage();
+  }
+}
+
+@TypedGoRoute<OrganizedEventsRoute>(path: "/organized-events/mine")
+class OrganizedEventsRoute extends GoRouteData with _$OrganizedEventsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return OrganizedEventsScreen();
+  }
+}
+
+@TypedGoRoute<TicketReceiptRoute>(path: "/ticket-receipt")
+class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
+  final int ticketPrice;
+  final int quantity;
+
+  const TicketReceiptRoute({required this.ticketPrice, required this.quantity});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketReceiptScreen(ticketPrice: ticketPrice, quantity: quantity);
+  }
+}
+
+@TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:attendeeId")
+class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
+  final String eventId;
+  final String attendeeId;
+  final String ticketName;
+  final int quantity;
+
+  const QrCodeRoute({
+    required this.eventId,
+    required this.attendeeId,
+    required this.ticketName,
+    required this.quantity,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final event = state.extra as Event;
+
+    return QrCodeScreen(
+      eventId: eventId,
+      attendeeId: attendeeId,
+      ticketName: ticketName,
+      quantity: quantity,
+      event: event,
+    );
+  }
+}
+
+class QrCodeScannerRoute extends GoRouteData with _$QrCodeScannerRoute {
+  final String eventId;
+
+  const QrCodeScannerRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return QrCodeScannerScreen(eventId: eventId);
   }
 }
 
@@ -468,9 +579,7 @@ class AchievementsHomePageRoute extends GoRouteData
   }
 }
 
-@TypedGoRoute<ActivitiesPageRoute>(
-  path: "/activities/:id",
-)
+@TypedGoRoute<ActivitiesPageRoute>(path: "/activities/:id")
 class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
   final String id;
   const ActivitiesPageRoute({required this.id});
@@ -481,7 +590,8 @@ class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
   }
 }
 
-class AchievementDetailPageRoute extends GoRouteData with _$AchievementDetailPageRoute {
+class AchievementDetailPageRoute extends GoRouteData
+    with _$AchievementDetailPageRoute {
   final String id;
   const AchievementDetailPageRoute({required this.id});
 
@@ -515,5 +625,35 @@ class ExamTimetableSearchRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ExamTimetableSearchScreen(institutionId: institutionId);
+  }
+}
+
+@TypedGoRoute<SettingsPageRoute>(path: "/settings")
+class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: SettingsPage(),
+      transitionDuration: Duration(milliseconds: 600),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInCubic));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
   }
 }

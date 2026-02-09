@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'package:academia/config/config.dart';
+import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
+import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/data/models/paginated_events_data_model.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:academia/core/network/network.dart';
-import '../../../../core/core.dart';
-import '../../domain/entities/attendee.dart';
-import '../../domain/entities/event.dart';
-import 'dart:math';
+import 'package:academia/core/core.dart';
 
 class ShereheRemoteDataSource with DioErrorHandler {
   final DioClient dioClient;
@@ -33,19 +32,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
   }) async {
     try {
       final response = await dioClient.dio.get(
-        // "https://qasherehe.opencrafts.io/events/getAllEvents",
-        "/$servicePrefix/events/getAllEvents",
+        "/$servicePrefix/event",
         queryParameters: {"page": page, "limit": limit},
       );
 
       if (response.statusCode == 200) {
-        final List<EventData> events = (response.data['data'] as List)
-            .map((e) => EventData.fromJson(e))
-            .toList();
-
-        final int? nextPage = response.data['nextPage'];
-
-        return right(PaginatedEventsData(events: events, nextPage: nextPage));
+        return right(
+          PaginatedEventsData(
+            events: (response.data['data'] as List)
+                .map((e) => EventData.fromJson(e))
+                .toList(),
+            nextPage: response.data['nextPage'],
+            previousPage: response.data['previousPage'],
+            totalEvents: response.data['totalEvents'],
+          ),
+        );
       } else {
         return left(
           ServerFailure(message: "Unexpected server response", error: response),
@@ -65,24 +66,198 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<AttendeeData>>> getAttendeesByEventId({
+  Future<Either<Failure, EventData>> getEventById({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/event/$eventId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(EventData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected server response: ${response.statusCode}",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching event by ID", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error while fetching event by ID", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching event",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<EventData>>> getEventByOrganizerId({
+    required String organizerId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/event/organizer/$organizerId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(
+          (response.data['data'] as List)
+              .map((e) => EventData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected server response: ${response.statusCode}",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching event by Organizer ID", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error while fetching event by Organizer ID", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred while fetching Organized events",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, EventData>> createEvent({
+    required String eventName,
+    required String eventDescription,
+    String? eventUrl,
+    required String eventLocation,
+    required String eventDate,
+    required String organizerId,
+    required List<String> eventGenre,
+    File? eventCardImage,
+    File? eventPosterImage,
+    File? eventBannerImage,
+    required List<TicketData> tickets,
+    PaymentTypes? selectedPaymentType,
+    String? paybillNumber,
+    String? accountReference,
+    String? tillNumber,
+    String? sendMoneyPhoneNumber,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'event_name': eventName,
+        'event_description': eventDescription,
+        if (eventUrl != null) 'event_url': eventUrl,
+        'event_location': eventLocation,
+        'event_date': eventDate,
+        'organizer_id': organizerId,
+        'event_genre': eventGenre,
+        'tickets': tickets.map((ticket) {
+          final json = ticket.toJson();
+          json.removeWhere((key, value) => value == null || value == "");
+          return json;
+        }).toList(),
+
+        if (eventCardImage != null)
+          'event_card_image': await MultipartFile.fromFile(
+            eventCardImage.path,
+            filename: eventCardImage.path.split('/').last,
+          ),
+        if (eventPosterImage != null)
+          'event_poster_image': await MultipartFile.fromFile(
+            eventPosterImage.path,
+            filename: eventPosterImage.path.split('/').last,
+          ),
+        if (eventBannerImage != null)
+          'event_banner_image': await MultipartFile.fromFile(
+            eventBannerImage.path,
+            filename: eventBannerImage.path.split('/').last,
+          ),
+        if (selectedPaymentType == PaymentTypes.paybill) ...{
+          'payment_type': 'MPESA_PAYBILL',
+          if (paybillNumber?.isNotEmpty == true)
+            'paybill_number': paybillNumber,
+          if (accountReference?.isNotEmpty == true)
+            'account_reference': accountReference,
+        } else if (selectedPaymentType == PaymentTypes.till) ...{
+          'payment_type': 'MPESA_TILL',
+          if (tillNumber?.isNotEmpty == true) 'till_number': tillNumber,
+        } else if (selectedPaymentType == PaymentTypes.sendMoney) ...{
+          'payment_type': 'MPESA_SEND_MONEY',
+          if (sendMoneyPhoneNumber?.isNotEmpty == true)
+            'send_money_phone': sendMoneyPhoneNumber,
+        } else if (selectedPaymentType == PaymentTypes.pochi) ...{
+          'payment_type': 'POSHI_LA_BIASHARA',
+          if (sendMoneyPhoneNumber?.isNotEmpty == true)
+            'send_money_phone': sendMoneyPhoneNumber,
+        },
+      });
+
+      // Send request
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/event/",
+        data: formData,
+        options: Options(headers: {"Content-Type": "multipart/form-data"}),
+      );
+
+      // Handle success
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(EventData.fromJson(response.data['data']['event']));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when creating event", error: de.response?.data);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error while creating event", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating the event",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>> getAttendeesByEventId({
     required String eventId,
     required int page,
     required int limit,
   }) async {
     try {
       final response = await dioClient.dio.get(
-        // "https://qasherehe.opencrafts.io/attendees/event/$eventId",
-        "/$servicePrefix/attendees/event/$eventId",
+        "/$servicePrefix/attendee/event/$eventId",
         queryParameters: {"page": page, "limit": limit},
       );
 
       if (response.statusCode == 200) {
-        final List<AttendeeData> attendees = (response.data['data'] as List)
-            .map((e) => AttendeeData.fromJson(e))
-            .toList();
-
-        return right(attendees);
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
       } else {
         return left(
           ServerFailure(
@@ -111,58 +286,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, EventData>> getSpecificEvent(String id) async {
+  Future<Either<Failure, AttendeeData>> getAttendeeByID(String id) async {
     try {
-      final response = await dioClient.dio.get(
-        // 'https://qasherehe.opencrafts.io/events/getEventById/$id',
-        "/$servicePrefix/events/getEventById/$id",
-      );
+      final response = await dioClient.dio.get("/$servicePrefix/attendee/$id");
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> eventJson = Map<String, dynamic>.from(
-          response.data['result'],
-        );
-        if (eventJson['organizer_id'] is String) {
-          eventJson['organizer_id'] =
-              int.tryParse(eventJson['organizer_id'] as String) ?? 0;
-        }
-        if (eventJson['number_of_attendees'] is String) {
-          eventJson['number_of_attendees'] =
-              int.tryParse(eventJson['number_of_attendees'] as String) ?? 0;
-        }
-
-        return right(EventData.fromJson(eventJson));
-      } else {
-        return left(
-          ServerFailure(
-            message: "Unexpected server response while fetching event.",
-            error: response,
-          ),
-        );
-      }
-    } on DioException catch (de) {
-      _logger.e("DioException when fetching event $id", error: de);
-      return handleDioError(de);
-    } catch (e) {
-      _logger.e("Unknown error while fetching event $id", error: e);
-      return left(
-        ServerFailure(
-          message: "An unexpected error occurred while fetching the event",
-          error: e,
-        ),
-      );
-    }
-  }
-
-  Future<Either<Failure, AttendeeData>> getSpecificAttendee(String id) async {
-    try {
-      final response = await dioClient.dio.get(
-        // 'https://qasherehe.opencrafts.io/attendees/$id',
-        "/$servicePrefix/attendees/$id",
-      );
-
-      if (response.statusCode == 200) {
-        return right(AttendeeData.fromJson(response.data['result']));
+        return right(AttendeeData.fromJson(response.data));
       } else {
         return left(
           ServerFailure(
@@ -185,301 +314,332 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, AttendeeData>> createAttendee(
-    Attendee attendee,
+  Future<Either<Failure, List<TicketData>>> getTicketByEventId(
+    String eventId,
   ) async {
-    final String fullTempId =
-        'temp_${DateTime.now().millisecondsSinceEpoch}_${attendee.eventId}_${attendee.firstName}_${attendee.lastName}_${attendee.email}';
-    final String safeTempId = fullTempId.substring(
-      0,
-      min(fullTempId.length, 50),
-    );
     try {
-      final Map<String, dynamic> attendeeData = {
-        'first_name': attendee.firstName,
-        'middle_name': attendee.middleName,
-        'last_name': attendee.lastName,
-        'event_id': attendee.eventId,
-        'email': attendee.email,
-      };
-
-      // final String endpointUrl = "https://qasherehe.opencrafts.io/attendees/";
-      final String endpointUrl = "/$servicePrefix/attendees/";
-      _logger.i("Sending attendee creation request to: $endpointUrl");
-      _logger.d("Attendee data: $attendeeData");
-
-      final response = await dioClient.dio.post(
-        endpointUrl,
-        data: attendeeData,
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/ticket/event/$eventId",
       );
 
-      _logger.i("Attendee creation response status: ${response.statusCode}");
-      _logger.d("Attendee creation response data: ${response.data}");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (response.data is Map<String, dynamic> &&
-            response.data['message'] == "Attendee created successfully") {
-          _logger.i(
-            "Attendee created successfully on server (Status 201/200).",
-          );
-          final fakeAttendeeData = AttendeeData(
-            id: safeTempId,
-            firstName: attendee.firstName,
-            middleName: attendee.middleName,
-            lastName: attendee.lastName,
-            eventId: attendee.eventId,
-            email: attendee.email,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-
-          _logger.w(
-            "Attendee creation successful, created local placeholder data based on sent data.",
-          );
-          return right(fakeAttendeeData);
-        } else {
-          _logger.w(
-            "Attendee creation successful (status ${response.statusCode}) but response body format unexpected: ${response.data}",
-          );
-          return left(
-            ServerFailure(
-              message:
-                  "Attendee created on server, but the response format was unexpected.",
-              error: "Response data: ${response.data.toString()}",
-            ),
-          );
-        }
-      } else {
-        _logger.e(
-          "Server error creating attendee. Status: ${response.statusCode}, Response: ${response.data}",
+      if (response.statusCode == 200) {
+        return right(
+          (response.data as List).map((e) => TicketData.fromJson(e)).toList(),
         );
-        String errorMessage =
-            response.data['message'] ?? 'Unknown server error';
-        _logger.e("Server error message: $errorMessage");
+      } else {
         return left(
           ServerFailure(
-            message:
-                "Server error: $errorMessage (Status: ${response.statusCode})",
+            message: "Unexpected response when fetching ticket by event ID",
             error: response,
           ),
         );
       }
     } on DioException catch (de) {
       _logger.e(
-        "DioException when creating attendee",
+        "DioException when fetching ticket for event $eventId",
         error: de,
-        stackTrace: de.stackTrace,
       );
       return handleDioError(de);
-    } catch (e, stackTrace) {
+    } catch (e) {
       _logger.e(
-        "Unexpected error while creating attendee",
+        "Unknown error when fetching ticket for event $eventId",
         error: e,
-        stackTrace: stackTrace,
       );
       return left(
         ServerFailure(
-          message:
-              "An unexpected error occurred while creating the attendee: ${e.toString()}",
-          error: e.toString(),
+          message: "An unexpected error occurred while fetching the ticket",
+          error: e,
         ),
       );
     }
   }
 
-  Future<Either<Failure, Unit>> createEvent(
-    Event event, {
-    File? eventImage,
-    File? bannerImage,
-    File? cardImage,
+  Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
+    required String ticketId,
+    required int ticketQuantity,
+    required String? phoneNumber,
   }) async {
     try {
-      if (eventImage == null) {
-        _logger.w("createEvent called without a required poster image file.");
-        return left(
-          ServerFailure(
-            message: "No poster image provided for event creation.",
-            error: "Poster image file is required",
-          ),
-        );
-      }
-      if (bannerImage == null) {
-        _logger.w("createEvent called without a required banner image file.");
-        return left(
-          ServerFailure(
-            message: "No banner image provided for event creation.",
-            error: "Banner image file is required",
-          ),
-        );
-      }
-      if (cardImage == null) {
-        _logger.w("createEvent called without a required card image file.");
-        return left(
-          ServerFailure(
-            message: "No card image provided for event creation.",
-            error: "Card image file is required",
-          ),
-        );
-      }
-      Map<String, dynamic> eventDataMap = {
-        'name': event.name,
-        'description': event.description,
-        'date': event.date,
-        'time': event.time,
-        'genre': event.genre.join(','),
-        'location': event.location,
-        'organizer': event.organizer,
-        'organizer_id': event.organizerId,
-        'url': event.url,
-      };
-      final FormData formData = FormData.fromMap(eventDataMap);
-      String posterFileName;
-      try {
-        posterFileName = eventImage.path.split('/').last;
-        if (posterFileName.isEmpty) {
-          throw FormatException("Extracted poster filename is empty");
-        }
-      } catch (e) {
-        _logger.w(
-          "Could not extract poster filename from path '${eventImage.path}'. Error: $e. Generating default filename.",
-        );
-        String extension = '.jpg';
-        try {
-          final pathParts = eventImage.path.split('.');
-          if (pathParts.length > 1) {
-            extension = '.${pathParts.last}';
-          }
-        } catch (extError) {
-          _logger.d(
-            "Could not determine poster file extension, using default .jpg. Error: $extError",
-          );
-        }
-        posterFileName =
-            'event_poster_${DateTime.now().millisecondsSinceEpoch}$extension';
-      }
-      _logger.d("Using poster filename for upload: $posterFileName");
-      formData.files.add(
-        MapEntry(
-          'poster',
-          await MultipartFile.fromFile(
-            eventImage.path,
-            filename: posterFileName,
-          ),
-        ),
-      );
-      String bannerFileName;
-      try {
-        bannerFileName = bannerImage.path.split('/').last;
-        if (bannerFileName.isEmpty) {
-          throw FormatException("Extracted banner filename is empty");
-        }
-      } catch (e) {
-        _logger.w(
-          "Could not extract banner filename from path '${bannerImage.path}'. Error: $e. Generating default filename.",
-        );
-        String extension = '.jpg';
-        try {
-          final pathParts = bannerImage.path.split('.');
-          if (pathParts.length > 1) {
-            extension = '.${pathParts.last}';
-          }
-        } catch (extError) {
-          _logger.d(
-            "Could not determine banner file extension, using default .jpg. Error: $extError",
-          );
-        }
-        bannerFileName =
-            'event_banner_${DateTime.now().millisecondsSinceEpoch}$extension';
-      }
-      _logger.d("Using banner filename for upload: $bannerFileName");
-      formData.files.add(
-        MapEntry(
-          'banner',
-          await MultipartFile.fromFile(
-            bannerImage.path,
-            filename: bannerFileName,
-          ),
-        ),
-      );
-      String cardFileName;
-      try {
-        cardFileName = cardImage.path.split('/').last;
-        if (cardFileName.isEmpty) {
-          throw FormatException("Extracted card filename is empty");
-        }
-      } catch (e) {
-        _logger.w(
-          "Could not extract card filename from path '${cardImage.path}'. Error: $e. Generating default filename.",
-        );
-        String extension = '.jpg';
-        try {
-          final pathParts = cardImage.path.split('.');
-          if (pathParts.length > 1) {
-            extension = '.${pathParts.last}';
-          }
-        } catch (extError) {
-          _logger.d(
-            "Could not determine card file extension, using default .jpg. Error: $extError",
-          );
-        }
-        cardFileName =
-            'event_card_${DateTime.now().millisecondsSinceEpoch}$extension';
-      }
-      _logger.d("Using card filename for upload: $cardFileName");
-      formData.files.add(
-        MapEntry(
-          'event_card_image',
-          await MultipartFile.fromFile(cardImage.path, filename: cardFileName),
-        ),
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/purchase/",
+        data: {
+          "ticket_id": ticketId,
+          "ticket_quantity": ticketQuantity,
+          if (phoneNumber != null) "user_phone": phoneNumber,
+        },
       );
 
-      // final String endpointUrl =
-      //     "https://qasherehe.opencrafts.io/events/createEvent";
-      //
-      final String endpointUrl = "/$servicePrefix/events/createEvent";
-
-      _logger.i("Sending event creation request to: $endpointUrl");
-      _logger.d("Event data (non-file): $eventDataMap");
-      final response = await dioClient.dio.post(endpointUrl, data: formData);
-      _logger.i("Event creation response status: ${response.statusCode}");
-      _logger.d("Event creation response data: ${response.data}");
       if (response.statusCode == 200 || response.statusCode == 201) {
-        String message = response.data['message'] ?? 'Event created';
-        _logger.i("Event created successfully: $message");
-        return right(unit);
-      } else {
-        _logger.e(
-          "Server error creating event. Status: ${response.statusCode}, Response: ${response.data}",
-        );
-        String errorMessage =
-            response.data['message'] ?? 'Unknown server error';
-        _logger.e("Server error message: $errorMessage");
+        // FREE EVENT
+        if (response.data.containsKey('attendee_id')) {
+          return right(
+            FreeTicketSuccess(
+              message: response.data['message'],
+              attendeeId: response.data['attendee_id'],
+            ),
+          );
+        }
+
+        // PAID EVENT
+        if (response.data.containsKey('trans_id')) {
+          return right(
+            PaidTicketInitiated(
+              message: response.data['message'],
+              transactionId: response.data['trans_id'],
+            ),
+          );
+        }
+
         return left(
           ServerFailure(
-            message:
-                "Server error: $errorMessage (Status: ${response.statusCode})",
+            message: "Unknown success response format",
+            error: response,
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when purchasing ticket",
             error: response,
           ),
         );
       }
     } on DioException catch (de) {
-      _logger.e(
-        "DioException when creating event",
-        error: de,
-        stackTrace: de.stackTrace,
-      );
+      _logger.e("DioException when purchasing ticket", error: de);
       return handleDioError(de);
-    } catch (e, stackTrace) {
-      _logger.e(
-        "Unexpected error while creating event",
-        error: e,
-        stackTrace: stackTrace,
+    } catch (e) {
+      _logger.e("Unknown error when purchasing ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while purchasing the ticket",
+          error: e,
+        ),
       );
+    }
+  }
+
+  Future<Either<Failure, String>> confirmPayment({
+    required String transId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/purchase/$transId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['status']);
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when confirming payment",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when confirming payment", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when confirming payment", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while confirming the payment",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>>
+  getUserPurchasedTicketsForEvent({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/attendee/event/user/$eventId",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting user's ticket for event",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting user's ticket for event", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting user's ticket for event", error: e);
       return left(
         ServerFailure(
           message:
-              "An unexpected error occurred while creating the event: ${e.toString()}",
-          error: e.toString(),
+              "An unexpected error occurred when getting user's ticket for event",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>>
+  getAllUserPurchasedTickets({required int page, required int limit}) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/attendee/user/attended",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when getting user's tickets",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting user's tickets", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting user's tickets", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting user's tickets",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<AttendeeData>>> searchUserAttendedEvents({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/attendee/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List).map((e) => AttendeeData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when searching attended events",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching attended events", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching attended events", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when searching attended events",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> validateAttendee({
+    required String eventId,
+    required String attendeeId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/attendee/user/",
+        data: {"eventId": eventId, "attendeeId": attendeeId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['status']);
+      } else {
+        _logger.e(
+          "Unexpected response data when validating attendee: ${response.data}",
+        );
+        return left(
+          ServerFailure(
+            message: "Unexpected response when validating attendee",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when validating attendee", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when validating attendee", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when validating attendee",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<EventData>>> searchEvents({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/event/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List).map((e) => EventData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message: "Unexpected response when searching events",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching events", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching events", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when searching events",
+          error: e,
         ),
       );
     }

@@ -4,23 +4,15 @@ abstract class ShereheDetailsEvent extends Equatable {
   const ShereheDetailsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadShereheDetails extends ShereheDetailsEvent {
   final String eventId;
+  final Event? initialEvent;
 
-  const LoadShereheDetails({required this.eventId});
-
-  @override
-  List<Object> get props => [eventId];
-}
-
-class MarkAsGoing extends ShereheDetailsEvent {
-  final String eventId;
-
-  const MarkAsGoing({required this.eventId});
+  const LoadShereheDetails({required this.eventId, this.initialEvent});
 
   @override
-  List<Object> get props => [eventId];
+  List<Object?> get props => [eventId, initialEvent];
 }

@@ -8,18 +8,16 @@ class AttendeeCard extends StatelessWidget {
 
   const AttendeeCard({super.key, required this.attendee, this.isHost = false});
 
-  String _getInitials(String? firstName) {
-    String initials = '';
-    if (firstName != null && firstName.isNotEmpty) {
-      initials += firstName[0].toUpperCase();
+  String _getInitials(String? userName) {
+    if (userName == null || userName.isEmpty) {
+      return "G"; // For unknown users
     }
-    return initials.isEmpty ? '?' : initials;
+    String initials = userName[0].toUpperCase();
+    return initials;
   }
 
   @override
   Widget build(BuildContext context) {
-    final String initials = _getInitials(attendee.firstName);
-    final String fullName = attendee.lastName.trim();
     final String status = isHost ? 'Organizer' : 'Attending';
 
     return Container(
@@ -32,13 +30,12 @@ class AttendeeCard extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
-          child: Text(initials),
+          child: Text(_getInitials(attendee.user?.username)),
         ),
-        title: Text(fullName.isNotEmpty ? fullName : "Anonymous"),
+        title: Text(attendee.user?.username ?? "Guest"),
         subtitle: Text(status),
         trailing: isHost ? Icon(Symbols.server_person) : null,
       ),
     );
   }
 }
-

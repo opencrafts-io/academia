@@ -1,21 +1,27 @@
-
-
-import 'package:academia/core/core.dart';
-import 'package:academia/features/sherehe/data/models/attendee_model.dart';
-import 'package:academia/features/sherehe/data/models/event_model.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('TicketData')
-class TicketTable extends Table with TableMixin{
-  @JsonKey('attendee_id')
-  TextColumn get attendeeId => text().references(AttendeeTable, #id)();
+class TicketTable extends Table {
+  TextColumn get id => text().nullable()();
 
   @JsonKey('event_id')
-  TextColumn get eventId => text().references(EventTable, #id)();
+  TextColumn get eventId => text().nullable()();
 
-  @JsonKey('payment_code')
-  TextColumn get paymentCode => text()();
+  @JsonKey('ticket_name')
+  TextColumn get ticketName => text()();
 
-  @override
-  Set<Column> get primaryKey => {id};
+  @JsonKey('ticket_price')
+  IntColumn get ticketPrice => integer()();
+
+  @JsonKey('ticket_quantity')
+  IntColumn get ticketQuantity => integer().nullable()();
+
+  @JsonKey('delete_tag')
+  BoolColumn get deleteTag => boolean().nullable()();
+
+  @JsonKey('created_at')
+  TextColumn get createdAt => text().nullable()();
+
+  @JsonKey('updatedAt')
+  TextColumn get updatedAt => text().nullable()();
 }

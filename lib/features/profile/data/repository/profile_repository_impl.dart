@@ -86,4 +86,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return right(userProfile.toEntity());
     });
   }
+
+  @override
+  Future<Either<Failure, String>> requestAccountDeletion() {
+    return profileRemoteDatasource.requestAccountDeletion();
+  }
+
+  @override
+  Future<Either<Failure, String>> requestAccountRecovery() {
+    return profileRemoteDatasource.requestAccountRecovery();
+  }
 }
