@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:academia/config/config.dart';
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/features.dart';
@@ -20,11 +22,21 @@ class _FeedPageState extends State<FeedPage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
+  late StreamSubscription _blockSubscription;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    // Listen to the block bloc stream
+    _blockSubscription = context.read<BlockBloc>().stream.listen((state) {
+      if (state is BlockActionSuccess) {
+        _currentPage = 1;
+        context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
+      }
+    });
+
     context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
   }
 
@@ -44,6 +56,7 @@ class _FeedPageState extends State<FeedPage>
 
   @override
   void dispose() {
+    _blockSubscription.cancel();
     _scrollController.dispose();
     super.dispose();
   }

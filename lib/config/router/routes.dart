@@ -164,6 +164,14 @@ class AddPostRoute extends GoRouteData with _$AddPostRoute {
   }
 }
 
+@TypedGoRoute<BlockedItemsRoute>(path: "/blocked-items")
+class BlockedItemsRoute extends GoRouteData with _$BlockedItemsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const BlockedItemsPage();
+  }
+}
+
 @TypedGoRoute<AuthRoute>(path: "/auth")
 class AuthRoute extends GoRouteData with _$AuthRoute {
   @override

@@ -1,6 +1,8 @@
-platform :ios, '15.6'
+platform :ios, '17.6'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+use_modular_headers!
 
 project 'Runner', {
   'Debug' => :debug,
@@ -33,93 +35,62 @@ end
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 flutter_ios_podfile_setup
 
+# ---------------------------------------
+# MAIN TARGET
+# ---------------------------------------
 target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-  
+
   target 'RunnerTests' do
     inherit! :search_paths
   end
 end
 
+# ---------------------------------------
+# OneSignal Notification Service Extension
+# Static libraries version
+# ---------------------------------------
 target 'OneSignalNotificationServiceExtension' do
   inherit! :search_paths
-  pod 'OneSignalXCFramework', '>= 5.0.2', '<6.0'
-  use_frameworks!
+
+  pod 'OneSignalXCFramework', '>= 5.0.0', '< 6.0'
 end
 
-# Post-install hook to configure build settings for permissions and Flutter
+# ---------------------------------------
+# Post-install Build Settings
+# ---------------------------------------
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    
+
     target.build_configurations.each do |config|
       # Setup for in app webview
       config.build_settings['SWIFT_VERSION'] = '5.0'  # required by simple_permission
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       # End of config
       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
-              '$(inherited)',
-    
-              ## dart: PermissionGroup.calendar
-              'PERMISSION_EVENTS=1',
-             
-              ## dart: PermissionGroup.calendarFullAccess
-              'PERMISSION_EVENTS_FULL_ACCESS=1',
-
-              ## dart: PermissionGroup.reminders
-              'PERMISSION_REMINDERS=1',
-
-              ## dart: PermissionGroup.camera
-              'PERMISSION_CAMERA=1',
-
-              ## dart: PermissionGroup.microphone
-              'PERMISSION_MICROPHONE=1',
-              
-              ## dart: PermissionGroup.photos
-              'PERMISSION_PHOTOS=1',
-              
-              ## dart: PermissionGroup.locationWhenInUse
-              'PERMISSION_LOCATION_WHENINUSE=1',
-
-              ## dart: PermissionGroup.notification
-              'PERMISSION_NOTIFICATIONS=1',
-
-              ## dart: PermissionGroup.mediaLibrary
-              'PERMISSION_MEDIA_LIBRARY=1',
-
-              ## dart: PermissionGroup.appTrackingTransparency
-             'PERMISSION_APP_TRACKING_TRANSPARENCY=1',
-             
-              ## dart: PermissionGroup.speech
-              'PERMISSION_SPEECH_RECOGNIZER=0',
-
-              ## The 'PERMISSION_LOCATION' macro enables the `locationWhenInUse` and `locationAlways` permission. If
-              ## the application only requires `locationWhenInUse`, only specify the `PERMISSION_LOCATION_WHENINUSE`
-              ## macro.
-             
-             
-              ## dart: PermissionGroup.sensors
-              'PERMISSION_SENSORS=0',
-
-              ## dart: PermissionGroup.bluetooth
-              'PERMISSION_BLUETOOTH=0',
-
-              ## dart: PermissionGroup.criticalAlerts
-              'PERMISSION_CRITICAL_ALERTS=1',
-             
-              ## dart: PermissionGroup.contacts
-              'PERMISSION_CONTACTS=0',
+        '$(inherited)',
+        'PERMISSION_EVENTS=1',
+        'PERMISSION_EVENTS_FULL_ACCESS=1',
+        'PERMISSION_REMINDERS=1',
+        'PERMISSION_CAMERA=1',
+        'PERMISSION_MICROPHONE=1',
+        'PERMISSION_PHOTOS=1',
+        'PERMISSION_LOCATION_WHENINUSE=1',
+        'PERMISSION_NOTIFICATIONS=1',
+        'PERMISSION_MEDIA_LIBRARY=1',
+        'PERMISSION_APP_TRACKING_TRANSPARENCY=1',
+        'PERMISSION_SPEECH_RECOGNIZER=0',
+        'PERMISSION_SENSORS=0',
+        'PERMISSION_BLUETOOTH=0',
+        'PERMISSION_CRITICAL_ALERTS=1',
+        'PERMISSION_CONTACTS=0',
       ]
-      
     end
   end
 
-  ################  Awesome Notifications pod modification ###################
   awesome_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications', 'ios', 'Scripts', 'AwesomePodFile'), '.symlinks')
   require awesome_pod_file
   update_awesome_pod_build_settings(installer)
-
-  # Update main target settings
   update_awesome_main_target_settings('Runner', File.dirname(File.realpath(__FILE__)), flutter_root)
-  ################  Awesome Notifications pod modification ###################
 end

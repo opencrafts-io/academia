@@ -2,6 +2,8 @@ import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
+import 'package:academia/features/chirp/interactions/data/models/block_model.dart';
+import 'package:academia/features/chirp/interactions/data/models/report_model.dart';
 import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
@@ -9,7 +11,6 @@ import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/course/data/models/course.dart';
 import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/features/institution/data/models/institution.dart';
-import 'package:academia/features/institution/data/models/institution_course_timetable_entry.dart';
 import 'package:academia/features/institution/data/models/institution_profile.dart';
 import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
 import 'package:academia/features/institution/data/models/institution_fee_transaction.dart';
@@ -56,6 +57,9 @@ part 'database.g.dart';
     PaymentInfoTable,
     ShereheUserTable, //temporary
     GroupTable,
+
+    BlockTable,
+    ReportTable,
 
     // Agenda
     AgendaEvent,
@@ -159,6 +163,15 @@ class AppDataBase extends _$AppDataBase {
               break;
           }
         }
+        // await m.createAll();
+        // if (from < 15) {
+        //   await m.createTable(examTimetable);
+        // } else if (from < 16) {
+        //   await m.addColumn(userProfile, userProfile.deletedAt);
+        // } else if (from < 17) {
+        //   await m.createTable(blockTable);
+        //   await m.createTable(reportTable);
+        // }
       },
       beforeOpen: (details) async {
         _logger.i(

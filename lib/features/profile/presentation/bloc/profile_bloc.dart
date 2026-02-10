@@ -15,6 +15,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UpdateUserProfile updateUserProfile;
   final UpdateUserPhone updateUserPhone;
   final GetCachedProfileUsecase getCachedProfileUsecase;
+  final RequestAccountDeletionUsecase requestAccountDeletionUsecase;
+  final RequestAccountRecoveryUsecase requestAccountRecoveryUsecase;
   final Logger _logger = Logger();
   final Posthog posthog = Posthog();
 
@@ -23,6 +25,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.updateUserProfile,
     required this.getCachedProfileUsecase,
     required this.updateUserPhone,
+    required this.requestAccountDeletionUsecase,
+    required this.requestAccountRecoveryUsecase,
   }) : super(ProfileInitialState()) {
     on<RefreshProfileEvent>((event, emit) async {
       final result = await refreshCurrentUserProfileUsecase(NoParams());
@@ -119,6 +123,36 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
 
           emit(ProfileLoadedState(profile: userProfile));
+        },
+      );
+    });
+
+    on<RequestAccountDeletionEvent>((event, emit) async {
+      emit(ProfileLoadingstate());
+      
+      final result = await requestAccountDeletionUsecase(NoParams());
+      result.fold(
+        (failure) {
+          _logger.d(failure.message, error: failure.error);
+          emit(ProfileErrorState(message: failure.message));
+        },
+        (message) {
+          emit(AccountDeletionRequestedState(message: message));
+        },
+      );
+    });
+
+    on<RequestAccountRecoveryEvent>((event, emit) async {
+      emit(ProfileLoadingstate());
+      
+      final result = await requestAccountRecoveryUsecase(NoParams());
+      result.fold(
+        (failure) {
+          _logger.d(failure.message, error: failure.error);
+          emit(ProfileErrorState(message: failure.message));
+        },
+        (message) {
+          emit(AccountRecoveryRequestedState(message: message));
         },
       );
     });
