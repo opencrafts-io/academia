@@ -42,7 +42,8 @@ void main(args) async {
         FlutterError.onError =
             FirebaseCrashlytics.instance.recordFlutterFatalError;
         if (Platform.isAndroid || Platform.isIOS) {
-          Workmanager().initialize(backgroundCallbackDispatcher);
+          await Workmanager().initialize(backgroundCallbackDispatcher);
+          registerDefaultBackgroundTasks();
         }
       }
       await di.init(
