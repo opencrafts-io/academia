@@ -2,6 +2,7 @@ import 'package:academia/config/router/router.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:magnet/magnet.dart';
 
 class InstitutionHomePage extends StatefulWidget {
   const InstitutionHomePage({super.key, required this.institutionID});
+
   final int institutionID;
 
   @override
@@ -191,6 +193,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
 
 class _InstitutionHomePageAppBar extends StatelessWidget {
   const _InstitutionHomePageAppBar({required this.institutionID});
+
   final int institutionID;
 
   @override
@@ -290,6 +293,7 @@ class SyncStatusSection extends StatelessWidget {
 
 class _FeesSectionCard extends StatelessWidget {
   const _FeesSectionCard({required this.institutionID});
+
   final int institutionID;
 
   @override
@@ -315,6 +319,7 @@ class _FeesSectionCard extends StatelessWidget {
 
 class _CoursesSectionCard extends StatelessWidget {
   const _CoursesSectionCard({required this.institutionId});
+
   final int institutionId;
 
   @override
@@ -327,7 +332,22 @@ class _CoursesSectionCard extends StatelessWidget {
           loading: () => Center(child: LoadingIndicatorM3E()),
           success: (courses) {
             if (courses.isEmpty) {
-              return Column(children: [Icon(Icons.emoji_people), Text("We")]);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Assets.icons.notificationIconAlert.image(width: 250),
+                  ),
+                  Text(
+                    "Oops!",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text("We couldn't find any courses for this institution yet"),
+                ],
+              );
             }
             return ListView.builder(
               padding: EdgeInsets.zero,
