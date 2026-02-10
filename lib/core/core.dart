@@ -1,4 +1,5 @@
 export 'usecase/usecase.dart';
+export 'strings.dart';
 export 'error/failures.dart';
 export 'error/exeptions.dart';
 export 'data/table_mixin.dart';

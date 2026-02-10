@@ -28,6 +28,7 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> {
   final Logger _logger = Logger();
+
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
@@ -164,7 +165,10 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
         BlocProvider(create: (context) => sl<TimetableBloc>()),
-        BlocProvider(create: (context) => sl<TimetableEntryBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
