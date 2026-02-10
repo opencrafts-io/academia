@@ -44,12 +44,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
       ontap: () => CoursesPageRoute().push(context),
       iconPath: Assets.icons.book.keyName,
     ),
-
-    _EssentialItem(
-      title: "Timetable",
-      ontap: () => TodosRoute().push(context),
-      iconPath: Assets.icons.timer.keyName,
-    ),
     _EssentialItem(
       title: "To-Dos",
       ontap: () => TodosRoute().push(context),
