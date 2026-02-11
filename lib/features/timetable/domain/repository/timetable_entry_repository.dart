@@ -102,4 +102,12 @@ abstract class TimetableEntryRepository {
   /// [timetableId] can optionally filter entries for a specific timetable.
   Future<Either<Failure, List<TimetableEntryEntity>>>
   fetchTimetableEntriesFromRemote({String? timetableId});
+
+  /// Watches timetable entries that occur today.
+  ///
+  /// This method considers both one-time events and recurring events with RRULE.
+  /// For recurring events, it checks if the RRULE contains today's weekday.
+  /// Returns entries sorted chronologically by start time.
+  Stream<Either<Failure, List<TimetableEntryEntity>>>
+  watchTodayTimetableEntries();
 }

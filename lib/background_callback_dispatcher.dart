@@ -1,15 +1,27 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:academia/background_task/background_task.dart';
 import 'package:academia/background_task/course_alert_background_task.dart';
 import 'package:academia/background_task/daily_login_background_task.dart';
+import 'package:academia/config/config.dart';
+import 'package:academia/features/course/course.dart';
+import 'package:academia/features/features.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:academia/injection_container.dart' as di;
 
 @pragma('vm:entry-point')
 void backgroundCallbackDispatcher() {
   Workmanager().executeTask((task, input) async {
+    await di.init(
+      FlavorConfig(
+        flavor: kDebugMode ? Flavor.staging : Flavor.production,
+        appName: kDebugMode ? 'Academia - stg' : 'Academia',
+        apiBaseUrl: "https://api.opencrafts.io",
+      ),
+    );
+
     await AwesomeNotifications().initialize("resource://drawable/academia", [
       NotificationChannel(
         channelKey: 'course_alerts',
@@ -27,7 +39,10 @@ void backgroundCallbackDispatcher() {
     ]);
 
     final dailyLogin = DailyLoginBackgroundTask();
-    final courseAlert = CourseAlertBackgroundTask();
+    final courseAlert = CourseAlertBackgroundTask(
+      timetableEntryRepository: di.sl<TimetableEntryRepository>(),
+      courseRepository: di.sl<CourseRepository>(),
+    );
 
     final Map<String, BackgroundTask> taskRegistry = {
       courseAlert.taskName: courseAlert,
@@ -43,12 +58,11 @@ void backgroundCallbackDispatcher() {
 }
 
 void registerDefaultBackgroundTasks() {
-  final courseAlert = CourseAlertBackgroundTask();
   Workmanager().registerPeriodicTask(
-    courseAlert.taskName,
-    courseAlert.taskName,
-    frequency: courseAlert.frequency,
+    'io.opencrafts.academia.course.alert',
+    'io.opencrafts.academia.course.alert',
+    frequency: const Duration(minutes: 15),
     existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
-    constraints: courseAlert.constraints.toWorkManagerConstraints(),
+    constraints: Constraints(networkType: NetworkType.notRequired),
   );
 }

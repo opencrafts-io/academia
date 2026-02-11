@@ -87,6 +87,10 @@ abstract class TimetableEntryLocalDatasource {
   Future<Either<Failure, Unit>> createOrUpdateTimetableEntries({
     required List<TimetableEntryCompanion> entries,
   });
+
+  // Watches all courses that are due today
+  Stream<Either<Failure, List<TimetableEntryData>>>
+  watchTodayTimetableEntries();
 }
 
 class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
@@ -300,5 +304,56 @@ class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
       return Left(CacheFailure(message: "Permanent deletion failed", error: e));
     }
   }
-}
 
+  @override
+  Stream<Either<Failure, List<TimetableEntryData>>>
+  watchTodayTimetableEntries() {
+    final now = DateTime.now();
+
+    // Start and end of today to catch one-off events
+    final startOfToday = DateTime(now.year, now.month, now.day);
+    final endOfToday = startOfToday.add(const Duration(days: 1));
+
+    // Map Dart weekday (1=Monday...7=Sunday) to RRULE day codes
+    final weekdayMap = {
+      1: 'MO',
+      2: 'TU',
+      3: 'WE',
+      4: 'TH',
+      5: 'FR',
+      6: 'SA',
+      7: 'SU',
+    };
+    final dayString = weekdayMap[now.weekday]!;
+
+    return (appDataBase.select(appDataBase.timetableEntry)
+          ..where((t) {
+            // 1. One-off classes happening specifically today
+            final isOneOffToday =
+                t.startDate.isBiggerOrEqualValue(startOfToday) &
+                t.startDate.isSmallerThanValue(endOfToday);
+
+            // 2. Recurring classes with RRULE containing today's day
+            // This checks if the rrule string contains the current day (e.g., "BYDAY=MO")
+            final isRecurringToday = t.rrule.contains(dayString);
+
+            // Include entries that are either one-off today OR recurring today
+            // AND not deleted
+            return (isOneOffToday | isRecurringToday) &
+                t.isDeleted.equals(false);
+          })
+          ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
+        .watch()
+        .map<Either<Failure, List<TimetableEntryData>>>(
+          (entries) => Right(entries),
+        )
+        .handleError(
+          (error) => Left(
+            CacheFailure(
+              error: error,
+              message: "Failed to watch today's timetable entries",
+            ),
+          ),
+        );
+  }
+}

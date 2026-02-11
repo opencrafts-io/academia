@@ -75,6 +75,17 @@ class TimetableEntryRepositoryImpl implements TimetableEntryRepository {
   }
 
   @override
+  Stream<Either<Failure, List<TimetableEntryEntity>>>
+  watchTodayTimetableEntries() {
+    return localDatasource.watchTodayTimetableEntries().map((result) {
+      return result.fold(
+        (failure) => Left(failure),
+        (dataList) => Right(dataList.map((data) => data.toEntity()).toList()),
+      );
+    });
+  }
+
+  @override
   Future<Either<Failure, TimetableEntryEntity>> createOrUpdateTimetableEntry({
     required TimetableEntryEntity entry,
   }) async {
