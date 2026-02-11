@@ -7,9 +7,10 @@ import 'package:rrule/rrule.dart';
 import 'package:academia/core/core.dart';
 
 class CourseCard extends StatelessWidget {
-  const CourseCard({super.key, required this.course});
+  const CourseCard({super.key, required this.course, this.onTap});
 
   final CourseEntity course;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class CourseCard extends StatelessWidget {
         elevation: 0,
         color: course.color?.withAlpha(128),
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           child: ExpansionTile(
             shape: const RoundedRectangleBorder(side: BorderSide.none),
             collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),

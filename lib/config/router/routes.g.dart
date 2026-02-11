@@ -1274,6 +1274,10 @@ RouteBase get $coursesPageRoute => GoRouteData.$route(
   factory: _$CoursesPageRoute._fromState,
   routes: [
     GoRouteData.$route(path: 'create', factory: _$AddCoursesRoute._fromState),
+    GoRouteData.$route(
+      path: 'view/:courseId',
+      factory: _$ViewCourseRoute._fromState,
+    ),
   ],
 );
 
@@ -1302,6 +1306,31 @@ mixin _$AddCoursesRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/courses/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin _$ViewCourseRoute on GoRouteData {
+  static ViewCourseRoute _fromState(GoRouterState state) =>
+      ViewCourseRoute(courseId: state.pathParameters['courseId']!);
+
+  ViewCourseRoute get _self => this as ViewCourseRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/courses/view/${Uri.encodeComponent(_self.courseId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
