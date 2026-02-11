@@ -4,7 +4,6 @@ import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:academia/config/config.dart';
 import 'package:logger/logger.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioClient {
   /// The DioClient
@@ -12,7 +11,7 @@ class DioClient {
   /// Will be used to send requests to the server
   late Dio dio;
   AuthLocalDatasource authLocalDatasource;
-  DioRequestInspector requestInspector;
+  DioRequestInspector? requestInspector;
 
   /// Ensure that before instanciating a DioClient that
   /// you must have injected the flavor
@@ -33,7 +32,9 @@ class DioClient {
       ),
     );
 
-    dio.interceptors.add(requestInspector.getDioRequestInterceptor());
+    if(requestInspector != null){
+      dio.interceptors.add(requestInspector!.getDioRequestInterceptor());
+    }
 
     // NOTE: Do not push the loggin version it pollutes the logs!
     // Use the inbuilt ui inspector

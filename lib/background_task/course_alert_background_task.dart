@@ -36,14 +36,14 @@ class CourseAlertBackgroundTask extends BackgroundTask {
           .watchTodayTimetableEntries()
           .first;
 
-      await entriesResult.fold(
+      return await entriesResult.fold(
         (failure) async {
           debugPrint("Failed to fetch today's entries: ${failure.message}");
           return false;
         },
         (entries) async {
           for (final entry in entries) {
-            final classStartTime = entry.startDate;
+            final classStartTime = _buildTodayDateTime(entry.startDate, now);
             final timeDifference = classStartTime.difference(now);
 
             // Get course details
@@ -54,6 +54,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
             await courseResult.fold(
               (failure) async {
                 debugPrint("Failed to fetch course: ${failure.message}");
+                return false;
               },
               (course) async {
                 // Build location string
@@ -117,11 +118,24 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         },
       );
 
-      return true;
     } catch (e) {
       debugPrint("Course Alert Background Task Error: $e");
       return false;
     }
+  }
+
+  /// Build a DateTime for today using the time from startDate
+  /// Since startDate only contains time info (the date portion is irrelevant),
+  /// we extract the time and combine it with today's date
+  DateTime _buildTodayDateTime(DateTime timeSource, DateTime today) {
+    return DateTime(
+      today.year,
+      today.month,
+      today.day,
+      timeSource.hour,
+      timeSource.minute,
+      timeSource.second,
+    );
   }
 
   /// Stage 1: Alert 30 minutes before class
@@ -134,23 +148,17 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       content: NotificationContent(
         id: _generateNotificationId(entry.id!, 30),
         channelKey: 'course_alerts',
-        title: '⏰ Class in 30 Minutes',
-        body:
-            '${course.courseName} (${course.courseCode})\n'
-            '📍 $location\n'
-            '👨‍🏫 ${course.instructor}',
+        title: 'Upcoming ${course.courseName}',
+        summary: 'Starting in 30 minutes',
+        body: '• Room: $location\n• Prep: Check your materials',
         actionType: ActionType.KeepOnTop,
         locked: true,
         autoDismissible: false,
         notificationLayout: NotificationLayout.BigText,
         category: NotificationCategory.Reminder,
-        backgroundColor: Color(course.color ?? 0xFF007DFD),
+        backgroundColor: course.color,
         color: Colors.white,
-        payload: {
-          "type": "30_minute_alert",
-          "entry_id": entry.id!,
-          "course_id": course.id ?? '',
-        },
+        payload: {},
         wakeUpScreen: true,
         criticalAlert: true,
         displayOnForeground: true,
@@ -177,17 +185,15 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       content: NotificationContent(
         id: _generateNotificationId(entry.id!, 15),
         channelKey: 'course_alerts',
-        title: '🚨 Class in 15 Minutes!',
-        body:
-            '${course.courseName} is starting soon\n'
-            '📍 $location\n'
-            '⏰ Time to head there!',
+        title: 'Upcoming: ${course.courseName}',
+        summary: 'Starting in 15 minutes',
+        body: '• Room: $location\n• Prep: Check your materials',
         actionType: ActionType.KeepOnTop,
         locked: true,
         autoDismissible: false,
         notificationLayout: NotificationLayout.BigText,
         category: NotificationCategory.Alarm,
-        backgroundColor: Color(course.color ?? 0xFFFF6B6B),
+        backgroundColor: course.color,
         color: Colors.white,
         payload: {
           "type": "15_minute_alert",
@@ -198,21 +204,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         criticalAlert: true,
         fullScreenIntent: true,
         displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/alarm.png',
+        largeIcon: 'asset://assets/icons/time.png',
         roundedLargeIcon: true,
       ),
-      actionButtons: [
-        NotificationActionButton(
-          key: 'NAVIGATE',
-          label: 'Navigate',
-          actionType: ActionType.Default,
-        ),
-        NotificationActionButton(
-          key: 'VIEW_DETAILS',
-          label: 'Details',
-          actionType: ActionType.Default,
-        ),
-      ],
     );
   }
 
@@ -226,37 +220,26 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       content: NotificationContent(
         id: _generateNotificationId(entry.id!, 0),
         channelKey: 'course_alerts',
-        title: '🔔 Class Starting Now!',
-        body:
-            '${course.courseName} has begun\n'
-            '📍 $location\n'
-            '⏱️ Duration: ${entry.durationMinutes} minutes',
+        title: 'Time for ${course.courseName}!',
+        summary: 'Starting Now • ${entry.durationMinutes}m',
+        body: '📍 $location\n👨‍🏫 ${course.instructor}',
         actionType: ActionType.KeepOnTop,
+        wakeUpScreen: true,
+        criticalAlert: true,
         locked: true,
         autoDismissible: false,
         notificationLayout: NotificationLayout.BigText,
-        category: NotificationCategory.Alarm,
-        backgroundColor: Color(course.color ?? 0xFFFF0000),
-        color: Colors.white,
-        payload: {
-          "type": "class_starting",
-          "entry_id": entry.id!,
-          "course_id": course.id ?? '',
-        },
-        wakeUpScreen: true,
-        criticalAlert: true,
-        fullScreenIntent: true,
+        displayOnBackground: true,
         displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/alarm.png',
+        category: NotificationCategory.Alarm,
+        backgroundColor: course.color,
+        color: Colors.white,
+        payload: {},
+        fullScreenIntent: true,
+        largeIcon: 'asset://assets/icons/motarboard.png',
         roundedLargeIcon: true,
       ),
-      actionButtons: [
-        NotificationActionButton(
-          key: 'JOIN_CLASS',
-          label: 'Join',
-          actionType: ActionType.Default,
-        ),
-      ],
+      actionButtons: [],
     );
   }
 
@@ -280,41 +263,26 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       content: NotificationContent(
         id: _generateNotificationId(entry.id!, -1),
         channelKey: 'course_alerts',
-        title: '📚 ${course.courseName} in Progress',
-        body:
-            '⏱️ $remaining minutes remaining\n'
-            '📍 $location\n'
-            '👨‍🏫 ${course.instructor}',
+        title: ' ${course.courseName} is in progress.',
+        summary: '${remaining.toString()} minutes left.',
+        body:'$location • ${course.instructor}',
         actionType: ActionType.KeepOnTop,
-        locked: true,
-        autoDismissible: false,
         notificationLayout: NotificationLayout.ProgressBar,
         category: NotificationCategory.Progress,
-        backgroundColor: Color(course.color ?? 0xFF4CAF50),
-        color: Colors.white,
+        locked: true,
+        autoDismissible: false,
+        fullScreenIntent: true,
+        backgroundColor: course.color,
+        color: Colors.black,
+        showWhen: true,
+        chronometer: Duration(minutes: elapsed),
+        timeoutAfter: Duration(minutes: remaining),
         progress: (progress * 100).toDouble(),
-        payload: {
-          "type": "class_in_progress",
-          "entry_id": entry.id!,
-          "course_id": course.id ?? '',
-          "remaining_minutes": remaining.toString(),
-        },
+        payload: {},
         displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/alarm.png',
+        largeIcon: 'asset://assets/icons/timer.png',
         roundedLargeIcon: true,
       ),
-      actionButtons: [
-        NotificationActionButton(
-          key: 'END_CLASS',
-          label: 'End Early',
-          actionType: ActionType.Default,
-        ),
-        NotificationActionButton(
-          key: 'VIEW_NOTES',
-          label: 'Notes',
-          actionType: ActionType.Default,
-        ),
-      ],
     );
   }
 

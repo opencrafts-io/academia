@@ -2,6 +2,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 /// An abstract contract for interacting with the local SQLite database via Drift
 /// for TimetableEntry-related data operations.
@@ -310,10 +311,6 @@ class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
   watchTodayTimetableEntries() {
     final now = DateTime.now();
 
-    // Start and end of today to catch one-off events
-    final startOfToday = DateTime(now.year, now.month, now.day);
-    final endOfToday = startOfToday.add(const Duration(days: 1));
-
     // Map Dart weekday (1=Monday...7=Sunday) to RRULE day codes
     final weekdayMap = {
       1: 'MO',
@@ -324,29 +321,44 @@ class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
       6: 'SA',
       7: 'SU',
     };
-    final dayString = weekdayMap[now.weekday]!;
+    final todayDayCode = weekdayMap[now.weekday]!;
 
-    return (appDataBase.select(appDataBase.timetableEntry)
-          ..where((t) {
-            // 1. One-off classes happening specifically today
-            final isOneOffToday =
-                t.startDate.isBiggerOrEqualValue(startOfToday) &
-                t.startDate.isSmallerThanValue(endOfToday);
-
-            // 2. Recurring classes with RRULE containing today's day
-            // This checks if the rrule string contains the current day (e.g., "BYDAY=MO")
-            final isRecurringToday = t.rrule.contains(dayString);
-
-            // Include entries that are either one-off today OR recurring today
-            // AND not deleted
-            return (isOneOffToday | isRecurringToday) &
-                t.isDeleted.equals(false);
-          })
-          ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
+    return (appDataBase.select(appDataBase.timetableEntry)..where((t) {
+          return t.isDeleted.equals(false);
+        }))
         .watch()
-        .map<Either<Failure, List<TimetableEntryData>>>(
-          (entries) => Right(entries),
-        )
+        .map<Either<Failure, List<TimetableEntryData>>>((entries) {
+          try {
+            final todayEntries = <TimetableEntryData>[];
+
+            for (final entry in entries) {
+              // Check if entry occurs today
+              if (_occursToday(entry, todayDayCode)) {
+                todayEntries.add(entry);
+              }
+            }
+
+            // Sort by start time
+            todayEntries.sort((a, b) {
+              final aTime = TimeOfDay.fromDateTime(a.startDate);
+              final bTime = TimeOfDay.fromDateTime(b.startDate);
+
+              final aMinutes = aTime.hour * 60 + aTime.minute;
+              final bMinutes = bTime.hour * 60 + bTime.minute;
+
+              return aMinutes.compareTo(bMinutes);
+            });
+
+            return Right(todayEntries);
+          } catch (error) {
+            return Left(
+              CacheFailure(
+                error: error,
+                message: "Failed to process today's timetable entries",
+              ),
+            );
+          }
+        })
         .handleError(
           (error) => Left(
             CacheFailure(
@@ -355,5 +367,32 @@ class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
             ),
           ),
         );
+  }
+
+  bool _occursToday(TimetableEntryData entry, String todayDayCode) {
+    final rrule = entry.rrule?.trim() ?? '';
+
+    // If no RRULE, this entry doesn't occur (invalid state)
+    // All entries should have an RRULE like "FREQ=WEEKLY;BYDAY=MO"
+    if (rrule.isEmpty) {
+      return false;
+    }
+
+    // Extract BYDAY value using regex to avoid false positives
+    // RRULE format: FREQ=WEEKLY;BYDAY=MO,WE,FR
+    final bydayRegex = RegExp(r'BYDAY=([^;]+)');
+    final match = bydayRegex.firstMatch(rrule);
+
+    if (match == null) {
+      return false; // No BYDAY found
+    }
+
+    final bydayValue = match.group(1) ?? '';
+
+    // Split by comma to get individual days and trim whitespace
+    final days = bydayValue.split(',').map((d) => d.trim()).toList();
+
+    // Check if today's day code is in the list
+    return days.contains(todayDayCode);
   }
 }
