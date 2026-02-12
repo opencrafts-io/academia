@@ -1,14 +1,18 @@
-import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-// padding: const EdgeInsets.symmetric(vertical: 12),
+import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/domain/domain.dart';
+import 'package:academia/features/institution/presentation/presentation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TicketVisibilitySelector extends StatefulWidget {
   final bool isPublic;
-  final List<String> selectedInstitutions;
+  final List<Institution> selectedInstitutions;
 
   final ValueChanged<bool?> onVisibilityChanged;
-  final void Function(String institution, bool selected) onInstitutionSelected;
+  final void Function(Institution institution, bool selected)
+  onInstitutionSelected;
 
   const TicketVisibilitySelector({
     super.key,
@@ -27,22 +31,38 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
   bool _isExpanded = false;
   String _search = "";
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
 
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _search = value;
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (_search.trim().isNotEmpty) {
+        context.read<InstitutionBloc>().add(
+          SearchInstitutionByNameEvent(_search.trim()),
+        );
+      }
+    });
+
+    setState(() {});
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    _search = "";
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Filtered list based on search
-    final filteredInstitutions = mockUniversityData
-        .where(
-          (inst) => inst.toLowerCase().contains(_search.toLowerCase().trim()),
-        )
-        .toList();
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -76,7 +96,6 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
             if (!widget.isPublic) ...[
               const SizedBox(height: 12),
 
-              // The expandable area with selected institutions summary
               InkWell(
                 onTap: () => setState(() => _isExpanded = !_isExpanded),
                 child: Container(
@@ -91,9 +110,8 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
                         child: widget.selectedInstitutions.isNotEmpty
                             ? Text(
                                 "${widget.selectedInstitutions.length} selected: "
-                                "${widget.selectedInstitutions.take(2).join(", ")}"
+                                "${widget.selectedInstitutions.take(2).map((i) => i.name).join(", ")}"
                                 "${widget.selectedInstitutions.length > 2 ? "..." : ""}",
-                                style: Theme.of(context).textTheme.bodyMedium,
                               )
                             : Text(
                                 "Select institutions",
@@ -117,7 +135,7 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
               if (_isExpanded) ...[
                 const SizedBox(height: 8),
 
-                // Search field with controller and clear button
+                /// SEARCH FIELD
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
@@ -128,35 +146,60 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
                     suffixIcon: _search.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => _search = "");
-                            },
+                            onPressed: _clearSearch,
                           )
                         : null,
                   ),
-                  onChanged: (val) {
-                    setState(() => _search = val);
-                  },
+                  onChanged: _onSearchChanged,
                 ),
 
                 const SizedBox(height: 8),
 
-                // List of institutions filtered by search
+                /// RESULTS FROM API
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 220),
-                  child: filteredInstitutions.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredInstitutions.length,
+                  child: BlocBuilder<InstitutionBloc, InstitutionState>(
+                    builder: (context, state) {
+                      if (state is InstitutionLoadingState) {
+                        return const Center(child: SpinningScallopIndicator());
+                      }
+
+                      if (state is InstitutionErrorState) {
+                        return Center(
+                          child: Text(
+                            state.error,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (state is InstitutionLoadedState) {
+                        if (state.institutions.isEmpty) {
+                          return const Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.search_off, size: 48),
+                                SizedBox(height: 8),
+                                Text("No results found"),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          itemCount: state.institutions.length,
                           itemBuilder: (context, index) {
-                            final inst = filteredInstitutions[index];
-                            final selected = widget.selectedInstitutions
-                                .contains(inst);
+                            final inst = state.institutions[index];
+                            final selected = widget.selectedInstitutions.any(
+                              (e) => e.institutionId == inst.institutionId,
+                            );
 
                             return CheckboxListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: Text(inst),
+                              title: Text(inst.name),
                               value: selected,
                               onChanged: (val) => widget.onInstitutionSelected(
                                 inst,
@@ -164,17 +207,24 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
                               ),
                             );
                           },
-                        )
-                      : Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.search_off, size: 48),
-                              SizedBox(height: 8),
-                              Text("No results found"),
-                            ],
-                          ),
+                        );
+                      }
+
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.school_outlined, size: 70),
+                            SizedBox(height: 10),
+                            Text(
+                              "Start by searching for an institution",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
                         ),
+                      );
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 8),

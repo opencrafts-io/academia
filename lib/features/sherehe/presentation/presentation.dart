@@ -47,6 +47,7 @@ export 'widgets/event_card_wrapper.dart';
 export 'widgets/event_card.dart';
 export 'widgets/ticket_card_widget.dart';
 export 'widgets/ticket_visibility_selector.dart';
+export 'widgets/ticket_editor_sheet.dart';
 export 'widgets/user_tile.dart';
 export 'utils/sherehe_utils.dart';
 export 'constants/sherehe_constants.dart';

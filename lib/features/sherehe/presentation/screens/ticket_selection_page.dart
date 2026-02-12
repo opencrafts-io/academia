@@ -1,10 +1,11 @@
+import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 class TicketSelectionPage extends StatefulWidget {
-  final List<Ticket> initialTickets;
-  final Function(List<Ticket> tickets) onContinue;
+  final List<TicketUI> initialTickets;
+  final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
 
@@ -27,14 +28,14 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   final _ticketPriceController = TextEditingController();
   final _ticketQtyController = TextEditingController();
 
-  late List<Ticket> _tickets;
+  late List<TicketUI> _tickets;
   bool _isPublic = true;
-  final Set<String> _selectedInstitutions = {};
+  final Set<Institution> _selectedInstitutions = {};
 
   @override
   void initState() {
     super.initState();
-    _tickets = List.from(widget.initialTickets);
+    _tickets = widget.initialTickets;
   }
 
   @override
@@ -46,15 +47,35 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   void _addTicket() {
+    if (!_isPublic && _selectedInstitutions.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Select at least one institution for restricted tickets",
+          ),
+        ),
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       final ticket = Ticket(
         ticketName: _ticketNameController.text.trim(),
         ticketPrice: int.tryParse(_ticketPriceController.text.trim()) ?? 0,
         ticketQuantity: int.tryParse(_ticketQtyController.text.trim()) ?? 0,
+        institutionIds: _isPublic
+            ? null
+            : _selectedInstitutions.map((e) => e.institutionId).toList(),
       );
 
       setState(() {
-        _tickets.add(ticket);
+        _tickets.add(
+          TicketUI(
+            ticket: ticket,
+            isPublic: _isPublic,
+            institutions: List.from(_selectedInstitutions),
+          ),
+        );
         _ticketNameController.clear();
         _ticketPriceController.clear();
         _ticketQtyController.clear();
@@ -73,78 +94,22 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   Future<void> _editTicketDialog(int index) async {
-    final ticket = _tickets[index];
+    final current = _tickets[index];
 
-    final nameController = TextEditingController(text: ticket.ticketName);
-    final priceController = TextEditingController(
-      text: ticket.ticketPrice.toString(),
-    );
-    final qtyController = TextEditingController(
-      text: ticket.ticketQuantity.toString(),
-    );
-
-    final result = await showDialog<bool>(
+    await showModalBottomSheet(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Edit Ticket"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (ticket.ticketPrice != 0) ...[
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: "Ticket Name"),
-                ),
-                TextField(
-                  controller: priceController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: "Price"),
-                ),
-              ],
-              TextField(
-                controller: qtyController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: "Quantity"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Cancel"),
-            ),
-            FilledButton(
-              onPressed: () {
-                final name = nameController.text.trim();
-                final price = int.tryParse(priceController.text.trim());
-                final qty = int.tryParse(qtyController.text.trim());
-
-                if (name.isEmpty || price == null || qty == null || qty <= 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Invalid ticket values")),
-                  );
-                  return;
-                }
-
-                Navigator.pop(context, true);
-              },
-              child: const Text("Save"),
-            ),
-          ],
+      isScrollControlled: true,
+      builder: (_) {
+        return TicketEditorSheet(
+          initial: current,
+          onSave: (updated) {
+            setState(() {
+              _tickets[index] = updated;
+            });
+          },
         );
       },
     );
-
-    if (result == true) {
-      setState(() {
-        _tickets[index] = Ticket(
-          ticketName: nameController.text.trim(),
-          ticketPrice: int.parse(priceController.text.trim()),
-          ticketQuantity: int.parse(qtyController.text.trim()),
-        );
-      });
-    }
   }
 
   Future<void> _showFreeTicketQuantityDialog() async {
@@ -193,7 +158,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketQuantity: result,
       );
 
-      widget.onContinue([freeTicket]);
+      widget.onContinue([
+        TicketUI(ticket: freeTicket, isPublic: true, institutions: []),
+      ]);
     }
   }
 
@@ -217,7 +184,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_tickets.any((t) => t.ticketPrice == 0)) ...[
+              if (_tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Text(
@@ -299,13 +266,18 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       if (_isPublic) _selectedInstitutions.clear();
                     });
                   },
-
                   onInstitutionSelected: (inst, selected) {
                     setState(() {
                       if (selected) {
-                        _selectedInstitutions.add(inst);
+                        if (!_selectedInstitutions.any(
+                          (e) => e.institutionId == inst.institutionId,
+                        )) {
+                          _selectedInstitutions.add(inst);
+                        }
                       } else {
-                        _selectedInstitutions.remove(inst);
+                        _selectedInstitutions.removeWhere(
+                          (e) => e.institutionId == inst.institutionId,
+                        );
                       }
                     });
                   },
@@ -348,10 +320,10 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 ),
               ] else
                 Column(
-                  children: _tickets.map((t) {
-                    final index = _tickets.indexOf(t);
-                    final isPublic = index == 0 ? _isPublic : true;
-                    final institutions = _selectedInstitutions.toList();
+                  children: _tickets.map((ui) {
+                    final t = ui.ticket;
+                    final isPublic = ui.isPublic;
+                    final institutions = ui.institutions;
 
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -373,13 +345,14 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.edit),
-                                      onPressed: () => _editTicketDialog(index),
+                                      onPressed: () => _editTicketDialog(
+                                        _tickets.indexOf(ui),
+                                      ),
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.delete),
-                                      onPressed: () => setState(
-                                        () => _tickets.removeAt(index),
-                                      ),
+                                      onPressed: () =>
+                                          setState(() => _tickets.remove(ui)),
                                     ),
                                   ],
                                 ),
@@ -437,7 +410,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                                           ),
                                         ),
                                         child: Text(
-                                          inst,
+                                          inst.name,
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Theme.of(

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:academia/features/sherehe/domain/entities/ticket.dart';
+import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -42,12 +42,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   File? _selectedBannerImage;
   File? _selectedCardImage;
   List<String> _selectedGenres = [];
-  List<Ticket> _tickets = [];
+  List<TicketUI> _tickets = [];
   String? organizerId;
   String? organizerName;
   late ConfettiController _confettiController;
   bool get _isFreeEvent {
-    return _tickets.length == 1 && _tickets.first.ticketPrice == 0;
+    return _tickets.length == 1 && _tickets.first.ticket.ticketPrice == 0;
   }
 
   @override
@@ -378,7 +378,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventPosterImage: _selectedPosterImage,
         eventBannerImage: _selectedBannerImage,
         eventGenre: _selectedGenres,
-        tickets: _tickets,
+        tickets: _tickets.map((ticketUI) => ticketUI.ticket).toList(),
         selectedPaymentType: _selectedPaymentType,
         paybillNumber: _paybillNumberController.text.trim().isEmpty
             ? null

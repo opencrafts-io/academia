@@ -5546,6 +5546,15 @@ class $TicketTableTable extends TicketTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  institutionIds = GeneratedColumn<String>(
+    'institution_ids',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($TicketTableTable.$converterinstitutionIdsn);
   static const VerificationMeta _deleteTagMeta = const VerificationMeta(
     'deleteTag',
   );
@@ -5589,6 +5598,7 @@ class $TicketTableTable extends TicketTable
     ticketName,
     ticketPrice,
     ticketQuantity,
+    institutionIds,
     deleteTag,
     createdAt,
     updatedAt,
@@ -5689,6 +5699,12 @@ class $TicketTableTable extends TicketTable
         DriftSqlType.int,
         data['${effectivePrefix}ticket_quantity'],
       ),
+      institutionIds: $TicketTableTable.$converterinstitutionIdsn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}institution_ids'],
+        ),
+      ),
       deleteTag: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}delete_tag'],
@@ -5708,6 +5724,11 @@ class $TicketTableTable extends TicketTable
   $TicketTableTable createAlias(String alias) {
     return $TicketTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<dynamic>, String> $converterinstitutionIds =
+      JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterinstitutionIdsn =
+      NullAwareTypeConverter.wrap($converterinstitutionIds);
 }
 
 class TicketData extends DataClass implements Insertable<TicketData> {
@@ -5716,6 +5737,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
   final String ticketName;
   final int ticketPrice;
   final int? ticketQuantity;
+  final List<dynamic>? institutionIds;
   final bool? deleteTag;
   final String? createdAt;
   final String? updatedAt;
@@ -5725,6 +5747,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     required this.ticketName,
     required this.ticketPrice,
     this.ticketQuantity,
+    this.institutionIds,
     this.deleteTag,
     this.createdAt,
     this.updatedAt,
@@ -5742,6 +5765,11 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     map['ticket_price'] = Variable<int>(ticketPrice);
     if (!nullToAbsent || ticketQuantity != null) {
       map['ticket_quantity'] = Variable<int>(ticketQuantity);
+    }
+    if (!nullToAbsent || institutionIds != null) {
+      map['institution_ids'] = Variable<String>(
+        $TicketTableTable.$converterinstitutionIdsn.toSql(institutionIds),
+      );
     }
     if (!nullToAbsent || deleteTag != null) {
       map['delete_tag'] = Variable<bool>(deleteTag);
@@ -5766,6 +5794,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketQuantity: ticketQuantity == null && nullToAbsent
           ? const Value.absent()
           : Value(ticketQuantity),
+      institutionIds: institutionIds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institutionIds),
       deleteTag: deleteTag == null && nullToAbsent
           ? const Value.absent()
           : Value(deleteTag),
@@ -5789,6 +5820,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketName: serializer.fromJson<String>(json['ticket_name']),
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
       ticketQuantity: serializer.fromJson<int?>(json['ticket_quantity']),
+      institutionIds: serializer.fromJson<List<dynamic>?>(
+        json['institution_ids'],
+      ),
       deleteTag: serializer.fromJson<bool?>(json['delete_tag']),
       createdAt: serializer.fromJson<String?>(json['created_at']),
       updatedAt: serializer.fromJson<String?>(json['updatedAt']),
@@ -5803,6 +5837,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       'ticket_name': serializer.toJson<String>(ticketName),
       'ticket_price': serializer.toJson<int>(ticketPrice),
       'ticket_quantity': serializer.toJson<int?>(ticketQuantity),
+      'institution_ids': serializer.toJson<List<dynamic>?>(institutionIds),
       'delete_tag': serializer.toJson<bool?>(deleteTag),
       'created_at': serializer.toJson<String?>(createdAt),
       'updatedAt': serializer.toJson<String?>(updatedAt),
@@ -5815,6 +5850,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     String? ticketName,
     int? ticketPrice,
     Value<int?> ticketQuantity = const Value.absent(),
+    Value<List<dynamic>?> institutionIds = const Value.absent(),
     Value<bool?> deleteTag = const Value.absent(),
     Value<String?> createdAt = const Value.absent(),
     Value<String?> updatedAt = const Value.absent(),
@@ -5826,6 +5862,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketQuantity: ticketQuantity.present
         ? ticketQuantity.value
         : this.ticketQuantity,
+    institutionIds: institutionIds.present
+        ? institutionIds.value
+        : this.institutionIds,
     deleteTag: deleteTag.present ? deleteTag.value : this.deleteTag,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -5843,6 +5882,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketQuantity: data.ticketQuantity.present
           ? data.ticketQuantity.value
           : this.ticketQuantity,
+      institutionIds: data.institutionIds.present
+          ? data.institutionIds.value
+          : this.institutionIds,
       deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -5857,6 +5899,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketQuantity: $ticketQuantity, ')
+          ..write('institutionIds: $institutionIds, ')
           ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -5871,6 +5914,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketName,
     ticketPrice,
     ticketQuantity,
+    institutionIds,
     deleteTag,
     createdAt,
     updatedAt,
@@ -5884,6 +5928,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           other.ticketName == this.ticketName &&
           other.ticketPrice == this.ticketPrice &&
           other.ticketQuantity == this.ticketQuantity &&
+          other.institutionIds == this.institutionIds &&
           other.deleteTag == this.deleteTag &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -5895,6 +5940,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   final Value<String> ticketName;
   final Value<int> ticketPrice;
   final Value<int?> ticketQuantity;
+  final Value<List<dynamic>?> institutionIds;
   final Value<bool?> deleteTag;
   final Value<String?> createdAt;
   final Value<String?> updatedAt;
@@ -5905,6 +5951,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     this.ticketName = const Value.absent(),
     this.ticketPrice = const Value.absent(),
     this.ticketQuantity = const Value.absent(),
+    this.institutionIds = const Value.absent(),
     this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -5916,6 +5963,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     required String ticketName,
     required int ticketPrice,
     this.ticketQuantity = const Value.absent(),
+    this.institutionIds = const Value.absent(),
     this.deleteTag = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -5928,6 +5976,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Expression<String>? ticketName,
     Expression<int>? ticketPrice,
     Expression<int>? ticketQuantity,
+    Expression<String>? institutionIds,
     Expression<bool>? deleteTag,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
@@ -5939,6 +5988,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       if (ticketName != null) 'ticket_name': ticketName,
       if (ticketPrice != null) 'ticket_price': ticketPrice,
       if (ticketQuantity != null) 'ticket_quantity': ticketQuantity,
+      if (institutionIds != null) 'institution_ids': institutionIds,
       if (deleteTag != null) 'delete_tag': deleteTag,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -5952,6 +6002,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Value<String>? ticketName,
     Value<int>? ticketPrice,
     Value<int?>? ticketQuantity,
+    Value<List<dynamic>?>? institutionIds,
     Value<bool?>? deleteTag,
     Value<String?>? createdAt,
     Value<String?>? updatedAt,
@@ -5963,6 +6014,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       ticketName: ticketName ?? this.ticketName,
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+      institutionIds: institutionIds ?? this.institutionIds,
       deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -5988,6 +6040,11 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     if (ticketQuantity.present) {
       map['ticket_quantity'] = Variable<int>(ticketQuantity.value);
     }
+    if (institutionIds.present) {
+      map['institution_ids'] = Variable<String>(
+        $TicketTableTable.$converterinstitutionIdsn.toSql(institutionIds.value),
+      );
+    }
     if (deleteTag.present) {
       map['delete_tag'] = Variable<bool>(deleteTag.value);
     }
@@ -6011,6 +6068,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketQuantity: $ticketQuantity, ')
+          ..write('institutionIds: $institutionIds, ')
           ..write('deleteTag: $deleteTag, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -23011,6 +23069,7 @@ typedef $$TicketTableTableCreateCompanionBuilder =
       required String ticketName,
       required int ticketPrice,
       Value<int?> ticketQuantity,
+      Value<List<dynamic>?> institutionIds,
       Value<bool?> deleteTag,
       Value<String?> createdAt,
       Value<String?> updatedAt,
@@ -23023,6 +23082,7 @@ typedef $$TicketTableTableUpdateCompanionBuilder =
       Value<String> ticketName,
       Value<int> ticketPrice,
       Value<int?> ticketQuantity,
+      Value<List<dynamic>?> institutionIds,
       Value<bool?> deleteTag,
       Value<String?> createdAt,
       Value<String?> updatedAt,
@@ -23061,6 +23121,12 @@ class $$TicketTableTableFilterComposer
   ColumnFilters<int> get ticketQuantity => $composableBuilder(
     column: $table.ticketQuantity,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get institutionIds => $composableBuilder(
+    column: $table.institutionIds,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<bool> get deleteTag => $composableBuilder(
@@ -23113,6 +23179,11 @@ class $$TicketTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get institutionIds => $composableBuilder(
+    column: $table.institutionIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get deleteTag => $composableBuilder(
     column: $table.deleteTag,
     builder: (column) => ColumnOrderings(column),
@@ -23158,6 +23229,12 @@ class $$TicketTableTableAnnotationComposer
     column: $table.ticketQuantity,
     builder: (column) => column,
   );
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get institutionIds =>
+      $composableBuilder(
+        column: $table.institutionIds,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<bool> get deleteTag =>
       $composableBuilder(column: $table.deleteTag, builder: (column) => column);
@@ -23205,6 +23282,7 @@ class $$TicketTableTableTableManager
                 Value<String> ticketName = const Value.absent(),
                 Value<int> ticketPrice = const Value.absent(),
                 Value<int?> ticketQuantity = const Value.absent(),
+                Value<List<dynamic>?> institutionIds = const Value.absent(),
                 Value<bool?> deleteTag = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
@@ -23215,6 +23293,7 @@ class $$TicketTableTableTableManager
                 ticketName: ticketName,
                 ticketPrice: ticketPrice,
                 ticketQuantity: ticketQuantity,
+                institutionIds: institutionIds,
                 deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -23227,6 +23306,7 @@ class $$TicketTableTableTableManager
                 required String ticketName,
                 required int ticketPrice,
                 Value<int?> ticketQuantity = const Value.absent(),
+                Value<List<dynamic>?> institutionIds = const Value.absent(),
                 Value<bool?> deleteTag = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
@@ -23237,6 +23317,7 @@ class $$TicketTableTableTableManager
                 ticketName: ticketName,
                 ticketPrice: ticketPrice,
                 ticketQuantity: ticketQuantity,
+                institutionIds: institutionIds,
                 deleteTag: deleteTag,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
