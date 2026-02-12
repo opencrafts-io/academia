@@ -430,7 +430,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                   height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
                   child: FilledButton(
                     onPressed: () {
-                      TicketFlowRoute(eventId: state.event.id).push(context);
+                      TicketFlowRoute(
+                        eventId: state.event.id,
+                        userId: userId ?? '',
+                      ).push(context);
                     },
                     child: const Text("I'm Going"),
                   ),

@@ -2,15 +2,19 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TicketFlowPage extends StatefulWidget {
   final String eventId;
+  final String userId;
 
-  const TicketFlowPage({super.key, required this.eventId});
+  const TicketFlowPage({
+    super.key,
+    required this.eventId,
+    required this.userId,
+  });
 
   @override
   State<TicketFlowPage> createState() => _TicketFlowPageState();
@@ -28,7 +32,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
   void initState() {
     super.initState();
     context.read<UserTicketSelectionBloc>().add(
-      FetchTicketsByEventId(eventId: widget.eventId),
+      FetchTicketsByEventId(eventId: widget.eventId, accountId: widget.userId),
     );
   }
 

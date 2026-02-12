@@ -415,14 +415,17 @@ mixin _$ShereheDetailsRoute on GoRouteData {
 }
 
 mixin _$TicketFlowRoute on GoRouteData {
-  static TicketFlowRoute _fromState(GoRouterState state) =>
-      TicketFlowRoute(eventId: state.pathParameters['eventId']!);
+  static TicketFlowRoute _fromState(GoRouterState state) => TicketFlowRoute(
+    eventId: state.pathParameters['eventId']!,
+    userId: state.uri.queryParameters['user-id']!,
+  );
 
   TicketFlowRoute get _self => this as TicketFlowRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/ticket-flow',
+    queryParams: {'user-id': _self.userId},
   );
 
   @override

@@ -215,6 +215,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
         },
       });
 
+      _logger.i("Form data is: ${formData.fields}");
+
       // Send request
       final response = await dioClient.dio.post(
         "/$servicePrefix/event/",

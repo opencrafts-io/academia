@@ -134,7 +134,12 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
-  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
+  sl.registerFactory(
+    () => UserTicketSelectionBloc(
+      getTicketsByEventId: sl(),
+      getAllCachedInstitutions: sl(),
+    ),
+  );
   sl.registerFactory(
     () => TicketPaymentBloc(purchaseTicket: sl(), confirmPayment: sl()),
   );

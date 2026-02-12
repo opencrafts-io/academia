@@ -17,8 +17,8 @@ class TicketTable extends Table {
   @JsonKey('ticket_quantity')
   IntColumn get ticketQuantity => integer().nullable()();
 
-  @JsonKey('institution_ids')
-  TextColumn get institutionIds => text().map(JsonListConverter()).nullable()();
+  @JsonKey('ticket_visibility')
+  TextColumn get ticketVisibility => text().map(JsonListConverter()).nullable()();
 
   @JsonKey('delete_tag')
   BoolColumn get deleteTag => boolean().nullable()();

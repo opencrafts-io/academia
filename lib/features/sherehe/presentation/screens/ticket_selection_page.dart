@@ -156,6 +156,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: "Free Ticket",
         ticketPrice: 0,
         ticketQuantity: result,
+        institutionIds: [],
       );
 
       widget.onContinue([

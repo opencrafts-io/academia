@@ -278,12 +278,13 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
 
 class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
   final String eventId;
+  final String userId;
 
-  const TicketFlowRoute({required this.eventId});
+  const TicketFlowRoute({required this.eventId, required this.userId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return TicketFlowPage(eventId: eventId);
+    return TicketFlowPage(eventId: eventId, userId: userId);
   }
 }
 
