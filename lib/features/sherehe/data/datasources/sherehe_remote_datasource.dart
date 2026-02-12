@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:academia/config/config.dart';
 import 'package:academia/core/network/network.dart';
@@ -174,11 +175,13 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'event_date': eventDate,
         'organizer_id': organizerId,
         'event_genre': eventGenre,
-        'tickets': tickets.map((ticket) {
-          final json = ticket.toJson();
-          json.removeWhere((key, value) => value == null || value == "");
-          return json;
-        }).toList(),
+        'tickets': jsonEncode(
+          tickets.map((ticket) {
+            final json = ticket.toJson();
+            json.removeWhere((k, v) => v == null || v == "");
+            return json;
+          }).toList(),
+        ),
 
         if (eventCardImage != null)
           'event_card_image': await MultipartFile.fromFile(
@@ -214,17 +217,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
             'send_money_phone': sendMoneyPhoneNumber,
         },
       });
-
-      _logger.i("Form data is: ${formData.fields}");
-
-      // Send request
       final response = await dioClient.dio.post(
         "/$servicePrefix/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
 
-      // Handle success
       if (response.statusCode == 200 || response.statusCode == 201) {
         return right(EventData.fromJson(response.data['data']['event']));
       } else {

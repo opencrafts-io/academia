@@ -34,9 +34,6 @@ class UserTicketSelectionBloc
         final userInstitutionIds = userInstitutions
             .map((e) => e.institutionId)
             .toSet();
-
-        print("Institutions: $userInstitutionIds");
-
         ticketsResult.fold(
           (failure) => emit(UserTicketError(failure.message)),
           (tickets) {
