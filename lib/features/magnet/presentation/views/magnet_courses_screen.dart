@@ -1,4 +1,5 @@
 import 'package:academia/features/magnet/magnet.dart';
+import 'package:academia/gen/assets.gen.dart';
 import './widget/magnet_course_card.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -76,8 +77,8 @@ class _MagnetCoursesScreenState extends State<MagnetCoursesScreen> {
                             children: [
                               Lottie.asset(
                                 state is MagnetLoadingState
-                                    ? "assets/lotties/thinking-learning.json"
-                                    : "assets/lotties/digital-marketing.json",
+                                    ? Assets.lotties.thinkingLearning
+                                    : Assets.lotties.digitalMarketing,
                                 height: 240,
                               ),
                               Text(
@@ -102,7 +103,7 @@ class _MagnetCoursesScreenState extends State<MagnetCoursesScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Lottie.asset(
-                                      "assets/lotties/thinking-learning.json",
+                                      Assets.lotties.thinkingLearning,
                                       height: 240,
                                     ),
                                     Text(

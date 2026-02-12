@@ -1,4 +1,5 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/features/chirp/interactions/presentation/views/blocked_items_page.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -157,6 +158,14 @@ class AddPostRoute extends GoRouteData with _$AddPostRoute {
   Widget build(BuildContext context, GoRouterState state) {
     final community = state.extra as Community?;
     return AddPostPage(preselectedCommunity: community);
+  }
+}
+
+@TypedGoRoute<BlockedItemsRoute>(path: "/blocked-items")
+class BlockedItemsRoute extends GoRouteData with _$BlockedItemsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const BlockedItemsPage();
   }
 }
 

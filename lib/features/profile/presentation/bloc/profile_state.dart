@@ -33,3 +33,21 @@ class ProfileErrorState extends ProfileState {
   @override
   List<Object?> get props => [message];
 }
+
+class AccountDeletionRequestedState extends ProfileState {
+  final String message;
+
+  AccountDeletionRequestedState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class AccountRecoveryRequestedState extends ProfileState {
+  final String message;
+
+  AccountRecoveryRequestedState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

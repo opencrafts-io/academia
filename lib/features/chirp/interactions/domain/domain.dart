@@ -1,0 +1,11 @@
+export 'usecases/block_community_usecase.dart';
+export 'usecases/block_user_usecase.dart';
+export 'usecases/check_block_status.dart';
+export 'usecases/get_blocks_usecase.dart';
+export 'usecases/get_reports_usecase.dart';
+export 'usecases/report_content_usecase.dart';
+export 'usecases/unblock_usecase.dart';
+export 'repository/interactions_repository.dart';
+export 'entities/block.dart';
+export 'entities/report.dart';
+export 'entities/block_status.dart';

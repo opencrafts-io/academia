@@ -1,4 +1,5 @@
 import 'package:academia/features/streaks/streaks.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,8 @@ class AchievementDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<AchievementDetailBloc>()..add(LoadAchievementDetail(id)),
+      create: (context) =>
+          sl<AchievementDetailBloc>()..add(LoadAchievementDetail(id)),
       child: const AchievementDetailView(),
     );
   }
@@ -41,10 +43,7 @@ class AchievementDetailView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/icons/locked-badge.png",
-                      height: 200,
-                    ),
+                    Assets.icons.lockedBadge.image(height: 200),
                     const SizedBox(height: 16),
                     Text(
                       achievement.title,
@@ -101,7 +100,7 @@ class AchievementDetailView extends StatelessWidget {
                             },
                           ),
                         ),
-                      )
+                      ),
                   ],
                 ),
               ),

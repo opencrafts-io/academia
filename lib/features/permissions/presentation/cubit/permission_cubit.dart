@@ -2,12 +2,14 @@ import 'package:academia/features/permissions/permissions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 
 part 'permission_state.dart';
 
 class PermissionCubit extends Cubit<PermissionState> {
   final RequestPermissionUsecase requestPermissionUsecase;
   final CheckPermissionUsecase checkPermissionUsecase;
+  final Posthog posthog = Posthog();
   PermissionCubit({
     required this.requestPermissionUsecase,
     required this.checkPermissionUsecase,
@@ -18,6 +20,10 @@ class PermissionCubit extends Cubit<PermissionState> {
     return result.fold(
       (error) => throw "Permission returned left this shouldn't happen",
       (status) {
+        posthog.capture(
+          eventName: "permission_request",
+          properties: {"permission": permission.name, "status": status.name},
+        );
         _emitStatus(status);
       },
     );

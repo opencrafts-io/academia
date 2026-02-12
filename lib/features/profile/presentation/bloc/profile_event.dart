@@ -15,3 +15,7 @@ class UpdateUserPhoneEvent extends ProfileEvent {
   final UserProfile profile;
   UpdateUserPhoneEvent({required this.profile});
 }
+
+class RequestAccountDeletionEvent extends ProfileEvent {}
+
+class RequestAccountRecoveryEvent extends ProfileEvent {}

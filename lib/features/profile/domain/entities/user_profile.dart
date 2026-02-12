@@ -14,6 +14,7 @@ class UserProfile extends Equatable {
   final String? phone;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime? deletedAt;
 
   const UserProfile({
     required this.id,
@@ -29,6 +30,7 @@ class UserProfile extends Equatable {
     required this.nationalID,
     required this.vibePoints,
     this.avatarUrl,
+    this.deletedAt,
   });
 
   UserProfile copyWith({
@@ -45,6 +47,7 @@ class UserProfile extends Equatable {
     String? phone,
     DateTime? createdAt,
     DateTime? updatedAt,
+    DateTime? deletedAt,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -60,6 +63,7 @@ class UserProfile extends Equatable {
       phone: phone ?? this.phone,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -78,6 +82,7 @@ class UserProfile extends Equatable {
     phone,
     createdAt,
     updatedAt,
+    deletedAt,
   ];
 
   @override
