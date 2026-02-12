@@ -42,6 +42,37 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
         }
 
         if (state is UserTicketLoaded) {
+          if (state.tickets.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Tickets are reserved for specific institutions",
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "You are not eligible to purchase tickets for this event.",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           final isFreeEvent =
               state.tickets.length == 1 && state.tickets.first.ticketPrice == 0;
 
