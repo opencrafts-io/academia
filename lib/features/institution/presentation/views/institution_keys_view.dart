@@ -18,40 +18,42 @@ class _InstitutionKeysViewState extends State<InstitutionKeysView> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: context.read<ScrappingCommandBloc>(),
-      child: SheetContentScaffold(
-        topBar: AppBar(centerTitle: true, title: Text("Keys management")),
-        body: SafeArea(
-          minimum: EdgeInsets.all(16),
-          child: BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
-            builder: (context, state) {
-              if (state is ScrappingCommandLoading) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    LoadingIndicatorM3E(),
-                    SizedBox(height: 12),
-                    Text("Loading institution information"),
-                  ],
-                );
-              } else if (state is ScrappingCommandError) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Holy molly ..."),
-                    SizedBox(height: 12),
-                    Text(state.message),
-                  ],
-                );
-              } else if (state is ScrappingCommandInitial) {
-                return SizedBox.shrink();
-              }
+      child: Scaffold(
+        body: SheetContentScaffold(
+          topBar: AppBar(centerTitle: true, title: Text("Keys management")),
+          body: SafeArea(
+            minimum: EdgeInsets.all(16),
+            child: BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
+              builder: (context, state) {
+                if (state is ScrappingCommandLoading) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      LoadingIndicatorM3E(),
+                      SizedBox(height: 12),
+                      Text("Loading institution information"),
+                    ],
+                  );
+                } else if (state is ScrappingCommandError) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Holy molly ..."),
+                      SizedBox(height: 12),
+                      Text(state.message),
+                    ],
+                  );
+                } else if (state is ScrappingCommandInitial) {
+                  return SizedBox.shrink();
+                }
 
-              return (state as ScrappingCommandLoaded).command == null
-                  ? InstitutionNotSupportedView()
-                  : ScrappingCommandForm(command: state.command!);
-            },
+                return (state as ScrappingCommandLoaded).command == null
+                    ? InstitutionNotSupportedView()
+                    : ScrappingCommandForm(command: state.command!);
+              },
+            ),
           ),
         ),
       ),
@@ -71,7 +73,6 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, TextEditingController> _controllers = {};
   bool _hasUnsavedChanges = false;
-  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -271,7 +272,7 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
       // Reset unsaved changes flag
       setState(() => _hasUnsavedChanges = false);
 
-      _scaffoldMessengerKey.currentState?.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text('Keys saved successfully'),
