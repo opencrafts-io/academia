@@ -19,6 +19,9 @@ class MagnetProcessing extends MagnetState {
   final ScrappingCommand command;
   final InstructionProgressEvent? progress;
   const MagnetProcessing({required this.command, this.progress});
+
+  @override
+  List<Object?> get props => [command, progress];
 }
 
 class MagnetSuccess extends MagnetState {

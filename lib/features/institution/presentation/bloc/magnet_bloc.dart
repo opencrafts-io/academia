@@ -61,17 +61,22 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
 
     try {
       final callback = InstructionCallbackManager();
-      final magnetResult = _magnet!
-          .execute(cmd, context: event.context, callbackManager: callback)
-          .whenComplete(() => callback.dispose());
+      final magnetFuture = _magnet!.execute(
+        cmd,
+        context: event.context,
+        callbackManager: callback,
+      );
 
-      await emit.forEach(
+      await emit.forEach<InstructionProgressEvent>(
         callback.progressStream,
-        onData: (data) => MagnetProcessing(command: cmd, progress: data),
+        onData: (data) {
+          return MagnetProcessing(command: cmd, progress: data);
+        },
         onError: (error, stackTrace) => MagnetError("Stream error: $error"),
       );
 
-      final result = await magnetResult;
+      final result = await magnetFuture;
+      callback.dispose();
 
       if (result.success) {
         // Logger().i(result.data);
@@ -104,7 +109,7 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
               ),
             );
 
-            if(entryResult.isLeft()){
+            if (entryResult.isLeft()) {
               Logger().e(
                 "Failed to save timetable entries for course ${courseWithSchedule.course.courseName} skipping",
                 error: (entryResult as Left).value,
@@ -167,7 +172,9 @@ List<InstitutionFeeTransaction> _parseRawFeesTransactions(
       ),
       debit: double.tryParse(map['debit'].toString().replaceAll(',', '')),
       credit: double.tryParse(map['credit'].toString().replaceAll(',', '')),
-      postingDate: DateTime.tryParse(map['posting_date'] ?? map['date']),
+      postingDate:
+          DateTime.tryParse(map['posting_date'] ?? map['date'] ?? '') ??
+          DateTime.now(),
       description: map['description'],
       currency: map['currency'],
     );
