@@ -158,6 +158,7 @@ class _AcademiaState extends State<Academia> {
                   NotificationChannelConfig.reminders,
                   NotificationChannelConfig.alerts,
                   NotificationChannelConfig.updates,
+                  NotificationChannelConfig.courseAlerts,
                 ],
               ),
             )

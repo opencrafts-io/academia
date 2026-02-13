@@ -1,4 +1,5 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/features/course/course.dart';
@@ -54,7 +55,20 @@ class _CourseListPageState extends State<CourseListPage> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final course = courses[index];
-                        return CourseCard(course: course);
+                        return CourseCard(
+                          course: course,
+                          onTap: () async {
+                            await ViewCourseRoute(
+                              courseId: course.id!,
+                            ).push(context);
+                            if (context.mounted) {
+                              context.read<CourseCubit>().watchCourses();
+                              context.read<TimetableEntryBloc>().add(
+                                WatchAllTimetableEntriesEvent(),
+                              );
+                            }
+                          },
+                        );
                       }, childCount: courses.length),
                     ),
                   );

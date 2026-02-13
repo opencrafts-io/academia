@@ -13,24 +13,28 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
-Future<void> init(FlavorConfig flavor) async {
-  final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: kDebugMode,
-    showSummary: false,
-  );
 
-  sl.registerSingleton<DioRequestInspector>(inspector);
+Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
+  if (!isBackground) {
+    final DioRequestInspector inspector = DioRequestInspector(
+      isInspectorEnabled: kDebugMode,
+      showSummary: false,
+    );
+    sl.registerSingleton<DioRequestInspector>(inspector);
+  }
 
   // Register the flavor
   sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
-  final AdService adService = AdService();
-  await adService.initialize();
-  adService.loadInterstitialAd();
+  if (!isBackground) {
+    final AdService adService = AdService();
+    await adService.initialize();
+    adService.loadInterstitialAd();
 
-  sl.registerSingleton<AdService>(adService);
+    sl.registerSingleton<AdService>(adService);
+  }
 
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
@@ -40,7 +44,7 @@ Future<void> init(FlavorConfig flavor) async {
     () => DioClient(
       flavor,
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
-      requestInspector: sl<DioRequestInspector>(),
+      requestInspector: isBackground ? null : sl<DioRequestInspector>(),
     ),
   );
 
@@ -380,8 +384,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /*************************************************************************
-                                    CHIRP
-  *************************************************************************/
+      CHIRP
+   *************************************************************************/
   //                        --- Chirp Users ---
   sl.registerFactory<ChirpUserLocalDataSource>(
     () => ChirpUserLocalDataSource(localDB: sl()),
@@ -554,8 +558,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /*************************************************************************
-                              // NOTIFICATIONS
-  *************************************************************************/
+      // NOTIFICATIONS
+   *************************************************************************/
   sl.registerFactory<NotificationRemoteDatasource>(
     () => NotificationRemoteDatasource(),
   );
@@ -636,52 +640,56 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // Firebase Remote Config
-  sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
-  sl.registerFactory<RemoteConfigRemoteDatasource>(
-    () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
-  );
-  sl.registerFactory<RemoteConfigRepository>(
-    () => RemoteConfigRepositoryImpl(
-      remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-    ),
-  );
+  if(!isBackground) {
+    sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
+    sl.registerFactory<RemoteConfigRemoteDatasource>(
+          () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
+    );
+    sl.registerFactory<RemoteConfigRepository>(
+          () =>
+          RemoteConfigRepositoryImpl(
+            remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
+          ),
+    );
 
-  sl.registerFactory<InitializeRemoteConfigUsecase>(
-    () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<FetchAndActivateUsecase>(
-    () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetStringUsecase>(
-    () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetBoolUsecase>(
-    () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetIntUsecase>(
-    () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetDoubleUsecase>(
-    () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetJsonUsecase>(
-    () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetAllParametersUsecase>(
-    () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<RemoteConfigBloc>(
-    () => RemoteConfigBloc(
-      initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
-      fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
-      getStringUsecase: sl.get<GetStringUsecase>(),
-      getBoolUsecase: sl.get<GetBoolUsecase>(),
-      getIntUsecase: sl.get<GetIntUsecase>(),
-      getDoubleUsecase: sl.get<GetDoubleUsecase>(),
-      getJsonUsecase: sl.get<GetJsonUsecase>(),
-      getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-    ),
-  );
+    sl.registerFactory<InitializeRemoteConfigUsecase>(
+          () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<FetchAndActivateUsecase>(
+          () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetStringUsecase>(
+          () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetBoolUsecase>(
+          () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetIntUsecase>(
+          () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetDoubleUsecase>(
+          () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetJsonUsecase>(
+          () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetAllParametersUsecase>(
+          () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<RemoteConfigBloc>(
+          () =>
+          RemoteConfigBloc(
+            initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
+            fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
+            getStringUsecase: sl.get<GetStringUsecase>(),
+            getBoolUsecase: sl.get<GetBoolUsecase>(),
+            getIntUsecase: sl.get<GetIntUsecase>(),
+            getDoubleUsecase: sl.get<GetDoubleUsecase>(),
+            getJsonUsecase: sl.get<GetJsonUsecase>(),
+            getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
+          ),
+    );
+  }
 
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(
@@ -939,8 +947,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /***************************************************************************************
-  *                                     SEMESTER
-  ***************************************************************************************/
+   *                                     SEMESTER
+   ***************************************************************************************/
   sl.registerFactory<SemesterLocalDatasource>(
     () => SemesterLocalDatasourceImpl(appDataBase: sl()),
   );
@@ -981,8 +989,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /**********************************************************************
-  *                               Courses
-  **********************************************************************/
+   *                               Courses
+   **********************************************************************/
 
   sl.registerFactory<CourseLocalDatasource>(
     () => CourseLocalDatasourceImpl(appDataBase: sl()),
@@ -1013,8 +1021,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /***************************************************************
-  *                       Timetable
-  ***************************************************************/
+   *                       Timetable
+   ***************************************************************/
 
   sl.registerFactory<TimetableEntryLocalDatasource>(
     () => TimetableEntryLocalDatasourceImpl(appDataBase: sl()),
@@ -1138,8 +1146,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /**********************************************************************
-  *                               LEADERBOARD
-  **********************************************************************/
+   *                               LEADERBOARD
+   **********************************************************************/
   sl.registerFactory<LeaderboardLocalDataSource>(
     () => LeaderboardLocalDataSource(localDB: sl()),
   );
@@ -1159,8 +1167,8 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
 
   /**********************************************************************
-  *                               STREAKS
-  **********************************************************************/
+   *                               STREAKS
+   **********************************************************************/
   sl.registerFactory<AchievementLocalDatasource>(
     () => AchievementLocalDatasource(localDB: sl<AppDataBase>()),
   );

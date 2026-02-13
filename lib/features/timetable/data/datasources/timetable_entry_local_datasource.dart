@@ -2,6 +2,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 /// An abstract contract for interacting with the local SQLite database via Drift
 /// for TimetableEntry-related data operations.
@@ -87,6 +88,10 @@ abstract class TimetableEntryLocalDatasource {
   Future<Either<Failure, Unit>> createOrUpdateTimetableEntries({
     required List<TimetableEntryCompanion> entries,
   });
+
+  // Watches all courses that are due today
+  Stream<Either<Failure, List<TimetableEntryData>>>
+  watchTodayTimetableEntries();
 }
 
 class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
@@ -300,5 +305,94 @@ class TimetableEntryLocalDatasourceImpl extends TimetableEntryLocalDatasource {
       return Left(CacheFailure(message: "Permanent deletion failed", error: e));
     }
   }
-}
 
+  @override
+  Stream<Either<Failure, List<TimetableEntryData>>>
+  watchTodayTimetableEntries() {
+    final now = DateTime.now();
+
+    // Map Dart weekday (1=Monday...7=Sunday) to RRULE day codes
+    final weekdayMap = {
+      1: 'MO',
+      2: 'TU',
+      3: 'WE',
+      4: 'TH',
+      5: 'FR',
+      6: 'SA',
+      7: 'SU',
+    };
+    final todayDayCode = weekdayMap[now.weekday]!;
+
+    return (appDataBase.select(appDataBase.timetableEntry)..where((t) {
+          return t.isDeleted.equals(false);
+        }))
+        .watch()
+        .map<Either<Failure, List<TimetableEntryData>>>((entries) {
+          try {
+            final todayEntries = <TimetableEntryData>[];
+
+            for (final entry in entries) {
+              // Check if entry occurs today
+              if (_occursToday(entry, todayDayCode)) {
+                todayEntries.add(entry);
+              }
+            }
+
+            // Sort by start time
+            todayEntries.sort((a, b) {
+              final aTime = TimeOfDay.fromDateTime(a.startDate);
+              final bTime = TimeOfDay.fromDateTime(b.startDate);
+
+              final aMinutes = aTime.hour * 60 + aTime.minute;
+              final bMinutes = bTime.hour * 60 + bTime.minute;
+
+              return aMinutes.compareTo(bMinutes);
+            });
+
+            return Right(todayEntries);
+          } catch (error) {
+            return Left(
+              CacheFailure(
+                error: error,
+                message: "Failed to process today's timetable entries",
+              ),
+            );
+          }
+        })
+        .handleError(
+          (error) => Left(
+            CacheFailure(
+              error: error,
+              message: "Failed to watch today's timetable entries",
+            ),
+          ),
+        );
+  }
+
+  bool _occursToday(TimetableEntryData entry, String todayDayCode) {
+    final rrule = entry.rrule?.trim() ?? '';
+
+    // If no RRULE, this entry doesn't occur (invalid state)
+    // All entries should have an RRULE like "FREQ=WEEKLY;BYDAY=MO"
+    if (rrule.isEmpty) {
+      return false;
+    }
+
+    // Extract BYDAY value using regex to avoid false positives
+    // RRULE format: FREQ=WEEKLY;BYDAY=MO,WE,FR
+    final bydayRegex = RegExp(r'BYDAY=([^;]+)');
+    final match = bydayRegex.firstMatch(rrule);
+
+    if (match == null) {
+      return false; // No BYDAY found
+    }
+
+    final bydayValue = match.group(1) ?? '';
+
+    // Split by comma to get individual days and trim whitespace
+    final days = bydayValue.split(',').map((d) => d.trim()).toList();
+
+    // Check if today's day code is in the list
+    return days.contains(todayDayCode);
+  }
+}
