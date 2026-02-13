@@ -25,3 +25,4 @@ export './src/core/magnet_config.dart';
 export './src/core/magnet_engine.dart';
 
 export './src/executor/instruction_callback_manager.dart';
+export './src/executor/instruction_status.dart';

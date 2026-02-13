@@ -27,13 +27,19 @@ final class InstructionCallbackManager {
 
   /// Emit a new progress event
   void emitProgress(InstructionProgressEvent event) {
-    if (!_progressController.isClosed) {
-      _progressController.add(event);
+    if (_progressController.isClosed) return;
+
+    _progressController.add(event);
+
+    if (event.isLastInstruction) {
+      _progressController.close();
     }
   }
 
   /// Dispose the stream controller
   void dispose() {
-    _progressController.close();
+    if (!_progressController.isClosed) {
+      _progressController.close();
+    }
   }
 }
