@@ -89,7 +89,6 @@ dependencies:
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
   image_editor_plus: ^1.0.8
-  upgrader: ^12.1.0
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
