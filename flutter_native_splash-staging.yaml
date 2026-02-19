@@ -1,0 +1,17 @@
+flutter_native_splash:
+  color: "#007DFD"
+  image: assets/splash/dash.png
+  icon_background_color: "#FFFFFF"
+  branding:      assets/splash/branding.png
+  branding_mode: bottom 
+  branding_bottom_padding: 24
+
+
+  android_12:
+    image: assets/splash/dash.png
+    icon_background_color: "#007DFD"
+    branding: assets/splash/branding.png
+
+
+  web: true
+

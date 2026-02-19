@@ -1,0 +1,16 @@
+flutter_native_splash:
+  color: "#6e44ff"
+  image: assets/splash/academia-splash.png
+  icon_background_color: "#FFFFFF"
+  branding:      assets/splash/branding.png
+  branding_mode: bottom 
+  branding_bottom_padding: 24
+
+  android_12:
+    image: assets/splash/academia-splash.png
+    icon_background_color: "#6e44ff"
+    branding:      assets/splash/branding.png
+    
+
+  web: true
+

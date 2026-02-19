@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
@@ -26,6 +28,7 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> {
   final Logger _logger = Logger();
+
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
@@ -155,6 +158,7 @@ class _AcademiaState extends State<Academia> {
                   NotificationChannelConfig.reminders,
                   NotificationChannelConfig.alerts,
                   NotificationChannelConfig.updates,
+                  NotificationChannelConfig.courseAlerts,
                 ],
               ),
             )
@@ -169,13 +173,16 @@ class _AcademiaState extends State<Academia> {
               sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
 
+        BlocProvider(create: (context) => sl<SemesterCubit>()),
+        BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
-        ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
+        BlocProvider(create: (context) => sl<TimetableBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
