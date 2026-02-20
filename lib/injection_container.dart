@@ -48,7 +48,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerFactory<InAppUpdateBloc>(() => InAppUpdateBloc());
+  if (!isBackground) {
+    sl.registerFactory<InAppUpdateBloc>(() => InAppUpdateBloc());
+  }
 
   sl.registerFactory(
     () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
