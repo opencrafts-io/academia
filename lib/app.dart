@@ -8,6 +8,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
+import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -258,7 +259,7 @@ class _AcademiaState extends State<Academia> {
                   showPerformanceOverlay: kProfileMode,
                   themeMode: state.themeMode,
                   theme: ThemeData(
-                    fontFamily: 'ProductSans',
+                    fontFamily: FontFamily.productSans,
                     useMaterial3: state.enableMaterialYou,
                     brightness: Brightness.light,
                     colorScheme: buildColorScheme(
@@ -270,7 +271,7 @@ class _AcademiaState extends State<Academia> {
                   ),
 
                   darkTheme: ThemeData(
-                    fontFamily: 'ProductSans',
+                    fontFamily: FontFamily.productSans,
                     useMaterial3: state.enableMaterialYou,
                     brightness: Brightness.dark,
                     colorScheme: buildColorScheme(
