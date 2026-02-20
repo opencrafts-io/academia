@@ -62,11 +62,7 @@ class InAppUpdateBloc extends Bloc<InAppUpdateEvent, InAppUpdateState> {
             "https://apps.apple.com/us/app/academia-for-campus-students/id6753922995",
           );
 
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
+    await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
   Map<String, dynamic> _deepConvert(Map map) {
