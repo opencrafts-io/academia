@@ -86,6 +86,10 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
+        ),
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
@@ -277,6 +281,32 @@ class _AcademiaState extends State<Academia> {
                     ),
                   ),
                   routerConfig: AppRouter.router,
+                  builder: (context, child) {
+                    return BlocListener<InAppUpdateBloc, InAppUpdateState>(
+                      listener: (context, state) {
+                        if (state is InAppUpdateRequired) {
+                          showModalBottomSheet(
+                            context:
+                                AppRouter.globalNavigatorKey.currentContext!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32),
+                            ),
+                            isDismissible: !state.isMandatory,
+                            enableDrag: false,
+                            useSafeArea: false,
+                            builder: (dialogContext) => AppUpdatePage(
+                              message: state.message,
+                              isMandatory: state.isMandatory,
+                              onUpdate: () => context
+                                  .read<InAppUpdateBloc>()
+                                  .redirectToStore(),
+                            ),
+                          );
+                        }
+                      },
+                      child: child ?? SizedBox.shrink(),
+                    );
+                  },
                 );
               },
             ),

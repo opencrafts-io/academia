@@ -48,6 +48,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
+  sl.registerFactory<InAppUpdateBloc>(() => InAppUpdateBloc());
+
   sl.registerFactory(
     () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
@@ -640,54 +642,52 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Firebase Remote Config
-  if(!isBackground) {
+  if (!isBackground) {
     sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
     sl.registerFactory<RemoteConfigRemoteDatasource>(
-          () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
+      () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
     );
     sl.registerFactory<RemoteConfigRepository>(
-          () =>
-          RemoteConfigRepositoryImpl(
-            remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-          ),
+      () => RemoteConfigRepositoryImpl(
+        remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
+      ),
     );
 
     sl.registerFactory<InitializeRemoteConfigUsecase>(
-          () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
+      () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<FetchAndActivateUsecase>(
-          () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
+      () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetStringUsecase>(
-          () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetBoolUsecase>(
-          () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetIntUsecase>(
-          () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetDoubleUsecase>(
-          () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetJsonUsecase>(
-          () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<GetAllParametersUsecase>(
-          () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
+      () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
     );
     sl.registerFactory<RemoteConfigBloc>(
-          () =>
-          RemoteConfigBloc(
-            initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
-            fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
-            getStringUsecase: sl.get<GetStringUsecase>(),
-            getBoolUsecase: sl.get<GetBoolUsecase>(),
-            getIntUsecase: sl.get<GetIntUsecase>(),
-            getDoubleUsecase: sl.get<GetDoubleUsecase>(),
-            getJsonUsecase: sl.get<GetJsonUsecase>(),
-            getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-          ),
+      () => RemoteConfigBloc(
+        initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
+        fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
+        getStringUsecase: sl.get<GetStringUsecase>(),
+        getBoolUsecase: sl.get<GetBoolUsecase>(),
+        getIntUsecase: sl.get<GetIntUsecase>(),
+        getDoubleUsecase: sl.get<GetDoubleUsecase>(),
+        getJsonUsecase: sl.get<GetJsonUsecase>(),
+        getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
+      ),
     );
   }
 
