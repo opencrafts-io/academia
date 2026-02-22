@@ -136,48 +136,54 @@ class _CommunityHomeState extends State<CommunityHome>
                           onTap: () {
                             showModalBottomSheet(
                               showDragHandle: true,
+                              isScrollControlled: true,
                               context: context,
-                              builder: (context) => Container(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Community guidelines",
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.headlineSmall,
-                                    ),
-
-                                    Divider(),
-                                    state.community.guidelines.isNotEmpty
-                                        ? Expanded(
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: state
-                                                  .community
-                                                  .guidelines
-                                                  .length,
-                                              itemBuilder: (context, index) =>
-                                                  ListTile(
-                                                    leading: Text(
-                                                      (index + 1).toString(),
+                              builder: (context) => DraggableScrollableSheet(
+                                initialChildSize: 0.6,
+                                minChildSize: 0.4,
+                                maxChildSize: 0.9,
+                                expand: false,
+                                builder: (context, scrollController) => Container(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "Community guidelines",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.headlineSmall,
+                                      ),
+                                      const Divider(),
+                                      state.community.guidelines.isNotEmpty
+                                          ? Expanded(
+                                              child: ListView.builder(
+                                                controller: scrollController,
+                                                itemCount: state
+                                                    .community
+                                                    .guidelines
+                                                    .length,
+                                                itemBuilder: (context, index) =>
+                                                    ListTile(
+                                                      leading: Text(
+                                                        (index + 1).toString(),
+                                                      ),
+                                                      title: Text(
+                                                        state
+                                                            .community
+                                                            .guidelines[index],
+                                                      ),
                                                     ),
-                                                    title: Text(
-                                                      state
-                                                          .community
-                                                          .guidelines[index],
-                                                    ),
-                                                  ),
+                                              ),
+                                            )
+                                          : const Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "No community guidelines"
+                                                " were provided by the mods",
+                                              ),
                                             ),
-                                          )
-                                        : Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "No community guidelines"
-                                              " were provided by the mods",
-                                            ),
-                                          ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -740,193 +746,201 @@ class _CommunityActionSection extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 showDragHandle: true,
-                builder: (modalContext) => Container(
-                  height: 380,
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "More community actions",
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      Divider(),
-                      SizedBox(height: 12),
-                      Visibility(
-                        visible:
-                            state.membership.role == "super-mod" ||
-                            state.membership.role == "mod",
-                        child: ListTile(
+                isScrollControlled: true,
+                builder: (modalContext) => DraggableScrollableSheet(
+                  initialChildSize: 0.6,
+                  minChildSize: 0.4,
+                  maxChildSize: 0.9,
+                  expand: false,
+                  builder: (context, scrollController) => Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListView(
+                      controller: scrollController,
+                      children: [
+                        const SizedBox(height: 8),
+                        Text(
+                          "More community actions",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const Divider(),
+                        const SizedBox(height: 12),
+                        Visibility(
+                          visible:
+                              state.membership.role == "super-mod" ||
+                              state.membership.role == "mod",
+                          child: ListTile(
+                            onTap: () {
+                              EditCommunityInfoRoute(
+                                communityId: communityID,
+                              ).push(context);
+                            },
+                            leading: const Icon(Icons.edit),
+                            title: const Text("Edit community information"),
+                          ),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.add_box_outlined),
+                          title: const Text("Add post"),
+                          onTap: () async {
+                            final communityState = communityHomeBloc.state;
+                            final router = GoRouter.of(context);
+
+                            // Close modal
+                            Navigator.of(modalContext).pop();
+
+                            if (communityState is CommunityHomeLoaded) {
+                              final result = await router.push(
+                                AddPostRoute().location,
+                                extra: communityState.community,
+                              );
+
+                              if (result == true) {
+                                feedBloc.add(
+                                  LoadPostsForCommunityEvent(
+                                    communityID: communityID,
+                                    page: 1,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
+
+                        // Block Community
+                        ListTile(
+                          leading: const Icon(Icons.block_outlined),
+                          title: const Text("Block Community"),
                           onTap: () {
-                            EditCommunityInfoRoute(
+                            Navigator.pop(modalContext);
+                            _showBlockCommunityDialog(context, communityName);
+                          },
+                        ),
+
+                        // Report Community
+                        ListTile(
+                          leading: const Icon(Icons.flag_outlined),
+                          title: const Text("Report Community"),
+                          onTap: () {
+                            Navigator.pop(modalContext);
+                            _showReportCommunityDialog(context);
+                          },
+                        ),
+
+                        ListTile(
+                          leading: const Icon(Icons.groups_2),
+                          title: const Text("View community members"),
+                          onTap: () {
+                            CommunityMembersRoute(
+                              role: "user",
                               communityId: communityID,
                             ).push(context);
                           },
-                          leading: Icon(Icons.edit),
-                          title: Text("Edit community information"),
                         ),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.add_box_outlined),
-                        title: Text("Add post"),
-                        onTap: () async {
-                          final communityState = communityHomeBloc.state;
-                          final router = GoRouter.of(context);
-
-                          // Close modal
-                          Navigator.of(modalContext).pop();
-
-                          if (communityState is CommunityHomeLoaded) {
-                            final result = await router.push(
-                              AddPostRoute().location,
-                              extra: communityState.community,
-                            );
-
-                            if (result == true) {
-                              feedBloc.add(
-                                LoadPostsForCommunityEvent(
-                                  communityID: communityID,
-                                  page: 1,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-
-                      // Block Community
-                      ListTile(
-                        leading: Icon(Icons.block_outlined),
-                        title: const Text("Block Community"),
-                        onTap: () {
-                          Navigator.pop(modalContext);
-                          _showBlockCommunityDialog(context, communityName);
-                        },
-                      ),
-
-                      // Report Community
-                      ListTile(
-                        leading: Icon(Icons.flag_outlined),
-                        title: const Text("Report Community"),
-                        onTap: () {
-                          Navigator.pop(modalContext);
-                          _showReportCommunityDialog(context);
-                        },
-                      ),
-
-                      ListTile(
-                        leading: Icon(Icons.groups_2),
-                        title: Text("View community members"),
-                        onTap: () {
-                          CommunityMembersRoute(
-                            role: "user",
-                            communityId: communityID,
-                          ).push(context);
-                        },
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.exit_to_app),
-                        title: Text("Leave community"),
-                        onTap: () {
-                          context.pop();
-                          showAdaptiveDialog(
-                            context: context,
-                            builder: (context) => AlertDialog.adaptive(
-                              title: Text("Are you sure you want to leave? "),
-                              content: Text(
-                                "By leaving you will no longer recieve"
-                                "updates from this community nor see posts"
-                                " from this community",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    context.pop();
-                                    cubit.leaveCommunity(
-                                      communityID: communityID,
-                                    );
-                                  },
-                                  child: Text("Im sure"),
-                                ),
-
-                                FilledButton(
-                                  onPressed: () => context.pop(),
-                                  child: Text("Cancel"),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      Visibility(
-                        visible: state.membership.role == "super-mod",
-                        child: ListTile(
+                        ListTile(
+                          leading: const Icon(Icons.exit_to_app),
+                          title: const Text("Leave community"),
                           onTap: () {
+                            context.pop();
                             showAdaptiveDialog(
                               context: context,
                               builder: (context) => AlertDialog.adaptive(
-                                title: Text("Delete this community"),
-                                content: Text(
-                                  "Are yout absolutely sure you want to delete "
-                                  "this community? "
-                                  "This is a permanent irreversible action. "
-                                  "All associated content, including all posts,"
-                                  "chats, images and membership data will be "
-                                  "instantly and permanently removed."
-                                  "This community cannot be resored. \n\n"
-                                  "Proceed only if you understand and accept the"
-                                  " outcome.",
+                                title: const Text("Are you sure you want to leave? "),
+                                content: const Text(
+                                  "By leaving you will no longer recieve"
+                                  "updates from this community nor see posts"
+                                  " from this community",
                                 ),
                                 actions: [
-                                  TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                                    onPressed: () async {
+                                  TextButton(
+                                    onPressed: () {
                                       context.pop();
-                                      BlocProvider.of<CommunityHomeBloc>(
-                                        context,
-                                      ).add(
-                                        DeleteCommunity(
-                                          communityID: communityID,
-                                        ),
+                                      cubit.leaveCommunity(
+                                        communityID: communityID,
                                       );
-                                      context.pop();
                                     },
-                                    label: Text("Im sure delete it"),
+                                    child: const Text("Im sure"),
                                   ),
+
                                   FilledButton(
                                     onPressed: () => context.pop(),
-                                    child: Text("Cancel"),
+                                    child: const Text("Cancel"),
                                   ),
                                 ],
                               ),
                             );
                           },
-                          leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text("Delete community"),
                         ),
-                      ),
-                    ],
+                        Visibility(
+                          visible: state.membership.role == "super-mod",
+                          child: ListTile(
+                            onTap: () {
+                              showAdaptiveDialog(
+                                context: context,
+                                builder: (context) => AlertDialog.adaptive(
+                                  title: const Text("Delete this community"),
+                                  content: const Text(
+                                    "Are yout absolutely sure you want to delete "
+                                    "this community? "
+                                    "This is a permanent irreversible action. "
+                                    "All associated content, including all posts,"
+                                    "chats, images and membership data will be "
+                                    "instantly and permanently removed."
+                                    "This community cannot be resored. \n\n"
+                                    "Proceed only if you understand and accept the"
+                                    " outcome.",
+                                  ),
+                                  actions: [
+                                    TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.error,
+                                      ),
+                                      onPressed: () async {
+                                        context.pop();
+                                        BlocProvider.of<CommunityHomeBloc>(
+                                          context,
+                                        ).add(
+                                          DeleteCommunity(
+                                            communityID: communityID,
+                                          ),
+                                        );
+                                        context.pop();
+                                      },
+                                      label: const Text("Im sure delete it"),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () => context.pop(),
+                                      child: const Text("Cancel"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            leading: const Icon(Icons.delete, color: Colors.red),
+                            title: const Text("Delete community"),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
             },
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
           );
         }
         return Padding(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: FilledButton(
             onPressed: () {
               final cubit = context.read<ChirpCommunityMembershipCubit>();
               showAdaptiveDialog(
                 context: context,
                 builder: (context) => AlertDialog.adaptive(
-                  title: Text("Are you sure you want to join?"),
-                  content: Text(
+                  title: const Text("Are you sure you want to join?"),
+                  content: const Text(
                     "Welcome to the community! "
                     "By joining, you'll be the first to know about exciting updates, "
                     "events, and everything happening here. "
@@ -939,20 +953,20 @@ class _CommunityActionSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => context.pop(),
-                      child: Text("Never mind"),
+                      child: const Text("Never mind"),
                     ),
                     FilledButton(
                       onPressed: () {
                         cubit.joinCommunity(communityID: communityID);
                         context.pop();
                       },
-                      child: Text("Join Now"),
+                      child: const Text("Join Now"),
                     ),
                   ],
                 ),
               );
             },
-            child: Text("Join"),
+            child: const Text("Join"),
           ),
         );
       },
