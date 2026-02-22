@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/injection_container.dart';
@@ -447,8 +448,8 @@ class CommentContentWidget extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
-              Text(
-                comment.content,
+              LinkifiedText(
+                text: comment.content,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

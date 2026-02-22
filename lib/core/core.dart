@@ -13,3 +13,4 @@ export 'data/color_converter.dart';
 export 'views/video_trimmer.dart';
 export 'widgets/expanding_fab.dart';
 export 'widgets/rrule_editor_widget.dart';
+export 'widgets/linkified_text.dart';
