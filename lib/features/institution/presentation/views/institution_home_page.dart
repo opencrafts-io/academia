@@ -355,8 +355,23 @@ class _CoursesSectionCard extends StatelessWidget {
               itemCount: courses.length,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  CourseCard(course: courses[index]),
+              itemBuilder: (context, index) {
+                final course = courses[index];
+                return CourseCard(
+                  course: course,
+                  onTap: () async {
+                    await ViewCourseRoute(
+                      courseId: course.id!,
+                    ).push(context);
+                    if (context.mounted) {
+                      context.read<CourseCubit>().watchByInstitution(institutionId);
+                      context.read<TimetableEntryBloc>().add(
+                        WatchAllTimetableEntriesEvent(),
+                      );
+                    }
+                  },
+                );
+              },
             );
           },
           error: (message) => Column(children: [Text(message)]),
