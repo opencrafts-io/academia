@@ -33,22 +33,17 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
         },
         child: CustomScrollView(
           slivers: [
-            SliverAppBar.large(
-              title: Text("Today's Events"),
+            SliverAppBar.medium(
+              title: Text(
+                "Today's Events",
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               pinned: true,
               snap: true,
               floating: true,
               actions: [
-                // IconButton(
-                //   onPressed: () {
-                //     final token =
-                //         (BlocProvider.of<AuthBloc>(context).state
-                //                 as AuthAuthenticated)
-                //             .token;
-                //     Clipboard.setData(ClipboardData(text: token.accessToken));
-                //   },
-                //   icon: Icon(Symbols.content_paste),
-                // ),
                 Visibility(
                   visible: kIsWeb,
                   child: IconButton(

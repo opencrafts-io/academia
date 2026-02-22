@@ -77,14 +77,16 @@ class _EssentialsPageState extends State<EssentialsPage> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.large(
+          SliverAppBar.medium(
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text("Essentials "),
+                    Text("Essentials ",
+                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                     AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
                   ],
                 ),
