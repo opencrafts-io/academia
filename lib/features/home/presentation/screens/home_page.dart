@@ -17,10 +17,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedDrawerItem = 0;
   String? userId;
+
   @override
   void initState() {
     super.initState();
-    context.read<PermissionCubit>().checkPermission(AppPermission.notification);
+    // Check both standard notification and precise alarm permissions
+    context.read<PermissionCubit>().checkMultiplePermissions([
+      AppPermission.notification,
+      AppPermission.preciseAlarm,
+    ]);
   }
 
   @override
@@ -50,7 +55,7 @@ class _HomePageState extends State<HomePage> {
               break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text("Feature coming soon."),
                   behavior: SnackBarBehavior.floating,
                 ),
@@ -59,47 +64,47 @@ class _HomePageState extends State<HomePage> {
         },
         children: [
           Padding(
-            padding: EdgeInsetsGeometry.all(12),
+            padding: const EdgeInsets.all(12),
             child: Text(
               "Chirp",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             icon: Icon(Icons.newspaper_outlined),
             selectedIcon: Icon(Icons.newspaper),
             label: Text("View your posts"),
           ),
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             selectedIcon: Icon(Icons.group_add),
             icon: Icon(Icons.group_add_outlined),
             label: Text("Create community"),
           ),
 
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             icon: Icon(Icons.view_comfy_outlined),
             selectedIcon: Icon(Icons.view_comfy),
             label: Text("View your communities"),
           ),
 
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             icon: Icon(Icons.block_outlined),
             selectedIcon: Icon(Icons.block),
             label: Text("View your block list"),
           ),
           Padding(
-            padding: EdgeInsetsGeometry.all(12),
+            padding: const EdgeInsets.all(12),
             child: Text(
               "Sherehe",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             icon: Icon(Icons.confirmation_number_outlined),
             selectedIcon: Icon(Icons.confirmation_number),
             label: Text("All Tickets"),
           ),
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
             icon: Icon(Icons.event_note_outlined),
             selectedIcon: Icon(Icons.event_note),
             label: Text("My Organized Events"),
@@ -119,16 +124,16 @@ class _HomePageState extends State<HomePage> {
                 snap: true,
                 stretch: false,
                 centerTitle: true,
-                title: GlobalSearchBar(),
+                title: const GlobalSearchBar(),
                 actions: [
                   IconButton(
                     onPressed: () {
                       ProfileRoute().push(context);
                     },
-                    icon: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
+                    icon: const UserAvatar(scallopDepth: 4, numberOfScallops: 12),
                   ),
                 ],
-                bottom: TabBar(
+                bottom: const TabBar(
                   isScrollable: true,
                   tabAlignment: TabAlignment.center,
                   tabs: [
@@ -144,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                   listener: (context, state) {
                     if (state is PermissionPermanentlyDenied) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text(
                             "You've previously permanently disabled notifications."
                             " Please re-enable them on the phone settings page.",
@@ -157,9 +162,9 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, state) {
                     if (state is PermissionDenied ||
                         state is PermissionPermanentlyDenied) {
-                      return PermissionNotificationAlertCard();
+                      return const PermissionNotificationAlertCard();
                     }
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
@@ -169,10 +174,10 @@ class _HomePageState extends State<HomePage> {
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                       maxWidth: ResponsiveBreakPoints.tablet,
                     ),
-                    child: TabBarView(
+                    child: const TabBarView(
                       children: [
                         LeaderboardHomepage(),
                         FeedPage(),

@@ -36,9 +36,9 @@ class PermissionNotificationAlertCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           color: Theme.of(context).colorScheme.primaryContainer,
           child: ListTile(
-            leading:AnimatedEmoji(AnimatedEmojis.headNod),
-            title: Text("Get message notifications"),
-            subtitle: Text(
+            leading: AnimatedEmoji(AnimatedEmojis.headNod),
+            title: const Text("Get message notifications"),
+            subtitle: const Text(
               "Turn on notifications so that you never miss any updates",
             ),
             subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
@@ -48,17 +48,21 @@ class PermissionNotificationAlertCard extends StatelessWidget {
               }
 
               if (!context.mounted) return;
+
+              // Check both permissions
               await context.read<PermissionCubit>().checkPermission(
                 AppPermission.notification,
               );
+
               if (!context.mounted) return;
+
               if (context.read<PermissionCubit>().state
                   is PermissionPermanentlyDenied) {
                 return showAdaptiveDialog(
                   context: context,
                   builder: (context) => AlertDialog.adaptive(
-                    title: Text("Allow permission"),
-                    content: Text(
+                    title: const Text("Allow permission"),
+                    content: const Text(
                       "You've previously denied permissions "
                       "to send you notifications. You may miss important updates "
                       "please re-enable them on the app's phone settings page.",
@@ -69,23 +73,31 @@ class PermissionNotificationAlertCard extends StatelessWidget {
                           openAppSettings();
                           context.pop();
                         },
-                        label: Text("Enable"),
-                        icon: Icon(Icons.notifications),
+                        label: const Text("Enable"),
+                        icon: const Icon(Icons.notifications),
                       ),
                       TextButton(
                         onPressed: () {
                           context.pop();
                         },
-                        child: Text("Cancel"),
+                        child: const Text("Cancel"),
                       ),
                     ],
                   ),
                 );
               }
 
-              context.read<PermissionCubit>().requestPermission(
+              // Request Notification permission
+              await context.read<PermissionCubit>().requestPermission(
                 AppPermission.notification,
               );
+
+              // Also request Precise Alarm permission for timing accuracy
+              if (context.mounted) {
+                await context.read<PermissionCubit>().requestPermission(
+                  AppPermission.preciseAlarm,
+                );
+              }
             },
           ),
         ),
