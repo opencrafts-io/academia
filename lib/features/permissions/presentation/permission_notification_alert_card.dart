@@ -30,16 +30,16 @@ class PermissionNotificationAlertCard extends StatelessWidget {
           },
         ),
       ],
-      child: Container(
-        color: Theme.of(context).colorScheme.surface,
         child: Card.filled(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          color: Theme.of(context).colorScheme.primaryContainer,
+          margin: EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          color: Theme.of(context).colorScheme.errorContainer,
           child: ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             leading: AnimatedEmoji(AnimatedEmojis.headNod),
-            title: const Text("Get message notifications"),
+            title: const Text("Stay Informed"),
             subtitle: const Text(
-              "Turn on notifications so that you never miss any updates",
+              "Receive alerts for classes and schedule changes.",
             ),
             subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
             onTap: () async {
@@ -101,7 +101,6 @@ class PermissionNotificationAlertCard extends StatelessWidget {
             },
           ),
         ),
-      ),
     );
   }
 }

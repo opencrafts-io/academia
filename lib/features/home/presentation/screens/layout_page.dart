@@ -3,6 +3,155 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+
+class _MobileLayout extends StatelessWidget {
+  const _MobileLayout({
+    required this.navigationShell,
+    required this.onDestinationSelected,
+    required this.selectedIndex,
+  });
+
+  final StatefulNavigationShell navigationShell;
+  final ValueChanged<int> onDestinationSelected;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: selectedIndex,
+        onDestinationSelected: onDestinationSelected,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Symbols.house_rounded),
+            selectedIcon: Icon(Symbols.house_rounded, fill: 1),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Symbols.calendar_today_rounded),
+            selectedIcon: Icon(Symbols.calendar_today_rounded, fill: 1),
+            label: 'Calendar',
+          ),
+          NavigationDestination(
+            icon: Icon(Symbols.grid_view_rounded),
+            selectedIcon: Icon(Symbols.grid_view_rounded, fill: 1),
+            label: 'Essentials',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TabletLayout extends StatelessWidget {
+  const _TabletLayout({
+    required this.navigationShell,
+    required this.onDestinationSelected,
+    required this.selectedIndex,
+  });
+
+  final StatefulNavigationShell navigationShell;
+  final ValueChanged<int> onDestinationSelected;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+            labelType: NavigationRailLabelType.all,
+            selectedIconTheme: IconThemeData(
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
+            selectedLabelTextStyle: Theme.of(context)
+                .textTheme
+                .labelMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Symbols.house_rounded),
+                selectedIcon: Icon(Symbols.house_rounded, fill: 1),
+                label: Text('Home'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Symbols.calendar_today_rounded),
+                selectedIcon: Icon(Symbols.calendar_today_rounded, fill: 1),
+                label: Text('Calendar'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Symbols.grid_view_rounded),
+                selectedIcon: Icon(Symbols.grid_view_rounded, fill: 1),
+                label: Text('Essentials'),
+              ),
+            ],
+          ),
+          const VerticalDivider(width: 1, thickness: 1),
+          Expanded(child: navigationShell),
+        ],
+      ),
+    );
+  }
+}
+
+class _DesktopLayout extends StatelessWidget {
+  const _DesktopLayout({
+    required this.navigationShell,
+    required this.onDestinationSelected,
+    required this.selectedIndex,
+    this.isLarge = false,
+  });
+
+  final StatefulNavigationShell navigationShell;
+  final ValueChanged<int> onDestinationSelected;
+  final int selectedIndex;
+  final bool isLarge;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationDrawer(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(28, isLarge ? 24 : 16, 16, 10),
+                child: Text(
+                  'Academia',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              const NavigationDrawerDestination(
+                icon: Icon(Symbols.house),
+                selectedIcon: Icon(Symbols.house_rounded, fill: 1),
+                label: Text('Home'),
+              ),
+              const NavigationDrawerDestination(
+                icon: Icon(Symbols.calendar_today_rounded),
+                selectedIcon: Icon(Symbols.calendar_today_rounded, fill: 1),
+                label: Text('Calendar'),
+              ),
+              const NavigationDrawerDestination(
+                icon: Icon(Symbols.grid_view_rounded),
+                selectedIcon: Icon(Symbols.grid_view_rounded, fill: 1),
+                label: Text('Essentials'),
+              ),
+            ],
+          ),
+          const VerticalDivider(width: 1, thickness: 1),
+          Expanded(child: navigationShell),
+        ],
+      ),
+    );
+  }
+}
+
+
 class LayoutPage extends StatefulWidget {
   const LayoutPage({super.key, required this.navigationShell});
   final StatefulNavigationShell navigationShell;
@@ -13,84 +162,37 @@ class LayoutPage extends StatefulWidget {
 
 class _LayoutPageState extends State<LayoutPage> {
   void _onNavigationSelected(int index) {
-    widget.navigationShell.goBranch(index);
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Scaffold(
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Visibility(
-              visible: !ResponsiveBreakPoints.isMobile(context),
-              child: NavigationRail(
-                selectedIconTheme: Theme.of(
-                  context,
-                ).iconTheme.copyWith(color: Theme.of(context).primaryColor),
-                selectedLabelTextStyle: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
-                labelType: NavigationRailLabelType.all,
-                groupAlignment:
-                    constraints.maxWidth > ResponsiveBreakPoints.tablet
-                    ? 0.0
-                    : null,
-                onDestinationSelected: _onNavigationSelected,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Symbols.house),
-                    label: Text("Home"),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Symbols.calendar_today),
-                    label: Text("Calendar"),
-                  ),
+    final selectedIndex = widget.navigationShell.currentIndex;
 
-                  // NavigationRailDestination(
-                  //   icon: Icon(Symbols.digital_wellbeing),
-                  //   label: Text("Well Being"),
-                  // ),
-                  NavigationRailDestination(
-                    icon: Icon(Symbols.grid_view),
-                    label: Text("Essentials"),
-                  ),
-                ],
-                selectedIndex: widget.navigationShell.currentIndex,
-              ),
-            ),
-            Expanded(flex: 5, child: widget.navigationShell),
-          ],
-        ),
-        bottomNavigationBar: !ResponsiveBreakPoints.isMobile(context)
-            ? null
-            : NavigationBar(
-                onDestinationSelected: _onNavigationSelected,
-                selectedIndex: widget.navigationShell.currentIndex,
-                destinations: [
-                  NavigationDestination(
-                    icon: Icon(Symbols.house),
-                    selectedIcon: Icon(Symbols.house),
-                    label: "Home",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Symbols.calendar_today),
-                    selectedIcon: Icon(Symbols.calendar_today),
-                    label: "Calendar",
-                  ),
+    if (ResponsiveBreakPoints.isMobile(context)) {
+      return _MobileLayout(
+        navigationShell: widget.navigationShell,
+        onDestinationSelected: _onNavigationSelected,
+        selectedIndex: selectedIndex,
+      );
+    }
 
-                  // NavigationDestination(
-                  //   icon: Icon(Symbols.digital_wellbeing),
-                  //   label: "Well Being",
-                  // ),
-                  NavigationDestination(
-                    icon: Icon(Symbols.grid_view),
-                    selectedIcon: Icon(Symbols.grid_view),
-                    label: "Essentials",
-                  ),
-                ],
-              ),
-      ),
+    if (ResponsiveBreakPoints.isTablet(context)) {
+      return _TabletLayout(
+        navigationShell: widget.navigationShell,
+        onDestinationSelected: _onNavigationSelected,
+        selectedIndex: selectedIndex,
+      );
+    }
+
+    return _DesktopLayout(
+      navigationShell: widget.navigationShell,
+      onDestinationSelected: _onNavigationSelected,
+      selectedIndex: selectedIndex,
+      isLarge: ResponsiveBreakPoints.isLargeDesktop(context),
     );
   }
 }
