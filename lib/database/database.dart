@@ -21,7 +21,6 @@ import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
-import 'package:academia/features/sherehe/data/models/sherehe_user_model.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
@@ -55,7 +54,7 @@ part 'database.g.dart';
     AttendeeTable,
     TicketTable,
     PaymentInfoTable,
-    ShereheUserTable, //temporary
+    ShereheUserTable, 
     DashboardStatsTable,
     TicketStatsTable,
     ScannerTable,

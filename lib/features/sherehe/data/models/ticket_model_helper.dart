@@ -8,9 +8,10 @@ extension TicketModelHelper on TicketData {
     ticketName: ticketName,
     ticketPrice: ticketPrice,
     ticketQuantity: ticketQuantity,
-    institutionIds: ticketVisibility != null
-        ? List<int>.from(ticketVisibility!.map((e) => int.tryParse(e) ?? 0))
-        : null,
+    institutionIds: ticketVisibility
+        ?.map((e) => int.tryParse(e))
+        .whereType<int>()
+        .toList(),
     deleteTag: deleteTag ?? false,
     createdAt: createdAt != null ? DateTime.tryParse(createdAt!) : null,
     updatedAt: updatedAt != null ? DateTime.tryParse(updatedAt!) : null,

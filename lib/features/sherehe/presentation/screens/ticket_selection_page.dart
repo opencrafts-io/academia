@@ -35,7 +35,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   @override
   void initState() {
     super.initState();
-    _tickets = widget.initialTickets;
+    _tickets = List.of(widget.initialTickets);
   }
 
   @override
