@@ -2,6 +2,10 @@ import 'dart:async';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/features/agenda/agenda.dart';
+import 'package:academia/features/course/course.dart';
+import 'package:academia/features/course/presentation/widgets/course_card.dart';
+import 'package:academia/features/timetable/domain/entities/timetable_entry_entity.dart';
+import 'package:academia/features/timetable/presentation/bloc/timetable_entry_bloc.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,16 +16,24 @@ import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
 
 class CalendarHomeWidget extends StatefulWidget {
-  const CalendarHomeWidget({super.key});
+  final DateTime selectedDay;
+  final Function(DateTime selectedDay, List<AgendaEvent> events,
+      List<TimetableEntryEntity> classes)? onDayChanged;
+
+  const CalendarHomeWidget({
+    super.key,
+    required this.selectedDay,
+    this.onDayChanged,
+  });
 
   @override
   State<CalendarHomeWidget> createState() => _CalendarHomeWidgetState();
 }
 
 class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
-  DateTime? _selectedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  List<AgendaEvent> _events = [];
+  final CalendarFormat _calendarFormat = CalendarFormat.week;
+  List<AgendaEvent> _allEvents = [];
+  List<TimetableEntryEntity> _allTimetableEntries = [];
   StreamSubscription<List<AgendaEvent>>? _eventsSubscription;
 
   @override
@@ -29,6 +41,10 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
     super.initState();
     // Fetch cached agenda events when widget initializes
     context.read<AgendaEventBloc>().add(FetchCachedAgendaEventsEvent());
+    // Ensure we are watching timetable entries
+    context
+        .read<TimetableEntryBloc>()
+        .add(const WatchAllTimetableEntriesEvent());
   }
 
   @override
@@ -37,322 +53,259 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
     super.dispose();
   }
 
+  bool _occursOnDay(TimetableEntryEntity entry, DateTime day) {
+    final rrule = entry.rrule?.trim() ?? '';
+
+    // If no RRULE, it's a one-time event on its startDate
+    if (rrule.isEmpty) {
+      return isSameDay(entry.startDate, day);
+    }
+
+    // Map Dart weekday (1=Monday...7=Sunday) to RRULE day codes
+    final weekdayMap = {
+      1: 'MO',
+      2: 'TU',
+      3: 'WE',
+      4: 'TH',
+      5: 'FR',
+      6: 'SA',
+      7: 'SU',
+    };
+    final dayCode = weekdayMap[day.weekday]!;
+
+    // Extract BYDAY value using regex to avoid false positives
+    final bydayRegex = RegExp(r'BYDAY=([^;]+)');
+    final match = bydayRegex.firstMatch(rrule);
+
+    if (match == null) {
+      // If it's DAILY and we're after the start date
+      if (rrule.contains('FREQ=DAILY')) {
+        return day.isAfter(entry.startDate) || isSameDay(entry.startDate, day);
+      }
+      return false;
+    }
+
+    final bydayValue = match.group(1) ?? '';
+    final days = bydayValue.split(',').map((d) => d.trim()).toList();
+
+    return days.contains(dayCode);
+  }
+
+  bool _hasEventsOnDay(DateTime day) {
+    final hasAgendaEvent = _allEvents.any((event) {
+      if (event.startTime == null) return false;
+      return isSameDay(event.startTime!, day);
+    });
+
+    if (hasAgendaEvent) return true;
+
+    return _allTimetableEntries.any((entry) => _occursOnDay(entry, day));
+  }
+
+  void _notifyDayChanged(DateTime day) {
+    if (widget.onDayChanged != null) {
+      final dayEvents = _allEvents.where((event) {
+        if (event.startTime == null) return false;
+        return isSameDay(event.startTime!, day);
+      }).toList();
+
+      final dayClasses = _allTimetableEntries.where((entry) {
+        return _occursOnDay(entry, day);
+      }).toList();
+
+      widget.onDayChanged!(day, dayEvents, dayClasses);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AgendaEventBloc, AgendaEventState>(
-      listener: (context, state) {
-        if (state is AgendaEventLoadedState) {
-          // Cancel previous subscription if exists
-          _eventsSubscription?.cancel();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-          // Listen to the stream and update events
-          _eventsSubscription = state.agendaEventsStream.listen((events) {
-            if (mounted) {
-              setState(() {
-                _events = events;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AgendaEventBloc, AgendaEventState>(
+          listener: (context, state) {
+            if (state is AgendaEventLoadedState) {
+              _eventsSubscription?.cancel();
+              _eventsSubscription = state.agendaEventsStream.listen((events) {
+                if (mounted) {
+                  setState(() {
+                    _allEvents = events;
+                  });
+                  _notifyDayChanged(widget.selectedDay);
+                }
               });
             }
-          });
-        }
-      },
-      builder: (context, state) {
-        return Container(
-          constraints: BoxConstraints(maxWidth: ResponsiveBreakPoints.mobile),
-          child: TableCalendar(
-            onDaySelected: (selectedDay, focusedDay) {
-              if (context.mounted) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                });
-                _showDayEventsBottomSheet(context, selectedDay);
-              }
-            },
-            availableCalendarFormats: {
-              CalendarFormat.twoWeeks: '2 weeks View',
-              CalendarFormat.month: 'Month View',
-            },
-            calendarFormat: _calendarFormat,
-            onFormatChanged: (format) {
+          },
+        ),
+        BlocListener<TimetableEntryBloc, TimetableEntryState>(
+          listener: (context, state) {
+            if (state is TimetableEntriesLoaded) {
               setState(() {
-                _calendarFormat = format;
+                _allTimetableEntries = state.entries;
               });
+              _notifyDayChanged(widget.selectedDay);
+            }
+          },
+        ),
+      ],
+      child: Container(
+        constraints: BoxConstraints(maxWidth: ResponsiveBreakPoints.mobile),
+        child: TableCalendar(
+          headerVisible: false,
+          onDaySelected: (selectedDay, focusedDay) {
+            if (context.mounted) {
+              _notifyDayChanged(selectedDay);
+            }
+          },
+          calendarFormat: _calendarFormat,
+          eventLoader: (day) {
+            final dayEvents = _allEvents.where((event) {
+              if (event.startTime == null) return false;
+              return isSameDay(event.startTime!, day);
+            }).toList();
+
+            final dayClasses = _allTimetableEntries.where((entry) {
+              return _occursOnDay(entry, day);
+            }).toList();
+
+            return [...dayEvents, ...dayClasses];
+          },
+          calendarBuilders: CalendarBuilders(
+            markerBuilder: (context, date, events) {
+              if (events.isEmpty) {
+                return null;
+              }
+
+              // Count different types
+              final eventCount = events.whereType<AgendaEvent>().length;
+              final classCount = events.whereType<TimetableEntryEntity>().length;
+
+              return Positioned(
+                bottom: 6,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (classCount > 0)
+                      Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    if (eventCount > 0)
+                      Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                  ],
+                ),
+              );
             },
-            eventLoader: (day) {
-              // Return list of events for this day
-              return _events
-                  .where((event) {
-                    if (event.startTime == null) return false;
-
-                    // Normalize dates to compare only year, month, day
-                    final eventDate = DateTime(
-                      event.startTime!.year,
-                      event.startTime!.month,
-                      event.startTime!.day,
-                    );
-
-                    final dayDate = DateTime(day.year, day.month, day.day);
-
-                    return eventDate.isAtSameMomentAs(dayDate);
-                  })
-                  .map((event) => event.summary ?? 'Event')
-                  .toList();
+            defaultBuilder: (context, day, focusedDay) {
+              final hasEvents = _hasEventsOnDay(day);
+              return _buildExpressiveDay(
+                context,
+                day,
+                backgroundColor: hasEvents
+                    ? colorScheme.primaryContainer
+                    : colorScheme.surfaceContainerHigh,
+                textStyle: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: hasEvents ? colorScheme.onPrimaryContainer : null,
+                ),
+              );
             },
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                if (events.isEmpty) {
-                  return null;
-                }
-                return Positioned(
-                  top: 0,
-                  right: 10,
-                  child: Badge(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    label: Text(events.length.toString()),
+            selectedBuilder: (context, day, focusedDay) {
+              return _buildExpressiveDay(
+                context,
+                day,
+                backgroundColor: colorScheme.primary,
+                borderColor: colorScheme.onPrimary.withOpacity(0.5),
+                textStyle: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onPrimary,
+                ),
+              );
+            },
+            todayBuilder: (context, day, focusedDay) {
+              final hasEvents = _hasEventsOnDay(day);
+              return _buildExpressiveDay(
+                context,
+                day,
+                backgroundColor: colorScheme.secondaryContainer,
+                borderColor: hasEvents ? colorScheme.secondary : null,
+                textStyle: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSecondaryContainer,
+                ),
+                isToday: true,
+              );
+            },
+            outsideBuilder: (context, day, focusedDay) {
+              return Opacity(
+                opacity: 0.5,
+                child: _buildExpressiveDay(
+                  context,
+                  day,
+                  backgroundColor: colorScheme.surface,
+                  textStyle: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              },
-            ),
-
-            calendarStyle: CalendarStyle(
-              isTodayHighlighted: true,
-              todayDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
                 ),
-              ),
-              selectedDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 2,
-                  style: BorderStyle.solid,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              defaultDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              weekendDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              outsideDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              selectedTextStyle:
-                  Theme.of(context).textTheme.bodyMedium ??
-                  const TextStyle(color: Colors.white),
-            ),
-            selectedDayPredicate: (date) => isSameDay(date, _selectedDay),
-            focusedDay: DateTime.now(),
-            firstDay: DateTime.now().subtract(
-              const Duration(days: 365 * 2),
-            ), // 2 years ago
-            lastDay: DateTime.now().add(
-              const Duration(days: 365 * 5),
-            ), // 5 years from now
+              );
+            },
           ),
-        );
-      },
+          calendarStyle: const CalendarStyle(
+            isTodayHighlighted: true,
+          ),
+          selectedDayPredicate: (date) => isSameDay(date, widget.selectedDay),
+          focusedDay: widget.selectedDay,
+          firstDay: DateTime.now().subtract(const Duration(days: 365 * 2)),
+          lastDay: DateTime.now().add(const Duration(days: 365 * 5)),
+        ),
+      ),
     );
   }
 
-  void _showDayEventsBottomSheet(BuildContext context, DateTime selectedDay) {
-    // Get events for the selected day
-    final dayEvents = _events.where((event) {
-      if (event.startTime == null) return false;
-
-      final eventDate = DateTime(
-        event.startTime!.year,
-        event.startTime!.month,
-        event.startTime!.day,
-      );
-      final selectedDate = DateTime(
-        selectedDay.year,
-        selectedDay.month,
-        selectedDay.day,
-      );
-
-      return eventDate.isAtSameMomentAs(selectedDate);
-    }).toList();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.75, // 3/4 of screen
-        minHeight:
-            MediaQuery.of(context).size.height * 0.5, // Minimum 1/2 of screen
+  Widget _buildExpressiveDay(
+    BuildContext context,
+    DateTime day, {
+    required Color backgroundColor,
+    Color? borderColor,
+    required TextStyle? textStyle,
+    bool isToday = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border:
+            borderColor != null ? Border.all(color: borderColor, width: 2) : null,
+        boxShadow: isToday
+            ? [
+                BoxShadow(
+                  color: backgroundColor.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                )
+              ]
+            : null,
       ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.75,
-        minChildSize: 0.5,
-        maxChildSize: 0.75,
-        builder: (context, scrollController) => Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-
-              // Header with date and create button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Events for',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        Text(
-                          DateFormat.yMMMMEEEEd().format(selectedDay),
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ],
-                    ),
-                  ),
-                  FilledButton.icon(
-                    onPressed: () async {
-                      // Provide haptic feedback for create button
-                      if (await Vibration.hasVibrator()) {
-                        Vibration.vibrate(
-                          preset: VibrationPreset.gentleReminder,
-                        );
-                      }
-
-                      if (!context.mounted) return;
-
-                      Navigator.of(context).pop();
-                      CreateAgendaEventRoute().push(context);
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Create'),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Events list or empty state
-              Expanded(
-                child: dayEvents.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Lottie.asset(
-                            Assets.lotties.painting,
-                              height: 250,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'You have no events for the day',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Tap "Create" to add an agenda event',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.separated(
-                        controller: scrollController,
-                        itemCount: dayEvents.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          final event = dayEvents[index];
-                          return AgendaEventCard(
-                            event: event,
-                            onEdit: () async {
-                              // Provide haptic feedback for edit action
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  preset: VibrationPreset.gentleReminder,
-                                );
-                              }
-
-                              if (!context.mounted) return;
-
-                              Navigator.of(context).pop();
-                              AgendaItemViewRoute(id: event.id).push(context);
-                            },
-                            onDelete: () async {
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate(
-                                  preset: VibrationPreset.gentleReminder,
-                                );
-                              }
-
-                              if (!context.mounted) return;
-
-                              // Show delete confirmation
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Delete Event'),
-                                  content: const Text(
-                                    'Are you sure you want to delete this event? This action cannot be undone.',
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                        ).pop(); // Close bottom sheet
-                                        context.read<AgendaEventBloc>().add(
-                                          DeleteAgendaEventEvent(
-                                            agendaEvent: event,
-                                          ),
-                                        );
-                                      },
-                                      style: FilledButton.styleFrom(
-                                        backgroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.error,
-                                      ),
-                                      child: const Text('Delete'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
+      child: Center(
+        child: Text(
+          day.day.toString(),
+          style: textStyle,
         ),
       ),
     );
