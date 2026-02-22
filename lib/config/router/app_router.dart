@@ -10,7 +10,7 @@ import 'package:posthog_flutter/posthog_flutter.dart';
 //
 
 class AppRouter {
-  static GlobalKey<NavigatorState> get globalNavigatorKey =>
+  static final GlobalKey<NavigatorState>  globalNavigatorKey =
       GlobalKey<NavigatorState>();
 
   static final router = GoRouter(

@@ -1428,14 +1428,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.4"
-  os_detect:
-    dependency: transitive
-    description:
-      name: os_detect
-      sha256: "7d87c0dd98c6faf110d5aa498e9a6df02ffce4bb78cc9cfc8ad02929be9bb71f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   package_config:
     dependency: transitive
     description:
@@ -1445,7 +1437,7 @@ packages:
     source: hosted
     version: "2.2.0"
   package_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info_plus
       sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
@@ -1669,7 +1661,7 @@ packages:
     source: hosted
     version: "6.1.5+1"
   pub_semver:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pub_semver
       sha256: "5bfcf68ca79ef689f8990d1160781b4bad40a3bd5e5218ad4076ddb7f4081585"
@@ -2013,10 +2005,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "19a78f63e83d3a61f00826d09bc2f60e191bf3504183c001262be6ac75589fb8"
+      sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.8"
+    version: "0.7.9"
   time:
     dependency: transitive
     description:
@@ -2073,14 +2065,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
-  upgrader:
-    dependency: "direct main"
-    description:
-      name: upgrader
-      sha256: a28de64108db70f77e5eacf8b87c1bdfaf9374ece9cab26f9aeac26ac3403eff
-      url: "https://pub.dev"
-    source: hosted
-    version: "12.1.0"
   url_launcher:
     dependency: "direct main"
     description:
@@ -2185,14 +2169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  version:
-    dependency: transitive
-    description:
-      name: version
-      sha256: "3d4140128e6ea10d83da32fef2fa4003fccbf6852217bb854845802f04191f94"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   vibration:
     dependency: "direct main"
     description:
