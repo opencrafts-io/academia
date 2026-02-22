@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
+import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -26,6 +29,7 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> {
   final Logger _logger = Logger();
+
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
@@ -83,6 +87,10 @@ class _AcademiaState extends State<Academia> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
+        ),
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
@@ -131,8 +139,10 @@ class _AcademiaState extends State<Academia> {
                 .get<RefreshCurrentUserProfileUsecase>(),
             updateUserProfile: sl.get<UpdateUserProfile>(),
             updateUserPhone: sl.get<UpdateUserPhone>(),
-            requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
-            requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
+            requestAccountDeletionUsecase: sl
+                .get<RequestAccountDeletionUsecase>(),
+            requestAccountRecoveryUsecase: sl
+                .get<RequestAccountRecoveryUsecase>(),
           )..add(GetCachedProfileEvent()),
         ),
         BlocProvider(
@@ -161,6 +171,7 @@ class _AcademiaState extends State<Academia> {
                   NotificationChannelConfig.reminders,
                   NotificationChannelConfig.alerts,
                   NotificationChannelConfig.updates,
+                  NotificationChannelConfig.courseAlerts,
                 ],
               ),
             )
@@ -175,13 +186,16 @@ class _AcademiaState extends State<Academia> {
               sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
         ),
 
+        BlocProvider(create: (context) => sl<SemesterCubit>()),
+        BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<MagnetBloc>()..add(InitializeMagnetInstancesEvent()),
-        ),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
+        BlocProvider(create: (context) => sl<TimetableBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
+        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -251,7 +265,7 @@ class _AcademiaState extends State<Academia> {
                   showPerformanceOverlay: kProfileMode,
                   themeMode: state.themeMode,
                   theme: ThemeData(
-                    fontFamily: 'ProductSans',
+                    fontFamily: FontFamily.productSans,
                     useMaterial3: state.enableMaterialYou,
                     brightness: Brightness.light,
                     colorScheme: buildColorScheme(
@@ -263,7 +277,7 @@ class _AcademiaState extends State<Academia> {
                   ),
 
                   darkTheme: ThemeData(
-                    fontFamily: 'ProductSans',
+                    fontFamily: FontFamily.productSans,
                     useMaterial3: state.enableMaterialYou,
                     brightness: Brightness.dark,
                     colorScheme: buildColorScheme(
@@ -274,6 +288,32 @@ class _AcademiaState extends State<Academia> {
                     ),
                   ),
                   routerConfig: AppRouter.router,
+                  builder: (context, child) {
+                    return BlocListener<InAppUpdateBloc, InAppUpdateState>(
+                      listener: (context, state) {
+                        if (state is InAppUpdateRequired) {
+                          showModalBottomSheet(
+                            context:
+                                AppRouter.globalNavigatorKey.currentContext!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32),
+                            ),
+                            isDismissible: !state.isMandatory,
+                            enableDrag: false,
+                            useSafeArea: false,
+                            builder: (dialogContext) => AppUpdatePage(
+                              message: state.message,
+                              isMandatory: state.isMandatory,
+                              onUpdate: () => context
+                                  .read<InAppUpdateBloc>()
+                                  .redirectToStore(),
+                            ),
+                          );
+                        }
+                      },
+                      child: child ?? SizedBox.shrink(),
+                    );
+                  },
                 );
               },
             ),

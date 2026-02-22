@@ -1,90 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>we need access to your media library to allow you to upload or play audio files within the platform.</string>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Academia</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>Academia</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
+	<dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>Academia</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>Academia</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>academia</string>
+				</array>
+			</dict>
+		</array>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>GADApplicationIdentifier</key>
+		<string>ca-app-pub-1784114980693221~6239287823</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UIStatusBarHidden</key>
+		<false/>
+		<key>UIStatusBarStyle</key>
+		<string></string>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>NSCameraUsageDescription</key>
+		<string>We need access to your camera to take pictures.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>We use your location to ensure you get feeds and stories around you</string>
+		<key>NSLocationUsageDescription</key>
+		<string>Used to provide notification service to you</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Used to capture audio</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photo library to save images.</string>
+		<key>NSCalendarsUsageDescription</key>
+		<string>To sync your calendar with Academia</string>
+		<key>NSCalendarsFullAccessUsageDescription</key>
+		<string>To enable you to add tasks and events to your calendar via Academia</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Keep track of app logs to ensure best performance possible for your device</string>
+		<key>PermissionGroupNotification</key>
+		<string>Bringing you notifications relevant to you</string>
+		<!--Disable transport security for in app webview for institutions using http-->
+		<key>NSAppTransportSecurity</key>
+    <dict>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>we need access to your media library to allow you to upload or play audio files within the platform.</string>
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>Academia</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Academia</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleURLTypes</key>
+    <array>
 		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>academia</string>
-			</array>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
 		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-1784114980693221~6239287823</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UIStatusBarHidden</key>
-	<false/>
-	<key>UIStatusBarStyle</key>
-	<string></string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to take pictures.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We use your location to ensure you get feeds and stories around you</string>
-	<key>NSLocationUsageDescription</key>
-	<string>Used to provide notification service to you</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Used to capture audio</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to save images.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>To sync your calendar with Academia</string>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>To enable you to add tasks and events to your calendar via Academia</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Keep track of app logs to ensure best performance possible for your device</string>
-	<key>PermissionGroupNotification</key>
-	<string>Bringing you notifications relevant to you</string>
-  <key>com.posthog.posthog.AUTO_INIT</key>
-  <false/>
-</dict>
+		<!-- End of transport security -->
+		<key>com.posthog.posthog.AUTO_INIT</key>
+		<false/>
+	</dict>
 </plist>

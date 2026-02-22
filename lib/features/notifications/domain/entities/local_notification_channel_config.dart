@@ -90,4 +90,18 @@ class NotificationChannelConfig {
     soundSource: "resource://raw/meloboom",
     playSound: true,
   );
+
+
+  static const NotificationChannelConfig courseAlerts = NotificationChannelConfig(
+  channelKey: 'course_alerts',
+  channelName: 'Course Alerts',
+  channelDescription: 'Notifications for upcoming classes',
+  defaultColor: const Color(0xFF007DFD),
+  importance: NotificationImportance.High,
+  playSound: true,
+  ledColor: const Color(0xFF007DFD),
+  soundSource: 'resource://raw/class_join',
+  defaultPrivacy: NotificationPrivacy.Public,
+  enableVibration: true,
+  );
 }

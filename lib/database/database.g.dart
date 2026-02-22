@@ -12941,16 +12941,915 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
-class $MagnetStudentProfileTable extends MagnetStudentProfile
-    with TableInfo<$MagnetStudentProfileTable, MagnetStudentProfileData> {
+class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
+    with
+        TableInfo<
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData
+        > {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MagnetStudentProfileTable(this.attachedDatabase, [this._alias]);
+  $InstitutionScrappingCommandTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _commandIDMeta = const VerificationMeta(
+    'commandID',
+  );
+  @override
+  late final GeneratedColumn<String> commandID = GeneratedColumn<String>(
+    'command_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _requiresInteractionMeta =
+      const VerificationMeta('requiresInteraction');
+  @override
+  late final GeneratedColumn<bool> requiresInteraction = GeneratedColumn<bool>(
+    'requires_interaction',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("requires_interaction" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>, String>
+  instructions =
+      GeneratedColumn<String>(
+        'instructions',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<List<dynamic>>(
+        $InstitutionScrappingCommandTable.$converterinstructions,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    institution,
+    commandID,
+    name,
+    url,
+    description,
+    requiresInteraction,
+    createdAt,
+    instructions,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_scrapping_command';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionScrappingCommandData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionMeta);
+    }
+    if (data.containsKey('command_i_d')) {
+      context.handle(
+        _commandIDMeta,
+        commandID.isAcceptableOrUnknown(data['command_i_d']!, _commandIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_commandIDMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('requires_interaction')) {
+      context.handle(
+        _requiresInteractionMeta,
+        requiresInteraction.isAcceptableOrUnknown(
+          data['requires_interaction']!,
+          _requiresInteractionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {commandID};
+  @override
+  InstitutionScrappingCommandData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionScrappingCommandData(
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      )!,
+      commandID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}command_i_d'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      requiresInteraction: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}requires_interaction'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      instructions: $InstitutionScrappingCommandTable.$converterinstructions
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}instructions'],
+            )!,
+          ),
+    );
+  }
+
+  @override
+  $InstitutionScrappingCommandTable createAlias(String alias) {
+    return $InstitutionScrappingCommandTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<dynamic>, String> $converterinstructions =
+      JsonListConverter();
+}
+
+class InstitutionScrappingCommandData extends DataClass
+    implements Insertable<InstitutionScrappingCommandData> {
+  final int institution;
+  final String commandID;
+  final String name;
+  final String? url;
+  final String? description;
+  final bool requiresInteraction;
+  final DateTime? createdAt;
+  final List<dynamic> instructions;
+  const InstitutionScrappingCommandData({
+    required this.institution,
+    required this.commandID,
+    required this.name,
+    this.url,
+    this.description,
+    required this.requiresInteraction,
+    this.createdAt,
+    required this.instructions,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['institution'] = Variable<int>(institution);
+    map['command_i_d'] = Variable<String>(commandID);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['requires_interaction'] = Variable<bool>(requiresInteraction);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    {
+      map['instructions'] = Variable<String>(
+        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+          instructions,
+        ),
+      );
+    }
+    return map;
+  }
+
+  InstitutionScrappingCommandCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionScrappingCommandCompanion(
+      institution: Value(institution),
+      commandID: Value(commandID),
+      name: Value(name),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      requiresInteraction: Value(requiresInteraction),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      instructions: Value(instructions),
+    );
+  }
+
+  factory InstitutionScrappingCommandData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionScrappingCommandData(
+      institution: serializer.fromJson<int>(json['institution']),
+      commandID: serializer.fromJson<String>(json['command_id']),
+      name: serializer.fromJson<String>(json['name']),
+      url: serializer.fromJson<String?>(json['url']),
+      description: serializer.fromJson<String?>(json['description']),
+      requiresInteraction: serializer.fromJson<bool>(
+        json['requires_interaction'],
+      ),
+      createdAt: serializer.fromJson<DateTime?>(json['created_at']),
+      instructions: serializer.fromJson<List<dynamic>>(json['instructions']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'institution': serializer.toJson<int>(institution),
+      'command_id': serializer.toJson<String>(commandID),
+      'name': serializer.toJson<String>(name),
+      'url': serializer.toJson<String?>(url),
+      'description': serializer.toJson<String?>(description),
+      'requires_interaction': serializer.toJson<bool>(requiresInteraction),
+      'created_at': serializer.toJson<DateTime?>(createdAt),
+      'instructions': serializer.toJson<List<dynamic>>(instructions),
+    };
+  }
+
+  InstitutionScrappingCommandData copyWith({
+    int? institution,
+    String? commandID,
+    String? name,
+    Value<String?> url = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    bool? requiresInteraction,
+    Value<DateTime?> createdAt = const Value.absent(),
+    List<dynamic>? instructions,
+  }) => InstitutionScrappingCommandData(
+    institution: institution ?? this.institution,
+    commandID: commandID ?? this.commandID,
+    name: name ?? this.name,
+    url: url.present ? url.value : this.url,
+    description: description.present ? description.value : this.description,
+    requiresInteraction: requiresInteraction ?? this.requiresInteraction,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    instructions: instructions ?? this.instructions,
+  );
+  InstitutionScrappingCommandData copyWithCompanion(
+    InstitutionScrappingCommandCompanion data,
+  ) {
+    return InstitutionScrappingCommandData(
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      commandID: data.commandID.present ? data.commandID.value : this.commandID,
+      name: data.name.present ? data.name.value : this.name,
+      url: data.url.present ? data.url.value : this.url,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      requiresInteraction: data.requiresInteraction.present
+          ? data.requiresInteraction.value
+          : this.requiresInteraction,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      instructions: data.instructions.present
+          ? data.instructions.value
+          : this.instructions,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionScrappingCommandData(')
+          ..write('institution: $institution, ')
+          ..write('commandID: $commandID, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('description: $description, ')
+          ..write('requiresInteraction: $requiresInteraction, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('instructions: $instructions')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    institution,
+    commandID,
+    name,
+    url,
+    description,
+    requiresInteraction,
+    createdAt,
+    instructions,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionScrappingCommandData &&
+          other.institution == this.institution &&
+          other.commandID == this.commandID &&
+          other.name == this.name &&
+          other.url == this.url &&
+          other.description == this.description &&
+          other.requiresInteraction == this.requiresInteraction &&
+          other.createdAt == this.createdAt &&
+          other.instructions == this.instructions);
+}
+
+class InstitutionScrappingCommandCompanion
+    extends UpdateCompanion<InstitutionScrappingCommandData> {
+  final Value<int> institution;
+  final Value<String> commandID;
+  final Value<String> name;
+  final Value<String?> url;
+  final Value<String?> description;
+  final Value<bool> requiresInteraction;
+  final Value<DateTime?> createdAt;
+  final Value<List<dynamic>> instructions;
+  final Value<int> rowid;
+  const InstitutionScrappingCommandCompanion({
+    this.institution = const Value.absent(),
+    this.commandID = const Value.absent(),
+    this.name = const Value.absent(),
+    this.url = const Value.absent(),
+    this.description = const Value.absent(),
+    this.requiresInteraction = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.instructions = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionScrappingCommandCompanion.insert({
+    required int institution,
+    required String commandID,
+    required String name,
+    this.url = const Value.absent(),
+    this.description = const Value.absent(),
+    this.requiresInteraction = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    required List<dynamic> instructions,
+    this.rowid = const Value.absent(),
+  }) : institution = Value(institution),
+       commandID = Value(commandID),
+       name = Value(name),
+       instructions = Value(instructions);
+  static Insertable<InstitutionScrappingCommandData> custom({
+    Expression<int>? institution,
+    Expression<String>? commandID,
+    Expression<String>? name,
+    Expression<String>? url,
+    Expression<String>? description,
+    Expression<bool>? requiresInteraction,
+    Expression<DateTime>? createdAt,
+    Expression<String>? instructions,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (institution != null) 'institution': institution,
+      if (commandID != null) 'command_i_d': commandID,
+      if (name != null) 'name': name,
+      if (url != null) 'url': url,
+      if (description != null) 'description': description,
+      if (requiresInteraction != null)
+        'requires_interaction': requiresInteraction,
+      if (createdAt != null) 'created_at': createdAt,
+      if (instructions != null) 'instructions': instructions,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionScrappingCommandCompanion copyWith({
+    Value<int>? institution,
+    Value<String>? commandID,
+    Value<String>? name,
+    Value<String?>? url,
+    Value<String?>? description,
+    Value<bool>? requiresInteraction,
+    Value<DateTime?>? createdAt,
+    Value<List<dynamic>>? instructions,
+    Value<int>? rowid,
+  }) {
+    return InstitutionScrappingCommandCompanion(
+      institution: institution ?? this.institution,
+      commandID: commandID ?? this.commandID,
+      name: name ?? this.name,
+      url: url ?? this.url,
+      description: description ?? this.description,
+      requiresInteraction: requiresInteraction ?? this.requiresInteraction,
+      createdAt: createdAt ?? this.createdAt,
+      instructions: instructions ?? this.instructions,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
+    if (commandID.present) {
+      map['command_i_d'] = Variable<String>(commandID.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (requiresInteraction.present) {
+      map['requires_interaction'] = Variable<bool>(requiresInteraction.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (instructions.present) {
+      map['instructions'] = Variable<String>(
+        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+          instructions.value,
+        ),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionScrappingCommandCompanion(')
+          ..write('institution: $institution, ')
+          ..write('commandID: $commandID, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('description: $description, ')
+          ..write('requiresInteraction: $requiresInteraction, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('instructions: $instructions, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InstitutionKeyTable extends InstitutionKey
+    with TableInfo<$InstitutionKeyTable, InstitutionKeyData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionKeyTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
+    'institutionID',
+  );
+  @override
+  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _commandIDMeta = const VerificationMeta(
+    'commandID',
+  );
+  @override
+  late final GeneratedColumn<String> commandID = GeneratedColumn<String>(
+    'command_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution_scrapping_command (command_i_d)',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
+  keySets = GeneratedColumn<String>(
+    'key_sets',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<Map<String, dynamic>>($InstitutionKeyTable.$converterkeySets);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DateTime.now()),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    institutionID,
+    commandID,
+    keySets,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_key';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionKeyData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIDMeta,
+        institutionID.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIDMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIDMeta);
+    }
+    if (data.containsKey('command_i_d')) {
+      context.handle(
+        _commandIDMeta,
+        commandID.isAcceptableOrUnknown(data['command_i_d']!, _commandIDMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_commandIDMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {institutionID, commandID};
+  @override
+  InstitutionKeyData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionKeyData(
+      institutionID: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      commandID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}command_i_d'],
+      )!,
+      keySets: $InstitutionKeyTable.$converterkeySets.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}key_sets'],
+        )!,
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $InstitutionKeyTable createAlias(String alias) {
+    return $InstitutionKeyTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, dynamic>, String> $converterkeySets =
+      JsonConverter();
+}
+
+class InstitutionKeyData extends DataClass
+    implements Insertable<InstitutionKeyData> {
+  final int institutionID;
+  final String commandID;
+  final Map<String, dynamic> keySets;
+  final DateTime? createdAt;
+  const InstitutionKeyData({
+    required this.institutionID,
+    required this.commandID,
+    required this.keySets,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['institution_id'] = Variable<int>(institutionID);
+    map['command_i_d'] = Variable<String>(commandID);
+    {
+      map['key_sets'] = Variable<String>(
+        $InstitutionKeyTable.$converterkeySets.toSql(keySets),
+      );
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  InstitutionKeyCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionKeyCompanion(
+      institutionID: Value(institutionID),
+      commandID: Value(commandID),
+      keySets: Value(keySets),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory InstitutionKeyData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionKeyData(
+      institutionID: serializer.fromJson<int>(json['institution_id']),
+      commandID: serializer.fromJson<String>(json['command_id']),
+      keySets: serializer.fromJson<Map<String, dynamic>>(json['key_sets']),
+      createdAt: serializer.fromJson<DateTime?>(json['created_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'institution_id': serializer.toJson<int>(institutionID),
+      'command_id': serializer.toJson<String>(commandID),
+      'key_sets': serializer.toJson<Map<String, dynamic>>(keySets),
+      'created_at': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  InstitutionKeyData copyWith({
+    int? institutionID,
+    String? commandID,
+    Map<String, dynamic>? keySets,
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => InstitutionKeyData(
+    institutionID: institutionID ?? this.institutionID,
+    commandID: commandID ?? this.commandID,
+    keySets: keySets ?? this.keySets,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  InstitutionKeyData copyWithCompanion(InstitutionKeyCompanion data) {
+    return InstitutionKeyData(
+      institutionID: data.institutionID.present
+          ? data.institutionID.value
+          : this.institutionID,
+      commandID: data.commandID.present ? data.commandID.value : this.commandID,
+      keySets: data.keySets.present ? data.keySets.value : this.keySets,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionKeyData(')
+          ..write('institutionID: $institutionID, ')
+          ..write('commandID: $commandID, ')
+          ..write('keySets: $keySets, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(institutionID, commandID, keySets, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionKeyData &&
+          other.institutionID == this.institutionID &&
+          other.commandID == this.commandID &&
+          other.keySets == this.keySets &&
+          other.createdAt == this.createdAt);
+}
+
+class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
+  final Value<int> institutionID;
+  final Value<String> commandID;
+  final Value<Map<String, dynamic>> keySets;
+  final Value<DateTime?> createdAt;
+  final Value<int> rowid;
+  const InstitutionKeyCompanion({
+    this.institutionID = const Value.absent(),
+    this.commandID = const Value.absent(),
+    this.keySets = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionKeyCompanion.insert({
+    required int institutionID,
+    required String commandID,
+    required Map<String, dynamic> keySets,
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : institutionID = Value(institutionID),
+       commandID = Value(commandID),
+       keySets = Value(keySets);
+  static Insertable<InstitutionKeyData> custom({
+    Expression<int>? institutionID,
+    Expression<String>? commandID,
+    Expression<String>? keySets,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (institutionID != null) 'institution_id': institutionID,
+      if (commandID != null) 'command_i_d': commandID,
+      if (keySets != null) 'key_sets': keySets,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionKeyCompanion copyWith({
+    Value<int>? institutionID,
+    Value<String>? commandID,
+    Value<Map<String, dynamic>>? keySets,
+    Value<DateTime?>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return InstitutionKeyCompanion(
+      institutionID: institutionID ?? this.institutionID,
+      commandID: commandID ?? this.commandID,
+      keySets: keySets ?? this.keySets,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (institutionID.present) {
+      map['institution_id'] = Variable<int>(institutionID.value);
+    }
+    if (commandID.present) {
+      map['command_i_d'] = Variable<String>(commandID.value);
+    }
+    if (keySets.present) {
+      map['key_sets'] = Variable<String>(
+        $InstitutionKeyTable.$converterkeySets.toSql(keySets.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionKeyCompanion(')
+          ..write('institutionID: $institutionID, ')
+          ..write('commandID: $commandID, ')
+          ..write('keySets: $keySets, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InstitutionProfileTable extends InstitutionProfile
+    with TableInfo<$InstitutionProfileTable, InstitutionProfileData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionProfileTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
   @override
   late final GeneratedColumn<String> userID = GeneratedColumn<String>(
-    'user_i_d',
+    'user_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -12961,60 +13860,163 @@ class $MagnetStudentProfileTable extends MagnetStudentProfile
   );
   @override
   late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
-    'institution_i_d',
+    'institution_id',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _admissionNumberMeta = const VerificationMeta(
-    'admissionNumber',
+  static const VerificationMeta _studentIDMeta = const VerificationMeta(
+    'studentID',
   );
   @override
-  late final GeneratedColumn<String> admissionNumber = GeneratedColumn<String>(
-    'admission_number',
+  late final GeneratedColumn<String> studentID = GeneratedColumn<String>(
+    'student_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _firstNameMeta = const VerificationMeta(
-    'firstName',
+  static const VerificationMeta _studentNameMeta = const VerificationMeta(
+    'studentName',
   );
   @override
-  late final GeneratedColumn<String> firstName = GeneratedColumn<String>(
-    'first_name',
+  late final GeneratedColumn<String> studentName = GeneratedColumn<String>(
+    'student_name',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _otherNamesMeta = const VerificationMeta(
-    'otherNames',
+    requiredDuringInsert: false,
+    defaultValue: Constant(""),
   );
   @override
-  late final GeneratedColumn<String> otherNames = GeneratedColumn<String>(
-    'other_names',
+  late final GeneratedColumnWithTypeConverter<Gender, String> gender =
+      GeneratedColumn<String>(
+        'gender',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(Gender.unknown.name),
+      ).withConverter<Gender>($InstitutionProfileTable.$convertergender);
+  @override
+  late final GeneratedColumnWithTypeConverter<AcademicStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(AcademicStatus.unknown.name),
+      ).withConverter<AcademicStatus>(
+        $InstitutionProfileTable.$converterstatus,
+      );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
-    'nationalId',
+  static const VerificationMeta _profilePictureMeta = const VerificationMeta(
+    'profilePicture',
   );
   @override
-  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+  late final GeneratedColumn<String> profilePicture = GeneratedColumn<String>(
+    'profile_picture',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nationalIDMeta = const VerificationMeta(
+    'nationalID',
+  );
+  @override
+  late final GeneratedColumn<String> nationalID = GeneratedColumn<String>(
     'national_id',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  static const VerificationMeta _nationalityMeta = const VerificationMeta(
+    'nationality',
+  );
   @override
-  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
-    'gender',
+  late final GeneratedColumn<String> nationality = GeneratedColumn<String>(
+    'nationality',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _programMeta = const VerificationMeta(
+    'program',
+  );
+  @override
+  late final GeneratedColumn<String> program = GeneratedColumn<String>(
+    'program',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _majorMeta = const VerificationMeta('major');
+  @override
+  late final GeneratedColumn<String> major = GeneratedColumn<String>(
+    'major',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _gpaMeta = const VerificationMeta('gpa');
+  @override
+  late final GeneratedColumn<double> gpa = GeneratedColumn<double>(
+    'gpa',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _disabilityStatusMeta = const VerificationMeta(
+    'disabilityStatus',
+  );
+  @override
+  late final GeneratedColumn<String> disabilityStatus = GeneratedColumn<String>(
+    'disability_status',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _schoolMeta = const VerificationMeta('school');
+  @override
+  late final GeneratedColumn<String> school = GeneratedColumn<String>(
+    'school',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -13031,1958 +14033,107 @@ class $MagnetStudentProfileTable extends MagnetStudentProfile
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
-  @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _phoneNumberMeta = const VerificationMeta(
-    'phoneNumber',
+  static const VerificationMeta _enrollmentDateMeta = const VerificationMeta(
+    'enrollmentDate',
   );
   @override
-  late final GeneratedColumn<String> phoneNumber = GeneratedColumn<String>(
-    'phone_number',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _profilePictureUrlMeta = const VerificationMeta(
-    'profilePictureUrl',
-  );
-  @override
-  late final GeneratedColumn<String> profilePictureUrl =
-      GeneratedColumn<String>(
-        'profile_picture_url',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
-    'dateOfBirth',
-  );
-  @override
-  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
-    'date_of_birth',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _schoolMeta = const VerificationMeta('school');
-  @override
-  late final GeneratedColumn<String> school = GeneratedColumn<String>(
-    'school',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
-  @override
-  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
-    'campus',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _enrollmentStatusMeta = const VerificationMeta(
-    'enrollmentStatus',
-  );
-  @override
-  late final GeneratedColumn<String> enrollmentStatus = GeneratedColumn<String>(
-    'enrollment_status',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _programmeMeta = const VerificationMeta(
-    'programme',
-  );
-  @override
-  late final GeneratedColumn<String> programme = GeneratedColumn<String>(
-    'programme',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _degreeMeta = const VerificationMeta('degree');
-  @override
-  late final GeneratedColumn<String> degree = GeneratedColumn<String>(
-    'degree',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _academicYearMeta = const VerificationMeta(
-    'academicYear',
-  );
-  @override
-  late final GeneratedColumn<int> academicYear = GeneratedColumn<int>(
-    'academic_year',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _gpaMeta = const VerificationMeta('gpa');
-  @override
-  late final GeneratedColumn<double> gpa = GeneratedColumn<double>(
-    'gpa',
-    aliasedName,
-    true,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _emergencyContactMeta = const VerificationMeta(
-    'emergencyContact',
-  );
-  @override
-  late final GeneratedColumn<String> emergencyContact = GeneratedColumn<String>(
-    'emergency_contact',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _parentNameMeta = const VerificationMeta(
-    'parentName',
-  );
-  @override
-  late final GeneratedColumn<String> parentName = GeneratedColumn<String>(
-    'parent_name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _dateOfAdmissionMeta = const VerificationMeta(
-    'dateOfAdmission',
-  );
-  @override
-  late final GeneratedColumn<DateTime> dateOfAdmission =
+  late final GeneratedColumn<DateTime> enrollmentDate =
       GeneratedColumn<DateTime>(
-        'date_of_admission',
+        'enrollment_date',
         aliasedName,
         true,
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _graduationDateMeta = const VerificationMeta(
-    'graduationDate',
-  );
+  static const VerificationMeta _expectedGraduationMeta =
+      const VerificationMeta('expectedGraduation');
   @override
-  late final GeneratedColumn<DateTime> graduationDate =
+  late final GeneratedColumn<DateTime> expectedGraduation =
       GeneratedColumn<DateTime>(
-        'graduation_date',
+        'expected_graduation',
         aliasedName,
         true,
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  static const VerificationMeta _disabilityStatusMeta = const VerificationMeta(
-    'disabilityStatus',
-  );
   @override
-  late final GeneratedColumn<String> disabilityStatus = GeneratedColumn<String>(
-    'disability_status',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _isInternationalStudentMeta =
-      const VerificationMeta('isInternationalStudent');
-  @override
-  late final GeneratedColumn<bool> isInternationalStudent =
-      GeneratedColumn<bool>(
-        'is_international_student',
-        aliasedName,
-        true,
-        type: DriftSqlType.bool,
-        requiredDuringInsert: false,
-        defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_international_student" IN (0, 1))',
-        ),
-      );
-  @override
-  List<GeneratedColumn> get $columns => [
-    userID,
-    institutionID,
-    admissionNumber,
-    firstName,
-    otherNames,
-    nationalId,
-    gender,
-    address,
-    email,
-    phoneNumber,
-    profilePictureUrl,
-    dateOfBirth,
-    school,
-    campus,
-    enrollmentStatus,
-    programme,
-    degree,
-    academicYear,
-    gpa,
-    emergencyContact,
-    parentName,
-    dateOfAdmission,
-    graduationDate,
-    disabilityStatus,
-    isInternationalStudent,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'magnet_student_profile';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<MagnetStudentProfileData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('user_i_d')) {
-      context.handle(
-        _userIDMeta,
-        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIDMeta);
-    }
-    if (data.containsKey('institution_i_d')) {
-      context.handle(
-        _institutionIDMeta,
-        institutionID.isAcceptableOrUnknown(
-          data['institution_i_d']!,
-          _institutionIDMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_institutionIDMeta);
-    }
-    if (data.containsKey('admission_number')) {
-      context.handle(
-        _admissionNumberMeta,
-        admissionNumber.isAcceptableOrUnknown(
-          data['admission_number']!,
-          _admissionNumberMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_admissionNumberMeta);
-    }
-    if (data.containsKey('first_name')) {
-      context.handle(
-        _firstNameMeta,
-        firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_firstNameMeta);
-    }
-    if (data.containsKey('other_names')) {
-      context.handle(
-        _otherNamesMeta,
-        otherNames.isAcceptableOrUnknown(data['other_names']!, _otherNamesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_otherNamesMeta);
-    }
-    if (data.containsKey('national_id')) {
-      context.handle(
-        _nationalIdMeta,
-        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
-      );
-    }
-    if (data.containsKey('gender')) {
-      context.handle(
-        _genderMeta,
-        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
-      );
-    }
-    if (data.containsKey('address')) {
-      context.handle(
-        _addressMeta,
-        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
-      );
-    }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    }
-    if (data.containsKey('phone_number')) {
-      context.handle(
-        _phoneNumberMeta,
-        phoneNumber.isAcceptableOrUnknown(
-          data['phone_number']!,
-          _phoneNumberMeta,
-        ),
-      );
-    }
-    if (data.containsKey('profile_picture_url')) {
-      context.handle(
-        _profilePictureUrlMeta,
-        profilePictureUrl.isAcceptableOrUnknown(
-          data['profile_picture_url']!,
-          _profilePictureUrlMeta,
-        ),
-      );
-    }
-    if (data.containsKey('date_of_birth')) {
-      context.handle(
-        _dateOfBirthMeta,
-        dateOfBirth.isAcceptableOrUnknown(
-          data['date_of_birth']!,
-          _dateOfBirthMeta,
-        ),
-      );
-    }
-    if (data.containsKey('school')) {
-      context.handle(
-        _schoolMeta,
-        school.isAcceptableOrUnknown(data['school']!, _schoolMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_schoolMeta);
-    }
-    if (data.containsKey('campus')) {
-      context.handle(
-        _campusMeta,
-        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
-      );
-    }
-    if (data.containsKey('enrollment_status')) {
-      context.handle(
-        _enrollmentStatusMeta,
-        enrollmentStatus.isAcceptableOrUnknown(
-          data['enrollment_status']!,
-          _enrollmentStatusMeta,
-        ),
-      );
-    }
-    if (data.containsKey('programme')) {
-      context.handle(
-        _programmeMeta,
-        programme.isAcceptableOrUnknown(data['programme']!, _programmeMeta),
-      );
-    }
-    if (data.containsKey('degree')) {
-      context.handle(
-        _degreeMeta,
-        degree.isAcceptableOrUnknown(data['degree']!, _degreeMeta),
-      );
-    }
-    if (data.containsKey('academic_year')) {
-      context.handle(
-        _academicYearMeta,
-        academicYear.isAcceptableOrUnknown(
-          data['academic_year']!,
-          _academicYearMeta,
-        ),
-      );
-    }
-    if (data.containsKey('gpa')) {
-      context.handle(
-        _gpaMeta,
-        gpa.isAcceptableOrUnknown(data['gpa']!, _gpaMeta),
-      );
-    }
-    if (data.containsKey('emergency_contact')) {
-      context.handle(
-        _emergencyContactMeta,
-        emergencyContact.isAcceptableOrUnknown(
-          data['emergency_contact']!,
-          _emergencyContactMeta,
-        ),
-      );
-    }
-    if (data.containsKey('parent_name')) {
-      context.handle(
-        _parentNameMeta,
-        parentName.isAcceptableOrUnknown(data['parent_name']!, _parentNameMeta),
-      );
-    }
-    if (data.containsKey('date_of_admission')) {
-      context.handle(
-        _dateOfAdmissionMeta,
-        dateOfAdmission.isAcceptableOrUnknown(
-          data['date_of_admission']!,
-          _dateOfAdmissionMeta,
-        ),
-      );
-    }
-    if (data.containsKey('graduation_date')) {
-      context.handle(
-        _graduationDateMeta,
-        graduationDate.isAcceptableOrUnknown(
-          data['graduation_date']!,
-          _graduationDateMeta,
-        ),
-      );
-    }
-    if (data.containsKey('disability_status')) {
-      context.handle(
-        _disabilityStatusMeta,
-        disabilityStatus.isAcceptableOrUnknown(
-          data['disability_status']!,
-          _disabilityStatusMeta,
-        ),
-      );
-    }
-    if (data.containsKey('is_international_student')) {
-      context.handle(
-        _isInternationalStudentMeta,
-        isInternationalStudent.isAcceptableOrUnknown(
-          data['is_international_student']!,
-          _isInternationalStudentMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {
-    admissionNumber,
-    institutionID,
-    userID,
-  };
-  @override
-  MagnetStudentProfileData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MagnetStudentProfileData(
-      userID: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_i_d'],
-      )!,
-      institutionID: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}institution_i_d'],
-      )!,
-      admissionNumber: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admission_number'],
-      )!,
-      firstName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}first_name'],
-      )!,
-      otherNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}other_names'],
-      )!,
-      nationalId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}national_id'],
-      ),
-      gender: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}gender'],
-      ),
-      address: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}address'],
-      ),
-      email: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email'],
-      ),
-      phoneNumber: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}phone_number'],
-      ),
-      profilePictureUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}profile_picture_url'],
-      ),
-      dateOfBirth: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}date_of_birth'],
-      ),
-      school: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}school'],
-      )!,
-      campus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}campus'],
-      ),
-      enrollmentStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}enrollment_status'],
-      ),
-      programme: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}programme'],
-      ),
-      degree: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}degree'],
-      ),
-      academicYear: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}academic_year'],
-      ),
-      gpa: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}gpa'],
-      ),
-      emergencyContact: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}emergency_contact'],
-      ),
-      parentName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}parent_name'],
-      ),
-      dateOfAdmission: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}date_of_admission'],
-      ),
-      graduationDate: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}graduation_date'],
-      ),
-      disabilityStatus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}disability_status'],
-      ),
-      isInternationalStudent: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_international_student'],
-      ),
-    );
-  }
-
-  @override
-  $MagnetStudentProfileTable createAlias(String alias) {
-    return $MagnetStudentProfileTable(attachedDatabase, alias);
-  }
-}
-
-class MagnetStudentProfileData extends DataClass
-    implements Insertable<MagnetStudentProfileData> {
-  final String userID;
-  final int institutionID;
-  final String admissionNumber;
-  final String firstName;
-  final String otherNames;
-  final String? nationalId;
-  final String? gender;
-  final String? address;
-  final String? email;
-  final String? phoneNumber;
-  final String? profilePictureUrl;
-  final DateTime? dateOfBirth;
-  final String school;
-  final String? campus;
-  final String? enrollmentStatus;
-  final String? programme;
-  final String? degree;
-  final int? academicYear;
-  final double? gpa;
-  final String? emergencyContact;
-  final String? parentName;
-  final DateTime? dateOfAdmission;
-  final DateTime? graduationDate;
-  final String? disabilityStatus;
-  final bool? isInternationalStudent;
-  const MagnetStudentProfileData({
-    required this.userID,
-    required this.institutionID,
-    required this.admissionNumber,
-    required this.firstName,
-    required this.otherNames,
-    this.nationalId,
-    this.gender,
-    this.address,
-    this.email,
-    this.phoneNumber,
-    this.profilePictureUrl,
-    this.dateOfBirth,
-    required this.school,
-    this.campus,
-    this.enrollmentStatus,
-    this.programme,
-    this.degree,
-    this.academicYear,
-    this.gpa,
-    this.emergencyContact,
-    this.parentName,
-    this.dateOfAdmission,
-    this.graduationDate,
-    this.disabilityStatus,
-    this.isInternationalStudent,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['user_i_d'] = Variable<String>(userID);
-    map['institution_i_d'] = Variable<int>(institutionID);
-    map['admission_number'] = Variable<String>(admissionNumber);
-    map['first_name'] = Variable<String>(firstName);
-    map['other_names'] = Variable<String>(otherNames);
-    if (!nullToAbsent || nationalId != null) {
-      map['national_id'] = Variable<String>(nationalId);
-    }
-    if (!nullToAbsent || gender != null) {
-      map['gender'] = Variable<String>(gender);
-    }
-    if (!nullToAbsent || address != null) {
-      map['address'] = Variable<String>(address);
-    }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || phoneNumber != null) {
-      map['phone_number'] = Variable<String>(phoneNumber);
-    }
-    if (!nullToAbsent || profilePictureUrl != null) {
-      map['profile_picture_url'] = Variable<String>(profilePictureUrl);
-    }
-    if (!nullToAbsent || dateOfBirth != null) {
-      map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
-    }
-    map['school'] = Variable<String>(school);
-    if (!nullToAbsent || campus != null) {
-      map['campus'] = Variable<String>(campus);
-    }
-    if (!nullToAbsent || enrollmentStatus != null) {
-      map['enrollment_status'] = Variable<String>(enrollmentStatus);
-    }
-    if (!nullToAbsent || programme != null) {
-      map['programme'] = Variable<String>(programme);
-    }
-    if (!nullToAbsent || degree != null) {
-      map['degree'] = Variable<String>(degree);
-    }
-    if (!nullToAbsent || academicYear != null) {
-      map['academic_year'] = Variable<int>(academicYear);
-    }
-    if (!nullToAbsent || gpa != null) {
-      map['gpa'] = Variable<double>(gpa);
-    }
-    if (!nullToAbsent || emergencyContact != null) {
-      map['emergency_contact'] = Variable<String>(emergencyContact);
-    }
-    if (!nullToAbsent || parentName != null) {
-      map['parent_name'] = Variable<String>(parentName);
-    }
-    if (!nullToAbsent || dateOfAdmission != null) {
-      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission);
-    }
-    if (!nullToAbsent || graduationDate != null) {
-      map['graduation_date'] = Variable<DateTime>(graduationDate);
-    }
-    if (!nullToAbsent || disabilityStatus != null) {
-      map['disability_status'] = Variable<String>(disabilityStatus);
-    }
-    if (!nullToAbsent || isInternationalStudent != null) {
-      map['is_international_student'] = Variable<bool>(isInternationalStudent);
-    }
-    return map;
-  }
-
-  MagnetStudentProfileCompanion toCompanion(bool nullToAbsent) {
-    return MagnetStudentProfileCompanion(
-      userID: Value(userID),
-      institutionID: Value(institutionID),
-      admissionNumber: Value(admissionNumber),
-      firstName: Value(firstName),
-      otherNames: Value(otherNames),
-      nationalId: nationalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nationalId),
-      gender: gender == null && nullToAbsent
-          ? const Value.absent()
-          : Value(gender),
-      address: address == null && nullToAbsent
-          ? const Value.absent()
-          : Value(address),
-      email: email == null && nullToAbsent
-          ? const Value.absent()
-          : Value(email),
-      phoneNumber: phoneNumber == null && nullToAbsent
-          ? const Value.absent()
-          : Value(phoneNumber),
-      profilePictureUrl: profilePictureUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(profilePictureUrl),
-      dateOfBirth: dateOfBirth == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dateOfBirth),
-      school: Value(school),
-      campus: campus == null && nullToAbsent
-          ? const Value.absent()
-          : Value(campus),
-      enrollmentStatus: enrollmentStatus == null && nullToAbsent
-          ? const Value.absent()
-          : Value(enrollmentStatus),
-      programme: programme == null && nullToAbsent
-          ? const Value.absent()
-          : Value(programme),
-      degree: degree == null && nullToAbsent
-          ? const Value.absent()
-          : Value(degree),
-      academicYear: academicYear == null && nullToAbsent
-          ? const Value.absent()
-          : Value(academicYear),
-      gpa: gpa == null && nullToAbsent ? const Value.absent() : Value(gpa),
-      emergencyContact: emergencyContact == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emergencyContact),
-      parentName: parentName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(parentName),
-      dateOfAdmission: dateOfAdmission == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dateOfAdmission),
-      graduationDate: graduationDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(graduationDate),
-      disabilityStatus: disabilityStatus == null && nullToAbsent
-          ? const Value.absent()
-          : Value(disabilityStatus),
-      isInternationalStudent: isInternationalStudent == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isInternationalStudent),
-    );
-  }
-
-  factory MagnetStudentProfileData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MagnetStudentProfileData(
-      userID: serializer.fromJson<String>(json['user_id']),
-      institutionID: serializer.fromJson<int>(json['institution_id']),
-      admissionNumber: serializer.fromJson<String>(json['admission_number']),
-      firstName: serializer.fromJson<String>(json['first_name']),
-      otherNames: serializer.fromJson<String>(json['other_names']),
-      nationalId: serializer.fromJson<String?>(json['national_id']),
-      gender: serializer.fromJson<String?>(json['gender']),
-      address: serializer.fromJson<String?>(json['address']),
-      email: serializer.fromJson<String?>(json['email']),
-      phoneNumber: serializer.fromJson<String?>(json['phone_number']),
-      profilePictureUrl: serializer.fromJson<String?>(
-        json['profile_picture_url'],
-      ),
-      dateOfBirth: serializer.fromJson<DateTime?>(json['date_of_birth']),
-      school: serializer.fromJson<String>(json['school']),
-      campus: serializer.fromJson<String?>(json['campus']),
-      enrollmentStatus: serializer.fromJson<String?>(json['enrollment_status']),
-      programme: serializer.fromJson<String?>(json['programme']),
-      degree: serializer.fromJson<String?>(json['degree']),
-      academicYear: serializer.fromJson<int?>(json['academicYear']),
-      gpa: serializer.fromJson<double?>(json['gpa']),
-      emergencyContact: serializer.fromJson<String?>(json['emergency_contact']),
-      parentName: serializer.fromJson<String?>(json['parent_name']),
-      dateOfAdmission: serializer.fromJson<DateTime?>(
-        json['date_of_admission'],
-      ),
-      graduationDate: serializer.fromJson<DateTime?>(json['graduation_date']),
-      disabilityStatus: serializer.fromJson<String?>(json['disability_status']),
-      isInternationalStudent: serializer.fromJson<bool?>(
-        json['is_international_student'],
-      ),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'user_id': serializer.toJson<String>(userID),
-      'institution_id': serializer.toJson<int>(institutionID),
-      'admission_number': serializer.toJson<String>(admissionNumber),
-      'first_name': serializer.toJson<String>(firstName),
-      'other_names': serializer.toJson<String>(otherNames),
-      'national_id': serializer.toJson<String?>(nationalId),
-      'gender': serializer.toJson<String?>(gender),
-      'address': serializer.toJson<String?>(address),
-      'email': serializer.toJson<String?>(email),
-      'phone_number': serializer.toJson<String?>(phoneNumber),
-      'profile_picture_url': serializer.toJson<String?>(profilePictureUrl),
-      'date_of_birth': serializer.toJson<DateTime?>(dateOfBirth),
-      'school': serializer.toJson<String>(school),
-      'campus': serializer.toJson<String?>(campus),
-      'enrollment_status': serializer.toJson<String?>(enrollmentStatus),
-      'programme': serializer.toJson<String?>(programme),
-      'degree': serializer.toJson<String?>(degree),
-      'academicYear': serializer.toJson<int?>(academicYear),
-      'gpa': serializer.toJson<double?>(gpa),
-      'emergency_contact': serializer.toJson<String?>(emergencyContact),
-      'parent_name': serializer.toJson<String?>(parentName),
-      'date_of_admission': serializer.toJson<DateTime?>(dateOfAdmission),
-      'graduation_date': serializer.toJson<DateTime?>(graduationDate),
-      'disability_status': serializer.toJson<String?>(disabilityStatus),
-      'is_international_student': serializer.toJson<bool?>(
-        isInternationalStudent,
-      ),
-    };
-  }
-
-  MagnetStudentProfileData copyWith({
-    String? userID,
-    int? institutionID,
-    String? admissionNumber,
-    String? firstName,
-    String? otherNames,
-    Value<String?> nationalId = const Value.absent(),
-    Value<String?> gender = const Value.absent(),
-    Value<String?> address = const Value.absent(),
-    Value<String?> email = const Value.absent(),
-    Value<String?> phoneNumber = const Value.absent(),
-    Value<String?> profilePictureUrl = const Value.absent(),
-    Value<DateTime?> dateOfBirth = const Value.absent(),
-    String? school,
-    Value<String?> campus = const Value.absent(),
-    Value<String?> enrollmentStatus = const Value.absent(),
-    Value<String?> programme = const Value.absent(),
-    Value<String?> degree = const Value.absent(),
-    Value<int?> academicYear = const Value.absent(),
-    Value<double?> gpa = const Value.absent(),
-    Value<String?> emergencyContact = const Value.absent(),
-    Value<String?> parentName = const Value.absent(),
-    Value<DateTime?> dateOfAdmission = const Value.absent(),
-    Value<DateTime?> graduationDate = const Value.absent(),
-    Value<String?> disabilityStatus = const Value.absent(),
-    Value<bool?> isInternationalStudent = const Value.absent(),
-  }) => MagnetStudentProfileData(
-    userID: userID ?? this.userID,
-    institutionID: institutionID ?? this.institutionID,
-    admissionNumber: admissionNumber ?? this.admissionNumber,
-    firstName: firstName ?? this.firstName,
-    otherNames: otherNames ?? this.otherNames,
-    nationalId: nationalId.present ? nationalId.value : this.nationalId,
-    gender: gender.present ? gender.value : this.gender,
-    address: address.present ? address.value : this.address,
-    email: email.present ? email.value : this.email,
-    phoneNumber: phoneNumber.present ? phoneNumber.value : this.phoneNumber,
-    profilePictureUrl: profilePictureUrl.present
-        ? profilePictureUrl.value
-        : this.profilePictureUrl,
-    dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
-    school: school ?? this.school,
-    campus: campus.present ? campus.value : this.campus,
-    enrollmentStatus: enrollmentStatus.present
-        ? enrollmentStatus.value
-        : this.enrollmentStatus,
-    programme: programme.present ? programme.value : this.programme,
-    degree: degree.present ? degree.value : this.degree,
-    academicYear: academicYear.present ? academicYear.value : this.academicYear,
-    gpa: gpa.present ? gpa.value : this.gpa,
-    emergencyContact: emergencyContact.present
-        ? emergencyContact.value
-        : this.emergencyContact,
-    parentName: parentName.present ? parentName.value : this.parentName,
-    dateOfAdmission: dateOfAdmission.present
-        ? dateOfAdmission.value
-        : this.dateOfAdmission,
-    graduationDate: graduationDate.present
-        ? graduationDate.value
-        : this.graduationDate,
-    disabilityStatus: disabilityStatus.present
-        ? disabilityStatus.value
-        : this.disabilityStatus,
-    isInternationalStudent: isInternationalStudent.present
-        ? isInternationalStudent.value
-        : this.isInternationalStudent,
-  );
-  MagnetStudentProfileData copyWithCompanion(
-    MagnetStudentProfileCompanion data,
-  ) {
-    return MagnetStudentProfileData(
-      userID: data.userID.present ? data.userID.value : this.userID,
-      institutionID: data.institutionID.present
-          ? data.institutionID.value
-          : this.institutionID,
-      admissionNumber: data.admissionNumber.present
-          ? data.admissionNumber.value
-          : this.admissionNumber,
-      firstName: data.firstName.present ? data.firstName.value : this.firstName,
-      otherNames: data.otherNames.present
-          ? data.otherNames.value
-          : this.otherNames,
-      nationalId: data.nationalId.present
-          ? data.nationalId.value
-          : this.nationalId,
-      gender: data.gender.present ? data.gender.value : this.gender,
-      address: data.address.present ? data.address.value : this.address,
-      email: data.email.present ? data.email.value : this.email,
-      phoneNumber: data.phoneNumber.present
-          ? data.phoneNumber.value
-          : this.phoneNumber,
-      profilePictureUrl: data.profilePictureUrl.present
-          ? data.profilePictureUrl.value
-          : this.profilePictureUrl,
-      dateOfBirth: data.dateOfBirth.present
-          ? data.dateOfBirth.value
-          : this.dateOfBirth,
-      school: data.school.present ? data.school.value : this.school,
-      campus: data.campus.present ? data.campus.value : this.campus,
-      enrollmentStatus: data.enrollmentStatus.present
-          ? data.enrollmentStatus.value
-          : this.enrollmentStatus,
-      programme: data.programme.present ? data.programme.value : this.programme,
-      degree: data.degree.present ? data.degree.value : this.degree,
-      academicYear: data.academicYear.present
-          ? data.academicYear.value
-          : this.academicYear,
-      gpa: data.gpa.present ? data.gpa.value : this.gpa,
-      emergencyContact: data.emergencyContact.present
-          ? data.emergencyContact.value
-          : this.emergencyContact,
-      parentName: data.parentName.present
-          ? data.parentName.value
-          : this.parentName,
-      dateOfAdmission: data.dateOfAdmission.present
-          ? data.dateOfAdmission.value
-          : this.dateOfAdmission,
-      graduationDate: data.graduationDate.present
-          ? data.graduationDate.value
-          : this.graduationDate,
-      disabilityStatus: data.disabilityStatus.present
-          ? data.disabilityStatus.value
-          : this.disabilityStatus,
-      isInternationalStudent: data.isInternationalStudent.present
-          ? data.isInternationalStudent.value
-          : this.isInternationalStudent,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MagnetStudentProfileData(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('admissionNumber: $admissionNumber, ')
-          ..write('firstName: $firstName, ')
-          ..write('otherNames: $otherNames, ')
-          ..write('nationalId: $nationalId, ')
-          ..write('gender: $gender, ')
-          ..write('address: $address, ')
-          ..write('email: $email, ')
-          ..write('phoneNumber: $phoneNumber, ')
-          ..write('profilePictureUrl: $profilePictureUrl, ')
-          ..write('dateOfBirth: $dateOfBirth, ')
-          ..write('school: $school, ')
-          ..write('campus: $campus, ')
-          ..write('enrollmentStatus: $enrollmentStatus, ')
-          ..write('programme: $programme, ')
-          ..write('degree: $degree, ')
-          ..write('academicYear: $academicYear, ')
-          ..write('gpa: $gpa, ')
-          ..write('emergencyContact: $emergencyContact, ')
-          ..write('parentName: $parentName, ')
-          ..write('dateOfAdmission: $dateOfAdmission, ')
-          ..write('graduationDate: $graduationDate, ')
-          ..write('disabilityStatus: $disabilityStatus, ')
-          ..write('isInternationalStudent: $isInternationalStudent')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    userID,
-    institutionID,
-    admissionNumber,
-    firstName,
-    otherNames,
-    nationalId,
-    gender,
-    address,
-    email,
-    phoneNumber,
-    profilePictureUrl,
-    dateOfBirth,
-    school,
-    campus,
-    enrollmentStatus,
-    programme,
-    degree,
-    academicYear,
-    gpa,
-    emergencyContact,
-    parentName,
-    dateOfAdmission,
-    graduationDate,
-    disabilityStatus,
-    isInternationalStudent,
-  ]);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MagnetStudentProfileData &&
-          other.userID == this.userID &&
-          other.institutionID == this.institutionID &&
-          other.admissionNumber == this.admissionNumber &&
-          other.firstName == this.firstName &&
-          other.otherNames == this.otherNames &&
-          other.nationalId == this.nationalId &&
-          other.gender == this.gender &&
-          other.address == this.address &&
-          other.email == this.email &&
-          other.phoneNumber == this.phoneNumber &&
-          other.profilePictureUrl == this.profilePictureUrl &&
-          other.dateOfBirth == this.dateOfBirth &&
-          other.school == this.school &&
-          other.campus == this.campus &&
-          other.enrollmentStatus == this.enrollmentStatus &&
-          other.programme == this.programme &&
-          other.degree == this.degree &&
-          other.academicYear == this.academicYear &&
-          other.gpa == this.gpa &&
-          other.emergencyContact == this.emergencyContact &&
-          other.parentName == this.parentName &&
-          other.dateOfAdmission == this.dateOfAdmission &&
-          other.graduationDate == this.graduationDate &&
-          other.disabilityStatus == this.disabilityStatus &&
-          other.isInternationalStudent == this.isInternationalStudent);
-}
-
-class MagnetStudentProfileCompanion
-    extends UpdateCompanion<MagnetStudentProfileData> {
-  final Value<String> userID;
-  final Value<int> institutionID;
-  final Value<String> admissionNumber;
-  final Value<String> firstName;
-  final Value<String> otherNames;
-  final Value<String?> nationalId;
-  final Value<String?> gender;
-  final Value<String?> address;
-  final Value<String?> email;
-  final Value<String?> phoneNumber;
-  final Value<String?> profilePictureUrl;
-  final Value<DateTime?> dateOfBirth;
-  final Value<String> school;
-  final Value<String?> campus;
-  final Value<String?> enrollmentStatus;
-  final Value<String?> programme;
-  final Value<String?> degree;
-  final Value<int?> academicYear;
-  final Value<double?> gpa;
-  final Value<String?> emergencyContact;
-  final Value<String?> parentName;
-  final Value<DateTime?> dateOfAdmission;
-  final Value<DateTime?> graduationDate;
-  final Value<String?> disabilityStatus;
-  final Value<bool?> isInternationalStudent;
-  final Value<int> rowid;
-  const MagnetStudentProfileCompanion({
-    this.userID = const Value.absent(),
-    this.institutionID = const Value.absent(),
-    this.admissionNumber = const Value.absent(),
-    this.firstName = const Value.absent(),
-    this.otherNames = const Value.absent(),
-    this.nationalId = const Value.absent(),
-    this.gender = const Value.absent(),
-    this.address = const Value.absent(),
-    this.email = const Value.absent(),
-    this.phoneNumber = const Value.absent(),
-    this.profilePictureUrl = const Value.absent(),
-    this.dateOfBirth = const Value.absent(),
-    this.school = const Value.absent(),
-    this.campus = const Value.absent(),
-    this.enrollmentStatus = const Value.absent(),
-    this.programme = const Value.absent(),
-    this.degree = const Value.absent(),
-    this.academicYear = const Value.absent(),
-    this.gpa = const Value.absent(),
-    this.emergencyContact = const Value.absent(),
-    this.parentName = const Value.absent(),
-    this.dateOfAdmission = const Value.absent(),
-    this.graduationDate = const Value.absent(),
-    this.disabilityStatus = const Value.absent(),
-    this.isInternationalStudent = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  MagnetStudentProfileCompanion.insert({
-    required String userID,
-    required int institutionID,
-    required String admissionNumber,
-    required String firstName,
-    required String otherNames,
-    this.nationalId = const Value.absent(),
-    this.gender = const Value.absent(),
-    this.address = const Value.absent(),
-    this.email = const Value.absent(),
-    this.phoneNumber = const Value.absent(),
-    this.profilePictureUrl = const Value.absent(),
-    this.dateOfBirth = const Value.absent(),
-    required String school,
-    this.campus = const Value.absent(),
-    this.enrollmentStatus = const Value.absent(),
-    this.programme = const Value.absent(),
-    this.degree = const Value.absent(),
-    this.academicYear = const Value.absent(),
-    this.gpa = const Value.absent(),
-    this.emergencyContact = const Value.absent(),
-    this.parentName = const Value.absent(),
-    this.dateOfAdmission = const Value.absent(),
-    this.graduationDate = const Value.absent(),
-    this.disabilityStatus = const Value.absent(),
-    this.isInternationalStudent = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : userID = Value(userID),
-       institutionID = Value(institutionID),
-       admissionNumber = Value(admissionNumber),
-       firstName = Value(firstName),
-       otherNames = Value(otherNames),
-       school = Value(school);
-  static Insertable<MagnetStudentProfileData> custom({
-    Expression<String>? userID,
-    Expression<int>? institutionID,
-    Expression<String>? admissionNumber,
-    Expression<String>? firstName,
-    Expression<String>? otherNames,
-    Expression<String>? nationalId,
-    Expression<String>? gender,
-    Expression<String>? address,
-    Expression<String>? email,
-    Expression<String>? phoneNumber,
-    Expression<String>? profilePictureUrl,
-    Expression<DateTime>? dateOfBirth,
-    Expression<String>? school,
-    Expression<String>? campus,
-    Expression<String>? enrollmentStatus,
-    Expression<String>? programme,
-    Expression<String>? degree,
-    Expression<int>? academicYear,
-    Expression<double>? gpa,
-    Expression<String>? emergencyContact,
-    Expression<String>? parentName,
-    Expression<DateTime>? dateOfAdmission,
-    Expression<DateTime>? graduationDate,
-    Expression<String>? disabilityStatus,
-    Expression<bool>? isInternationalStudent,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (userID != null) 'user_i_d': userID,
-      if (institutionID != null) 'institution_i_d': institutionID,
-      if (admissionNumber != null) 'admission_number': admissionNumber,
-      if (firstName != null) 'first_name': firstName,
-      if (otherNames != null) 'other_names': otherNames,
-      if (nationalId != null) 'national_id': nationalId,
-      if (gender != null) 'gender': gender,
-      if (address != null) 'address': address,
-      if (email != null) 'email': email,
-      if (phoneNumber != null) 'phone_number': phoneNumber,
-      if (profilePictureUrl != null) 'profile_picture_url': profilePictureUrl,
-      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
-      if (school != null) 'school': school,
-      if (campus != null) 'campus': campus,
-      if (enrollmentStatus != null) 'enrollment_status': enrollmentStatus,
-      if (programme != null) 'programme': programme,
-      if (degree != null) 'degree': degree,
-      if (academicYear != null) 'academic_year': academicYear,
-      if (gpa != null) 'gpa': gpa,
-      if (emergencyContact != null) 'emergency_contact': emergencyContact,
-      if (parentName != null) 'parent_name': parentName,
-      if (dateOfAdmission != null) 'date_of_admission': dateOfAdmission,
-      if (graduationDate != null) 'graduation_date': graduationDate,
-      if (disabilityStatus != null) 'disability_status': disabilityStatus,
-      if (isInternationalStudent != null)
-        'is_international_student': isInternationalStudent,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  MagnetStudentProfileCompanion copyWith({
-    Value<String>? userID,
-    Value<int>? institutionID,
-    Value<String>? admissionNumber,
-    Value<String>? firstName,
-    Value<String>? otherNames,
-    Value<String?>? nationalId,
-    Value<String?>? gender,
-    Value<String?>? address,
-    Value<String?>? email,
-    Value<String?>? phoneNumber,
-    Value<String?>? profilePictureUrl,
-    Value<DateTime?>? dateOfBirth,
-    Value<String>? school,
-    Value<String?>? campus,
-    Value<String?>? enrollmentStatus,
-    Value<String?>? programme,
-    Value<String?>? degree,
-    Value<int?>? academicYear,
-    Value<double?>? gpa,
-    Value<String?>? emergencyContact,
-    Value<String?>? parentName,
-    Value<DateTime?>? dateOfAdmission,
-    Value<DateTime?>? graduationDate,
-    Value<String?>? disabilityStatus,
-    Value<bool?>? isInternationalStudent,
-    Value<int>? rowid,
-  }) {
-    return MagnetStudentProfileCompanion(
-      userID: userID ?? this.userID,
-      institutionID: institutionID ?? this.institutionID,
-      admissionNumber: admissionNumber ?? this.admissionNumber,
-      firstName: firstName ?? this.firstName,
-      otherNames: otherNames ?? this.otherNames,
-      nationalId: nationalId ?? this.nationalId,
-      gender: gender ?? this.gender,
-      address: address ?? this.address,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      school: school ?? this.school,
-      campus: campus ?? this.campus,
-      enrollmentStatus: enrollmentStatus ?? this.enrollmentStatus,
-      programme: programme ?? this.programme,
-      degree: degree ?? this.degree,
-      academicYear: academicYear ?? this.academicYear,
-      gpa: gpa ?? this.gpa,
-      emergencyContact: emergencyContact ?? this.emergencyContact,
-      parentName: parentName ?? this.parentName,
-      dateOfAdmission: dateOfAdmission ?? this.dateOfAdmission,
-      graduationDate: graduationDate ?? this.graduationDate,
-      disabilityStatus: disabilityStatus ?? this.disabilityStatus,
-      isInternationalStudent:
-          isInternationalStudent ?? this.isInternationalStudent,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (userID.present) {
-      map['user_i_d'] = Variable<String>(userID.value);
-    }
-    if (institutionID.present) {
-      map['institution_i_d'] = Variable<int>(institutionID.value);
-    }
-    if (admissionNumber.present) {
-      map['admission_number'] = Variable<String>(admissionNumber.value);
-    }
-    if (firstName.present) {
-      map['first_name'] = Variable<String>(firstName.value);
-    }
-    if (otherNames.present) {
-      map['other_names'] = Variable<String>(otherNames.value);
-    }
-    if (nationalId.present) {
-      map['national_id'] = Variable<String>(nationalId.value);
-    }
-    if (gender.present) {
-      map['gender'] = Variable<String>(gender.value);
-    }
-    if (address.present) {
-      map['address'] = Variable<String>(address.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
-    }
-    if (phoneNumber.present) {
-      map['phone_number'] = Variable<String>(phoneNumber.value);
-    }
-    if (profilePictureUrl.present) {
-      map['profile_picture_url'] = Variable<String>(profilePictureUrl.value);
-    }
-    if (dateOfBirth.present) {
-      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
-    }
-    if (school.present) {
-      map['school'] = Variable<String>(school.value);
-    }
-    if (campus.present) {
-      map['campus'] = Variable<String>(campus.value);
-    }
-    if (enrollmentStatus.present) {
-      map['enrollment_status'] = Variable<String>(enrollmentStatus.value);
-    }
-    if (programme.present) {
-      map['programme'] = Variable<String>(programme.value);
-    }
-    if (degree.present) {
-      map['degree'] = Variable<String>(degree.value);
-    }
-    if (academicYear.present) {
-      map['academic_year'] = Variable<int>(academicYear.value);
-    }
-    if (gpa.present) {
-      map['gpa'] = Variable<double>(gpa.value);
-    }
-    if (emergencyContact.present) {
-      map['emergency_contact'] = Variable<String>(emergencyContact.value);
-    }
-    if (parentName.present) {
-      map['parent_name'] = Variable<String>(parentName.value);
-    }
-    if (dateOfAdmission.present) {
-      map['date_of_admission'] = Variable<DateTime>(dateOfAdmission.value);
-    }
-    if (graduationDate.present) {
-      map['graduation_date'] = Variable<DateTime>(graduationDate.value);
-    }
-    if (disabilityStatus.present) {
-      map['disability_status'] = Variable<String>(disabilityStatus.value);
-    }
-    if (isInternationalStudent.present) {
-      map['is_international_student'] = Variable<bool>(
-        isInternationalStudent.value,
-      );
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MagnetStudentProfileCompanion(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('admissionNumber: $admissionNumber, ')
-          ..write('firstName: $firstName, ')
-          ..write('otherNames: $otherNames, ')
-          ..write('nationalId: $nationalId, ')
-          ..write('gender: $gender, ')
-          ..write('address: $address, ')
-          ..write('email: $email, ')
-          ..write('phoneNumber: $phoneNumber, ')
-          ..write('profilePictureUrl: $profilePictureUrl, ')
-          ..write('dateOfBirth: $dateOfBirth, ')
-          ..write('school: $school, ')
-          ..write('campus: $campus, ')
-          ..write('enrollmentStatus: $enrollmentStatus, ')
-          ..write('programme: $programme, ')
-          ..write('degree: $degree, ')
-          ..write('academicYear: $academicYear, ')
-          ..write('gpa: $gpa, ')
-          ..write('emergencyContact: $emergencyContact, ')
-          ..write('parentName: $parentName, ')
-          ..write('dateOfAdmission: $dateOfAdmission, ')
-          ..write('graduationDate: $graduationDate, ')
-          ..write('disabilityStatus: $disabilityStatus, ')
-          ..write('isInternationalStudent: $isInternationalStudent, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $MagnetCredentialsTable extends MagnetCredentials
-    with TableInfo<$MagnetCredentialsTable, MagnetCredential> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MagnetCredentialsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
-  @override
-  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
-    'user_i_d',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
-    'institutionID',
-  );
-  @override
-  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
-    'institution_i_d',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _usernameMeta = const VerificationMeta(
-    'username',
-  );
-  @override
-  late final GeneratedColumn<String> username = GeneratedColumn<String>(
-    'username',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _passwordMeta = const VerificationMeta(
-    'password',
-  );
-  @override
-  late final GeneratedColumn<String> password = GeneratedColumn<String>(
-    'password',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _extraMeta = const VerificationMeta('extra');
-  @override
-  late final GeneratedColumn<String> extra = GeneratedColumn<String>(
-    'extra',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    userID,
-    institutionID,
-    username,
-    password,
-    extra,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'magnet_credentials';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<MagnetCredential> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('user_i_d')) {
-      context.handle(
-        _userIDMeta,
-        userID.isAcceptableOrUnknown(data['user_i_d']!, _userIDMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIDMeta);
-    }
-    if (data.containsKey('institution_i_d')) {
-      context.handle(
-        _institutionIDMeta,
-        institutionID.isAcceptableOrUnknown(
-          data['institution_i_d']!,
-          _institutionIDMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_institutionIDMeta);
-    }
-    if (data.containsKey('username')) {
-      context.handle(
-        _usernameMeta,
-        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_usernameMeta);
-    }
-    if (data.containsKey('password')) {
-      context.handle(
-        _passwordMeta,
-        password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_passwordMeta);
-    }
-    if (data.containsKey('extra')) {
-      context.handle(
-        _extraMeta,
-        extra.isAcceptableOrUnknown(data['extra']!, _extraMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {username, institutionID, userID};
-  @override
-  MagnetCredential map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MagnetCredential(
-      userID: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_i_d'],
-      )!,
-      institutionID: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}institution_i_d'],
-      )!,
-      username: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}username'],
-      )!,
-      password: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}password'],
-      )!,
-      extra: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}extra'],
-      ),
-    );
-  }
-
-  @override
-  $MagnetCredentialsTable createAlias(String alias) {
-    return $MagnetCredentialsTable(attachedDatabase, alias);
-  }
-}
-
-class MagnetCredential extends DataClass
-    implements Insertable<MagnetCredential> {
-  final String userID;
-  final int institutionID;
-  final String username;
-  final String password;
-
-  /// Store the extra Map`<String, dynamic>` as a JSON string
-  final String? extra;
-  const MagnetCredential({
-    required this.userID,
-    required this.institutionID,
-    required this.username,
-    required this.password,
-    this.extra,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['user_i_d'] = Variable<String>(userID);
-    map['institution_i_d'] = Variable<int>(institutionID);
-    map['username'] = Variable<String>(username);
-    map['password'] = Variable<String>(password);
-    if (!nullToAbsent || extra != null) {
-      map['extra'] = Variable<String>(extra);
-    }
-    return map;
-  }
-
-  MagnetCredentialsCompanion toCompanion(bool nullToAbsent) {
-    return MagnetCredentialsCompanion(
-      userID: Value(userID),
-      institutionID: Value(institutionID),
-      username: Value(username),
-      password: Value(password),
-      extra: extra == null && nullToAbsent
-          ? const Value.absent()
-          : Value(extra),
-    );
-  }
-
-  factory MagnetCredential.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MagnetCredential(
-      userID: serializer.fromJson<String>(json['user_id']),
-      institutionID: serializer.fromJson<int>(json['institution_id']),
-      username: serializer.fromJson<String>(json['username']),
-      password: serializer.fromJson<String>(json['password']),
-      extra: serializer.fromJson<String?>(json['extra']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'user_id': serializer.toJson<String>(userID),
-      'institution_id': serializer.toJson<int>(institutionID),
-      'username': serializer.toJson<String>(username),
-      'password': serializer.toJson<String>(password),
-      'extra': serializer.toJson<String?>(extra),
-    };
-  }
-
-  MagnetCredential copyWith({
-    String? userID,
-    int? institutionID,
-    String? username,
-    String? password,
-    Value<String?> extra = const Value.absent(),
-  }) => MagnetCredential(
-    userID: userID ?? this.userID,
-    institutionID: institutionID ?? this.institutionID,
-    username: username ?? this.username,
-    password: password ?? this.password,
-    extra: extra.present ? extra.value : this.extra,
-  );
-  MagnetCredential copyWithCompanion(MagnetCredentialsCompanion data) {
-    return MagnetCredential(
-      userID: data.userID.present ? data.userID.value : this.userID,
-      institutionID: data.institutionID.present
-          ? data.institutionID.value
-          : this.institutionID,
-      username: data.username.present ? data.username.value : this.username,
-      password: data.password.present ? data.password.value : this.password,
-      extra: data.extra.present ? data.extra.value : this.extra,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MagnetCredential(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('username: $username, ')
-          ..write('password: $password, ')
-          ..write('extra: $extra')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(userID, institutionID, username, password, extra);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MagnetCredential &&
-          other.userID == this.userID &&
-          other.institutionID == this.institutionID &&
-          other.username == this.username &&
-          other.password == this.password &&
-          other.extra == this.extra);
-}
-
-class MagnetCredentialsCompanion extends UpdateCompanion<MagnetCredential> {
-  final Value<String> userID;
-  final Value<int> institutionID;
-  final Value<String> username;
-  final Value<String> password;
-  final Value<String?> extra;
-  final Value<int> rowid;
-  const MagnetCredentialsCompanion({
-    this.userID = const Value.absent(),
-    this.institutionID = const Value.absent(),
-    this.username = const Value.absent(),
-    this.password = const Value.absent(),
-    this.extra = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  MagnetCredentialsCompanion.insert({
-    required String userID,
-    required int institutionID,
-    required String username,
-    required String password,
-    this.extra = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : userID = Value(userID),
-       institutionID = Value(institutionID),
-       username = Value(username),
-       password = Value(password);
-  static Insertable<MagnetCredential> custom({
-    Expression<String>? userID,
-    Expression<int>? institutionID,
-    Expression<String>? username,
-    Expression<String>? password,
-    Expression<String>? extra,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (userID != null) 'user_i_d': userID,
-      if (institutionID != null) 'institution_i_d': institutionID,
-      if (username != null) 'username': username,
-      if (password != null) 'password': password,
-      if (extra != null) 'extra': extra,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  MagnetCredentialsCompanion copyWith({
-    Value<String>? userID,
-    Value<int>? institutionID,
-    Value<String>? username,
-    Value<String>? password,
-    Value<String?>? extra,
-    Value<int>? rowid,
-  }) {
-    return MagnetCredentialsCompanion(
-      userID: userID ?? this.userID,
-      institutionID: institutionID ?? this.institutionID,
-      username: username ?? this.username,
-      password: password ?? this.password,
-      extra: extra ?? this.extra,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (userID.present) {
-      map['user_i_d'] = Variable<String>(userID.value);
-    }
-    if (institutionID.present) {
-      map['institution_i_d'] = Variable<int>(institutionID.value);
-    }
-    if (username.present) {
-      map['username'] = Variable<String>(username.value);
-    }
-    if (password.present) {
-      map['password'] = Variable<String>(password.value);
-    }
-    if (extra.present) {
-      map['extra'] = Variable<String>(extra.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MagnetCredentialsCompanion(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('username: $username, ')
-          ..write('password: $password, ')
-          ..write('extra: $extra, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $MagnetCourseInfoTable extends MagnetCourseInfo
-    with TableInfo<$MagnetCourseInfoTable, MagnetCourseInfoData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MagnetCourseInfoTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
-  @override
-  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
-    'institutionID',
-  );
-  @override
-  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
-    'institution_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
-    'courseCode',
-  );
-  @override
-  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
-    'course_code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _courseTitleMeta = const VerificationMeta(
-    'courseTitle',
-  );
-  @override
-  late final GeneratedColumn<String> courseTitle = GeneratedColumn<String>(
-    'course_title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _courseDescriptionMeta = const VerificationMeta(
-    'courseDescription',
-  );
-  @override
-  late final GeneratedColumn<String> courseDescription =
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  rawData =
       GeneratedColumn<String>(
-        'course_description',
+        'raw_data',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
+      ).withConverter<Map<String, dynamic>?>(
+        $InstitutionProfileTable.$converterrawDatan,
       );
-  static const VerificationMeta _creditsMeta = const VerificationMeta(
-    'credits',
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
   );
   @override
-  late final GeneratedColumn<int> credits = GeneratedColumn<int>(
-    'credits',
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
     false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _instructorMeta = const VerificationMeta(
-    'instructor',
-  );
-  @override
-  late final GeneratedColumn<String> instructor = GeneratedColumn<String>(
-    'instructor',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _semesterMeta = const VerificationMeta(
-    'semester',
-  );
-  @override
-  late final GeneratedColumn<String> semester = GeneratedColumn<String>(
-    'semester',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _scheduleMeta = const VerificationMeta(
-    'schedule',
-  );
-  @override
-  late final GeneratedColumn<DateTime> schedule = GeneratedColumn<DateTime>(
-    'schedule',
-    aliasedName,
-    true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
-  static const VerificationMeta _durationInSecondsMeta = const VerificationMeta(
-    'durationInSeconds',
-  );
-  @override
-  late final GeneratedColumn<int> durationInSeconds = GeneratedColumn<int>(
-    'duration_in_seconds',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _prerequisitesMeta = const VerificationMeta(
-    'prerequisites',
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
   );
   @override
-  late final GeneratedColumn<String> prerequisites = GeneratedColumn<String>(
-    'prerequisites',
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
     aliasedName,
-    true,
-    type: DriftSqlType.string,
+    false,
+    type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _courseTypeMeta = const VerificationMeta(
-    'courseType',
-  );
-  @override
-  late final GeneratedColumn<String> courseType = GeneratedColumn<String>(
-    'course_type',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _courseLevelMeta = const VerificationMeta(
-    'courseLevel',
-  );
-  @override
-  late final GeneratedColumn<String> courseLevel = GeneratedColumn<String>(
-    'course_level',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _locationMeta = const VerificationMeta(
-    'location',
-  );
-  @override
-  late final GeneratedColumn<String> location = GeneratedColumn<String>(
-    'location',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _enrollmentLimitMeta = const VerificationMeta(
-    'enrollmentLimit',
-  );
-  @override
-  late final GeneratedColumn<int> enrollmentLimit = GeneratedColumn<int>(
-    'enrollment_limit',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _currentEnrollmentMeta = const VerificationMeta(
-    'currentEnrollment',
-  );
-  @override
-  late final GeneratedColumn<int> currentEnrollment = GeneratedColumn<int>(
-    'current_enrollment',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _courseMaterialsMeta = const VerificationMeta(
-    'courseMaterials',
-  );
-  @override
-  late final GeneratedColumn<String> courseMaterials = GeneratedColumn<String>(
-    'course_materials',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
     userID,
     institutionID,
-    courseCode,
-    courseTitle,
-    courseDescription,
-    credits,
-    instructor,
-    semester,
-    schedule,
-    durationInSeconds,
-    prerequisites,
-    courseType,
-    courseLevel,
-    location,
-    enrollmentLimit,
-    currentEnrollment,
-    courseMaterials,
+    studentID,
+    studentName,
+    gender,
+    status,
+    email,
+    profilePicture,
+    nationalID,
+    nationality,
+    program,
+    major,
+    year,
+    gpa,
+    disabilityStatus,
+    school,
+    phone,
+    address,
+    enrollmentDate,
+    expectedGraduation,
+    rawData,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'courses';
+  static const String $name = 'institution_profile';
   @override
   VerificationContext validateIntegrity(
-    Insertable<MagnetCourseInfoData> instance, {
+    Insertable<InstitutionProfileData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('user_id')) {
       context.handle(
         _userIDMeta,
@@ -15002,135 +14153,147 @@ class $MagnetCourseInfoTable extends MagnetCourseInfo
     } else if (isInserting) {
       context.missing(_institutionIDMeta);
     }
-    if (data.containsKey('course_code')) {
+    if (data.containsKey('student_id')) {
       context.handle(
-        _courseCodeMeta,
-        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+        _studentIDMeta,
+        studentID.isAcceptableOrUnknown(data['student_id']!, _studentIDMeta),
       );
     } else if (isInserting) {
-      context.missing(_courseCodeMeta);
+      context.missing(_studentIDMeta);
     }
-    if (data.containsKey('course_title')) {
+    if (data.containsKey('student_name')) {
       context.handle(
-        _courseTitleMeta,
-        courseTitle.isAcceptableOrUnknown(
-          data['course_title']!,
-          _courseTitleMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_courseTitleMeta);
-    }
-    if (data.containsKey('course_description')) {
-      context.handle(
-        _courseDescriptionMeta,
-        courseDescription.isAcceptableOrUnknown(
-          data['course_description']!,
-          _courseDescriptionMeta,
+        _studentNameMeta,
+        studentName.isAcceptableOrUnknown(
+          data['student_name']!,
+          _studentNameMeta,
         ),
       );
     }
-    if (data.containsKey('credits')) {
+    if (data.containsKey('email')) {
       context.handle(
-        _creditsMeta,
-        credits.isAcceptableOrUnknown(data['credits']!, _creditsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_creditsMeta);
-    }
-    if (data.containsKey('instructor')) {
-      context.handle(
-        _instructorMeta,
-        instructor.isAcceptableOrUnknown(data['instructor']!, _instructorMeta),
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
       );
     }
-    if (data.containsKey('semester')) {
+    if (data.containsKey('profile_picture')) {
       context.handle(
-        _semesterMeta,
-        semester.isAcceptableOrUnknown(data['semester']!, _semesterMeta),
-      );
-    }
-    if (data.containsKey('schedule')) {
-      context.handle(
-        _scheduleMeta,
-        schedule.isAcceptableOrUnknown(data['schedule']!, _scheduleMeta),
-      );
-    }
-    if (data.containsKey('duration_in_seconds')) {
-      context.handle(
-        _durationInSecondsMeta,
-        durationInSeconds.isAcceptableOrUnknown(
-          data['duration_in_seconds']!,
-          _durationInSecondsMeta,
+        _profilePictureMeta,
+        profilePicture.isAcceptableOrUnknown(
+          data['profile_picture']!,
+          _profilePictureMeta,
         ),
       );
     }
-    if (data.containsKey('prerequisites')) {
+    if (data.containsKey('national_id')) {
       context.handle(
-        _prerequisitesMeta,
-        prerequisites.isAcceptableOrUnknown(
-          data['prerequisites']!,
-          _prerequisitesMeta,
+        _nationalIDMeta,
+        nationalID.isAcceptableOrUnknown(data['national_id']!, _nationalIDMeta),
+      );
+    }
+    if (data.containsKey('nationality')) {
+      context.handle(
+        _nationalityMeta,
+        nationality.isAcceptableOrUnknown(
+          data['nationality']!,
+          _nationalityMeta,
         ),
       );
     }
-    if (data.containsKey('course_type')) {
+    if (data.containsKey('program')) {
       context.handle(
-        _courseTypeMeta,
-        courseType.isAcceptableOrUnknown(data['course_type']!, _courseTypeMeta),
+        _programMeta,
+        program.isAcceptableOrUnknown(data['program']!, _programMeta),
       );
     }
-    if (data.containsKey('course_level')) {
+    if (data.containsKey('major')) {
       context.handle(
-        _courseLevelMeta,
-        courseLevel.isAcceptableOrUnknown(
-          data['course_level']!,
-          _courseLevelMeta,
+        _majorMeta,
+        major.isAcceptableOrUnknown(data['major']!, _majorMeta),
+      );
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    }
+    if (data.containsKey('gpa')) {
+      context.handle(
+        _gpaMeta,
+        gpa.isAcceptableOrUnknown(data['gpa']!, _gpaMeta),
+      );
+    }
+    if (data.containsKey('disability_status')) {
+      context.handle(
+        _disabilityStatusMeta,
+        disabilityStatus.isAcceptableOrUnknown(
+          data['disability_status']!,
+          _disabilityStatusMeta,
         ),
       );
     }
-    if (data.containsKey('location')) {
+    if (data.containsKey('school')) {
       context.handle(
-        _locationMeta,
-        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+        _schoolMeta,
+        school.isAcceptableOrUnknown(data['school']!, _schoolMeta),
       );
     }
-    if (data.containsKey('enrollment_limit')) {
+    if (data.containsKey('phone')) {
       context.handle(
-        _enrollmentLimitMeta,
-        enrollmentLimit.isAcceptableOrUnknown(
-          data['enrollment_limit']!,
-          _enrollmentLimitMeta,
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    }
+    if (data.containsKey('enrollment_date')) {
+      context.handle(
+        _enrollmentDateMeta,
+        enrollmentDate.isAcceptableOrUnknown(
+          data['enrollment_date']!,
+          _enrollmentDateMeta,
         ),
       );
     }
-    if (data.containsKey('current_enrollment')) {
+    if (data.containsKey('expected_graduation')) {
       context.handle(
-        _currentEnrollmentMeta,
-        currentEnrollment.isAcceptableOrUnknown(
-          data['current_enrollment']!,
-          _currentEnrollmentMeta,
+        _expectedGraduationMeta,
+        expectedGraduation.isAcceptableOrUnknown(
+          data['expected_graduation']!,
+          _expectedGraduationMeta,
         ),
       );
     }
-    if (data.containsKey('course_materials')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _courseMaterialsMeta,
-        courseMaterials.isAcceptableOrUnknown(
-          data['course_materials']!,
-          _courseMaterialsMeta,
-        ),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {userID, institutionID, courseCode};
+  Set<GeneratedColumn> get $primaryKey => {institutionID, userID};
   @override
-  MagnetCourseInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InstitutionProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MagnetCourseInfoData(
+    return InstitutionProfileData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      ),
       userID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
@@ -15139,562 +14302,749 @@ class $MagnetCourseInfoTable extends MagnetCourseInfo
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
       )!,
-      courseCode: attachedDatabase.typeMapping.read(
+      studentID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}course_code'],
+        data['${effectivePrefix}student_id'],
       )!,
-      courseTitle: attachedDatabase.typeMapping.read(
+      studentName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}course_title'],
+        data['${effectivePrefix}student_name'],
       )!,
-      courseDescription: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}course_description'],
+      gender: $InstitutionProfileTable.$convertergender.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}gender'],
+        )!,
       ),
-      credits: attachedDatabase.typeMapping.read(
+      status: $InstitutionProfileTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      profilePicture: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_picture'],
+      ),
+      nationalID: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_id'],
+      ),
+      nationality: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nationality'],
+      ),
+      program: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}program'],
+      ),
+      major: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}major'],
+      ),
+      year: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}credits'],
-      )!,
-      instructor: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}instructor'],
+        data['${effectivePrefix}year'],
       ),
-      semester: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}semester'],
+      gpa: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}gpa'],
       ),
-      schedule: attachedDatabase.typeMapping.read(
+      disabilityStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}disability_status'],
+      ),
+      school: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school'],
+      ),
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      ),
+      enrollmentDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}schedule'],
+        data['${effectivePrefix}enrollment_date'],
       ),
-      durationInSeconds: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}duration_in_seconds'],
+      expectedGraduation: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}expected_graduation'],
       ),
-      prerequisites: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}prerequisites'],
+      rawData: $InstitutionProfileTable.$converterrawDatan.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}raw_data'],
+        ),
       ),
-      courseType: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}course_type'],
-      ),
-      courseLevel: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}course_level'],
-      ),
-      location: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}location'],
-      ),
-      enrollmentLimit: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}enrollment_limit'],
-      ),
-      currentEnrollment: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}current_enrollment'],
-      ),
-      courseMaterials: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}course_materials'],
-      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
   @override
-  $MagnetCourseInfoTable createAlias(String alias) {
-    return $MagnetCourseInfoTable(attachedDatabase, alias);
+  $InstitutionProfileTable createAlias(String alias) {
+    return $InstitutionProfileTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<Gender, String, String> $convertergender =
+      const EnumNameConverter<Gender>(Gender.values);
+  static JsonTypeConverter2<AcademicStatus, String, String> $converterstatus =
+      const EnumNameConverter<AcademicStatus>(AcademicStatus.values);
+  static TypeConverter<Map<String, dynamic>, String> $converterrawData =
+      const JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterrawDatan =
+      NullAwareTypeConverter.wrap($converterrawData);
 }
 
-class MagnetCourseInfoData extends DataClass
-    implements Insertable<MagnetCourseInfoData> {
+class InstitutionProfileData extends DataClass
+    implements Insertable<InstitutionProfileData> {
+  final int? id;
   final String userID;
   final int institutionID;
-  final String courseCode;
-  final String courseTitle;
-  final String? courseDescription;
-  final int credits;
-  final String? instructor;
-  final String? semester;
-  final DateTime? schedule;
-  final int? durationInSeconds;
-  final String? prerequisites;
-  final String? courseType;
-  final String? courseLevel;
-  final String? location;
-  final int? enrollmentLimit;
-  final int? currentEnrollment;
-  final String? courseMaterials;
-  const MagnetCourseInfoData({
+  final String studentID;
+  final String studentName;
+  final Gender gender;
+  final AcademicStatus status;
+  final String? email;
+  final String? profilePicture;
+  final String? nationalID;
+  final String? nationality;
+  final String? program;
+  final String? major;
+  final int? year;
+  final double? gpa;
+  final String? disabilityStatus;
+  final String? school;
+  final String? phone;
+  final String? address;
+  final DateTime? enrollmentDate;
+  final DateTime? expectedGraduation;
+  final Map<String, dynamic>? rawData;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const InstitutionProfileData({
+    this.id,
     required this.userID,
     required this.institutionID,
-    required this.courseCode,
-    required this.courseTitle,
-    this.courseDescription,
-    required this.credits,
-    this.instructor,
-    this.semester,
-    this.schedule,
-    this.durationInSeconds,
-    this.prerequisites,
-    this.courseType,
-    this.courseLevel,
-    this.location,
-    this.enrollmentLimit,
-    this.currentEnrollment,
-    this.courseMaterials,
+    required this.studentID,
+    required this.studentName,
+    required this.gender,
+    required this.status,
+    this.email,
+    this.profilePicture,
+    this.nationalID,
+    this.nationality,
+    this.program,
+    this.major,
+    this.year,
+    this.gpa,
+    this.disabilityStatus,
+    this.school,
+    this.phone,
+    this.address,
+    this.enrollmentDate,
+    this.expectedGraduation,
+    this.rawData,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
     map['user_id'] = Variable<String>(userID);
     map['institution_id'] = Variable<int>(institutionID);
-    map['course_code'] = Variable<String>(courseCode);
-    map['course_title'] = Variable<String>(courseTitle);
-    if (!nullToAbsent || courseDescription != null) {
-      map['course_description'] = Variable<String>(courseDescription);
+    map['student_id'] = Variable<String>(studentID);
+    map['student_name'] = Variable<String>(studentName);
+    {
+      map['gender'] = Variable<String>(
+        $InstitutionProfileTable.$convertergender.toSql(gender),
+      );
     }
-    map['credits'] = Variable<int>(credits);
-    if (!nullToAbsent || instructor != null) {
-      map['instructor'] = Variable<String>(instructor);
+    {
+      map['status'] = Variable<String>(
+        $InstitutionProfileTable.$converterstatus.toSql(status),
+      );
     }
-    if (!nullToAbsent || semester != null) {
-      map['semester'] = Variable<String>(semester);
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
     }
-    if (!nullToAbsent || schedule != null) {
-      map['schedule'] = Variable<DateTime>(schedule);
+    if (!nullToAbsent || profilePicture != null) {
+      map['profile_picture'] = Variable<String>(profilePicture);
     }
-    if (!nullToAbsent || durationInSeconds != null) {
-      map['duration_in_seconds'] = Variable<int>(durationInSeconds);
+    if (!nullToAbsent || nationalID != null) {
+      map['national_id'] = Variable<String>(nationalID);
     }
-    if (!nullToAbsent || prerequisites != null) {
-      map['prerequisites'] = Variable<String>(prerequisites);
+    if (!nullToAbsent || nationality != null) {
+      map['nationality'] = Variable<String>(nationality);
     }
-    if (!nullToAbsent || courseType != null) {
-      map['course_type'] = Variable<String>(courseType);
+    if (!nullToAbsent || program != null) {
+      map['program'] = Variable<String>(program);
     }
-    if (!nullToAbsent || courseLevel != null) {
-      map['course_level'] = Variable<String>(courseLevel);
+    if (!nullToAbsent || major != null) {
+      map['major'] = Variable<String>(major);
     }
-    if (!nullToAbsent || location != null) {
-      map['location'] = Variable<String>(location);
+    if (!nullToAbsent || year != null) {
+      map['year'] = Variable<int>(year);
     }
-    if (!nullToAbsent || enrollmentLimit != null) {
-      map['enrollment_limit'] = Variable<int>(enrollmentLimit);
+    if (!nullToAbsent || gpa != null) {
+      map['gpa'] = Variable<double>(gpa);
     }
-    if (!nullToAbsent || currentEnrollment != null) {
-      map['current_enrollment'] = Variable<int>(currentEnrollment);
+    if (!nullToAbsent || disabilityStatus != null) {
+      map['disability_status'] = Variable<String>(disabilityStatus);
     }
-    if (!nullToAbsent || courseMaterials != null) {
-      map['course_materials'] = Variable<String>(courseMaterials);
+    if (!nullToAbsent || school != null) {
+      map['school'] = Variable<String>(school);
     }
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || enrollmentDate != null) {
+      map['enrollment_date'] = Variable<DateTime>(enrollmentDate);
+    }
+    if (!nullToAbsent || expectedGraduation != null) {
+      map['expected_graduation'] = Variable<DateTime>(expectedGraduation);
+    }
+    if (!nullToAbsent || rawData != null) {
+      map['raw_data'] = Variable<String>(
+        $InstitutionProfileTable.$converterrawDatan.toSql(rawData),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
-  MagnetCourseInfoCompanion toCompanion(bool nullToAbsent) {
-    return MagnetCourseInfoCompanion(
+  InstitutionProfileCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionProfileCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       userID: Value(userID),
       institutionID: Value(institutionID),
-      courseCode: Value(courseCode),
-      courseTitle: Value(courseTitle),
-      courseDescription: courseDescription == null && nullToAbsent
+      studentID: Value(studentID),
+      studentName: Value(studentName),
+      gender: Value(gender),
+      status: Value(status),
+      email: email == null && nullToAbsent
           ? const Value.absent()
-          : Value(courseDescription),
-      credits: Value(credits),
-      instructor: instructor == null && nullToAbsent
+          : Value(email),
+      profilePicture: profilePicture == null && nullToAbsent
           ? const Value.absent()
-          : Value(instructor),
-      semester: semester == null && nullToAbsent
+          : Value(profilePicture),
+      nationalID: nationalID == null && nullToAbsent
           ? const Value.absent()
-          : Value(semester),
-      schedule: schedule == null && nullToAbsent
+          : Value(nationalID),
+      nationality: nationality == null && nullToAbsent
           ? const Value.absent()
-          : Value(schedule),
-      durationInSeconds: durationInSeconds == null && nullToAbsent
+          : Value(nationality),
+      program: program == null && nullToAbsent
           ? const Value.absent()
-          : Value(durationInSeconds),
-      prerequisites: prerequisites == null && nullToAbsent
+          : Value(program),
+      major: major == null && nullToAbsent
           ? const Value.absent()
-          : Value(prerequisites),
-      courseType: courseType == null && nullToAbsent
+          : Value(major),
+      year: year == null && nullToAbsent ? const Value.absent() : Value(year),
+      gpa: gpa == null && nullToAbsent ? const Value.absent() : Value(gpa),
+      disabilityStatus: disabilityStatus == null && nullToAbsent
           ? const Value.absent()
-          : Value(courseType),
-      courseLevel: courseLevel == null && nullToAbsent
+          : Value(disabilityStatus),
+      school: school == null && nullToAbsent
           ? const Value.absent()
-          : Value(courseLevel),
-      location: location == null && nullToAbsent
+          : Value(school),
+      phone: phone == null && nullToAbsent
           ? const Value.absent()
-          : Value(location),
-      enrollmentLimit: enrollmentLimit == null && nullToAbsent
+          : Value(phone),
+      address: address == null && nullToAbsent
           ? const Value.absent()
-          : Value(enrollmentLimit),
-      currentEnrollment: currentEnrollment == null && nullToAbsent
+          : Value(address),
+      enrollmentDate: enrollmentDate == null && nullToAbsent
           ? const Value.absent()
-          : Value(currentEnrollment),
-      courseMaterials: courseMaterials == null && nullToAbsent
+          : Value(enrollmentDate),
+      expectedGraduation: expectedGraduation == null && nullToAbsent
           ? const Value.absent()
-          : Value(courseMaterials),
+          : Value(expectedGraduation),
+      rawData: rawData == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawData),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
-  factory MagnetCourseInfoData.fromJson(
+  factory InstitutionProfileData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MagnetCourseInfoData(
-      userID: serializer.fromJson<String>(json['userID']),
-      institutionID: serializer.fromJson<int>(json['institutionID']),
-      courseCode: serializer.fromJson<String>(json['courseCode']),
-      courseTitle: serializer.fromJson<String>(json['courseTitle']),
-      courseDescription: serializer.fromJson<String?>(
-        json['courseDescription'],
+    return InstitutionProfileData(
+      id: serializer.fromJson<int?>(json['id']),
+      userID: serializer.fromJson<String>(json['user_id']),
+      institutionID: serializer.fromJson<int>(json['institution']),
+      studentID: serializer.fromJson<String>(json['student_id']),
+      studentName: serializer.fromJson<String>(json['student_name']),
+      gender: $InstitutionProfileTable.$convertergender.fromJson(
+        serializer.fromJson<String>(json['gender']),
       ),
-      credits: serializer.fromJson<int>(json['credits']),
-      instructor: serializer.fromJson<String?>(json['instructor']),
-      semester: serializer.fromJson<String?>(json['semester']),
-      schedule: serializer.fromJson<DateTime?>(json['schedule']),
-      durationInSeconds: serializer.fromJson<int?>(json['durationInSeconds']),
-      prerequisites: serializer.fromJson<String?>(json['prerequisites']),
-      courseType: serializer.fromJson<String?>(json['courseType']),
-      courseLevel: serializer.fromJson<String?>(json['courseLevel']),
-      location: serializer.fromJson<String?>(json['location']),
-      enrollmentLimit: serializer.fromJson<int?>(json['enrollmentLimit']),
-      currentEnrollment: serializer.fromJson<int?>(json['currentEnrollment']),
-      courseMaterials: serializer.fromJson<String?>(json['courseMaterials']),
+      status: $InstitutionProfileTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
+      email: serializer.fromJson<String?>(json['email']),
+      profilePicture: serializer.fromJson<String?>(json['profile_picture']),
+      nationalID: serializer.fromJson<String?>(json['national_id']),
+      nationality: serializer.fromJson<String?>(json['nationality']),
+      program: serializer.fromJson<String?>(json['program']),
+      major: serializer.fromJson<String?>(json['major']),
+      year: serializer.fromJson<int?>(json['year']),
+      gpa: serializer.fromJson<double?>(json['gpa']),
+      disabilityStatus: serializer.fromJson<String?>(json['disability_status']),
+      school: serializer.fromJson<String?>(json['school']),
+      phone: serializer.fromJson<String?>(json['phone']),
+      address: serializer.fromJson<String?>(json['address']),
+      enrollmentDate: serializer.fromJson<DateTime?>(json['enrollment_date']),
+      expectedGraduation: serializer.fromJson<DateTime?>(
+        json['expected_graduation'],
+      ),
+      rawData: serializer.fromJson<Map<String, dynamic>?>(json['raw_data']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'userID': serializer.toJson<String>(userID),
-      'institutionID': serializer.toJson<int>(institutionID),
-      'courseCode': serializer.toJson<String>(courseCode),
-      'courseTitle': serializer.toJson<String>(courseTitle),
-      'courseDescription': serializer.toJson<String?>(courseDescription),
-      'credits': serializer.toJson<int>(credits),
-      'instructor': serializer.toJson<String?>(instructor),
-      'semester': serializer.toJson<String?>(semester),
-      'schedule': serializer.toJson<DateTime?>(schedule),
-      'durationInSeconds': serializer.toJson<int?>(durationInSeconds),
-      'prerequisites': serializer.toJson<String?>(prerequisites),
-      'courseType': serializer.toJson<String?>(courseType),
-      'courseLevel': serializer.toJson<String?>(courseLevel),
-      'location': serializer.toJson<String?>(location),
-      'enrollmentLimit': serializer.toJson<int?>(enrollmentLimit),
-      'currentEnrollment': serializer.toJson<int?>(currentEnrollment),
-      'courseMaterials': serializer.toJson<String?>(courseMaterials),
+      'id': serializer.toJson<int?>(id),
+      'user_id': serializer.toJson<String>(userID),
+      'institution': serializer.toJson<int>(institutionID),
+      'student_id': serializer.toJson<String>(studentID),
+      'student_name': serializer.toJson<String>(studentName),
+      'gender': serializer.toJson<String>(
+        $InstitutionProfileTable.$convertergender.toJson(gender),
+      ),
+      'status': serializer.toJson<String>(
+        $InstitutionProfileTable.$converterstatus.toJson(status),
+      ),
+      'email': serializer.toJson<String?>(email),
+      'profile_picture': serializer.toJson<String?>(profilePicture),
+      'national_id': serializer.toJson<String?>(nationalID),
+      'nationality': serializer.toJson<String?>(nationality),
+      'program': serializer.toJson<String?>(program),
+      'major': serializer.toJson<String?>(major),
+      'year': serializer.toJson<int?>(year),
+      'gpa': serializer.toJson<double?>(gpa),
+      'disability_status': serializer.toJson<String?>(disabilityStatus),
+      'school': serializer.toJson<String?>(school),
+      'phone': serializer.toJson<String?>(phone),
+      'address': serializer.toJson<String?>(address),
+      'enrollment_date': serializer.toJson<DateTime?>(enrollmentDate),
+      'expected_graduation': serializer.toJson<DateTime?>(expectedGraduation),
+      'raw_data': serializer.toJson<Map<String, dynamic>?>(rawData),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  MagnetCourseInfoData copyWith({
+  InstitutionProfileData copyWith({
+    Value<int?> id = const Value.absent(),
     String? userID,
     int? institutionID,
-    String? courseCode,
-    String? courseTitle,
-    Value<String?> courseDescription = const Value.absent(),
-    int? credits,
-    Value<String?> instructor = const Value.absent(),
-    Value<String?> semester = const Value.absent(),
-    Value<DateTime?> schedule = const Value.absent(),
-    Value<int?> durationInSeconds = const Value.absent(),
-    Value<String?> prerequisites = const Value.absent(),
-    Value<String?> courseType = const Value.absent(),
-    Value<String?> courseLevel = const Value.absent(),
-    Value<String?> location = const Value.absent(),
-    Value<int?> enrollmentLimit = const Value.absent(),
-    Value<int?> currentEnrollment = const Value.absent(),
-    Value<String?> courseMaterials = const Value.absent(),
-  }) => MagnetCourseInfoData(
+    String? studentID,
+    String? studentName,
+    Gender? gender,
+    AcademicStatus? status,
+    Value<String?> email = const Value.absent(),
+    Value<String?> profilePicture = const Value.absent(),
+    Value<String?> nationalID = const Value.absent(),
+    Value<String?> nationality = const Value.absent(),
+    Value<String?> program = const Value.absent(),
+    Value<String?> major = const Value.absent(),
+    Value<int?> year = const Value.absent(),
+    Value<double?> gpa = const Value.absent(),
+    Value<String?> disabilityStatus = const Value.absent(),
+    Value<String?> school = const Value.absent(),
+    Value<String?> phone = const Value.absent(),
+    Value<String?> address = const Value.absent(),
+    Value<DateTime?> enrollmentDate = const Value.absent(),
+    Value<DateTime?> expectedGraduation = const Value.absent(),
+    Value<Map<String, dynamic>?> rawData = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => InstitutionProfileData(
+    id: id.present ? id.value : this.id,
     userID: userID ?? this.userID,
     institutionID: institutionID ?? this.institutionID,
-    courseCode: courseCode ?? this.courseCode,
-    courseTitle: courseTitle ?? this.courseTitle,
-    courseDescription: courseDescription.present
-        ? courseDescription.value
-        : this.courseDescription,
-    credits: credits ?? this.credits,
-    instructor: instructor.present ? instructor.value : this.instructor,
-    semester: semester.present ? semester.value : this.semester,
-    schedule: schedule.present ? schedule.value : this.schedule,
-    durationInSeconds: durationInSeconds.present
-        ? durationInSeconds.value
-        : this.durationInSeconds,
-    prerequisites: prerequisites.present
-        ? prerequisites.value
-        : this.prerequisites,
-    courseType: courseType.present ? courseType.value : this.courseType,
-    courseLevel: courseLevel.present ? courseLevel.value : this.courseLevel,
-    location: location.present ? location.value : this.location,
-    enrollmentLimit: enrollmentLimit.present
-        ? enrollmentLimit.value
-        : this.enrollmentLimit,
-    currentEnrollment: currentEnrollment.present
-        ? currentEnrollment.value
-        : this.currentEnrollment,
-    courseMaterials: courseMaterials.present
-        ? courseMaterials.value
-        : this.courseMaterials,
+    studentID: studentID ?? this.studentID,
+    studentName: studentName ?? this.studentName,
+    gender: gender ?? this.gender,
+    status: status ?? this.status,
+    email: email.present ? email.value : this.email,
+    profilePicture: profilePicture.present
+        ? profilePicture.value
+        : this.profilePicture,
+    nationalID: nationalID.present ? nationalID.value : this.nationalID,
+    nationality: nationality.present ? nationality.value : this.nationality,
+    program: program.present ? program.value : this.program,
+    major: major.present ? major.value : this.major,
+    year: year.present ? year.value : this.year,
+    gpa: gpa.present ? gpa.value : this.gpa,
+    disabilityStatus: disabilityStatus.present
+        ? disabilityStatus.value
+        : this.disabilityStatus,
+    school: school.present ? school.value : this.school,
+    phone: phone.present ? phone.value : this.phone,
+    address: address.present ? address.value : this.address,
+    enrollmentDate: enrollmentDate.present
+        ? enrollmentDate.value
+        : this.enrollmentDate,
+    expectedGraduation: expectedGraduation.present
+        ? expectedGraduation.value
+        : this.expectedGraduation,
+    rawData: rawData.present ? rawData.value : this.rawData,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
-  MagnetCourseInfoData copyWithCompanion(MagnetCourseInfoCompanion data) {
-    return MagnetCourseInfoData(
+  InstitutionProfileData copyWithCompanion(InstitutionProfileCompanion data) {
+    return InstitutionProfileData(
+      id: data.id.present ? data.id.value : this.id,
       userID: data.userID.present ? data.userID.value : this.userID,
       institutionID: data.institutionID.present
           ? data.institutionID.value
           : this.institutionID,
-      courseCode: data.courseCode.present
-          ? data.courseCode.value
-          : this.courseCode,
-      courseTitle: data.courseTitle.present
-          ? data.courseTitle.value
-          : this.courseTitle,
-      courseDescription: data.courseDescription.present
-          ? data.courseDescription.value
-          : this.courseDescription,
-      credits: data.credits.present ? data.credits.value : this.credits,
-      instructor: data.instructor.present
-          ? data.instructor.value
-          : this.instructor,
-      semester: data.semester.present ? data.semester.value : this.semester,
-      schedule: data.schedule.present ? data.schedule.value : this.schedule,
-      durationInSeconds: data.durationInSeconds.present
-          ? data.durationInSeconds.value
-          : this.durationInSeconds,
-      prerequisites: data.prerequisites.present
-          ? data.prerequisites.value
-          : this.prerequisites,
-      courseType: data.courseType.present
-          ? data.courseType.value
-          : this.courseType,
-      courseLevel: data.courseLevel.present
-          ? data.courseLevel.value
-          : this.courseLevel,
-      location: data.location.present ? data.location.value : this.location,
-      enrollmentLimit: data.enrollmentLimit.present
-          ? data.enrollmentLimit.value
-          : this.enrollmentLimit,
-      currentEnrollment: data.currentEnrollment.present
-          ? data.currentEnrollment.value
-          : this.currentEnrollment,
-      courseMaterials: data.courseMaterials.present
-          ? data.courseMaterials.value
-          : this.courseMaterials,
+      studentID: data.studentID.present ? data.studentID.value : this.studentID,
+      studentName: data.studentName.present
+          ? data.studentName.value
+          : this.studentName,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      status: data.status.present ? data.status.value : this.status,
+      email: data.email.present ? data.email.value : this.email,
+      profilePicture: data.profilePicture.present
+          ? data.profilePicture.value
+          : this.profilePicture,
+      nationalID: data.nationalID.present
+          ? data.nationalID.value
+          : this.nationalID,
+      nationality: data.nationality.present
+          ? data.nationality.value
+          : this.nationality,
+      program: data.program.present ? data.program.value : this.program,
+      major: data.major.present ? data.major.value : this.major,
+      year: data.year.present ? data.year.value : this.year,
+      gpa: data.gpa.present ? data.gpa.value : this.gpa,
+      disabilityStatus: data.disabilityStatus.present
+          ? data.disabilityStatus.value
+          : this.disabilityStatus,
+      school: data.school.present ? data.school.value : this.school,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      address: data.address.present ? data.address.value : this.address,
+      enrollmentDate: data.enrollmentDate.present
+          ? data.enrollmentDate.value
+          : this.enrollmentDate,
+      expectedGraduation: data.expectedGraduation.present
+          ? data.expectedGraduation.value
+          : this.expectedGraduation,
+      rawData: data.rawData.present ? data.rawData.value : this.rawData,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('MagnetCourseInfoData(')
+    return (StringBuffer('InstitutionProfileData(')
+          ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
-          ..write('courseCode: $courseCode, ')
-          ..write('courseTitle: $courseTitle, ')
-          ..write('courseDescription: $courseDescription, ')
-          ..write('credits: $credits, ')
-          ..write('instructor: $instructor, ')
-          ..write('semester: $semester, ')
-          ..write('schedule: $schedule, ')
-          ..write('durationInSeconds: $durationInSeconds, ')
-          ..write('prerequisites: $prerequisites, ')
-          ..write('courseType: $courseType, ')
-          ..write('courseLevel: $courseLevel, ')
-          ..write('location: $location, ')
-          ..write('enrollmentLimit: $enrollmentLimit, ')
-          ..write('currentEnrollment: $currentEnrollment, ')
-          ..write('courseMaterials: $courseMaterials')
+          ..write('studentID: $studentID, ')
+          ..write('studentName: $studentName, ')
+          ..write('gender: $gender, ')
+          ..write('status: $status, ')
+          ..write('email: $email, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('nationalID: $nationalID, ')
+          ..write('nationality: $nationality, ')
+          ..write('program: $program, ')
+          ..write('major: $major, ')
+          ..write('year: $year, ')
+          ..write('gpa: $gpa, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('school: $school, ')
+          ..write('phone: $phone, ')
+          ..write('address: $address, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('expectedGraduation: $expectedGraduation, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
+    id,
     userID,
     institutionID,
-    courseCode,
-    courseTitle,
-    courseDescription,
-    credits,
-    instructor,
-    semester,
-    schedule,
-    durationInSeconds,
-    prerequisites,
-    courseType,
-    courseLevel,
-    location,
-    enrollmentLimit,
-    currentEnrollment,
-    courseMaterials,
-  );
+    studentID,
+    studentName,
+    gender,
+    status,
+    email,
+    profilePicture,
+    nationalID,
+    nationality,
+    program,
+    major,
+    year,
+    gpa,
+    disabilityStatus,
+    school,
+    phone,
+    address,
+    enrollmentDate,
+    expectedGraduation,
+    rawData,
+    createdAt,
+    updatedAt,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is MagnetCourseInfoData &&
+      (other is InstitutionProfileData &&
+          other.id == this.id &&
           other.userID == this.userID &&
           other.institutionID == this.institutionID &&
-          other.courseCode == this.courseCode &&
-          other.courseTitle == this.courseTitle &&
-          other.courseDescription == this.courseDescription &&
-          other.credits == this.credits &&
-          other.instructor == this.instructor &&
-          other.semester == this.semester &&
-          other.schedule == this.schedule &&
-          other.durationInSeconds == this.durationInSeconds &&
-          other.prerequisites == this.prerequisites &&
-          other.courseType == this.courseType &&
-          other.courseLevel == this.courseLevel &&
-          other.location == this.location &&
-          other.enrollmentLimit == this.enrollmentLimit &&
-          other.currentEnrollment == this.currentEnrollment &&
-          other.courseMaterials == this.courseMaterials);
+          other.studentID == this.studentID &&
+          other.studentName == this.studentName &&
+          other.gender == this.gender &&
+          other.status == this.status &&
+          other.email == this.email &&
+          other.profilePicture == this.profilePicture &&
+          other.nationalID == this.nationalID &&
+          other.nationality == this.nationality &&
+          other.program == this.program &&
+          other.major == this.major &&
+          other.year == this.year &&
+          other.gpa == this.gpa &&
+          other.disabilityStatus == this.disabilityStatus &&
+          other.school == this.school &&
+          other.phone == this.phone &&
+          other.address == this.address &&
+          other.enrollmentDate == this.enrollmentDate &&
+          other.expectedGraduation == this.expectedGraduation &&
+          other.rawData == this.rawData &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
-class MagnetCourseInfoCompanion extends UpdateCompanion<MagnetCourseInfoData> {
+class InstitutionProfileCompanion
+    extends UpdateCompanion<InstitutionProfileData> {
+  final Value<int?> id;
   final Value<String> userID;
   final Value<int> institutionID;
-  final Value<String> courseCode;
-  final Value<String> courseTitle;
-  final Value<String?> courseDescription;
-  final Value<int> credits;
-  final Value<String?> instructor;
-  final Value<String?> semester;
-  final Value<DateTime?> schedule;
-  final Value<int?> durationInSeconds;
-  final Value<String?> prerequisites;
-  final Value<String?> courseType;
-  final Value<String?> courseLevel;
-  final Value<String?> location;
-  final Value<int?> enrollmentLimit;
-  final Value<int?> currentEnrollment;
-  final Value<String?> courseMaterials;
+  final Value<String> studentID;
+  final Value<String> studentName;
+  final Value<Gender> gender;
+  final Value<AcademicStatus> status;
+  final Value<String?> email;
+  final Value<String?> profilePicture;
+  final Value<String?> nationalID;
+  final Value<String?> nationality;
+  final Value<String?> program;
+  final Value<String?> major;
+  final Value<int?> year;
+  final Value<double?> gpa;
+  final Value<String?> disabilityStatus;
+  final Value<String?> school;
+  final Value<String?> phone;
+  final Value<String?> address;
+  final Value<DateTime?> enrollmentDate;
+  final Value<DateTime?> expectedGraduation;
+  final Value<Map<String, dynamic>?> rawData;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
-  const MagnetCourseInfoCompanion({
+  const InstitutionProfileCompanion({
+    this.id = const Value.absent(),
     this.userID = const Value.absent(),
     this.institutionID = const Value.absent(),
-    this.courseCode = const Value.absent(),
-    this.courseTitle = const Value.absent(),
-    this.courseDescription = const Value.absent(),
-    this.credits = const Value.absent(),
-    this.instructor = const Value.absent(),
-    this.semester = const Value.absent(),
-    this.schedule = const Value.absent(),
-    this.durationInSeconds = const Value.absent(),
-    this.prerequisites = const Value.absent(),
-    this.courseType = const Value.absent(),
-    this.courseLevel = const Value.absent(),
-    this.location = const Value.absent(),
-    this.enrollmentLimit = const Value.absent(),
-    this.currentEnrollment = const Value.absent(),
-    this.courseMaterials = const Value.absent(),
+    this.studentID = const Value.absent(),
+    this.studentName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.status = const Value.absent(),
+    this.email = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.nationalID = const Value.absent(),
+    this.nationality = const Value.absent(),
+    this.program = const Value.absent(),
+    this.major = const Value.absent(),
+    this.year = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.school = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.address = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.expectedGraduation = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  MagnetCourseInfoCompanion.insert({
+  InstitutionProfileCompanion.insert({
+    this.id = const Value.absent(),
     required String userID,
     required int institutionID,
-    required String courseCode,
-    required String courseTitle,
-    this.courseDescription = const Value.absent(),
-    required int credits,
-    this.instructor = const Value.absent(),
-    this.semester = const Value.absent(),
-    this.schedule = const Value.absent(),
-    this.durationInSeconds = const Value.absent(),
-    this.prerequisites = const Value.absent(),
-    this.courseType = const Value.absent(),
-    this.courseLevel = const Value.absent(),
-    this.location = const Value.absent(),
-    this.enrollmentLimit = const Value.absent(),
-    this.currentEnrollment = const Value.absent(),
-    this.courseMaterials = const Value.absent(),
+    required String studentID,
+    this.studentName = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.status = const Value.absent(),
+    this.email = const Value.absent(),
+    this.profilePicture = const Value.absent(),
+    this.nationalID = const Value.absent(),
+    this.nationality = const Value.absent(),
+    this.program = const Value.absent(),
+    this.major = const Value.absent(),
+    this.year = const Value.absent(),
+    this.gpa = const Value.absent(),
+    this.disabilityStatus = const Value.absent(),
+    this.school = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.address = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.expectedGraduation = const Value.absent(),
+    this.rawData = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : userID = Value(userID),
        institutionID = Value(institutionID),
-       courseCode = Value(courseCode),
-       courseTitle = Value(courseTitle),
-       credits = Value(credits);
-  static Insertable<MagnetCourseInfoData> custom({
+       studentID = Value(studentID);
+  static Insertable<InstitutionProfileData> custom({
+    Expression<int>? id,
     Expression<String>? userID,
     Expression<int>? institutionID,
-    Expression<String>? courseCode,
-    Expression<String>? courseTitle,
-    Expression<String>? courseDescription,
-    Expression<int>? credits,
-    Expression<String>? instructor,
-    Expression<String>? semester,
-    Expression<DateTime>? schedule,
-    Expression<int>? durationInSeconds,
-    Expression<String>? prerequisites,
-    Expression<String>? courseType,
-    Expression<String>? courseLevel,
-    Expression<String>? location,
-    Expression<int>? enrollmentLimit,
-    Expression<int>? currentEnrollment,
-    Expression<String>? courseMaterials,
+    Expression<String>? studentID,
+    Expression<String>? studentName,
+    Expression<String>? gender,
+    Expression<String>? status,
+    Expression<String>? email,
+    Expression<String>? profilePicture,
+    Expression<String>? nationalID,
+    Expression<String>? nationality,
+    Expression<String>? program,
+    Expression<String>? major,
+    Expression<int>? year,
+    Expression<double>? gpa,
+    Expression<String>? disabilityStatus,
+    Expression<String>? school,
+    Expression<String>? phone,
+    Expression<String>? address,
+    Expression<DateTime>? enrollmentDate,
+    Expression<DateTime>? expectedGraduation,
+    Expression<String>? rawData,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (userID != null) 'user_id': userID,
       if (institutionID != null) 'institution_id': institutionID,
-      if (courseCode != null) 'course_code': courseCode,
-      if (courseTitle != null) 'course_title': courseTitle,
-      if (courseDescription != null) 'course_description': courseDescription,
-      if (credits != null) 'credits': credits,
-      if (instructor != null) 'instructor': instructor,
-      if (semester != null) 'semester': semester,
-      if (schedule != null) 'schedule': schedule,
-      if (durationInSeconds != null) 'duration_in_seconds': durationInSeconds,
-      if (prerequisites != null) 'prerequisites': prerequisites,
-      if (courseType != null) 'course_type': courseType,
-      if (courseLevel != null) 'course_level': courseLevel,
-      if (location != null) 'location': location,
-      if (enrollmentLimit != null) 'enrollment_limit': enrollmentLimit,
-      if (currentEnrollment != null) 'current_enrollment': currentEnrollment,
-      if (courseMaterials != null) 'course_materials': courseMaterials,
+      if (studentID != null) 'student_id': studentID,
+      if (studentName != null) 'student_name': studentName,
+      if (gender != null) 'gender': gender,
+      if (status != null) 'status': status,
+      if (email != null) 'email': email,
+      if (profilePicture != null) 'profile_picture': profilePicture,
+      if (nationalID != null) 'national_id': nationalID,
+      if (nationality != null) 'nationality': nationality,
+      if (program != null) 'program': program,
+      if (major != null) 'major': major,
+      if (year != null) 'year': year,
+      if (gpa != null) 'gpa': gpa,
+      if (disabilityStatus != null) 'disability_status': disabilityStatus,
+      if (school != null) 'school': school,
+      if (phone != null) 'phone': phone,
+      if (address != null) 'address': address,
+      if (enrollmentDate != null) 'enrollment_date': enrollmentDate,
+      if (expectedGraduation != null) 'expected_graduation': expectedGraduation,
+      if (rawData != null) 'raw_data': rawData,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  MagnetCourseInfoCompanion copyWith({
+  InstitutionProfileCompanion copyWith({
+    Value<int?>? id,
     Value<String>? userID,
     Value<int>? institutionID,
-    Value<String>? courseCode,
-    Value<String>? courseTitle,
-    Value<String?>? courseDescription,
-    Value<int>? credits,
-    Value<String?>? instructor,
-    Value<String?>? semester,
-    Value<DateTime?>? schedule,
-    Value<int?>? durationInSeconds,
-    Value<String?>? prerequisites,
-    Value<String?>? courseType,
-    Value<String?>? courseLevel,
-    Value<String?>? location,
-    Value<int?>? enrollmentLimit,
-    Value<int?>? currentEnrollment,
-    Value<String?>? courseMaterials,
+    Value<String>? studentID,
+    Value<String>? studentName,
+    Value<Gender>? gender,
+    Value<AcademicStatus>? status,
+    Value<String?>? email,
+    Value<String?>? profilePicture,
+    Value<String?>? nationalID,
+    Value<String?>? nationality,
+    Value<String?>? program,
+    Value<String?>? major,
+    Value<int?>? year,
+    Value<double?>? gpa,
+    Value<String?>? disabilityStatus,
+    Value<String?>? school,
+    Value<String?>? phone,
+    Value<String?>? address,
+    Value<DateTime?>? enrollmentDate,
+    Value<DateTime?>? expectedGraduation,
+    Value<Map<String, dynamic>?>? rawData,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
-    return MagnetCourseInfoCompanion(
+    return InstitutionProfileCompanion(
+      id: id ?? this.id,
       userID: userID ?? this.userID,
       institutionID: institutionID ?? this.institutionID,
-      courseCode: courseCode ?? this.courseCode,
-      courseTitle: courseTitle ?? this.courseTitle,
-      courseDescription: courseDescription ?? this.courseDescription,
-      credits: credits ?? this.credits,
-      instructor: instructor ?? this.instructor,
-      semester: semester ?? this.semester,
-      schedule: schedule ?? this.schedule,
-      durationInSeconds: durationInSeconds ?? this.durationInSeconds,
-      prerequisites: prerequisites ?? this.prerequisites,
-      courseType: courseType ?? this.courseType,
-      courseLevel: courseLevel ?? this.courseLevel,
-      location: location ?? this.location,
-      enrollmentLimit: enrollmentLimit ?? this.enrollmentLimit,
-      currentEnrollment: currentEnrollment ?? this.currentEnrollment,
-      courseMaterials: courseMaterials ?? this.courseMaterials,
+      studentID: studentID ?? this.studentID,
+      studentName: studentName ?? this.studentName,
+      gender: gender ?? this.gender,
+      status: status ?? this.status,
+      email: email ?? this.email,
+      profilePicture: profilePicture ?? this.profilePicture,
+      nationalID: nationalID ?? this.nationalID,
+      nationality: nationality ?? this.nationality,
+      program: program ?? this.program,
+      major: major ?? this.major,
+      year: year ?? this.year,
+      gpa: gpa ?? this.gpa,
+      disabilityStatus: disabilityStatus ?? this.disabilityStatus,
+      school: school ?? this.school,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+      expectedGraduation: expectedGraduation ?? this.expectedGraduation,
+      rawData: rawData ?? this.rawData,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -15702,56 +15052,83 @@ class MagnetCourseInfoCompanion extends UpdateCompanion<MagnetCourseInfoData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (userID.present) {
       map['user_id'] = Variable<String>(userID.value);
     }
     if (institutionID.present) {
       map['institution_id'] = Variable<int>(institutionID.value);
     }
-    if (courseCode.present) {
-      map['course_code'] = Variable<String>(courseCode.value);
+    if (studentID.present) {
+      map['student_id'] = Variable<String>(studentID.value);
     }
-    if (courseTitle.present) {
-      map['course_title'] = Variable<String>(courseTitle.value);
+    if (studentName.present) {
+      map['student_name'] = Variable<String>(studentName.value);
     }
-    if (courseDescription.present) {
-      map['course_description'] = Variable<String>(courseDescription.value);
+    if (gender.present) {
+      map['gender'] = Variable<String>(
+        $InstitutionProfileTable.$convertergender.toSql(gender.value),
+      );
     }
-    if (credits.present) {
-      map['credits'] = Variable<int>(credits.value);
+    if (status.present) {
+      map['status'] = Variable<String>(
+        $InstitutionProfileTable.$converterstatus.toSql(status.value),
+      );
     }
-    if (instructor.present) {
-      map['instructor'] = Variable<String>(instructor.value);
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
     }
-    if (semester.present) {
-      map['semester'] = Variable<String>(semester.value);
+    if (profilePicture.present) {
+      map['profile_picture'] = Variable<String>(profilePicture.value);
     }
-    if (schedule.present) {
-      map['schedule'] = Variable<DateTime>(schedule.value);
+    if (nationalID.present) {
+      map['national_id'] = Variable<String>(nationalID.value);
     }
-    if (durationInSeconds.present) {
-      map['duration_in_seconds'] = Variable<int>(durationInSeconds.value);
+    if (nationality.present) {
+      map['nationality'] = Variable<String>(nationality.value);
     }
-    if (prerequisites.present) {
-      map['prerequisites'] = Variable<String>(prerequisites.value);
+    if (program.present) {
+      map['program'] = Variable<String>(program.value);
     }
-    if (courseType.present) {
-      map['course_type'] = Variable<String>(courseType.value);
+    if (major.present) {
+      map['major'] = Variable<String>(major.value);
     }
-    if (courseLevel.present) {
-      map['course_level'] = Variable<String>(courseLevel.value);
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
     }
-    if (location.present) {
-      map['location'] = Variable<String>(location.value);
+    if (gpa.present) {
+      map['gpa'] = Variable<double>(gpa.value);
     }
-    if (enrollmentLimit.present) {
-      map['enrollment_limit'] = Variable<int>(enrollmentLimit.value);
+    if (disabilityStatus.present) {
+      map['disability_status'] = Variable<String>(disabilityStatus.value);
     }
-    if (currentEnrollment.present) {
-      map['current_enrollment'] = Variable<int>(currentEnrollment.value);
+    if (school.present) {
+      map['school'] = Variable<String>(school.value);
     }
-    if (courseMaterials.present) {
-      map['course_materials'] = Variable<String>(courseMaterials.value);
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (enrollmentDate.present) {
+      map['enrollment_date'] = Variable<DateTime>(enrollmentDate.value);
+    }
+    if (expectedGraduation.present) {
+      map['expected_graduation'] = Variable<DateTime>(expectedGraduation.value);
+    }
+    if (rawData.present) {
+      map['raw_data'] = Variable<String>(
+        $InstitutionProfileTable.$converterrawDatan.toSql(rawData.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -15761,139 +15138,147 @@ class MagnetCourseInfoCompanion extends UpdateCompanion<MagnetCourseInfoData> {
 
   @override
   String toString() {
-    return (StringBuffer('MagnetCourseInfoCompanion(')
+    return (StringBuffer('InstitutionProfileCompanion(')
+          ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
-          ..write('courseCode: $courseCode, ')
-          ..write('courseTitle: $courseTitle, ')
-          ..write('courseDescription: $courseDescription, ')
-          ..write('credits: $credits, ')
-          ..write('instructor: $instructor, ')
-          ..write('semester: $semester, ')
-          ..write('schedule: $schedule, ')
-          ..write('durationInSeconds: $durationInSeconds, ')
-          ..write('prerequisites: $prerequisites, ')
-          ..write('courseType: $courseType, ')
-          ..write('courseLevel: $courseLevel, ')
-          ..write('location: $location, ')
-          ..write('enrollmentLimit: $enrollmentLimit, ')
-          ..write('currentEnrollment: $currentEnrollment, ')
-          ..write('courseMaterials: $courseMaterials, ')
+          ..write('studentID: $studentID, ')
+          ..write('studentName: $studentName, ')
+          ..write('gender: $gender, ')
+          ..write('status: $status, ')
+          ..write('email: $email, ')
+          ..write('profilePicture: $profilePicture, ')
+          ..write('nationalID: $nationalID, ')
+          ..write('nationality: $nationality, ')
+          ..write('program: $program, ')
+          ..write('major: $major, ')
+          ..write('year: $year, ')
+          ..write('gpa: $gpa, ')
+          ..write('disabilityStatus: $disabilityStatus, ')
+          ..write('school: $school, ')
+          ..write('phone: $phone, ')
+          ..write('address: $address, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('expectedGraduation: $expectedGraduation, ')
+          ..write('rawData: $rawData, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
+class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
     with
         TableInfo<
-          $MagnetFinancialTransactionTable,
-          MagnetFinancialTransactionData
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData
         > {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MagnetFinancialTransactionTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
+  $InstitutionFeeTransactionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> userID = GeneratedColumn<String>(
-    'user_id',
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
     aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _institutionIDMeta = const VerificationMeta(
-    'institutionID',
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
   );
   @override
-  late final GeneratedColumn<int> institutionID = GeneratedColumn<int>(
-    'institution_id',
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
   );
-  static const VerificationMeta _transactionIdMeta = const VerificationMeta(
-    'transactionId',
+  static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
+    'referenceNumber',
   );
   @override
-  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
-    'transaction_id',
+  late final GeneratedColumn<String> referenceNumber = GeneratedColumn<String>(
+    'reference_number',
     aliasedName,
-    false,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  static const VerificationMeta _runningBalanceMeta = const VerificationMeta(
+    'runningBalance',
+  );
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
+  late final GeneratedColumn<double> runningBalance = GeneratedColumn<double>(
+    'running_balance',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
   );
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  static const VerificationMeta _debitMeta = const VerificationMeta('debit');
   @override
-  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-    'date',
+  late final GeneratedColumn<double> debit = GeneratedColumn<double>(
+    'debit',
     aliasedName,
-    false,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0.0),
+  );
+  static const VerificationMeta _creditMeta = const VerificationMeta('credit');
+  @override
+  late final GeneratedColumn<double> credit = GeneratedColumn<double>(
+    'credit',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0.0),
+  );
+  static const VerificationMeta _postingDateMeta = const VerificationMeta(
+    'postingDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> postingDate = GeneratedColumn<DateTime>(
+    'posting_date',
+    aliasedName,
+    true,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
   @override
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-    'type',
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _paymentMethodMeta = const VerificationMeta(
-    'paymentMethod',
-  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> paymentMethod = GeneratedColumn<String>(
-    'payment_method',
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _studentIdMeta = const VerificationMeta(
-    'studentId',
-  );
-  @override
-  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
-    'student_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _balanceAfterTransactionMeta =
-      const VerificationMeta('balanceAfterTransaction');
-  @override
-  late final GeneratedColumn<double> balanceAfterTransaction =
-      GeneratedColumn<double>(
-        'balance_after_transaction',
-        aliasedName,
-        false,
-        type: DriftSqlType.double,
-        requiredDuringInsert: true,
-      );
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-    'status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _currencyMeta = const VerificationMeta(
     'currency',
@@ -15901,6 +15286,572 @@ class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
   @override
   late final GeneratedColumn<String> currency = GeneratedColumn<String>(
     'currency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: Constant("KES"),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    institution,
+    referenceNumber,
+    runningBalance,
+    debit,
+    credit,
+    postingDate,
+    description,
+    title,
+    currency,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institution_fee_transaction';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstitutionFeeTransactionData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionMeta);
+    }
+    if (data.containsKey('reference_number')) {
+      context.handle(
+        _referenceNumberMeta,
+        referenceNumber.isAcceptableOrUnknown(
+          data['reference_number']!,
+          _referenceNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('running_balance')) {
+      context.handle(
+        _runningBalanceMeta,
+        runningBalance.isAcceptableOrUnknown(
+          data['running_balance']!,
+          _runningBalanceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('debit')) {
+      context.handle(
+        _debitMeta,
+        debit.isAcceptableOrUnknown(data['debit']!, _debitMeta),
+      );
+    }
+    if (data.containsKey('credit')) {
+      context.handle(
+        _creditMeta,
+        credit.isAcceptableOrUnknown(data['credit']!, _creditMeta),
+      );
+    }
+    if (data.containsKey('posting_date')) {
+      context.handle(
+        _postingDateMeta,
+        postingDate.isAcceptableOrUnknown(
+          data['posting_date']!,
+          _postingDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {institution, referenceNumber};
+  @override
+  InstitutionFeeTransactionData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionFeeTransactionData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      ),
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      )!,
+      referenceNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference_number'],
+      ),
+      runningBalance: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}running_balance'],
+      ),
+      debit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}debit'],
+      ),
+      credit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}credit'],
+      ),
+      postingDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}posting_date'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      ),
+    );
+  }
+
+  @override
+  $InstitutionFeeTransactionTable createAlias(String alias) {
+    return $InstitutionFeeTransactionTable(attachedDatabase, alias);
+  }
+}
+
+class InstitutionFeeTransactionData extends DataClass
+    implements Insertable<InstitutionFeeTransactionData> {
+  final int? id;
+  final int institution;
+  final String? referenceNumber;
+  final double? runningBalance;
+  final double? debit;
+  final double? credit;
+  final DateTime? postingDate;
+  final String? description;
+  final String? title;
+  final String? currency;
+  const InstitutionFeeTransactionData({
+    this.id,
+    required this.institution,
+    this.referenceNumber,
+    this.runningBalance,
+    this.debit,
+    this.credit,
+    this.postingDate,
+    this.description,
+    this.title,
+    this.currency,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['institution'] = Variable<int>(institution);
+    if (!nullToAbsent || referenceNumber != null) {
+      map['reference_number'] = Variable<String>(referenceNumber);
+    }
+    if (!nullToAbsent || runningBalance != null) {
+      map['running_balance'] = Variable<double>(runningBalance);
+    }
+    if (!nullToAbsent || debit != null) {
+      map['debit'] = Variable<double>(debit);
+    }
+    if (!nullToAbsent || credit != null) {
+      map['credit'] = Variable<double>(credit);
+    }
+    if (!nullToAbsent || postingDate != null) {
+      map['posting_date'] = Variable<DateTime>(postingDate);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || currency != null) {
+      map['currency'] = Variable<String>(currency);
+    }
+    return map;
+  }
+
+  InstitutionFeeTransactionCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionFeeTransactionCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      institution: Value(institution),
+      referenceNumber: referenceNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(referenceNumber),
+      runningBalance: runningBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(runningBalance),
+      debit: debit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(debit),
+      credit: credit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(credit),
+      postingDate: postingDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(postingDate),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      currency: currency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currency),
+    );
+  }
+
+  factory InstitutionFeeTransactionData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionFeeTransactionData(
+      id: serializer.fromJson<int?>(json['id']),
+      institution: serializer.fromJson<int>(json['institution']),
+      referenceNumber: serializer.fromJson<String?>(json['reference_number']),
+      runningBalance: serializer.fromJson<double?>(json['running_balance']),
+      debit: serializer.fromJson<double?>(json['debit']),
+      credit: serializer.fromJson<double?>(json['credit']),
+      postingDate: serializer.fromJson<DateTime?>(json['posting_date']),
+      description: serializer.fromJson<String?>(json['description']),
+      title: serializer.fromJson<String?>(json['title']),
+      currency: serializer.fromJson<String?>(json['currency']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int?>(id),
+      'institution': serializer.toJson<int>(institution),
+      'reference_number': serializer.toJson<String?>(referenceNumber),
+      'running_balance': serializer.toJson<double?>(runningBalance),
+      'debit': serializer.toJson<double?>(debit),
+      'credit': serializer.toJson<double?>(credit),
+      'posting_date': serializer.toJson<DateTime?>(postingDate),
+      'description': serializer.toJson<String?>(description),
+      'title': serializer.toJson<String?>(title),
+      'currency': serializer.toJson<String?>(currency),
+    };
+  }
+
+  InstitutionFeeTransactionData copyWith({
+    Value<int?> id = const Value.absent(),
+    int? institution,
+    Value<String?> referenceNumber = const Value.absent(),
+    Value<double?> runningBalance = const Value.absent(),
+    Value<double?> debit = const Value.absent(),
+    Value<double?> credit = const Value.absent(),
+    Value<DateTime?> postingDate = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> title = const Value.absent(),
+    Value<String?> currency = const Value.absent(),
+  }) => InstitutionFeeTransactionData(
+    id: id.present ? id.value : this.id,
+    institution: institution ?? this.institution,
+    referenceNumber: referenceNumber.present
+        ? referenceNumber.value
+        : this.referenceNumber,
+    runningBalance: runningBalance.present
+        ? runningBalance.value
+        : this.runningBalance,
+    debit: debit.present ? debit.value : this.debit,
+    credit: credit.present ? credit.value : this.credit,
+    postingDate: postingDate.present ? postingDate.value : this.postingDate,
+    description: description.present ? description.value : this.description,
+    title: title.present ? title.value : this.title,
+    currency: currency.present ? currency.value : this.currency,
+  );
+  InstitutionFeeTransactionData copyWithCompanion(
+    InstitutionFeeTransactionCompanion data,
+  ) {
+    return InstitutionFeeTransactionData(
+      id: data.id.present ? data.id.value : this.id,
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      referenceNumber: data.referenceNumber.present
+          ? data.referenceNumber.value
+          : this.referenceNumber,
+      runningBalance: data.runningBalance.present
+          ? data.runningBalance.value
+          : this.runningBalance,
+      debit: data.debit.present ? data.debit.value : this.debit,
+      credit: data.credit.present ? data.credit.value : this.credit,
+      postingDate: data.postingDate.present
+          ? data.postingDate.value
+          : this.postingDate,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      title: data.title.present ? data.title.value : this.title,
+      currency: data.currency.present ? data.currency.value : this.currency,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionFeeTransactionData(')
+          ..write('id: $id, ')
+          ..write('institution: $institution, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('runningBalance: $runningBalance, ')
+          ..write('debit: $debit, ')
+          ..write('credit: $credit, ')
+          ..write('postingDate: $postingDate, ')
+          ..write('description: $description, ')
+          ..write('title: $title, ')
+          ..write('currency: $currency')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    institution,
+    referenceNumber,
+    runningBalance,
+    debit,
+    credit,
+    postingDate,
+    description,
+    title,
+    currency,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionFeeTransactionData &&
+          other.id == this.id &&
+          other.institution == this.institution &&
+          other.referenceNumber == this.referenceNumber &&
+          other.runningBalance == this.runningBalance &&
+          other.debit == this.debit &&
+          other.credit == this.credit &&
+          other.postingDate == this.postingDate &&
+          other.description == this.description &&
+          other.title == this.title &&
+          other.currency == this.currency);
+}
+
+class InstitutionFeeTransactionCompanion
+    extends UpdateCompanion<InstitutionFeeTransactionData> {
+  final Value<int?> id;
+  final Value<int> institution;
+  final Value<String?> referenceNumber;
+  final Value<double?> runningBalance;
+  final Value<double?> debit;
+  final Value<double?> credit;
+  final Value<DateTime?> postingDate;
+  final Value<String?> description;
+  final Value<String?> title;
+  final Value<String?> currency;
+  final Value<int> rowid;
+  const InstitutionFeeTransactionCompanion({
+    this.id = const Value.absent(),
+    this.institution = const Value.absent(),
+    this.referenceNumber = const Value.absent(),
+    this.runningBalance = const Value.absent(),
+    this.debit = const Value.absent(),
+    this.credit = const Value.absent(),
+    this.postingDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.title = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionFeeTransactionCompanion.insert({
+    this.id = const Value.absent(),
+    required int institution,
+    this.referenceNumber = const Value.absent(),
+    this.runningBalance = const Value.absent(),
+    this.debit = const Value.absent(),
+    this.credit = const Value.absent(),
+    this.postingDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.title = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : institution = Value(institution);
+  static Insertable<InstitutionFeeTransactionData> custom({
+    Expression<int>? id,
+    Expression<int>? institution,
+    Expression<String>? referenceNumber,
+    Expression<double>? runningBalance,
+    Expression<double>? debit,
+    Expression<double>? credit,
+    Expression<DateTime>? postingDate,
+    Expression<String>? description,
+    Expression<String>? title,
+    Expression<String>? currency,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (institution != null) 'institution': institution,
+      if (referenceNumber != null) 'reference_number': referenceNumber,
+      if (runningBalance != null) 'running_balance': runningBalance,
+      if (debit != null) 'debit': debit,
+      if (credit != null) 'credit': credit,
+      if (postingDate != null) 'posting_date': postingDate,
+      if (description != null) 'description': description,
+      if (title != null) 'title': title,
+      if (currency != null) 'currency': currency,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionFeeTransactionCompanion copyWith({
+    Value<int?>? id,
+    Value<int>? institution,
+    Value<String?>? referenceNumber,
+    Value<double?>? runningBalance,
+    Value<double?>? debit,
+    Value<double?>? credit,
+    Value<DateTime?>? postingDate,
+    Value<String?>? description,
+    Value<String?>? title,
+    Value<String?>? currency,
+    Value<int>? rowid,
+  }) {
+    return InstitutionFeeTransactionCompanion(
+      id: id ?? this.id,
+      institution: institution ?? this.institution,
+      referenceNumber: referenceNumber ?? this.referenceNumber,
+      runningBalance: runningBalance ?? this.runningBalance,
+      debit: debit ?? this.debit,
+      credit: credit ?? this.credit,
+      postingDate: postingDate ?? this.postingDate,
+      description: description ?? this.description,
+      title: title ?? this.title,
+      currency: currency ?? this.currency,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
+    if (referenceNumber.present) {
+      map['reference_number'] = Variable<String>(referenceNumber.value);
+    }
+    if (runningBalance.present) {
+      map['running_balance'] = Variable<double>(runningBalance.value);
+    }
+    if (debit.present) {
+      map['debit'] = Variable<double>(debit.value);
+    }
+    if (credit.present) {
+      map['credit'] = Variable<double>(credit.value);
+    }
+    if (postingDate.present) {
+      map['posting_date'] = Variable<DateTime>(postingDate.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionFeeTransactionCompanion(')
+          ..write('id: $id, ')
+          ..write('institution: $institution, ')
+          ..write('referenceNumber: $referenceNumber, ')
+          ..write('runningBalance: $runningBalance, ')
+          ..write('debit: $debit, ')
+          ..write('credit: $credit, ')
+          ..write('postingDate: $postingDate, ')
+          ..write('description: $description, ')
+          ..write('title: $title, ')
+          ..write('currency: $currency, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SemesterTable extends Semester
+    with TableInfo<$SemesterTable, SemesterData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SemesterTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -15917,144 +15868,75 @@ class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
-    'referenceNumber',
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
   );
   @override
-  late final GeneratedColumn<String> referenceNumber = GeneratedColumn<String>(
-    'reference_number',
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
     aliasedName,
     true,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
-    userID,
-    institutionID,
-    transactionId,
-    amount,
-    date,
-    type,
-    paymentMethod,
-    studentId,
-    balanceAfterTransaction,
-    status,
-    currency,
+    id,
+    name,
     description,
-    referenceNumber,
+    institutionId,
+    startDate,
+    endDate,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'magnet_financial_transaction';
+  static const String $name = 'semester';
   @override
   VerificationContext validateIntegrity(
-    Insertable<MagnetFinancialTransactionData> instance, {
+    Insertable<SemesterData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIDMeta,
-        userID.isAcceptableOrUnknown(data['user_id']!, _userIDMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_userIDMeta);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('institution_id')) {
+    if (data.containsKey('name')) {
       context.handle(
-        _institutionIDMeta,
-        institutionID.isAcceptableOrUnknown(
-          data['institution_id']!,
-          _institutionIDMeta,
-        ),
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
     } else if (isInserting) {
-      context.missing(_institutionIDMeta);
-    }
-    if (data.containsKey('transaction_id')) {
-      context.handle(
-        _transactionIdMeta,
-        transactionId.isAcceptableOrUnknown(
-          data['transaction_id']!,
-          _transactionIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_transactionIdMeta);
-    }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
-    if (data.containsKey('date')) {
-      context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('type')) {
-      context.handle(
-        _typeMeta,
-        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_typeMeta);
-    }
-    if (data.containsKey('payment_method')) {
-      context.handle(
-        _paymentMethodMeta,
-        paymentMethod.isAcceptableOrUnknown(
-          data['payment_method']!,
-          _paymentMethodMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_paymentMethodMeta);
-    }
-    if (data.containsKey('student_id')) {
-      context.handle(
-        _studentIdMeta,
-        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_studentIdMeta);
-    }
-    if (data.containsKey('balance_after_transaction')) {
-      context.handle(
-        _balanceAfterTransactionMeta,
-        balanceAfterTransaction.isAcceptableOrUnknown(
-          data['balance_after_transaction']!,
-          _balanceAfterTransactionMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_balanceAfterTransactionMeta);
-    }
-    if (data.containsKey('status')) {
-      context.handle(
-        _statusMeta,
-        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_statusMeta);
-    }
-    if (data.containsKey('currency')) {
-      context.handle(
-        _currencyMeta,
-        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_currencyMeta);
+      context.missing(_nameMeta);
     }
     if (data.containsKey('description')) {
       context.handle(
@@ -16065,457 +15947,949 @@ class $MagnetFinancialTransactionTable extends MagnetFinancialTransaction
         ),
       );
     }
-    if (data.containsKey('reference_number')) {
+    if (data.containsKey('institution_id')) {
       context.handle(
-        _referenceNumberMeta,
-        referenceNumber.isAcceptableOrUnknown(
-          data['reference_number']!,
-          _referenceNumberMeta,
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
         ),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
       );
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {
-    userID,
-    institutionID,
-    transactionId,
-  };
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  MagnetFinancialTransactionData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
+  SemesterData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MagnetFinancialTransactionData(
-      userID: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      )!,
-      institutionID: attachedDatabase.typeMapping.read(
+    return SemesterData(
+      id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}institution_id'],
+        data['${effectivePrefix}id'],
       )!,
-      transactionId: attachedDatabase.typeMapping.read(
+      name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}transaction_id'],
-      )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}date'],
-      )!,
-      type: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}type'],
-      )!,
-      paymentMethod: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}payment_method'],
-      )!,
-      studentId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}student_id'],
-      )!,
-      balanceAfterTransaction: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}balance_after_transaction'],
-      )!,
-      status: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}status'],
-      )!,
-      currency: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}currency'],
+        data['${effectivePrefix}name'],
       )!,
       description: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
-      referenceNumber: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}reference_number'],
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
       ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
     );
   }
 
   @override
-  $MagnetFinancialTransactionTable createAlias(String alias) {
-    return $MagnetFinancialTransactionTable(attachedDatabase, alias);
+  $SemesterTable createAlias(String alias) {
+    return $SemesterTable(attachedDatabase, alias);
   }
 }
 
-class MagnetFinancialTransactionData extends DataClass
-    implements Insertable<MagnetFinancialTransactionData> {
-  final String userID;
-  final int institutionID;
-  final String transactionId;
-  final double amount;
-  final DateTime date;
-  final String type;
-  final String paymentMethod;
-  final String studentId;
-  final double balanceAfterTransaction;
-  final String status;
-  final String currency;
+class SemesterData extends DataClass implements Insertable<SemesterData> {
+  final int id;
+  final String name;
   final String? description;
-  final String? referenceNumber;
-  const MagnetFinancialTransactionData({
-    required this.userID,
-    required this.institutionID,
-    required this.transactionId,
-    required this.amount,
-    required this.date,
-    required this.type,
-    required this.paymentMethod,
-    required this.studentId,
-    required this.balanceAfterTransaction,
-    required this.status,
-    required this.currency,
+  final int? institutionId;
+  final DateTime startDate;
+  final DateTime endDate;
+  const SemesterData({
+    required this.id,
+    required this.name,
     this.description,
-    this.referenceNumber,
+    this.institutionId,
+    required this.startDate,
+    required this.endDate,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['user_id'] = Variable<String>(userID);
-    map['institution_id'] = Variable<int>(institutionID);
-    map['transaction_id'] = Variable<String>(transactionId);
-    map['amount'] = Variable<double>(amount);
-    map['date'] = Variable<DateTime>(date);
-    map['type'] = Variable<String>(type);
-    map['payment_method'] = Variable<String>(paymentMethod);
-    map['student_id'] = Variable<String>(studentId);
-    map['balance_after_transaction'] = Variable<double>(
-      balanceAfterTransaction,
-    );
-    map['status'] = Variable<String>(status);
-    map['currency'] = Variable<String>(currency);
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    if (!nullToAbsent || referenceNumber != null) {
-      map['reference_number'] = Variable<String>(referenceNumber);
+    if (!nullToAbsent || institutionId != null) {
+      map['institution_id'] = Variable<int>(institutionId);
     }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
     return map;
   }
 
-  MagnetFinancialTransactionCompanion toCompanion(bool nullToAbsent) {
-    return MagnetFinancialTransactionCompanion(
-      userID: Value(userID),
-      institutionID: Value(institutionID),
-      transactionId: Value(transactionId),
-      amount: Value(amount),
-      date: Value(date),
-      type: Value(type),
-      paymentMethod: Value(paymentMethod),
-      studentId: Value(studentId),
-      balanceAfterTransaction: Value(balanceAfterTransaction),
-      status: Value(status),
-      currency: Value(currency),
+  SemesterCompanion toCompanion(bool nullToAbsent) {
+    return SemesterCompanion(
+      id: Value(id),
+      name: Value(name),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      referenceNumber: referenceNumber == null && nullToAbsent
+      institutionId: institutionId == null && nullToAbsent
           ? const Value.absent()
-          : Value(referenceNumber),
+          : Value(institutionId),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
     );
   }
 
-  factory MagnetFinancialTransactionData.fromJson(
+  factory SemesterData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MagnetFinancialTransactionData(
-      userID: serializer.fromJson<String>(json['userID']),
-      institutionID: serializer.fromJson<int>(json['institutionID']),
-      transactionId: serializer.fromJson<String>(json['transactionId']),
-      amount: serializer.fromJson<double>(json['amount']),
-      date: serializer.fromJson<DateTime>(json['date']),
-      type: serializer.fromJson<String>(json['type']),
-      paymentMethod: serializer.fromJson<String>(json['paymentMethod']),
-      studentId: serializer.fromJson<String>(json['studentId']),
-      balanceAfterTransaction: serializer.fromJson<double>(
-        json['balanceAfterTransaction'],
-      ),
-      status: serializer.fromJson<String>(json['status']),
-      currency: serializer.fromJson<String>(json['currency']),
+    return SemesterData(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
-      referenceNumber: serializer.fromJson<String?>(json['referenceNumber']),
+      institutionId: serializer.fromJson<int?>(json['institutionId']),
+      startDate: serializer.fromJson<DateTime>(json['start_date']),
+      endDate: serializer.fromJson<DateTime>(json['end_date']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'userID': serializer.toJson<String>(userID),
-      'institutionID': serializer.toJson<int>(institutionID),
-      'transactionId': serializer.toJson<String>(transactionId),
-      'amount': serializer.toJson<double>(amount),
-      'date': serializer.toJson<DateTime>(date),
-      'type': serializer.toJson<String>(type),
-      'paymentMethod': serializer.toJson<String>(paymentMethod),
-      'studentId': serializer.toJson<String>(studentId),
-      'balanceAfterTransaction': serializer.toJson<double>(
-        balanceAfterTransaction,
-      ),
-      'status': serializer.toJson<String>(status),
-      'currency': serializer.toJson<String>(currency),
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
-      'referenceNumber': serializer.toJson<String?>(referenceNumber),
+      'institutionId': serializer.toJson<int?>(institutionId),
+      'start_date': serializer.toJson<DateTime>(startDate),
+      'end_date': serializer.toJson<DateTime>(endDate),
     };
   }
 
-  MagnetFinancialTransactionData copyWith({
-    String? userID,
-    int? institutionID,
-    String? transactionId,
-    double? amount,
-    DateTime? date,
-    String? type,
-    String? paymentMethod,
-    String? studentId,
-    double? balanceAfterTransaction,
-    String? status,
-    String? currency,
+  SemesterData copyWith({
+    int? id,
+    String? name,
     Value<String?> description = const Value.absent(),
-    Value<String?> referenceNumber = const Value.absent(),
-  }) => MagnetFinancialTransactionData(
-    userID: userID ?? this.userID,
-    institutionID: institutionID ?? this.institutionID,
-    transactionId: transactionId ?? this.transactionId,
-    amount: amount ?? this.amount,
-    date: date ?? this.date,
-    type: type ?? this.type,
-    paymentMethod: paymentMethod ?? this.paymentMethod,
-    studentId: studentId ?? this.studentId,
-    balanceAfterTransaction:
-        balanceAfterTransaction ?? this.balanceAfterTransaction,
-    status: status ?? this.status,
-    currency: currency ?? this.currency,
+    Value<int?> institutionId = const Value.absent(),
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => SemesterData(
+    id: id ?? this.id,
+    name: name ?? this.name,
     description: description.present ? description.value : this.description,
-    referenceNumber: referenceNumber.present
-        ? referenceNumber.value
-        : this.referenceNumber,
+    institutionId: institutionId.present
+        ? institutionId.value
+        : this.institutionId,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
   );
-  MagnetFinancialTransactionData copyWithCompanion(
-    MagnetFinancialTransactionCompanion data,
-  ) {
-    return MagnetFinancialTransactionData(
-      userID: data.userID.present ? data.userID.value : this.userID,
-      institutionID: data.institutionID.present
-          ? data.institutionID.value
-          : this.institutionID,
-      transactionId: data.transactionId.present
-          ? data.transactionId.value
-          : this.transactionId,
-      amount: data.amount.present ? data.amount.value : this.amount,
-      date: data.date.present ? data.date.value : this.date,
-      type: data.type.present ? data.type.value : this.type,
-      paymentMethod: data.paymentMethod.present
-          ? data.paymentMethod.value
-          : this.paymentMethod,
-      studentId: data.studentId.present ? data.studentId.value : this.studentId,
-      balanceAfterTransaction: data.balanceAfterTransaction.present
-          ? data.balanceAfterTransaction.value
-          : this.balanceAfterTransaction,
-      status: data.status.present ? data.status.value : this.status,
-      currency: data.currency.present ? data.currency.value : this.currency,
+  SemesterData copyWithCompanion(SemesterCompanion data) {
+    return SemesterData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
       description: data.description.present
           ? data.description.value
           : this.description,
-      referenceNumber: data.referenceNumber.present
-          ? data.referenceNumber.value
-          : this.referenceNumber,
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('MagnetFinancialTransactionData(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('transactionId: $transactionId, ')
-          ..write('amount: $amount, ')
-          ..write('date: $date, ')
-          ..write('type: $type, ')
-          ..write('paymentMethod: $paymentMethod, ')
-          ..write('studentId: $studentId, ')
-          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
-          ..write('status: $status, ')
-          ..write('currency: $currency, ')
+    return (StringBuffer('SemesterData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('referenceNumber: $referenceNumber')
+          ..write('institutionId: $institutionId, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, description, institutionId, startDate, endDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SemesterData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.institutionId == this.institutionId &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
+}
+
+class SemesterCompanion extends UpdateCompanion<SemesterData> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<int?> institutionId;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  const SemesterCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  });
+  SemesterCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.description = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<SemesterData> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? institutionId,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (institutionId != null) 'institution_id': institutionId,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+    });
+  }
+
+  SemesterCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<int?>? institutionId,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+  }) {
+    return SemesterCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      institutionId: institutionId ?? this.institutionId,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SemesterCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CourseTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: generateUuid,
+  );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<int> serverId = GeneratedColumn<int>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _semesterMeta = const VerificationMeta(
+    'semester',
+  );
+  @override
+  late final GeneratedColumn<int> semester = GeneratedColumn<int>(
+    'semester',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES semester (id)',
+    ),
+  );
+  static const VerificationMeta _courseCodeMeta = const VerificationMeta(
+    'courseCode',
+  );
+  @override
+  late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
+    'course_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseNameMeta = const VerificationMeta(
+    'courseName',
+  );
+  @override
+  late final GeneratedColumn<String> courseName = GeneratedColumn<String>(
+    'course_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _instructorMeta = const VerificationMeta(
+    'instructor',
+  );
+  @override
+  late final GeneratedColumn<String> instructor = GeneratedColumn<String>(
+    'instructor',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Color?, int> color =
+      GeneratedColumn<int>(
+        'color',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: Constant(0x1E1E2EFF),
+      ).withConverter<Color?>($CourseTable.$convertercolorn);
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    serverId,
+    institution,
+    semester,
+    courseCode,
+    courseName,
+    instructor,
+    color,
+    isSynced,
+    isDeleted,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'course';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CourseData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
+    }
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('semester')) {
+      context.handle(
+        _semesterMeta,
+        semester.isAcceptableOrUnknown(data['semester']!, _semesterMeta),
+      );
+    }
+    if (data.containsKey('course_code')) {
+      context.handle(
+        _courseCodeMeta,
+        courseCode.isAcceptableOrUnknown(data['course_code']!, _courseCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseCodeMeta);
+    }
+    if (data.containsKey('course_name')) {
+      context.handle(
+        _courseNameMeta,
+        courseName.isAcceptableOrUnknown(data['course_name']!, _courseNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseNameMeta);
+    }
+    if (data.containsKey('instructor')) {
+      context.handle(
+        _instructorMeta,
+        instructor.isAcceptableOrUnknown(data['instructor']!, _instructorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_instructorMeta);
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CourseData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CourseData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_id'],
+      ),
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      ),
+      semester: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}semester'],
+      ),
+      courseCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_code'],
+      )!,
+      courseName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_name'],
+      )!,
+      instructor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructor'],
+      )!,
+      color: $CourseTable.$convertercolorn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}color'],
+        ),
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CourseTable createAlias(String alias) {
+    return $CourseTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Color, int> $convertercolor = ColorConverter();
+  static TypeConverter<Color?, int?> $convertercolorn =
+      NullAwareTypeConverter.wrap($convertercolor);
+}
+
+class CourseData extends DataClass implements Insertable<CourseData> {
+  final String id;
+  final int? serverId;
+  final int? institution;
+  final int? semester;
+  final String courseCode;
+  final String courseName;
+  final String instructor;
+  final Color? color;
+  final bool isSynced;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CourseData({
+    required this.id,
+    this.serverId,
+    this.institution,
+    this.semester,
+    required this.courseCode,
+    required this.courseName,
+    required this.instructor,
+    this.color,
+    required this.isSynced,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<int>(serverId);
+    }
+    if (!nullToAbsent || institution != null) {
+      map['institution'] = Variable<int>(institution);
+    }
+    if (!nullToAbsent || semester != null) {
+      map['semester'] = Variable<int>(semester);
+    }
+    map['course_code'] = Variable<String>(courseCode);
+    map['course_name'] = Variable<String>(courseName);
+    map['instructor'] = Variable<String>(instructor);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<int>($CourseTable.$convertercolorn.toSql(color));
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CourseCompanion toCompanion(bool nullToAbsent) {
+    return CourseCompanion(
+      id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      institution: institution == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institution),
+      semester: semester == null && nullToAbsent
+          ? const Value.absent()
+          : Value(semester),
+      courseCode: Value(courseCode),
+      courseName: Value(courseName),
+      instructor: Value(instructor),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      isSynced: Value(isSynced),
+      isDeleted: Value(isDeleted),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CourseData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CourseData(
+      id: serializer.fromJson<String>(json['cache_id']),
+      serverId: serializer.fromJson<int?>(json['id']),
+      institution: serializer.fromJson<int?>(json['institution']),
+      semester: serializer.fromJson<int?>(json['semester']),
+      courseCode: serializer.fromJson<String>(json['course_code']),
+      courseName: serializer.fromJson<String>(json['course_name']),
+      instructor: serializer.fromJson<String>(json['instructor']),
+      color: serializer.fromJson<Color?>(json['color']),
+      isSynced: serializer.fromJson<bool>(json['is_synced']),
+      isDeleted: serializer.fromJson<bool>(json['is_deleted']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cache_id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int?>(serverId),
+      'institution': serializer.toJson<int?>(institution),
+      'semester': serializer.toJson<int?>(semester),
+      'course_code': serializer.toJson<String>(courseCode),
+      'course_name': serializer.toJson<String>(courseName),
+      'instructor': serializer.toJson<String>(instructor),
+      'color': serializer.toJson<Color?>(color),
+      'is_synced': serializer.toJson<bool>(isSynced),
+      'is_deleted': serializer.toJson<bool>(isDeleted),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CourseData copyWith({
+    String? id,
+    Value<int?> serverId = const Value.absent(),
+    Value<int?> institution = const Value.absent(),
+    Value<int?> semester = const Value.absent(),
+    String? courseCode,
+    String? courseName,
+    String? instructor,
+    Value<Color?> color = const Value.absent(),
+    bool? isSynced,
+    bool? isDeleted,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CourseData(
+    id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
+    institution: institution.present ? institution.value : this.institution,
+    semester: semester.present ? semester.value : this.semester,
+    courseCode: courseCode ?? this.courseCode,
+    courseName: courseName ?? this.courseName,
+    instructor: instructor ?? this.instructor,
+    color: color.present ? color.value : this.color,
+    isSynced: isSynced ?? this.isSynced,
+    isDeleted: isDeleted ?? this.isDeleted,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CourseData copyWithCompanion(CourseCompanion data) {
+    return CourseData(
+      id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      semester: data.semester.present ? data.semester.value : this.semester,
+      courseCode: data.courseCode.present
+          ? data.courseCode.value
+          : this.courseCode,
+      courseName: data.courseName.present
+          ? data.courseName.value
+          : this.courseName,
+      instructor: data.instructor.present
+          ? data.instructor.value
+          : this.instructor,
+      color: data.color.present ? data.color.value : this.color,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CourseData(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('institution: $institution, ')
+          ..write('semester: $semester, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseName: $courseName, ')
+          ..write('instructor: $instructor, ')
+          ..write('color: $color, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-    userID,
-    institutionID,
-    transactionId,
-    amount,
-    date,
-    type,
-    paymentMethod,
-    studentId,
-    balanceAfterTransaction,
-    status,
-    currency,
-    description,
-    referenceNumber,
+    id,
+    serverId,
+    institution,
+    semester,
+    courseCode,
+    courseName,
+    instructor,
+    color,
+    isSynced,
+    isDeleted,
+    createdAt,
+    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is MagnetFinancialTransactionData &&
-          other.userID == this.userID &&
-          other.institutionID == this.institutionID &&
-          other.transactionId == this.transactionId &&
-          other.amount == this.amount &&
-          other.date == this.date &&
-          other.type == this.type &&
-          other.paymentMethod == this.paymentMethod &&
-          other.studentId == this.studentId &&
-          other.balanceAfterTransaction == this.balanceAfterTransaction &&
-          other.status == this.status &&
-          other.currency == this.currency &&
-          other.description == this.description &&
-          other.referenceNumber == this.referenceNumber);
+      (other is CourseData &&
+          other.id == this.id &&
+          other.serverId == this.serverId &&
+          other.institution == this.institution &&
+          other.semester == this.semester &&
+          other.courseCode == this.courseCode &&
+          other.courseName == this.courseName &&
+          other.instructor == this.instructor &&
+          other.color == this.color &&
+          other.isSynced == this.isSynced &&
+          other.isDeleted == this.isDeleted &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
-class MagnetFinancialTransactionCompanion
-    extends UpdateCompanion<MagnetFinancialTransactionData> {
-  final Value<String> userID;
-  final Value<int> institutionID;
-  final Value<String> transactionId;
-  final Value<double> amount;
-  final Value<DateTime> date;
-  final Value<String> type;
-  final Value<String> paymentMethod;
-  final Value<String> studentId;
-  final Value<double> balanceAfterTransaction;
-  final Value<String> status;
-  final Value<String> currency;
-  final Value<String?> description;
-  final Value<String?> referenceNumber;
+class CourseCompanion extends UpdateCompanion<CourseData> {
+  final Value<String> id;
+  final Value<int?> serverId;
+  final Value<int?> institution;
+  final Value<int?> semester;
+  final Value<String> courseCode;
+  final Value<String> courseName;
+  final Value<String> instructor;
+  final Value<Color?> color;
+  final Value<bool> isSynced;
+  final Value<bool> isDeleted;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
-  const MagnetFinancialTransactionCompanion({
-    this.userID = const Value.absent(),
-    this.institutionID = const Value.absent(),
-    this.transactionId = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.date = const Value.absent(),
-    this.type = const Value.absent(),
-    this.paymentMethod = const Value.absent(),
-    this.studentId = const Value.absent(),
-    this.balanceAfterTransaction = const Value.absent(),
-    this.status = const Value.absent(),
-    this.currency = const Value.absent(),
-    this.description = const Value.absent(),
-    this.referenceNumber = const Value.absent(),
+  const CourseCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.institution = const Value.absent(),
+    this.semester = const Value.absent(),
+    this.courseCode = const Value.absent(),
+    this.courseName = const Value.absent(),
+    this.instructor = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  MagnetFinancialTransactionCompanion.insert({
-    required String userID,
-    required int institutionID,
-    required String transactionId,
-    required double amount,
-    required DateTime date,
-    required String type,
-    required String paymentMethod,
-    required String studentId,
-    required double balanceAfterTransaction,
-    required String status,
-    required String currency,
-    this.description = const Value.absent(),
-    this.referenceNumber = const Value.absent(),
+  CourseCompanion.insert({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.institution = const Value.absent(),
+    this.semester = const Value.absent(),
+    required String courseCode,
+    required String courseName,
+    required String instructor,
+    this.color = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : userID = Value(userID),
-       institutionID = Value(institutionID),
-       transactionId = Value(transactionId),
-       amount = Value(amount),
-       date = Value(date),
-       type = Value(type),
-       paymentMethod = Value(paymentMethod),
-       studentId = Value(studentId),
-       balanceAfterTransaction = Value(balanceAfterTransaction),
-       status = Value(status),
-       currency = Value(currency);
-  static Insertable<MagnetFinancialTransactionData> custom({
-    Expression<String>? userID,
-    Expression<int>? institutionID,
-    Expression<String>? transactionId,
-    Expression<double>? amount,
-    Expression<DateTime>? date,
-    Expression<String>? type,
-    Expression<String>? paymentMethod,
-    Expression<String>? studentId,
-    Expression<double>? balanceAfterTransaction,
-    Expression<String>? status,
-    Expression<String>? currency,
-    Expression<String>? description,
-    Expression<String>? referenceNumber,
+  }) : courseCode = Value(courseCode),
+       courseName = Value(courseName),
+       instructor = Value(instructor);
+  static Insertable<CourseData> custom({
+    Expression<String>? id,
+    Expression<int>? serverId,
+    Expression<int>? institution,
+    Expression<int>? semester,
+    Expression<String>? courseCode,
+    Expression<String>? courseName,
+    Expression<String>? instructor,
+    Expression<int>? color,
+    Expression<bool>? isSynced,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (userID != null) 'user_id': userID,
-      if (institutionID != null) 'institution_id': institutionID,
-      if (transactionId != null) 'transaction_id': transactionId,
-      if (amount != null) 'amount': amount,
-      if (date != null) 'date': date,
-      if (type != null) 'type': type,
-      if (paymentMethod != null) 'payment_method': paymentMethod,
-      if (studentId != null) 'student_id': studentId,
-      if (balanceAfterTransaction != null)
-        'balance_after_transaction': balanceAfterTransaction,
-      if (status != null) 'status': status,
-      if (currency != null) 'currency': currency,
-      if (description != null) 'description': description,
-      if (referenceNumber != null) 'reference_number': referenceNumber,
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (institution != null) 'institution': institution,
+      if (semester != null) 'semester': semester,
+      if (courseCode != null) 'course_code': courseCode,
+      if (courseName != null) 'course_name': courseName,
+      if (instructor != null) 'instructor': instructor,
+      if (color != null) 'color': color,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  MagnetFinancialTransactionCompanion copyWith({
-    Value<String>? userID,
-    Value<int>? institutionID,
-    Value<String>? transactionId,
-    Value<double>? amount,
-    Value<DateTime>? date,
-    Value<String>? type,
-    Value<String>? paymentMethod,
-    Value<String>? studentId,
-    Value<double>? balanceAfterTransaction,
-    Value<String>? status,
-    Value<String>? currency,
-    Value<String?>? description,
-    Value<String?>? referenceNumber,
+  CourseCompanion copyWith({
+    Value<String>? id,
+    Value<int?>? serverId,
+    Value<int?>? institution,
+    Value<int?>? semester,
+    Value<String>? courseCode,
+    Value<String>? courseName,
+    Value<String>? instructor,
+    Value<Color?>? color,
+    Value<bool>? isSynced,
+    Value<bool>? isDeleted,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
-    return MagnetFinancialTransactionCompanion(
-      userID: userID ?? this.userID,
-      institutionID: institutionID ?? this.institutionID,
-      transactionId: transactionId ?? this.transactionId,
-      amount: amount ?? this.amount,
-      date: date ?? this.date,
-      type: type ?? this.type,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      studentId: studentId ?? this.studentId,
-      balanceAfterTransaction:
-          balanceAfterTransaction ?? this.balanceAfterTransaction,
-      status: status ?? this.status,
-      currency: currency ?? this.currency,
-      description: description ?? this.description,
-      referenceNumber: referenceNumber ?? this.referenceNumber,
+    return CourseCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      institution: institution ?? this.institution,
+      semester: semester ?? this.semester,
+      courseCode: courseCode ?? this.courseCode,
+      courseName: courseName ?? this.courseName,
+      instructor: instructor ?? this.instructor,
+      color: color ?? this.color,
+      isSynced: isSynced ?? this.isSynced,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -16523,46 +16897,43 @@ class MagnetFinancialTransactionCompanion
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (userID.present) {
-      map['user_id'] = Variable<String>(userID.value);
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
-    if (institutionID.present) {
-      map['institution_id'] = Variable<int>(institutionID.value);
+    if (serverId.present) {
+      map['server_id'] = Variable<int>(serverId.value);
     }
-    if (transactionId.present) {
-      map['transaction_id'] = Variable<String>(transactionId.value);
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (semester.present) {
+      map['semester'] = Variable<int>(semester.value);
     }
-    if (date.present) {
-      map['date'] = Variable<DateTime>(date.value);
+    if (courseCode.present) {
+      map['course_code'] = Variable<String>(courseCode.value);
     }
-    if (type.present) {
-      map['type'] = Variable<String>(type.value);
+    if (courseName.present) {
+      map['course_name'] = Variable<String>(courseName.value);
     }
-    if (paymentMethod.present) {
-      map['payment_method'] = Variable<String>(paymentMethod.value);
+    if (instructor.present) {
+      map['instructor'] = Variable<String>(instructor.value);
     }
-    if (studentId.present) {
-      map['student_id'] = Variable<String>(studentId.value);
-    }
-    if (balanceAfterTransaction.present) {
-      map['balance_after_transaction'] = Variable<double>(
-        balanceAfterTransaction.value,
+    if (color.present) {
+      map['color'] = Variable<int>(
+        $CourseTable.$convertercolorn.toSql(color.value),
       );
     }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
     }
-    if (currency.present) {
-      map['currency'] = Variable<String>(currency.value);
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (referenceNumber.present) {
-      map['reference_number'] = Variable<String>(referenceNumber.value);
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -16572,20 +16943,1459 @@ class MagnetFinancialTransactionCompanion
 
   @override
   String toString() {
-    return (StringBuffer('MagnetFinancialTransactionCompanion(')
-          ..write('userID: $userID, ')
-          ..write('institutionID: $institutionID, ')
-          ..write('transactionId: $transactionId, ')
-          ..write('amount: $amount, ')
-          ..write('date: $date, ')
-          ..write('type: $type, ')
-          ..write('paymentMethod: $paymentMethod, ')
-          ..write('studentId: $studentId, ')
-          ..write('balanceAfterTransaction: $balanceAfterTransaction, ')
-          ..write('status: $status, ')
-          ..write('currency: $currency, ')
-          ..write('description: $description, ')
-          ..write('referenceNumber: $referenceNumber, ')
+    return (StringBuffer('CourseCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('institution: $institution, ')
+          ..write('semester: $semester, ')
+          ..write('courseCode: $courseCode, ')
+          ..write('courseName: $courseName, ')
+          ..write('instructor: $instructor, ')
+          ..write('color: $color, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TimetableTable extends Timetable
+    with TableInfo<$TimetableTable, TimetableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimetableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: generateUuid,
+  );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<int> serverId = GeneratedColumn<int>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionMeta = const VerificationMeta(
+    'institution',
+  );
+  @override
+  late final GeneratedColumn<int> institution = GeneratedColumn<int>(
+    'institution',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    serverId,
+    name,
+    userId,
+    institution,
+    isSynced,
+    isDeleted,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timetable';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TimetableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('institution')) {
+      context.handle(
+        _institutionMeta,
+        institution.isAcceptableOrUnknown(
+          data['institution']!,
+          _institutionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimetableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_id'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institution: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $TimetableTable createAlias(String alias) {
+    return $TimetableTable(attachedDatabase, alias);
+  }
+}
+
+class TimetableData extends DataClass implements Insertable<TimetableData> {
+  final String id;
+  final int? serverId;
+  final String name;
+  final String userId;
+  final int? institution;
+  final bool isSynced;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const TimetableData({
+    required this.id,
+    this.serverId,
+    required this.name,
+    required this.userId,
+    this.institution,
+    required this.isSynced,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<int>(serverId);
+    }
+    map['name'] = Variable<String>(name);
+    map['user_id'] = Variable<String>(userId);
+    if (!nullToAbsent || institution != null) {
+      map['institution'] = Variable<int>(institution);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  TimetableCompanion toCompanion(bool nullToAbsent) {
+    return TimetableCompanion(
+      id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      name: Value(name),
+      userId: Value(userId),
+      institution: institution == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institution),
+      isSynced: Value(isSynced),
+      isDeleted: Value(isDeleted),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory TimetableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimetableData(
+      id: serializer.fromJson<String>(json['cache_id']),
+      serverId: serializer.fromJson<int?>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      institution: serializer.fromJson<int?>(json['institution_id']),
+      isSynced: serializer.fromJson<bool>(json['is_synced']),
+      isDeleted: serializer.fromJson<bool>(json['is_deleted']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cache_id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int?>(serverId),
+      'name': serializer.toJson<String>(name),
+      'user_id': serializer.toJson<String>(userId),
+      'institution_id': serializer.toJson<int?>(institution),
+      'is_synced': serializer.toJson<bool>(isSynced),
+      'is_deleted': serializer.toJson<bool>(isDeleted),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'updated_at': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  TimetableData copyWith({
+    String? id,
+    Value<int?> serverId = const Value.absent(),
+    String? name,
+    String? userId,
+    Value<int?> institution = const Value.absent(),
+    bool? isSynced,
+    bool? isDeleted,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => TimetableData(
+    id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
+    name: name ?? this.name,
+    userId: userId ?? this.userId,
+    institution: institution.present ? institution.value : this.institution,
+    isSynced: isSynced ?? this.isSynced,
+    isDeleted: isDeleted ?? this.isDeleted,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  TimetableData copyWithCompanion(TimetableCompanion data) {
+    return TimetableData(
+      id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      name: data.name.present ? data.name.value : this.name,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      institution: data.institution.present
+          ? data.institution.value
+          : this.institution,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetableData(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('name: $name, ')
+          ..write('userId: $userId, ')
+          ..write('institution: $institution, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    serverId,
+    name,
+    userId,
+    institution,
+    isSynced,
+    isDeleted,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimetableData &&
+          other.id == this.id &&
+          other.serverId == this.serverId &&
+          other.name == this.name &&
+          other.userId == this.userId &&
+          other.institution == this.institution &&
+          other.isSynced == this.isSynced &&
+          other.isDeleted == this.isDeleted &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TimetableCompanion extends UpdateCompanion<TimetableData> {
+  final Value<String> id;
+  final Value<int?> serverId;
+  final Value<String> name;
+  final Value<String> userId;
+  final Value<int?> institution;
+  final Value<bool> isSynced;
+  final Value<bool> isDeleted;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const TimetableCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.institution = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TimetableCompanion.insert({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    required String name,
+    required String userId,
+    this.institution = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : name = Value(name),
+       userId = Value(userId);
+  static Insertable<TimetableData> custom({
+    Expression<String>? id,
+    Expression<int>? serverId,
+    Expression<String>? name,
+    Expression<String>? userId,
+    Expression<int>? institution,
+    Expression<bool>? isSynced,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (name != null) 'name': name,
+      if (userId != null) 'user_id': userId,
+      if (institution != null) 'institution': institution,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TimetableCompanion copyWith({
+    Value<String>? id,
+    Value<int?>? serverId,
+    Value<String>? name,
+    Value<String>? userId,
+    Value<int?>? institution,
+    Value<bool>? isSynced,
+    Value<bool>? isDeleted,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return TimetableCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      name: name ?? this.name,
+      userId: userId ?? this.userId,
+      institution: institution ?? this.institution,
+      isSynced: isSynced ?? this.isSynced,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<int>(serverId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (institution.present) {
+      map['institution'] = Variable<int>(institution.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetableCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('name: $name, ')
+          ..write('userId: $userId, ')
+          ..write('institution: $institution, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TimetableEntryTable extends TimetableEntry
+    with TableInfo<$TimetableEntryTable, TimetableEntryData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimetableEntryTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: generateUuid,
+  );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<int> serverId = GeneratedColumn<int>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseIdMeta = const VerificationMeta(
+    'courseId',
+  );
+  @override
+  late final GeneratedColumn<String> courseId = GeneratedColumn<String>(
+    'course_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES course (id)',
+    ),
+  );
+  static const VerificationMeta _timetableIdMeta = const VerificationMeta(
+    'timetableId',
+  );
+  @override
+  late final GeneratedColumn<String> timetableId = GeneratedColumn<String>(
+    'timetable_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES timetable (id)',
+    ),
+  );
+  static const VerificationMeta _rruleMeta = const VerificationMeta('rrule');
+  @override
+  late final GeneratedColumn<String> rrule = GeneratedColumn<String>(
+    'rrule',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _durationMinutesMeta = const VerificationMeta(
+    'durationMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> durationMinutes = GeneratedColumn<int>(
+    'duration_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+    'location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roomMeta = const VerificationMeta('room');
+  @override
+  late final GeneratedColumn<String> room = GeneratedColumn<String>(
+    'room',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _buildingMeta = const VerificationMeta(
+    'building',
+  );
+  @override
+  late final GeneratedColumn<String> building = GeneratedColumn<String>(
+    'building',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _lastUpdatedMeta = const VerificationMeta(
+    'lastUpdated',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
+    'last_updated',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    serverId,
+    userId,
+    institutionId,
+    courseId,
+    timetableId,
+    rrule,
+    startDate,
+    durationMinutes,
+    location,
+    room,
+    building,
+    isSynced,
+    isDeleted,
+    lastUpdated,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timetable_entry';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TimetableEntryData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIdMeta);
+    }
+    if (data.containsKey('course_id')) {
+      context.handle(
+        _courseIdMeta,
+        courseId.isAcceptableOrUnknown(data['course_id']!, _courseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseIdMeta);
+    }
+    if (data.containsKey('timetable_id')) {
+      context.handle(
+        _timetableIdMeta,
+        timetableId.isAcceptableOrUnknown(
+          data['timetable_id']!,
+          _timetableIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_timetableIdMeta);
+    }
+    if (data.containsKey('rrule')) {
+      context.handle(
+        _rruleMeta,
+        rrule.isAcceptableOrUnknown(data['rrule']!, _rruleMeta),
+      );
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('duration_minutes')) {
+      context.handle(
+        _durationMinutesMeta,
+        durationMinutes.isAcceptableOrUnknown(
+          data['duration_minutes']!,
+          _durationMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_durationMinutesMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
+    }
+    if (data.containsKey('room')) {
+      context.handle(
+        _roomMeta,
+        room.isAcceptableOrUnknown(data['room']!, _roomMeta),
+      );
+    }
+    if (data.containsKey('building')) {
+      context.handle(
+        _buildingMeta,
+        building.isAcceptableOrUnknown(data['building']!, _buildingMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('last_updated')) {
+      context.handle(
+        _lastUpdatedMeta,
+        lastUpdated.isAcceptableOrUnknown(
+          data['last_updated']!,
+          _lastUpdatedMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TimetableEntryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimetableEntryData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_id'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_id'],
+      )!,
+      timetableId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timetable_id'],
+      )!,
+      rrule: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rrule'],
+      ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      durationMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_minutes'],
+      )!,
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      ),
+      room: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room'],
+      ),
+      building: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}building'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      lastUpdated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated'],
+      )!,
+    );
+  }
+
+  @override
+  $TimetableEntryTable createAlias(String alias) {
+    return $TimetableEntryTable(attachedDatabase, alias);
+  }
+}
+
+class TimetableEntryData extends DataClass
+    implements Insertable<TimetableEntryData> {
+  final String id;
+  final int? serverId;
+  final String userId;
+  final int institutionId;
+  final String courseId;
+  final String timetableId;
+
+  /// This allows the app to calculate occurrences offline.
+  final String? rrule;
+
+  /// For one-off events or the "Anchor" date for the RRULE
+  final DateTime startDate;
+
+  /// Duration in minutes (better than storing a hard EndDate for recurring events)
+  final int durationMinutes;
+  final String? location;
+  final String? room;
+  final String? building;
+  final bool isSynced;
+  final bool isDeleted;
+  final DateTime lastUpdated;
+  const TimetableEntryData({
+    required this.id,
+    this.serverId,
+    required this.userId,
+    required this.institutionId,
+    required this.courseId,
+    required this.timetableId,
+    this.rrule,
+    required this.startDate,
+    required this.durationMinutes,
+    this.location,
+    this.room,
+    this.building,
+    required this.isSynced,
+    required this.isDeleted,
+    required this.lastUpdated,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<int>(serverId);
+    }
+    map['user_id'] = Variable<String>(userId);
+    map['institution_id'] = Variable<int>(institutionId);
+    map['course_id'] = Variable<String>(courseId);
+    map['timetable_id'] = Variable<String>(timetableId);
+    if (!nullToAbsent || rrule != null) {
+      map['rrule'] = Variable<String>(rrule);
+    }
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['duration_minutes'] = Variable<int>(durationMinutes);
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String>(location);
+    }
+    if (!nullToAbsent || room != null) {
+      map['room'] = Variable<String>(room);
+    }
+    if (!nullToAbsent || building != null) {
+      map['building'] = Variable<String>(building);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    map['last_updated'] = Variable<DateTime>(lastUpdated);
+    return map;
+  }
+
+  TimetableEntryCompanion toCompanion(bool nullToAbsent) {
+    return TimetableEntryCompanion(
+      id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      userId: Value(userId),
+      institutionId: Value(institutionId),
+      courseId: Value(courseId),
+      timetableId: Value(timetableId),
+      rrule: rrule == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rrule),
+      startDate: Value(startDate),
+      durationMinutes: Value(durationMinutes),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      room: room == null && nullToAbsent ? const Value.absent() : Value(room),
+      building: building == null && nullToAbsent
+          ? const Value.absent()
+          : Value(building),
+      isSynced: Value(isSynced),
+      isDeleted: Value(isDeleted),
+      lastUpdated: Value(lastUpdated),
+    );
+  }
+
+  factory TimetableEntryData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimetableEntryData(
+      id: serializer.fromJson<String>(json['cache_id']),
+      serverId: serializer.fromJson<int?>(json['id']),
+      userId: serializer.fromJson<String>(json['user_id']),
+      institutionId: serializer.fromJson<int>(json['institution_id']),
+      courseId: serializer.fromJson<String>(json['course_id']),
+      timetableId: serializer.fromJson<String>(json['timetable_id']),
+      rrule: serializer.fromJson<String?>(json['rrule']),
+      startDate: serializer.fromJson<DateTime>(json['start_date']),
+      durationMinutes: serializer.fromJson<int>(json['durationMinutes']),
+      location: serializer.fromJson<String?>(json['location']),
+      room: serializer.fromJson<String?>(json['room']),
+      building: serializer.fromJson<String?>(json['building']),
+      isSynced: serializer.fromJson<bool>(json['is_synced']),
+      isDeleted: serializer.fromJson<bool>(json['is_deleted']),
+      lastUpdated: serializer.fromJson<DateTime>(json['last_updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cache_id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int?>(serverId),
+      'user_id': serializer.toJson<String>(userId),
+      'institution_id': serializer.toJson<int>(institutionId),
+      'course_id': serializer.toJson<String>(courseId),
+      'timetable_id': serializer.toJson<String>(timetableId),
+      'rrule': serializer.toJson<String?>(rrule),
+      'start_date': serializer.toJson<DateTime>(startDate),
+      'durationMinutes': serializer.toJson<int>(durationMinutes),
+      'location': serializer.toJson<String?>(location),
+      'room': serializer.toJson<String?>(room),
+      'building': serializer.toJson<String?>(building),
+      'is_synced': serializer.toJson<bool>(isSynced),
+      'is_deleted': serializer.toJson<bool>(isDeleted),
+      'last_updated': serializer.toJson<DateTime>(lastUpdated),
+    };
+  }
+
+  TimetableEntryData copyWith({
+    String? id,
+    Value<int?> serverId = const Value.absent(),
+    String? userId,
+    int? institutionId,
+    String? courseId,
+    String? timetableId,
+    Value<String?> rrule = const Value.absent(),
+    DateTime? startDate,
+    int? durationMinutes,
+    Value<String?> location = const Value.absent(),
+    Value<String?> room = const Value.absent(),
+    Value<String?> building = const Value.absent(),
+    bool? isSynced,
+    bool? isDeleted,
+    DateTime? lastUpdated,
+  }) => TimetableEntryData(
+    id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
+    userId: userId ?? this.userId,
+    institutionId: institutionId ?? this.institutionId,
+    courseId: courseId ?? this.courseId,
+    timetableId: timetableId ?? this.timetableId,
+    rrule: rrule.present ? rrule.value : this.rrule,
+    startDate: startDate ?? this.startDate,
+    durationMinutes: durationMinutes ?? this.durationMinutes,
+    location: location.present ? location.value : this.location,
+    room: room.present ? room.value : this.room,
+    building: building.present ? building.value : this.building,
+    isSynced: isSynced ?? this.isSynced,
+    isDeleted: isDeleted ?? this.isDeleted,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+  );
+  TimetableEntryData copyWithCompanion(TimetableEntryCompanion data) {
+    return TimetableEntryData(
+      id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      timetableId: data.timetableId.present
+          ? data.timetableId.value
+          : this.timetableId,
+      rrule: data.rrule.present ? data.rrule.value : this.rrule,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      durationMinutes: data.durationMinutes.present
+          ? data.durationMinutes.value
+          : this.durationMinutes,
+      location: data.location.present ? data.location.value : this.location,
+      room: data.room.present ? data.room.value : this.room,
+      building: data.building.present ? data.building.value : this.building,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      lastUpdated: data.lastUpdated.present
+          ? data.lastUpdated.value
+          : this.lastUpdated,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetableEntryData(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('userId: $userId, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('courseId: $courseId, ')
+          ..write('timetableId: $timetableId, ')
+          ..write('rrule: $rrule, ')
+          ..write('startDate: $startDate, ')
+          ..write('durationMinutes: $durationMinutes, ')
+          ..write('location: $location, ')
+          ..write('room: $room, ')
+          ..write('building: $building, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('lastUpdated: $lastUpdated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    serverId,
+    userId,
+    institutionId,
+    courseId,
+    timetableId,
+    rrule,
+    startDate,
+    durationMinutes,
+    location,
+    room,
+    building,
+    isSynced,
+    isDeleted,
+    lastUpdated,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimetableEntryData &&
+          other.id == this.id &&
+          other.serverId == this.serverId &&
+          other.userId == this.userId &&
+          other.institutionId == this.institutionId &&
+          other.courseId == this.courseId &&
+          other.timetableId == this.timetableId &&
+          other.rrule == this.rrule &&
+          other.startDate == this.startDate &&
+          other.durationMinutes == this.durationMinutes &&
+          other.location == this.location &&
+          other.room == this.room &&
+          other.building == this.building &&
+          other.isSynced == this.isSynced &&
+          other.isDeleted == this.isDeleted &&
+          other.lastUpdated == this.lastUpdated);
+}
+
+class TimetableEntryCompanion extends UpdateCompanion<TimetableEntryData> {
+  final Value<String> id;
+  final Value<int?> serverId;
+  final Value<String> userId;
+  final Value<int> institutionId;
+  final Value<String> courseId;
+  final Value<String> timetableId;
+  final Value<String?> rrule;
+  final Value<DateTime> startDate;
+  final Value<int> durationMinutes;
+  final Value<String?> location;
+  final Value<String?> room;
+  final Value<String?> building;
+  final Value<bool> isSynced;
+  final Value<bool> isDeleted;
+  final Value<DateTime> lastUpdated;
+  final Value<int> rowid;
+  const TimetableEntryCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.institutionId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.timetableId = const Value.absent(),
+    this.rrule = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.durationMinutes = const Value.absent(),
+    this.location = const Value.absent(),
+    this.room = const Value.absent(),
+    this.building = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TimetableEntryCompanion.insert({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    required String userId,
+    required int institutionId,
+    required String courseId,
+    required String timetableId,
+    this.rrule = const Value.absent(),
+    required DateTime startDate,
+    required int durationMinutes,
+    this.location = const Value.absent(),
+    this.room = const Value.absent(),
+    this.building = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       institutionId = Value(institutionId),
+       courseId = Value(courseId),
+       timetableId = Value(timetableId),
+       startDate = Value(startDate),
+       durationMinutes = Value(durationMinutes);
+  static Insertable<TimetableEntryData> custom({
+    Expression<String>? id,
+    Expression<int>? serverId,
+    Expression<String>? userId,
+    Expression<int>? institutionId,
+    Expression<String>? courseId,
+    Expression<String>? timetableId,
+    Expression<String>? rrule,
+    Expression<DateTime>? startDate,
+    Expression<int>? durationMinutes,
+    Expression<String>? location,
+    Expression<String>? room,
+    Expression<String>? building,
+    Expression<bool>? isSynced,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? lastUpdated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (userId != null) 'user_id': userId,
+      if (institutionId != null) 'institution_id': institutionId,
+      if (courseId != null) 'course_id': courseId,
+      if (timetableId != null) 'timetable_id': timetableId,
+      if (rrule != null) 'rrule': rrule,
+      if (startDate != null) 'start_date': startDate,
+      if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (location != null) 'location': location,
+      if (room != null) 'room': room,
+      if (building != null) 'building': building,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (lastUpdated != null) 'last_updated': lastUpdated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TimetableEntryCompanion copyWith({
+    Value<String>? id,
+    Value<int?>? serverId,
+    Value<String>? userId,
+    Value<int>? institutionId,
+    Value<String>? courseId,
+    Value<String>? timetableId,
+    Value<String?>? rrule,
+    Value<DateTime>? startDate,
+    Value<int>? durationMinutes,
+    Value<String?>? location,
+    Value<String?>? room,
+    Value<String?>? building,
+    Value<bool>? isSynced,
+    Value<bool>? isDeleted,
+    Value<DateTime>? lastUpdated,
+    Value<int>? rowid,
+  }) {
+    return TimetableEntryCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      userId: userId ?? this.userId,
+      institutionId: institutionId ?? this.institutionId,
+      courseId: courseId ?? this.courseId,
+      timetableId: timetableId ?? this.timetableId,
+      rrule: rrule ?? this.rrule,
+      startDate: startDate ?? this.startDate,
+      durationMinutes: durationMinutes ?? this.durationMinutes,
+      location: location ?? this.location,
+      room: room ?? this.room,
+      building: building ?? this.building,
+      isSynced: isSynced ?? this.isSynced,
+      isDeleted: isDeleted ?? this.isDeleted,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<int>(serverId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<String>(courseId.value);
+    }
+    if (timetableId.present) {
+      map['timetable_id'] = Variable<String>(timetableId.value);
+    }
+    if (rrule.present) {
+      map['rrule'] = Variable<String>(rrule.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (durationMinutes.present) {
+      map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (room.present) {
+      map['room'] = Variable<String>(room.value);
+    }
+    if (building.present) {
+      map['building'] = Variable<String>(building.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (lastUpdated.present) {
+      map['last_updated'] = Variable<DateTime>(lastUpdated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetableEntryCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('userId: $userId, ')
+          ..write('institutionId: $institutionId, ')
+          ..write('courseId: $courseId, ')
+          ..write('timetableId: $timetableId, ')
+          ..write('rrule: $rrule, ')
+          ..write('startDate: $startDate, ')
+          ..write('durationMinutes: $durationMinutes, ')
+          ..write('location: $location, ')
+          ..write('room: $room, ')
+          ..write('building: $building, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('lastUpdated: $lastUpdated, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -21636,15 +23446,17 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $NotificationTableTable notificationTable =
       $NotificationTableTable(this);
   late final $InstitutionTable institution = $InstitutionTable(this);
-  late final $MagnetStudentProfileTable magnetStudentProfile =
-      $MagnetStudentProfileTable(this);
-  late final $MagnetCredentialsTable magnetCredentials =
-      $MagnetCredentialsTable(this);
-  late final $MagnetCourseInfoTable magnetCourseInfo = $MagnetCourseInfoTable(
-    this,
-  );
-  late final $MagnetFinancialTransactionTable magnetFinancialTransaction =
-      $MagnetFinancialTransactionTable(this);
+  late final $InstitutionScrappingCommandTable institutionScrappingCommand =
+      $InstitutionScrappingCommandTable(this);
+  late final $InstitutionKeyTable institutionKey = $InstitutionKeyTable(this);
+  late final $InstitutionProfileTable institutionProfile =
+      $InstitutionProfileTable(this);
+  late final $InstitutionFeeTransactionTable institutionFeeTransaction =
+      $InstitutionFeeTransactionTable(this);
+  late final $SemesterTable semester = $SemesterTable(this);
+  late final $CourseTable course = $CourseTable(this);
+  late final $TimetableTable timetable = $TimetableTable(this);
+  late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
   late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
@@ -21682,10 +23494,14 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     agendaEvent,
     notificationTable,
     institution,
-    magnetStudentProfile,
-    magnetCredentials,
-    magnetCourseInfo,
-    magnetFinancialTransaction,
+    institutionScrappingCommand,
+    institutionKey,
+    institutionProfile,
+    institutionFeeTransaction,
+    semester,
+    course,
+    timetable,
+    timetableEntry,
     examTimetable,
     chirpUser,
     community,
@@ -27750,6 +29566,134 @@ typedef $$InstitutionTableUpdateCompanionBuilder =
       Value<String?> stateProvince,
     });
 
+final class $$InstitutionTableReferences
+    extends BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData> {
+  $$InstitutionTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
+  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKey,
+    aliasName: $_aliasNameGenerator(
+      db.institution.institutionId,
+      db.institutionKey.institutionID,
+    ),
+  );
+
+  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
+    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
+        .filter(
+          (f) => f.institutionID.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $InstitutionFeeTransactionTable,
+    List<InstitutionFeeTransactionData>
+  >
+  _institutionFeeTransactionRefsTable(_$AppDataBase db) =>
+      MultiTypedResultKey.fromTable(
+        db.institutionFeeTransaction,
+        aliasName: $_aliasNameGenerator(
+          db.institution.institutionId,
+          db.institutionFeeTransaction.institution,
+        ),
+      );
+
+  $$InstitutionFeeTransactionTableProcessedTableManager
+  get institutionFeeTransactionRefs {
+    final manager =
+        $$InstitutionFeeTransactionTableTableManager(
+          $_db,
+          $_db.institutionFeeTransaction,
+        ).filter(
+          (f) => f.institution.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _institutionFeeTransactionRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$SemesterTable, List<SemesterData>>
+  _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.semester,
+    aliasName: $_aliasNameGenerator(
+      db.institution.institutionId,
+      db.semester.institutionId,
+    ),
+  );
+
+  $$SemesterTableProcessedTableManager get semesterRefs {
+    final manager = $$SemesterTableTableManager($_db, $_db.semester).filter(
+      (f) => f.institutionId.institutionId.sqlEquals(
+        $_itemColumn<int>('institution_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_semesterRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CourseTable, List<CourseData>> _courseRefsTable(
+    _$AppDataBase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.course,
+    aliasName: $_aliasNameGenerator(
+      db.institution.institutionId,
+      db.course.institution,
+    ),
+  );
+
+  $$CourseTableProcessedTableManager get courseRefs {
+    final manager = $$CourseTableTableManager($_db, $_db.course).filter(
+      (f) => f.institution.institutionId.sqlEquals(
+        $_itemColumn<int>('institution_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_courseRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimetableTable, List<TimetableData>>
+  _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.timetable,
+    aliasName: $_aliasNameGenerator(
+      db.institution.institutionId,
+      db.timetable.institution,
+    ),
+  );
+
+  $$TimetableTableProcessedTableManager get timetableRefs {
+    final manager = $$TimetableTableTableManager($_db, $_db.timetable).filter(
+      (f) => f.institution.institutionId.sqlEquals(
+        $_itemColumn<int>('institution_id')!,
+      ),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_timetableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$InstitutionTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionTable> {
   $$InstitutionTableFilterComposer({
@@ -27795,6 +29739,133 @@ class $$InstitutionTableFilterComposer
     column: $table.stateProvince,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> institutionKeyRefs(
+    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  ) {
+    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutionKey,
+      getReferencedColumn: (t) => t.institutionID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionKeyTableFilterComposer(
+            $db: $db,
+            $table: $db.institutionKey,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> institutionFeeTransactionRefs(
+    Expression<bool> Function($$InstitutionFeeTransactionTableFilterComposer f)
+    f,
+  ) {
+    final $$InstitutionFeeTransactionTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionFeeTransaction,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionFeeTransactionTableFilterComposer(
+                $db: $db,
+                $table: $db.institutionFeeTransaction,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> semesterRefs(
+    Expression<bool> Function($$SemesterTableFilterComposer f) f,
+  ) {
+    final $$SemesterTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableFilterComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> courseRefs(
+    Expression<bool> Function($$CourseTableFilterComposer f) f,
+  ) {
+    final $$CourseTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.institution,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableFilterComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timetableRefs(
+    Expression<bool> Function($$TimetableTableFilterComposer f) f,
+  ) {
+    final $$TimetableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.timetable,
+      getReferencedColumn: (t) => t.institution,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableTableFilterComposer(
+            $db: $db,
+            $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$InstitutionTableOrderingComposer
@@ -27877,6 +29948,133 @@ class $$InstitutionTableAnnotationComposer
     column: $table.stateProvince,
     builder: (column) => column,
   );
+
+  Expression<T> institutionKeyRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  ) {
+    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutionKey,
+      getReferencedColumn: (t) => t.institutionID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionKeyTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institutionKey,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> institutionFeeTransactionRefs<T extends Object>(
+    Expression<T> Function($$InstitutionFeeTransactionTableAnnotationComposer a)
+    f,
+  ) {
+    final $$InstitutionFeeTransactionTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.institutionId,
+          referencedTable: $db.institutionFeeTransaction,
+          getReferencedColumn: (t) => t.institution,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionFeeTransactionTableAnnotationComposer(
+                $db: $db,
+                $table: $db.institutionFeeTransaction,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> semesterRefs<T extends Object>(
+    Expression<T> Function($$SemesterTableAnnotationComposer a) f,
+  ) {
+    final $$SemesterTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableAnnotationComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> courseRefs<T extends Object>(
+    Expression<T> Function($$CourseTableAnnotationComposer a) f,
+  ) {
+    final $$CourseTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.institution,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableAnnotationComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> timetableRefs<T extends Object>(
+    Expression<T> Function($$TimetableTableAnnotationComposer a) f,
+  ) {
+    final $$TimetableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.timetable,
+      getReferencedColumn: (t) => t.institution,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$InstitutionTableTableManager
@@ -27890,12 +30088,15 @@ class $$InstitutionTableTableManager
           $$InstitutionTableAnnotationComposer,
           $$InstitutionTableCreateCompanionBuilder,
           $$InstitutionTableUpdateCompanionBuilder,
-          (
-            InstitutionData,
-            BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
-          ),
+          (InstitutionData, $$InstitutionTableReferences),
           InstitutionData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool institutionKeyRefs,
+            bool institutionFeeTransactionRefs,
+            bool semesterRefs,
+            bool courseRefs,
+            bool timetableRefs,
+          })
         > {
   $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
     : super(
@@ -27945,9 +30146,143 @@ class $$InstitutionTableTableManager
                 stateProvince: stateProvince,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                institutionKeyRefs = false,
+                institutionFeeTransactionRefs = false,
+                semesterRefs = false,
+                courseRefs = false,
+                timetableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (institutionKeyRefs) db.institutionKey,
+                    if (institutionFeeTransactionRefs)
+                      db.institutionFeeTransaction,
+                    if (semesterRefs) db.semester,
+                    if (courseRefs) db.course,
+                    if (timetableRefs) db.timetable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (institutionKeyRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          InstitutionKeyData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._institutionKeyRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).institutionKeyRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionID == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (institutionFeeTransactionRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          InstitutionFeeTransactionData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._institutionFeeTransactionRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).institutionFeeTransactionRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (semesterRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          SemesterData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._semesterRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).semesterRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionId == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (courseRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          CourseData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._courseRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).courseRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (timetableRefs)
+                        await $_getPrefetchedData<
+                          InstitutionData,
+                          $InstitutionTable,
+                          TimetableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionTableReferences
+                              ._timetableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timetableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -27962,1412 +30297,104 @@ typedef $$InstitutionTableProcessedTableManager =
       $$InstitutionTableAnnotationComposer,
       $$InstitutionTableCreateCompanionBuilder,
       $$InstitutionTableUpdateCompanionBuilder,
-      (
-        InstitutionData,
-        BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
-      ),
+      (InstitutionData, $$InstitutionTableReferences),
       InstitutionData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool institutionKeyRefs,
+        bool institutionFeeTransactionRefs,
+        bool semesterRefs,
+        bool courseRefs,
+        bool timetableRefs,
+      })
     >;
-typedef $$MagnetStudentProfileTableCreateCompanionBuilder =
-    MagnetStudentProfileCompanion Function({
-      required String userID,
-      required int institutionID,
-      required String admissionNumber,
-      required String firstName,
-      required String otherNames,
-      Value<String?> nationalId,
-      Value<String?> gender,
-      Value<String?> address,
-      Value<String?> email,
-      Value<String?> phoneNumber,
-      Value<String?> profilePictureUrl,
-      Value<DateTime?> dateOfBirth,
-      required String school,
-      Value<String?> campus,
-      Value<String?> enrollmentStatus,
-      Value<String?> programme,
-      Value<String?> degree,
-      Value<int?> academicYear,
-      Value<double?> gpa,
-      Value<String?> emergencyContact,
-      Value<String?> parentName,
-      Value<DateTime?> dateOfAdmission,
-      Value<DateTime?> graduationDate,
-      Value<String?> disabilityStatus,
-      Value<bool?> isInternationalStudent,
-      Value<int> rowid,
-    });
-typedef $$MagnetStudentProfileTableUpdateCompanionBuilder =
-    MagnetStudentProfileCompanion Function({
-      Value<String> userID,
-      Value<int> institutionID,
-      Value<String> admissionNumber,
-      Value<String> firstName,
-      Value<String> otherNames,
-      Value<String?> nationalId,
-      Value<String?> gender,
-      Value<String?> address,
-      Value<String?> email,
-      Value<String?> phoneNumber,
-      Value<String?> profilePictureUrl,
-      Value<DateTime?> dateOfBirth,
-      Value<String> school,
-      Value<String?> campus,
-      Value<String?> enrollmentStatus,
-      Value<String?> programme,
-      Value<String?> degree,
-      Value<int?> academicYear,
-      Value<double?> gpa,
-      Value<String?> emergencyContact,
-      Value<String?> parentName,
-      Value<DateTime?> dateOfAdmission,
-      Value<DateTime?> graduationDate,
-      Value<String?> disabilityStatus,
-      Value<bool?> isInternationalStudent,
-      Value<int> rowid,
-    });
-
-class $$MagnetStudentProfileTableFilterComposer
-    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
-  $$MagnetStudentProfileTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get admissionNumber => $composableBuilder(
-    column: $table.admissionNumber,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get firstName => $composableBuilder(
-    column: $table.firstName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get otherNames => $composableBuilder(
-    column: $table.otherNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get gender => $composableBuilder(
-    column: $table.gender,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get address => $composableBuilder(
-    column: $table.address,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get phoneNumber => $composableBuilder(
-    column: $table.phoneNumber,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get profilePictureUrl => $composableBuilder(
-    column: $table.profilePictureUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
-    column: $table.dateOfBirth,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get school => $composableBuilder(
-    column: $table.school,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get campus => $composableBuilder(
-    column: $table.campus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get enrollmentStatus => $composableBuilder(
-    column: $table.enrollmentStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get programme => $composableBuilder(
-    column: $table.programme,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get degree => $composableBuilder(
-    column: $table.degree,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get academicYear => $composableBuilder(
-    column: $table.academicYear,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get gpa => $composableBuilder(
-    column: $table.gpa,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get emergencyContact => $composableBuilder(
-    column: $table.emergencyContact,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get parentName => $composableBuilder(
-    column: $table.parentName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get dateOfAdmission => $composableBuilder(
-    column: $table.dateOfAdmission,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get graduationDate => $composableBuilder(
-    column: $table.graduationDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get disabilityStatus => $composableBuilder(
-    column: $table.disabilityStatus,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isInternationalStudent => $composableBuilder(
-    column: $table.isInternationalStudent,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$MagnetStudentProfileTableOrderingComposer
-    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
-  $$MagnetStudentProfileTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get admissionNumber => $composableBuilder(
-    column: $table.admissionNumber,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get firstName => $composableBuilder(
-    column: $table.firstName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get otherNames => $composableBuilder(
-    column: $table.otherNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get gender => $composableBuilder(
-    column: $table.gender,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get address => $composableBuilder(
-    column: $table.address,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get phoneNumber => $composableBuilder(
-    column: $table.phoneNumber,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get profilePictureUrl => $composableBuilder(
-    column: $table.profilePictureUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
-    column: $table.dateOfBirth,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get school => $composableBuilder(
-    column: $table.school,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get campus => $composableBuilder(
-    column: $table.campus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get enrollmentStatus => $composableBuilder(
-    column: $table.enrollmentStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get programme => $composableBuilder(
-    column: $table.programme,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get degree => $composableBuilder(
-    column: $table.degree,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get academicYear => $composableBuilder(
-    column: $table.academicYear,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get gpa => $composableBuilder(
-    column: $table.gpa,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get emergencyContact => $composableBuilder(
-    column: $table.emergencyContact,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get parentName => $composableBuilder(
-    column: $table.parentName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get dateOfAdmission => $composableBuilder(
-    column: $table.dateOfAdmission,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get graduationDate => $composableBuilder(
-    column: $table.graduationDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get disabilityStatus => $composableBuilder(
-    column: $table.disabilityStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isInternationalStudent => $composableBuilder(
-    column: $table.isInternationalStudent,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$MagnetStudentProfileTableAnnotationComposer
-    extends Composer<_$AppDataBase, $MagnetStudentProfileTable> {
-  $$MagnetStudentProfileTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get userID =>
-      $composableBuilder(column: $table.userID, builder: (column) => column);
-
-  GeneratedColumn<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get admissionNumber => $composableBuilder(
-    column: $table.admissionNumber,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get firstName =>
-      $composableBuilder(column: $table.firstName, builder: (column) => column);
-
-  GeneratedColumn<String> get otherNames => $composableBuilder(
-    column: $table.otherNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get nationalId => $composableBuilder(
-    column: $table.nationalId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get gender =>
-      $composableBuilder(column: $table.gender, builder: (column) => column);
-
-  GeneratedColumn<String> get address =>
-      $composableBuilder(column: $table.address, builder: (column) => column);
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<String> get phoneNumber => $composableBuilder(
-    column: $table.phoneNumber,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get profilePictureUrl => $composableBuilder(
-    column: $table.profilePictureUrl,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
-    column: $table.dateOfBirth,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get school =>
-      $composableBuilder(column: $table.school, builder: (column) => column);
-
-  GeneratedColumn<String> get campus =>
-      $composableBuilder(column: $table.campus, builder: (column) => column);
-
-  GeneratedColumn<String> get enrollmentStatus => $composableBuilder(
-    column: $table.enrollmentStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get programme =>
-      $composableBuilder(column: $table.programme, builder: (column) => column);
-
-  GeneratedColumn<String> get degree =>
-      $composableBuilder(column: $table.degree, builder: (column) => column);
-
-  GeneratedColumn<int> get academicYear => $composableBuilder(
-    column: $table.academicYear,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<double> get gpa =>
-      $composableBuilder(column: $table.gpa, builder: (column) => column);
-
-  GeneratedColumn<String> get emergencyContact => $composableBuilder(
-    column: $table.emergencyContact,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get parentName => $composableBuilder(
-    column: $table.parentName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get dateOfAdmission => $composableBuilder(
-    column: $table.dateOfAdmission,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get graduationDate => $composableBuilder(
-    column: $table.graduationDate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get disabilityStatus => $composableBuilder(
-    column: $table.disabilityStatus,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get isInternationalStudent => $composableBuilder(
-    column: $table.isInternationalStudent,
-    builder: (column) => column,
-  );
-}
-
-class $$MagnetStudentProfileTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $MagnetStudentProfileTable,
-          MagnetStudentProfileData,
-          $$MagnetStudentProfileTableFilterComposer,
-          $$MagnetStudentProfileTableOrderingComposer,
-          $$MagnetStudentProfileTableAnnotationComposer,
-          $$MagnetStudentProfileTableCreateCompanionBuilder,
-          $$MagnetStudentProfileTableUpdateCompanionBuilder,
-          (
-            MagnetStudentProfileData,
-            BaseReferences<
-              _$AppDataBase,
-              $MagnetStudentProfileTable,
-              MagnetStudentProfileData
-            >,
-          ),
-          MagnetStudentProfileData,
-          PrefetchHooks Function()
-        > {
-  $$MagnetStudentProfileTableTableManager(
-    _$AppDataBase db,
-    $MagnetStudentProfileTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$MagnetStudentProfileTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$MagnetStudentProfileTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$MagnetStudentProfileTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<String> userID = const Value.absent(),
-                Value<int> institutionID = const Value.absent(),
-                Value<String> admissionNumber = const Value.absent(),
-                Value<String> firstName = const Value.absent(),
-                Value<String> otherNames = const Value.absent(),
-                Value<String?> nationalId = const Value.absent(),
-                Value<String?> gender = const Value.absent(),
-                Value<String?> address = const Value.absent(),
-                Value<String?> email = const Value.absent(),
-                Value<String?> phoneNumber = const Value.absent(),
-                Value<String?> profilePictureUrl = const Value.absent(),
-                Value<DateTime?> dateOfBirth = const Value.absent(),
-                Value<String> school = const Value.absent(),
-                Value<String?> campus = const Value.absent(),
-                Value<String?> enrollmentStatus = const Value.absent(),
-                Value<String?> programme = const Value.absent(),
-                Value<String?> degree = const Value.absent(),
-                Value<int?> academicYear = const Value.absent(),
-                Value<double?> gpa = const Value.absent(),
-                Value<String?> emergencyContact = const Value.absent(),
-                Value<String?> parentName = const Value.absent(),
-                Value<DateTime?> dateOfAdmission = const Value.absent(),
-                Value<DateTime?> graduationDate = const Value.absent(),
-                Value<String?> disabilityStatus = const Value.absent(),
-                Value<bool?> isInternationalStudent = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetStudentProfileCompanion(
-                userID: userID,
-                institutionID: institutionID,
-                admissionNumber: admissionNumber,
-                firstName: firstName,
-                otherNames: otherNames,
-                nationalId: nationalId,
-                gender: gender,
-                address: address,
-                email: email,
-                phoneNumber: phoneNumber,
-                profilePictureUrl: profilePictureUrl,
-                dateOfBirth: dateOfBirth,
-                school: school,
-                campus: campus,
-                enrollmentStatus: enrollmentStatus,
-                programme: programme,
-                degree: degree,
-                academicYear: academicYear,
-                gpa: gpa,
-                emergencyContact: emergencyContact,
-                parentName: parentName,
-                dateOfAdmission: dateOfAdmission,
-                graduationDate: graduationDate,
-                disabilityStatus: disabilityStatus,
-                isInternationalStudent: isInternationalStudent,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String userID,
-                required int institutionID,
-                required String admissionNumber,
-                required String firstName,
-                required String otherNames,
-                Value<String?> nationalId = const Value.absent(),
-                Value<String?> gender = const Value.absent(),
-                Value<String?> address = const Value.absent(),
-                Value<String?> email = const Value.absent(),
-                Value<String?> phoneNumber = const Value.absent(),
-                Value<String?> profilePictureUrl = const Value.absent(),
-                Value<DateTime?> dateOfBirth = const Value.absent(),
-                required String school,
-                Value<String?> campus = const Value.absent(),
-                Value<String?> enrollmentStatus = const Value.absent(),
-                Value<String?> programme = const Value.absent(),
-                Value<String?> degree = const Value.absent(),
-                Value<int?> academicYear = const Value.absent(),
-                Value<double?> gpa = const Value.absent(),
-                Value<String?> emergencyContact = const Value.absent(),
-                Value<String?> parentName = const Value.absent(),
-                Value<DateTime?> dateOfAdmission = const Value.absent(),
-                Value<DateTime?> graduationDate = const Value.absent(),
-                Value<String?> disabilityStatus = const Value.absent(),
-                Value<bool?> isInternationalStudent = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetStudentProfileCompanion.insert(
-                userID: userID,
-                institutionID: institutionID,
-                admissionNumber: admissionNumber,
-                firstName: firstName,
-                otherNames: otherNames,
-                nationalId: nationalId,
-                gender: gender,
-                address: address,
-                email: email,
-                phoneNumber: phoneNumber,
-                profilePictureUrl: profilePictureUrl,
-                dateOfBirth: dateOfBirth,
-                school: school,
-                campus: campus,
-                enrollmentStatus: enrollmentStatus,
-                programme: programme,
-                degree: degree,
-                academicYear: academicYear,
-                gpa: gpa,
-                emergencyContact: emergencyContact,
-                parentName: parentName,
-                dateOfAdmission: dateOfAdmission,
-                graduationDate: graduationDate,
-                disabilityStatus: disabilityStatus,
-                isInternationalStudent: isInternationalStudent,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$MagnetStudentProfileTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $MagnetStudentProfileTable,
-      MagnetStudentProfileData,
-      $$MagnetStudentProfileTableFilterComposer,
-      $$MagnetStudentProfileTableOrderingComposer,
-      $$MagnetStudentProfileTableAnnotationComposer,
-      $$MagnetStudentProfileTableCreateCompanionBuilder,
-      $$MagnetStudentProfileTableUpdateCompanionBuilder,
-      (
-        MagnetStudentProfileData,
-        BaseReferences<
-          _$AppDataBase,
-          $MagnetStudentProfileTable,
-          MagnetStudentProfileData
-        >,
-      ),
-      MagnetStudentProfileData,
-      PrefetchHooks Function()
-    >;
-typedef $$MagnetCredentialsTableCreateCompanionBuilder =
-    MagnetCredentialsCompanion Function({
-      required String userID,
-      required int institutionID,
-      required String username,
-      required String password,
-      Value<String?> extra,
-      Value<int> rowid,
-    });
-typedef $$MagnetCredentialsTableUpdateCompanionBuilder =
-    MagnetCredentialsCompanion Function({
-      Value<String> userID,
-      Value<int> institutionID,
-      Value<String> username,
-      Value<String> password,
-      Value<String?> extra,
-      Value<int> rowid,
-    });
-
-class $$MagnetCredentialsTableFilterComposer
-    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
-  $$MagnetCredentialsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get username => $composableBuilder(
-    column: $table.username,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get password => $composableBuilder(
-    column: $table.password,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get extra => $composableBuilder(
-    column: $table.extra,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$MagnetCredentialsTableOrderingComposer
-    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
-  $$MagnetCredentialsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get username => $composableBuilder(
-    column: $table.username,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get password => $composableBuilder(
-    column: $table.password,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get extra => $composableBuilder(
-    column: $table.extra,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$MagnetCredentialsTableAnnotationComposer
-    extends Composer<_$AppDataBase, $MagnetCredentialsTable> {
-  $$MagnetCredentialsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get userID =>
-      $composableBuilder(column: $table.userID, builder: (column) => column);
-
-  GeneratedColumn<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get username =>
-      $composableBuilder(column: $table.username, builder: (column) => column);
-
-  GeneratedColumn<String> get password =>
-      $composableBuilder(column: $table.password, builder: (column) => column);
-
-  GeneratedColumn<String> get extra =>
-      $composableBuilder(column: $table.extra, builder: (column) => column);
-}
-
-class $$MagnetCredentialsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $MagnetCredentialsTable,
-          MagnetCredential,
-          $$MagnetCredentialsTableFilterComposer,
-          $$MagnetCredentialsTableOrderingComposer,
-          $$MagnetCredentialsTableAnnotationComposer,
-          $$MagnetCredentialsTableCreateCompanionBuilder,
-          $$MagnetCredentialsTableUpdateCompanionBuilder,
-          (
-            MagnetCredential,
-            BaseReferences<
-              _$AppDataBase,
-              $MagnetCredentialsTable,
-              MagnetCredential
-            >,
-          ),
-          MagnetCredential,
-          PrefetchHooks Function()
-        > {
-  $$MagnetCredentialsTableTableManager(
-    _$AppDataBase db,
-    $MagnetCredentialsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$MagnetCredentialsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$MagnetCredentialsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$MagnetCredentialsTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<String> userID = const Value.absent(),
-                Value<int> institutionID = const Value.absent(),
-                Value<String> username = const Value.absent(),
-                Value<String> password = const Value.absent(),
-                Value<String?> extra = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetCredentialsCompanion(
-                userID: userID,
-                institutionID: institutionID,
-                username: username,
-                password: password,
-                extra: extra,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String userID,
-                required int institutionID,
-                required String username,
-                required String password,
-                Value<String?> extra = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetCredentialsCompanion.insert(
-                userID: userID,
-                institutionID: institutionID,
-                username: username,
-                password: password,
-                extra: extra,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$MagnetCredentialsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $MagnetCredentialsTable,
-      MagnetCredential,
-      $$MagnetCredentialsTableFilterComposer,
-      $$MagnetCredentialsTableOrderingComposer,
-      $$MagnetCredentialsTableAnnotationComposer,
-      $$MagnetCredentialsTableCreateCompanionBuilder,
-      $$MagnetCredentialsTableUpdateCompanionBuilder,
-      (
-        MagnetCredential,
-        BaseReferences<
-          _$AppDataBase,
-          $MagnetCredentialsTable,
-          MagnetCredential
-        >,
-      ),
-      MagnetCredential,
-      PrefetchHooks Function()
-    >;
-typedef $$MagnetCourseInfoTableCreateCompanionBuilder =
-    MagnetCourseInfoCompanion Function({
-      required String userID,
-      required int institutionID,
-      required String courseCode,
-      required String courseTitle,
-      Value<String?> courseDescription,
-      required int credits,
-      Value<String?> instructor,
-      Value<String?> semester,
-      Value<DateTime?> schedule,
-      Value<int?> durationInSeconds,
-      Value<String?> prerequisites,
-      Value<String?> courseType,
-      Value<String?> courseLevel,
-      Value<String?> location,
-      Value<int?> enrollmentLimit,
-      Value<int?> currentEnrollment,
-      Value<String?> courseMaterials,
-      Value<int> rowid,
-    });
-typedef $$MagnetCourseInfoTableUpdateCompanionBuilder =
-    MagnetCourseInfoCompanion Function({
-      Value<String> userID,
-      Value<int> institutionID,
-      Value<String> courseCode,
-      Value<String> courseTitle,
-      Value<String?> courseDescription,
-      Value<int> credits,
-      Value<String?> instructor,
-      Value<String?> semester,
-      Value<DateTime?> schedule,
-      Value<int?> durationInSeconds,
-      Value<String?> prerequisites,
-      Value<String?> courseType,
-      Value<String?> courseLevel,
-      Value<String?> location,
-      Value<int?> enrollmentLimit,
-      Value<int?> currentEnrollment,
-      Value<String?> courseMaterials,
-      Value<int> rowid,
-    });
-
-class $$MagnetCourseInfoTableFilterComposer
-    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
-  $$MagnetCourseInfoTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseCode => $composableBuilder(
-    column: $table.courseCode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseTitle => $composableBuilder(
-    column: $table.courseTitle,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseDescription => $composableBuilder(
-    column: $table.courseDescription,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get credits => $composableBuilder(
-    column: $table.credits,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get instructor => $composableBuilder(
-    column: $table.instructor,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get semester => $composableBuilder(
-    column: $table.semester,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get schedule => $composableBuilder(
-    column: $table.schedule,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get durationInSeconds => $composableBuilder(
-    column: $table.durationInSeconds,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get prerequisites => $composableBuilder(
-    column: $table.prerequisites,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseType => $composableBuilder(
-    column: $table.courseType,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseLevel => $composableBuilder(
-    column: $table.courseLevel,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get location => $composableBuilder(
-    column: $table.location,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get enrollmentLimit => $composableBuilder(
-    column: $table.enrollmentLimit,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get currentEnrollment => $composableBuilder(
-    column: $table.currentEnrollment,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get courseMaterials => $composableBuilder(
-    column: $table.courseMaterials,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$MagnetCourseInfoTableOrderingComposer
-    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
-  $$MagnetCourseInfoTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get userID => $composableBuilder(
-    column: $table.userID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseCode => $composableBuilder(
-    column: $table.courseCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseTitle => $composableBuilder(
-    column: $table.courseTitle,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseDescription => $composableBuilder(
-    column: $table.courseDescription,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get credits => $composableBuilder(
-    column: $table.credits,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get instructor => $composableBuilder(
-    column: $table.instructor,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get semester => $composableBuilder(
-    column: $table.semester,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get schedule => $composableBuilder(
-    column: $table.schedule,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get durationInSeconds => $composableBuilder(
-    column: $table.durationInSeconds,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get prerequisites => $composableBuilder(
-    column: $table.prerequisites,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseType => $composableBuilder(
-    column: $table.courseType,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseLevel => $composableBuilder(
-    column: $table.courseLevel,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get location => $composableBuilder(
-    column: $table.location,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get enrollmentLimit => $composableBuilder(
-    column: $table.enrollmentLimit,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get currentEnrollment => $composableBuilder(
-    column: $table.currentEnrollment,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get courseMaterials => $composableBuilder(
-    column: $table.courseMaterials,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$MagnetCourseInfoTableAnnotationComposer
-    extends Composer<_$AppDataBase, $MagnetCourseInfoTable> {
-  $$MagnetCourseInfoTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get userID =>
-      $composableBuilder(column: $table.userID, builder: (column) => column);
-
-  GeneratedColumn<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseCode => $composableBuilder(
-    column: $table.courseCode,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseTitle => $composableBuilder(
-    column: $table.courseTitle,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseDescription => $composableBuilder(
-    column: $table.courseDescription,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get credits =>
-      $composableBuilder(column: $table.credits, builder: (column) => column);
-
-  GeneratedColumn<String> get instructor => $composableBuilder(
-    column: $table.instructor,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get semester =>
-      $composableBuilder(column: $table.semester, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get schedule =>
-      $composableBuilder(column: $table.schedule, builder: (column) => column);
-
-  GeneratedColumn<int> get durationInSeconds => $composableBuilder(
-    column: $table.durationInSeconds,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get prerequisites => $composableBuilder(
-    column: $table.prerequisites,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseType => $composableBuilder(
-    column: $table.courseType,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseLevel => $composableBuilder(
-    column: $table.courseLevel,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get location =>
-      $composableBuilder(column: $table.location, builder: (column) => column);
-
-  GeneratedColumn<int> get enrollmentLimit => $composableBuilder(
-    column: $table.enrollmentLimit,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get currentEnrollment => $composableBuilder(
-    column: $table.currentEnrollment,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get courseMaterials => $composableBuilder(
-    column: $table.courseMaterials,
-    builder: (column) => column,
-  );
-}
-
-class $$MagnetCourseInfoTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $MagnetCourseInfoTable,
-          MagnetCourseInfoData,
-          $$MagnetCourseInfoTableFilterComposer,
-          $$MagnetCourseInfoTableOrderingComposer,
-          $$MagnetCourseInfoTableAnnotationComposer,
-          $$MagnetCourseInfoTableCreateCompanionBuilder,
-          $$MagnetCourseInfoTableUpdateCompanionBuilder,
-          (
-            MagnetCourseInfoData,
-            BaseReferences<
-              _$AppDataBase,
-              $MagnetCourseInfoTable,
-              MagnetCourseInfoData
-            >,
-          ),
-          MagnetCourseInfoData,
-          PrefetchHooks Function()
-        > {
-  $$MagnetCourseInfoTableTableManager(
-    _$AppDataBase db,
-    $MagnetCourseInfoTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$MagnetCourseInfoTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$MagnetCourseInfoTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$MagnetCourseInfoTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> userID = const Value.absent(),
-                Value<int> institutionID = const Value.absent(),
-                Value<String> courseCode = const Value.absent(),
-                Value<String> courseTitle = const Value.absent(),
-                Value<String?> courseDescription = const Value.absent(),
-                Value<int> credits = const Value.absent(),
-                Value<String?> instructor = const Value.absent(),
-                Value<String?> semester = const Value.absent(),
-                Value<DateTime?> schedule = const Value.absent(),
-                Value<int?> durationInSeconds = const Value.absent(),
-                Value<String?> prerequisites = const Value.absent(),
-                Value<String?> courseType = const Value.absent(),
-                Value<String?> courseLevel = const Value.absent(),
-                Value<String?> location = const Value.absent(),
-                Value<int?> enrollmentLimit = const Value.absent(),
-                Value<int?> currentEnrollment = const Value.absent(),
-                Value<String?> courseMaterials = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetCourseInfoCompanion(
-                userID: userID,
-                institutionID: institutionID,
-                courseCode: courseCode,
-                courseTitle: courseTitle,
-                courseDescription: courseDescription,
-                credits: credits,
-                instructor: instructor,
-                semester: semester,
-                schedule: schedule,
-                durationInSeconds: durationInSeconds,
-                prerequisites: prerequisites,
-                courseType: courseType,
-                courseLevel: courseLevel,
-                location: location,
-                enrollmentLimit: enrollmentLimit,
-                currentEnrollment: currentEnrollment,
-                courseMaterials: courseMaterials,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String userID,
-                required int institutionID,
-                required String courseCode,
-                required String courseTitle,
-                Value<String?> courseDescription = const Value.absent(),
-                required int credits,
-                Value<String?> instructor = const Value.absent(),
-                Value<String?> semester = const Value.absent(),
-                Value<DateTime?> schedule = const Value.absent(),
-                Value<int?> durationInSeconds = const Value.absent(),
-                Value<String?> prerequisites = const Value.absent(),
-                Value<String?> courseType = const Value.absent(),
-                Value<String?> courseLevel = const Value.absent(),
-                Value<String?> location = const Value.absent(),
-                Value<int?> enrollmentLimit = const Value.absent(),
-                Value<int?> currentEnrollment = const Value.absent(),
-                Value<String?> courseMaterials = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => MagnetCourseInfoCompanion.insert(
-                userID: userID,
-                institutionID: institutionID,
-                courseCode: courseCode,
-                courseTitle: courseTitle,
-                courseDescription: courseDescription,
-                credits: credits,
-                instructor: instructor,
-                semester: semester,
-                schedule: schedule,
-                durationInSeconds: durationInSeconds,
-                prerequisites: prerequisites,
-                courseType: courseType,
-                courseLevel: courseLevel,
-                location: location,
-                enrollmentLimit: enrollmentLimit,
-                currentEnrollment: currentEnrollment,
-                courseMaterials: courseMaterials,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$MagnetCourseInfoTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $MagnetCourseInfoTable,
-      MagnetCourseInfoData,
-      $$MagnetCourseInfoTableFilterComposer,
-      $$MagnetCourseInfoTableOrderingComposer,
-      $$MagnetCourseInfoTableAnnotationComposer,
-      $$MagnetCourseInfoTableCreateCompanionBuilder,
-      $$MagnetCourseInfoTableUpdateCompanionBuilder,
-      (
-        MagnetCourseInfoData,
-        BaseReferences<
-          _$AppDataBase,
-          $MagnetCourseInfoTable,
-          MagnetCourseInfoData
-        >,
-      ),
-      MagnetCourseInfoData,
-      PrefetchHooks Function()
-    >;
-typedef $$MagnetFinancialTransactionTableCreateCompanionBuilder =
-    MagnetFinancialTransactionCompanion Function({
-      required String userID,
-      required int institutionID,
-      required String transactionId,
-      required double amount,
-      required DateTime date,
-      required String type,
-      required String paymentMethod,
-      required String studentId,
-      required double balanceAfterTransaction,
-      required String status,
-      required String currency,
+typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
+    InstitutionScrappingCommandCompanion Function({
+      required int institution,
+      required String commandID,
+      required String name,
+      Value<String?> url,
       Value<String?> description,
-      Value<String?> referenceNumber,
+      Value<bool> requiresInteraction,
+      Value<DateTime?> createdAt,
+      required List<dynamic> instructions,
       Value<int> rowid,
     });
-typedef $$MagnetFinancialTransactionTableUpdateCompanionBuilder =
-    MagnetFinancialTransactionCompanion Function({
-      Value<String> userID,
-      Value<int> institutionID,
-      Value<String> transactionId,
-      Value<double> amount,
-      Value<DateTime> date,
-      Value<String> type,
-      Value<String> paymentMethod,
-      Value<String> studentId,
-      Value<double> balanceAfterTransaction,
-      Value<String> status,
-      Value<String> currency,
+typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
+    InstitutionScrappingCommandCompanion Function({
+      Value<int> institution,
+      Value<String> commandID,
+      Value<String> name,
+      Value<String?> url,
       Value<String?> description,
-      Value<String?> referenceNumber,
+      Value<bool> requiresInteraction,
+      Value<DateTime?> createdAt,
+      Value<List<dynamic>> instructions,
       Value<int> rowid,
     });
 
-class $$MagnetFinancialTransactionTableFilterComposer
-    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
-  $$MagnetFinancialTransactionTableFilterComposer({
+final class $$InstitutionScrappingCommandTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData
+        > {
+  $$InstitutionScrappingCommandTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
+  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKey,
+    aliasName: $_aliasNameGenerator(
+      db.institutionScrappingCommand.commandID,
+      db.institutionKey.commandID,
+    ),
+  );
+
+  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
+    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
+        .filter(
+          (f) => f.commandID.commandID.sqlEquals(
+            $_itemColumn<String>('command_i_d')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$InstitutionScrappingCommandTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get userID => $composableBuilder(
-    column: $table.userID,
+  ColumnFilters<int> get institution => $composableBuilder(
+    column: $table.institution,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get institutionID => $composableBuilder(
-    column: $table.institutionID,
+  ColumnFilters<String> get commandID => $composableBuilder(
+    column: $table.commandID,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get transactionId => $composableBuilder(
-    column: $table.transactionId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get paymentMethod => $composableBuilder(
-    column: $table.paymentMethod,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get studentId => $composableBuilder(
-    column: $table.studentId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get balanceAfterTransaction => $composableBuilder(
-    column: $table.balanceAfterTransaction,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get currency => $composableBuilder(
-    column: $table.currency,
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -29376,21 +30403,937 @@ class $$MagnetFinancialTransactionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get referenceNumber => $composableBuilder(
-    column: $table.referenceNumber,
+  ColumnFilters<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
+  get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  Expression<bool> institutionKeyRefs(
+    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  ) {
+    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.commandID,
+      referencedTable: $db.institutionKey,
+      getReferencedColumn: (t) => t.commandID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionKeyTableFilterComposer(
+            $db: $db,
+            $table: $db.institutionKey,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
-class $$MagnetFinancialTransactionTableOrderingComposer
-    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
-  $$MagnetFinancialTransactionTableOrderingComposer({
+class $$InstitutionScrappingCommandTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get commandID => $composableBuilder(
+    column: $table.commandID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructions => $composableBuilder(
+    column: $table.instructions,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstitutionScrappingCommandTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
+  $$InstitutionScrappingCommandTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get commandID =>
+      $composableBuilder(column: $table.commandID, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get requiresInteraction => $composableBuilder(
+    column: $table.requiresInteraction,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>, String> get instructions =>
+      $composableBuilder(
+        column: $table.instructions,
+        builder: (column) => column,
+      );
+
+  Expression<T> institutionKeyRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  ) {
+    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.commandID,
+      referencedTable: $db.institutionKey,
+      getReferencedColumn: (t) => t.commandID,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionKeyTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institutionKey,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$InstitutionScrappingCommandTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData,
+          $$InstitutionScrappingCommandTableFilterComposer,
+          $$InstitutionScrappingCommandTableOrderingComposer,
+          $$InstitutionScrappingCommandTableAnnotationComposer,
+          $$InstitutionScrappingCommandTableCreateCompanionBuilder,
+          $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+          (
+            InstitutionScrappingCommandData,
+            $$InstitutionScrappingCommandTableReferences,
+          ),
+          InstitutionScrappingCommandData,
+          PrefetchHooks Function({bool institutionKeyRefs})
+        > {
+  $$InstitutionScrappingCommandTableTableManager(
+    _$AppDataBase db,
+    $InstitutionScrappingCommandTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionScrappingCommandTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InstitutionScrappingCommandTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InstitutionScrappingCommandTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> institution = const Value.absent(),
+                Value<String> commandID = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<bool> requiresInteraction = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<List<dynamic>> instructions = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionScrappingCommandCompanion(
+                institution: institution,
+                commandID: commandID,
+                name: name,
+                url: url,
+                description: description,
+                requiresInteraction: requiresInteraction,
+                createdAt: createdAt,
+                instructions: instructions,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int institution,
+                required String commandID,
+                required String name,
+                Value<String?> url = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<bool> requiresInteraction = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                required List<dynamic> instructions,
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionScrappingCommandCompanion.insert(
+                institution: institution,
+                commandID: commandID,
+                name: name,
+                url: url,
+                description: description,
+                requiresInteraction: requiresInteraction,
+                createdAt: createdAt,
+                instructions: instructions,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionScrappingCommandTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institutionKeyRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (institutionKeyRefs) db.institutionKey,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (institutionKeyRefs)
+                    await $_getPrefetchedData<
+                      InstitutionScrappingCommandData,
+                      $InstitutionScrappingCommandTable,
+                      InstitutionKeyData
+                    >(
+                      currentTable: table,
+                      referencedTable:
+                          $$InstitutionScrappingCommandTableReferences
+                              ._institutionKeyRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$InstitutionScrappingCommandTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).institutionKeyRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.commandID == item.commandID,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$InstitutionScrappingCommandTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionScrappingCommandTable,
+      InstitutionScrappingCommandData,
+      $$InstitutionScrappingCommandTableFilterComposer,
+      $$InstitutionScrappingCommandTableOrderingComposer,
+      $$InstitutionScrappingCommandTableAnnotationComposer,
+      $$InstitutionScrappingCommandTableCreateCompanionBuilder,
+      $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+      (
+        InstitutionScrappingCommandData,
+        $$InstitutionScrappingCommandTableReferences,
+      ),
+      InstitutionScrappingCommandData,
+      PrefetchHooks Function({bool institutionKeyRefs})
+    >;
+typedef $$InstitutionKeyTableCreateCompanionBuilder =
+    InstitutionKeyCompanion Function({
+      required int institutionID,
+      required String commandID,
+      required Map<String, dynamic> keySets,
+      Value<DateTime?> createdAt,
+      Value<int> rowid,
+    });
+typedef $$InstitutionKeyTableUpdateCompanionBuilder =
+    InstitutionKeyCompanion Function({
+      Value<int> institutionID,
+      Value<String> commandID,
+      Value<Map<String, dynamic>> keySets,
+      Value<DateTime?> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$InstitutionKeyTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionKeyTable,
+          InstitutionKeyData
+        > {
+  $$InstitutionKeyTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionTable _institutionIDTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.institutionKey.institutionID,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager get institutionID {
+    final $_column = $_itemColumn<int>('institution_id')!;
+
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionIDTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $InstitutionScrappingCommandTable _commandIDTable(_$AppDataBase db) =>
+      db.institutionScrappingCommand.createAlias(
+        $_aliasNameGenerator(
+          db.institutionKey.commandID,
+          db.institutionScrappingCommand.commandID,
+        ),
+      );
+
+  $$InstitutionScrappingCommandTableProcessedTableManager get commandID {
+    final $_column = $_itemColumn<String>('command_i_d')!;
+
+    final manager = $$InstitutionScrappingCommandTableTableManager(
+      $_db,
+      $_db.institutionScrappingCommand,
+    ).filter((f) => f.commandID.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_commandIDTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$InstitutionKeyTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
+  $$InstitutionKeyTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>,
+    Map<String, dynamic>,
+    String
+  >
+  get keySets => $composableBuilder(
+    column: $table.keySets,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institutionID {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionID,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InstitutionScrappingCommandTableFilterComposer get commandID {
+    final $$InstitutionScrappingCommandTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.commandID,
+          referencedTable: $db.institutionScrappingCommand,
+          getReferencedColumn: (t) => t.commandID,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionScrappingCommandTableFilterComposer(
+                $db: $db,
+                $table: $db.institutionScrappingCommand,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$InstitutionKeyTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
+  $$InstitutionKeyTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get keySets => $composableBuilder(
+    column: $table.keySets,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institutionID {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionID,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InstitutionScrappingCommandTableOrderingComposer get commandID {
+    final $$InstitutionScrappingCommandTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.commandID,
+          referencedTable: $db.institutionScrappingCommand,
+          getReferencedColumn: (t) => t.commandID,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionScrappingCommandTableOrderingComposer(
+                $db: $db,
+                $table: $db.institutionScrappingCommand,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$InstitutionKeyTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
+  $$InstitutionKeyTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get keySets =>
+      $composableBuilder(column: $table.keySets, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institutionID {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionID,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InstitutionScrappingCommandTableAnnotationComposer get commandID {
+    final $$InstitutionScrappingCommandTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.commandID,
+          referencedTable: $db.institutionScrappingCommand,
+          getReferencedColumn: (t) => t.commandID,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InstitutionScrappingCommandTableAnnotationComposer(
+                $db: $db,
+                $table: $db.institutionScrappingCommand,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$InstitutionKeyTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionKeyTable,
+          InstitutionKeyData,
+          $$InstitutionKeyTableFilterComposer,
+          $$InstitutionKeyTableOrderingComposer,
+          $$InstitutionKeyTableAnnotationComposer,
+          $$InstitutionKeyTableCreateCompanionBuilder,
+          $$InstitutionKeyTableUpdateCompanionBuilder,
+          (InstitutionKeyData, $$InstitutionKeyTableReferences),
+          InstitutionKeyData,
+          PrefetchHooks Function({bool institutionID, bool commandID})
+        > {
+  $$InstitutionKeyTableTableManager(
+    _$AppDataBase db,
+    $InstitutionKeyTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionKeyTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InstitutionKeyTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InstitutionKeyTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> institutionID = const Value.absent(),
+                Value<String> commandID = const Value.absent(),
+                Value<Map<String, dynamic>> keySets = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionKeyCompanion(
+                institutionID: institutionID,
+                commandID: commandID,
+                keySets: keySets,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int institutionID,
+                required String commandID,
+                required Map<String, dynamic> keySets,
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionKeyCompanion.insert(
+                institutionID: institutionID,
+                commandID: commandID,
+                keySets: keySets,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionKeyTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institutionID = false, commandID = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institutionID) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institutionID,
+                                referencedTable: $$InstitutionKeyTableReferences
+                                    ._institutionIDTable(db),
+                                referencedColumn:
+                                    $$InstitutionKeyTableReferences
+                                        ._institutionIDTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+                    if (commandID) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.commandID,
+                                referencedTable: $$InstitutionKeyTableReferences
+                                    ._commandIDTable(db),
+                                referencedColumn:
+                                    $$InstitutionKeyTableReferences
+                                        ._commandIDTable(db)
+                                        .commandID,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$InstitutionKeyTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionKeyTable,
+      InstitutionKeyData,
+      $$InstitutionKeyTableFilterComposer,
+      $$InstitutionKeyTableOrderingComposer,
+      $$InstitutionKeyTableAnnotationComposer,
+      $$InstitutionKeyTableCreateCompanionBuilder,
+      $$InstitutionKeyTableUpdateCompanionBuilder,
+      (InstitutionKeyData, $$InstitutionKeyTableReferences),
+      InstitutionKeyData,
+      PrefetchHooks Function({bool institutionID, bool commandID})
+    >;
+typedef $$InstitutionProfileTableCreateCompanionBuilder =
+    InstitutionProfileCompanion Function({
+      Value<int?> id,
+      required String userID,
+      required int institutionID,
+      required String studentID,
+      Value<String> studentName,
+      Value<Gender> gender,
+      Value<AcademicStatus> status,
+      Value<String?> email,
+      Value<String?> profilePicture,
+      Value<String?> nationalID,
+      Value<String?> nationality,
+      Value<String?> program,
+      Value<String?> major,
+      Value<int?> year,
+      Value<double?> gpa,
+      Value<String?> disabilityStatus,
+      Value<String?> school,
+      Value<String?> phone,
+      Value<String?> address,
+      Value<DateTime?> enrollmentDate,
+      Value<DateTime?> expectedGraduation,
+      Value<Map<String, dynamic>?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$InstitutionProfileTableUpdateCompanionBuilder =
+    InstitutionProfileCompanion Function({
+      Value<int?> id,
+      Value<String> userID,
+      Value<int> institutionID,
+      Value<String> studentID,
+      Value<String> studentName,
+      Value<Gender> gender,
+      Value<AcademicStatus> status,
+      Value<String?> email,
+      Value<String?> profilePicture,
+      Value<String?> nationalID,
+      Value<String?> nationality,
+      Value<String?> program,
+      Value<String?> major,
+      Value<int?> year,
+      Value<double?> gpa,
+      Value<String?> disabilityStatus,
+      Value<String?> school,
+      Value<String?> phone,
+      Value<String?> address,
+      Value<DateTime?> enrollmentDate,
+      Value<DateTime?> expectedGraduation,
+      Value<Map<String, dynamic>?> rawData,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$InstitutionProfileTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentID => $composableBuilder(
+    column: $table.studentID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentName => $composableBuilder(
+    column: $table.studentName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Gender, Gender, String> get gender =>
+      $composableBuilder(
+        column: $table.gender,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<AcademicStatus, AcademicStatus, String>
+  get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get program => $composableBuilder(
+    column: $table.program,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get major => $composableBuilder(
+    column: $table.major,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InstitutionProfileTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get userID => $composableBuilder(
     column: $table.userID,
     builder: (column) => ColumnOrderings(column),
@@ -29401,38 +31344,18 @@ class $$MagnetFinancialTransactionTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get transactionId => $composableBuilder(
-    column: $table.transactionId,
+  ColumnOrderings<String> get studentID => $composableBuilder(
+    column: $table.studentID,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
-    column: $table.amount,
+  ColumnOrderings<String> get studentName => $composableBuilder(
+    column: $table.studentName,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get paymentMethod => $composableBuilder(
-    column: $table.paymentMethod,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get studentId => $composableBuilder(
-    column: $table.studentId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get balanceAfterTransaction => $composableBuilder(
-    column: $table.balanceAfterTransaction,
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -29441,31 +31364,104 @@ class $$MagnetFinancialTransactionTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get currency => $composableBuilder(
-    column: $table.currency,
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnOrderings<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get referenceNumber => $composableBuilder(
-    column: $table.referenceNumber,
+  ColumnOrderings<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get program => $composableBuilder(
+    column: $table.program,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get major => $composableBuilder(
+    column: $table.major,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get gpa => $composableBuilder(
+    column: $table.gpa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get school => $composableBuilder(
+    column: $table.school,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawData => $composableBuilder(
+    column: $table.rawData,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$MagnetFinancialTransactionTableAnnotationComposer
-    extends Composer<_$AppDataBase, $MagnetFinancialTransactionTable> {
-  $$MagnetFinancialTransactionTableAnnotationComposer({
+class $$InstitutionProfileTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
+  $$InstitutionProfileTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<String> get userID =>
       $composableBuilder(column: $table.userID, builder: (column) => column);
 
@@ -29474,156 +31470,228 @@ class $$MagnetFinancialTransactionTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get transactionId => $composableBuilder(
-    column: $table.transactionId,
+  GeneratedColumn<String> get studentID =>
+      $composableBuilder(column: $table.studentID, builder: (column) => column);
+
+  GeneratedColumn<String> get studentName => $composableBuilder(
+    column: $table.studentName,
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<Gender, String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get date =>
-      $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumn<String> get paymentMethod => $composableBuilder(
-    column: $table.paymentMethod,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get studentId =>
-      $composableBuilder(column: $table.studentId, builder: (column) => column);
-
-  GeneratedColumn<double> get balanceAfterTransaction => $composableBuilder(
-    column: $table.balanceAfterTransaction,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get status =>
+  GeneratedColumnWithTypeConverter<AcademicStatus, String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
-  GeneratedColumn<String> get currency =>
-      $composableBuilder(column: $table.currency, builder: (column) => column);
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
 
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
+  GeneratedColumn<String> get profilePicture => $composableBuilder(
+    column: $table.profilePicture,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get referenceNumber => $composableBuilder(
-    column: $table.referenceNumber,
+  GeneratedColumn<String> get nationalID => $composableBuilder(
+    column: $table.nationalID,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get program =>
+      $composableBuilder(column: $table.program, builder: (column) => column);
+
+  GeneratedColumn<String> get major =>
+      $composableBuilder(column: $table.major, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<double> get gpa =>
+      $composableBuilder(column: $table.gpa, builder: (column) => column);
+
+  GeneratedColumn<String> get disabilityStatus => $composableBuilder(
+    column: $table.disabilityStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get school =>
+      $composableBuilder(column: $table.school, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get enrollmentDate => $composableBuilder(
+    column: $table.enrollmentDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get expectedGraduation => $composableBuilder(
+    column: $table.expectedGraduation,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get rawData =>
+      $composableBuilder(column: $table.rawData, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$MagnetFinancialTransactionTableTableManager
+class $$InstitutionProfileTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $MagnetFinancialTransactionTable,
-          MagnetFinancialTransactionData,
-          $$MagnetFinancialTransactionTableFilterComposer,
-          $$MagnetFinancialTransactionTableOrderingComposer,
-          $$MagnetFinancialTransactionTableAnnotationComposer,
-          $$MagnetFinancialTransactionTableCreateCompanionBuilder,
-          $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+          $InstitutionProfileTable,
+          InstitutionProfileData,
+          $$InstitutionProfileTableFilterComposer,
+          $$InstitutionProfileTableOrderingComposer,
+          $$InstitutionProfileTableAnnotationComposer,
+          $$InstitutionProfileTableCreateCompanionBuilder,
+          $$InstitutionProfileTableUpdateCompanionBuilder,
           (
-            MagnetFinancialTransactionData,
+            InstitutionProfileData,
             BaseReferences<
               _$AppDataBase,
-              $MagnetFinancialTransactionTable,
-              MagnetFinancialTransactionData
+              $InstitutionProfileTable,
+              InstitutionProfileData
             >,
           ),
-          MagnetFinancialTransactionData,
+          InstitutionProfileData,
           PrefetchHooks Function()
         > {
-  $$MagnetFinancialTransactionTableTableManager(
+  $$InstitutionProfileTableTableManager(
     _$AppDataBase db,
-    $MagnetFinancialTransactionTable table,
+    $InstitutionProfileTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$MagnetFinancialTransactionTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$InstitutionProfileTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$MagnetFinancialTransactionTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$InstitutionProfileTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$MagnetFinancialTransactionTableAnnotationComposer(
+              $$InstitutionProfileTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
           updateCompanionCallback:
               ({
+                Value<int?> id = const Value.absent(),
                 Value<String> userID = const Value.absent(),
                 Value<int> institutionID = const Value.absent(),
-                Value<String> transactionId = const Value.absent(),
-                Value<double> amount = const Value.absent(),
-                Value<DateTime> date = const Value.absent(),
-                Value<String> type = const Value.absent(),
-                Value<String> paymentMethod = const Value.absent(),
-                Value<String> studentId = const Value.absent(),
-                Value<double> balanceAfterTransaction = const Value.absent(),
-                Value<String> status = const Value.absent(),
-                Value<String> currency = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                Value<String?> referenceNumber = const Value.absent(),
+                Value<String> studentID = const Value.absent(),
+                Value<String> studentName = const Value.absent(),
+                Value<Gender> gender = const Value.absent(),
+                Value<AcademicStatus> status = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<String?> nationalID = const Value.absent(),
+                Value<String?> nationality = const Value.absent(),
+                Value<String?> program = const Value.absent(),
+                Value<String?> major = const Value.absent(),
+                Value<int?> year = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<String?> school = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<DateTime?> enrollmentDate = const Value.absent(),
+                Value<DateTime?> expectedGraduation = const Value.absent(),
+                Value<Map<String, dynamic>?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => MagnetFinancialTransactionCompanion(
+              }) => InstitutionProfileCompanion(
+                id: id,
                 userID: userID,
                 institutionID: institutionID,
-                transactionId: transactionId,
-                amount: amount,
-                date: date,
-                type: type,
-                paymentMethod: paymentMethod,
-                studentId: studentId,
-                balanceAfterTransaction: balanceAfterTransaction,
+                studentID: studentID,
+                studentName: studentName,
+                gender: gender,
                 status: status,
-                currency: currency,
-                description: description,
-                referenceNumber: referenceNumber,
+                email: email,
+                profilePicture: profilePicture,
+                nationalID: nationalID,
+                nationality: nationality,
+                program: program,
+                major: major,
+                year: year,
+                gpa: gpa,
+                disabilityStatus: disabilityStatus,
+                school: school,
+                phone: phone,
+                address: address,
+                enrollmentDate: enrollmentDate,
+                expectedGraduation: expectedGraduation,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                Value<int?> id = const Value.absent(),
                 required String userID,
                 required int institutionID,
-                required String transactionId,
-                required double amount,
-                required DateTime date,
-                required String type,
-                required String paymentMethod,
-                required String studentId,
-                required double balanceAfterTransaction,
-                required String status,
-                required String currency,
-                Value<String?> description = const Value.absent(),
-                Value<String?> referenceNumber = const Value.absent(),
+                required String studentID,
+                Value<String> studentName = const Value.absent(),
+                Value<Gender> gender = const Value.absent(),
+                Value<AcademicStatus> status = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> profilePicture = const Value.absent(),
+                Value<String?> nationalID = const Value.absent(),
+                Value<String?> nationality = const Value.absent(),
+                Value<String?> program = const Value.absent(),
+                Value<String?> major = const Value.absent(),
+                Value<int?> year = const Value.absent(),
+                Value<double?> gpa = const Value.absent(),
+                Value<String?> disabilityStatus = const Value.absent(),
+                Value<String?> school = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<DateTime?> enrollmentDate = const Value.absent(),
+                Value<DateTime?> expectedGraduation = const Value.absent(),
+                Value<Map<String, dynamic>?> rawData = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => MagnetFinancialTransactionCompanion.insert(
+              }) => InstitutionProfileCompanion.insert(
+                id: id,
                 userID: userID,
                 institutionID: institutionID,
-                transactionId: transactionId,
-                amount: amount,
-                date: date,
-                type: type,
-                paymentMethod: paymentMethod,
-                studentId: studentId,
-                balanceAfterTransaction: balanceAfterTransaction,
+                studentID: studentID,
+                studentName: studentName,
+                gender: gender,
                 status: status,
-                currency: currency,
-                description: description,
-                referenceNumber: referenceNumber,
+                email: email,
+                profilePicture: profilePicture,
+                nationalID: nationalID,
+                nationality: nationality,
+                program: program,
+                major: major,
+                year: year,
+                gpa: gpa,
+                disabilityStatus: disabilityStatus,
+                school: school,
+                phone: phone,
+                address: address,
+                enrollmentDate: enrollmentDate,
+                expectedGraduation: expectedGraduation,
+                rawData: rawData,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -29634,26 +31702,2661 @@ class $$MagnetFinancialTransactionTableTableManager
       );
 }
 
-typedef $$MagnetFinancialTransactionTableProcessedTableManager =
+typedef $$InstitutionProfileTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $MagnetFinancialTransactionTable,
-      MagnetFinancialTransactionData,
-      $$MagnetFinancialTransactionTableFilterComposer,
-      $$MagnetFinancialTransactionTableOrderingComposer,
-      $$MagnetFinancialTransactionTableAnnotationComposer,
-      $$MagnetFinancialTransactionTableCreateCompanionBuilder,
-      $$MagnetFinancialTransactionTableUpdateCompanionBuilder,
+      $InstitutionProfileTable,
+      InstitutionProfileData,
+      $$InstitutionProfileTableFilterComposer,
+      $$InstitutionProfileTableOrderingComposer,
+      $$InstitutionProfileTableAnnotationComposer,
+      $$InstitutionProfileTableCreateCompanionBuilder,
+      $$InstitutionProfileTableUpdateCompanionBuilder,
       (
-        MagnetFinancialTransactionData,
+        InstitutionProfileData,
         BaseReferences<
           _$AppDataBase,
-          $MagnetFinancialTransactionTable,
-          MagnetFinancialTransactionData
+          $InstitutionProfileTable,
+          InstitutionProfileData
         >,
       ),
-      MagnetFinancialTransactionData,
+      InstitutionProfileData,
       PrefetchHooks Function()
+    >;
+typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
+    InstitutionFeeTransactionCompanion Function({
+      Value<int?> id,
+      required int institution,
+      Value<String?> referenceNumber,
+      Value<double?> runningBalance,
+      Value<double?> debit,
+      Value<double?> credit,
+      Value<DateTime?> postingDate,
+      Value<String?> description,
+      Value<String?> title,
+      Value<String?> currency,
+      Value<int> rowid,
+    });
+typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
+    InstitutionFeeTransactionCompanion Function({
+      Value<int?> id,
+      Value<int> institution,
+      Value<String?> referenceNumber,
+      Value<double?> runningBalance,
+      Value<double?> debit,
+      Value<double?> credit,
+      Value<DateTime?> postingDate,
+      Value<String?> description,
+      Value<String?> title,
+      Value<String?> currency,
+      Value<int> rowid,
+    });
+
+final class $$InstitutionFeeTransactionTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData
+        > {
+  $$InstitutionFeeTransactionTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.institutionFeeTransaction.institution,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager get institution {
+    final $_column = $_itemColumn<int>('institution')!;
+
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$InstitutionFeeTransactionTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get debit => $composableBuilder(
+    column: $table.debit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get credit => $composableBuilder(
+    column: $table.credit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institution {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get debit => $composableBuilder(
+    column: $table.debit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get credit => $composableBuilder(
+    column: $table.credit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institution {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
+  $$InstitutionFeeTransactionTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get referenceNumber => $composableBuilder(
+    column: $table.referenceNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get runningBalance => $composableBuilder(
+    column: $table.runningBalance,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get debit =>
+      $composableBuilder(column: $table.debit, builder: (column) => column);
+
+  GeneratedColumn<double> get credit =>
+      $composableBuilder(column: $table.credit, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get postingDate => $composableBuilder(
+    column: $table.postingDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institution {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InstitutionFeeTransactionTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData,
+          $$InstitutionFeeTransactionTableFilterComposer,
+          $$InstitutionFeeTransactionTableOrderingComposer,
+          $$InstitutionFeeTransactionTableAnnotationComposer,
+          $$InstitutionFeeTransactionTableCreateCompanionBuilder,
+          $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+          (
+            InstitutionFeeTransactionData,
+            $$InstitutionFeeTransactionTableReferences,
+          ),
+          InstitutionFeeTransactionData,
+          PrefetchHooks Function({bool institution})
+        > {
+  $$InstitutionFeeTransactionTableTableManager(
+    _$AppDataBase db,
+    $InstitutionFeeTransactionTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionFeeTransactionTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InstitutionFeeTransactionTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InstitutionFeeTransactionTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                Value<int> institution = const Value.absent(),
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<double?> runningBalance = const Value.absent(),
+                Value<double?> debit = const Value.absent(),
+                Value<double?> credit = const Value.absent(),
+                Value<DateTime?> postingDate = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> currency = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionFeeTransactionCompanion(
+                id: id,
+                institution: institution,
+                referenceNumber: referenceNumber,
+                runningBalance: runningBalance,
+                debit: debit,
+                credit: credit,
+                postingDate: postingDate,
+                description: description,
+                title: title,
+                currency: currency,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                required int institution,
+                Value<String?> referenceNumber = const Value.absent(),
+                Value<double?> runningBalance = const Value.absent(),
+                Value<double?> debit = const Value.absent(),
+                Value<double?> credit = const Value.absent(),
+                Value<DateTime?> postingDate = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> currency = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstitutionFeeTransactionCompanion.insert(
+                id: id,
+                institution: institution,
+                referenceNumber: referenceNumber,
+                runningBalance: runningBalance,
+                debit: debit,
+                credit: credit,
+                postingDate: postingDate,
+                description: description,
+                title: title,
+                currency: currency,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InstitutionFeeTransactionTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institution = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institution) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institution,
+                                referencedTable:
+                                    $$InstitutionFeeTransactionTableReferences
+                                        ._institutionTable(db),
+                                referencedColumn:
+                                    $$InstitutionFeeTransactionTableReferences
+                                        ._institutionTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$InstitutionFeeTransactionTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InstitutionFeeTransactionTable,
+      InstitutionFeeTransactionData,
+      $$InstitutionFeeTransactionTableFilterComposer,
+      $$InstitutionFeeTransactionTableOrderingComposer,
+      $$InstitutionFeeTransactionTableAnnotationComposer,
+      $$InstitutionFeeTransactionTableCreateCompanionBuilder,
+      $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+      (
+        InstitutionFeeTransactionData,
+        $$InstitutionFeeTransactionTableReferences,
+      ),
+      InstitutionFeeTransactionData,
+      PrefetchHooks Function({bool institution})
+    >;
+typedef $$SemesterTableCreateCompanionBuilder =
+    SemesterCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<String?> description,
+      Value<int?> institutionId,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+typedef $$SemesterTableUpdateCompanionBuilder =
+    SemesterCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String?> description,
+      Value<int?> institutionId,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+
+final class $$SemesterTableReferences
+    extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
+  $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $InstitutionTable _institutionIdTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.semester.institutionId,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager? get institutionId {
+    final $_column = $_itemColumn<int>('institution_id');
+    if ($_column == null) return null;
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$CourseTable, List<CourseData>> _courseRefsTable(
+    _$AppDataBase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.course,
+    aliasName: $_aliasNameGenerator(db.semester.id, db.course.semester),
+  );
+
+  $$CourseTableProcessedTableManager get courseRefs {
+    final manager = $$CourseTableTableManager(
+      $_db,
+      $_db.course,
+    ).filter((f) => f.semester.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_courseRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SemesterTableFilterComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institutionId {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> courseRefs(
+    Expression<bool> Function($$CourseTableFilterComposer f) f,
+  ) {
+    final $$CourseTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.semester,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableFilterComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SemesterTableOrderingComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institutionId {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SemesterTableAnnotationComposer
+    extends Composer<_$AppDataBase, $SemesterTable> {
+  $$SemesterTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institutionId {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> courseRefs<T extends Object>(
+    Expression<T> Function($$CourseTableAnnotationComposer a) f,
+  ) {
+    final $$CourseTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.semester,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableAnnotationComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SemesterTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $SemesterTable,
+          SemesterData,
+          $$SemesterTableFilterComposer,
+          $$SemesterTableOrderingComposer,
+          $$SemesterTableAnnotationComposer,
+          $$SemesterTableCreateCompanionBuilder,
+          $$SemesterTableUpdateCompanionBuilder,
+          (SemesterData, $$SemesterTableReferences),
+          SemesterData,
+          PrefetchHooks Function({bool institutionId, bool courseRefs})
+        > {
+  $$SemesterTableTableManager(_$AppDataBase db, $SemesterTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SemesterTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SemesterTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SemesterTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int?> institutionId = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => SemesterCompanion(
+                id: id,
+                name: name,
+                description: description,
+                institutionId: institutionId,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<int?> institutionId = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => SemesterCompanion.insert(
+                id: id,
+                name: name,
+                description: description,
+                institutionId: institutionId,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SemesterTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({institutionId = false, courseRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (courseRefs) db.course],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institutionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institutionId,
+                                referencedTable: $$SemesterTableReferences
+                                    ._institutionIdTable(db),
+                                referencedColumn: $$SemesterTableReferences
+                                    ._institutionIdTable(db)
+                                    .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (courseRefs)
+                    await $_getPrefetchedData<
+                      SemesterData,
+                      $SemesterTable,
+                      CourseData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$SemesterTableReferences
+                          ._courseRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$SemesterTableReferences(db, table, p0).courseRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.semester == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SemesterTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $SemesterTable,
+      SemesterData,
+      $$SemesterTableFilterComposer,
+      $$SemesterTableOrderingComposer,
+      $$SemesterTableAnnotationComposer,
+      $$SemesterTableCreateCompanionBuilder,
+      $$SemesterTableUpdateCompanionBuilder,
+      (SemesterData, $$SemesterTableReferences),
+      SemesterData,
+      PrefetchHooks Function({bool institutionId, bool courseRefs})
+    >;
+typedef $$CourseTableCreateCompanionBuilder =
+    CourseCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      Value<int?> institution,
+      Value<int?> semester,
+      required String courseCode,
+      required String courseName,
+      required String instructor,
+      Value<Color?> color,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$CourseTableUpdateCompanionBuilder =
+    CourseCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      Value<int?> institution,
+      Value<int?> semester,
+      Value<String> courseCode,
+      Value<String> courseName,
+      Value<String> instructor,
+      Value<Color?> color,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$CourseTableReferences
+    extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
+  $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.course.institution,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager? get institution {
+    final $_column = $_itemColumn<int>('institution');
+    if ($_column == null) return null;
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SemesterTable _semesterTable(_$AppDataBase db) => db.semester
+      .createAlias($_aliasNameGenerator(db.course.semester, db.semester.id));
+
+  $$SemesterTableProcessedTableManager? get semester {
+    final $_column = $_itemColumn<int>('semester');
+    if ($_column == null) return null;
+    final manager = $$SemesterTableTableManager(
+      $_db,
+      $_db.semester,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_semesterTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
+  _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.timetableEntry,
+    aliasName: $_aliasNameGenerator(db.course.id, db.timetableEntry.courseId),
+  );
+
+  $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
+    final manager = $$TimetableEntryTableTableManager(
+      $_db,
+      $_db.timetableEntry,
+    ).filter((f) => f.courseId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$CourseTableFilterComposer
+    extends Composer<_$AppDataBase, $CourseTable> {
+  $$CourseTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Color?, Color, int> get color =>
+      $composableBuilder(
+        column: $table.color,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institution {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SemesterTableFilterComposer get semester {
+    final $$SemesterTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.semester,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableFilterComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> timetableEntryRefs(
+    Expression<bool> Function($$TimetableEntryTableFilterComposer f) f,
+  ) {
+    final $$TimetableEntryTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timetableEntry,
+      getReferencedColumn: (t) => t.courseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableEntryTableFilterComposer(
+            $db: $db,
+            $table: $db.timetableEntry,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$CourseTableOrderingComposer
+    extends Composer<_$AppDataBase, $CourseTable> {
+  $$CourseTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institution {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SemesterTableOrderingComposer get semester {
+    final $$SemesterTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.semester,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableOrderingComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CourseTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CourseTable> {
+  $$CourseTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get courseCode => $composableBuilder(
+    column: $table.courseCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseName => $composableBuilder(
+    column: $table.courseName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get instructor => $composableBuilder(
+    column: $table.instructor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<Color?, int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institution {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SemesterTableAnnotationComposer get semester {
+    final $$SemesterTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.semester,
+      referencedTable: $db.semester,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SemesterTableAnnotationComposer(
+            $db: $db,
+            $table: $db.semester,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> timetableEntryRefs<T extends Object>(
+    Expression<T> Function($$TimetableEntryTableAnnotationComposer a) f,
+  ) {
+    final $$TimetableEntryTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timetableEntry,
+      getReferencedColumn: (t) => t.courseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableEntryTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timetableEntry,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$CourseTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $CourseTable,
+          CourseData,
+          $$CourseTableFilterComposer,
+          $$CourseTableOrderingComposer,
+          $$CourseTableAnnotationComposer,
+          $$CourseTableCreateCompanionBuilder,
+          $$CourseTableUpdateCompanionBuilder,
+          (CourseData, $$CourseTableReferences),
+          CourseData,
+          PrefetchHooks Function({
+            bool institution,
+            bool semester,
+            bool timetableEntryRefs,
+          })
+        > {
+  $$CourseTableTableManager(_$AppDataBase db, $CourseTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CourseTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CourseTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CourseTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                Value<int?> institution = const Value.absent(),
+                Value<int?> semester = const Value.absent(),
+                Value<String> courseCode = const Value.absent(),
+                Value<String> courseName = const Value.absent(),
+                Value<String> instructor = const Value.absent(),
+                Value<Color?> color = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CourseCompanion(
+                id: id,
+                serverId: serverId,
+                institution: institution,
+                semester: semester,
+                courseCode: courseCode,
+                courseName: courseName,
+                instructor: instructor,
+                color: color,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                Value<int?> institution = const Value.absent(),
+                Value<int?> semester = const Value.absent(),
+                required String courseCode,
+                required String courseName,
+                required String instructor,
+                Value<Color?> color = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CourseCompanion.insert(
+                id: id,
+                serverId: serverId,
+                institution: institution,
+                semester: semester,
+                courseCode: courseCode,
+                courseName: courseName,
+                instructor: instructor,
+                color: color,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$CourseTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                institution = false,
+                semester = false,
+                timetableEntryRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (timetableEntryRefs) db.timetableEntry,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (institution) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.institution,
+                                    referencedTable: $$CourseTableReferences
+                                        ._institutionTable(db),
+                                    referencedColumn: $$CourseTableReferences
+                                        ._institutionTable(db)
+                                        .institutionId,
+                                  )
+                                  as T;
+                        }
+                        if (semester) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.semester,
+                                    referencedTable: $$CourseTableReferences
+                                        ._semesterTable(db),
+                                    referencedColumn: $$CourseTableReferences
+                                        ._semesterTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (timetableEntryRefs)
+                        await $_getPrefetchedData<
+                          CourseData,
+                          $CourseTable,
+                          TimetableEntryData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CourseTableReferences
+                              ._timetableEntryRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CourseTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timetableEntryRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.courseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$CourseTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $CourseTable,
+      CourseData,
+      $$CourseTableFilterComposer,
+      $$CourseTableOrderingComposer,
+      $$CourseTableAnnotationComposer,
+      $$CourseTableCreateCompanionBuilder,
+      $$CourseTableUpdateCompanionBuilder,
+      (CourseData, $$CourseTableReferences),
+      CourseData,
+      PrefetchHooks Function({
+        bool institution,
+        bool semester,
+        bool timetableEntryRefs,
+      })
+    >;
+typedef $$TimetableTableCreateCompanionBuilder =
+    TimetableCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      required String name,
+      required String userId,
+      Value<int?> institution,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$TimetableTableUpdateCompanionBuilder =
+    TimetableCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      Value<String> name,
+      Value<String> userId,
+      Value<int?> institution,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$TimetableTableReferences
+    extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
+  $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
+      db.institution.createAlias(
+        $_aliasNameGenerator(
+          db.timetable.institution,
+          db.institution.institutionId,
+        ),
+      );
+
+  $$InstitutionTableProcessedTableManager? get institution {
+    final $_column = $_itemColumn<int>('institution');
+    if ($_column == null) return null;
+    final manager = $$InstitutionTableTableManager(
+      $_db,
+      $_db.institution,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
+  _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.timetableEntry,
+    aliasName: $_aliasNameGenerator(
+      db.timetable.id,
+      db.timetableEntry.timetableId,
+    ),
+  );
+
+  $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
+    final manager = $$TimetableEntryTableTableManager(
+      $_db,
+      $_db.timetableEntry,
+    ).filter((f) => f.timetableId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TimetableTableFilterComposer
+    extends Composer<_$AppDataBase, $TimetableTable> {
+  $$TimetableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InstitutionTableFilterComposer get institution {
+    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableFilterComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> timetableEntryRefs(
+    Expression<bool> Function($$TimetableEntryTableFilterComposer f) f,
+  ) {
+    final $$TimetableEntryTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timetableEntry,
+      getReferencedColumn: (t) => t.timetableId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableEntryTableFilterComposer(
+            $db: $db,
+            $table: $db.timetableEntry,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimetableTableOrderingComposer
+    extends Composer<_$AppDataBase, $TimetableTable> {
+  $$TimetableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InstitutionTableOrderingComposer get institution {
+    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableOrderingComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimetableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TimetableTable> {
+  $$TimetableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$InstitutionTableAnnotationComposer get institution {
+    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institution,
+      referencedTable: $db.institution,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institution,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> timetableEntryRefs<T extends Object>(
+    Expression<T> Function($$TimetableEntryTableAnnotationComposer a) f,
+  ) {
+    final $$TimetableEntryTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timetableEntry,
+      getReferencedColumn: (t) => t.timetableId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableEntryTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timetableEntry,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimetableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TimetableTable,
+          TimetableData,
+          $$TimetableTableFilterComposer,
+          $$TimetableTableOrderingComposer,
+          $$TimetableTableAnnotationComposer,
+          $$TimetableTableCreateCompanionBuilder,
+          $$TimetableTableUpdateCompanionBuilder,
+          (TimetableData, $$TimetableTableReferences),
+          TimetableData,
+          PrefetchHooks Function({bool institution, bool timetableEntryRefs})
+        > {
+  $$TimetableTableTableManager(_$AppDataBase db, $TimetableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimetableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimetableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimetableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int?> institution = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimetableCompanion(
+                id: id,
+                serverId: serverId,
+                name: name,
+                userId: userId,
+                institution: institution,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                required String name,
+                required String userId,
+                Value<int?> institution = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimetableCompanion.insert(
+                id: id,
+                serverId: serverId,
+                name: name,
+                userId: userId,
+                institution: institution,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TimetableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({institution = false, timetableEntryRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (timetableEntryRefs) db.timetableEntry,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (institution) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.institution,
+                                    referencedTable: $$TimetableTableReferences
+                                        ._institutionTable(db),
+                                    referencedColumn: $$TimetableTableReferences
+                                        ._institutionTable(db)
+                                        .institutionId,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (timetableEntryRefs)
+                        await $_getPrefetchedData<
+                          TimetableData,
+                          $TimetableTable,
+                          TimetableEntryData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TimetableTableReferences
+                              ._timetableEntryRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TimetableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timetableEntryRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.timetableId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TimetableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TimetableTable,
+      TimetableData,
+      $$TimetableTableFilterComposer,
+      $$TimetableTableOrderingComposer,
+      $$TimetableTableAnnotationComposer,
+      $$TimetableTableCreateCompanionBuilder,
+      $$TimetableTableUpdateCompanionBuilder,
+      (TimetableData, $$TimetableTableReferences),
+      TimetableData,
+      PrefetchHooks Function({bool institution, bool timetableEntryRefs})
+    >;
+typedef $$TimetableEntryTableCreateCompanionBuilder =
+    TimetableEntryCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      required String userId,
+      required int institutionId,
+      required String courseId,
+      required String timetableId,
+      Value<String?> rrule,
+      required DateTime startDate,
+      required int durationMinutes,
+      Value<String?> location,
+      Value<String?> room,
+      Value<String?> building,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> lastUpdated,
+      Value<int> rowid,
+    });
+typedef $$TimetableEntryTableUpdateCompanionBuilder =
+    TimetableEntryCompanion Function({
+      Value<String> id,
+      Value<int?> serverId,
+      Value<String> userId,
+      Value<int> institutionId,
+      Value<String> courseId,
+      Value<String> timetableId,
+      Value<String?> rrule,
+      Value<DateTime> startDate,
+      Value<int> durationMinutes,
+      Value<String?> location,
+      Value<String?> room,
+      Value<String?> building,
+      Value<bool> isSynced,
+      Value<bool> isDeleted,
+      Value<DateTime> lastUpdated,
+      Value<int> rowid,
+    });
+
+final class $$TimetableEntryTableReferences
+    extends
+        BaseReferences<
+          _$AppDataBase,
+          $TimetableEntryTable,
+          TimetableEntryData
+        > {
+  $$TimetableEntryTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CourseTable _courseIdTable(_$AppDataBase db) => db.course.createAlias(
+    $_aliasNameGenerator(db.timetableEntry.courseId, db.course.id),
+  );
+
+  $$CourseTableProcessedTableManager get courseId {
+    final $_column = $_itemColumn<String>('course_id')!;
+
+    final manager = $$CourseTableTableManager(
+      $_db,
+      $_db.course,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_courseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $TimetableTable _timetableIdTable(_$AppDataBase db) =>
+      db.timetable.createAlias(
+        $_aliasNameGenerator(db.timetableEntry.timetableId, db.timetable.id),
+      );
+
+  $$TimetableTableProcessedTableManager get timetableId {
+    final $_column = $_itemColumn<String>('timetable_id')!;
+
+    final manager = $$TimetableTableTableManager(
+      $_db,
+      $_db.timetable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_timetableIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TimetableEntryTableFilterComposer
+    extends Composer<_$AppDataBase, $TimetableEntryTable> {
+  $$TimetableEntryTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rrule => $composableBuilder(
+    column: $table.rrule,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMinutes => $composableBuilder(
+    column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get room => $composableBuilder(
+    column: $table.room,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get building => $composableBuilder(
+    column: $table.building,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
+    column: $table.lastUpdated,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CourseTableFilterComposer get courseId {
+    final $$CourseTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableFilterComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimetableTableFilterComposer get timetableId {
+    final $$TimetableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timetableId,
+      referencedTable: $db.timetable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableTableFilterComposer(
+            $db: $db,
+            $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimetableEntryTableOrderingComposer
+    extends Composer<_$AppDataBase, $TimetableEntryTable> {
+  $$TimetableEntryTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rrule => $composableBuilder(
+    column: $table.rrule,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationMinutes => $composableBuilder(
+    column: $table.durationMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get location => $composableBuilder(
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get room => $composableBuilder(
+    column: $table.room,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get building => $composableBuilder(
+    column: $table.building,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
+    column: $table.lastUpdated,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CourseTableOrderingComposer get courseId {
+    final $$CourseTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableOrderingComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimetableTableOrderingComposer get timetableId {
+    final $$TimetableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timetableId,
+      referencedTable: $db.timetable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableTableOrderingComposer(
+            $db: $db,
+            $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimetableEntryTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TimetableEntryTable> {
+  $$TimetableEntryTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rrule =>
+      $composableBuilder(column: $table.rrule, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<int> get durationMinutes => $composableBuilder(
+    column: $table.durationMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get room =>
+      $composableBuilder(column: $table.room, builder: (column) => column);
+
+  GeneratedColumn<String> get building =>
+      $composableBuilder(column: $table.building, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
+    column: $table.lastUpdated,
+    builder: (column) => column,
+  );
+
+  $$CourseTableAnnotationComposer get courseId {
+    final $$CourseTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.course,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseTableAnnotationComposer(
+            $db: $db,
+            $table: $db.course,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimetableTableAnnotationComposer get timetableId {
+    final $$TimetableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timetableId,
+      referencedTable: $db.timetable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimetableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimetableEntryTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TimetableEntryTable,
+          TimetableEntryData,
+          $$TimetableEntryTableFilterComposer,
+          $$TimetableEntryTableOrderingComposer,
+          $$TimetableEntryTableAnnotationComposer,
+          $$TimetableEntryTableCreateCompanionBuilder,
+          $$TimetableEntryTableUpdateCompanionBuilder,
+          (TimetableEntryData, $$TimetableEntryTableReferences),
+          TimetableEntryData,
+          PrefetchHooks Function({bool courseId, bool timetableId})
+        > {
+  $$TimetableEntryTableTableManager(
+    _$AppDataBase db,
+    $TimetableEntryTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimetableEntryTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimetableEntryTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimetableEntryTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> institutionId = const Value.absent(),
+                Value<String> courseId = const Value.absent(),
+                Value<String> timetableId = const Value.absent(),
+                Value<String?> rrule = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<int> durationMinutes = const Value.absent(),
+                Value<String?> location = const Value.absent(),
+                Value<String?> room = const Value.absent(),
+                Value<String?> building = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> lastUpdated = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimetableEntryCompanion(
+                id: id,
+                serverId: serverId,
+                userId: userId,
+                institutionId: institutionId,
+                courseId: courseId,
+                timetableId: timetableId,
+                rrule: rrule,
+                startDate: startDate,
+                durationMinutes: durationMinutes,
+                location: location,
+                room: room,
+                building: building,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                lastUpdated: lastUpdated,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<int?> serverId = const Value.absent(),
+                required String userId,
+                required int institutionId,
+                required String courseId,
+                required String timetableId,
+                Value<String?> rrule = const Value.absent(),
+                required DateTime startDate,
+                required int durationMinutes,
+                Value<String?> location = const Value.absent(),
+                Value<String?> room = const Value.absent(),
+                Value<String?> building = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> lastUpdated = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimetableEntryCompanion.insert(
+                id: id,
+                serverId: serverId,
+                userId: userId,
+                institutionId: institutionId,
+                courseId: courseId,
+                timetableId: timetableId,
+                rrule: rrule,
+                startDate: startDate,
+                durationMinutes: durationMinutes,
+                location: location,
+                room: room,
+                building: building,
+                isSynced: isSynced,
+                isDeleted: isDeleted,
+                lastUpdated: lastUpdated,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TimetableEntryTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({courseId = false, timetableId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (courseId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.courseId,
+                                referencedTable: $$TimetableEntryTableReferences
+                                    ._courseIdTable(db),
+                                referencedColumn:
+                                    $$TimetableEntryTableReferences
+                                        ._courseIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (timetableId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.timetableId,
+                                referencedTable: $$TimetableEntryTableReferences
+                                    ._timetableIdTable(db),
+                                referencedColumn:
+                                    $$TimetableEntryTableReferences
+                                        ._timetableIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TimetableEntryTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TimetableEntryTable,
+      TimetableEntryData,
+      $$TimetableEntryTableFilterComposer,
+      $$TimetableEntryTableOrderingComposer,
+      $$TimetableEntryTableAnnotationComposer,
+      $$TimetableEntryTableCreateCompanionBuilder,
+      $$TimetableEntryTableUpdateCompanionBuilder,
+      (TimetableEntryData, $$TimetableEntryTableReferences),
+      TimetableEntryData,
+      PrefetchHooks Function({bool courseId, bool timetableId})
     >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
@@ -32595,18 +37298,29 @@ class $AppDataBaseManager {
       $$NotificationTableTableTableManager(_db, _db.notificationTable);
   $$InstitutionTableTableManager get institution =>
       $$InstitutionTableTableManager(_db, _db.institution);
-  $$MagnetStudentProfileTableTableManager get magnetStudentProfile =>
-      $$MagnetStudentProfileTableTableManager(_db, _db.magnetStudentProfile);
-  $$MagnetCredentialsTableTableManager get magnetCredentials =>
-      $$MagnetCredentialsTableTableManager(_db, _db.magnetCredentials);
-  $$MagnetCourseInfoTableTableManager get magnetCourseInfo =>
-      $$MagnetCourseInfoTableTableManager(_db, _db.magnetCourseInfo);
-  $$MagnetFinancialTransactionTableTableManager
-  get magnetFinancialTransaction =>
-      $$MagnetFinancialTransactionTableTableManager(
+  $$InstitutionScrappingCommandTableTableManager
+  get institutionScrappingCommand =>
+      $$InstitutionScrappingCommandTableTableManager(
         _db,
-        _db.magnetFinancialTransaction,
+        _db.institutionScrappingCommand,
       );
+  $$InstitutionKeyTableTableManager get institutionKey =>
+      $$InstitutionKeyTableTableManager(_db, _db.institutionKey);
+  $$InstitutionProfileTableTableManager get institutionProfile =>
+      $$InstitutionProfileTableTableManager(_db, _db.institutionProfile);
+  $$InstitutionFeeTransactionTableTableManager get institutionFeeTransaction =>
+      $$InstitutionFeeTransactionTableTableManager(
+        _db,
+        _db.institutionFeeTransaction,
+      );
+  $$SemesterTableTableManager get semester =>
+      $$SemesterTableTableManager(_db, _db.semester);
+  $$CourseTableTableManager get course =>
+      $$CourseTableTableManager(_db, _db.course);
+  $$TimetableTableTableManager get timetable =>
+      $$TimetableTableTableManager(_db, _db.timetable);
+  $$TimetableEntryTableTableManager get timetableEntry =>
+      $$TimetableEntryTableTableManager(_db, _db.timetableEntry);
   $$ExamTimetableTableTableManager get examTimetable =>
       $$ExamTimetableTableTableManager(_db, _db.examTimetable);
   $$ChirpUserTableTableManager get chirpUser =>

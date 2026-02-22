@@ -1,10 +1,13 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/chirp/interactions/presentation/views/blocked_items_page.dart';
+import 'package:academia/features/course/course.dart';
+import 'package:academia/features/institution/institution.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'routes.g.dart';
 
@@ -430,58 +433,6 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
   }
 }
 
-@TypedGoRoute<MagnetRoute>(
-  path: "/magnet",
-  routes: [
-    TypedGoRoute<MagnetAuthRoute>(path: "auth/:institutionID"),
-    TypedGoRoute<MagnetHomeRoute>(
-      path: ":institutionID",
-      routes: [
-        TypedGoRoute<MagnetProfileRoute>(path: "profile"),
-        TypedGoRoute<MagnetCoursesRoute>(path: "courses"),
-        TypedGoRoute<MagnetFeesRoute>(path: "fees"),
-      ],
-    ),
-  ],
-)
-class MagnetRoute extends GoRouteData with _$MagnetRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: Text("Magnet route")));
-  }
-}
-
-class MagnetAuthRoute extends GoRouteData with _$MagnetAuthRoute {
-  final int institutionID;
-  MagnetAuthRoute({required this.institutionID});
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: MagnetAuthScreen(institutionID: institutionID),
-      transitionDuration: Duration(milliseconds: 600),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutCubic));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
-  }
-}
-
 @TypedGoRoute<CommunitiesRoute>(
   path: "/communities/:communityId",
   routes: [
@@ -537,64 +488,6 @@ class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CreateCommunityScreen();
-  }
-}
-
-class MagnetProfileRoute extends GoRouteData with _$MagnetProfileRoute {
-  final int institutionID;
-  MagnetProfileRoute({required this.institutionID});
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MagnetProfilePage(institutionID: institutionID);
-  }
-}
-
-class MagnetCoursesRoute extends GoRouteData with _$MagnetCoursesRoute {
-  final int institutionID;
-  MagnetCoursesRoute({required this.institutionID});
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MagnetCoursesScreen(institutionID: institutionID);
-  }
-}
-
-class MagnetFeesRoute extends GoRouteData with _$MagnetFeesRoute {
-  final int institutionID;
-  MagnetFeesRoute({required this.institutionID});
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MagnetFeesTransactionsPage(institutionID: institutionID);
-  }
-}
-
-class MagnetHomeRoute extends GoRouteData with _$MagnetHomeRoute {
-  final int institutionID;
-  MagnetHomeRoute({required this.institutionID});
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: MagnetHomeScreen(institutionID: institutionID),
-      transitionDuration: Duration(milliseconds: 600),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutCubic));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
   }
 }
 
@@ -688,7 +581,7 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 600),
+      transitionDuration: Duration(milliseconds: 300),
       transitionsBuilder:
           (
             BuildContext context,
@@ -699,7 +592,277 @@ class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
             var tween = Tween(
               begin: Offset(0.0, 1.0),
               end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInCubic));
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+@TypedShellRoute<InstitutionShellRouteData>(
+  routes: [
+    TypedGoRoute<InstitutionHomePageRoute>(
+      path: "/institution/:institutionID",
+      routes: [
+        TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
+        TypedGoRoute<InstitutionFeesTransactionRoute>(path: "fees"),
+        TypedGoRoute<EditStudentProfileRoute>(path: "profile/:profileId"),
+      ],
+    ),
+  ],
+)
+class InstitutionShellRouteData extends ShellRouteData {
+  const InstitutionShellRouteData();
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
+    // Extract institutionID from state if needed for initialization
+    final institutionID = int.parse(state.pathParameters['institutionID']!);
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<ScrappingCommandBloc>()
+                ..add(GetScrappingCommandEvent(institutionID: institutionID)),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<InstitutionKeyBloc>()
+                ..add(GetInstitutionKeyEvent(institutionID: institutionID)),
+        ),
+        BlocProvider(create: (context) => sl<MagnetBloc>()),
+        BlocProvider(create: (context) => sl<StudentProfileBloc>()),
+        BlocProvider(
+          create: (context) =>
+              sl<InstitutionFeesBloc>()..add(WatchFeesStarted(institutionID)),
+        ),
+      ],
+      child: navigator, // This contains either the Home or Keys page
+    );
+  }
+}
+
+class InstitutionHomePageRoute extends GoRouteData
+    with _$InstitutionHomePageRoute {
+  InstitutionHomePageRoute({required this.institutionID});
+
+  final int institutionID;
+
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: InstitutionHomePage(institutionID: institutionID),
+      transitionDuration: const Duration(milliseconds: 400),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // 1. Scale Tween: Starts slightly zoomed out
+        final scaleTween = Tween<double>(
+          begin: 0.92,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOutCubicEmphasized));
+
+        // 2. Fade Tween: Smoothly brings the opacity up
+        final fadeTween = Tween<double>(begin: 0.0, end: 1.0).chain(
+          CurveTween(curve: const Interval(0.0, 0.5, curve: Curves.easeIn)),
+        );
+
+        return FadeTransition(
+          opacity: animation.drive(fadeTween),
+          child: ScaleTransition(
+            scale: animation.drive(scaleTween),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class InstitutionKeysViewRoute extends GoRouteData
+    with _$InstitutionKeysViewRoute {
+  InstitutionKeysViewRoute({required this.institutionID});
+  final int institutionID;
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(child: InstitutionKeysView()),
+    );
+  }
+}
+
+class EditStudentProfileRoute extends GoRouteData
+    with _$EditStudentProfileRoute {
+  final int profileId;
+  final int? institutionID;
+  const EditStudentProfileRoute({required this.profileId, this.institutionID});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EditStudentProfilePage(profileId: profileId);
+  }
+}
+
+class InstitutionFeesTransactionRoute extends GoRouteData
+    with _$InstitutionFeesTransactionRoute {
+  InstitutionFeesTransactionRoute({required this.institutionID});
+
+  final int institutionID;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const InstitutionFeesTransactionPage();
+  }
+}
+
+@TypedGoRoute<SemestersPageRoute>(
+  path: "/semesters",
+  routes: [
+    TypedGoRoute<AddSemesterRoute>(path: "add"),
+    TypedGoRoute<EditSemesterRoute>(path: "edit/:id"),
+  ],
+)
+class SemestersPageRoute extends GoRouteData with _$SemestersPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: SemestersPage(),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+class AddSemesterRoute extends GoRouteData with _$AddSemesterRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(child: const AddSemesterSheet()),
+    );
+  }
+}
+
+class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
+  final int id;
+  const EditSemesterRoute({required this.id});
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+
+      child: Sheet(child: EditSemesterSheet(semesterId: id)),
+    );
+  }
+}
+
+@TypedGoRoute<CoursesPageRoute>(
+  path: "/courses",
+  routes: [
+    TypedGoRoute<AddCoursesRoute>(path: "create"),
+    TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),
+  ],
+)
+class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: CourseListPage(),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+    );
+  }
+}
+
+class AddCoursesRoute extends GoRouteData with _$AddCoursesRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+      child: Sheet(child: const AddCourseSheet()),
+    );
+  }
+}
+
+class ViewCourseRoute extends GoRouteData with _$ViewCourseRoute {
+  final String courseId;
+  const ViewCourseRoute({required this.courseId});
+  @override
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: CourseDetailPage(courseId: courseId),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
             var offsetAnimation = animation.drive(tween);
 
             return SlideTransition(position: offsetAnimation, child: child);

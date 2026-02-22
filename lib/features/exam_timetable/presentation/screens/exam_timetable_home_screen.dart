@@ -5,7 +5,6 @@ import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
-import 'package:academia/features/magnet/presentation/bloc/magnet_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
@@ -45,24 +44,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
     context.read<ExamTimetableBloc>().add(LoadCachedExams());
   }
 
-  void _importCoursesFromMagnet() {
-    final profileState = context.read<ProfileBloc>().state;
-    if (profileState is ProfileLoadedState) {
-      try {
-        final institutionIdInt = int.parse(widget.institutionId);
-        context.read<MagnetBloc>().add(
-          GetCachedMagnetStudentTimetableEvent(
-            institutionID: institutionIdInt,
-            userID: profileState.profile.id,
-          ),
-        );
-      } on Exception catch (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Invalid institution ID format")),
-        );
-      }
-    }
-  }
+  void _importCoursesFromMagnet() {}
 
   void _navigateToSearch() {
     Navigator.of(context)
@@ -220,54 +202,6 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
                   _hasAttemptedAutoImport = true;
                   _importCoursesFromMagnet();
                 }
-              }
-            },
-          ),
-          BlocListener<MagnetBloc, MagnetState>(
-            listener: (context, state) {
-              if (state is MagnetTimeTableLoadedState) {
-                final courseCodes = state.timetable
-                    .map((e) {
-                      final cleanCode = e.courseCode.replaceAll('-', '');
-
-                      if (e.courseType != null) {
-                        if (e.courseType!.contains('-')) {
-                          final suffix = e.courseType!.split('-').first;
-                          return '$cleanCode$suffix';
-                        }
-                      }
-                      return cleanCode;
-                    })
-                    .toSet()
-                    .take(6)
-                    .toList();
-
-                if (courseCodes.isNotEmpty) {
-                  context.read<ExamTimetableBloc>().add(
-                    RefreshExamTimetable(
-                      institutionId: widget.institutionId,
-                      courseCodes: courseCodes,
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "No courses found in your class timetable.",
-                      ),
-                    ),
-                  );
-                }
-              }
-
-              if (state is MagnetErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Failed to load class timetable: ${state.error}",
-                    ),
-                  ),
-                );
               }
             },
           ),
