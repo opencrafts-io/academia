@@ -42,9 +42,14 @@ class _RRuleEditorWidgetState extends State<RRuleEditorWidget> {
         'SU': DayOfWeek.sunday,
       };
 
-      for (final entry in dayMap.entries) {
-        if (rrule.contains(entry.key)) {
-          _selectedDays.add(entry.value);
+      // Extract only the days listed after BYDAY= specifically to avoid false positives
+      final byDayMatch = RegExp(r'BYDAY=([^;]+)').firstMatch(rrule);
+      if (byDayMatch != null) {
+        final byDayValue = byDayMatch.group(1)!;
+        for (final entry in dayMap.entries) {
+          if (byDayValue.contains(entry.key)) {
+            _selectedDays.add(entry.value);
+          }
         }
       }
 
