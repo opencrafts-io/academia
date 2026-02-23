@@ -1,10 +1,8 @@
 import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/profile/profile.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:upgrader/upgrader.dart';
 
 class SplashRemover extends StatefulWidget {
   final Widget child;
@@ -35,23 +33,15 @@ class _SplashRemoverState extends State<SplashRemover> {
 
   @override
   Widget build(BuildContext context) {
-    return UpgradeAlert(
-      upgrader: Upgrader(
-        minAppVersion: "2025.11.27",
-        durationUntilAlertAgain: Duration(hours: 2),
-        debugDisplayAlways: kDebugMode,
-        debugLogging: kDebugMode,
-      ),
-      child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, authState) {
-          return BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, profileState) {
-              _checkAndRemoveSplash(authState, profileState);
-              return widget.child;
-            },
-          );
-        },
-      ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, authState) {
+        return BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, profileState) {
+            _checkAndRemoveSplash(authState, profileState);
+            return widget.child;
+          },
+        );
+      },
     );
   }
 }

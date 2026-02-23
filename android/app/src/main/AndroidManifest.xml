@@ -1,6 +1,9 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:label="Academia" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
+<application android:label="Academia" 
+  android:usesCleartextTraffic="true"
+  android:name="${applicationName}"
+  android:icon="@mipmap/launcher_icon">
 		<activity android:name=".MainActivity"
         android:exported="true"
         android:launchMode="singleTop"
@@ -64,6 +67,17 @@
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="ca-app-pub-4838989029590048~7653410728"/>
+
+    <provider
+    android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
+    android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
+    android:exported="false"
+    android:grantUriPermissions="true">
+    <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
+
     <meta-data android:name="com.posthog.posthog.AUTO_INIT" android:value="false" />
 	</application>
 	<!-- Required to query activities that can process text, see:

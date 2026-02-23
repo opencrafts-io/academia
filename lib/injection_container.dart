@@ -2,33 +2,39 @@ import 'package:academia/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
+import 'package:academia/features/semester/semester.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
-Future<void> init(FlavorConfig flavor) async {
-  final DioRequestInspector inspector = DioRequestInspector(
-    isInspectorEnabled: kDebugMode,
-    showSummary: false,
-  );
 
-  sl.registerSingleton<DioRequestInspector>(inspector);
+Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
+  if (!isBackground) {
+    final DioRequestInspector inspector = DioRequestInspector(
+      isInspectorEnabled: kDebugMode,
+      showSummary: false,
+    );
+    sl.registerSingleton<DioRequestInspector>(inspector);
+  }
 
   // Register the flavor
   sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
-  final AdService adService = AdService();
-  await adService.initialize();
-  adService.loadInterstitialAd();
+  if (!isBackground) {
+    final AdService adService = AdService();
+    await adService.initialize();
+    adService.loadInterstitialAd();
 
-  sl.registerSingleton<AdService>(adService);
+    sl.registerSingleton<AdService>(adService);
+  }
 
   sl.registerFactory<AuthLocalDatasource>(
     () => AuthLocalDatasource(localDB: cacheDB),
@@ -38,9 +44,13 @@ Future<void> init(FlavorConfig flavor) async {
     () => DioClient(
       flavor,
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
-      requestInspector: sl<DioRequestInspector>(),
+      requestInspector: isBackground ? null : sl<DioRequestInspector>(),
     ),
   );
+
+  if (!isBackground) {
+    sl.registerFactory<InAppUpdateBloc>(() => InAppUpdateBloc());
+  }
 
   sl.registerFactory(
     () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
@@ -378,8 +388,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /*************************************************************************
-                                    CHIRP
-  *************************************************************************/
+      CHIRP
+   *************************************************************************/
   //                        --- Chirp Users ---
   sl.registerFactory<ChirpUserLocalDataSource>(
     () => ChirpUserLocalDataSource(localDB: sl()),
@@ -552,8 +562,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /*************************************************************************
-                              // NOTIFICATIONS
-  *************************************************************************/
+      // NOTIFICATIONS
+   *************************************************************************/
   sl.registerFactory<NotificationRemoteDatasource>(
     () => NotificationRemoteDatasource(),
   );
@@ -634,52 +644,54 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   // Firebase Remote Config
-  sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
-  sl.registerFactory<RemoteConfigRemoteDatasource>(
-    () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
-  );
-  sl.registerFactory<RemoteConfigRepository>(
-    () => RemoteConfigRepositoryImpl(
-      remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-    ),
-  );
+  if (!isBackground) {
+    sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
+    sl.registerFactory<RemoteConfigRemoteDatasource>(
+      () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
+    );
+    sl.registerFactory<RemoteConfigRepository>(
+      () => RemoteConfigRepositoryImpl(
+        remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
+      ),
+    );
 
-  sl.registerFactory<InitializeRemoteConfigUsecase>(
-    () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<FetchAndActivateUsecase>(
-    () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetStringUsecase>(
-    () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetBoolUsecase>(
-    () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetIntUsecase>(
-    () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetDoubleUsecase>(
-    () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetJsonUsecase>(
-    () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<GetAllParametersUsecase>(
-    () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
-  );
-  sl.registerFactory<RemoteConfigBloc>(
-    () => RemoteConfigBloc(
-      initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
-      fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
-      getStringUsecase: sl.get<GetStringUsecase>(),
-      getBoolUsecase: sl.get<GetBoolUsecase>(),
-      getIntUsecase: sl.get<GetIntUsecase>(),
-      getDoubleUsecase: sl.get<GetDoubleUsecase>(),
-      getJsonUsecase: sl.get<GetJsonUsecase>(),
-      getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-    ),
-  );
+    sl.registerFactory<InitializeRemoteConfigUsecase>(
+      () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<FetchAndActivateUsecase>(
+      () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetStringUsecase>(
+      () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetBoolUsecase>(
+      () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetIntUsecase>(
+      () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetDoubleUsecase>(
+      () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetJsonUsecase>(
+      () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<GetAllParametersUsecase>(
+      () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
+    );
+    sl.registerFactory<RemoteConfigBloc>(
+      () => RemoteConfigBloc(
+        initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
+        fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
+        getStringUsecase: sl.get<GetStringUsecase>(),
+        getBoolUsecase: sl.get<GetBoolUsecase>(),
+        getIntUsecase: sl.get<GetIntUsecase>(),
+        getDoubleUsecase: sl.get<GetDoubleUsecase>(),
+        getJsonUsecase: sl.get<GetJsonUsecase>(),
+        getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
+      ),
+    );
+  }
 
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(
@@ -689,10 +701,59 @@ Future<void> init(FlavorConfig flavor) async {
     () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
 
+  sl.registerFactory<InstitutionCommandLocalDatasource>(
+    () => InstitutionCommandLocalDatasource(appDataBase: sl()),
+  );
+  sl.registerFactory<InstitutionCommandRemoteDatasource>(
+    () => InstitutionCommandRemoteDatasource(flavor: flavor, dioClient: sl()),
+  );
+
+  sl.registerFactory<InstitutionKeyLocalDatasource>(
+    () => InstitutionKeyLocalDatasource(appDataBase: sl()),
+  );
+
+  sl.registerFactory<InstitutionKeyRepository>(
+    () => InstitutionKeyRepositoryImpl(localDataSource: sl()),
+  );
+  // --- Student Profile Datasources ---
+  sl.registerFactory<InstitutionProfileLocalDatasource>(
+    () => InstitutionProfileLocalDatasource(appDataBase: sl<AppDataBase>()),
+  );
+
+  sl.registerFactory<InstitutionProfileRemoteDatasource>(
+    () => InstitutionProfileRemoteDatasource(
+      dioClient: sl<DioClient>(),
+      flavor: flavor,
+    ),
+  );
+
+  sl.registerFactory<InstitutionFeesLocalDatasource>(
+    () => InstitutionFeesLocalDatasourceImpl(sl()),
+  );
+
+  sl.registerFactory<InstitutionFeesRepository>(
+    () => InstitutionFeesRepositoryImpl(localDatasource: sl()),
+  );
+
+  // --- Student Profile Repository ---
+  sl.registerFactory<StudentProfileRepository>(
+    () => StudentProfileRepositoryImpl(
+      remoteDatasource: sl<InstitutionProfileRemoteDatasource>(),
+      localDatasource: sl<InstitutionProfileLocalDatasource>(),
+    ),
+  );
+
   sl.registerFactory<InstitutionRepositoryImpl>(
     () => InstitutionRepositoryImpl(
       institutionLocalDatasource: sl(),
       institutionRemoteDatasource: sl(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionCommandRepository>(
+    () => InstitutionScrappingCommandRepositoryImpl(
+      institutionCommandLocalDatasource: sl(),
+      institutionCommandRemoteDatasource: sl(),
     ),
   );
 
@@ -720,6 +781,127 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
+  sl.registerFactory<GetInstitutionKeyUsecase>(
+    () => GetInstitutionKeyUsecase(repository: sl()),
+  );
+  sl.registerFactory<SaveInstitutionKeyUsecase>(
+    () => SaveInstitutionKeyUsecase(repository: sl()),
+  );
+
+  sl.registerFactory<GetInstitutionScrappingCommandUsecase>(
+    () => GetInstitutionScrappingCommandUsecase(repository: sl()),
+  );
+
+  // --- Student Profile Usecases ---
+  // Watch Usecases
+  sl.registerFactory<WatchProfileByIdUsecase>(
+    () => WatchProfileByIdUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchProfileByUserAndInstitutionUsecase>(
+    () => WatchProfileByUserAndInstitutionUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
+  );
+
+  sl.registerFactory<WatchProfilesByUserUsecase>(
+    () =>
+        WatchProfilesByUserUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchLatestProfileByStudentUsecase>(
+    () => WatchLatestProfileByStudentUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
+  );
+
+  // Fetch Usecases
+  sl.registerFactory<FetchProfileByIdUsecase>(
+    () => FetchProfileByIdUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<FetchProfilesUsecase>(
+    () => FetchProfilesUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<FetchCurrentUserProfileUsecase>(
+    () => FetchCurrentUserProfileUsecase(
+      repository: sl<StudentProfileRepository>(),
+    ),
+  );
+
+  // Create Usecase
+  sl.registerFactory<CreateProfileUsecase>(
+    () => CreateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<SyncInstitutionProfileUsecase>(
+    () => SyncInstitutionProfileUsecase(createProfileUsecase: sl()),
+  );
+
+  // Update Usecases
+  sl.registerFactory<UpdateProfileUsecase>(
+    () => UpdateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<PartialUpdateProfileUsecase>(
+    () =>
+        PartialUpdateProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  // Delete Usecases
+  sl.registerFactory<DeleteProfileUsecase>(
+    () => DeleteProfileUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<DeleteUserProfilesUsecase>(
+    () => DeleteUserProfilesUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<ClearProfileCacheUsecase>(
+    () => ClearProfileCacheUsecase(repository: sl<StudentProfileRepository>()),
+  );
+
+  sl.registerFactory<WatchInstitutionFees>(() => WatchInstitutionFees(sl()));
+
+  sl.registerFactory<WatchAllFees>(() => WatchAllFees(sl()));
+
+  sl.registerFactory<SaveFeeTransaction>(() => SaveFeeTransaction(sl()));
+
+  sl.registerFactory<InstitutionFeesBloc>(
+    () => InstitutionFeesBloc(
+      watchInstitutionFees: sl(),
+      saveFeeTransaction: sl(),
+    ),
+  );
+
+  sl.registerFactory<InstitutionKeyBloc>(
+    () => InstitutionKeyBloc(
+      getInstitutionKeyUsecase: sl(),
+      saveInstitutionKeyUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory<StudentProfileBloc>(
+    () => StudentProfileBloc(
+      watchProfileByIdUsecase: sl<WatchProfileByIdUsecase>(),
+      watchProfilesByUserAndInstitutionUsecase:
+          sl<WatchProfileByUserAndInstitutionUsecase>(),
+      watchProfilesByUserUsecase: sl<WatchProfilesByUserUsecase>(),
+      watchLatestProfileByStudentUsecase:
+          sl<WatchLatestProfileByStudentUsecase>(),
+      fetchProfileByIdUsecase: sl<FetchProfileByIdUsecase>(),
+      fetchProfilesUsecase: sl<FetchProfilesUsecase>(),
+      fetchCurrentUserProfileUsecase: sl<FetchCurrentUserProfileUsecase>(),
+      createProfileUsecase: sl<CreateProfileUsecase>(),
+      updateProfileUsecase: sl<UpdateProfileUsecase>(),
+      partialUpdateProfileUsecase: sl<PartialUpdateProfileUsecase>(),
+      deleteProfileUsecase: sl<DeleteProfileUsecase>(),
+      deleteUserProfilesUsecase: sl<DeleteUserProfilesUsecase>(),
+      clearProfileCacheUsecase: sl<ClearProfileCacheUsecase>(),
+    ),
+  );
+
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
       addAccountToInstitution: sl(),
@@ -727,6 +909,10 @@ Future<void> init(FlavorConfig flavor) async {
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
     ),
+  );
+
+  sl.registerFactory<ScrappingCommandBloc>(
+    () => ScrappingCommandBloc(getInstitutionScrappingCommandUsecase: sl()),
   );
 
   // Exam Timetable
@@ -762,83 +948,184 @@ Future<void> init(FlavorConfig flavor) async {
     ),
   );
 
-  // Magnet
-  sl.registerFactory<MagnetCredentialsLocalDatasource>(
-    () => MagnetCredentialsLocalDatasource(localDB: sl()),
-  );
-  sl.registerFactory<MagnetStudentProfileLocalDatasource>(
-    () => MagnetStudentProfileLocalDatasource(localDB: sl()),
-  );
-  sl.registerFactory<MagnetCourseLocalDataSource>(
-    () => MagnetCourseLocalDataSource(localDB: sl()),
+  /***************************************************************************************
+   *                                     SEMESTER
+   ***************************************************************************************/
+  sl.registerFactory<SemesterLocalDatasource>(
+    () => SemesterLocalDatasourceImpl(appDataBase: sl()),
   );
 
-  sl.registerFactory<MagnetRepositoryImpl>(
-    () => MagnetRepositoryImpl(
-      magnetCredentialsLocalDatasource: sl(),
-      magnetStudentProfileLocalDatasource: sl(),
-      magnetCourseLocalDataSource: sl(),
-    ),
+  sl.registerFactory<SemesterRepository>(
+    () => SemesterRepositoryImpl(semesterLocalDatasource: sl()),
   );
 
-  // -- Usecases
-  sl.registerFactory<MagnetLoginUsecase>(
-    () => MagnetLoginUsecase(magnetRepository: sl<MagnetRepositoryImpl>()),
+  sl.registerFactory<CreateSemesterUsecase>(
+    () => CreateSemesterUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<GetCachedMagnetCredentialUsecase>(
-    () => GetCachedMagnetCredentialUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+  sl.registerFactory<DeleteSemesterUsecase>(
+    () => DeleteSemesterUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<GetMagnetAuthenticationStatusUsecase>(
-    () => GetMagnetAuthenticationStatusUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+  sl.registerFactory<UpdateSemesterUsecase>(
+    () => UpdateSemesterUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<GetCachedMagnetStudentProfileUsecase>(
-    () => GetCachedMagnetStudentProfileUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+  sl.registerFactory<WatchAllSemestersUsecase>(
+    () => WatchAllSemestersUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<FetchMagnetStudentProfileUsecase>(
-    () => FetchMagnetStudentProfileUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+  sl.registerFactory<GetSemestersForInstituionUsecase>(
+    () => GetSemestersForInstituionUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<FetchMagnetStudentTimetableUsecase>(
-    () => FetchMagnetStudentTimetableUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+
+  sl.registerFactory<GetSemesterByIdUsecase>(
+    () => GetSemesterByIdUsecase(semesterRepository: sl()),
   );
-  sl.registerFactory<GetCachedMagnetStudentTimetableUsecase>(
-    () => GetCachedMagnetStudentTimetableUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
+
+  sl.registerFactory<SemesterCubit>(
+    () => SemesterCubit(
+      createSemesterUsecase: sl(),
+      getSemesterByIdUsecase: sl(),
+      deleteSemesterUsecase: sl(),
+      getSemestersForInstitutionUsecase: sl(),
+      updateSemesterUsecase: sl(),
+      watchAllSemestersUsecase: sl(),
     ),
   );
 
-  sl.registerFactory<DeleteMagentCourseByCourseCodeUsecase>(
-    () => DeleteMagentCourseByCourseCodeUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
-    ),
+  /**********************************************************************
+   *                               Courses
+   **********************************************************************/
+
+  sl.registerFactory<CourseLocalDatasource>(
+    () => CourseLocalDatasourceImpl(appDataBase: sl()),
   );
-  sl.registerFactory<FetchMagnetFinancialFeesStatementsUsecase>(
-    () => FetchMagnetFinancialFeesStatementsUsecase(
-      magnetRepository: sl<MagnetRepositoryImpl>(),
+
+  sl.registerFactory<CourseRepository>(
+    () => CourseRepositoryImpl(localDatasource: sl()),
+  );
+
+  sl.registerFactory<WatchAllCoursesUsecase>(
+    () => WatchAllCoursesUsecase(sl()),
+  );
+  sl.registerFactory<SaveCourseUsecase>(() => SaveCourseUsecase(sl()));
+  sl.registerFactory<DeleteCourseUsecase>(() => DeleteCourseUsecase(sl()));
+  sl.registerFactory<WatchInstitutionCoursesUsecase>(
+    () => WatchInstitutionCoursesUsecase(sl()),
+  );
+  sl.registerFactory<GetCourseUsecase>(() => GetCourseUsecase(sl()));
+
+  sl.registerFactory<CourseCubit>(
+    () => CourseCubit(
+      getCourse: sl(),
+      watchInstitutionCourses: sl(),
+      watchAllCourses: sl(),
+      saveCourse: sl(),
+      deleteCourse: sl(),
     ),
   );
 
-  // -- Bloc
+  /***************************************************************
+   *                       Timetable
+   ***************************************************************/
+
+  sl.registerFactory<TimetableEntryLocalDatasource>(
+    () => TimetableEntryLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<TimetableLocalDatasource>(
+    () => TimetableLocalDatasourceImpl(appDataBase: sl()),
+  );
+
+  sl.registerFactory<TimetableRepository>(
+    () => TimetableRepositoryImpl(localDatasource: sl()),
+  );
+
+  sl.registerFactory<TimetableEntryRepository>(
+    () => TimetableEntryRepositoryImpl(localDatasource: sl()),
+  );
+
+  sl.registerFactory<CreateOrUpdateTimetableEntry>(
+    () => CreateOrUpdateTimetableEntry(sl()),
+  );
+  sl.registerFactory<CreateOrUpdateTimetableEntries>(
+    () => CreateOrUpdateTimetableEntries(sl()),
+  );
+  sl.registerFactory<GetTimetableEntryById>(() => GetTimetableEntryById(sl()));
+  sl.registerFactory<WatchAllTimetableEntries>(
+    () => WatchAllTimetableEntries(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByTimetableId>(
+    () => WatchTimetableEntriesByTimetableId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByCourseId>(
+    () => WatchTimetableEntriesByCourseId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByUserId>(
+    () => WatchTimetableEntriesByUserId(sl()),
+  );
+  sl.registerFactory<WatchTimetableEntriesByInstitutionId>(
+    () => WatchTimetableEntriesByInstitutionId(sl()),
+  );
+  sl.registerFactory<DeleteTimetableEntry>(() => DeleteTimetableEntry(sl()));
+  sl.registerFactory<DeleteTimetableEntries>(
+    () => DeleteTimetableEntries(sl()),
+  );
+  sl.registerFactory<SyncTimetableEntries>(() => SyncTimetableEntries(sl()));
+  sl.registerFactory<FetchTimetableEntriesFromRemote>(
+    () => FetchTimetableEntriesFromRemote(sl()),
+  );
+
+  sl.registerFactory<CreateOrUpdateTimetable>(
+    () => CreateOrUpdateTimetable(sl()),
+  );
+  sl.registerFactory<GetTimetableById>(() => GetTimetableById(sl()));
+  sl.registerFactory<WatchAllTimetables>(() => WatchAllTimetables(sl()));
+  sl.registerFactory<WatchTimetablesByUserId>(
+    () => WatchTimetablesByUserId(sl()),
+  );
+  sl.registerFactory<WatchTimetablesByInstitutionId>(
+    () => WatchTimetablesByInstitutionId(sl()),
+  );
+  sl.registerFactory<DeleteTimetable>(() => DeleteTimetable(sl()));
+  sl.registerFactory<SyncTimetables>(() => SyncTimetables(sl()));
+  sl.registerFactory<FetchTimetablesFromRemote>(
+    () => FetchTimetablesFromRemote(sl()),
+  );
+
+  sl.registerFactory<TimetableBloc>(
+    () => TimetableBloc(
+      watchAllTimetables: sl(),
+      watchTimetablesByUserId: sl(),
+      watchTimetablesByInstitutionId: sl(),
+      createOrUpdateTimetable: sl(),
+      getTimetableById: sl(),
+      deleteTimetable: sl(),
+      syncTimetables: sl(),
+      fetchTimetablesFromRemote: sl(),
+    ),
+  );
+
+  sl.registerFactory<TimetableEntryBloc>(
+    () => TimetableEntryBloc(
+      watchAllTimetableEntries: sl(),
+      watchTimetableEntriesByTimetableId: sl(),
+      watchTimetableEntriesByCourseId: sl(),
+      watchTimetableEntriesByUserId: sl(),
+      watchTimetableEntriesByInstitutionId: sl(),
+      createOrUpdateTimetableEntry: sl(),
+      createOrUpdateTimetableEntries: sl(),
+      getTimetableEntryById: sl(),
+      deleteTimetableEntry: sl(),
+      deleteTimetableEntries: sl(),
+      syncTimetableEntries: sl(),
+      fetchTimetableEntriesFromRemote: sl(),
+    ),
+  );
+
   sl.registerFactory<MagnetBloc>(
     () => MagnetBloc(
-      magnetLoginUsecase: sl(),
-      getCachedMagnetCredentialUsecase: sl(),
-      getMagnetAuthenticationStatusUsecase: sl(),
-      fetchMagnetStudentProfileUsecase: sl(),
-      getCachedMagnetStudentProfileUsecase: sl(),
-      fetchMagnetStudentTimetableUsecase: sl(),
-      deleteMagentCourseByCourseCodeUsecase: sl(),
-      getCachedMagnetStudentTimetableUsecase: sl(),
-      fetchMagnetFinancialFeesStatementsUsecase: sl(),
+      createOrUpdateTimetableEntries: sl(),
+      saveCourseUsecase: sl(),
+      syncInstitutionProfileUsecase: sl(),
+      saveFeeTransaction: sl(),
     ),
   );
 
@@ -861,8 +1148,8 @@ Future<void> init(FlavorConfig flavor) async {
   );
 
   /**********************************************************************
-  *                               LEADERBOARD
-  **********************************************************************/
+   *                               LEADERBOARD
+   **********************************************************************/
   sl.registerFactory<LeaderboardLocalDataSource>(
     () => LeaderboardLocalDataSource(localDB: sl()),
   );
@@ -882,8 +1169,8 @@ Future<void> init(FlavorConfig flavor) async {
   sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
 
   /**********************************************************************
-  *                               STREAKS
-  **********************************************************************/
+   *                               STREAKS
+   **********************************************************************/
   sl.registerFactory<AchievementLocalDatasource>(
     () => AchievementLocalDatasource(localDB: sl<AppDataBase>()),
   );
