@@ -10,7 +10,7 @@ class TrackingExplainerSheet extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 16, 28, 32),
+      padding: const EdgeInsets.fromLTRB(28, 16, 28, 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -75,11 +75,11 @@ class TrackingExplainerSheet extends StatelessWidget {
             "Keeping Academia free for everyone",
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
 
           SizedBox(
             width: double.infinity,
-            height: 56,
+            height: 50,
             child: FilledButton(
               style: FilledButton.styleFrom(
                 shape: RoundedRectangleBorder(
