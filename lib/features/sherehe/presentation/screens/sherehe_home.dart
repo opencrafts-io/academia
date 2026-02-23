@@ -72,6 +72,9 @@ class _ShereheHomeState extends State<ShereheHome>
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
             SliverPinnedHeader(
               child: Container(
                 color: Theme.of(context).colorScheme.surface,

@@ -23,6 +23,7 @@ class _CourseListPageState extends State<CourseListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'add-course-fab',
         onPressed: () => AddCoursesRoute().push(context),
         icon: const Icon(Icons.add),
         label: const Text('Add Course'),

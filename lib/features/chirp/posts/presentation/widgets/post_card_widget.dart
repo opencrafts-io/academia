@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -438,14 +439,20 @@ class _PostCardState extends State<PostCard> {
               },
             ),
             const SizedBox(height: 8),
-            Text(
-              widget.post.title,
+            LinkifiedText(
+              text: widget.post.title,
               style: Theme.of(
                 context,
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8),
-            Text(widget.post.content),
+            LinkifiedText(
+              text: widget.post.content,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
             if (widget.post.attachments.isNotEmpty) ...[
               const SizedBox(height: 8),
               LayoutBuilder(

@@ -97,7 +97,7 @@ class NotificationChannelConfig {
   channelName: 'Course Alerts',
   channelDescription: 'Notifications for upcoming classes',
   defaultColor: const Color(0xFF007DFD),
-  importance: NotificationImportance.High,
+  importance: NotificationImportance.Max,
   playSound: true,
   ledColor: const Color(0xFF007DFD),
   soundSource: 'resource://raw/class_join',

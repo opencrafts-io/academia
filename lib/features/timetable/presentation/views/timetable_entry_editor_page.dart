@@ -83,17 +83,12 @@ class _TimetableEntryEditorPageState extends State<TimetableEntryEditorPage> {
         slivers: [
           SliverAppBar.medium(
             title: Text(isEditing ? 'Edit Class' : 'New Class'),
-            backgroundColor: widget.courseColor,
-            foregroundColor: _getContrastColor(widget.courseColor),
             actions: [
-              TextButton(
+              FilledButton.icon(
                 onPressed: _saveEntry,
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                    color: _getContrastColor(widget.courseColor),
-                    fontWeight: FontWeight.bold,
-                  ),
+                label: Text("Save"),
+                icon: Icon(
+                  Icons.save_outlined
                 ),
               ),
             ],

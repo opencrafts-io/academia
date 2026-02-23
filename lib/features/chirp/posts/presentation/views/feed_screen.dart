@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import 'package:lottie/lottie.dart';
 
 class FeedPage extends StatefulWidget {
@@ -28,15 +29,14 @@ class _FeedPageState extends State<FeedPage>
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
-    // Listen to the block bloc stream
     _blockSubscription = context.read<BlockBloc>().stream.listen((state) {
-      if (state is BlockActionSuccess) {
-        _currentPage = 1;
-        context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
-      }
+      if (state is BlockActionSuccess) _loadFeed();
     });
+    _loadFeed();
+  }
 
+  void _loadFeed() {
+    _currentPage = 1;
     context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
   }
 
@@ -63,15 +63,12 @@ class _FeedPageState extends State<FeedPage>
 
   List<Widget> getPostsWithAds(List<Post> posts) {
     List<Widget> postsWithAds = [];
-    int adInterval = 3; // Interval after which to show ads
-
+    const int adInterval = 3;
     for (int i = 0; i < posts.length; i++) {
-      // Add the post item
       postsWithAds.add(
         PostCard(
           post: posts[i],
           onTap: () async {
-            // marking the post as viewed
             context.read<FeedBloc>().add(
               MarkPostAsViewed(
                 postId: posts[i].id,
@@ -82,22 +79,17 @@ class _FeedPageState extends State<FeedPage>
               PostDetailRoute(postId: posts[i].id).location,
               extra: posts[i],
             );
-
             if (!context.mounted) return;
-
             if (updatedPost != null && updatedPost is Post) {
               context.read<FeedBloc>().add(UpdatePostInFeed(updatedPost));
             }
           },
         ),
       );
-
-      // Insert ad after every `adInterval` posts
       if ((i + 1) % adInterval == 0) {
         postsWithAds.add(BannerAdWidget(size: AdSize.banner));
       }
     }
-
     return postsWithAds;
   }
 
@@ -110,14 +102,14 @@ class _FeedPageState extends State<FeedPage>
           if (state is PostCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Post created successfully!"),
+                content: Text('Post created successfully!'),
                 behavior: SnackBarBehavior.floating,
               ),
             );
           } else if (state is PostCreateError) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Error creating post"),
+                content: Text('Error creating post'),
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -125,25 +117,32 @@ class _FeedPageState extends State<FeedPage>
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            _currentPage = 1;
-            context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
+            _loadFeed();
             await Future.delayed(const Duration(seconds: 2));
           },
           child: CustomScrollView(
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
+              SliverOverlapInjector(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+              ),
               BlocBuilder<FeedBloc, FeedState>(
                 builder: (context, state) {
                   if (state is FeedLoading) {
                     return const SliverFillRemaining(
-                      child: Center(child: SpinningScallopIndicator()),
+                      child: Center(child: LoadingIndicatorM3E()),
                     );
                   }
 
                   if (state is FeedError) {
                     return SliverFillRemaining(
-                      child: Center(child: Text(state.message)),
+                      child: _FeedErrorState(
+                        message: state.message,
+                        onRetry: _loadFeed,
+                      ),
                     );
                   }
 
@@ -161,67 +160,49 @@ class _FeedPageState extends State<FeedPage>
                     hasError = true;
                   }
 
-                  if (posts.isEmpty && !isLoadingMore && !hasError) {
-                    return SliverPadding(
-                      padding: const EdgeInsets.all(16),
-                      sliver: SliverFillRemaining(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Lottie.asset(Assets.lotties.chat, height: 300),
-                            Text(
-                              "It's a little quiet in here... "
-                              "Let's make some noise! Start following "
-                              "and posting to fill up your feed.",
-                              style: Theme.of(context).textTheme.titleMedium,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
+                  if (posts.isEmpty && !isLoadingMore) {
+                    return SliverFillRemaining(
+                      child: _FeedEmptyState(onRefresh: _loadFeed),
                     );
                   }
+
                   final feed = getPostsWithAds(posts);
                   return SliverList.builder(
                     itemCount:
-                        feed.length + (isLoadingMore || hasError ? 1 : 0),
+                    feed.length + (isLoadingMore || hasError ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index < feed.length) {
                         final item = feed[index];
-
                         if (item is PostCard) {
                           return BlocProvider(
                             create: (context) =>
-                                sl<ChirpUserCubit>()
-                                  ..getChirpUserByID(item.post.authorId),
+                            sl<ChirpUserCubit>()
+                              ..getChirpUserByID(item.post.authorId),
                             child: item,
                           );
                         }
                         return item;
-                      } else {
-                        if (isLoadingMore) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: SpinningScallopIndicator(),
-                            ),
-                          );
-                        }
-                        if (hasError) {
-                          return Center(
-                            child: TextButton.icon(
-                              onPressed: () {
-                                context.read<FeedBloc>().add(
-                                  LoadFeedEvent(page: _currentPage),
-                                );
-                              },
-                              icon: const Icon(Icons.refresh),
-                              label: const Text("Retry loading more posts"),
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
                       }
+                      if (isLoadingMore) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: LoadingIndicatorM3E(),
+                          ),
+                        );
+                      }
+                      if (hasError) {
+                        return Center(
+                          child: TextButton.icon(
+                            onPressed: () => context.read<FeedBloc>().add(
+                              LoadFeedEvent(page: _currentPage),
+                            ),
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('Retry loading more'),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
                     },
                   );
                 },
@@ -231,11 +212,98 @@ class _FeedPageState extends State<FeedPage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: "addPostBtn",
-        onPressed: () async {
-          AddPostRoute().push(context);
-        },
+        heroTag: 'addPostBtn',
+        onPressed: () => AddPostRoute().push(context),
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _FeedEmptyState extends StatelessWidget {
+  const _FeedEmptyState({required this.onRefresh});
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(Assets.lotties.chat, height: 260),
+          const SizedBox(height: 16),
+          Text(
+            "It's a little quiet in here...",
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Follow communities and post to fill up your feed.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          FilledButton.icon(
+            onPressed: onRefresh,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Refresh'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class _FeedErrorState extends StatelessWidget {
+  const _FeedErrorState({required this.message, required this.onRetry});
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.cloud_off_rounded,
+            size: 80,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Something went wrong',
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            message,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          FilledButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Try again'),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Or pull down to refresh',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }

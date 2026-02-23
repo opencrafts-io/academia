@@ -21,10 +21,10 @@ class CourseAlertBackgroundTask extends BackgroundTask {
   String get taskName => 'io.opencrafts.academia.course.alert';
 
   @override
-  Duration? get frequency => const Duration(minutes: 5);
+  Duration? get frequency => const Duration(hours: 12);
 
   @override
-  ExistingWorkPolicy get existingWorkPolicy => ExistingWorkPolicy.keep;
+  ExistingWorkPolicy get existingWorkPolicy => ExistingWorkPolicy.replace;
 
   @override
   Future<bool> execute(Map<String, dynamic>? inputData) async {
@@ -44,7 +44,6 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         (entries) async {
           for (final entry in entries) {
             final classStartTime = _buildTodayDateTime(entry.startDate, now);
-            final timeDifference = classStartTime.difference(now);
 
             // Get course details
             final courseResult = await courseRepository.getCourse(
@@ -54,7 +53,6 @@ class CourseAlertBackgroundTask extends BackgroundTask {
             await courseResult.fold(
               (failure) async {
                 debugPrint("Failed to fetch course: ${failure.message}");
-                return false;
               },
               (course) async {
                 // Build location string
@@ -64,29 +62,41 @@ class CourseAlertBackgroundTask extends BackgroundTask {
                   location: entry.location,
                 );
 
-                // Stage 1: 30 minutes before class
-                if (timeDifference.inMinutes <= 30 &&
-                    timeDifference.inMinutes > 25) {
+                // Stage 1: Schedule 30 minutes before class
+                final alert30 =
+                    classStartTime.subtract(const Duration(minutes: 30));
+                if (alert30.isAfter(now)) {
                   await _send30MinuteAlert(
                     course: course,
                     entry: entry,
                     location: location,
+                    scheduledDate: alert30,
                   );
                 }
 
-                // Stage 2: 15 minutes before class
-                if (timeDifference.inMinutes <= 15 &&
-                    timeDifference.inMinutes > 10) {
+                // Stage 2: Schedule 15 minutes before class
+                final alert15 =
+                    classStartTime.subtract(const Duration(minutes: 15));
+                if (alert15.isAfter(now)) {
                   await _send15MinuteAlert(
                     course: course,
                     entry: entry,
                     location: location,
+                    scheduledDate: alert15,
                   );
                 }
 
-                // Stage 3: Class starting now
-                if (timeDifference.inMinutes <= 0 &&
-                    timeDifference.inMinutes > -5) {
+                // Stage 3: Schedule alert for class start
+                if (classStartTime.isAfter(now)) {
+                  await _sendClassStartingAlert(
+                    course: course,
+                    entry: entry,
+                    location: location,
+                    scheduledDate: classStartTime,
+                  );
+                } else if (now.isBefore(
+                    classStartTime.add(const Duration(minutes: 5)))) {
+                  // If class just started (within 5 mins), send immediately
                   await _sendClassStartingAlert(
                     course: course,
                     entry: entry,
@@ -94,22 +104,30 @@ class CourseAlertBackgroundTask extends BackgroundTask {
                   );
                 }
 
-                // Stage 4: Class in progress - show progress notification
-                if (timeDifference.inMinutes < 0) {
-                  final classEndTime = classStartTime.add(
-                    Duration(minutes: entry.durationMinutes),
-                  );
-                  final isClassOngoing = now.isBefore(classEndTime);
+                // Stage 4: Class in progress - show status notification
+                final classEndTime = classStartTime.add(
+                  Duration(minutes: entry.durationMinutes),
+                );
 
-                  if (isClassOngoing) {
-                    await _sendClassInProgressAlert(
-                      course: course,
-                      entry: entry,
-                      location: location,
-                      startTime: classStartTime,
-                      endTime: classEndTime,
-                    );
-                  }
+                if (classStartTime.isAfter(now)) {
+                  // Schedule the status notification to appear when class starts
+                  await _sendClassInProgressAlert(
+                    course: course,
+                    entry: entry,
+                    location: location,
+                    startTime: classStartTime,
+                    endTime: classEndTime,
+                    scheduledDate: classStartTime,
+                  );
+                } else if (now.isBefore(classEndTime)) {
+                  // Class is already ongoing, show it immediately
+                  await _sendClassInProgressAlert(
+                    course: course,
+                    entry: entry,
+                    location: location,
+                    startTime: classStartTime,
+                    endTime: classEndTime,
+                  );
                 }
               },
             );
@@ -117,7 +135,6 @@ class CourseAlertBackgroundTask extends BackgroundTask {
           return true;
         },
       );
-
     } catch (e) {
       debugPrint("Course Alert Background Task Error: $e");
       return false;
@@ -125,8 +142,6 @@ class CourseAlertBackgroundTask extends BackgroundTask {
   }
 
   /// Build a DateTime for today using the time from startDate
-  /// Since startDate only contains time info (the date portion is irrelevant),
-  /// we extract the time and combine it with today's date
   DateTime _buildTodayDateTime(DateTime timeSource, DateTime today) {
     return DateTime(
       today.year,
@@ -134,7 +149,8 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       today.day,
       timeSource.hour,
       timeSource.minute,
-      timeSource.second,
+      0,
+      0,
     );
   }
 
@@ -143,6 +159,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required course,
     required entry,
     required String location,
+    DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -165,6 +182,10 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         largeIcon: 'asset://assets/icons/alarm.png',
         roundedLargeIcon: true,
       ),
+      schedule: scheduledDate != null
+          ? NotificationCalendar.fromDate(
+              date: scheduledDate, preciseAlarm: true)
+          : null,
       actionButtons: [
         NotificationActionButton(
           key: 'VIEW_DETAILS',
@@ -180,6 +201,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required course,
     required entry,
     required String location,
+    DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -207,6 +229,10 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         largeIcon: 'asset://assets/icons/time.png',
         roundedLargeIcon: true,
       ),
+      schedule: scheduledDate != null
+          ? NotificationCalendar.fromDate(
+              date: scheduledDate, preciseAlarm: true)
+          : null,
     );
   }
 
@@ -215,6 +241,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required course,
     required entry,
     required String location,
+    DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -239,50 +266,53 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         largeIcon: 'asset://assets/icons/motarboard.png',
         roundedLargeIcon: true,
       ),
+      schedule: scheduledDate != null
+          ? NotificationCalendar.fromDate(
+              date: scheduledDate, preciseAlarm: true)
+          : null,
       actionButtons: [],
     );
   }
 
-  /// Stage 4: Show progress notification during class
+  /// Stage 4: Show status notification during class
   Future<void> _sendClassInProgressAlert({
     required course,
     required entry,
     required String location,
     required DateTime startTime,
     required DateTime endTime,
+    DateTime? scheduledDate,
   }) async {
-    final now = DateTime.now();
+    final effectiveNow = scheduledDate ?? DateTime.now();
+    final elapsed = effectiveNow.difference(startTime);
     final totalDuration = endTime.difference(startTime).inMinutes;
-    final elapsed = now.difference(startTime).inMinutes;
-    final remaining = endTime.difference(now).inMinutes;
-
-    // Calculate progress (0.0 to 1.0)
-    final progress = elapsed / totalDuration;
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _generateNotificationId(entry.id!, -1),
         channelKey: 'course_alerts',
-        title: ' ${course.courseName} is in progress.',
-        summary: '${remaining.toString()} minutes left.',
-        body:'$location • ${course.instructor}',
+        title: '${course.courseName} is in progress',
+        body: '📍 $location\n👨‍🏫 ${course.instructor}',
+        summary: 'Ends at ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')} ($totalDuration mins total)',
         actionType: ActionType.KeepOnTop,
-        notificationLayout: NotificationLayout.ProgressBar,
-        category: NotificationCategory.Progress,
+        notificationLayout: NotificationLayout.BigText,
+        category: NotificationCategory.Status,
         locked: true,
         autoDismissible: false,
-        fullScreenIntent: true,
         backgroundColor: course.color,
         color: Colors.black,
         showWhen: true,
-        chronometer: Duration(minutes: elapsed),
-        timeoutAfter: Duration(minutes: remaining),
-        progress: (progress * 100).toDouble(),
+        // The chronometer will count up from the start of the class
+        chronometer: elapsed,
         payload: {},
         displayOnForeground: true,
         largeIcon: 'asset://assets/icons/timer.png',
         roundedLargeIcon: true,
       ),
+      schedule: scheduledDate != null
+          ? NotificationCalendar.fromDate(
+              date: scheduledDate, preciseAlarm: true)
+          : null,
     );
   }
 
@@ -310,10 +340,10 @@ class CourseAlertBackgroundTask extends BackgroundTask {
   }
 
   /// Generate unique notification ID based on entry ID and alert stage
-  /// This ensures we can have multiple notifications for the same class
+  /// Uses a combined string hash to prevent numerical collisions between stages.
   int _generateNotificationId(String entryId, int stage) {
-    // Use hashCode of entryId combined with stage
-    // Stage: 30 (30min), 15 (15min), 0 (starting), -1 (in progress)
-    return (entryId.hashCode + stage * 1000).abs() % 2147483647;
+    // We combine the ID and stage into a unique string before hashing.
+    // This ensures 'ID1_stage15' and 'ID1_stage30' have completely uncorrelated hashes.
+    return (entryId + stage.toString()).hashCode.abs() % 2147483647;
   }
 }

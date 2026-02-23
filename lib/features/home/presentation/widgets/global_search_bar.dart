@@ -1,5 +1,4 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:animated_emoji/animated_emoji.dart';
@@ -7,189 +6,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
-class GlobalSearchBar extends StatefulWidget {
-  const GlobalSearchBar({super.key});
-
-  @override
-  State<GlobalSearchBar> createState() => _GlobalSearchBarState();
-}
-
-class _GlobalSearchBarState extends State<GlobalSearchBar> {
-  void _performSearch(BuildContext context, String query) {
-    context.read<CommunityListingCubit>().searchForCommunity(
-      query,
-      // pageSize: 1,
-      page: 1,
-    );
-
-    //int _currentTabIndex = 0;
-    // switch (_currentTabIndex) {
-    //   case 0:
-    //     debugPrint("Searching Posts for: $query");
-    //     break;
-    //   case 1:
-    //     context.read<CommunityListingCubit>().searchForCommunity(
-    //       query,
-    //       // pageSize: 1,
-    //       page: 1,
-    //     );
-    //     break;
-    //   case 2:
-    //     debugPrint("Searching Users for: $query");
-    //     break;
-    // }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchAnchor.bar(
-      suggestionsBuilder: (context, searchController) {
-        return [
-          DefaultTabController(
-            length: 1,
-            child: Builder(
-              builder: (tabContext) {
-                // final tabController = DefaultTabController.of(tabContext);
-                // tabController.addListener(() {
-                //   if (!tabController.indexIsChanging) {
-                //     setState(() {
-                //       _currentTabIndex = tabController.index;
-                //     });
-                //   }
-                // });
-                return Column(
-                  children: [
-                    // TabBar(
-                    //   indicatorSize: TabBarIndicatorSize.tab,
-                    //   indicatorAnimation: TabIndicatorAnimation.elastic,
-                    //   tabs: [
-                    //     // Tab(text: "Posts", icon: Icon(Icons.newspaper)),
-                    //     Tab(text: "Communities", icon: Icon(Icons.group)),
-                    //     // Tab(text: "Users", icon: Icon(Icons.account_box)),
-                    //   ],
-                    // ),
-                    SizedBox(
-                      height: MediaQuery.of(tabContext).size.height * 0.8,
-                      child: TabBarView(
-                        children: [
-                          // if (_currentTabIndex == 0)
-                          // _buildSearchPostSection(),
-                          // else if (_currentTabIndex == 1)
-                          _buildSearchCommunitiesSection(),
-                          // else if (_currentTabIndex == 2)
-                          // _buildSearchFriendsSection(),
-                          // else
-                          // const SizedBox.shrink(),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ];
-      },
-      barElevation: WidgetStatePropertyAll(0),
-      barBackgroundColor: WidgetStatePropertyAll(
-        Theme.of(context).colorScheme.primaryContainer,
-      ),
-      barHintText: "Search for communities",
-      barLeading: Icon(Icons.search),
-      viewElevation: 0,
-      isFullScreen: true,
-      onChanged: (query) => _performSearch(context, query),
-      shrinkWrap: true,
-    );
-  }
-
-  // Widget _buildSearchPostSection() {
-  //   return Padding(
-  //     padding: EdgeInsetsGeometry.all(12),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         AnimatedEmoji(AnimatedEmojis.thinkingFace, size: 80),
-  //         Text(
-  //           "There's just that post ",
-  //           style: Theme.of(context).textTheme.headlineSmall,
-  //           textAlign: TextAlign.center,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildSearchFriendsSection() {
-  //   return Padding(
-  //     padding: EdgeInsetsGeometry.all(12),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         AnimatedEmoji(AnimatedEmojis.pleading, size: 80),
-  //         Text(
-  //           "Find your friends via academia",
-  //           style: Theme.of(context).textTheme.headlineSmall,
-  //           textAlign: TextAlign.center,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget _buildSearchCommunitiesSection() {
-    return Padding(
-      padding: EdgeInsetsGeometry.all(12),
-      child: BlocBuilder<CommunityListingCubit, CommunityListingState>(
-        builder: (context, state) {
-          if (state is CommunityListingLoadedState) {
-            if (state.communities.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AnimatedEmoji(AnimatedEmojis.seeNoEvilMonkey, size: 80),
-                  Text("Searched community does not exist!"),
-                ],
-              );
-            }
-
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ...state.communities.map(
-                    (community) => CommunitySearchCard(community: community),
-                  ),
-                  SizedBox(height: 80),
-                ],
-              ),
-            );
-          } else if (state is CommunityListingLoadingState) {
-            return Center(child: SpinningScallopIndicator());
-          }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              AnimatedEmoji(AnimatedEmojis.hugFace, size: 120),
-              Text(
-                "Find groups of people that share your interests.",
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class CommunitySearchCard extends StatelessWidget {
-  const CommunitySearchCard({super.key, required this.community});
+class _CommunitySearchCard extends StatelessWidget {
+  const _CommunitySearchCard({super.key, required this.community});
   final Community community;
 
   @override
@@ -235,8 +55,8 @@ class CommunitySearchCard extends StatelessWidget {
                 imageUrl: community.banner ?? '',
                 errorWidget: (context, error, child) => Assets
                     .icons
-                    .userIconAvatar
-                    .image(width: double.infinity, fit: BoxFit.cover),
+                    .userIconUserGroup
+                    .image(width: 200, fit: BoxFit.cover),
                 height: 200,
                 fit: BoxFit.fill,
               ),
@@ -284,3 +104,127 @@ class CommunitySearchCard extends StatelessWidget {
     );
   }
 }
+
+
+class GlobalSearchDelegate extends SearchDelegate<void> {
+  GlobalSearchDelegate() : super(searchFieldLabel: 'Search communities...');
+
+  void _performSearch(BuildContext context) {
+    if (query.trim().isEmpty) return;
+    context.read<CommunityListingCubit>().searchForCommunity(query, page: 1);
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+    if (query.isNotEmpty)
+      IconButton(
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+        icon: const Icon(Icons.close),
+        tooltip: 'Clear',
+      ),
+  ];
+
+  @override
+  Widget buildLeading(BuildContext context) => IconButton(
+    onPressed: () => close(context, null),
+    icon: const Icon(Icons.arrow_back),
+    tooltip: 'Back',
+  );
+
+
+  @override
+  Widget buildResults(BuildContext context) {
+    _performSearch(context);
+    return _SearchBody(query: query);
+  }
+
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    _performSearch(context);
+    return _SearchBody(query: query);
+  }
+}
+
+
+class _SearchBody extends StatelessWidget {
+  const _SearchBody({required this.query});
+  final String query;
+
+  @override
+  Widget build(BuildContext context) {
+    if (query.trim().isEmpty) {
+      return _SearchEmptyPrompt();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: BlocBuilder<CommunityListingCubit, CommunityListingState>(
+        builder: (context, state) {
+          if (state is CommunityListingLoadingState) {
+            return const Center(child: LoadingIndicatorM3E());
+          }
+
+          if (state is CommunityListingLoadedState) {
+            if (state.communities.isEmpty) {
+              return _SearchNoResults();
+            }
+
+            return ListView.builder(
+              itemCount: state.communities.length,
+              itemBuilder: (context, index) => _CommunitySearchCard(
+                community: state.communities[index],
+              ),
+            );
+          }
+
+          return _SearchEmptyPrompt();
+        },
+      ),
+    );
+  }
+}
+
+
+class _SearchEmptyPrompt extends StatelessWidget {
+  const _SearchEmptyPrompt();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedEmoji(AnimatedEmojis.hugFace, size: 120),
+        const SizedBox(height: 12),
+        Text(
+          'Find groups that share your interests',
+          style: Theme.of(context).textTheme.headlineSmall,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchNoResults extends StatelessWidget {
+  const _SearchNoResults();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedEmoji(AnimatedEmojis.seeNoEvilMonkey, size: 80),
+        const SizedBox(height: 12),
+        Text(
+          'No communities found',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ],
+    );
+  }
+}
+

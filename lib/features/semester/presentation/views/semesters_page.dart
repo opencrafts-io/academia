@@ -85,6 +85,7 @@ class _SemestersPageState extends State<SemestersPage> {
         },
       ),
       floatingActionButton: FloatingActionButton.large(
+        heroTag: 'add-semester-fab',
         onPressed: () => AddSemesterRoute().push(context),
         child: Icon(Icons.add),
       ),
