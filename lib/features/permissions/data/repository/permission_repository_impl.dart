@@ -16,6 +16,8 @@ class PermissionRepositoryImpl implements PermissionRepository {
         return ph.Permission.camera;
       case AppPermission.storage:
         return ph.Permission.storage;
+      case AppPermission.preciseAlarm:
+        return ph.Permission.scheduleExactAlarm;
     }
   }
 

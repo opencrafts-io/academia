@@ -39,6 +39,30 @@ class PermissionCubit extends Cubit<PermissionState> {
     );
   }
 
+  /// Checks multiple permissions and emits PermissionGranted only if ALL are granted.
+  Future<void> checkMultiplePermissions(List<AppPermission> permissions) async {
+    PermissionStatus combinedStatus = PermissionStatus.granted;
+
+    for (final permission in permissions) {
+      final result = await checkPermissionUsecase(permission);
+      result.fold(
+        (error) => null,
+        (status) {
+          if (status.isPermanentlyDenied) {
+            combinedStatus = PermissionStatus.permanentlyDenied;
+          } else if (!status.isGranted &&
+              combinedStatus != PermissionStatus.permanentlyDenied) {
+            combinedStatus = PermissionStatus.denied;
+          }
+        },
+      );
+
+      if (combinedStatus.isPermanentlyDenied) break;
+    }
+
+    _emitStatus(combinedStatus);
+  }
+
   // Helper method to avoid duplicating the if/else logic
   void _emitStatus(PermissionStatus status) {
     if (status.isGranted) {

@@ -31,6 +31,7 @@ abstract class SettingsState with _$SettingsState {
     @Default(true) bool enableMaterialYou,
     @Default(true) bool automaticallyPickAccentColor,
     @Default('en') String language,
+    @Default(true) bool showDailyScheduleOnFeed,
   }) = _SettingsState;
 
   factory SettingsState.fromJson(Map<String, dynamic> json) =>

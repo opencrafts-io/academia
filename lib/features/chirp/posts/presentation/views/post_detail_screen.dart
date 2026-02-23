@@ -1,4 +1,4 @@
-import 'package:academia/core/clippers/clippers.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/injection_container.dart';
@@ -192,12 +192,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 ),
                               ],
                             ),
-                            Text(
-                              _replyingTo?.content ?? '',
+                            LinkifiedText(
+                              text: _replyingTo?.content ?? '',
                               style: Theme.of(context).textTheme.bodySmall,
                               textAlign: TextAlign.start,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                              selectable: false,
                             ),
                           ],
                         ),
@@ -208,12 +209,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
               // Input row
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => isAddingComment ? null : _sendReply(),
+                      minLines: 1,
+                      maxLines: 5,
                       enabled: !isAddingComment,
                       decoration: InputDecoration(
                         hintText: _replyingTo != null
@@ -236,15 +238,18 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: isAddingComment ? null : _sendReply,
-                    icon: isAddingComment
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: SpinningScallopIndicator(),
-                          )
-                        : const Icon(Icons.send),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: IconButton(
+                      onPressed: isAddingComment ? null : _sendReply,
+                      icon: isAddingComment
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: SpinningScallopIndicator(),
+                            )
+                          : const Icon(Icons.send),
+                    ),
                   ),
                 ],
               ),

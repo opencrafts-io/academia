@@ -55,6 +55,9 @@ class _LeaderboardHomepageState extends State<LeaderboardHomepage>
       },
       child: CustomScrollView(
         slivers: [
+          SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          ),
           SliverPinnedHeader(
             child: Card(
               margin: EdgeInsets.zero,

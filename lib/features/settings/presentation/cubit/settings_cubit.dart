@@ -24,6 +24,11 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       automaticallyPickAccentColor: !state.automaticallyPickAccentColor,
     ),
   );
+  void toggleShowDailyScheduleOnFeed() => emit(
+    state.copyWith(
+      showDailyScheduleOnFeed: !state.showDailyScheduleOnFeed,
+    ),
+  );
 
   @override
   SettingsState? fromJson(Map<String, dynamic> json) =>

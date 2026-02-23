@@ -97,6 +97,19 @@ class SettingsPage extends StatelessWidget {
                                   .toggleEnableExtraDarkMode();
                             },
                           ),
+                          SizedBox(height: 18,),
+                          _SectionHeader(title: "Courses"),
+                          _ToggleCard(
+                            title: "Daily schedule at glance",
+                            subTitle:
+                            "Pin a smart shortcut for today’s courses to the top of your feed.",
+                            value: state.showDailyScheduleOnFeed,
+                            onChanged: (value) {
+                              context
+                                  .read<SettingsCubit>()
+                                  .toggleShowDailyScheduleOnFeed();
+                            },
+                          ),
                           SizedBox(height: 24),
                         ],
                       );
@@ -297,6 +310,7 @@ class _ToggleCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Expanded(child:
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -307,9 +321,10 @@ class _ToggleCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
-            ),
+            ),),
             Switch(value: value, onChanged: onChanged),
           ],
         ),

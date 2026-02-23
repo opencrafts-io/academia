@@ -51,12 +51,24 @@ void backgroundCallbackDispatcher() {
 }
 
 Future<void> registerDefaultBackgroundTasks() async {
+  // Calculate delay to next 5 AM
+  final now = DateTime.now();
+  var next5Am = DateTime(now.year, now.month, now.day, 5);
+
+  if (now.isAfter(next5Am)) {
+    next5Am = next5Am.add(const Duration(days: 1));
+  }
+
+  final initialDelay = next5Am.difference(now);
+
+  // Run the course alert task once every 24 hours at 5 AM
+  // It schedules precise notifications for the day
   await Workmanager().registerPeriodicTask(
     'io.opencrafts.academia.course.alert',
     'io.opencrafts.academia.course.alert',
-    initialDelay: const Duration(seconds: 0),
+    initialDelay: initialDelay,
     backoffPolicy: BackoffPolicy.linear,
-    frequency: const Duration(minutes: 15),
+    frequency: const Duration(hours: 24),
     existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
     constraints: Constraints(
       requiresBatteryNotLow: false,

@@ -26,6 +26,7 @@ class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.small(
+      heroTag: action.hashCode,
       backgroundColor: action.backgroundColor,
       onPressed: onPressed,
       tooltip: action.tooltip,
@@ -114,6 +115,7 @@ class _ExpandingFabState extends State<ExpandingFab>
 
         // Main FAB (Must be the LAST child)
         FloatingActionButton(
+          heroTag: widget.hashCode,
           backgroundColor: widget.mainButtonColor,
           onPressed: _toggle,
           child: AnimatedRotation(

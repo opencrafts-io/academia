@@ -173,11 +173,21 @@ class TimetableEntryCard extends StatelessWidget {
     };
 
     final days = <String>[];
-    for (final entry in dayMap.entries) {
-      if (rrule.contains(entry.key)) {
-        days.add(entry.value);
+    
+    // Extract the BYDAY part of the RRULE specifically to avoid false positives
+    // like matching 'MO' or 'TH' inside 'MONTHLY' or 'WE' inside 'WEEKLY'.
+    final byDayMatch = RegExp(r'BYDAY=([^;]+)').firstMatch(rrule);
+    
+    if (byDayMatch != null) {
+      final byDayValue = byDayMatch.group(1)!;
+      // The day order in dayMap ensures we maintain Mon-Sun order in the result
+      for (final entry in dayMap.entries) {
+        if (byDayValue.contains(entry.key)) {
+          days.add(entry.value);
+        }
       }
     }
+
     return days;
   }
 
