@@ -139,7 +139,7 @@ class _TimetableEntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Wrap(
               children: [
                 // Highlight the frequency with a Primary Container style
                 Container(
@@ -170,7 +170,8 @@ class _TimetableEntryCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Spacer(),
+
+                SizedBox(width: 12),
                 // Displaying Location in the top right for balance
                 _MiniTag(
                   icon: Icons.location_on_rounded,

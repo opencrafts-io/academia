@@ -1,102 +1,117 @@
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android">
-<application android:label="Academia" 
-  android:usesCleartextTraffic="true"
-  android:name="${applicationName}"
-  android:icon="@mipmap/launcher_icon">
-		<activity android:name=".MainActivity"
-        android:exported="true"
-        android:launchMode="singleTop"
-        android:enableOnBackInvokedCallback="true"
-        android:theme="@style/LaunchTheme"
-        android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-        android:hardwareAccelerated="true"
-        android:windowSoftInputMode="adjustResize"
-      >
-			<!-- Specifies an Android theme to apply to this Activity as soon as
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name="${applicationName}"
+        android:icon="@mipmap/launcher_icon"
+        android:label="Academia"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:enableOnBackInvokedCallback="true"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
-			<meta-data
-        android:name="io.flutter.embedding.android.NormalTheme"
-        android:resource="@style/NormalTheme"/>
-      <meta-data
-        android:name="flutter_deeplinking_enabled"
-          android:value="true" />
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
 
-      <!-- Launcher -->
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
+            <!-- Launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-      <!-- Deep linking: For a detailed guide checkout:
-      https://codewithandrea.com/articles/flutter-deep-links/ -->
-      <intent-filter android:autoVerify="true">
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="http" android:host="academia.opencrafts.io" />
-          <data android:scheme="https" />
-      </intent-filter>
-    </activity>
+            <!-- Deep linking: For a detailed guide checkout:
+            https://codewithandrea.com/articles/flutter-deep-links/ -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="academia.opencrafts.io"
+                    android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
 
 
-    <!-- OAuth callback only -->
-    <activity
-      android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
-      android:exported="true"
-      >
-      <intent-filter android:label="flutter_web_auth_2">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="academia"/>
-      </intent-filter>
-    </activity>
-		<!-- Don't delete the meta-data below.
+        <!-- OAuth callback only -->
+        <activity
+            android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
+            android:exported="true">
+            <intent-filter android:label="flutter_web_auth_2">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="academia" />
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
-		<meta-data android:name="flutterEmbedding" android:value="2"/>
-		
-		<!-- OneSignal Configuration -->
-		<meta-data android:name="onesignal_app_id" android:value="88ca0bb7-c0d7-4e36-b9e6-ea0e29213593"/>
-		<meta-data android:name="onesignal_google_project_number" android:value="YOUR_GOOGLE_PROJECT_NUMBER"/>
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!-- OneSignal Configuration -->
+        <meta-data
+            android:name="onesignal_app_id"
+            android:value="88ca0bb7-c0d7-4e36-b9e6-ea0e29213593" />
+        <meta-data
+            android:name="onesignal_google_project_number"
+            android:value="YOUR_GOOGLE_PROJECT_NUMBER" />
 
 
-    <!-- google ads -->
-    <meta-data
-        android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="ca-app-pub-4838989029590048~7653410728"/>
+        <!-- google ads -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4838989029590048~7653410728" />
 
-    <provider
-    android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
-    android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-    <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/provider_paths" />
-    </provider>
+        <provider
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
+            android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
-    <meta-data android:name="com.posthog.posthog.AUTO_INIT" android:value="false" />
-	</application>
-	<!-- Required to query activities that can process text, see:
+        <meta-data
+            android:name="com.posthog.posthog.AUTO_INIT"
+            android:value="false" />
+    </application>
+    <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
-	<queries>
-		<intent>
-			<action android:name="android.intent.action.PROCESS_TEXT"/>
-			<data android:mimeType="text/plain"/>
-		</intent>
-	</queries>
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 
-  <!-- IMPORTANT FOR PAYMENTS -->
-  <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- IMPORTANT FOR PAYMENTS -->
+    <uses-permission android:name="com.android.vending.BILLING" />
 </manifest>

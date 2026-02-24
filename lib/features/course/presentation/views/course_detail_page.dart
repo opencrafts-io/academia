@@ -45,7 +45,26 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                 return _buildErrorView('Course not found', colorScheme);
               }
               final course = courses.first;
-              return _buildCourseContent(course, colorScheme, theme);
+
+              // Wrap the content in a Theme widget that uses the course color as the seed
+              return Theme(
+                data: theme.copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: course.color ?? const Color(0xFF1E1E2E),
+                    brightness: theme.brightness,
+                  ),
+                ),
+                child: Builder(
+                  builder: (context) {
+                    final localTheme = Theme.of(context);
+                    return _buildCourseContent(
+                      course,
+                      localTheme.colorScheme,
+                      localTheme,
+                    );
+                  },
+                ),
+              );
             },
             error: (message) => _buildErrorView(message, colorScheme),
           );
@@ -59,7 +78,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
       slivers: [
         SliverAppBar.large(
           title: const Text('Loading...'),
-          backgroundColor: colorScheme.surface,
         ),
         SliverFillRemaining(
           child: Center(
@@ -75,7 +93,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
       slivers: [
         SliverAppBar.large(
           title: const Text('Error'),
-          backgroundColor: colorScheme.errorContainer,
         ),
         SliverFillRemaining(
           child: Center(
@@ -108,46 +125,33 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     ColorScheme colorScheme,
     ThemeData theme,
   ) {
-    final courseColor = course.color ?? const Color(0xFF1E1E2E);
-
     return CustomScrollView(
       slivers: [
-        // App Bar with course color
+        // App Bar following M3 guidelines (no background color, surface based)
         SliverAppBar.large(
           expandedHeight: 200,
           pinned: true,
-          backgroundColor: courseColor,
-          foregroundColor: _getContrastColor(courseColor),
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              course.courseCode,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            background: Container(
-              decoration: BoxDecoration(color: courseColor),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const SizedBox(height: 48),
-                      Text(
-                        course.courseName,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: _getContrastColor(
-                            courseColor,
-                          ).withOpacity(0.9),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                course.courseCode,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+              Text(
+                course.courseName,
+                style: theme.textTheme.displaySmall?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
           actions: [
             IconButton(
@@ -160,8 +164,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               tooltip: _isEditing ? 'Done' : 'Edit',
             ),
             IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () => _showOptionsMenu(context, course),
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => _confirmDelete(context, course),
+              tooltip: 'Delete',
             ),
           ],
         ),
@@ -274,40 +279,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     );
   }
 
-  Color _getContrastColor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
-  }
-
-  void _showOptionsMenu(BuildContext context, CourseEntity course) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: const Text('Delete Course'),
-              onTap: () {
-                Navigator.pop(context);
-                _confirmDelete(context, course);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Share'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implement share
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _confirmDelete(BuildContext context, CourseEntity course) {
     showDialog(
       context: context,
@@ -330,6 +301,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             },
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             child: const Text('Delete'),
           ),
@@ -388,6 +360,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             },
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             child: const Text('Delete'),
           ),
@@ -441,7 +414,7 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
     if (widget.course != oldWidget.course) {
       _codeController.text = widget.course.courseCode;
       _nameController.text = widget.course.courseName;
-      _instructorController.text = widget.course.instructor;
+      _instructorController.text = widget.course.instructor ?? '';
       _selectedColor = widget.course.color ?? const Color(0xFF1E1E2E);
     }
   }
@@ -467,283 +440,114 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Course Code Field
-          _buildInfoCard(
-            context,
-            icon: Icons.tag,
-            label: 'Course Code',
-            child: widget.isEditing
-                ? TextField(
-                    controller: _codeController,
-                    decoration: const InputDecoration(
-                      hintText: 'e.g., CS101',
-                      border: OutlineInputBorder(),
-                    ),
-                    style: theme.textTheme.titleMedium,
-                  )
-                : Text(
-                    widget.course.courseCode,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Course Name Field
-          _buildInfoCard(
-            context,
-            icon: Icons.school,
-            label: 'Course Name',
-            child: widget.isEditing
-                ? TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(
-                      hintText: 'e.g., Introduction to Computer Science',
-                      border: OutlineInputBorder(),
-                    ),
-                    style: theme.textTheme.bodyLarge,
-                    maxLines: 2,
-                  )
-                : Text(
-                    widget.course.courseName,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Instructor Field
-          _buildInfoCard(
-            context,
-            icon: Icons.person_outline,
-            label: 'Instructor',
-            child: widget.isEditing
-                ? TextField(
-                    controller: _instructorController,
-                    decoration: const InputDecoration(
-                      hintText: 'e.g., Dr. Jane Smith',
-                      border: OutlineInputBorder(),
-                    ),
-                    style: theme.textTheme.bodyLarge,
-                  )
-                : Text(
-                    widget.course.instructor,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Color Picker
-          if (widget.isEditing)
-            _buildInfoCard(
-              context,
-              icon: Icons.palette_outlined,
-              label: 'Course Color',
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  InkWell(
-                    onTap: () => _showColorPicker(context),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: _selectedColor,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: colorScheme.outline.withOpacity(0.5),
-                          width: 1,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Tap to change color',
-                          style: TextStyle(
-                            color: _getContrastColor(_selectedColor),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          if (widget.isEditing) ...[
+            TextField(
+              controller: _codeController,
+              decoration: const InputDecoration(
+                labelText: 'Course Code',
+                border: OutlineInputBorder(),
               ),
             ),
-
-          // Sync Status
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Icon(
-                widget.course.isSynced
-                    ? Icons.cloud_done_outlined
-                    : Icons.cloud_off_outlined,
-                size: 16,
-                color: colorScheme.onSurfaceVariant,
+            const SizedBox(height: 16),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Course Name',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(width: 8),
-              Text(
-                widget.course.isSynced ? 'Synced' : 'Not synced',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _instructorController,
+              decoration: const InputDecoration(
+                labelText: 'Instructor',
+                border: OutlineInputBorder(),
               ),
-              if (widget.course.createdAt != null) ...[
-                const SizedBox(width: 16),
-                Icon(
-                  Icons.access_time,
-                  size: 16,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Created ${_formatDate(widget.course.createdAt!)}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Course Color'),
+            const SizedBox(height: 8),
+            ColorPicker(
+              color: _selectedColor,
+              onColorChanged: (color) {
+                setState(() {
+                  _selectedColor = color;
+                });
+              },
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              spacing: 10,
+              runSpacing: 10,
+              wheelDiameter: 165,
+              heading: Text(
+                'Select color',
+                style: theme.textTheme.titleSmall,
+              ),
+              subheading: Text(
+                'Select color shade',
+                style: theme.textTheme.titleSmall,
+              ),
+            ),
+          ] else ...[
+            _buildInfoRow(
+              context,
+              Icons.person_outline,
+              'Instructor',
+              widget.course.instructor ?? 'Not assigned',
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildInfoCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Widget child,
-  }) {
+  Widget _buildInfoRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+  ) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Card(
-      elevation: 0,
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(icon, size: 20, color: colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  label,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
-            const SizedBox(height: 12),
-            child,
+            Text(
+              value,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
-      ),
+      ],
     );
-  }
-
-  void _showColorPicker(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pick a Color'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            color: _selectedColor,
-            onColorChanged: (color) {
-              setState(() {
-                _selectedColor = color;
-              });
-            },
-            width: 44,
-            height: 44,
-            borderRadius: 8,
-            spacing: 8,
-            runSpacing: 8,
-            wheelDiameter: 200,
-            heading: Text(
-              'Select color',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            subheading: Text(
-              'Select color shade',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            wheelSubheading: Text(
-              'Selected color and its shades',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            showMaterialName: true,
-            showColorName: true,
-            showColorCode: true,
-            copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-              longPressMenu: true,
-            ),
-            materialNameTextStyle: Theme.of(context).textTheme.bodySmall,
-            colorNameTextStyle: Theme.of(context).textTheme.bodySmall,
-            colorCodeTextStyle: Theme.of(context).textTheme.bodySmall,
-            pickersEnabled: const <ColorPickerType, bool>{
-              ColorPickerType.both: false,
-              ColorPickerType.primary: true,
-              ColorPickerType.accent: false,
-              ColorPickerType.bw: false,
-              ColorPickerType.custom: false,
-              ColorPickerType.wheel: true,
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Done'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getContrastColor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
-  }
-
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inDays == 0) {
-      return 'today';
-    } else if (difference.inDays == 1) {
-      return 'yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inDays < 30) {
-      final weeks = (difference.inDays / 7).floor();
-      return '$weeks ${weeks == 1 ? 'week' : 'weeks'} ago';
-    } else {
-      final months = (difference.inDays / 30).floor();
-      return '$months ${months == 1 ? 'month' : 'months'} ago';
-    }
   }
 }

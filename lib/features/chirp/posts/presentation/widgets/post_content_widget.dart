@@ -144,13 +144,13 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            Text(
-                              widget.post.title,
+                            LinkifiedText(
+                              text: widget.post.title,
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
-                            Text(widget.post.content),
+                            LinkifiedText(text: widget.post.content),
                             if (widget.post.attachments.isNotEmpty) ...[
                               const SizedBox(height: 12),
                               Wrap(
