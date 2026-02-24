@@ -107,40 +107,52 @@ class ShereheUtils {
   }) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text("Remove Scanner"),
-        content: Text(
-          "Are you sure you want to remove $scannerName as a scanner?\n\n"
-          "They will no longer be able to scan tickets for this event.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("Cancel"),
-          ),
-          BlocBuilder<ScannerActionsBloc, ScannerActionsState>(
-            builder: (context, state) {
-              return state is DeleteScannerLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(),
-                    )
-                  : FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                      onPressed: () {
-                        context.read<ScannerActionsBloc>().add(
-                          DeleteScanner(scannerId: scannerId),
-                        );
-                      },
-                      child: const Text("Remove"),
-                    );
+      builder: (dialogContext) =>
+          BlocListener<ScannerActionsBloc, ScannerActionsState>(
+            listener: (context, state) {
+              if (state is DeleteScannerSuccess) {
+                Navigator.pop(dialogContext); // closes the dialog
+              } else if (state is DeleteScannerError) {
+                Navigator.pop(dialogContext); // closes the dialog
+              }
             },
+            child: AlertDialog(
+              title: const Text("Remove Scanner"),
+              content: Text(
+                "Are you sure you want to remove $scannerName as a scanner?\n\n"
+                "They will no longer be able to scan tickets for this event.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text("Cancel"),
+                ),
+                BlocBuilder<ScannerActionsBloc, ScannerActionsState>(
+                  builder: (context, state) {
+                    return state is DeleteScannerLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : FilledButton(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.error,
+                            ),
+                            onPressed: () {
+                              context.read<ScannerActionsBloc>().add(
+                                DeleteScanner(scannerId: scannerId),
+                              );
+                            },
+                            child: const Text("Remove"),
+                          );
+                  },
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
     );
   }
 }

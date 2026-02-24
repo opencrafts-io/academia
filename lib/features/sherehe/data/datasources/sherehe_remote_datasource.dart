@@ -940,7 +940,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         "/$servicePrefix/eventscanner/$scannerId",
       );
 
-      if (response.statusCode == 200 || response.statusCode == 204) {
+      if (response.statusCode == 200) {
         return right(response.data['message']);
       } else {
         return left(

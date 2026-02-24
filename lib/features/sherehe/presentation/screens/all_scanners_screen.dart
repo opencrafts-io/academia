@@ -54,10 +54,7 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
       body: BlocListener<ScannerActionsBloc, ScannerActionsState>(
         listener: (context, state) {
           if (state is DeleteScannerSuccess) {
-            Navigator.pop(context); // close dialog
             Navigator.pop(context); // close screen
-          } else if (state is DeleteScannerError) {
-            Navigator.pop(context); // close dialog
           }
         },
         child: BlocBuilder<AllScannersBloc, AllScannersState>(
