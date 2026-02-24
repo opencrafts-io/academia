@@ -417,7 +417,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                   child: AttendeesList(
                     eventId: state.event.id,
                     organizerId: state.event.organizerId,
-                    userId: userId,
                   ),
                 ),
               ],
