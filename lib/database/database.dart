@@ -121,7 +121,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 24;
+  int get schemaVersion => 25;
 
   @override
   MigrationStrategy get migration {
@@ -163,17 +163,11 @@ class AppDataBase extends _$AppDataBase {
             case 23:
               await migrate23To24(m);
               break;
+            case 24:
+              await migrate24To25(m);
+              break;
           }
         }
-        // await m.createAll();
-        // if (from < 15) {
-        //   await m.createTable(examTimetable);
-        // } else if (from < 16) {
-        //   await m.addColumn(userProfile, userProfile.deletedAt);
-        // } else if (from < 17) {
-        //   await m.createTable(blockTable);
-        //   await m.createTable(reportTable);
-        // }
       },
       beforeOpen: (details) async {
         _logger.i(
