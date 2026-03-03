@@ -52,9 +52,7 @@ abstract class ShereheRepository {
     required String? phoneNumber,
   });
 
-  Future<Either<Failure, String>> confirmPayment({
-    required String transId,
-  });
+  Future<Either<Failure, String>> confirmPayment({required String transId});
 
   Future<Either<Failure, PaginatedResult<Attendee>>>
   getUserPurchasedTicketsForEvent({
@@ -75,7 +73,45 @@ abstract class ShereheRepository {
     required String attendeeId,
   });
 
-  Future<Either<Failure, List<Event>>> searchEvents({
+  Future<Either<Failure, List<Event>>> searchEvents({required String query});
+
+  Future<Either<Failure, DashboardStats>> getAttendeesAndScanners({
+    required String eventId,
+  });
+
+  Future<Either<Failure, List<TicketStats>>> getDashboardTicketStats({
+    required String eventId,
+  });
+
+  Future<Either<Failure, Ticket>> updateTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  });
+
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAllAttendees({
+    required String eventId,
+    required int page,
+    required int limit,
+  });
+
+  Future<Either<Failure, Scanner>> addEventScanner({
+    required String eventId,
+    required String userId,
+  });
+
+  Future<Either<Failure, PaginatedResult<Scanner>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  });
+
+  Future<Either<Failure, String>> deleteEventScanner({required String scannerId});
+
+  Future<Either<Failure, String>> getEventScannerByUserId({
+    required String eventId,
+  });
+
+  Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   });
 }

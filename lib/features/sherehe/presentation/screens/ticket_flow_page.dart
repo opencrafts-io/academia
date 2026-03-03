@@ -2,15 +2,19 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TicketFlowPage extends StatefulWidget {
   final String eventId;
+  final String userId;
 
-  const TicketFlowPage({super.key, required this.eventId});
+  const TicketFlowPage({
+    super.key,
+    required this.eventId,
+    required this.userId,
+  });
 
   @override
   State<TicketFlowPage> createState() => _TicketFlowPageState();
@@ -28,7 +32,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
   void initState() {
     super.initState();
     context.read<UserTicketSelectionBloc>().add(
-      FetchTicketsByEventId(eventId: widget.eventId),
+      FetchTicketsByEventId(eventId: widget.eventId, accountId: widget.userId),
     );
   }
 
@@ -164,9 +168,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           if (state is PurchaseError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "There was an error sending an Mpesa Prompt, please click Try Again to resend",
-                ),
+                content: Text(state.message),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -175,9 +177,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           if (state is ConfirmPaymentError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "There was an error confirming payment, please try again",
-                ),
+                content: Text(state.message),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -304,7 +304,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
               onTicketSelected: (ticket) {
                 setState(() {
                   _selectedTicket = ticket;
-                  _quantity = ticket == null ? 1 : _quantity;
+                  _quantity = 1;
                 });
               },
               onQuantityChanged: (qty) {

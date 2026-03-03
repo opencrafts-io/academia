@@ -35,6 +35,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     context.read<ShereheDetailsBloc>().add(
       LoadShereheDetails(eventId: widget.eventId, initialEvent: widget.event),
     );
+
+    context.read<GetEventScannerByUserIdBloc>().add(
+      GetEventScannerByUserId(eventId: widget.eventId),
+    );
   }
 
   double _getExpandedHeight(BuildContext context) {
@@ -45,6 +49,11 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     } else {
       return 500.0;
     }
+  }
+
+  String _normalizeDescription(String text) {
+    // Replace 3+ line breaks with just 2
+    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
   }
 
   @override
@@ -83,75 +92,109 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     icon: const Icon(Icons.arrow_back),
                   ),
                   actions: [
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert),
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'share':
-                            final url =
-                                'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: state.event.id).location}';
+                    BlocBuilder<
+                      GetEventScannerByUserIdBloc,
+                      GetEventScannerByUserIdState
+                    >(
+                      builder: (context, scannerState) {
+                        final isOrganizer =
+                            userId != null && userId == state.event.organizerId;
 
-                            Share.share(
-                              'You have been invited from Academia to the following event:\n\n '
-                              '🎉 ${state.event.eventName}\n\n'
-                              '📍 Where: ${state.event.eventLocation}\n'
-                              '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
-                              'It’s going to be an amazing experience — don’t miss out!\n\n'
-                              '🎟 Get your ticket here:\n'
-                              '$url',
-                            );
-                            break;
-                          case 'scan':
-                            if (userId != null &&
-                                userId == state.event.organizerId) {
-                              QrCodeScannerRoute(
-                                eventId: state.event.id,
-                              ).push(context);
+                        final isScanner =
+                            scannerState is GetEventScannerByUserIdSuccess;
+
+                        final canScan = isOrganizer || isScanner;
+
+                        return PopupMenuButton<String>(
+                          icon: const Icon(Icons.more_vert),
+                          onSelected: (value) {
+                            switch (value) {
+                              case 'share':
+                                final url =
+                                    'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: state.event.id).location}';
+
+                                Share.share(
+                                  'You have been invited from Academia to the following event:\n\n '
+                                  '🎉 ${state.event.eventName}\n\n'
+                                  '📍 Where: ${state.event.eventLocation}\n'
+                                  '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
+                                  '🎟 Get your ticket here:\n$url',
+                                );
+                                break;
+
+                              case 'scan':
+                                if (canScan) {
+                                  QrCodeScannerRoute(
+                                    eventId: state.event.id,
+                                  ).push(context);
+                                }
+                                break;
+
+                              case 'dashboard':
+                                if (isOrganizer) {
+                                  OrganizerDashboardRoute(
+                                    eventId: state.event.id,
+                                  ).push(context);
+                                }
+                                break;
+
+                              case 'tickets':
+                                context.push(
+                                  EventTicketsRoute(
+                                    eventId: state.event.id,
+                                  ).location,
+                                  extra: state.event,
+                                );
+                                break;
                             }
+                          },
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'share',
+                              child: ListTile(
+                                leading: Icon(Icons.share),
+                                title: Text('Share Event'),
+                                contentPadding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ),
 
-                            break;
-                          case 'tickets':
-                            context.push(
-                              EventTicketsRoute(
-                                eventId: state.event.id,
-                              ).location,
-                              extra: state.event,
-                            );
-                            break;
-                        }
+                            if (canScan)
+                              const PopupMenuItem(
+                                value: 'scan',
+                                child: ListTile(
+                                  leading: Icon(Icons.qr_code_scanner),
+                                  title: Text('Scan my Event'),
+                                  contentPadding: EdgeInsets.zero,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              ),
+
+                            if (isOrganizer)
+                              const PopupMenuItem(
+                                value: 'dashboard',
+                                child: ListTile(
+                                  leading: Icon(Icons.dashboard),
+                                  title: Text('Dashboard'),
+                                  contentPadding: EdgeInsets.zero,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              ),
+
+                            const PopupMenuItem(
+                              value: 'tickets',
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.confirmation_number_outlined,
+                                ),
+                                title: Text('My Tickets'),
+                                contentPadding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ),
+                          ],
+                        );
                       },
-                      itemBuilder: (BuildContext context) => [
-                        PopupMenuItem(
-                          value: 'share',
-                          child: ListTile(
-                            leading: const Icon(Icons.share),
-                            title: const Text('Share Event'),
-                            contentPadding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ),
-                        if (userId != null && userId == state.event.organizerId)
-                          PopupMenuItem(
-                            value: 'scan',
-                            child: ListTile(
-                              leading: const Icon(Icons.qr_code_scanner),
-                              title: const Text('Scan my Event'),
-                              contentPadding: EdgeInsets.zero,
-                              visualDensity: VisualDensity.compact,
-                            ),
-                          ),
-                        PopupMenuItem(
-                          value: 'tickets',
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.confirmation_number_outlined,
-                            ),
-                            title: const Text('My Tickets'),
-                            contentPadding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
@@ -288,7 +331,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                               ],
                             ),
                             Text(
-                              state.event.eventDescription,
+                              _normalizeDescription(
+                                state.event.eventDescription,
+                              ),
                               style:
                                   ResponsiveBreakPoints.isTablet(context) ||
                                       ResponsiveBreakPoints.isDesktop(context)
@@ -372,7 +417,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                   child: AttendeesList(
                     eventId: state.event.id,
                     organizerId: state.event.organizerId,
-                    userId: userId,
                   ),
                 ),
               ],
@@ -385,7 +429,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                   height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
                   child: FilledButton(
                     onPressed: () {
-                      TicketFlowRoute(eventId: state.event.id).push(context);
+                      TicketFlowRoute(
+                        eventId: state.event.id,
+                        userId: userId ?? '',
+                      ).push(context);
                     },
                     child: const Text("I'm Going"),
                   ),

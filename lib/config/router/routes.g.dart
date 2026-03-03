@@ -38,21 +38,21 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
   factory: $LayoutShellRouteExtension._fromState,
   branches: [
     StatefulShellBranchData.$branch(
-      routes: [GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState)],
+      routes: [GoRouteData.$route(path: '/', factory: $HomeRoute._fromState)],
     ),
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
           path: '/calendar',
-          factory: _$CalendarRoute._fromState,
+          factory: $CalendarRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'create',
-              factory: _$CreateAgendaEventRoute._fromState,
+              factory: $CreateAgendaEventRoute._fromState,
             ),
             GoRouteData.$route(
               path: 'item/:id',
-              factory: _$AgendaItemViewRoute._fromState,
+              factory: $AgendaItemViewRoute._fromState,
             ),
           ],
         ),
@@ -62,7 +62,7 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/essentials',
-          factory: _$EssentialsRoute._fromState,
+          factory: $EssentialsRoute._fromState,
         ),
       ],
     ),
@@ -74,7 +74,7 @@ extension $LayoutShellRouteExtension on LayoutShellRoute {
       const LayoutShellRoute();
 }
 
-mixin _$HomeRoute on GoRouteData {
+mixin $HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => HomeRoute();
 
   @override
@@ -94,7 +94,7 @@ mixin _$HomeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CalendarRoute on GoRouteData {
+mixin $CalendarRoute on GoRouteData {
   static CalendarRoute _fromState(GoRouterState state) => CalendarRoute();
 
   @override
@@ -114,7 +114,7 @@ mixin _$CalendarRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CreateAgendaEventRoute on GoRouteData {
+mixin $CreateAgendaEventRoute on GoRouteData {
   static CreateAgendaEventRoute _fromState(GoRouterState state) =>
       CreateAgendaEventRoute();
 
@@ -135,7 +135,7 @@ mixin _$CreateAgendaEventRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AgendaItemViewRoute on GoRouteData {
+mixin $AgendaItemViewRoute on GoRouteData {
   static AgendaItemViewRoute _fromState(GoRouterState state) =>
       AgendaItemViewRoute(id: state.pathParameters['id']);
 
@@ -160,7 +160,7 @@ mixin _$AgendaItemViewRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EssentialsRoute on GoRouteData {
+mixin $EssentialsRoute on GoRouteData {
   static EssentialsRoute _fromState(GoRouterState state) => EssentialsRoute();
 
   @override
@@ -181,9 +181,9 @@ mixin _$EssentialsRoute on GoRouteData {
 }
 
 RouteBase get $feedRoute =>
-    GoRouteData.$route(path: '/feed', factory: _$FeedRoute._fromState);
+    GoRouteData.$route(path: '/feed', factory: $FeedRoute._fromState);
 
-mixin _$FeedRoute on GoRouteData {
+mixin $FeedRoute on GoRouteData {
   static FeedRoute _fromState(GoRouterState state) => FeedRoute();
 
   @override
@@ -205,10 +205,10 @@ mixin _$FeedRoute on GoRouteData {
 
 RouteBase get $postDetailRoute => GoRouteData.$route(
   path: '/post/:postId',
-  factory: _$PostDetailRoute._fromState,
+  factory: $PostDetailRoute._fromState,
 );
 
-mixin _$PostDetailRoute on GoRouteData {
+mixin $PostDetailRoute on GoRouteData {
   static PostDetailRoute _fromState(GoRouterState state) =>
       PostDetailRoute(postId: int.parse(state.pathParameters['postId']!));
 
@@ -234,9 +234,9 @@ mixin _$PostDetailRoute on GoRouteData {
 }
 
 RouteBase get $addPostRoute =>
-    GoRouteData.$route(path: '/add-post', factory: _$AddPostRoute._fromState);
+    GoRouteData.$route(path: '/add-post', factory: $AddPostRoute._fromState);
 
-mixin _$AddPostRoute on GoRouteData {
+mixin $AddPostRoute on GoRouteData {
   static AddPostRoute _fromState(GoRouterState state) => const AddPostRoute();
 
   @override
@@ -258,10 +258,10 @@ mixin _$AddPostRoute on GoRouteData {
 
 RouteBase get $blockedItemsRoute => GoRouteData.$route(
   path: '/blocked-items',
-  factory: _$BlockedItemsRoute._fromState,
+  factory: $BlockedItemsRoute._fromState,
 );
 
-mixin _$BlockedItemsRoute on GoRouteData {
+mixin $BlockedItemsRoute on GoRouteData {
   static BlockedItemsRoute _fromState(GoRouterState state) =>
       BlockedItemsRoute();
 
@@ -283,9 +283,9 @@ mixin _$BlockedItemsRoute on GoRouteData {
 }
 
 RouteBase get $authRoute =>
-    GoRouteData.$route(path: '/auth', factory: _$AuthRoute._fromState);
+    GoRouteData.$route(path: '/auth', factory: $AuthRoute._fromState);
 
-mixin _$AuthRoute on GoRouteData {
+mixin $AuthRoute on GoRouteData {
   static AuthRoute _fromState(GoRouterState state) => AuthRoute();
 
   @override
@@ -306,9 +306,9 @@ mixin _$AuthRoute on GoRouteData {
 }
 
 RouteBase get $profileRoute =>
-    GoRouteData.$route(path: '/profile', factory: _$ProfileRoute._fromState);
+    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState);
 
-mixin _$ProfileRoute on GoRouteData {
+mixin $ProfileRoute on GoRouteData {
   static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
 
   @override
@@ -330,10 +330,10 @@ mixin _$ProfileRoute on GoRouteData {
 
 RouteBase get $completeProfileRoute => GoRouteData.$route(
   path: '/complete-profile',
-  factory: _$CompleteProfileRoute._fromState,
+  factory: $CompleteProfileRoute._fromState,
 );
 
-mixin _$CompleteProfileRoute on GoRouteData {
+mixin $CompleteProfileRoute on GoRouteData {
   static CompleteProfileRoute _fromState(GoRouterState state) =>
       CompleteProfileRoute();
 
@@ -356,31 +356,49 @@ mixin _$CompleteProfileRoute on GoRouteData {
 
 RouteBase get $shereheRoute => GoRouteData.$route(
   path: '/sherehe',
-  factory: _$ShereheRoute._fromState,
+  factory: $ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'get-event/:eventId',
-      factory: _$ShereheDetailsRoute._fromState,
+      factory: $ShereheDetailsRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'ticket-flow',
-          factory: _$TicketFlowRoute._fromState,
+          factory: $TicketFlowRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'qr-code-scanner',
-          factory: _$QrCodeScannerRoute._fromState,
+          factory: $QrCodeScannerRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'event-tickets',
-          factory: _$EventTicketsRoute._fromState,
+          factory: $EventTicketsRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'organizer-dashboard',
+          factory: $OrganizerDashboardRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'all-attendees',
+              factory: $AllAttendeesRoute._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'all-scanners',
+              factory: $AllScannersRoute._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'add-event-scanner',
+              factory: $AddEventScannerRoute._fromState,
+            ),
+          ],
         ),
       ],
     ),
-    GoRouteData.$route(path: 'create', factory: _$CreateEventRoute._fromState),
+    GoRouteData.$route(path: 'create', factory: $CreateEventRoute._fromState),
   ],
 );
 
-mixin _$ShereheRoute on GoRouteData {
+mixin $ShereheRoute on GoRouteData {
   static ShereheRoute _fromState(GoRouterState state) => ShereheRoute();
 
   @override
@@ -400,7 +418,7 @@ mixin _$ShereheRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$ShereheDetailsRoute on GoRouteData {
+mixin $ShereheDetailsRoute on GoRouteData {
   static ShereheDetailsRoute _fromState(GoRouterState state) =>
       ShereheDetailsRoute(eventId: state.pathParameters['eventId']!);
 
@@ -425,15 +443,18 @@ mixin _$ShereheDetailsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$TicketFlowRoute on GoRouteData {
-  static TicketFlowRoute _fromState(GoRouterState state) =>
-      TicketFlowRoute(eventId: state.pathParameters['eventId']!);
+mixin $TicketFlowRoute on GoRouteData {
+  static TicketFlowRoute _fromState(GoRouterState state) => TicketFlowRoute(
+    eventId: state.pathParameters['eventId']!,
+    userId: state.uri.queryParameters['user-id']!,
+  );
 
   TicketFlowRoute get _self => this as TicketFlowRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/ticket-flow',
+    queryParams: {'user-id': _self.userId},
   );
 
   @override
@@ -450,7 +471,7 @@ mixin _$TicketFlowRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$QrCodeScannerRoute on GoRouteData {
+mixin $QrCodeScannerRoute on GoRouteData {
   static QrCodeScannerRoute _fromState(GoRouterState state) =>
       QrCodeScannerRoute(eventId: state.pathParameters['eventId']!);
 
@@ -475,7 +496,7 @@ mixin _$QrCodeScannerRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EventTicketsRoute on GoRouteData {
+mixin $EventTicketsRoute on GoRouteData {
   static EventTicketsRoute _fromState(GoRouterState state) =>
       EventTicketsRoute(eventId: state.pathParameters['eventId']!);
 
@@ -500,7 +521,107 @@ mixin _$EventTicketsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CreateEventRoute on GoRouteData {
+mixin $OrganizerDashboardRoute on GoRouteData {
+  static OrganizerDashboardRoute _fromState(GoRouterState state) =>
+      OrganizerDashboardRoute(eventId: state.pathParameters['eventId']!);
+
+  OrganizerDashboardRoute get _self => this as OrganizerDashboardRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AllAttendeesRoute on GoRouteData {
+  static AllAttendeesRoute _fromState(GoRouterState state) =>
+      AllAttendeesRoute(eventId: state.pathParameters['eventId']!);
+
+  AllAttendeesRoute get _self => this as AllAttendeesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-attendees',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AllScannersRoute on GoRouteData {
+  static AllScannersRoute _fromState(GoRouterState state) =>
+      AllScannersRoute(eventId: state.pathParameters['eventId']!);
+
+  AllScannersRoute get _self => this as AllScannersRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AddEventScannerRoute on GoRouteData {
+  static AddEventScannerRoute _fromState(GoRouterState state) =>
+      AddEventScannerRoute(eventId: state.pathParameters['eventId']!);
+
+  AddEventScannerRoute get _self => this as AddEventScannerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/add-event-scanner',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $CreateEventRoute on GoRouteData {
   static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
 
   @override
@@ -522,10 +643,10 @@ mixin _$CreateEventRoute on GoRouteData {
 
 RouteBase get $purchasedTicketsRoute => GoRouteData.$route(
   path: '/purchased-tickets/all',
-  factory: _$PurchasedTicketsRoute._fromState,
+  factory: $PurchasedTicketsRoute._fromState,
 );
 
-mixin _$PurchasedTicketsRoute on GoRouteData {
+mixin $PurchasedTicketsRoute on GoRouteData {
   static PurchasedTicketsRoute _fromState(GoRouterState state) =>
       PurchasedTicketsRoute();
 
@@ -548,10 +669,10 @@ mixin _$PurchasedTicketsRoute on GoRouteData {
 
 RouteBase get $organizedEventsRoute => GoRouteData.$route(
   path: '/organized-events/mine',
-  factory: _$OrganizedEventsRoute._fromState,
+  factory: $OrganizedEventsRoute._fromState,
 );
 
-mixin _$OrganizedEventsRoute on GoRouteData {
+mixin $OrganizedEventsRoute on GoRouteData {
   static OrganizedEventsRoute _fromState(GoRouterState state) =>
       OrganizedEventsRoute();
 
@@ -574,10 +695,10 @@ mixin _$OrganizedEventsRoute on GoRouteData {
 
 RouteBase get $ticketReceiptRoute => GoRouteData.$route(
   path: '/ticket-receipt',
-  factory: _$TicketReceiptRoute._fromState,
+  factory: $TicketReceiptRoute._fromState,
 );
 
-mixin _$TicketReceiptRoute on GoRouteData {
+mixin $TicketReceiptRoute on GoRouteData {
   static TicketReceiptRoute _fromState(GoRouterState state) =>
       TicketReceiptRoute(
         ticketPrice: int.parse(state.uri.queryParameters['ticket-price']!),
@@ -611,10 +732,10 @@ mixin _$TicketReceiptRoute on GoRouteData {
 
 RouteBase get $qrCodeRoute => GoRouteData.$route(
   path: '/qr-code/:eventId/:attendeeId',
-  factory: _$QrCodeRoute._fromState,
+  factory: $QrCodeRoute._fromState,
 );
 
-mixin _$QrCodeRoute on GoRouteData {
+mixin $QrCodeRoute on GoRouteData {
   static QrCodeRoute _fromState(GoRouterState state) => QrCodeRoute(
     eventId: state.pathParameters['eventId']!,
     attendeeId: state.pathParameters['attendeeId']!,
@@ -648,9 +769,9 @@ mixin _$QrCodeRoute on GoRouteData {
 }
 
 RouteBase get $todosRoute =>
-    GoRouteData.$route(path: '/todos', factory: _$TodosRoute._fromState);
+    GoRouteData.$route(path: '/todos', factory: $TodosRoute._fromState);
 
-mixin _$TodosRoute on GoRouteData {
+mixin $TodosRoute on GoRouteData {
   static TodosRoute _fromState(GoRouterState state) => TodosRoute();
 
   @override
@@ -672,21 +793,21 @@ mixin _$TodosRoute on GoRouteData {
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities/:communityId',
-  factory: _$CommunitiesRoute._fromState,
+  factory: $CommunitiesRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'info', factory: _$CommunityInfoRoute._fromState),
+    GoRouteData.$route(path: 'info', factory: $CommunityInfoRoute._fromState),
     GoRouteData.$route(
       path: 'members/:role',
-      factory: _$CommunityMembersRoute._fromState,
+      factory: $CommunityMembersRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'edit',
-      factory: _$EditCommunityInfoRoute._fromState,
+      factory: $EditCommunityInfoRoute._fromState,
     ),
   ],
 );
 
-mixin _$CommunitiesRoute on GoRouteData {
+mixin $CommunitiesRoute on GoRouteData {
   static CommunitiesRoute _fromState(GoRouterState state) => CommunitiesRoute(
     communityId: int.parse(state.pathParameters['communityId']!),
   );
@@ -712,7 +833,7 @@ mixin _$CommunitiesRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CommunityInfoRoute on GoRouteData {
+mixin $CommunityInfoRoute on GoRouteData {
   static CommunityInfoRoute _fromState(GoRouterState state) =>
       CommunityInfoRoute(
         communityId: int.parse(state.pathParameters['communityId']!),
@@ -739,7 +860,7 @@ mixin _$CommunityInfoRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$CommunityMembersRoute on GoRouteData {
+mixin $CommunityMembersRoute on GoRouteData {
   static CommunityMembersRoute _fromState(GoRouterState state) =>
       CommunityMembersRoute(
         communityId: int.parse(state.pathParameters['communityId']!),
@@ -767,7 +888,7 @@ mixin _$CommunityMembersRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EditCommunityInfoRoute on GoRouteData {
+mixin $EditCommunityInfoRoute on GoRouteData {
   static EditCommunityInfoRoute _fromState(GoRouterState state) =>
       EditCommunityInfoRoute(
         communityId: int.parse(state.pathParameters['communityId']!),
@@ -796,10 +917,10 @@ mixin _$EditCommunityInfoRoute on GoRouteData {
 
 RouteBase get $createCommunitiesRoute => GoRouteData.$route(
   path: '/create-community',
-  factory: _$CreateCommunitiesRoute._fromState,
+  factory: $CreateCommunitiesRoute._fromState,
 );
 
-mixin _$CreateCommunitiesRoute on GoRouteData {
+mixin $CreateCommunitiesRoute on GoRouteData {
   static CreateCommunitiesRoute _fromState(GoRouterState state) =>
       CreateCommunitiesRoute();
 
@@ -822,10 +943,10 @@ mixin _$CreateCommunitiesRoute on GoRouteData {
 
 RouteBase get $trimVideoRoute => GoRouteData.$route(
   path: '/video-trimer/:videoPath',
-  factory: _$TrimVideoRoute._fromState,
+  factory: $TrimVideoRoute._fromState,
 );
 
-mixin _$TrimVideoRoute on GoRouteData {
+mixin $TrimVideoRoute on GoRouteData {
   static TrimVideoRoute _fromState(GoRouterState state) =>
       TrimVideoRoute(videoPath: state.pathParameters['videoPath']!);
 
@@ -852,10 +973,10 @@ mixin _$TrimVideoRoute on GoRouteData {
 
 RouteBase get $communityMembershipsRoute => GoRouteData.$route(
   path: '/community/memberships/mine',
-  factory: _$CommunityMembershipsRoute._fromState,
+  factory: $CommunityMembershipsRoute._fromState,
 );
 
-mixin _$CommunityMembershipsRoute on GoRouteData {
+mixin $CommunityMembershipsRoute on GoRouteData {
   static CommunityMembershipsRoute _fromState(GoRouterState state) =>
       CommunityMembershipsRoute();
 
@@ -878,16 +999,16 @@ mixin _$CommunityMembershipsRoute on GoRouteData {
 
 RouteBase get $achievementsHomePageRoute => GoRouteData.$route(
   path: '/achievements',
-  factory: _$AchievementsHomePageRoute._fromState,
+  factory: $AchievementsHomePageRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: ':id',
-      factory: _$AchievementDetailPageRoute._fromState,
+      factory: $AchievementDetailPageRoute._fromState,
     ),
   ],
 );
 
-mixin _$AchievementsHomePageRoute on GoRouteData {
+mixin $AchievementsHomePageRoute on GoRouteData {
   static AchievementsHomePageRoute _fromState(GoRouterState state) =>
       AchievementsHomePageRoute();
 
@@ -908,7 +1029,7 @@ mixin _$AchievementsHomePageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AchievementDetailPageRoute on GoRouteData {
+mixin $AchievementDetailPageRoute on GoRouteData {
   static AchievementDetailPageRoute _fromState(GoRouterState state) =>
       AchievementDetailPageRoute(id: state.pathParameters['id']!);
 
@@ -934,10 +1055,10 @@ mixin _$AchievementDetailPageRoute on GoRouteData {
 
 RouteBase get $activitiesPageRoute => GoRouteData.$route(
   path: '/activities/:id',
-  factory: _$ActivitiesPageRoute._fromState,
+  factory: $ActivitiesPageRoute._fromState,
 );
 
-mixin _$ActivitiesPageRoute on GoRouteData {
+mixin $ActivitiesPageRoute on GoRouteData {
   static ActivitiesPageRoute _fromState(GoRouterState state) =>
       ActivitiesPageRoute(id: state.pathParameters['id']!);
 
@@ -963,16 +1084,16 @@ mixin _$ActivitiesPageRoute on GoRouteData {
 
 RouteBase get $examTimetableRoute => GoRouteData.$route(
   path: '/exam-timetable/:institutionId',
-  factory: _$ExamTimetableRoute._fromState,
+  factory: $ExamTimetableRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'search',
-      factory: _$ExamTimetableSearchRoute._fromState,
+      factory: $ExamTimetableSearchRoute._fromState,
     ),
   ],
 );
 
-mixin _$ExamTimetableRoute on GoRouteData {
+mixin $ExamTimetableRoute on GoRouteData {
   static ExamTimetableRoute _fromState(GoRouterState state) =>
       ExamTimetableRoute(institutionId: state.pathParameters['institutionId']!);
 
@@ -997,7 +1118,7 @@ mixin _$ExamTimetableRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$ExamTimetableSearchRoute on GoRouteData {
+mixin $ExamTimetableSearchRoute on GoRouteData {
   static ExamTimetableSearchRoute _fromState(GoRouterState state) =>
       ExamTimetableSearchRoute(
         institutionId: state.pathParameters['institutionId']!,
@@ -1026,10 +1147,10 @@ mixin _$ExamTimetableSearchRoute on GoRouteData {
 
 RouteBase get $settingsPageRoute => GoRouteData.$route(
   path: '/settings',
-  factory: _$SettingsPageRoute._fromState,
+  factory: $SettingsPageRoute._fromState,
 );
 
-mixin _$SettingsPageRoute on GoRouteData {
+mixin $SettingsPageRoute on GoRouteData {
   static SettingsPageRoute _fromState(GoRouterState state) =>
       SettingsPageRoute();
 
@@ -1055,19 +1176,19 @@ RouteBase get $institutionShellRouteData => ShellRouteData.$route(
   routes: [
     GoRouteData.$route(
       path: '/institution/:institutionID',
-      factory: _$InstitutionHomePageRoute._fromState,
+      factory: $InstitutionHomePageRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'keys',
-          factory: _$InstitutionKeysViewRoute._fromState,
+          factory: $InstitutionKeysViewRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'fees',
-          factory: _$InstitutionFeesTransactionRoute._fromState,
+          factory: $InstitutionFeesTransactionRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'profile/:profileId',
-          factory: _$EditStudentProfileRoute._fromState,
+          factory: $EditStudentProfileRoute._fromState,
         ),
       ],
     ),
@@ -1079,7 +1200,7 @@ extension $InstitutionShellRouteDataExtension on InstitutionShellRouteData {
       const InstitutionShellRouteData();
 }
 
-mixin _$InstitutionHomePageRoute on GoRouteData {
+mixin $InstitutionHomePageRoute on GoRouteData {
   static InstitutionHomePageRoute _fromState(GoRouterState state) =>
       InstitutionHomePageRoute(
         institutionID: int.parse(state.pathParameters['institutionID']!),
@@ -1106,7 +1227,7 @@ mixin _$InstitutionHomePageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$InstitutionKeysViewRoute on GoRouteData {
+mixin $InstitutionKeysViewRoute on GoRouteData {
   static InstitutionKeysViewRoute _fromState(GoRouterState state) =>
       InstitutionKeysViewRoute(
         institutionID: int.parse(state.pathParameters['institutionID']!),
@@ -1133,7 +1254,7 @@ mixin _$InstitutionKeysViewRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$InstitutionFeesTransactionRoute on GoRouteData {
+mixin $InstitutionFeesTransactionRoute on GoRouteData {
   static InstitutionFeesTransactionRoute _fromState(GoRouterState state) =>
       InstitutionFeesTransactionRoute(
         institutionID: int.parse(state.pathParameters['institutionID']!),
@@ -1161,7 +1282,7 @@ mixin _$InstitutionFeesTransactionRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EditStudentProfileRoute on GoRouteData {
+mixin $EditStudentProfileRoute on GoRouteData {
   static EditStudentProfileRoute _fromState(GoRouterState state) =>
       EditStudentProfileRoute(
         profileId: int.parse(state.pathParameters['profileId']!),
@@ -1193,17 +1314,17 @@ mixin _$EditStudentProfileRoute on GoRouteData {
 
 RouteBase get $semestersPageRoute => GoRouteData.$route(
   path: '/semesters',
-  factory: _$SemestersPageRoute._fromState,
+  factory: $SemestersPageRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'add', factory: _$AddSemesterRoute._fromState),
+    GoRouteData.$route(path: 'add', factory: $AddSemesterRoute._fromState),
     GoRouteData.$route(
       path: 'edit/:id',
-      factory: _$EditSemesterRoute._fromState,
+      factory: $EditSemesterRoute._fromState,
     ),
   ],
 );
 
-mixin _$SemestersPageRoute on GoRouteData {
+mixin $SemestersPageRoute on GoRouteData {
   static SemestersPageRoute _fromState(GoRouterState state) =>
       SemestersPageRoute();
 
@@ -1224,7 +1345,7 @@ mixin _$SemestersPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AddSemesterRoute on GoRouteData {
+mixin $AddSemesterRoute on GoRouteData {
   static AddSemesterRoute _fromState(GoRouterState state) => AddSemesterRoute();
 
   @override
@@ -1244,7 +1365,7 @@ mixin _$AddSemesterRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EditSemesterRoute on GoRouteData {
+mixin $EditSemesterRoute on GoRouteData {
   static EditSemesterRoute _fromState(GoRouterState state) =>
       EditSemesterRoute(id: int.parse(state.pathParameters['id']!));
 
@@ -1271,17 +1392,17 @@ mixin _$EditSemesterRoute on GoRouteData {
 
 RouteBase get $coursesPageRoute => GoRouteData.$route(
   path: '/courses',
-  factory: _$CoursesPageRoute._fromState,
+  factory: $CoursesPageRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'create', factory: _$AddCoursesRoute._fromState),
+    GoRouteData.$route(path: 'create', factory: $AddCoursesRoute._fromState),
     GoRouteData.$route(
       path: 'view/:courseId',
-      factory: _$ViewCourseRoute._fromState,
+      factory: $ViewCourseRoute._fromState,
     ),
   ],
 );
 
-mixin _$CoursesPageRoute on GoRouteData {
+mixin $CoursesPageRoute on GoRouteData {
   static CoursesPageRoute _fromState(GoRouterState state) => CoursesPageRoute();
 
   @override
@@ -1301,7 +1422,7 @@ mixin _$CoursesPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AddCoursesRoute on GoRouteData {
+mixin $AddCoursesRoute on GoRouteData {
   static AddCoursesRoute _fromState(GoRouterState state) => AddCoursesRoute();
 
   @override
@@ -1321,7 +1442,7 @@ mixin _$AddCoursesRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$ViewCourseRoute on GoRouteData {
+mixin $ViewCourseRoute on GoRouteData {
   static ViewCourseRoute _fromState(GoRouterState state) =>
       ViewCourseRoute(courseId: state.pathParameters['courseId']!);
 

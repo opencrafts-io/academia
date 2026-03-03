@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName('TicketData')
@@ -15,6 +16,9 @@ class TicketTable extends Table {
 
   @JsonKey('ticket_quantity')
   IntColumn get ticketQuantity => integer().nullable()();
+
+  @JsonKey('ticket_visibility')
+  TextColumn get ticketVisibility => text().map(JsonListConverter()).nullable()();
 
   @JsonKey('delete_tag')
   BoolColumn get deleteTag => boolean().nullable()();

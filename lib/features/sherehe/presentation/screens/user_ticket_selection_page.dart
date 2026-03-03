@@ -42,12 +42,43 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
         }
 
         if (state is UserTicketLoaded) {
+          if (state.tickets.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Tickets are reserved for specific institutions",
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "You are not eligible to purchase tickets for this event.",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           final isFreeEvent =
               state.tickets.length == 1 && state.tickets.first.ticketPrice == 0;
 
           final int maxAllowedQuantity = widget.selectedTicket == null
               ? 0
-              : min(widget.selectedTicket!.ticketQuantity ?? 0, 3);
+              : min(widget.selectedTicket!.ticketQuantity ?? 0, 2);
 
           if (isFreeEvent && widget.selectedTicket == null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -184,12 +215,12 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
-                              widget.quantity == 3 &&
+                              widget.quantity == 2 &&
                                       (widget.selectedTicket!.ticketQuantity ??
                                               0) >
-                                          3
-                                  ? "Maximum of 3 tickets per order"
-                                  : "Only ${widget.selectedTicket!.ticketQuantity} tickets remaining",
+                                          2
+                                  ? "Maximum of 2 tickets can be purchased"
+                                  : "Only ${widget.selectedTicket!.ticketQuantity} ${widget.selectedTicket!.ticketQuantity == 1 ? "ticket" : "tickets"} remaining",
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: Theme.of(context).colorScheme.error,
