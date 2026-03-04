@@ -34,6 +34,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
     context.read<UserTicketSelectionBloc>().add(
       FetchTicketsByEventId(eventId: widget.eventId, accountId: widget.userId),
     );
+    context.read<TicketPaymentBloc>().add(ResetTicketPaymentState());
   }
 
   void _nextPage() {
@@ -78,9 +79,6 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 actions: [
                   FilledButton(
                     onPressed: () {
-                      context.read<TicketPaymentBloc>().add(
-                        ResetTicketPaymentState(),
-                      );
                       Navigator.pop(context);
                       context.pop();
                     },
