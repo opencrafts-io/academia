@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -73,6 +74,12 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   //   return await getApplicationDocumentsDirectory();
   // }
 
+  //function to load image from assets and convert to MemoryImage for PDF
+  Future<pw.MemoryImage> loadPdfImage(String assetPath) async {
+    final bytes = await rootBundle.load(assetPath);
+    return pw.MemoryImage(bytes.buffer.asUint8List());
+  }
+
   Future<File> _generateTicketPdf() async {
     final pdf = pw.Document();
 
@@ -80,6 +87,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     const accentColor = PdfColor.fromInt(0xFF00A3FF);
     const stubBg = PdfColor.fromInt(0xFFF2F2F2);
     const ticketBorder = PdfColor.fromInt(0xFFE0E0E0);
+    final logo = await loadPdfImage("assets/icons/opencrafts.png");
 
     pdf.addPage(
       pw.Page(
@@ -272,6 +280,25 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             fontSize: 7,
                             color: PdfColors.grey600,
                             letterSpacing: 1,
+                          ),
+                        ),
+                        pw.SizedBox(height: 15),
+
+                        pw.Image(
+                          logo,
+                          width: 20,
+                          height: 20,
+                          fit: pw.BoxFit.contain,
+                        ),
+
+                        pw.SizedBox(height: 6),
+
+                        pw.Text(
+                          "Powered by Opencrafts",
+                          style: pw.TextStyle(
+                            fontSize: 8,
+                            fontWeight: pw.FontWeight.bold,
+                            color: primaryBg,
                           ),
                         ),
                       ],
@@ -491,6 +518,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                               child: PrettyQrView.data(
                                 data: 'attendee:${widget.attendeeId}',
                                 decoration: const PrettyQrDecoration(
+                                  image: PrettyQrDecorationImage(
+                                    image: AssetImage(
+                                      "assets/icons/opencrafts.png",
+                                    ),
+                                  ),
                                   shape: PrettyQrSmoothSymbol(
                                     color: Colors.black,
                                   ),

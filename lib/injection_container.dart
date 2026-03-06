@@ -107,6 +107,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => GetSpecificEvent(sl()));
   sl.registerLazySingleton(() => GetEventsByOrganizerIdUseCase(sl()));
   sl.registerLazySingleton(() => GetAttendee(sl()));
+  sl.registerLazySingleton(() => GetAllAttendees(sl()));
   sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
   sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
   sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
@@ -120,16 +121,35 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerLazySingleton(() => SearchEventsUseCase(sl()));
 
+  sl.registerLazySingleton(() => GetAttendeesAndScannersUsecase(sl()));
+
+  sl.registerLazySingleton(() => GetDashboardTicketStatsUsecase(sl()));
+
+  sl.registerLazySingleton(() => UpdateTicketUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllEventScannersUsecase(sl()));
+  sl.registerLazySingleton(() => SearchUsersByUsernameUsecase(sl()));
+  sl.registerLazySingleton(() => AddEventScannerUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteEventScannerUsecase(sl()));
+  sl.registerLazySingleton(() => GetEventScannerByUserIdUsecase(sl()));
+
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
+  sl.registerFactory(
+    () => GetEventScannerByUserIdBloc(getEventScannerByUserId: sl()),
+  );
 
   sl.registerFactory(
     () => OrganizedEventsBloc(getEventsByOrganizerIdUseCase: sl()),
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
-  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
+  sl.registerFactory(
+    () => UserTicketSelectionBloc(
+      getTicketsByEventId: sl(),
+      getAllCachedInstitutions: sl(),
+    ),
+  );
   sl.registerFactory(
     () => TicketPaymentBloc(purchaseTicket: sl(), confirmPayment: sl()),
   );
@@ -143,6 +163,21 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => UserEventTicketsBloc(getUserPurchasedTicketsForEvent: sl()),
   );
   sl.registerFactory(() => ValidateAttendeeBloc(validateAttendeeUseCase: sl()));
+  sl.registerFactory(
+    () => AttendeesAndScannerStatsBloc(getAttendeesAndScanners: sl()),
+  );
+  sl.registerFactory(
+    () => TicketStatsBloc(getDashboardTicketStats: sl(), updateTicket: sl()),
+  );
+  sl.registerFactory(() => AllAttendeesBloc(getAllAttendees: sl()));
+  sl.registerFactory(() => AllScannersBloc(getAllScanners: sl()));
+  sl.registerFactory(
+    () => ScannerActionsBloc(
+      searchUsersByUsername: sl(),
+      addEventScanner: sl(),
+      deleteEventScanner: sl(),
+    ),
+  );
   sl.registerFactory<ProfileRemoteDatasource>(
     () =>
         ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),

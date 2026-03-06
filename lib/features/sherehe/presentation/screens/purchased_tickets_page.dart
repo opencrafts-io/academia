@@ -24,6 +24,9 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
     super.initState();
     _fetchInitialTickets();
     _scrollController.addListener(_onScroll);
+    _searchController.addListener(() {
+      setState(() {});
+    });
   }
 
   void _fetchInitialTickets() {
@@ -100,17 +103,19 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         );
                       },
 
-                      trailing: [
-                        IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchDebounce?.cancel();
-                            _searchController.clear();
-                            _isSearching = false;
-                            _fetchInitialTickets();
-                          },
-                        ),
-                      ],
+                      trailing: _searchController.text.isEmpty
+                          ? const []
+                          : [
+                              IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchDebounce?.cancel();
+                                  _searchController.clear();
+                                  _isSearching = false;
+                                  _fetchInitialTickets();
+                                },
+                              ),
+                            ],
                     ),
                   ),
                 ),

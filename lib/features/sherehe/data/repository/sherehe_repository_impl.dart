@@ -245,4 +245,139 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (events) => right(events.map((e) => e.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, DashboardStats>> getAttendeesAndScanners({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getAttendeesAndScanners(
+      eventId: eventId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (dashboardStats) => right(dashboardStats.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<TicketStats>>> getDashboardTicketStats({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getDashboardTicketStats(
+      eventId: eventId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (ticketStats) => right(ticketStats.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Ticket>> updateTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  }) async {
+    final result = await remoteDataSource.updateTicket(
+      ticketId: ticketId,
+      ticketQuantity: ticketQuantity,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (ticket) => right(ticket.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Attendee>>> getAllAttendees({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getAllAttendees(
+      eventId: eventId,
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Scanner>> addEventScanner({
+    required String eventId,
+    required String userId,
+  }) async {
+    final result = await remoteDataSource.addEventScanner(
+      eventId: eventId,
+      userId: userId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (scanner) => right(scanner.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Scanner>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    final result = await remoteDataSource.getEventScanners(
+      eventId: eventId,
+      page: page,
+      limit: limit,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (paginatedData) => right(
+        PaginatedResult(
+          results: paginatedData.results.map((e) => e.toEntity()).toList(),
+          next: paginatedData.next,
+          previous: paginatedData.previous,
+          currentPage: paginatedData.currentPage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteEventScanner({
+    required String scannerId,
+  }) async {
+    final result = await remoteDataSource.deleteEventScanner(
+      scannerId: scannerId,
+    );
+    return result.fold((failure) => left(failure), (success) => right(success));
+  }
+
+  @override
+  Future<Either<Failure, String>> getEventScannerByUserId({
+    required String eventId,
+  }) async {
+    final result = await remoteDataSource.getEventScannerByUserId(
+      eventId: eventId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
+    required String query,
+  }) async {
+    final result = await remoteDataSource.searchUsersByUsername(query: query);
+    return result.fold(
+      (failure) => left(failure),
+      (users) => right(users.map((e) => e.toEntity()).toList()),
+    );
+  }
 }

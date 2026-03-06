@@ -8,6 +8,10 @@ extension TicketModelHelper on TicketData {
     ticketName: ticketName,
     ticketPrice: ticketPrice,
     ticketQuantity: ticketQuantity,
+    institutionIds: ticketVisibility
+        ?.map((e) => int.tryParse(e))
+        .whereType<int>()
+        .toList(),
     deleteTag: deleteTag ?? false,
     createdAt: createdAt != null ? DateTime.tryParse(createdAt!) : null,
     updatedAt: updatedAt != null ? DateTime.tryParse(updatedAt!) : null,
@@ -21,6 +25,7 @@ extension TicketEntityHelper on Ticket {
     ticketName: ticketName,
     ticketPrice: ticketPrice,
     ticketQuantity: ticketQuantity,
+    ticketVisibility: institutionIds?.map((e) => e.toString()).toList(),
     deleteTag: deleteTag,
     createdAt: createdAt?.toIso8601String(),
     updatedAt: updatedAt?.toIso8601String(),

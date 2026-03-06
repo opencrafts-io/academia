@@ -104,6 +104,7 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
+        BlocProvider(create: (context) => sl<GetEventScannerByUserIdBloc>()),
         BlocProvider(create: (context) => sl<OrganizedEventsBloc>()),
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
         BlocProvider(create: (context) => sl<UserTicketSelectionBloc>()),
@@ -111,6 +112,11 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
         BlocProvider(create: (context) => sl<ValidateAttendeeBloc>()),
         BlocProvider(create: (context) => sl<TicketPaymentBloc>()),
+        BlocProvider(create: (context) => sl<AttendeesAndScannerStatsBloc>()),
+        BlocProvider(create: (context) => sl<TicketStatsBloc>()),
+        BlocProvider(create: (context) => sl<AllAttendeesBloc>()),
+        BlocProvider(create: (context) => sl<AllScannersBloc>()),
+        BlocProvider(create: (context) => sl<ScannerActionsBloc>()),
 
         BlocProvider(create: (context) => sl<FeedBloc>()),
 

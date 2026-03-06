@@ -7,13 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AttendeesList extends StatefulWidget {
   final String eventId;
   final String organizerId;
-  final String? userId;
 
   const AttendeesList({
     super.key,
     required this.eventId,
     required this.organizerId,
-    this.userId,
   });
 
   @override
@@ -31,7 +29,7 @@ class _AttendeesListState extends State<AttendeesList> {
   }
 
   bool _isAttendeeHost(Attendee attendee) {
-    if (widget.userId != null && widget.userId == widget.organizerId) {
+    if (attendee.userId == widget.organizerId) {
       return true;
     }
     return false;

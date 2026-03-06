@@ -6,6 +6,7 @@ class Ticket extends Equatable {
   final String ticketName;
   final int ticketPrice;
   final int? ticketQuantity;
+  final List<int>? institutionIds;
   final bool? deleteTag;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -16,6 +17,7 @@ class Ticket extends Equatable {
     required this.ticketName,
     required this.ticketPrice,
     this.ticketQuantity,
+    this.institutionIds,
     this.deleteTag,
     this.createdAt,
     this.updatedAt,
@@ -27,6 +29,7 @@ class Ticket extends Equatable {
     String? ticketName,
     int? ticketPrice,
     int? ticketQuantity,
+    List<int>? institutionIds,
     bool? deleteTag,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -37,6 +40,7 @@ class Ticket extends Equatable {
       ticketName: ticketName ?? this.ticketName,
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
+      institutionIds: institutionIds ?? this.institutionIds,
       deleteTag: deleteTag ?? this.deleteTag,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -50,6 +54,7 @@ class Ticket extends Equatable {
     ticketName,
     ticketPrice,
     ticketQuantity,
+    institutionIds,
     deleteTag,
     createdAt,
     updatedAt,

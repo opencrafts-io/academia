@@ -21,7 +21,6 @@ import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
-import 'package:academia/features/sherehe/data/models/sherehe_user_model.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
@@ -55,7 +54,10 @@ part 'database.g.dart';
     AttendeeTable,
     TicketTable,
     PaymentInfoTable,
-    ShereheUserTable, //temporary
+    ShereheUserTable, 
+    DashboardStatsTable,
+    TicketStatsTable,
+    ScannerTable,
     GroupTable,
 
     BlockTable,
@@ -119,7 +121,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 24;
+  int get schemaVersion => 25;
 
   @override
   MigrationStrategy get migration {
@@ -161,17 +163,11 @@ class AppDataBase extends _$AppDataBase {
             case 23:
               await migrate23To24(m);
               break;
+            case 24:
+              await migrate24To25(m);
+              break;
           }
         }
-        // await m.createAll();
-        // if (from < 15) {
-        //   await m.createTable(examTimetable);
-        // } else if (from < 16) {
-        //   await m.addColumn(userProfile, userProfile.deletedAt);
-        // } else if (from < 17) {
-        //   await m.createTable(blockTable);
-        //   await m.createTable(reportTable);
-        // }
       },
       beforeOpen: (details) async {
         _logger.i(

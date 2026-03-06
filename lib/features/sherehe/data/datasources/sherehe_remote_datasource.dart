@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:academia/config/config.dart';
 import 'package:academia/core/network/network.dart';
@@ -49,7 +50,13 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       } else {
         return left(
-          ServerFailure(message: "Unexpected server response", error: response),
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
+            error: response,
+          ),
         );
       }
     } on DioException catch (de) {
@@ -79,7 +86,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected server response: ${response.statusCode}",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -115,7 +125,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected server response: ${response.statusCode}",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -162,11 +175,13 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'event_date': eventDate,
         'organizer_id': organizerId,
         'event_genre': eventGenre,
-        'tickets': tickets.map((ticket) {
-          final json = ticket.toJson();
-          json.removeWhere((key, value) => value == null || value == "");
-          return json;
-        }).toList(),
+        'tickets': jsonEncode(
+          tickets.map((ticket) {
+            final json = ticket.toJson();
+            json.removeWhere((k, v) => v == null || v == "");
+            return json;
+          }).toList(),
+        ),
 
         if (eventCardImage != null)
           'event_card_image': await MultipartFile.fromFile(
@@ -202,22 +217,21 @@ class ShereheRemoteDataSource with DioErrorHandler {
             'send_money_phone': sendMoneyPhoneNumber,
         },
       });
-
-      // Send request
       final response = await dioClient.dio.post(
         "/$servicePrefix/event/",
         data: formData,
         options: Options(headers: {"Content-Type": "multipart/form-data"}),
       );
 
-      // Handle success
       if (response.statusCode == 200 || response.statusCode == 201) {
         return right(EventData.fromJson(response.data['data']['event']));
       } else {
         return left(
           ServerFailure(
             message:
-                "Unexpected server response: ${response.statusCode} ${response.statusMessage}",
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
             error: response,
           ),
         );
@@ -261,7 +275,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching attendees",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching attendees",
             error: response,
           ),
         );
@@ -295,7 +312,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching attendee",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching attendee",
             error: response,
           ),
         );
@@ -329,7 +349,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when fetching ticket by event ID",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching ticket by event ID",
             error: response,
           ),
         );
@@ -389,7 +412,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
             ),
           );
         }
-
         return left(
           ServerFailure(
             message: "Unknown success response format",
@@ -399,7 +421,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when purchasing ticket",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when purchasing ticket",
             error: response,
           ),
         );
@@ -431,7 +456,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when confirming payment",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when confirming payment",
             error: response,
           ),
         );
@@ -476,7 +504,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting user's ticket for event",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting user's ticket for event",
             error: response,
           ),
         );
@@ -518,7 +549,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when getting user's tickets",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting user's tickets",
             error: response,
           ),
         );
@@ -553,7 +587,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when searching attended events",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching attended events",
             error: response,
           ),
         );
@@ -591,7 +628,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
         return left(
           ServerFailure(
-            message: "Unexpected response when validating attendee",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when validating attendee",
             error: response,
           ),
         );
@@ -626,7 +666,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
       } else {
         return left(
           ServerFailure(
-            message: "Unexpected response when searching events",
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching events",
             error: response,
           ),
         );
@@ -639,6 +682,368 @@ class ShereheRemoteDataSource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred when searching events",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, DashboardStatsData>> getAttendeesAndScanners({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/dashboard/events/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(DashboardStatsData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting stats",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting stats", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting stats", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting stats",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<TicketStatsData>>> getDashboardTicketStats({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/dashboard/tickets/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data as List)
+              .map((e) => TicketStatsData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting stats",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting stats", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting stats", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting stats",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  //for now only update ticket quantity
+  Future<Either<Failure, TicketData>> updateTicket({
+    required String ticketId,
+    required int ticketQuantity,
+  }) async {
+    try {
+      final response = await dioClient.dio.put(
+        "/$servicePrefix/ticket/$ticketId",
+        data: {"ticket_quantity": ticketQuantity},
+      );
+
+      if (response.statusCode == 200) {
+        return right(TicketData.fromJson(response.data['ticket']));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when updating ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when updating ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when updating ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while updating ticket",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<AttendeeData>>> getAllAttendees({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/dashboard/attendees/$eventId",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => AttendeeData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting all attendees",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting all attendees", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting all attendees", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when getting all attendees",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, ScannerData>> addEventScanner({
+    required String eventId,
+    required String userId,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/eventscanner/",
+        data: {"event_id": eventId, "user_id": userId},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(ScannerData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when adding event scanner",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when adding event scanner", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when adding event scanner", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when adding event scanner",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, PaginatedResult<ScannerData>>> getEventScanners({
+    required String eventId,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/eventscanner/event/$eventId",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          PaginatedResult(
+            results: (response.data['data'] as List)
+                .map((e) => ScannerData.fromJson(e))
+                .toList(),
+            next: response.data['nextPage']?.toString(),
+            previous: response.data['previousPage']?.toString(),
+            currentPage: response.data['currentPage'],
+          ),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting all event scanners",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when getting all event scanners", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when getting all event scanners", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when getting all event scanners",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> deleteEventScanner({
+    required String scannerId,
+  }) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "/$servicePrefix/eventscanner/$scannerId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when deleting event scanner",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when deleting event scanner", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when deleting event scanner", error: e);
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when deleting the event scanner",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> getEventScannerByUserId({
+    required String eventId,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/eventscanner/user/$eventId",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when getting event scanner by user id",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e(
+        "DioException when getting event scanner by user id",
+        error: de,
+      );
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e(
+        "Unknown error when getting event scanner by user id",
+        error: e,
+      );
+      return left(
+        ServerFailure(
+          message:
+              "An unexpected error occurred when getting event scanner by user id",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<ShereheUserData>>> searchUsersByUsername({
+    required String query,
+  }) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/user/search",
+        queryParameters: {"q": query},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(
+          (response.data['data'] as List)
+              .map((e) => ShereheUserData.fromJson(e))
+              .toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when searching users",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when searching users", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when searching users", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred when searching users",
           error: e,
         ),
       );

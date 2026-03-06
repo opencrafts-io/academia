@@ -45,28 +45,28 @@ class LayoutShellRoute extends StatefulShellRouteData {
   }
 }
 
-class HomeRoute extends GoRouteData with _$HomeRoute {
+class HomeRoute extends GoRouteData with $HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return HomePage();
   }
 }
 
-class EssentialsRoute extends GoRouteData with _$EssentialsRoute {
+class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EssentialsPage();
   }
 }
 
-class CalendarRoute extends GoRouteData with _$CalendarRoute {
+class CalendarRoute extends GoRouteData with $CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AgendaHomePage();
   }
 }
 
-class AgendaItemViewRoute extends GoRouteData with _$AgendaItemViewRoute {
+class AgendaItemViewRoute extends GoRouteData with $AgendaItemViewRoute {
   AgendaItemViewRoute({this.id});
   String? id;
   @override
@@ -87,7 +87,7 @@ class AgendaItemViewRoute extends GoRouteData with _$AgendaItemViewRoute {
   }
 }
 
-class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
+class CreateAgendaEventRoute extends GoRouteData with $CreateAgendaEventRoute {
   @override
   CustomTransitionPage<void> buildPage(
     BuildContext context,
@@ -115,7 +115,7 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
   }
 }
 
-// class MeteorRoute extends GoRouteData with _$MeteorRoute {
+// class MeteorRoute extends GoRouteData with $MeteorRoute {
 //   @override
 //   Widget build(BuildContext context, GoRouterState state) {
 //     return Scaffold(body: Center(child: Text("MeteorRoute")));
@@ -123,7 +123,7 @@ class CreateAgendaEventRoute extends GoRouteData with _$CreateAgendaEventRoute {
 // }
 
 @TypedGoRoute<FeedRoute>(path: "/feed")
-class FeedRoute extends GoRouteData with _$FeedRoute {
+class FeedRoute extends GoRouteData with $FeedRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return FeedPage();
@@ -131,7 +131,7 @@ class FeedRoute extends GoRouteData with _$FeedRoute {
 }
 
 @TypedGoRoute<PostDetailRoute>(path: '/post/:postId')
-class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
+class PostDetailRoute extends GoRouteData with $PostDetailRoute {
   final int postId;
 
   const PostDetailRoute({required this.postId});
@@ -154,7 +154,7 @@ class PostDetailRoute extends GoRouteData with _$PostDetailRoute {
 }
 
 @TypedGoRoute<AddPostRoute>(path: "/add-post")
-class AddPostRoute extends GoRouteData with _$AddPostRoute {
+class AddPostRoute extends GoRouteData with $AddPostRoute {
   const AddPostRoute();
 
   @override
@@ -165,7 +165,7 @@ class AddPostRoute extends GoRouteData with _$AddPostRoute {
 }
 
 @TypedGoRoute<BlockedItemsRoute>(path: "/blocked-items")
-class BlockedItemsRoute extends GoRouteData with _$BlockedItemsRoute {
+class BlockedItemsRoute extends GoRouteData with $BlockedItemsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const BlockedItemsPage();
@@ -173,7 +173,7 @@ class BlockedItemsRoute extends GoRouteData with _$BlockedItemsRoute {
 }
 
 @TypedGoRoute<AuthRoute>(path: "/auth")
-class AuthRoute extends GoRouteData with _$AuthRoute {
+class AuthRoute extends GoRouteData with $AuthRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AuthScreen();
@@ -181,7 +181,7 @@ class AuthRoute extends GoRouteData with _$AuthRoute {
 }
 
 @TypedGoRoute<ProfileRoute>(path: "/profile")
-class ProfileRoute extends GoRouteData with _$ProfileRoute {
+class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
   CustomTransitionPage<void> buildPage(
     BuildContext context,
@@ -210,7 +210,7 @@ class ProfileRoute extends GoRouteData with _$ProfileRoute {
 }
 
 @TypedGoRoute<CompleteProfileRoute>(path: "/complete-profile")
-class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
+class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
@@ -226,26 +226,34 @@ class CompleteProfileRoute extends GoRouteData with _$CompleteProfileRoute {
         TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
         TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
         TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+        TypedGoRoute<OrganizerDashboardRoute>(
+          path: "organizer-dashboard",
+          routes: [
+            TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
+            TypedGoRoute<AllScannersRoute>(path: "all-scanners"),
+            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+          ],
+        ),
       ],
     ),
     TypedGoRoute<CreateEventRoute>(path: "create"),
   ],
 )
-class ShereheRoute extends GoRouteData with _$ShereheRoute {
+class ShereheRoute extends GoRouteData with $ShereheRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ShereheHome();
   }
 }
 
-class CreateEventRoute extends GoRouteData with _$CreateEventRoute {
+class CreateEventRoute extends GoRouteData with $CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
   }
 }
 
-class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
+class ShereheDetailsRoute extends GoRouteData with $ShereheDetailsRoute {
   final String eventId;
 
   const ShereheDetailsRoute({required this.eventId});
@@ -280,18 +288,19 @@ class ShereheDetailsRoute extends GoRouteData with _$ShereheDetailsRoute {
   }
 }
 
-class TicketFlowRoute extends GoRouteData with _$TicketFlowRoute {
+class TicketFlowRoute extends GoRouteData with $TicketFlowRoute {
   final String eventId;
+  final String userId;
 
-  const TicketFlowRoute({required this.eventId});
+  const TicketFlowRoute({required this.eventId, required this.userId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return TicketFlowPage(eventId: eventId);
+    return TicketFlowPage(eventId: eventId, userId: userId);
   }
 }
 
-class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
+class EventTicketsRoute extends GoRouteData with $EventTicketsRoute {
   final String eventId;
 
   const EventTicketsRoute({required this.eventId});
@@ -304,8 +313,49 @@ class EventTicketsRoute extends GoRouteData with _$EventTicketsRoute {
   }
 }
 
+class OrganizerDashboardRoute extends GoRouteData
+    with $OrganizerDashboardRoute {
+  final String eventId;
+
+  const OrganizerDashboardRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return OrganizerDashboardPage(eventId: eventId);
+  }
+}
+
+class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
+  final String eventId;
+
+  const AllAttendeesRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AllAttendeesScreen(eventId: eventId);
+  }
+}
+
+class AllScannersRoute extends GoRouteData with $AllScannersRoute {
+  final String eventId;
+
+  const AllScannersRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AllScannersScreen(eventId: eventId);
+  }
+}
+
+class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
+  final String eventId;
+
+  const AddEventScannerRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddEventScannerScreen(eventId: eventId);
+  }
+}
+
 @TypedGoRoute<PurchasedTicketsRoute>(path: "/purchased-tickets/all")
-class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
+class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return PurchasedTicketsPage();
@@ -313,7 +363,7 @@ class PurchasedTicketsRoute extends GoRouteData with _$PurchasedTicketsRoute {
 }
 
 @TypedGoRoute<OrganizedEventsRoute>(path: "/organized-events/mine")
-class OrganizedEventsRoute extends GoRouteData with _$OrganizedEventsRoute {
+class OrganizedEventsRoute extends GoRouteData with $OrganizedEventsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return OrganizedEventsScreen();
@@ -321,7 +371,7 @@ class OrganizedEventsRoute extends GoRouteData with _$OrganizedEventsRoute {
 }
 
 @TypedGoRoute<TicketReceiptRoute>(path: "/ticket-receipt")
-class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
+class TicketReceiptRoute extends GoRouteData with $TicketReceiptRoute {
   final int ticketPrice;
   final int quantity;
 
@@ -334,7 +384,7 @@ class TicketReceiptRoute extends GoRouteData with _$TicketReceiptRoute {
 }
 
 @TypedGoRoute<QrCodeRoute>(path: "/qr-code/:eventId/:attendeeId")
-class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
+class QrCodeRoute extends GoRouteData with $QrCodeRoute {
   final String eventId;
   final String attendeeId;
   final String ticketName;
@@ -361,7 +411,7 @@ class QrCodeRoute extends GoRouteData with _$QrCodeRoute {
   }
 }
 
-class QrCodeScannerRoute extends GoRouteData with _$QrCodeScannerRoute {
+class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
   final String eventId;
 
   const QrCodeScannerRoute({required this.eventId});
@@ -376,7 +426,7 @@ class QrCodeScannerRoute extends GoRouteData with _$QrCodeScannerRoute {
   path: "/todos",
   // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
 )
-class TodosRoute extends GoRouteData with _$TodosRoute {
+class TodosRoute extends GoRouteData with $TodosRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TodoHomeScreen();
@@ -391,7 +441,7 @@ class TodosRoute extends GoRouteData with _$TodosRoute {
     TypedGoRoute<EditCommunityInfoRoute>(path: "edit"),
   ],
 )
-class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
+class CommunitiesRoute extends GoRouteData with $CommunitiesRoute {
   final int communityId;
 
   CommunitiesRoute({required this.communityId});
@@ -401,7 +451,7 @@ class CommunitiesRoute extends GoRouteData with _$CommunitiesRoute {
   }
 }
 
-class CommunityInfoRoute extends GoRouteData with _$CommunityInfoRoute {
+class CommunityInfoRoute extends GoRouteData with $CommunityInfoRoute {
   final int communityId;
   CommunityInfoRoute({required this.communityId});
 
@@ -411,7 +461,7 @@ class CommunityInfoRoute extends GoRouteData with _$CommunityInfoRoute {
   }
 }
 
-class CommunityMembersRoute extends GoRouteData with _$CommunityMembersRoute {
+class CommunityMembersRoute extends GoRouteData with $CommunityMembersRoute {
   final int communityId;
   final String role;
 
@@ -423,7 +473,7 @@ class CommunityMembersRoute extends GoRouteData with _$CommunityMembersRoute {
   }
 }
 
-class EditCommunityInfoRoute extends GoRouteData with _$EditCommunityInfoRoute {
+class EditCommunityInfoRoute extends GoRouteData with $EditCommunityInfoRoute {
   final int communityId;
   EditCommunityInfoRoute({required this.communityId});
 
@@ -434,7 +484,7 @@ class EditCommunityInfoRoute extends GoRouteData with _$EditCommunityInfoRoute {
 }
 
 @TypedGoRoute<CreateCommunitiesRoute>(path: "/create-community")
-class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
+class CreateCommunitiesRoute extends GoRouteData with $CreateCommunitiesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CreateCommunityScreen();
@@ -442,7 +492,7 @@ class CreateCommunitiesRoute extends GoRouteData with _$CreateCommunitiesRoute {
 }
 
 @TypedGoRoute<TrimVideoRoute>(path: "/video-trimer/:videoPath")
-class TrimVideoRoute extends GoRouteData with _$TrimVideoRoute {
+class TrimVideoRoute extends GoRouteData with $TrimVideoRoute {
   TrimVideoRoute({required this.videoPath});
   final String videoPath;
   @override
@@ -453,7 +503,7 @@ class TrimVideoRoute extends GoRouteData with _$TrimVideoRoute {
 
 @TypedGoRoute<CommunityMembershipsRoute>(path: "/community/memberships/mine")
 class CommunityMembershipsRoute extends GoRouteData
-    with _$CommunityMembershipsRoute {
+    with $CommunityMembershipsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CommunityMembershipPage();
@@ -465,7 +515,7 @@ class CommunityMembershipsRoute extends GoRouteData
   routes: [TypedGoRoute<AchievementDetailPageRoute>(path: ":id")],
 )
 class AchievementsHomePageRoute extends GoRouteData
-    with _$AchievementsHomePageRoute {
+    with $AchievementsHomePageRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AchievementsHomePage();
@@ -473,7 +523,7 @@ class AchievementsHomePageRoute extends GoRouteData
 }
 
 @TypedGoRoute<ActivitiesPageRoute>(path: "/activities/:id")
-class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
+class ActivitiesPageRoute extends GoRouteData with $ActivitiesPageRoute {
   final String id;
   const ActivitiesPageRoute({required this.id});
 
@@ -484,7 +534,7 @@ class ActivitiesPageRoute extends GoRouteData with _$ActivitiesPageRoute {
 }
 
 class AchievementDetailPageRoute extends GoRouteData
-    with _$AchievementDetailPageRoute {
+    with $AchievementDetailPageRoute {
   final String id;
   const AchievementDetailPageRoute({required this.id});
 
@@ -498,7 +548,7 @@ class AchievementDetailPageRoute extends GoRouteData
   path: "/exam-timetable/:institutionId",
   routes: [TypedGoRoute<ExamTimetableSearchRoute>(path: "search")],
 )
-class ExamTimetableRoute extends GoRouteData with _$ExamTimetableRoute {
+class ExamTimetableRoute extends GoRouteData with $ExamTimetableRoute {
   final String institutionId;
 
   const ExamTimetableRoute({required this.institutionId});
@@ -510,7 +560,7 @@ class ExamTimetableRoute extends GoRouteData with _$ExamTimetableRoute {
 }
 
 class ExamTimetableSearchRoute extends GoRouteData
-    with _$ExamTimetableSearchRoute {
+    with $ExamTimetableSearchRoute {
   final String institutionId;
 
   const ExamTimetableSearchRoute({required this.institutionId});
@@ -522,7 +572,7 @@ class ExamTimetableSearchRoute extends GoRouteData
 }
 
 @TypedGoRoute<SettingsPageRoute>(path: "/settings")
-class SettingsPageRoute extends GoRouteData with _$SettingsPageRoute {
+class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
   @override
   CustomTransitionPage<void> buildPage(
     BuildContext context,
@@ -596,7 +646,7 @@ class InstitutionShellRouteData extends ShellRouteData {
 }
 
 class InstitutionHomePageRoute extends GoRouteData
-    with _$InstitutionHomePageRoute {
+    with $InstitutionHomePageRoute {
   InstitutionHomePageRoute({required this.institutionID});
 
   final int institutionID;
@@ -636,7 +686,7 @@ class InstitutionHomePageRoute extends GoRouteData
 }
 
 class InstitutionKeysViewRoute extends GoRouteData
-    with _$InstitutionKeysViewRoute {
+    with $InstitutionKeysViewRoute {
   InstitutionKeysViewRoute({required this.institutionID});
   final int institutionID;
   @override
@@ -653,7 +703,7 @@ class InstitutionKeysViewRoute extends GoRouteData
 }
 
 class EditStudentProfileRoute extends GoRouteData
-    with _$EditStudentProfileRoute {
+    with $EditStudentProfileRoute {
   final int profileId;
   final int? institutionID;
   const EditStudentProfileRoute({required this.profileId, this.institutionID});
@@ -664,7 +714,7 @@ class EditStudentProfileRoute extends GoRouteData
 }
 
 class InstitutionFeesTransactionRoute extends GoRouteData
-    with _$InstitutionFeesTransactionRoute {
+    with $InstitutionFeesTransactionRoute {
   InstitutionFeesTransactionRoute({required this.institutionID});
 
   final int institutionID;
@@ -682,7 +732,7 @@ class InstitutionFeesTransactionRoute extends GoRouteData
     TypedGoRoute<EditSemesterRoute>(path: "edit/:id"),
   ],
 )
-class SemestersPageRoute extends GoRouteData with _$SemestersPageRoute {
+class SemestersPageRoute extends GoRouteData with $SemestersPageRoute {
   @override
   CustomTransitionPage<void> buildPage(
     BuildContext context,
@@ -711,7 +761,7 @@ class SemestersPageRoute extends GoRouteData with _$SemestersPageRoute {
   }
 }
 
-class AddSemesterRoute extends GoRouteData with _$AddSemesterRoute {
+class AddSemesterRoute extends GoRouteData with $AddSemesterRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
@@ -724,7 +774,7 @@ class AddSemesterRoute extends GoRouteData with _$AddSemesterRoute {
   }
 }
 
-class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
+class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
   final int id;
   const EditSemesterRoute({required this.id});
 
@@ -748,7 +798,7 @@ class EditSemesterRoute extends GoRouteData with _$EditSemesterRoute {
     TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),
   ],
 )
-class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
+class CoursesPageRoute extends GoRouteData with $CoursesPageRoute {
   @override
   CustomTransitionPage<void> buildPage(
     BuildContext context,
@@ -777,7 +827,7 @@ class CoursesPageRoute extends GoRouteData with _$CoursesPageRoute {
   }
 }
 
-class AddCoursesRoute extends GoRouteData with _$AddCoursesRoute {
+class AddCoursesRoute extends GoRouteData with $AddCoursesRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
@@ -790,7 +840,7 @@ class AddCoursesRoute extends GoRouteData with _$AddCoursesRoute {
   }
 }
 
-class ViewCourseRoute extends GoRouteData with _$ViewCourseRoute {
+class ViewCourseRoute extends GoRouteData with $ViewCourseRoute {
   final String courseId;
   const ViewCourseRoute({required this.courseId});
   @override
