@@ -195,6 +195,7 @@
 //   }
 // }
 
+import 'dart:io';
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/permissions/permissions.dart';
@@ -211,62 +212,64 @@ class _HomeActionsSheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _SheetSectionLabel(label: 'Chirp'),
-            _SheetTile(
-              icon: Symbols.newspaper,
-              label: 'Your posts',
-              onTap: () => Navigator.pop(context), // TODO: wire route
-            ),
-            _SheetTile(
-              icon: Symbols.group_add,
-              label: 'Create community',
-              onTap: () {
-                Navigator.pop(context);
-                CreateCommunitiesRoute().push(context);
-              },
-            ),
-            _SheetTile(
-              icon: Symbols.view_comfy,
-              label: 'Your communities',
-              onTap: () {
-                Navigator.pop(context);
-                CommunityMembershipsRoute().push(context);
-              },
-            ),
-            _SheetTile(
-              icon: Symbols.block,
-              label: 'Block list',
-              onTap: () {
-                Navigator.pop(context);
-                BlockedItemsRoute().push(context);
-              },
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _SheetSectionLabel(label: 'Chirp'),
+              _SheetTile(
+                icon: Symbols.newspaper,
+                label: 'Your posts',
+                onTap: () => Navigator.pop(context), // TODO: wire route
+              ),
+              _SheetTile(
+                icon: Symbols.group_add,
+                label: 'Create community',
+                onTap: () {
+                  Navigator.pop(context);
+                  CreateCommunitiesRoute().push(context);
+                },
+              ),
+              _SheetTile(
+                icon: Symbols.view_comfy,
+                label: 'Your communities',
+                onTap: () {
+                  Navigator.pop(context);
+                  CommunityMembershipsRoute().push(context);
+                },
+              ),
+              _SheetTile(
+                icon: Symbols.block,
+                label: 'Block list',
+                onTap: () {
+                  Navigator.pop(context);
+                  BlockedItemsRoute().push(context);
+                },
+              ),
 
-            const Divider(indent: 16, endIndent: 16),
+              const Divider(indent: 16, endIndent: 16),
 
-            // Sherehe section
-            _SheetSectionLabel(label: 'Sherehe'),
-            _SheetTile(
-              icon: Symbols.confirmation_number,
-              label: 'All tickets',
-              onTap: () {
-                Navigator.pop(context);
-                PurchasedTicketsRoute().push(context);
-              },
-            ),
-            _SheetTile(
-              icon: Symbols.event_note,
-              label: 'My organized events',
-              onTap: () {
-                Navigator.pop(context);
-                OrganizedEventsRoute().push(context);
-              },
-            ),
-          ],
+              // Sherehe section
+              _SheetSectionLabel(label: 'Sherehe'),
+              _SheetTile(
+                icon: Symbols.confirmation_number,
+                label: 'All tickets',
+                onTap: () {
+                  Navigator.pop(context);
+                  PurchasedTicketsRoute().push(context);
+                },
+              ),
+              _SheetTile(
+                icon: Symbols.event_note,
+                label: 'My organized events',
+                onTap: () {
+                  Navigator.pop(context);
+                  OrganizedEventsRoute().push(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -325,10 +328,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<PermissionCubit>().checkMultiplePermissions([
-      AppPermission.notification,
-      AppPermission.preciseAlarm,
-    ]);
+    final permissions = [AppPermission.notification];
+    if (Platform.isAndroid) {
+      permissions.add(AppPermission.preciseAlarm);
+    }
+    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
   }
 
   void _showActionsSheet(BuildContext context) {
@@ -336,6 +340,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       useRootNavigator: true,
       showDragHandle: true,
+      isScrollControlled: true,
       builder: (_) => const _HomeActionsSheet(),
     );
   }
