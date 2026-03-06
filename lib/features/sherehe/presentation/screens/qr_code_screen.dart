@@ -41,10 +41,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       final pdfFile = await _generateTicketPdf();
 
       // Share the PDF
-      await Share.shareXFiles([
-        XFile(pdfFile.path),
-      ], text: 'Here is your ticket for ${widget.ticketName}!');
-
+      final box = context.findRenderObject() as RenderBox?;
+      await Share.shareXFiles(
+        [XFile(pdfFile.path)],
+        text: 'Here is your ticket for ${widget.ticketName}!',
+        sharePositionOrigin: box != null
+            ? box.localToGlobal(Offset.zero) & box.size
+            : null,
+      );
+    
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(

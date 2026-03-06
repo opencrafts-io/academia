@@ -80,11 +80,17 @@ class InviteLinkWidget extends StatelessWidget {
 
           // Share button
           FilledButton.icon(
-            onPressed: () => Share.share(
-              "👋 Hey! I’m inviting you to join our community on Academia.\n\n"
-              "Tap the link below to accept your invite:\n$inviteLink",
-              subject: "Join our community on Academia!",
-            ),
+            onPressed: () {
+              final box = context.findRenderObject() as RenderBox?;
+              Share.share(
+                "👋 Hey! I’m inviting you to join our community on Academia.\n\n"
+                "Tap the link below to accept your invite:\n$inviteLink",
+                subject: "Join our community on Academia!",
+                sharePositionOrigin: box != null
+                    ? box.localToGlobal(Offset.zero) & box.size
+                    : null,
+              );
+            },
             icon: const Icon(Icons.share),
             label: const Text("Share"),
             style: FilledButton.styleFrom(
