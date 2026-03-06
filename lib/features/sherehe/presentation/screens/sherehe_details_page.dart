@@ -111,7 +111,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             switch (value) {
                               case 'share':
                                 final url =
-                                    'https://academia.opencrafts.io/${ShereheDetailsRoute(eventId: state.event.id).location}';
+                                    'https://academia.opencrafts.io${ShereheDetailsRoute(eventId: state.event.id).location}';
 
                                 Share.share(
                                   'You have been invited from Academia to the following event:\n\n '
