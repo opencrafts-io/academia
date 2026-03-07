@@ -17,7 +17,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:workmanager/workmanager.dart';
 import './background_callback_dispatcher.dart';
 
-void main(args) async {
+void main(List<String> args) async {
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

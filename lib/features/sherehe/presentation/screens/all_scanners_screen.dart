@@ -130,7 +130,7 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                   else
                     SliverList.separated(
                       itemCount: state.scanners.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final scanner = state.scanners[index];
 
@@ -152,7 +152,7 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                 else if (state is AllScannersStatePaginationLoading) ...[
                   SliverList.separated(
                     itemCount: state.existingScanners.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final scanner = state.existingScanners[index];
 
@@ -179,7 +179,7 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                 else if (state is AllScannersStatePaginationError) ...[
                   SliverList.separated(
                     itemCount: state.existingScanners.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final scanner = state.existingScanners[index];
 

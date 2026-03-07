@@ -170,7 +170,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       final formData = FormData.fromMap({
         'event_name': eventName,
         'event_description': eventDescription,
-        if (eventUrl != null) 'event_url': eventUrl,
+        'event_url': eventUrl,
         'event_location': eventLocation,
         'event_date': eventDate,
         'organizer_id': organizerId,
@@ -388,7 +388,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         data: {
           "ticket_id": ticketId,
           "ticket_quantity": ticketQuantity,
-          if (phoneNumber != null) "user_phone": phoneNumber,
+          "user_phone": phoneNumber,
         },
       );
 

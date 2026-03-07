@@ -244,26 +244,22 @@ class _PostCardState extends State<PostCard> {
                           final isSelected = selectedReason == reason;
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              title: Text(reason),
-                              leading: Radio<String>(
+                            child: RadioGroup<String>(
+                              onChanged: (val) {
+                                setState(() => selectedReason = val);
+                              },
+                              child: RadioListTile.adaptive(
                                 value: reason,
-                                groupValue: selectedReason,
-                                onChanged: (value) {
-                                  setState(() => selectedReason = value);
-                                },
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).dividerColor,
+                                title: Text(reason),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: isSelected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).dividerColor,
+                                  ),
                                 ),
                               ),
-                              onTap: () {
-                                setState(() => selectedReason = reason);
-                              },
                             ),
                           );
                         }),

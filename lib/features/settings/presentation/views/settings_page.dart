@@ -97,12 +97,12 @@ class SettingsPage extends StatelessWidget {
                                   .toggleEnableExtraDarkMode();
                             },
                           ),
-                          SizedBox(height: 18,),
+                          SizedBox(height: 18),
                           _SectionHeader(title: "Courses"),
                           _ToggleCard(
                             title: "Daily schedule at glance",
                             subTitle:
-                            "Pin a smart shortcut for today’s courses to the top of your feed.",
+                                "Pin a smart shortcut for today’s courses to the top of your feed.",
                             value: state.showDailyScheduleOnFeed,
                             onChanged: (value) {
                               context
@@ -158,7 +158,9 @@ class _ThemeModeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(
+            context,
+          ).colorScheme.outline.withAlpha((0.2 * 255).round()),
         ),
       ),
       child: Padding(
@@ -228,7 +230,9 @@ class _ColorSeedCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(
+            context,
+          ).colorScheme.outline.withAlpha((0.2 * 255).round()),
         ),
       ),
       child: Padding(
@@ -302,7 +306,9 @@ class _ToggleCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(
+            context,
+          ).colorScheme.outline.withAlpha((0.2 * 255).round()),
         ),
       ),
       child: Padding(
@@ -310,21 +316,22 @@ class _ToggleCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child:
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.labelLarge),
-                const SizedBox(height: 4),
-                Text(
-                  subTitle,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: Theme.of(context).textTheme.labelLarge),
+                  const SizedBox(height: 4),
+                  Text(
+                    subTitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),),
+                ],
+              ),
+            ),
             Switch(value: value, onChanged: onChanged),
           ],
         ),

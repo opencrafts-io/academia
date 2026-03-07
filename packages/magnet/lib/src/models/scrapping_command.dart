@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magnet/src/models/scrapping_instruction.dart';
 
@@ -32,4 +33,5 @@ abstract class ScrappingCommand with _$ScrappingCommand {
 
   factory ScrappingCommand.fromJson(Map<String, dynamic> json) =>
       _$ScrappingCommandFromJson(json);
+
 }

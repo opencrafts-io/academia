@@ -184,7 +184,7 @@ class _ExpressiveAvatar extends StatelessWidget {
         return Image.memory(
           base64Decode(cleanBase64.trim()),
           fit: BoxFit.cover,
-          errorBuilder: (context, _, __) => _buildPlaceholder(theme),
+          errorBuilder: (context, _, _) => _buildPlaceholder(theme),
         );
       } catch (e) {
         return _buildPlaceholder(theme);

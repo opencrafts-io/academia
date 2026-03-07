@@ -18,7 +18,7 @@ class InAppUpdateBloc extends Bloc<InAppUpdateEvent, InAppUpdateState> {
 
         final packageInfo = await PackageInfo.fromPlatform();
         final currentVersion = Version.parse(packageInfo.version);
-        final Object? rawPayload = await Posthog().getFeatureFlagPayload(
+        final Object? rawPayload = await Posthog().getFeatureFlagResult(
           'app-upgrade-config',
         );
 

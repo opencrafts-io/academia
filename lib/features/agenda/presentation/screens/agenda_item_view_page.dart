@@ -64,30 +64,38 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
     if (await Vibration.hasVibrator()) {
       Vibration.vibrate(preset: VibrationPreset.gentleReminder);
     }
-    
+
     if (!mounted) return;
-    
+
     setState(() {
       _isEditing = !_isEditing;
       if (_isEditing && agendaEvent != null) {
         _titleController.text = agendaEvent!.summary ?? '';
         _descriptionController.text = agendaEvent!.description ?? '';
         _locationController.text = agendaEvent!.location ?? '';
-        
+
         // Initialize timing state
         _isAllDay = agendaEvent!.allDay;
         _startDate = agendaEvent!.startTime ?? DateTime.now();
-        _endDate = agendaEvent!.endTime ?? DateTime.now().add(const Duration(hours: 1));
-        _startTime = TimeOfDay.fromDateTime(agendaEvent!.startTime ?? DateTime.now());
-        _endTime = TimeOfDay.fromDateTime(agendaEvent!.endTime ?? DateTime.now().add(const Duration(hours: 1)));
-        
+        _endDate =
+            agendaEvent!.endTime ??
+            DateTime.now().add(const Duration(hours: 1));
+        _startTime = TimeOfDay.fromDateTime(
+          agendaEvent!.startTime ?? DateTime.now(),
+        );
+        _endTime = TimeOfDay.fromDateTime(
+          agendaEvent!.endTime ?? DateTime.now().add(const Duration(hours: 1)),
+        );
+
         // Initialize recurrence
         if (agendaEvent!.recurrence.isNotEmpty) {
-          _repeatSetting = agendaEvent!.recurrence.first.toString().toUpperCase();
+          _repeatSetting = agendaEvent!.recurrence.first
+              .toString()
+              .toUpperCase();
         } else {
           _repeatSetting = 'Does not repeat';
         }
-        
+
         // Initialize attendees
         _attendees = agendaEvent!.attendees.map((attendee) {
           return <String, String>{
@@ -105,9 +113,9 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
       if (await Vibration.hasVibrator()) {
         Vibration.vibrate(preset: VibrationPreset.softPulse);
       }
-      
+
       if (!mounted) return;
-      
+
       setState(() {
         _isSubmitting = true;
       });
@@ -169,7 +177,7 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
       if (await Vibration.hasVibrator()) {
         Vibration.vibrate(preset: VibrationPreset.emergencyAlert);
       }
-      
+
       if (!mounted) return;
       showDialog(
         context: context,
@@ -231,12 +239,14 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
                     setState(() {
                       agendaEvent = null;
                     });
-                    
+
                     // If we were in the process of deleting, show success message and navigate back
                     if (_isDeleting) {
                       setState(() {
                         _isDeleting = false;
                       });
+
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Event deleted successfully'),
@@ -246,6 +256,7 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
                       Navigator.of(context).pop();
                     } else {
                       // Event was deleted from elsewhere, just navigate back
+                      if (!context.mounted) return;
                       Navigator.of(context).pop();
                     }
                   }
@@ -311,8 +322,10 @@ class _AgendaItemViewPageState extends State<AgendaItemViewPage> {
               onEndDateChanged: (date) => setState(() => _endDate = date),
               onStartTimeChanged: (time) => setState(() => _startTime = time),
               onEndTimeChanged: (time) => setState(() => _endTime = time),
-              onRepeatChanged: (setting) => setState(() => _repeatSetting = setting),
-              onAttendeesChanged: (attendees) => setState(() => _attendees = attendees),
+              onRepeatChanged: (setting) =>
+                  setState(() => _repeatSetting = setting),
+              onAttendeesChanged: (attendees) =>
+                  setState(() => _attendees = attendees),
             );
           },
         ),
@@ -562,14 +575,18 @@ class _TitleField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((255.0 * 0.5).round()),
         ),
       ),
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.w500,
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((255.0 * 0.5).round()),
       ),
     );
   }
@@ -621,13 +638,17 @@ class _DescriptionField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((255.0 * 0.5).round()),
         ),
       ),
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((255.0 * 0.5).round()),
       ),
       maxLines: 3,
       minLines: 1,
@@ -683,18 +704,24 @@ class _LocationField extends StatelessWidget {
           size: 20,
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((255.0 * 0.5).round()),
         ),
         hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((255.0 * 0.5).round()),
         ),
       ),
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((0.5 * 255.0).round()),
       ),
     );
   }
@@ -763,14 +790,14 @@ class _TimingSection extends StatelessWidget {
               Switch(
                 value: isAllDay,
                 onChanged: onAllDayChanged,
-                thumbColor: WidgetStateProperty.resolveWith<Color?>(
-                  (Set<WidgetState> states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Theme.of(context).colorScheme.primary;
-                    }
-                    return null;
-                  },
-                ),
+                thumbColor: WidgetStateProperty.resolveWith<Color?>((
+                  Set<WidgetState> states,
+                ) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Theme.of(context).colorScheme.primary;
+                  }
+                  return null;
+                }),
               ),
             ],
           ),
@@ -917,7 +944,9 @@ class _DateTimeRow extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: enabled
                   ? null
-                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  : Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
         ),
@@ -933,7 +962,9 @@ class _DateTimeRow extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: enabled
                     ? null
-                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                    : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ),
@@ -1059,7 +1090,8 @@ class _DateTimeDisplay extends StatelessWidget {
     if (isAllDay) {
       return dateStr;
     } else {
-      final timeStr = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+      final timeStr =
+          '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
       return '$dateStr at $timeStr';
     }
   }
@@ -1095,7 +1127,9 @@ class _RepeatSelector extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: enabled
                   ? null
-                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  : Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
           const Spacer(),
@@ -1180,9 +1214,13 @@ class _AttendeesSection extends StatelessWidget {
                     if (value.isNotEmpty && value.contains('@')) {
                       final newAttendee = <String, String>{
                         'email': value,
-                        'displayName': value.split('@')[0], // Use email prefix as display name
+                        'displayName': value.split(
+                          '@',
+                        )[0], // Use email prefix as display name
                       };
-                      final updatedAttendees = List<Map<String, String>>.from(attendees)..add(newAttendee);
+                      final updatedAttendees = List<Map<String, String>>.from(
+                        attendees,
+                      )..add(newAttendee);
                       onAttendeesChanged(updatedAttendees);
                       attendeesController.clear();
                     }
@@ -1198,7 +1236,9 @@ class _AttendeesSection extends StatelessWidget {
                       'email': value,
                       'displayName': value.split('@')[0],
                     };
-                    final updatedAttendees = List<Map<String, String>>.from(attendees)..add(newAttendee);
+                    final updatedAttendees = List<Map<String, String>>.from(
+                      attendees,
+                    )..add(newAttendee);
                     onAttendeesChanged(updatedAttendees);
                     attendeesController.clear();
                   }
@@ -1219,7 +1259,9 @@ class _AttendeesSection extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
                     child: Text(
                       (attendee['displayName'] ?? 'A')[0].toUpperCase(),
                       style: TextStyle(
@@ -1235,15 +1277,17 @@ class _AttendeesSection extends StatelessWidget {
                       children: [
                         Text(
                           attendee['displayName'] ?? '',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         Text(
                           attendee['email'] ?? '',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -1251,7 +1295,9 @@ class _AttendeesSection extends StatelessWidget {
                   if (enabled) ...[
                     IconButton(
                       onPressed: () {
-                        final updatedAttendees = List<Map<String, String>>.from(attendees)..remove(attendee);
+                        final updatedAttendees = List<Map<String, String>>.from(
+                          attendees,
+                        )..remove(attendee);
                         onAttendeesChanged(updatedAttendees);
                       },
                       icon: const Icon(Icons.remove_circle_outline, size: 20),

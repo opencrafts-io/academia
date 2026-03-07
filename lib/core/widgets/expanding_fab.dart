@@ -181,13 +181,23 @@ class _ExpandingFabFlowDelegate extends FlowDelegate {
       // Use a Matrix4 to translate, then scale from the center
       final matrix = Matrix4.identity()
         // 1. Move to the final (x, y) position
-        ..translate(x, y)
+        ..translateByDouble(x, y, 0.0, 1.0)
         // 2. Move to the center of the small button
-        ..translate(smallButtonSize.width / 2, smallButtonSize.height / 2)
+        ..translateByDouble(
+          smallButtonSize.width / 2,
+          smallButtonSize.height / 2,
+          0.0,
+          1.0,
+        )
         // 3. Scale from that center
-        ..scale(animationValue, animationValue)
+        ..scaleByDouble(animationValue, animationValue, 0.0, 1.0)
         // 4. Move back
-        ..translate(-smallButtonSize.width / 2, -smallButtonSize.height / 2);
+        ..translateByDouble(
+          -smallButtonSize.width / 2,
+          -smallButtonSize.height / 2,
+          0.0,
+          1.0,
+        );
 
       context.paintChild(
         i,

@@ -109,6 +109,8 @@ dependencies:
   uuid: ^4.5.2
   package_info_plus: ^9.0.0
   pub_semver: ^2.2.0
+  video_player: ^2.11.0
+  flex_color_picker: ^3.8.0
 
 
 dev_dependencies:

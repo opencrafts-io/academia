@@ -62,8 +62,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
 
     if (institutionState is InstitutionLoadedState &&
         institutionState.institutions.isNotEmpty) {
-      final primaryInstitution = institutionState.institutions.first;
-
       // TODO: multiple institutuions
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,8 +82,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
               children: [
                 Row(
                   children: [
-                    Text("Essentials ",
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                    Text(
+                      "Essentials ",
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
                   ],

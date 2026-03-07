@@ -16,7 +16,7 @@ class RRuleEditorWidget extends StatefulWidget {
 
 class _RRuleEditorWidgetState extends State<RRuleEditorWidget> {
   RecurrenceType _recurrenceType = RecurrenceType.none;
-  Set<DayOfWeek> _selectedDays = {};
+  final Set<DayOfWeek> _selectedDays = {};
   int _interval = 1;
 
   @override
@@ -110,10 +110,14 @@ class _RRuleEditorWidgetState extends State<RRuleEditorWidget> {
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withAlpha(
+        (255.0 * 0.3).round(),
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+        side: BorderSide(
+          color: colorScheme.outline.withAlpha((255.0 * 0.3).round()),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -246,10 +250,12 @@ class _RRuleEditorWidgetState extends State<RRuleEditorWidget> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withOpacity(0.3),
+                  color: colorScheme.primaryContainer.withAlpha(
+                    (255.0 * 0.3).round(),
+                  ),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: colorScheme.primary.withOpacity(0.3),
+                    color: colorScheme.primary.withAlpha((255.0 * 0.3).round()),
                   ),
                 ),
                 child: Row(

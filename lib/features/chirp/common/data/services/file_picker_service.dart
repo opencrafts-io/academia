@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 
@@ -33,8 +34,7 @@ class FilePickerService {
         }).toList();
       }
     } catch (e) {
-      // Handle error
-      print('Error picking files: $e');
+      Logger().e("Error picking files", error: e);
     }
 
     return [];
@@ -55,7 +55,7 @@ class FilePickerService {
         }).toList();
       }
     } catch (e) {
-      print('Error picking images: $e');
+      Logger().e("Error picking image(s)", error: e);
     }
 
     return [];
@@ -76,7 +76,7 @@ class FilePickerService {
         }).toList();
       }
     } catch (e) {
-      print('Error picking videos: $e');
+      Logger().e("Error picking video(s)", error: e);
     }
 
     return [];
@@ -98,7 +98,7 @@ class FilePickerService {
         }).toList();
       }
     } catch (e) {
-      print('Error picking documents: $e');
+      Logger().e("Error picking document(s)", error: e);
     }
 
     return [];
@@ -130,7 +130,8 @@ class FilePickerService {
 
     return Attachments(
       id: int.parse(DateTime.now().millisecondsSinceEpoch.toString()),
-      postId: 0, // This will be set when the attachment is associated with a post
+      postId:
+          0, // This will be set when the attachment is associated with a post
       attachmentType: attachmentType,
       file: file.path ?? '', // For local files, this will be the file path
       name: file.name,

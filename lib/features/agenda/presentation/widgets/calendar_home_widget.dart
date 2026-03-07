@@ -1,24 +1,18 @@
 import 'dart:async';
-import 'package:academia/config/router/router.dart';
 import 'package:academia/constants/responsive_break_points.dart';
-import 'package:academia/features/agenda/agenda.dart';
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/course/presentation/widgets/course_card.dart';
-import 'package:academia/features/timetable/domain/entities/timetable_entry_entity.dart';
-import 'package:academia/features/timetable/presentation/bloc/timetable_entry_bloc.dart';
-import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:vibration/vibration.dart';
-import 'package:vibration/vibration_presets.dart';
 
 class CalendarHomeWidget extends StatefulWidget {
   final DateTime selectedDay;
-  final Function(DateTime selectedDay, List<AgendaEvent> events,
-      List<TimetableEntryEntity> classes)? onDayChanged;
+  final Function(
+    DateTime selectedDay,
+    List<AgendaEvent> events,
+    List<TimetableEntryEntity> classes,
+  )?
+  onDayChanged;
 
   const CalendarHomeWidget({
     super.key,
@@ -42,9 +36,9 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
     // Fetch cached agenda events when widget initializes
     context.read<AgendaEventBloc>().add(FetchCachedAgendaEventsEvent());
     // Ensure we are watching timetable entries
-    context
-        .read<TimetableEntryBloc>()
-        .add(const WatchAllTimetableEntriesEvent());
+    context.read<TimetableEntryBloc>().add(
+      const WatchAllTimetableEntriesEvent(),
+    );
   }
 
   @override
@@ -180,7 +174,9 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
 
               // Count different types
               final eventCount = events.whereType<AgendaEvent>().length;
-              final classCount = events.whereType<TimetableEntryEntity>().length;
+              final classCount = events
+                  .whereType<TimetableEntryEntity>()
+                  .length;
 
               return Positioned(
                 bottom: 6,
@@ -230,7 +226,9 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
                 context,
                 day,
                 backgroundColor: colorScheme.primary,
-                borderColor: colorScheme.onPrimary.withOpacity(0.5),
+                borderColor: colorScheme.onPrimary.withAlpha(
+                  (0.5 * 255).round(),
+                ),
                 textStyle: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onPrimary,
@@ -265,9 +263,7 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
               );
             },
           ),
-          calendarStyle: const CalendarStyle(
-            isTodayHighlighted: true,
-          ),
+          calendarStyle: const CalendarStyle(isTodayHighlighted: true),
           selectedDayPredicate: (date) => isSameDay(date, widget.selectedDay),
           focusedDay: widget.selectedDay,
           firstDay: DateTime.now().subtract(const Duration(days: 365 * 2)),
@@ -290,24 +286,20 @@ class _CalendarHomeWidgetState extends State<CalendarHomeWidget> {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border:
-            borderColor != null ? Border.all(color: borderColor, width: 2) : null,
+        border: borderColor != null
+            ? Border.all(color: borderColor, width: 2)
+            : null,
         boxShadow: isToday
             ? [
                 BoxShadow(
-                  color: backgroundColor.withOpacity(0.3),
+                  color: backgroundColor.withAlpha((255.0 * 0.3).round()),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
-                )
+                ),
               ]
             : null,
       ),
-      child: Center(
-        child: Text(
-          day.day.toString(),
-          style: textStyle,
-        ),
-      ),
+      child: Center(child: Text(day.day.toString(), style: textStyle)),
     );
   }
 }

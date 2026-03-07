@@ -705,8 +705,11 @@ class InstitutionKeysViewRoute extends GoRouteData
 class EditStudentProfileRoute extends GoRouteData
     with $EditStudentProfileRoute {
   final int profileId;
-  final int? institutionID;
-  const EditStudentProfileRoute({required this.profileId, this.institutionID});
+  final int institutionID;
+  const EditStudentProfileRoute({
+    required this.profileId,
+    required this.institutionID,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EditStudentProfilePage(profileId: profileId);

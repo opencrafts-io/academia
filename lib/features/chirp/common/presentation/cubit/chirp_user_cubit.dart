@@ -1,6 +1,4 @@
 import 'package:academia/features/chirp/common/domain/domain.dart';
-import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_id_usecase.dart';
-import 'package:academia/features/chirp/common/domain/usecases/get_chirp_user_by_username_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

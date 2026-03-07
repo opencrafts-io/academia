@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:academia/config/config.dart';
-import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
@@ -79,7 +78,7 @@ class _FeedPageState extends State<FeedPage>
               PostDetailRoute(postId: posts[i].id).location,
               extra: posts[i],
             );
-            if (!context.mounted) return;
+            if (!mounted) return;
             if (updatedPost != null && updatedPost is Post) {
               context.read<FeedBloc>().add(UpdatePostInFeed(updatedPost));
             }
@@ -169,15 +168,15 @@ class _FeedPageState extends State<FeedPage>
                   final feed = getPostsWithAds(posts);
                   return SliverList.builder(
                     itemCount:
-                    feed.length + (isLoadingMore || hasError ? 1 : 0),
+                        feed.length + (isLoadingMore || hasError ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index < feed.length) {
                         final item = feed[index];
                         if (item is PostCard) {
                           return BlocProvider(
                             create: (context) =>
-                            sl<ChirpUserCubit>()
-                              ..getChirpUserByID(item.post.authorId),
+                                sl<ChirpUserCubit>()
+                                  ..getChirpUserByID(item.post.authorId),
                             child: item,
                           );
                         }
@@ -257,7 +256,6 @@ class _FeedEmptyState extends StatelessWidget {
     );
   }
 }
-
 
 class _FeedErrorState extends StatelessWidget {
   const _FeedErrorState({required this.message, required this.onRetry});

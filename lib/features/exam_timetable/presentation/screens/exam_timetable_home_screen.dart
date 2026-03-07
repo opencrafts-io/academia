@@ -3,7 +3,6 @@ import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/countdown_timer.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
-import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

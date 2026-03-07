@@ -192,7 +192,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     padding: const EdgeInsets.all(16.0),
                     sliver: SliverList.separated(
                       itemCount: state.attendee.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 20),
+                      separatorBuilder: (_, _) => const SizedBox(height: 20),
                       itemBuilder: (context, index) {
                         final item = state.attendee[index];
 
@@ -211,7 +211,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                   padding: const EdgeInsets.all(16.0),
                   sliver: SliverList.separated(
                     itemCount: state.existingAttendee.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 20),
+                    separatorBuilder: (_, _) => const SizedBox(height: 20),
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
@@ -237,7 +237,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                   padding: const EdgeInsets.all(16.0),
                   sliver: SliverList.separated(
                     itemCount: state.existingAttendee.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 20),
+                    separatorBuilder: (_, _) => const SizedBox(height: 20),
                     itemBuilder: (context, index) {
                       final item = state.existingAttendee[index];
 
@@ -320,7 +320,7 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                     padding: const EdgeInsets.all(16),
                     sliver: SliverList.separated(
                       itemCount: state.attendee.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 20),
+                      separatorBuilder: (_, _) => const SizedBox(height: 20),
                       itemBuilder: (context, index) {
                         final item = state.attendee[index];
                         return TicketCardWidget(

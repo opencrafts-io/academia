@@ -225,9 +225,9 @@ class _AgendaFormState extends State<_AgendaForm>
       if (await Vibration.hasVibrator()) {
         Vibration.vibrate(preset: VibrationPreset.gentleReminder);
       }
-      
+
       if (!mounted) return;
-      
+
       setState(() {
         _isSubmitting = true;
       });
@@ -620,14 +620,18 @@ class _TitleField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((0.5 * 255.0).round()),
         ),
       ),
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.w500,
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((255.0 * .5).round()),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -657,13 +661,17 @@ class _DescriptionField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((0.5 * 255.0).round()),
         ),
       ),
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((0.5 * 255.0).round()),
       ),
       maxLines: 3,
       minLines: 1,
@@ -691,18 +699,24 @@ class _LocationField extends StatelessWidget {
           size: 20,
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((0.5 * 255.0).round()),
         ),
         hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: enabled
               ? Theme.of(context).colorScheme.onSurfaceVariant
-              : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha((0.5 * 255.0).round()),
         ),
       ),
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
         color: enabled
             ? null
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((0.5 * 255).round()),
       ),
     );
   }
@@ -845,7 +859,9 @@ class _DateTimeRow extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: enabled
                   ? null
-                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  : Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withAlpha((0.5 * 255).round()),
             ),
           ),
         ),
@@ -861,7 +877,9 @@ class _DateTimeRow extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: enabled
                     ? null
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.5 * 255.0).round()),
               ),
             ),
           ),
@@ -994,7 +1012,9 @@ class _AnimatedRepeatSelectorState extends State<_AnimatedRepeatSelector>
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: widget.enabled
                     ? null
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.5 * 255).round()),
               ),
             ),
             const Spacer(),
@@ -1182,7 +1202,9 @@ class _AttendeesSectionState extends State<_AttendeesSection> {
                     icon: const Icon(Icons.remove_circle_outline, size: 20),
                     color: widget.enabled
                         ? Theme.of(context).colorScheme.error
-                        : Theme.of(context).colorScheme.error.withOpacity(0.5),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.error.withAlpha((255 * 0.5).round()),
                   ),
                 ],
               ),
