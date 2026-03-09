@@ -26,11 +26,7 @@ class AttachmentWidget extends StatelessWidget {
       default:
         child = const SizedBox.shrink();
     }
-    return SizedBox(
-      width: 80,
-      height: 80,
-      child: child,
-    );
+    return SizedBox(width: 80, height: 80, child: child);
   }
 }
 
@@ -83,7 +79,9 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.url));
+    _videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.url),
+    );
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
@@ -131,11 +129,10 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
   }
 }
 
-
 // --- Preview Widgets ---
 
 abstract class _PreviewWidget extends StatelessWidget {
-  const _PreviewWidget({super.key});
+  const _PreviewWidget();
 
   Widget buildPreview(BuildContext context);
   void onPreviewTap(BuildContext context);
@@ -147,7 +144,7 @@ abstract class _PreviewWidget extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             width: 1.0,
@@ -181,12 +178,11 @@ class _ImagePreview extends _PreviewWidget {
       errorWidget: (context, url, error) => Icon(
         Icons.broken_image,
         size: 40,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
     );
   }
 }
-
 
 class _VideoPreview extends _PreviewWidget {
   final String url;
@@ -216,9 +212,9 @@ class _VideoPreview extends _PreviewWidget {
           child: Icon(
             Icons.play_circle_outline,
             size: 32,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withAlpha((0.8 * 255).round()),
           ),
-        )
+        ),
       ],
     );
   }
@@ -235,11 +231,10 @@ class _FilePreview extends _PreviewWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Could not open file."),
-        ),
-      );
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Could not open file.")));
     }
   }
 

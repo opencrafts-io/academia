@@ -52,4 +52,6 @@ class ScrappingResult with _$ScrappingResult {
 
   factory ScrappingResult.fromJson(Map<String, dynamic> json) =>
       _$ScrappingResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ScrappingResultToJson(this);
 }

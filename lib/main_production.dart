@@ -18,7 +18,7 @@ import 'package:workmanager/workmanager.dart';
 import './background_callback_dispatcher.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
-void main(args) async {
+void main(List<String> args) async {
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

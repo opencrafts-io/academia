@@ -63,8 +63,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
                 );
 
                 // Stage 1: Schedule 30 minutes before class
-                final alert30 =
-                    classStartTime.subtract(const Duration(minutes: 30));
+                final alert30 = classStartTime.subtract(
+                  const Duration(minutes: 30),
+                );
                 if (alert30.isAfter(now)) {
                   await _send30MinuteAlert(
                     course: course,
@@ -75,8 +76,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
                 }
 
                 // Stage 2: Schedule 15 minutes before class
-                final alert15 =
-                    classStartTime.subtract(const Duration(minutes: 15));
+                final alert15 = classStartTime.subtract(
+                  const Duration(minutes: 15),
+                );
                 if (alert15.isAfter(now)) {
                   await _send15MinuteAlert(
                     course: course,
@@ -95,7 +97,8 @@ class CourseAlertBackgroundTask extends BackgroundTask {
                     scheduledDate: classStartTime,
                   );
                 } else if (now.isBefore(
-                    classStartTime.add(const Duration(minutes: 5)))) {
+                  classStartTime.add(const Duration(minutes: 5)),
+                )) {
                   // If class just started (within 5 mins), send immediately
                   await _sendClassStartingAlert(
                     course: course,
@@ -156,14 +159,14 @@ class CourseAlertBackgroundTask extends BackgroundTask {
 
   /// Stage 1: Alert 30 minutes before class
   Future<void> _send30MinuteAlert({
-    required course,
-    required entry,
+    required CourseEntity course,
+    required TimetableEntryEntity entry,
     required String location,
     DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _generateNotificationId(entry.id!, 30),
+        id: _generateNotificationId(entry.id ?? '', 30),
         channelKey: 'course_alerts',
         title: 'Upcoming ${course.courseName}',
         summary: 'Starting in 30 minutes',
@@ -184,7 +187,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       ),
       schedule: scheduledDate != null
           ? NotificationCalendar.fromDate(
-              date: scheduledDate, preciseAlarm: true)
+              date: scheduledDate,
+              preciseAlarm: true,
+            )
           : null,
       actionButtons: [
         NotificationActionButton(
@@ -198,14 +203,14 @@ class CourseAlertBackgroundTask extends BackgroundTask {
 
   /// Stage 2: Alert 15 minutes before class
   Future<void> _send15MinuteAlert({
-    required course,
-    required entry,
+    required CourseEntity course,
+    required TimetableEntryEntity entry,
     required String location,
     DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _generateNotificationId(entry.id!, 15),
+        id: _generateNotificationId(entry.id ?? '', 15),
         channelKey: 'course_alerts',
         title: 'Upcoming: ${course.courseName}',
         summary: 'Starting in 15 minutes',
@@ -219,8 +224,8 @@ class CourseAlertBackgroundTask extends BackgroundTask {
         color: Colors.white,
         payload: {
           "type": "15_minute_alert",
-          "entry_id": entry.id!,
-          "course_id": course.id ?? '',
+          "entry_id": entry.id,
+          "course_id": course.id,
         },
         wakeUpScreen: true,
         criticalAlert: true,
@@ -231,21 +236,23 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       ),
       schedule: scheduledDate != null
           ? NotificationCalendar.fromDate(
-              date: scheduledDate, preciseAlarm: true)
+              date: scheduledDate,
+              preciseAlarm: true,
+            )
           : null,
     );
   }
 
   /// Stage 3: Alert when class is starting
   Future<void> _sendClassStartingAlert({
-    required course,
-    required entry,
+    required CourseEntity course,
+    required TimetableEntryEntity entry,
     required String location,
     DateTime? scheduledDate,
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _generateNotificationId(entry.id!, 0),
+        id: _generateNotificationId(entry.id ?? '', 0),
         channelKey: 'course_alerts',
         title: 'Time for ${course.courseName}!',
         summary: 'Starting Now • ${entry.durationMinutes}m',
@@ -268,7 +275,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       ),
       schedule: scheduledDate != null
           ? NotificationCalendar.fromDate(
-              date: scheduledDate, preciseAlarm: true)
+              date: scheduledDate,
+              preciseAlarm: true,
+            )
           : null,
       actionButtons: [],
     );
@@ -276,8 +285,8 @@ class CourseAlertBackgroundTask extends BackgroundTask {
 
   /// Stage 4: Show status notification during class
   Future<void> _sendClassInProgressAlert({
-    required course,
-    required entry,
+    required CourseEntity course,
+    required TimetableEntryEntity entry,
     required String location,
     required DateTime startTime,
     required DateTime endTime,
@@ -289,11 +298,12 @@ class CourseAlertBackgroundTask extends BackgroundTask {
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _generateNotificationId(entry.id!, -1),
+        id: _generateNotificationId(entry.id ?? '', -1),
         channelKey: 'course_alerts',
         title: '${course.courseName} is in progress',
         body: '📍 $location\n👨‍🏫 ${course.instructor}',
-        summary: 'Ends at ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')} ($totalDuration mins total)',
+        summary:
+            'Ends at ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')} ($totalDuration mins total)',
         actionType: ActionType.KeepOnTop,
         notificationLayout: NotificationLayout.BigText,
         category: NotificationCategory.Status,
@@ -311,7 +321,9 @@ class CourseAlertBackgroundTask extends BackgroundTask {
       ),
       schedule: scheduledDate != null
           ? NotificationCalendar.fromDate(
-              date: scheduledDate, preciseAlarm: true)
+              date: scheduledDate,
+              preciseAlarm: true,
+            )
           : null,
     );
   }

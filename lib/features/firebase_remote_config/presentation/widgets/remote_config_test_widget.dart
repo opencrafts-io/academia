@@ -68,7 +68,7 @@ class RemoteConfigTestWidget extends StatelessWidget {
     }
 
     return Card(
-      color: color.withOpacity(0.1),
+      color: color.withAlpha((0.1*255.0).round()),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

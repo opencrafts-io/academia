@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 class _CommunitySearchCard extends StatelessWidget {
-  const _CommunitySearchCard({super.key, required this.community});
+  const _CommunitySearchCard({required this.community});
   final Community community;
 
   @override
@@ -105,7 +105,6 @@ class _CommunitySearchCard extends StatelessWidget {
   }
 }
 
-
 class GlobalSearchDelegate extends SearchDelegate<void> {
   GlobalSearchDelegate() : super(searchFieldLabel: 'Search communities...');
 
@@ -134,13 +133,11 @@ class GlobalSearchDelegate extends SearchDelegate<void> {
     tooltip: 'Back',
   );
 
-
   @override
   Widget buildResults(BuildContext context) {
     _performSearch(context);
     return _SearchBody(query: query);
   }
-
 
   @override
   Widget buildSuggestions(BuildContext context) {
@@ -148,7 +145,6 @@ class GlobalSearchDelegate extends SearchDelegate<void> {
     return _SearchBody(query: query);
   }
 }
-
 
 class _SearchBody extends StatelessWidget {
   const _SearchBody({required this.query});
@@ -175,9 +171,8 @@ class _SearchBody extends StatelessWidget {
 
             return ListView.builder(
               itemCount: state.communities.length,
-              itemBuilder: (context, index) => _CommunitySearchCard(
-                community: state.communities[index],
-              ),
+              itemBuilder: (context, index) =>
+                  _CommunitySearchCard(community: state.communities[index]),
             );
           }
 
@@ -187,7 +182,6 @@ class _SearchBody extends StatelessWidget {
     );
   }
 }
-
 
 class _SearchEmptyPrompt extends StatelessWidget {
   const _SearchEmptyPrompt();
@@ -227,4 +221,3 @@ class _SearchNoResults extends StatelessWidget {
     );
   }
 }
-

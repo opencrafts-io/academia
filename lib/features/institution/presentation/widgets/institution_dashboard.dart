@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magnet/magnet.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
-import './sync_required_card.dart';
 
 class InstitutionDashboard extends StatefulWidget {
   const InstitutionDashboard({super.key, required this.institutionID});
