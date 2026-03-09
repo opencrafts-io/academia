@@ -190,7 +190,7 @@ class _ExpandingFabFlowDelegate extends FlowDelegate {
           1.0,
         )
         // 3. Scale from that center
-        ..scaleByDouble(animationValue, animationValue, 0.0, 1.0)
+        ..scaleByDouble(animationValue, animationValue, 1.0, 1.0)
         // 4. Move back
         ..translateByDouble(
           -smallButtonSize.width / 2,
