@@ -91,7 +91,7 @@ class AchievementDetailView extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 24.0),
                         child: Card(
                           elevation: 0,
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           child: ListTile(
                             title: Text(activity.name),
                             subtitle: Text(activity.description ?? ''),

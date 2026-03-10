@@ -589,58 +589,54 @@ class _CommunityActionSection extends StatelessWidget {
                   ),
                   const Divider(),
                   Expanded(
-                    child: ListView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.all(20),
-                      children: [
-                        Text(
-                          'Why are you reporting this community?',
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 16),
-                        ...reasons.map((reason) {
-                          final isSelected = selectedReason == reason;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              title: Text(reason),
-                              leading: Radio<String>(
+                    child: RadioGroup(
+                      onChanged: (val) {
+                        setState(() => selectedReason = val.toString());
+                      },
+                      child: ListView(
+                        controller: scrollController,
+                        padding: const EdgeInsets.all(20),
+                        children: [
+                          Text(
+                            'Why are you reporting this community?',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(height: 16),
+                          ...reasons.map((reason) {
+                            final isSelected = selectedReason == reason;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: RadioListTile.adaptive(
                                 value: reason,
-                                groupValue: selectedReason,
-                                onChanged: (value) {
-                                  setState(() => selectedReason = value);
-                                },
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).dividerColor,
+                                title: Text(reason),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: isSelected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).dividerColor,
+                                  ),
                                 ),
                               ),
-                              onTap: () {
-                                setState(() => selectedReason = reason);
-                              },
-                            ),
-                          );
-                        }),
-                        if (selectedReason == 'Other') ...[
-                          const SizedBox(height: 16),
-                          TextField(
-                            controller: customReasonController,
-                            maxLines: 4,
-                            maxLength: 500,
-                            decoration: InputDecoration(
-                              hintText: 'Please provide more details...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                            );
+                          }),
+                          if (selectedReason == 'Other') ...[
+                            const SizedBox(height: 16),
+                            TextField(
+                              controller: customReasonController,
+                              maxLines: 4,
+                              maxLength: 500,
+                              decoration: InputDecoration(
+                                hintText: 'Please provide more details...',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                   Container(
@@ -845,7 +841,9 @@ class _CommunityActionSection extends StatelessWidget {
                             showAdaptiveDialog(
                               context: context,
                               builder: (context) => AlertDialog.adaptive(
-                                title: const Text("Are you sure you want to leave? "),
+                                title: const Text(
+                                  "Are you sure you want to leave? ",
+                                ),
                                 content: const Text(
                                   "By leaving you will no longer recieve"
                                   "updates from this community nor see posts"
@@ -918,7 +916,10 @@ class _CommunityActionSection extends StatelessWidget {
                                 ),
                               );
                             },
-                            leading: const Icon(Icons.delete, color: Colors.red),
+                            leading: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
                             title: const Text("Delete community"),
                           ),
                         ),

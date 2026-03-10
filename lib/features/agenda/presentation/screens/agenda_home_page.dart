@@ -1,9 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/agenda/presentation/widgets/agenda_timeline_widget.dart';
-import 'package:academia/features/timetable/domain/entities/timetable_entry_entity.dart';
-import 'package:academia/features/todos/presensentation/widgets/create_todo_bottom_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../course/presentation/cubit/course_cubit.dart';
+import '../widgets/agenda_timeline_widget.dart';
 
 class AgendaHomePage extends StatefulWidget {
   const AgendaHomePage({super.key});
@@ -27,7 +25,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
   void initState() {
     super.initState();
     context.read<CourseCubit>().watchCourses();
-    context.read<TimetableEntryBloc>().add(const WatchAllTimetableEntriesEvent());
+    context.read<TimetableEntryBloc>().add(
+      const WatchAllTimetableEntriesEvent(),
+    );
     context.read<AgendaEventBloc>().add(FetchCachedAgendaEventsEvent());
   }
 
@@ -41,7 +41,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
 
     // Map Dart weekday (1=Monday...7=Sunday) to RRULE day codes
     final weekdayMap = {
-      1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU',
+      1: 'MO',
+      2: 'TU',
+      3: 'WE',
+      4: 'TH',
+      5: 'FR',
+      6: 'SA',
+      7: 'SU',
     };
     final dayCode = weekdayMap[day.weekday]!;
 
@@ -96,14 +102,14 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 ),
               ],
             ),
-            
+
             // Calendar Section
             SliverPadding(
               padding: const EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
                 child: CalendarHomeWidget(
                   selectedDay: _selectedDay,
-                  onDayChanged: (day, _, __) {
+                  onDayChanged: (day, _, _) {
                     setState(() {
                       _selectedDay = day;
                     });
@@ -122,9 +128,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 child: Row(
                   children: [
                     Text(
-                      isSameDay(_selectedDay, DateTime.now()) 
-                        ? "Today's Schedule" 
-                        : DateFormat('EEEE, MMMM d').format(_selectedDay),
+                      isSameDay(_selectedDay, DateTime.now())
+                          ? "Today's Schedule"
+                          : DateFormat('EEEE, MMMM d').format(_selectedDay),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -148,8 +154,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             // Combined Schedule (Reactive)
             BlocBuilder<TimetableEntryBloc, TimetableEntryState>(
               builder: (context, timetableState) {
-                final allTimetableEntries = timetableState is TimetableEntriesLoaded 
-                    ? timetableState.entries 
+                final allTimetableEntries =
+                    timetableState is TimetableEntriesLoaded
+                    ? timetableState.entries
                     : <TimetableEntryEntity>[];
 
                 return BlocBuilder<AgendaEventBloc, AgendaEventState>(
@@ -159,15 +166,19 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         stream: agendaState.agendaEventsStream,
                         builder: (context, snapshot) {
                           final allEvents = snapshot.data ?? [];
-                          
-                          // Filter for the selected day
-                          final dayEvents = allEvents.where((e) => 
-                            e.startTime != null && isSameDay(e.startTime!, _selectedDay)
-                          ).toList();
 
-                          final dayClasses = allTimetableEntries.where((e) => 
-                            _occursOnDay(e, _selectedDay)
-                          ).toList();
+                          // Filter for the selected day
+                          final dayEvents = allEvents
+                              .where(
+                                (e) =>
+                                    e.startTime != null &&
+                                    isSameDay(e.startTime!, _selectedDay),
+                              )
+                              .toList();
+
+                          final dayClasses = allTimetableEntries
+                              .where((e) => _occursOnDay(e, _selectedDay))
+                              .toList();
 
                           return SliverPadding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -182,7 +193,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                         },
                       );
                     }
-                    
+
                     return const SliverToBoxAdapter(
                       child: Center(
                         child: Padding(
@@ -195,11 +206,9 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 );
               },
             ),
-            
+
             // Bottom Padding for FAB
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 100),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
       ),

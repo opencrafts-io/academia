@@ -87,9 +87,7 @@ class _TimetableEntryEditorPageState extends State<TimetableEntryEditorPage> {
               FilledButton.icon(
                 onPressed: _saveEntry,
                 label: Text("Save"),
-                icon: Icon(
-                  Icons.save_outlined
-                ),
+                icon: Icon(Icons.save_outlined),
               ),
             ],
           ),
@@ -475,10 +473,5 @@ class _TimetableEntryEditorPageState extends State<TimetableEntryEditorPage> {
     );
 
     Navigator.of(context).pop();
-  }
-
-  Color _getContrastColor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

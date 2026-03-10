@@ -1,4 +1,3 @@
-import 'package:academia/config/router/routes.dart';
 import 'package:flutter/material.dart';
 
 class CommunityAbout extends StatefulWidget {

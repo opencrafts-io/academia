@@ -2,8 +2,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/firebase_remote_config/firebase_remote_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
-import 'dart:convert';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigRepositoryImpl implements RemoteConfigRepository {
   final RemoteConfigRemoteDatasource remoteDatasource;

@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:academia/config/config.dart';
-import 'package:academia/features/agenda/agenda.dart';
 import 'package:academia/features/course/course.dart';
-import 'package:academia/features/course/presentation/widgets/course_card.dart';
-import 'package:academia/features/timetable/domain/entities/timetable_entry_entity.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -50,8 +48,6 @@ class _AgendaTimelineWidgetState extends State<AgendaTimelineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     // Combine and sort events by time
     final allDayItems = <_TimelineItem>[];
     

@@ -151,7 +151,6 @@ class CommentContentWidget extends StatelessWidget {
     final TextEditingController customReasonController =
         TextEditingController();
 
-
     final reasons = [
       'Spam or misleading',
       'Harassment or hate speech',
@@ -229,26 +228,22 @@ class CommentContentWidget extends StatelessWidget {
                           final isSelected = selectedReason == reason;
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              title: Text(reason),
-                              leading: Radio<String>(
+                            child: RadioGroup(
+                              onChanged: (val) {
+                                setState(() => val = reason);
+                              },
+                              child: RadioListTile.adaptive(
                                 value: reason,
-                                groupValue: selectedReason,
-                                onChanged: (value) {
-                                  setState(() => selectedReason = value);
-                                },
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).dividerColor,
+                                title: Text(reason),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: isSelected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).dividerColor,
+                                  ),
                                 ),
                               ),
-                              onTap: () {
-                                setState(() => selectedReason = reason);
-                              },
                             ),
                           );
                         }),
@@ -280,34 +275,32 @@ class CommentContentWidget extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: selectedReason == null
-                            ? null
-                            : () {
-                                final reason = selectedReason == 'Other'
-                                    ? customReasonController.text.trim()
-                                    : selectedReason!;
+                        onPressed: () {
+                          final reason = selectedReason == 'Other'
+                              ? customReasonController.text.trim()
+                              : selectedReason;
 
-                                if (reason.isEmpty) return;
+                          if (reason?.isEmpty ?? true) return;
 
-                                final messenger = ScaffoldMessenger.of(context);
+                          final messenger = ScaffoldMessenger.of(context);
 
-                                context.read<ReportBloc>().add(
-                                  ReportContentEvent(
-                                    reportType: 'comment',
-                                    entityId: commentId.toString(),
-                                    reason: reason,
-                                  ),
-                                );
-                                Navigator.pop(context);
-                                messenger.showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Thank you for your report. Our team will review it.',
-                                    ),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              },
+                          context.read<ReportBloc>().add(
+                            ReportContentEvent(
+                              reportType: 'comment',
+                              entityId: commentId.toString(),
+                              reason: reason ?? 'Other',
+                            ),
+                          );
+                          Navigator.pop(context);
+                          messenger.showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Thank you for your report. Our team will review it.',
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Theme.of(context).colorScheme.error,

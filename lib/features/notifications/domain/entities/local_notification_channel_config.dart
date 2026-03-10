@@ -91,17 +91,17 @@ class NotificationChannelConfig {
     playSound: true,
   );
 
-
-  static const NotificationChannelConfig courseAlerts = NotificationChannelConfig(
-  channelKey: 'course_alerts',
-  channelName: 'Course Alerts',
-  channelDescription: 'Notifications for upcoming classes',
-  defaultColor: const Color(0xFF007DFD),
-  importance: NotificationImportance.Max,
-  playSound: true,
-  ledColor: const Color(0xFF007DFD),
-  soundSource: 'resource://raw/class_join',
-  defaultPrivacy: NotificationPrivacy.Public,
-  enableVibration: true,
-  );
+  static const NotificationChannelConfig courseAlerts =
+      NotificationChannelConfig(
+        channelKey: 'course_alerts',
+        channelName: 'Course Alerts',
+        channelDescription: 'Notifications for upcoming classes',
+        defaultColor: Color(0xFF007DFD),
+        importance: NotificationImportance.Max,
+        playSound: true,
+        ledColor: Color(0xFF007DFD),
+        soundSource: 'resource://raw/class_join',
+        defaultPrivacy: NotificationPrivacy.Public,
+        enableVibration: true,
+      );
 }

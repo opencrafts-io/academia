@@ -75,8 +75,7 @@ class ChirpCommunityMembershipRepositoryImpl
         .leaveCommunity(communityID: communityID);
 
     return remoteRes.fold((failure) => left(failure), (ok) async {
-      final localRes = await chirpCommunityMembershipLocalDatasource
-          .deleteCached(communityID);
+      await chirpCommunityMembershipLocalDatasource.deleteCached(communityID);
       return right(null);
     });
   }

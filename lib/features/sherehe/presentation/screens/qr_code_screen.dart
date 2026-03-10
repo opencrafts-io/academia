@@ -531,7 +531,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                   shape: PrettyQrSmoothSymbol(
                                     color: Colors.black,
                                   ),
-                                  quietZone: PrettyQrQuietZone.standart,
+                                  quietZone: PrettyQrQuietZone.standard,
                                 ),
                               ),
                             ),

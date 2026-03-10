@@ -121,7 +121,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                 else
                   SliverList.separated(
                     itemCount: state.attendees.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final attendee = state.attendees[index];
 
@@ -138,7 +138,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
               else if (state is AllAttendeesStatePaginationLoading) ...[
                 SliverList.separated(
                   itemCount: state.existingAttendee.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
 
@@ -160,7 +160,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
               else if (state is AllAttendeesStatePaginationError) ...[
                 SliverList.separated(
                   itemCount: state.existingAttendee.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
 

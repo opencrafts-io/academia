@@ -17,7 +17,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:workmanager/workmanager.dart';
 import './background_callback_dispatcher.dart';
 
-void main(args) async {
+void main(List<String> args) async {
   await runZonedGuarded(
     () async {
       final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

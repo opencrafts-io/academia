@@ -47,7 +47,9 @@ class SyncRequiredCard extends StatelessWidget {
             Text(
               "We’re showing you offline data for now. If you're online, a quick sync will bring in the latest updates from your institution.",
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSecondaryContainer.withOpacity(0.8),
+                color: colorScheme.onSecondaryContainer.withAlpha(
+                  (0.8 * 255.0).round(),
+                ),
               ),
             ),
             const SizedBox(height: 16),

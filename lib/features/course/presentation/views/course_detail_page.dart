@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/timetable/timetable.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 
 /// Course detail page with Material 3 design
 /// Displays course information and associated timetable entries
@@ -76,9 +76,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   Widget _buildLoadingView(ColorScheme colorScheme) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar.large(
-          title: const Text('Loading...'),
-        ),
+        SliverAppBar.large(title: const Text('Loading...')),
         SliverFillRemaining(
           child: Center(
             child: CircularProgressIndicator(color: colorScheme.primary),
@@ -91,9 +89,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   Widget _buildErrorView(String message, ColorScheme colorScheme) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar.large(
-          title: const Text('Error'),
-        ),
+        SliverAppBar.large(title: const Text('Error')),
         SliverFillRemaining(
           child: Center(
             child: Column(
@@ -414,7 +410,7 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
     if (widget.course != oldWidget.course) {
       _codeController.text = widget.course.courseCode;
       _nameController.text = widget.course.courseName;
-      _instructorController.text = widget.course.instructor ?? '';
+      _instructorController.text = widget.course.instructor;
       _selectedColor = widget.course.color ?? const Color(0xFF1E1E2E);
     }
   }
@@ -486,10 +482,7 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
               spacing: 10,
               runSpacing: 10,
               wheelDiameter: 165,
-              heading: Text(
-                'Select color',
-                style: theme.textTheme.titleSmall,
-              ),
+              heading: Text('Select color', style: theme.textTheme.titleSmall),
               subheading: Text(
                 'Select color shade',
                 style: theme.textTheme.titleSmall,
@@ -500,7 +493,7 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
               context,
               Icons.person_outline,
               'Instructor',
-              widget.course.instructor ?? 'Not assigned',
+              widget.course.instructor,
             ),
           ],
         ],
@@ -520,14 +513,12 @@ class _CourseInfoSectionState extends State<_CourseInfoSection> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+            color: theme.colorScheme.primaryContainer.withAlpha(
+              (0.4 * 255.0).round(),
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            size: 20,
-            color: theme.colorScheme.primary,
-          ),
+          child: Icon(icon, size: 20, color: theme.colorScheme.primary),
         ),
         const SizedBox(width: 16),
         Column(

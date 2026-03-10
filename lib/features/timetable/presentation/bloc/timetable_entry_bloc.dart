@@ -300,11 +300,11 @@ class TimetableEntryBloc
 
   String _mapFailureToMessage(Failure failure) {
     if (failure is ServerFailure) {
-      return failure.message ?? 'Server error occurred';
+      return failure.message;
     } else if (failure is CacheFailure) {
-      return failure.message ?? 'Local database error occurred';
+      return failure.message;
     } else if (failure is NetworkFailure) {
-      return failure.message ?? 'No internet connection';
+      return failure.message;
     } else {
       return 'Unexpected error occurred';
     }

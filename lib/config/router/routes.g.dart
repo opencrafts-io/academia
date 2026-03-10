@@ -1286,16 +1286,14 @@ mixin $EditStudentProfileRoute on GoRouteData {
   static EditStudentProfileRoute _fromState(GoRouterState state) =>
       EditStudentProfileRoute(
         profileId: int.parse(state.pathParameters['profileId']!),
-        institutionID: int.tryParse(
-          state.pathParameters['institutionID'] ?? '',
-        )!,
+        institutionID: int.parse(state.pathParameters['institutionID']!),
       );
 
   EditStudentProfileRoute get _self => this as EditStudentProfileRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/institution/${Uri.encodeComponent(_self.institutionID!.toString() ?? '')}/profile/${Uri.encodeComponent(_self.profileId.toString())}',
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/profile/${Uri.encodeComponent(_self.profileId.toString())}',
   );
 
   @override
