@@ -166,7 +166,11 @@ class CourseAlertBackgroundTask extends BackgroundTask {
   }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _generateNotificationId(entry.id ?? '', 30),
+        id: _generateNotificationId(
+          entry.id ??
+              "${entry.courseId}_${entry.startDate.millisecondsSinceEpoch}",
+          30,
+        ),
         channelKey: 'course_alerts',
         title: 'Upcoming ${course.courseName}',
         summary: 'Starting in 30 minutes',
