@@ -111,6 +111,7 @@ dependencies:
   pub_semver: ^2.2.0
   video_player: ^2.11.0
   flex_color_picker: ^3.8.0
+  app_tracking_transparency: ^2.0.6+1
 
 
 dev_dependencies:

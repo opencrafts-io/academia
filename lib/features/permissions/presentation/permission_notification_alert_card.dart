@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:academia/features/features.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:flutter/material.dart';
@@ -30,77 +32,79 @@ class PermissionNotificationAlertCard extends StatelessWidget {
           },
         ),
       ],
-        child: Card.filled(
-          margin: EdgeInsets.all(0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-          color: Theme.of(context).colorScheme.errorContainer,
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            leading: AnimatedEmoji(AnimatedEmojis.headNod),
-            title: const Text("Stay Informed"),
-            subtitle: const Text(
-              "Receive alerts for classes and schedule changes.",
-            ),
-            subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-            onTap: () async {
-              if (await Vibration.hasVibrator()) {
-                Vibration.vibrate(duration: 128);
-              }
+      child: Card.filled(
+        margin: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        color: Theme.of(context).colorScheme.errorContainer,
+        child: ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          leading: AnimatedEmoji(AnimatedEmojis.headNod),
+          title: const Text("Stay Informed"),
+          subtitle: const Text(
+            "Receive alerts for classes and schedule changes.",
+          ),
+          subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
+          onTap: () async {
+            if (await Vibration.hasVibrator()) {
+              Vibration.vibrate(duration: 128);
+            }
 
-              if (!context.mounted) return;
+            if (!context.mounted) return;
 
-              // Check both permissions
-              await context.read<PermissionCubit>().checkPermission(
-                AppPermission.notification,
-              );
+            // Check both permissions
+            await context.read<PermissionCubit>().checkPermission(
+              AppPermission.notification,
+            );
 
-              if (!context.mounted) return;
+            if (!context.mounted) return;
 
-              if (context.read<PermissionCubit>().state
-                  is PermissionPermanentlyDenied) {
-                return showAdaptiveDialog(
-                  context: context,
-                  builder: (context) => AlertDialog.adaptive(
-                    title: const Text("Allow permission"),
-                    content: const Text(
-                      "You've previously denied permissions "
-                      "to send you notifications. You may miss important updates "
-                      "please re-enable them on the app's phone settings page.",
-                    ),
-                    actions: [
-                      FilledButton.icon(
-                        onPressed: () {
-                          openAppSettings();
-                          context.pop();
-                        },
-                        label: const Text("Enable"),
-                        icon: const Icon(Icons.notifications),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: const Text("Cancel"),
-                      ),
-                    ],
+            if (context.read<PermissionCubit>().state
+                is PermissionPermanentlyDenied) {
+              return showAdaptiveDialog(
+                context: context,
+                builder: (context) => AlertDialog.adaptive(
+                  title: const Text("Allow permission"),
+                  content: const Text(
+                    "You've previously denied permissions "
+                    "to send you notifications. You may miss important updates "
+                    "please re-enable them on the app's phone settings page.",
                   ),
-                );
-              }
-
-              // Request Notification permission
-              await context.read<PermissionCubit>().requestPermission(
-                AppPermission.notification,
+                  actions: [
+                    FilledButton.icon(
+                      onPressed: () {
+                        openAppSettings();
+                        context.pop();
+                      },
+                      label: const Text("Enable"),
+                      icon: const Icon(Icons.notifications),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                  ],
+                ),
               );
+            }
 
-              // Also request Precise Alarm permission for timing accuracy
+            // Request Notification permission
+            await context.read<PermissionCubit>().requestPermission(
+              AppPermission.notification,
+            );
+
+            // Also request Precise Alarm permission for timing accuracy
+            if (Platform.isAndroid) {
               if (context.mounted) {
                 await context.read<PermissionCubit>().requestPermission(
                   AppPermission.preciseAlarm,
                 );
               }
-            },
-          ),
+            }
+          },
         ),
+      ),
     );
   }
 }

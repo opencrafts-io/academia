@@ -359,6 +359,7 @@ class CommentContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      key: ValueKey('comment_user_${comment.id}_${comment.authorId}'),
       create: (context) => ChirpUserCubit(
         getChirpUserByIdUsecase: sl(),
         getChirpUserByUsernameUsecase: sl(),

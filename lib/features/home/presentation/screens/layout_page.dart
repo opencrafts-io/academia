@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:academia/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import '../widgets/tracking_explainer_sheet.dart';
+import 'package:flutter/foundation.dart';
 
 
 class _MobileLayout extends StatelessWidget {
@@ -161,11 +165,41 @@ class LayoutPage extends StatefulWidget {
 }
 
 class _LayoutPageState extends State<LayoutPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showExpressiveTrackingSheet(context);
+    });
+  }
+
   void _onNavigationSelected(int index) {
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
     );
+  }
+
+  Future<void> showExpressiveTrackingSheet(BuildContext context) async {
+    if (kIsWeb && !Platform.isIOS) return;
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+    if (status == TrackingStatus.notDetermined && context.mounted) {
+      await showModalBottomSheet(
+        context: context,
+        isDismissible: false,
+        enableDrag: false,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        builder: (context) => const TrackingExplainerSheet(),
+      );
+
+      await Future.delayed(const Duration(milliseconds: 400));
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
   }
 
   @override

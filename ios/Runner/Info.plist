@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+		<key>NSAppleMusicUsageDescription</key>
+		<string>we need access to your media library to allow you to upload or play audio files within the platform.</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
@@ -41,6 +43,7 @@
 		<true/>
 		<key>UIBackgroundModes</key>
 		<array>
+			<string>fetch</string>
 			<string>remote-notification</string>
 		</array>
 		<key>UILaunchStoryboardName</key>
@@ -82,39 +85,14 @@
 		<string>Keep track of app logs to ensure best performance possible for your device</string>
 		<key>PermissionGroupNotification</key>
 		<string>Bringing you notifications relevant to you</string>
-		<!--Disable transport security for in app webview for institutions using http-->
+		<key>com.posthog.posthog.AUTO_INIT</key>
+		<false/>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>This identifier will be used to deliver personalized ads to you.</string>
 		<key>NSAppTransportSecurity</key>
-    <dict>
-    <key>NSAppleMusicUsageDescription</key>
-    <string>we need access to your media library to allow you to upload or play audio files within the platform.</string>
-    <key>CADisableMinimumFrameDurationOnPhone</key>
-    <true/>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>$(DEVELOPMENT_LANGUAGE)</string>
-    <key>CFBundleDisplayName</key>
-    <string>Academia</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    <key>CFBundleIdentifier</key>
-    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleName</key>
-    <string>Academia</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>$(FLUTTER_BUILD_NAME)</string>
-    <key>CFBundleSignature</key>
-    <string>????</string>
-    <key>CFBundleURLTypes</key>
-    <array>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
 			<true/>
 		</dict>
-		<!-- End of transport security -->
-		<key>com.posthog.posthog.AUTO_INIT</key>
-		<false/>
 	</dict>
 </plist>
