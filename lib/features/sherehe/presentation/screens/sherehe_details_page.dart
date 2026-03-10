@@ -113,12 +113,18 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 final url =
                                     'https://academia.opencrafts.io${ShereheDetailsRoute(eventId: state.event.id).location}';
 
+                                final box =
+                                    context.findRenderObject() as RenderBox?;
                                 Share.share(
                                   'You have been invited from Academia to the following event:\n\n '
                                   '🎉 ${state.event.eventName}\n\n'
                                   '📍 Where: ${state.event.eventLocation}\n'
                                   '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
                                   '🎟 Get your ticket here:\n$url',
+                                  sharePositionOrigin: box != null
+                                      ? box.localToGlobal(Offset.zero) &
+                                            box.size
+                                      : null,
                                 );
                                 break;
 
