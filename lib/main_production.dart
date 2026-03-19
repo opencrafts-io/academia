@@ -35,6 +35,14 @@ void main(List<String> args) async {
       config.sessionReplay = true;
       config.sessionReplayConfig.maskAllTexts = false;
       config.sessionReplayConfig.maskAllImages = false;
+
+      // Enable exception autocapture
+      config.errorTrackingConfig.captureFlutterErrors = true;
+      config.errorTrackingConfig.capturePlatformDispatcherErrors = true;
+      config.errorTrackingConfig.captureIsolateErrors = true;
+      config.errorTrackingConfig.captureNativeExceptions = true;
+      config.errorTrackingConfig.captureSilentFlutterErrors = false;
+
       await Posthog().setup(config);
 
       HydratedBloc.storage = await HydratedStorage.build(
@@ -54,8 +62,6 @@ void main(List<String> args) async {
       );
 
       if (!kIsWeb) {
-        FlutterError.onError =
-            FirebaseCrashlytics.instance.recordFlutterFatalError;
         if (Platform.isAndroid || Platform.isIOS) {
           await Workmanager().initialize(backgroundCallbackDispatcher);
           await registerDefaultBackgroundTasks();
@@ -80,9 +86,7 @@ void main(List<String> args) async {
       );
     },
     (error, stack) {
-      if (!kIsWeb) {
-        FirebaseCrashlytics.instance.recordError(error, stack);
-      }
+      Posthog().captureException(error: error, stackTrace: stack);
     },
   );
 }
