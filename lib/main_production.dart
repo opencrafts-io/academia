@@ -3,12 +3,9 @@ import 'dart:io';
 
 import 'package:academia/app.dart';
 import 'package:academia/config/flavor.dart';
-import 'package:academia/firebase_options.dart';
 import 'package:academia/injection_container.dart' as di;
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -56,10 +53,6 @@ void main(List<String> args) async {
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
-
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
 
       if (!kIsWeb) {
         if (Platform.isAndroid || Platform.isIOS) {

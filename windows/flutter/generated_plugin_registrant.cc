@@ -12,7 +12,6 @@
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
 #include <dynamic_color/dynamic_color_plugin_c_api.h>
 #include <file_selector_windows/file_selector_windows.h>
-#include <firebase_core/firebase_core_plugin_c_api.h>
 #include <flutter_inappwebview_windows/flutter_inappwebview_windows_plugin_c_api.h>
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
 #include <share_plus/share_plus_windows_plugin_c_api.h>
@@ -33,8 +32,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("DynamicColorPluginCApi"));
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
-  FirebaseCorePluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
   FlutterInappwebviewWindowsPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterInappwebviewWindowsPluginCApi"));
   PermissionHandlerWindowsPluginRegisterWithRegistrar(
