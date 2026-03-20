@@ -101,38 +101,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Spacer(),
-
-                  // BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                  //   buildWhen: (stateA, stateB) =>
-                  //       stateB is BoolValueLoadedState &&
-                  //       stateB.value == true &&
-                  //       stateB.key == "enable_review_login",
-                  //   builder: (context, state) => GestureDetector(
-                  //     onDoubleTap:
-                  //         state is BoolValueLoadedState &&
-                  //             state.value == true &&
-                  //             state.key == "enable_review_login"
-                  //         ? () {
-                  //             context.read<AuthBloc>().add(
-                  //               AuthSignInAsReviewerEvent(),
-                  //             );
-                  //             ScaffoldMessenger.of(context).showSnackBar(
-                  //               SnackBar(
-                  //                 content: Text("Enabling test login..."),
-                  //                 behavior: SnackBarBehavior.floating,
-                  //                 duration: Duration(seconds: 2),
-                  //               ),
-                  //             );
-                  //           }
-                  //         : null,
-                  //     child: Visibility(
-                  //       child: Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Assets.icons.academia.image(width: 60),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   Text(
                     "Your school life. Fun.",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -167,39 +135,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     label: Text("Continue with Google"),
                     icon: Icon(FontAwesome.google_brand),
                   ),
-                  // OutlinedButton.icon(
-                  //   onPressed: () {},
-                  //   label: Text("Continue with Microsoft"),
-                  //   icon: Icon(FontAwesome.microsoft_brand),
-                  // ),
-                  // OutlinedButton.icon(
-                  //   onPressed: () {},
-                  //   label: Text("Continue with Github"),
-                  //   icon: Icon(FontAwesome.github_brand),
-                  // ),
-                  // BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                  //   buildWhen: (stateA, stateB) =>
-                  //       stateB is BoolValueLoadedState &&
-                  //       stateB.key == "enable_spotify_login",
-                  //   builder: (context, state) {
-                  //     if (state is BoolValueLoadedState &&
-                  //         state.key == "enable_spotify_login") {
-                  //       return Visibility(
-                  //         visible: state.value,
-                  //         child: OutlinedButton.icon(
-                  //           onPressed: () {
-                  //             BlocProvider.of<AuthBloc>(
-                  //               context,
-                  //             ).add(AuthSignInWithSpotifyEvent());
-                  //           },
-                  //           label: Text("Continue with Spotify"),
-                  //           icon: Icon(FontAwesome.spotify_brand),
-                  //         ),
-                  //       );
-                  //     }
-                  //     return SizedBox.shrink();
-                  //   },
-                  // ),
                   SizedBox(height: 22),
                   Text.rich(
                     TextSpan(
