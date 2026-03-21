@@ -181,11 +181,6 @@ class _AcademiaState extends State<Academia> {
               ),
             ),
         ),
-        BlocProvider(
-          create: (context) =>
-              sl<RemoteConfigBloc>()..add(InitializeRemoteConfigEvent()),
-        ),
-
         BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
@@ -217,16 +212,6 @@ class _AcademiaState extends State<Academia> {
                 if (state is ProfileLoadedState) {
                   context.read<InstitutionBloc>().add(
                     GetCachedUserInstitutionsEvent(state.profile.id),
-                  );
-                }
-              },
-            ),
-            BlocListener<RemoteConfigBloc, RemoteConfigState>(
-              listener: (context, state) {
-                if (state is RemoteConfigErrorState) {
-                  _logger.e(
-                    'Firebase Remote Config failed: ${state.message}',
-                    error: state.message,
                   );
                 }
               },

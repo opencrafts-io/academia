@@ -8,7 +8,6 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
@@ -677,56 +676,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       setUserDataUsecase: sl.get<SetUserDataUsecase>(),
     ),
   );
-
-  // Firebase Remote Config
-  if (!isBackground) {
-    sl.registerSingleton<FirebaseRemoteConfig>(FirebaseRemoteConfig.instance);
-    sl.registerFactory<RemoteConfigRemoteDatasource>(
-      () => RemoteConfigRemoteDatasource(remoteConfig: sl()),
-    );
-    sl.registerFactory<RemoteConfigRepository>(
-      () => RemoteConfigRepositoryImpl(
-        remoteDatasource: sl.get<RemoteConfigRemoteDatasource>(),
-      ),
-    );
-
-    sl.registerFactory<InitializeRemoteConfigUsecase>(
-      () => InitializeRemoteConfigUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<FetchAndActivateUsecase>(
-      () => FetchAndActivateUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetStringUsecase>(
-      () => GetStringUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetBoolUsecase>(
-      () => GetBoolUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetIntUsecase>(
-      () => GetIntUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetDoubleUsecase>(
-      () => GetDoubleUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetJsonUsecase>(
-      () => GetJsonUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<GetAllParametersUsecase>(
-      () => GetAllParametersUsecase(sl.get<RemoteConfigRepository>()),
-    );
-    sl.registerFactory<RemoteConfigBloc>(
-      () => RemoteConfigBloc(
-        initializeUsecase: sl.get<InitializeRemoteConfigUsecase>(),
-        fetchAndActivateUsecase: sl.get<FetchAndActivateUsecase>(),
-        getStringUsecase: sl.get<GetStringUsecase>(),
-        getBoolUsecase: sl.get<GetBoolUsecase>(),
-        getIntUsecase: sl.get<GetIntUsecase>(),
-        getDoubleUsecase: sl.get<GetDoubleUsecase>(),
-        getJsonUsecase: sl.get<GetJsonUsecase>(),
-        getAllParametersUsecase: sl.get<GetAllParametersUsecase>(),
-      ),
-    );
-  }
 
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(

@@ -3,12 +3,9 @@ import 'dart:io';
 
 import 'package:academia/app.dart';
 import 'package:academia/config/flavor.dart';
-import 'package:academia/firebase_options.dart';
 import 'package:academia/injection_container.dart' as di;
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -35,6 +32,14 @@ void main(List<String> args) async {
       config.sessionReplay = true;
       config.sessionReplayConfig.maskAllTexts = false;
       config.sessionReplayConfig.maskAllImages = false;
+
+      // Enable exception autocapture
+      config.errorTrackingConfig.captureFlutterErrors = true;
+      config.errorTrackingConfig.capturePlatformDispatcherErrors = true;
+      config.errorTrackingConfig.captureIsolateErrors = true;
+      config.errorTrackingConfig.captureNativeExceptions = true;
+      config.errorTrackingConfig.captureSilentFlutterErrors = false;
+
       await Posthog().setup(config);
 
       HydratedBloc.storage = await HydratedStorage.build(
@@ -49,13 +54,7 @@ void main(List<String> args) async {
         return;
       }
 
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-
       if (!kIsWeb) {
-        FlutterError.onError =
-            FirebaseCrashlytics.instance.recordFlutterFatalError;
         if (Platform.isAndroid || Platform.isIOS) {
           await Workmanager().initialize(backgroundCallbackDispatcher);
           await registerDefaultBackgroundTasks();
@@ -80,9 +79,7 @@ void main(List<String> args) async {
       );
     },
     (error, stack) {
-      if (!kIsWeb) {
-        FirebaseCrashlytics.instance.recordError(error, stack);
-      }
+      Posthog().captureException(error: error, stackTrace: stack);
     },
   );
 }
