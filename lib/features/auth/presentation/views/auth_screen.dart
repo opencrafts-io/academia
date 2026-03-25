@@ -93,148 +93,178 @@ class _AuthScreenState extends State<AuthScreen> {
         ],
         child: SafeArea(
           minimum: EdgeInsets.all(12),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 320),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Spacer(),
-                  Text(
-                    "Your school life. Fun.",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+          child: LayoutBuilder(
+            builder: (context, constraints) => Center(
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                    maxWidth: 320,
                   ),
-                  Text(
-                    "Login to your Academia account.",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.outlineVariant,
-                    ),
-                  ),
-
-                  SizedBox(height: 16),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      BlocProvider.of<AuthBloc>(
-                        context,
-                      ).add(AuthSignInWithAppleEvent());
-                    },
-                    label: Text("Continue with Apple"),
-                    icon: Icon(FontAwesome.apple_brand),
-                  ),
-
-                  OutlinedButton.icon(
-                    iconAlignment: IconAlignment.start,
-                    onPressed: () async {
-                      BlocProvider.of<AuthBloc>(
-                        context,
-                      ).add(AuthSignInWithGoogleEvent());
-                    },
-                    label: Text("Continue with Google"),
-                    icon: Icon(FontAwesome.google_brand),
-                  ),
-                  SizedBox(height: 22),
-                  Text.rich(
-                    TextSpan(
-                      text:
-                          "By continuing, you acknowledge that you understand and agree to Academia's ",
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        TextSpan(
-                          text: "Terms & conditions",
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              try {
-                                final url = Uri.parse(
-                                  'https://policy.opencrafts.io',
-                                );
-                                if (await canLaunchUrl(url)) {
-                                  launchUrl(url);
-                                }
-                              } catch (e) {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Failed to lauch url"),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              }
-                            },
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Assets.icons.padlock.image(),
+                          ),
                         ),
-                        const TextSpan(text: " and "),
-                        TextSpan(
-                          text: "Privacy Policy",
-                          style: Theme.of(context).textTheme.bodyMedium
+                        SizedBox(height: 8),
+                        Text(
+                          "Your school life. Fun.",
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          "Continue to your Academia account.",
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                decoration: TextDecoration.underline,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outlineVariant,
                               ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              try {
-                                final url = Uri.parse(
-                                  'https://policy.opencrafts.io',
-                                );
-                                if (await canLaunchUrl(url)) {
-                                  launchUrl(url);
-                                }
-                              } catch (e) {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Failed to lauch url"),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              }
-                            },
+                        ),
+
+                        SizedBox(height: 16),
+                        FilledButton.icon(
+                          onPressed: () {
+                            BlocProvider.of<AuthBloc>(
+                              context,
+                            ).add(AuthSignInWithAppleEvent());
+                          },
+                          label: Text("Continue with Apple"),
+                          icon: Icon(FontAwesome.apple_brand),
+                        ),
+
+                        FilledButton.icon(
+                          iconAlignment: IconAlignment.start,
+                          onPressed: () async {
+                            BlocProvider.of<AuthBloc>(
+                              context,
+                            ).add(AuthSignInWithGoogleEvent());
+                          },
+                          label: Text("Continue with Google"),
+                          icon: Icon(FontAwesome.google_brand),
+                        ),
+                        SizedBox(height: 22),
+                        Text.rich(
+                          TextSpan(
+                            text:
+                                "By continuing, you acknowledge that you understand and agree to Academia's ",
+                            children: [
+                              TextSpan(
+                                text: "Terms & conditions",
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    try {
+                                      final url = Uri.parse(
+                                        'https://policy.opencrafts.io',
+                                      );
+                                      if (await canLaunchUrl(url)) {
+                                        launchUrl(url);
+                                      }
+                                    } catch (e) {
+                                      if (!context.mounted) return;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Failed to lauch url"),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    }
+                                  },
+                              ),
+                              const TextSpan(text: " and "),
+                              TextSpan(
+                                text: "Privacy Policy",
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    try {
+                                      final url = Uri.parse(
+                                        'https://policy.opencrafts.io',
+                                      );
+                                      if (await canLaunchUrl(url)) {
+                                        launchUrl(url);
+                                      }
+                                    } catch (e) {
+                                      if (!context.mounted) return;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Failed to lauch url"),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    }
+                                  },
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Spacer(),
+
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Assets.icons.opencrafts.image(height: 40),
+                        ),
+
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text.rich(
+                            TextSpan(
+                              text: "Powered by Open Crafts Interactive",
+                              style: Theme.of(context).textTheme.bodySmall,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  try {
+                                    final url = Uri.parse(
+                                      'https://opencrafts.io/',
+                                    );
+                                    if (await canLaunchUrl(url)) {
+                                      launchUrl(url);
+                                    }
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Failed to lauch url"),
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                  }
+                                },
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  Spacer(),
-
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Assets.icons.opencrafts.image(height: 40),
-                  ),
-
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text.rich(
-                      TextSpan(
-                        text: "Powered by Opencrafts Interactive",
-                        style: Theme.of(context).textTheme.bodySmall,
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            try {
-                              final url = Uri.parse('https://opencrafts.io/');
-                              if (await canLaunchUrl(url)) {
-                                launchUrl(url);
-                              }
-                            } catch (e) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Failed to lauch url"),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                          },
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
