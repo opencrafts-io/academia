@@ -65,6 +65,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
   );
 
+  sl.registerFactory<SignInWithProviderUsecase>(
+    () => SignInWithProviderUsecase(repository: sl.get<AuthRepositoryImpl>()),
+  );
+
   sl.registerFactory<SignInWithAppleUsecase>(
     () => SignInWithAppleUsecase(sl.get<AuthRepositoryImpl>()),
   );

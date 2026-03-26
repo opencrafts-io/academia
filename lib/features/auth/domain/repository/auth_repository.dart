@@ -6,6 +6,11 @@ abstract class AuthRepository {
   Future<Either<Failure, Token>> signInWithGoogle();
   Future<Either<Failure, Token>> signInWithApple();
   Future<Either<Failure, Token>> reviewSignIn();
+  Future<Either<Failure, Token>> signInWithProvider(
+    String provider, {
+    String deviceToken,
+    String deviceName = "Unknown Device",
+  });
   Future<Either<Failure, Token>> signInWithSpotify();
   Future<Either<Failure, List<Token>>> getPreviousAuthState();
   Future<Either<Failure, Token>> refreshVerisafeToken(Token token);

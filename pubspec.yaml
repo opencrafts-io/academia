@@ -109,6 +109,7 @@ dependencies:
   video_player: ^2.11.0
   flex_color_picker: ^3.8.0
   app_tracking_transparency: ^2.0.6+1
+  device_info_plus: ^12.3.0
 
 
 dev_dependencies:

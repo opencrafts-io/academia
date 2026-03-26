@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetPreviousAuthState getPreviousAuthState;
   final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
   final SignInAsReviewUsecase signInAsReviewUsecase;
+  final SignInWithProviderUsecase signInWithProviderUsecase;
   final Posthog posthog = Posthog();
 
   AuthBloc({
@@ -26,16 +27,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.refreshVerisafeTokenUsecase,
     required this.signInAsReviewUsecase,
     required this.signInWithAppleUsecase,
+    required this.signInWithProviderUsecase,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
     on<AuthSignInWithGoogleEvent>(_onSignInWithGoogle);
+    on<AuthSignInWithProviderEvent>(_onSignInWithProvider);
     on<AuthSignInWithAppleEvent>(_onSignInWithApple);
     on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
     on<AuthCheckStatusEvent>(_onAppLaunched);
   }
 
   // --- Event Handlers ---
+  Future<void> _onSignInWithProvider(
+    AuthSignInWithProviderEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading()); // Show loading state
+
+    final result = await signInWithProviderUsecase(event.authProvider);
+
+    result.fold(
+      (failure) =>
+          emit(AuthError(message: (failure as AuthenticationFailure).message)),
+      (token) {
+        // Log successfull login
+        if (sl<FlavorConfig>().isProduction) {
+          posthog.capture(
+            eventName: "user_login",
+            properties: {'login_type': 'Google', "successful": 1},
+          );
+        }
+        emit(AuthAuthenticated(token: token));
+      },
+    );
+  }
 
   Future<void> _onSignInWithSpotify(
     AuthSignInWithSpotifyEvent event,
