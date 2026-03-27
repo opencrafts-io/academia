@@ -176,7 +176,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (tokens.any(
           (token) =>
               token.provider == "verisafe" &&
-              (token.expiresAt?.isAfter(DateTime.now()) ?? false),
+              (token.refreshExpiresAt.isAfter(DateTime.now())),
         )) {
           // -- Attempt to refresh verisafe's token
           refreshVerisafeTokenUsecase(tokens.first);

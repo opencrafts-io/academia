@@ -35,9 +35,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     sl.registerSingleton<AdService>(adService);
   }
 
-  sl.registerFactory<AuthLocalDatasource>(
-    () => AuthLocalDatasource(localDB: cacheDB),
-  );
+  sl.registerSingleton<AuthLocalDatasource>(AuthLocalDatasource());
 
   sl.registerFactory<DioClient>(
     () => DioClient(

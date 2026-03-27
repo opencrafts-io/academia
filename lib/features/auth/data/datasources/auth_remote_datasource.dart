@@ -1,7 +1,7 @@
 import 'package:academia/config/flavor.dart';
+import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -218,12 +218,10 @@ class AuthRemoteDatasource with DioErrorHandler {
 
   /// Maps a [_TokenExchangeResponse] to the domain [TokenData] model.
   TokenData _toTokenData(_TokenExchangeResponse r) => TokenData(
-    id: 1,
     provider: "verisafe",
     accessToken: r.accessToken,
     refreshToken: r.refreshToken,
-    expiresAt: r.accessExpiresAt,
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
+    accessExpiresAt: r.accessExpiresAt,
+    refreshExpiresAt: r.refreshExpiresAt,
   );
 }

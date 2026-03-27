@@ -53,8 +53,12 @@ extension AppDatabaseExtension on AppDataBase {
     // Delete all existing sherehe tables to start from a fresh start
     await m.database.customStatement("DROP TABLE IF EXISTS 'attendee_table';");
     await m.database.customStatement("DROP TABLE IF EXISTS 'event_table';");
-    await m.database.customStatement("DROP TABLE IF EXISTS 'payment_info_table';");
-    await m.database.customStatement("DROP TABLE IF EXISTS 'sherehe_user_table';");
+    await m.database.customStatement(
+      "DROP TABLE IF EXISTS 'payment_info_table';",
+    );
+    await m.database.customStatement(
+      "DROP TABLE IF EXISTS 'sherehe_user_table';",
+    );
     await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
 
     // Recreate all previously deleted tables
@@ -68,5 +72,9 @@ extension AppDatabaseExtension on AppDataBase {
     await m.createTable(dashboardStatsTable);
     await m.createTable(ticketStatsTable);
     await m.createTable(scannerTable);
+  }
+
+  Future<void> migrate25To26(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'token';");
   }
 }

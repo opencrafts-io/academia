@@ -1,26 +1,28 @@
 import 'package:equatable/equatable.dart';
 
 class Token extends Equatable {
-  final int id;
+  final String provider;
   final String accessToken;
   final String refreshToken;
-  final String provider;
-  final DateTime? expiresAt;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime accessExpiresAt;
+  final DateTime refreshExpiresAt;
 
   const Token({
-    required this.id,
     required this.refreshToken,
     required this.provider,
-    required this.expiresAt,
     required this.accessToken,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.refreshExpiresAt,
+    required this.accessExpiresAt,
   });
 
   @override
-  List<Object?> get props => [accessToken, refreshToken];
+  List<Object?> get props => [
+    provider,
+    accessToken,
+    refreshToken,
+    accessExpiresAt,
+    refreshExpiresAt,
+  ];
 
   @override
   bool? get stringify => true;
