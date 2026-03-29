@@ -48,7 +48,7 @@ class SignInWithProviderUsecase extends UseCase<Token, AuthProvider> {
     }
 
     return await repository.signInWithProvider(
-      provider.toString(),
+      provider.name,
       deviceName: deviceName,
       deviceToken: deviceToken,
     );
