@@ -120,6 +120,7 @@ class AuthRemoteDatasource with DioErrorHandler {
       final response = await dioClient.dio.post(
         "/$servicePrefix/auth/token/refresh",
         data: {"refresh_token": token.refreshToken},
+        options: Options(extra: {'skipAuth': true}),
       );
 
       if (response.statusCode == 200) {
@@ -129,7 +130,10 @@ class AuthRemoteDatasource with DioErrorHandler {
         return right(_toTokenData(tokenResponse));
       }
 
-      throw ("Unexpected status code: ${response.statusCode}");
+      throw (AuthenticationFailure(
+        message: "Unexpected status code: ${response.statusCode}",
+        error: response,
+      ));
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
@@ -202,6 +206,7 @@ class AuthRemoteDatasource with DioErrorHandler {
     final response = await dioClient.dio.post(
       "/$servicePrefix/auth/token/exchange",
       data: {"code": code},
+      options: Options(extra: {'skipAuth': true}),
     );
 
     if (response.statusCode != 200) {
