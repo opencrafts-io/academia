@@ -87,12 +87,8 @@ class _EssentialsPageState extends State<EssentialsPage> {
                       style: Theme.of(context).textTheme.headlineLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
+                    Assets.icons.animalsIconButterfly.image(height: 40),
                   ],
-                ),
-                Text(
-                  "Your school life easier. ",
-                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -117,9 +113,9 @@ class _EssentialsPageState extends State<EssentialsPage> {
               children: [
                 Card.outlined(
                   child: ListTile(
-                    leading: Icon(Icons.settings),
+                    leading: Assets.icons.settings.image(height: 40),
                     title: Text("Settings & Preferences"),
-                    subtitle: Text("Theme"),
+                    subtitle: Text("Make Academia behave how you like"),
                     onTap: () => SettingsPageRoute().push(context),
                     subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),

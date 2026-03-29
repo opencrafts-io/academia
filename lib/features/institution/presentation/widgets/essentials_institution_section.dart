@@ -3,6 +3,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:academia/gen/assets.gen.dart';
 
 class EssentialsInstitutionSection extends StatelessWidget {
   const EssentialsInstitutionSection({super.key});
@@ -56,7 +57,7 @@ class _InstitutionCard extends StatelessWidget {
           institutionID: institution.institutionId,
         ).push(context),
 
-        leading: Icon(Icons.school),
+        leading: Assets.icons.motarboard.image(height: 40),
         title: Text(institution.name),
         subtitle: Text(institution.domains?.first ?? ''),
         trailing: Icon(Icons.open_in_new),
