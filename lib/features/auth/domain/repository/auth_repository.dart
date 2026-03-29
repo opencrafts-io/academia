@@ -8,7 +8,7 @@ abstract class AuthRepository {
   Future<Either<Failure, Token>> reviewSignIn();
   Future<Either<Failure, Token>> signInWithProvider(
     String provider, {
-    String deviceToken,
+    String deviceToken = "none",
     String deviceName = "Unknown Device",
   });
   Future<Either<Failure, Token>> signInWithSpotify();
