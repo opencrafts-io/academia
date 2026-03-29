@@ -27,7 +27,11 @@ abstract class TokenData with _$TokenData {
       _$TokenDataFromJson(json);
 }
 
-DateTime _dateFromJson(String? value) =>
-    value == null ? DateTime.now() : DateTime.parse(value);
+DateTime _dateFromJson(String? value) {
+  if (value == null) {
+    throw FormatException('Missing token expiry');
+  }
+  return DateTime.parse(value);
+}
 
 String? _dateToJson(DateTime? value) => value?.toIso8601String();
