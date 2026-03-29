@@ -94,6 +94,8 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
+            signOutUsecase: sl(),
+            signInWithProviderUsecase: sl(),
             signInWithAppleUsecase: sl(),
             signInAsReviewUsecase: sl(),
             refreshVerisafeTokenUsecase: sl(),

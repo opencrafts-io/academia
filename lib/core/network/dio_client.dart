@@ -1,20 +1,16 @@
 import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:academia/config/config.dart';
 import 'package:logger/logger.dart';
 
 class DioClient {
-  /// The DioClient
-  ///
-  /// Will be used to send requests to the server
   late Dio dio;
-  AuthLocalDatasource authLocalDatasource;
-  DioRequestInspector? requestInspector;
 
-  /// Ensure that before instanciating a DioClient that
-  /// you must have injected the flavor
+  final AuthLocalDatasource authLocalDatasource;
+  final DioRequestInspector? requestInspector;
+
+  /// Ensure that before instantiating a [DioClient] you have injected the flavor.
   DioClient(
     FlavorConfig flavor, {
     required this.authLocalDatasource,
@@ -26,32 +22,14 @@ class DioClient {
         preserveHeaderCase: true,
         receiveDataWhenStatusError: true,
         followRedirects: true,
-        validateStatus: (status) {
-          return status! < 500;
-        },
+        validateStatus: (status) => status! < 500,
       ),
     );
 
-    if(requestInspector != null){
+    if (requestInspector != null) {
       dio.interceptors.add(requestInspector!.getDioRequestInterceptor());
     }
 
-    // NOTE: Do not push the loggin version it pollutes the logs!
-    // Use the inbuilt ui inspector
-    // dio.interceptors.add(
-    //   PrettyDioLogger(
-    //     error: true,
-    //     responseBody: true,
-    //     request: true,
-    //     requestBody: true,
-    //     requestHeader: true,
-    //     responseHeader: true,
-    //     maxWidth: 90,
-    //     compact: true,
-    //     enabled: kDebugMode,
-    //   ),
-    // );
-    //
     _addAuthInterceptor();
   }
 
@@ -59,29 +37,52 @@ class DioClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // fetch the token
-          final tokenRes = await authLocalDatasource.getTokenByProvider(
-            "verisafe",
+          if (options.extra['skipAuth'] == true) {
+            handler.next(options);
+            return;
+          }
+
+          // Gate: ensure the biometric session is unlocked before doing
+          // anything. If auth is already in progress from a parallel request
+          // this awaits the same Completer rather than spawning a second prompt.
+          // No request is dispatched unauthenticated -- if auth fails the
+          // request is rejected here rather than going out without a token.
+          final authResult = await authLocalDatasource.ensureAuthenticated();
+
+          final authFailure = authResult.fold((f) => f, (_) => null);
+          if (authFailure != null) {
+            Logger().w(
+              'Auth gate rejected request to ${options.path}: ${authFailure.message}',
+            );
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.cancel,
+                error: authFailure,
+                message: authFailure.message,
+              ),
+              true,
+            );
+            return;
+          }
+
+          // Auth passed -- attach the token.
+          final tokenResult = await authLocalDatasource.getTokenByProvider(
+            'verisafe',
           );
 
-          return tokenRes.fold(
+          tokenResult.fold(
             (failure) {
-              Logger().w('No authentication token found: ${failure.message}');
-              if (kDebugMode) {
-                print('Auth interceptor: ${failure.message}');
-                // Uncomment the next 3 lines to test with a dummy token
-                // options.headers.addAll({
-                //   "Authorization": 'Bearer dummy-token-for-testing',
-                // });
-              }
-              // Continue without auth header - let the API return 401
+              // No token stored (user is not logged in). Continue without
+              // an Authorization header and let the API return 401, which
+              // the refresh interceptor or the UI can handle appropriately.
+              Logger().w(
+                'No token for request to ${options.path}: ${failure.message}',
+              );
               handler.next(options);
             },
             (token) {
-              Logger().i('Adding auth token for request to: ${options.path}');
-              options.headers.addAll({
-                "Authorization": 'Bearer ${token.accessToken}',
-              });
+              options.headers['Authorization'] = 'Bearer ${token.accessToken}';
               handler.next(options);
             },
           );

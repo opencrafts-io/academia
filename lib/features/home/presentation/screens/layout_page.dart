@@ -6,7 +6,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import '../widgets/tracking_explainer_sheet.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:academia/gen/assets.gen.dart';
 
 class _MobileLayout extends StatelessWidget {
   const _MobileLayout({
@@ -26,20 +26,17 @@ class _MobileLayout extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: onDestinationSelected,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Symbols.house_rounded),
-            selectedIcon: Icon(Symbols.house_rounded, fill: 1),
+            icon: Assets.icons.house.image(height: 40),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Symbols.calendar_today_rounded),
-            selectedIcon: Icon(Symbols.calendar_today_rounded, fill: 1),
+            icon: Assets.icons.calendar.image(height: 40),
             label: 'Calendar',
           ),
           NavigationDestination(
-            icon: Icon(Symbols.grid_view_rounded),
-            selectedIcon: Icon(Symbols.grid_view_rounded, fill: 1),
+            icon: Assets.icons.calculator.image(height: 40),
             label: 'Essentials',
           ),
         ],
@@ -71,9 +68,7 @@ class _TabletLayout extends StatelessWidget {
             selectedIconTheme: IconThemeData(
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
-            selectedLabelTextStyle: Theme.of(context)
-                .textTheme
-                .labelMedium
+            selectedLabelTextStyle: Theme.of(context).textTheme.labelMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
             destinations: const [
               NavigationRailDestination(
@@ -155,7 +150,6 @@ class _DesktopLayout extends StatelessWidget {
   }
 }
 
-
 class LayoutPage extends StatefulWidget {
   const LayoutPage({super.key, required this.navigationShell});
   final StatefulNavigationShell navigationShell;
@@ -230,3 +224,4 @@ class _LayoutPageState extends State<LayoutPage> {
     );
   }
 }
+
