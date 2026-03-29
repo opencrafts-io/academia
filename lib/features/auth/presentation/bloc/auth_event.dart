@@ -16,6 +16,8 @@ class AuthSignInWithGoogleEvent extends AuthEvent {
 class AuthSignInWithProviderEvent extends AuthEvent {
   final AuthProvider authProvider;
   const AuthSignInWithProviderEvent({required this.authProvider});
+  @override
+  List<Object> get props => [authProvider];
 }
 
 /// Event dispatched to trigger a sign-in process, typically with Apple.
