@@ -14,4 +14,5 @@ abstract class AuthRepository {
   Future<Either<Failure, Token>> signInWithSpotify();
   Future<Either<Failure, List<Token>>> getPreviousAuthState();
   Future<Either<Failure, Token>> refreshVerisafeToken(Token token);
+  Future<Either<Failure, void>> signout();
 }

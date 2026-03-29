@@ -86,6 +86,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
+  sl.registerFactory<SignOutUsecase>(
+    () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
+  );
+
   //sherehe
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),

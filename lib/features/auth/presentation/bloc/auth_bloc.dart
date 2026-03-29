@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
   final SignInAsReviewUsecase signInAsReviewUsecase;
   final SignInWithProviderUsecase signInWithProviderUsecase;
+  final SignOutUsecase signOutUsecase;
   final Posthog posthog = Posthog();
 
   AuthBloc({
@@ -28,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInAsReviewUsecase,
     required this.signInWithAppleUsecase,
     required this.signInWithProviderUsecase,
+    required this.signOutUsecase,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
@@ -36,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInWithAppleEvent>(_onSignInWithApple);
     on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
     on<AuthCheckStatusEvent>(_onAppLaunched);
+    on<AuthSignOutEvent>(_onSignOut);
   }
 
   // --- Event Handlers ---
@@ -183,6 +186,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           return emit(AuthAuthenticated(token: tokens.first));
         }
         return emit(AuthUnauthenticated());
+      },
+    );
+  }
+
+  Future<void> _onSignOut(
+    AuthSignOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+
+    final result = await signOutUsecase(NoParams());
+    result.fold(
+      (failure) {
+        emit(AuthError(message: failure.message));
+      },
+      (success) {
+        posthog.capture(eventName: "user_logout");
+        emit(AuthUnauthenticated());
       },
     );
   }

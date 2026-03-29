@@ -98,4 +98,25 @@ class AuthRepositoryImpl implements AuthRepository {
       NotFoundFailure(message: "Not implemented", error: UnimplementedError()),
     );
   }
+
+  @override
+  Future<Either<Failure, void>> signout() async {
+    final tokenResult = await authLocalDatasource.getTokenByProvider(
+      "verisafe",
+    );
+
+    return await tokenResult.fold(
+      (failure) async {
+        authLocalDatasource.invalidateSession();
+        await authLocalDatasource.deleteAllTokens();
+        return right(null);
+      },
+      (token) async {
+        authRemoteDatasource.revokeToken(token);
+        authLocalDatasource.invalidateSession();
+        await authLocalDatasource.deleteAllTokens();
+        return right(null);
+      },
+    );
+  }
 }

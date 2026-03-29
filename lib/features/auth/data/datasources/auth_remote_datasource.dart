@@ -147,6 +147,37 @@ class AuthRemoteDatasource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, TokenData>> revokeToken(TokenData token) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/auth/token/revoke",
+        data: {"refresh_token": token.refreshToken},
+      );
+
+      if (response.statusCode == 200) {
+        final tokenResponse = _TokenExchangeResponse.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+        return right(_toTokenData(tokenResponse));
+      }
+
+      throw (AuthenticationFailure(
+        message: "Unexpected status code: ${response.statusCode}",
+        error: response,
+      ));
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Failed to revoke token pair", error: e);
+      return left(
+        AuthenticationFailure(
+          message: "Something went wrong while trying to sign you out",
+          error: e,
+        ),
+      );
+    }
+  }
+
   /// Builds the backend OAuth initiation URL with all required query params.
   Uri _buildAuthUri({
     required String provider,
