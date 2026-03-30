@@ -81,6 +81,14 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
             ),
           );
         } else if (state is ShereheDetailsLoaded) {
+          DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
+
+          final eventDate = normalize(
+            DateTime.parse(state.event.eventDate).toLocal(),
+          );
+          final today = normalize(DateTime.now());
+
+          final isPastEvent = today.isAfter(eventDate);
           return Scaffold(
             body: CustomScrollView(
               slivers: [
@@ -434,12 +442,14 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                   width: double.infinity,
                   height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
                   child: FilledButton(
-                    onPressed: () {
-                      TicketFlowRoute(
-                        eventId: state.event.id,
-                        userId: userId ?? '',
-                      ).push(context);
-                    },
+                    onPressed: isPastEvent
+                        ? null
+                        : () {
+                            TicketFlowRoute(
+                              eventId: state.event.id,
+                              userId: userId ?? '',
+                            ).push(context);
+                          },
                     child: const Text("I'm Going"),
                   ),
                 ),

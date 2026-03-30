@@ -124,6 +124,7 @@ class _TicketEditorSheetState extends State<TicketEditorSheet> {
 
             TicketVisibilitySelector(
               isPublic: isPublic,
+              isEditingTicket: true,
               selectedInstitutions: selectedInstitutions.toList(),
               onVisibilityChanged: (v) {
                 setState(() {
