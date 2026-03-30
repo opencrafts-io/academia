@@ -50,14 +50,18 @@
         <!-- OAuth callback only -->
         <activity
             android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
-            android:exported="true">
+            android:exported="true"
+            android:taskAffinity=""
+          >
             <intent-filter android:label="flutter_web_auth_2">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="academia" />
+                <data
+                  android:scheme="https"
+                  android:host="academia.opencrafts.io"
+                  android:pathPrefix="/auth/callback" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
@@ -114,4 +118,5 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- IMPORTANT FOR PAYMENTS -->
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
 </manifest>

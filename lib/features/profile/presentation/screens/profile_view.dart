@@ -368,8 +368,8 @@ class _ProfileViewState extends State<ProfileView> {
             icon: Icon(Icons.check_rounded),
 
             onPressed: () async {
+              context.read<AuthBloc>().add(AuthSignOutEvent());
               Navigator.pop(dialogContext);
-
               final appDb = sl.get<AppDataBase>();
               final tables = appDb.allTables;
               for (final table in tables) {
@@ -455,6 +455,7 @@ class _ProfileViewState extends State<ProfileView> {
             onPressed: () {
               Navigator.pop(dialogContext);
               context.read<ProfileBloc>().add(RequestAccountDeletionEvent());
+              context.read<AuthBloc>().add(AuthSignOutEvent());
             },
             icon: Icon(Icons.delete_forever_outlined),
             label: Text('Delete My Account'),

@@ -1,5 +1,4 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
-import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
 import 'package:academia/features/chirp/interactions/data/models/block_model.dart';
@@ -41,9 +40,6 @@ part 'database.g.dart';
     // Profile
     UserProfile,
 
-    // Auth
-    Token,
-
     // Posts
     AttachmentTable,
     PostTable,
@@ -54,7 +50,7 @@ part 'database.g.dart';
     AttendeeTable,
     TicketTable,
     PaymentInfoTable,
-    ShereheUserTable, 
+    ShereheUserTable,
     DashboardStatsTable,
     TicketStatsTable,
     ScannerTable,
@@ -121,7 +117,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 25;
+  int get schemaVersion => 26;
 
   @override
   MigrationStrategy get migration {
@@ -165,6 +161,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 24:
               await migrate24To25(m);
+              break;
+            case 25:
+              await migrate25To26(m);
               break;
           }
         }
