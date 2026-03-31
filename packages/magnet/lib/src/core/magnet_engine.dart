@@ -67,7 +67,7 @@ class Magnet {
         );
       }
 
-      if (kDebugMode && (Platform.isAndroid || Platform.isIOS)) {
+      if (kDebugMode && Platform.isAndroid) {
         await InAppWebViewController.setWebContentsDebuggingEnabled(true);
       }
     }
