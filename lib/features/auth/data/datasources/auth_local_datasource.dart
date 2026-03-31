@@ -102,7 +102,8 @@ class AuthLocalDatasource {
     }
   }
 
-  /// Wipes all stored tokens effectively invalidating the session.
+  /// Wipes locally stored tokens for every provider
+  /// Any server side revocation must happen separately.
   Future<Either<Failure, void>> deleteAllTokens() async {
     try {
       final all = await _storage.readAll();
