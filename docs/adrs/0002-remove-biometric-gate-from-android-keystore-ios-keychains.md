@@ -1,4 +1,4 @@
-# 2. Remove Biometric Gate from Android Keystore/ ios Keychains
+# 2. Remove Biometric Gate from Android Keystore / iOS Keychains
 
 Date: 2026-03-31
 
@@ -8,13 +8,13 @@ amended
 
 ## Context
 
-We were faces by a classical scenario of security vs user flow.
+We faced a classic trade-off between security and user flow.
 
-Initialy we had implemented Android Keystore and iOS keychains with biometrics but some concern was raised that the requirement to provision your biometrics on each app launch to decrypt the secrets was super hardcore for a simple application.
+Initially, we used Android Keystore and iOS keychains with biometric gating, but requiring biometric verification on each app launch to decrypt secrets made the flow too heavy for this application.
 
 ## Decision
 
-Following this scenario, a decision was made to soften our security mechanism of storing the device access / refresh tokens,  still use keychains / keystores for secrets such as device tokens, but with the exception of biometrics since it looked like a gimick and it resulted to a broken user flow
+We will continue storing access tokens, refresh tokens, and device tokens in the keystore/keychain, but without biometric gating because it created a broken user flow.
 
 ## Consequences
 
