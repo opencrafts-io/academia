@@ -34,7 +34,9 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
         data: {
           "institution_id": institutionId,
           if (courseCodes != null && courseCodes.isNotEmpty)
-            "course_codes": courseCodes,
+            "course_codes": courseCodes
+                .map((c) => c.replaceAll('-', ''))
+                .toList(),
         },
       );
 

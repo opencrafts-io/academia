@@ -57,12 +57,40 @@ class _EssentialsPageState extends State<EssentialsPage> {
     ),
   ];
 
-  void _navigateToExamTimetable() {
+  void _navigateToExamTimetable() async {
     final institutionState = context.read<InstitutionBloc>().state;
 
     if (institutionState is InstitutionLoadedState &&
         institutionState.institutions.isNotEmpty) {
-      // TODO: multiple institutuions
+      final primaryInstitution = institutionState.institutions.first;
+
+      context.read<ScrappingCommandBloc>().add(
+        GetScrappingCommandEvent(
+          institutionID: primaryInstitution.institutionId,
+        ),
+      );
+      final resolvedState = await context
+          .read<ScrappingCommandBloc>()
+          .stream
+          .firstWhere((s) => s is! ScrappingCommandLoading);
+
+      final isSupported =
+          resolvedState is ScrappingCommandLoaded &&
+          resolvedState.command != null;
+
+      if (!mounted) return;
+
+      if (isSupported) {
+        ExamTimetableRoute(
+          institutionId: primaryInstitution.institutionId.toString(),
+        ).push(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("This feature is not supported for your school"),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("No institution data found")),
@@ -87,8 +115,12 @@ class _EssentialsPageState extends State<EssentialsPage> {
                       style: Theme.of(context).textTheme.headlineLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Assets.icons.animalsIconButterfly.image(height: 40),
+                    AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
                   ],
+                ),
+                Text(
+                  "Your school life easier. ",
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -113,7 +145,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
               children: [
                 Card.outlined(
                   child: ListTile(
-                    leading: Assets.icons.settings.image(height: 40),
+                    leading: Icon(Icons.settings),
                     title: Text("Settings & Preferences"),
                     subtitle: Text("Make Academia behave how you like"),
                     onTap: () => SettingsPageRoute().push(context),

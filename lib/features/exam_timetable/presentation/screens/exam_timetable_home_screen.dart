@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/features/course/course.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/countdown_timer.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
 import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:academia/features/profile/profile.dart';
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 import 'package:academia/features/exam_timetable/presentation/screens/exam_timetable_search_screen.dart';
@@ -23,6 +25,7 @@ class ExamTimetableHomeScreen extends StatefulWidget {
 class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   Timer? _timer;
   bool _hasAttemptedAutoImport = false;
+  bool _autoImportDispatched = false;
 
   @override
   void initState() {
@@ -43,7 +46,11 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
     context.read<ExamTimetableBloc>().add(LoadCachedExams());
   }
 
-  void _importCoursesFromMagnet() {}
+  void _loadCoursesFromLocal() {
+    final institutionID = int.tryParse(widget.institutionId);
+    if (institutionID == null) return;
+    context.read<CourseCubit>().watchByInstitution(institutionID);
+  }
 
   void _navigateToSearch() {
     Navigator.of(context)
@@ -183,29 +190,42 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
           ),
         ],
       ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<ExamTimetableBloc, ExamTimetableState>(
-            listener: (context, state) {
-              if (state is ExamTimetableError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: colorScheme.error,
+      body: BlocListener<CourseCubit, CourseState>(
+        listener: (context, courseState) {
+          // Only active during the one-time auto-import flow (timetable was empty on open).
+          if (!_hasAttemptedAutoImport || _autoImportDispatched) return;
+          courseState.whenOrNull(
+            success: (courses) {
+              if (courses.isNotEmpty && mounted) {
+                _autoImportDispatched = true;
+                final courseCodes = courses.map((e) => e.courseCode).toList();
+                context.read<ExamTimetableBloc>().add(
+                  RefreshExamTimetable(
+                    institutionId: widget.institutionId,
+                    courseCodes: courseCodes,
                   ),
                 );
               }
-
-              if (state is ExamTimetableEmpty) {
-                if (!_hasAttemptedAutoImport) {
-                  _hasAttemptedAutoImport = true;
-                  _importCoursesFromMagnet();
-                }
-              }
             },
-          ),
-        ],
-        child: BlocBuilder<ExamTimetableBloc, ExamTimetableState>(
+          );
+        },
+        child: BlocConsumer<ExamTimetableBloc, ExamTimetableState>(
+          listener: (context, state) {
+            if (state is ExamTimetableError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: colorScheme.error,
+                ),
+              );
+            }
+
+            // Only auto-import once, and only when the timetable is truly empty.
+            if (state is ExamTimetableEmpty && !_hasAttemptedAutoImport) {
+              _hasAttemptedAutoImport = true;
+              _loadCoursesFromLocal();
+            }
+          },
           builder: (context, state) {
             if (state is ExamTimetableLoading) {
               return Center(
