@@ -55,7 +55,10 @@ class HomeRoute extends GoRouteData with $HomeRoute {
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EssentialsPage();
+    return BlocProvider(
+      create: (_) => sl<ScrappingCommandBloc>(),
+      child: EssentialsPage(),
+    );
   }
 }
 
