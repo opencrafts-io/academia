@@ -89,9 +89,7 @@
 		<false/>
 		<key>NSUserTrackingUsageDescription</key>
 		<string>This identifier will be used to deliver personalized ads to you.</string>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Some sensitive operations in the app need your authorization.</string>
-		<key>NSAppTransportSecurity</key>
+    		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
 			<true/>

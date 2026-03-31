@@ -107,13 +107,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
     return await tokenResult.fold(
       (failure) async {
-        authLocalDatasource.invalidateSession();
         await authLocalDatasource.deleteAllTokens();
         return right(null);
       },
       (token) async {
         authRemoteDatasource.revokeToken(token);
-        authLocalDatasource.invalidateSession();
         await authLocalDatasource.deleteAllTokens();
         return right(null);
       },

@@ -42,31 +42,6 @@ class DioClient {
             return;
           }
 
-          // Gate: ensure the biometric session is unlocked before doing
-          // anything. If auth is already in progress from a parallel request
-          // this awaits the same Completer rather than spawning a second prompt.
-          // No request is dispatched unauthenticated -- if auth fails the
-          // request is rejected here rather than going out without a token.
-          final authResult = await authLocalDatasource.ensureAuthenticated();
-
-          final authFailure = authResult.fold((f) => f, (_) => null);
-          if (authFailure != null) {
-            Logger().w(
-              'Auth gate rejected request to ${options.path}: ${authFailure.message}',
-            );
-            handler.reject(
-              DioException(
-                requestOptions: options,
-                type: DioExceptionType.cancel,
-                error: authFailure,
-                message: authFailure.message,
-              ),
-              true,
-            );
-            return;
-          }
-
-          // Auth passed -- attach the token.
           final tokenResult = await authLocalDatasource.getTokenByProvider(
             'verisafe',
           );
