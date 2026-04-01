@@ -214,6 +214,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
             if (state is ExamTimetableError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text(state.message),
                   backgroundColor: colorScheme.error,
                 ),
