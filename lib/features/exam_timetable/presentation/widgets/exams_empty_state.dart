@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:academia/gen/assets.gen.dart';
 
 class EmptyState extends StatelessWidget {
-
-  const EmptyState({ super.key});
+  const EmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,12 @@ class EmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
+                // color: colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
-              child: Image.asset(
-                'assets/illustrations/exam_timetable.png',
+              child: Assets.icons.animalsIconPenguin.image(
                 height: 200,
                 width: 200,
-                fit: BoxFit.contain,
               ),
             ),
             // const SizedBox(height: 24),
