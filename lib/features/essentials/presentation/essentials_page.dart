@@ -9,6 +9,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:academia/injection_container.dart';
 import '../widgets/essential_category_tile.dart';
 
 class EssentialsPage extends StatefulWidget {
@@ -81,6 +82,9 @@ class _EssentialsPageState extends State<EssentialsPage> {
       if (!mounted) return;
 
       if (isSupported) {
+        final adService = sl<AdService>();
+        adService.showInterstitialAd();
+        if (!mounted) return;
         ExamTimetableRoute(
           institutionId: primaryInstitution.institutionId.toString(),
         ).push(context);
