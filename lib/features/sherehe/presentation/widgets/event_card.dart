@@ -100,10 +100,10 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: (event.eventBannerImage != null)
+                child: (event.eventCardImage != null)
                     ? CachedNetworkImage(
                         fit: BoxFit.cover,
-                        imageUrl: event.eventBannerImage!,
+                        imageUrl: event.eventCardImage!,
                         width: double.infinity,
                         errorWidget: (context, child, error) {
                           return Container(

@@ -9,7 +9,6 @@ import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_editor_plus/options.dart' as image_editor_options;
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'package:confetti/confetti.dart';
 import 'package:intl/intl.dart';
 import '../../presentation/presentation.dart';
 
@@ -45,7 +44,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   List<TicketUI> _tickets = [];
   String? organizerId;
   String? organizerName;
-  late ConfettiController _confettiController;
   bool get _isFreeEvent {
     return _tickets.length == 1 && _tickets.first.ticket.ticketPrice == 0;
   }
@@ -61,9 +59,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     } else {
       organizerId = null;
     }
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 1),
-    );
   }
 
   @override
@@ -76,7 +71,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _accountReferenceController.dispose();
     _tillNumberController.dispose();
     _sendMoneyPhoneController.dispose();
-    _confettiController.dispose();
     super.dispose();
   }
 
@@ -568,7 +562,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             body: BlocListener<CreateEventBloc, CreateEventState>(
               listener: (context, state) {
                 if (state is CreateEventSuccess) {
-                  _confettiController.play();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Event created successfully!"),
@@ -603,19 +596,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              shouldLoop: false,
-              emissionFrequency: 0.01,
-              numberOfParticles: 100,
-              maxBlastForce: 100,
-              minBlastForce: 80,
-              gravity: 0.3,
             ),
           ),
         ],
