@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:academia/features/sherehe/presentation/widgets/event_image_picker_widget.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 class ImageUploadPage extends StatelessWidget {
@@ -39,25 +38,43 @@ class ImageUploadPage extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.left,
           ),
+          const SizedBox(height: 8),
+
+          Text(
+            "Upload images to make your event more engaging. Each image is used in different parts of the app.",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           const SizedBox(height: 32),
           EventImagePickerWidget(
             selectedImage: selectedCardImage,
             onTap: onPickCardImage,
-            label: 'Card Image (1:1) *',
+            label: 'Card Image (1:1)',
             height: 350,
+          ),
+          EventImageHelperTextWidget(
+            text:
+                "Used in event listings and when sharing on the event on Chirp. This is the main image people will see first.",
           ),
           const SizedBox(height: 20),
           EventImagePickerWidget(
             selectedImage: selectedBannerImage,
             onTap: onPickBannerImage,
-            label: 'Banner Image (16:9) *',
+            label: 'Banner Image (16:9)',
+          ),
+          EventImageHelperTextWidget(
+            text:
+                "Displayed on the event details page (event preview screen with date, description, and people attending the event).",
           ),
           const SizedBox(height: 20),
           EventImagePickerWidget(
             selectedImage: selectedPosterImage,
             onTap: onPickPosterImage,
-            label: 'Poster Image *',
+            label: 'Poster Image',
             height: 500,
+          ),
+          EventImageHelperTextWidget(
+            text:
+                "Used when sharing your event externally (e.g., WhatsApp and other social media platforms). Acts like a preview image for your event.",
           ),
           const SizedBox(height: 40),
           if (selectedCardImage == null ||

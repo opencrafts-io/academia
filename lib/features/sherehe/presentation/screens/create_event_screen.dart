@@ -22,7 +22,7 @@ class CreateEventScreen extends StatefulWidget {
 class _CreateEventScreenState extends State<CreateEventScreen> {
   final PageController _pageController = PageController();
   final ScrollController _stage3ScrollController = ScrollController();
-  late double _progress;
+  double _progress = 0.25;
 
   final _stage1FormKey = GlobalKey<FormState>();
   final _stage2FormKey = GlobalKey<FormState>();
@@ -51,7 +51,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void initState() {
     super.initState();
-    _progress = 1 / (!_isFreeEvent ? 6 : 5); // Start at first step
     final userState = context.read<ProfileBloc>().state;
 
     if (userState is ProfileLoadedState) {
@@ -394,9 +393,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   // Update progress based on the current page index
   void _updateProgress(int pageIndex) {
     setState(() {
-      _progress =
-          (pageIndex + 1) /
-          (!_isFreeEvent ? 6 : 5); // 6 steps if paid, otherwise 5
+      _progress = (pageIndex + 1) / _steps.length;
     });
 
     if (pageIndex == 2 && _stage3ScrollController.hasClients) {
@@ -414,173 +411,194 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   void _moveToPreviousPage() {
     _pageController.previousPage(
       duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      curve: Curves.elasticOut,
     );
+  }
+
+  List<Widget Function()> get _steps {
+    return [
+      () => BasicEventDetailsPage(
+        formKey: _stage1FormKey,
+        nameController: _nameController,
+        dateTimeController: _dateTimeController,
+        locationController: _locationController,
+        onSelectDateAndTime: () => _selectDateAndTime(context),
+        onNext: () {
+          if (_stage1FormKey.currentState!.validate()) {
+            if (_selectedDateTime == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Please select a date and time"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _moveToNextPage();
+          }
+        },
+        context: context,
+      ),
+      () => EventDescriptionPage(
+        formKey: _stage2FormKey,
+        aboutController: _aboutController,
+        selectedGenres: _selectedGenres,
+        onShowGenreSelectionDialog: _showGenreSelectionDialog,
+        onGenreDeleted: (genre) {
+          _selectedGenres.remove(genre);
+        },
+        onPrevious: _moveToPreviousPage,
+        onNext: () {
+          if (_stage2FormKey.currentState!.validate()) {
+            if (_selectedGenres.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Please select at least one genre"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _moveToNextPage();
+          }
+        },
+        context: context,
+      ),
+      () => ImageUploadPage(
+        controller: _stage3ScrollController,
+        selectedCardImage: _selectedCardImage,
+        onPickCardImage: _pickCardImage,
+        selectedBannerImage: _selectedBannerImage,
+        onPickBannerImage: _pickBannerImage,
+        selectedPosterImage: _selectedPosterImage,
+        onPickPosterImage: _pickPosterImage,
+        onPrevious: _moveToPreviousPage,
+        onNext: () {
+          _moveToNextPage();
+        },
+        context: context,
+      ),
+      () => TicketSelectionPage(
+        initialTickets: _tickets,
+        onContinue: (tickets) {
+          setState(() {
+            _tickets = tickets;
+            _selectedPaymentType = null; // reset payment if tickets changed
+          });
+
+          _moveToNextPage();
+        },
+        onSkip: _moveToNextPage,
+        onPrevious: _moveToPreviousPage,
+      ),
+
+      if (!_isFreeEvent)
+        () => PaymentTypeSelectionPage(
+          formKey: _stage5FormKey,
+          paybillNumberController: _paybillNumberController,
+          accountReferenceController: _accountReferenceController,
+          tillNumberController: _tillNumberController,
+          sendMoneyPhoneController: _sendMoneyPhoneController,
+          selectedPaymentType: _selectedPaymentType,
+          onPaymentTypeChanged: (type) {
+            setState(() {
+              _selectedPaymentType = type;
+
+              _paybillNumberController.clear();
+              _accountReferenceController.clear();
+              _tillNumberController.clear();
+              _sendMoneyPhoneController.clear();
+            });
+          },
+          onPrevious: _moveToPreviousPage,
+          onNext: () {
+            if (_stage5FormKey.currentState!.validate()) {
+              _moveToNextPage();
+            }
+          },
+        ),
+
+      () => Stage4ReviewAndSubmit(
+        onSubmit: _submitForm,
+        onPrevious: _moveToPreviousPage,
+        userName: organizerName ?? "Guest",
+        context: context,
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create an event"),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(8.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: LinearProgressIndicator(
-              value: _progress,
-              valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
-        ),
-      ),
-      body: BlocListener<CreateEventBloc, CreateEventState>(
-        listener: (context, state) {
-          if (state is CreateEventSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Event created successfully!"),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            context.read<ShereheHomeBloc>().add(FetchAllEvents(page: 1));
-            if (context.canPop()) {
-              context.pop(true);
-            }
-          } else if (state is CreateEventFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to create event: ${state.message}'),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
-          }
-        },
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsetsGeometry.all(16.0),
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _pageController,
-              onPageChanged: _updateProgress,
-              children: [
-                BasicEventDetailsPage(
-                  formKey: _stage1FormKey,
-                  nameController: _nameController,
-                  dateTimeController: _dateTimeController,
-                  locationController: _locationController,
-                  onSelectDateAndTime: () => _selectDateAndTime(context),
-                  onNext: () {
-                    if (_stage1FormKey.currentState!.validate()) {
-                      if (_selectedDateTime == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please select a date and time"),
-                            behavior: SnackBarBehavior.floating,
+      body: Stack(
+        children: [
+          NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      automaticallyImplyLeading: true,
+                      title: const Text("Create an event"),
+                      pinned: true,
+                      forceElevated: innerBoxIsScrolled,
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: LinearProgressIndicator(
+                            value: _progress,
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.primary,
+                            ),
+                            // backgroundColor: Theme.of(
+                            //   context,
+                            // ).colorScheme.primary,
                           ),
-                        );
-                        return;
-                      }
-                      _moveToNextPage();
-                    }
-                  },
-                ),
-                EventDescriptionPage(
-                  formKey: _stage2FormKey,
-                  aboutController: _aboutController,
-                  selectedGenres: _selectedGenres,
-                  onShowGenreSelectionDialog: _showGenreSelectionDialog,
-                  onGenreDeleted: (genre) {
-                    setState(() {
-                      _selectedGenres.remove(genre);
-                    });
-                  },
-                  onPrevious: _moveToPreviousPage,
-                  onNext: () {
-                    if (_stage2FormKey.currentState!.validate()) {
-                      if (_selectedGenres.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please select at least one genre"),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        return;
-                      }
-                      _moveToNextPage();
-                    }
-                  },
-                ),
-                ImageUploadPage(
-                  controller: _stage3ScrollController,
-                  selectedCardImage: _selectedCardImage,
-                  onPickCardImage: _pickCardImage,
-                  selectedBannerImage: _selectedBannerImage,
-                  onPickBannerImage: _pickBannerImage,
-                  selectedPosterImage: _selectedPosterImage,
-                  onPickPosterImage: _pickPosterImage,
-                  onPrevious: _moveToPreviousPage,
-                  onNext: () {
-                    _moveToNextPage();
-                  },
-                ),
-                TicketSelectionPage(
-                  initialTickets: _tickets,
-                  onContinue: (tickets) {
-                    setState(() {
-                      _tickets = tickets;
-                      if (_isFreeEvent) {
-                        // reset payment if it is a free event
-                        _selectedPaymentType = null;
-                        _paybillNumberController.clear();
-                        _accountReferenceController.clear();
-                        _tillNumberController.clear();
-                        _sendMoneyPhoneController.clear();
-                      }
-                    });
-                    _moveToNextPage();
-                  },
-                  onSkip: _moveToNextPage,
-                  onPrevious: _moveToPreviousPage,
-                ),
-
-                if (!_isFreeEvent)
-                  PaymentTypeSelectionPage(
-                    formKey: _stage5FormKey,
-                    paybillNumberController: _paybillNumberController,
-                    accountReferenceController: _accountReferenceController,
-                    tillNumberController: _tillNumberController,
-                    sendMoneyPhoneController: _sendMoneyPhoneController,
-                    selectedPaymentType: _selectedPaymentType,
-                    onPaymentTypeChanged: (type) {
-                      setState(() {
-                        _selectedPaymentType = type;
-
-                        _paybillNumberController.clear();
-                        _accountReferenceController.clear();
-                        _tillNumberController.clear();
-                        _sendMoneyPhoneController.clear();
-                      });
-                    },
-                    onPrevious: _moveToPreviousPage,
-                    onNext: () {
-                      if (_stage5FormKey.currentState!.validate()) {
-                        _moveToNextPage();
-                      }
-                    },
+                        ),
+                      ),
+                    ),
+                  ];
+                },
+            body: BlocListener<CreateEventBloc, CreateEventState>(
+              listener: (context, state) {
+                if (state is CreateEventSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Event created successfully!"),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  context.read<ShereheHomeBloc>().add(FetchAllEvents(page: 1));
+                  if (context.canPop()) {
+                    context.pop(true);
+                  }
+                } else if (state is CreateEventFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to create event: ${state.message}'),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                  );
+                }
+              },
+              child: SafeArea(
+                minimum: const EdgeInsets.all(12),
+                child: Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: PageView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _pageController,
+                      onPageChanged: _updateProgress,
+                      itemBuilder: (context, index) => _steps[index](),
+                    ),
                   ),
-                Stage4ReviewAndSubmit(
-                  onSubmit: _submitForm,
-                  onPrevious: _moveToPreviousPage,
-                  userName: organizerName ?? "Guest",
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
