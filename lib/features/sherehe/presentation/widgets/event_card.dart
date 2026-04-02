@@ -102,7 +102,7 @@ class EventCard extends StatelessWidget {
                 flex: 3,
                 child: (event.eventCardImage != null)
                     ? CachedNetworkImage(
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         imageUrl: event.eventCardImage!,
                         width: double.infinity,
                         errorWidget: (context, child, error) {
@@ -137,9 +137,8 @@ class EventCard extends StatelessWidget {
                       ),
               ),
 
-              // Details section - takes remaining space
               Expanded(
-                flex: 2, // Takes 2/5 of the available height
+                flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(

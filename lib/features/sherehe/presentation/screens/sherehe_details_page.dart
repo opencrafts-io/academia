@@ -42,13 +42,8 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
   }
 
   double _getExpandedHeight(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return MediaQuery.of(context).size.height * 0.40;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return MediaQuery.of(context).size.height * 0.4;
-    } else {
-      return 500.0;
-    }
+    final width = MediaQuery.of(context).size.width;
+    return width * (9 / 16); // 16:9 ratio
   }
 
   String _normalizeDescription(String text) {
