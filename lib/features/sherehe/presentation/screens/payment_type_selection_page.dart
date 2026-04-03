@@ -47,173 +47,175 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: widget.formKey,
-        child: Column(
-          children: [
-            Text(
-              "Select your preferred payment method.",
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.left,
-            ),
-            const SizedBox(height: 12),
-
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
+      body: SingleChildScrollView(
+        child: Form(
+          key: widget.formKey,
+          child: Column(
+            children: [
+              Text(
+                "Select your preferred payment method.",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.left,
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.primary,
+              const SizedBox(height: 12),
+        
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "All ticket payments are first received by us, "
+                        "and then we will transfer your earnings to the selected payment method.",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              DropdownButtonFormField<PaymentTypes>(
+                decoration: const InputDecoration(
+                  labelText: 'Payment Type',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: widget.selectedPaymentType,
+                items: PaymentTypes.values.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(_paymentTypeLabel(type)),
+                  );
+                }).toList(),
+                onChanged: widget.onPaymentTypeChanged,
+                validator: (value) =>
+                    value == null ? 'Please select a payment type' : null,
+              ),
+        
+              const SizedBox(height: 16),
+        
+              if (widget.selectedPaymentType == PaymentTypes.paybill) ...[
+                TextFormField(
+                  controller: widget.paybillNumberController,
+                  decoration: const InputDecoration(
+                    labelText: 'Paybill Number',
+                    border: OutlineInputBorder(),
                   ),
-                  const SizedBox(width: 8),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter paybill number';
+                    }
+                    if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Digits only';
+                    }
+                    if (value.length < 5 || value.length > 6) {
+                      return 'Paybill must be 5–6 digits';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: widget.accountReferenceController,
+                  decoration: const InputDecoration(
+                    labelText: 'Account Reference',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter account reference';
+                    }
+                    if (value.length < 3) {
+                      return 'Reference too short';
+                    }
+                    if (value.length > 20) {
+                      return 'Reference too long';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+        
+              if (widget.selectedPaymentType == PaymentTypes.till) ...[
+                TextFormField(
+                  controller: widget.tillNumberController,
+                  decoration: const InputDecoration(
+                    labelText: 'Till Number',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter till number';
+                    }
+                    if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Digits only';
+                    }
+                    if (value.length < 5 || value.length > 6) {
+                      return 'Till number must be 5–6 digits';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+        
+              if (widget.selectedPaymentType == PaymentTypes.sendMoney ||
+                  widget.selectedPaymentType == PaymentTypes.pochi) ...[
+                TextFormField(
+                  controller: widget.sendMoneyPhoneController,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    hintText: 'e.g. 07XXXXXXXX',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter phone number';
+                    }
+                    if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                      return 'Phone number must be exactly 10 digits';
+                    }
+                    if (!value.startsWith('07') && !value.startsWith('01')) {
+                      return 'Must start with 07 or 01';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+        
+              const SizedBox(height: 36),
+        
+              Row(
+                spacing: 16.0,
+                children: [
                   Expanded(
-                    child: Text(
-                      "All ticket payments are first received by us, "
-                      "and then we will transfer your earnings to the selected payment method.",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    child: OutlinedButton(
+                      onPressed: widget.onPrevious,
+                      child: const Text('Back'),
+                    ),
+                  ),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: widget.onNext,
+                      label: const Text('Next'),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-            DropdownButtonFormField<PaymentTypes>(
-              decoration: const InputDecoration(
-                labelText: 'Payment Type',
-                border: OutlineInputBorder(),
-              ),
-              initialValue: widget.selectedPaymentType,
-              items: PaymentTypes.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(_paymentTypeLabel(type)),
-                );
-              }).toList(),
-              onChanged: widget.onPaymentTypeChanged,
-              validator: (value) =>
-                  value == null ? 'Please select a payment type' : null,
-            ),
-
-            const SizedBox(height: 16),
-
-            if (widget.selectedPaymentType == PaymentTypes.paybill) ...[
-              TextFormField(
-                controller: widget.paybillNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'Paybill Number',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter paybill number';
-                  }
-                  if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Digits only';
-                  }
-                  if (value.length < 5 || value.length > 6) {
-                    return 'Paybill must be 5–6 digits';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: widget.accountReferenceController,
-                decoration: const InputDecoration(
-                  labelText: 'Account Reference',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter account reference';
-                  }
-                  if (value.length < 3) {
-                    return 'Reference too short';
-                  }
-                  if (value.length > 20) {
-                    return 'Reference too long';
-                  }
-                  return null;
-                },
-              ),
             ],
-
-            if (widget.selectedPaymentType == PaymentTypes.till) ...[
-              TextFormField(
-                controller: widget.tillNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'Till Number',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter till number';
-                  }
-                  if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Digits only';
-                  }
-                  if (value.length < 5 || value.length > 6) {
-                    return 'Till number must be 5–6 digits';
-                  }
-                  return null;
-                },
-              ),
-            ],
-
-            if (widget.selectedPaymentType == PaymentTypes.sendMoney ||
-                widget.selectedPaymentType == PaymentTypes.pochi) ...[
-              TextFormField(
-                controller: widget.sendMoneyPhoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  hintText: 'e.g. 07XXXXXXXX',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter phone number';
-                  }
-                  if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-                    return 'Phone number must be exactly 10 digits';
-                  }
-                  if (!value.startsWith('07') && !value.startsWith('01')) {
-                    return 'Must start with 07 or 01';
-                  }
-                  return null;
-                },
-              ),
-            ],
-
-            const Spacer(),
-
-            Row(
-              spacing: 16.0,
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: widget.onPrevious,
-                    child: const Text('Back'),
-                  ),
-                ),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: widget.onNext,
-                    label: const Text('Next'),
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
