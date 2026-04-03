@@ -64,6 +64,18 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
         message = 'This ticket does not belong to this event.';
         break;
 
+      case 'TOO_EARLY':
+        valid = false;
+        title = 'Too Early';
+        message = "It's too early to scan the ticket. Please try again later.";
+        break;
+
+      case 'EXPIRED':
+        valid = false;
+        title = 'Expired';
+        message = "This ticket has expired.";
+        break;
+
       case 'INVALID':
       default:
         valid = false;
