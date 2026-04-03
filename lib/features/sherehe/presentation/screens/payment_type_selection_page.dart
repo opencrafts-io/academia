@@ -56,6 +56,33 @@ class _PaymentTypeSelectionPageState extends State<PaymentTypeSelectionPage> {
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.left,
             ),
+            const SizedBox(height: 12),
+
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "All ticket payments are first received by us, "
+                      "and then we will transfer your earnings to the selected payment method.",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 24),
             DropdownButtonFormField<PaymentTypes>(
               decoration: const InputDecoration(
