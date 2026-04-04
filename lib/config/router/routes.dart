@@ -260,7 +260,14 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
         ),
       ],
     ),
-    TypedGoRoute<CreateEventRoute>(path: "create"),
+    TypedGoRoute<CreateEventRoute>(
+      path: "create",
+      routes: [
+        TypedGoRoute<ShereheSelectInstitutionsRoute>(
+          path: "sherehe-select-institutions",
+        ),
+      ],
+    ),
   ],
 )
 class ShereheRoute extends GoRouteData with $ShereheRoute {
@@ -274,6 +281,20 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
+  }
+}
+
+class ShereheSelectInstitutionsRoute extends GoRouteData
+    with $ShereheSelectInstitutionsRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final selectedInstitutions = state.extra is List<Institution>
+        ? state.extra as List<Institution>
+        : <Institution>[];
+
+    return ShereheSelectInstitutionsScreen(
+      selectedInstitutions: selectedInstitutions,
+    );
   }
 }
 

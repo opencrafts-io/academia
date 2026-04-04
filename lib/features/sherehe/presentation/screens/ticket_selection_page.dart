@@ -214,80 +214,78 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 ),
                 const SizedBox(height: 16),
 
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextFormField(
-                        controller: _ticketNameController,
-                        decoration: const InputDecoration(
-                          labelText: "Ticket Name",
-                        ),
-                        validator: (v) =>
-                            v == null || v.isEmpty ? "Enter name" : null,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        controller: _ticketPriceController,
-                        decoration: const InputDecoration(labelText: "Price"),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          final num? parsed = num.tryParse(value ?? "");
-                          if (parsed == null) return "Price?";
-                          if (parsed <= 0) return "Invalid";
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        controller: _ticketQtyController,
-                        decoration: const InputDecoration(
-                          labelText: "Quantity",
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          final int? parsed = int.tryParse(value ?? "");
-                          if (parsed == null || parsed <= 0) return "Qty?";
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
+                TextFormField(
+                  controller: _ticketNameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Name',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket name',
+                  ),
+
+                  validator: (v) => v == null || v.isEmpty
+                      ? "Please enter ticket name"
+                      : null,
+                ),
+
+                const SizedBox(height: 12),
+
+                TextFormField(
+                  controller: _ticketPriceController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Price',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket price',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final num? parsed = num.tryParse(value ?? "");
+                    if (parsed == null) return "Please enter Ticket Price";
+                    if (parsed <= 0) return "Please enter a valid Ticket Price";
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _ticketQtyController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Quantity',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket quantity',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final int? parsed = int.tryParse(value ?? "");
+                    if (parsed == null) return "Please enter Ticket Quantity";
+                    if (parsed <= 0) {
+                      return "Ticket Quantity must be at least 1";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 TicketVisibilitySelector(
                   isPublic: _isPublic,
                   selectedInstitutions: _selectedInstitutions.toList(),
-
                   onVisibilityChanged: (isPublic) {
                     setState(() {
                       _isPublic = isPublic ?? true;
                       if (_isPublic) _selectedInstitutions.clear();
                     });
                   },
-                  onInstitutionSelected: (inst, selected) {
+                  onInstitutionsChanged: (institutions) {
                     setState(() {
-                      if (selected) {
-                        if (!_selectedInstitutions.any(
-                          (e) => e.institutionId == inst.institutionId,
-                        )) {
-                          _selectedInstitutions.add(inst);
-                        }
-                      } else {
-                        _selectedInstitutions.removeWhere(
-                          (e) => e.institutionId == inst.institutionId,
-                        );
+                      if (institutions != null) {
+                        _selectedInstitutions.addAll(institutions);
                       }
                     });
                   },
                 ),
-
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,

@@ -122,28 +122,28 @@ class _TicketEditorSheetState extends State<TicketEditorSheet> {
 
             const SizedBox(height: 16),
 
-            TicketVisibilitySelector(
-              isPublic: isPublic,
-              isEditingTicket: true,
-              selectedInstitutions: selectedInstitutions.toList(),
-              onVisibilityChanged: (v) {
-                setState(() {
-                  isPublic = v ?? true;
-                  if (isPublic) selectedInstitutions.clear();
-                });
-              },
-              onInstitutionSelected: (inst, selected) {
-                setState(() {
-                  if (selected) {
-                    selectedInstitutions.add(inst);
-                  } else {
-                    selectedInstitutions.removeWhere(
-                      (e) => e.institutionId == inst.institutionId,
-                    );
-                  }
-                });
-              },
-            ),
+            // TicketVisibilitySelector(
+            //   isPublic: isPublic,
+            //   isEditingTicket: true,
+            //   selectedInstitutions: selectedInstitutions.toList(),
+            //   onVisibilityChanged: (v) {
+            //     setState(() {
+            //       isPublic = v ?? true;
+            //       if (isPublic) selectedInstitutions.clear();
+            //     });
+            //   },
+            //   // onInstitutionSelected: (inst, selected) {
+            //   //   setState(() {
+            //   //     if (selected) {
+            //   //       selectedInstitutions.add(inst);
+            //   //     } else {
+            //   //       selectedInstitutions.removeWhere(
+            //   //         (e) => e.institutionId == inst.institutionId,
+            //   //       );
+            //   //     }
+            //   //   });
+            //   // },
+            // ),
 
             const SizedBox(height: 16),
 
