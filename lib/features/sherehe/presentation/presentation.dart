@@ -21,6 +21,7 @@ export 'screens/organizer_dashboard_page.dart';
 export 'screens/all_attendees_screen.dart';
 export 'screens/all_scanners_screen.dart';
 export 'screens/add_event_scanner_screen.dart';
+export 'screens/sherehe_select_institutions_screen.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/attendee_list.dart';
