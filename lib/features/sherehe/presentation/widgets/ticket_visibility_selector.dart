@@ -70,8 +70,6 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
 
               if (result != null && result is List<Institution>) {
                 widget.onInstitutionsChanged?.call(result);
-              } else {
-                widget.onInstitutionsChanged?.call([]);
               }
             },
             child: Container(
