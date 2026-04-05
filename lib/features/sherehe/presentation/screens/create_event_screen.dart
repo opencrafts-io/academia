@@ -532,12 +532,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   onContinue: (tickets) {
                     setState(() {
                       _tickets = tickets;
-                      _selectedPaymentType =
-                          null; // reset payment if tickets changed
-                      _paybillNumberController.clear();
-                      _accountReferenceController.clear();
-                      _tillNumberController.clear();
-                      _sendMoneyPhoneController.clear();
+                      if (_isFreeEvent) {
+                        // reset payment if it is a free event
+                        _selectedPaymentType = null;
+                        _paybillNumberController.clear();
+                        _accountReferenceController.clear();
+                        _tillNumberController.clear();
+                        _sendMoneyPhoneController.clear();
+                      }
                     });
                     _moveToNextPage();
                   },
