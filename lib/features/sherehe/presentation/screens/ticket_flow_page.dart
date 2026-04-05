@@ -192,7 +192,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 SnackBar(
                   content: Text(
                     "Ticket booked successfully 🎉"
-                    "\nFind it under the menu (⋮) in the top right," 
+                    "\nFind it under the menu (⋮) in the top right, " 
                     "then tap 'My Tickets'.",
                   ),
                   duration: const Duration(seconds: 6),
