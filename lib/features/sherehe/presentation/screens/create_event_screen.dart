@@ -22,7 +22,7 @@ class CreateEventScreen extends StatefulWidget {
 class _CreateEventScreenState extends State<CreateEventScreen> {
   final PageController _pageController = PageController();
   final ScrollController _stage3ScrollController = ScrollController();
-  double _progress = 0.25;
+  late double _progress;
 
   final _stage1FormKey = GlobalKey<FormState>();
   final _stage2FormKey = GlobalKey<FormState>();
@@ -51,6 +51,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void initState() {
     super.initState();
+    _progress = 1 / (!_isFreeEvent ? 6 : 5); // Start at first step
     final userState = context.read<ProfileBloc>().state;
 
     if (userState is ProfileLoadedState) {
