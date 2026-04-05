@@ -534,13 +534,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       _tickets = tickets;
                       _selectedPaymentType =
                           null; // reset payment if tickets changed
+                      _paybillNumberController.clear();
+                      _accountReferenceController.clear();
+                      _tillNumberController.clear();
+                      _sendMoneyPhoneController.clear();
                     });
                     _moveToNextPage();
                   },
                   onSkip: _moveToNextPage,
                   onPrevious: _moveToPreviousPage,
                 ),
-          
+
                 if (!_isFreeEvent)
                   PaymentTypeSelectionPage(
                     formKey: _stage5FormKey,
@@ -552,7 +556,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     onPaymentTypeChanged: (type) {
                       setState(() {
                         _selectedPaymentType = type;
-          
+
                         _paybillNumberController.clear();
                         _accountReferenceController.clear();
                         _tillNumberController.clear();
