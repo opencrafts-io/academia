@@ -171,9 +171,9 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
                           backgroundColor: valid
                               ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.error,
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onPrimary,
+                          foregroundColor: valid
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onError,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
