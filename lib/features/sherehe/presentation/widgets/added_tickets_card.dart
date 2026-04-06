@@ -1,4 +1,5 @@
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 class AddedTicketsCard extends StatefulWidget {
@@ -22,6 +23,8 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
   Widget build(BuildContext context) {
     final isPublic = widget.addedTicket.isPublic;
     final institutions = widget.addedTicket.institutions;
+    final selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -50,9 +53,28 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
-                      const SizedBox(height: 4),
 
-                      /// Price + Quantity (better styled)
+                      const SizedBox(height: 6),
+
+                      if (selectedTicketGroupType != null)
+                        Chip(
+                          visualDensity: VisualDensity.compact,
+                          label: Text(selectedTicketGroupType.label),
+                          avatar: Icon(selectedTicketGroupType.icon, size: 16),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+
+                      const SizedBox(height: 8),
+
+                      /// Price + Quantity
                       Wrap(
                         spacing: 8,
                         runSpacing: 6,
@@ -116,15 +138,13 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
                     fontWeight: FontWeight.w500,
                     color: isPublic
                         ? Theme.of(context).colorScheme.onPrimaryContainer
-                        : Theme.of(
-                            context,
-                          ).colorScheme.onSecondaryContainer,
+                        : Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
                 ),
-                        
+
                 if (!isPublic && institutions.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                        
+
                   /// Institutions
                   Wrap(
                     spacing: 6,

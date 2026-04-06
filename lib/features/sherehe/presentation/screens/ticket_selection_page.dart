@@ -72,6 +72,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           ticket: ticket,
           isPublic: _isPublic,
           institutions: List.from(_selectedInstitutions),
+          selectedTicketGroupType: _selectedTicketGroupType,  
         ),
       );
 
@@ -168,7 +169,12 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       );
 
       widget.onContinue([
-        TicketUI(ticket: freeTicket, isPublic: true, institutions: []),
+        TicketUI(
+          ticket: freeTicket,
+          isPublic: true,
+          institutions: [],
+          selectedTicketGroupType: null,
+        ),
       ]);
     }
   }
