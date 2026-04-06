@@ -4,14 +4,18 @@ import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 class TicketSelectionPage extends StatefulWidget {
-  final List<TicketUI> initialTickets;
+  final List<TicketUI> tickets;
+  final Function(TicketUI ticket) onAddTicket;
+  final Function(TicketUI ticket) onRemoveTicket;
   final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
 
   const TicketSelectionPage({
     super.key,
-    required this.initialTickets,
+    required this.tickets,
+    required this.onAddTicket,
+    required this.onRemoveTicket,
     required this.onContinue,
     required this.onSkip,
     required this.onPrevious,
@@ -27,16 +31,11 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   final _ticketNameController = TextEditingController();
   final _ticketPriceController = TextEditingController();
   final _ticketQtyController = TextEditingController();
+  TicketGroupTypes? _selectedTicketGroupType;
 
-  late List<TicketUI> _tickets;
   bool _isPublic = true;
   final Set<Institution> _selectedInstitutions = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _tickets = List.of(widget.initialTickets);
-  }
+  bool _showTickets = false;
 
   @override
   void dispose() {
@@ -68,20 +67,24 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
       );
 
+      widget.onAddTicket(
+        TicketUI(
+          ticket: ticket,
+          isPublic: _isPublic,
+          institutions: List.from(_selectedInstitutions),
+        ),
+      );
+
       setState(() {
-        _tickets.add(
-          TicketUI(
-            ticket: ticket,
-            isPublic: _isPublic,
-            institutions: List.from(_selectedInstitutions),
-          ),
-        );
-        _ticketNameController.clear();
-        _ticketPriceController.clear();
-        _ticketQtyController.clear();
-        _isPublic = true;
-        _selectedInstitutions.clear();
+        _showTickets = true;
       });
+      _ticketNameController.clear();
+      _ticketPriceController.clear();
+      _ticketQtyController.clear();
+      _selectedTicketGroupType = null;
+
+      _isPublic = true;
+      _selectedInstitutions.clear();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -94,7 +97,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   Future<void> _editTicketDialog(int index) async {
-    final current = _tickets[index];
+    final current = widget.tickets[index];
 
     await showModalBottomSheet(
       context: context,
@@ -104,7 +107,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           initial: current,
           onSave: (updated) {
             setState(() {
-              _tickets[index] = updated;
+              widget.tickets[index] = updated;
             });
           },
         );
@@ -142,7 +145,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
               ),
               FilledButton(
                 onPressed: () {
-                  if (freeTicketQuantityDialogFormKey.currentState!.validate()) {
+                  if (freeTicketQuantityDialogFormKey.currentState!
+                      .validate()) {
                     final qty = int.tryParse(qtyController.text.trim());
                     Navigator.pop(context, qty);
                   }
@@ -170,13 +174,13 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   void _submit() {
-    if (_tickets.isEmpty) {
+    if (widget.tickets.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please add at least one ticket")),
       );
       return;
     }
-    widget.onContinue(_tickets);
+    widget.onContinue(widget.tickets);
   }
 
   @override
@@ -189,7 +193,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
+              if (widget.tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Text(
@@ -269,6 +273,32 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   },
                 ),
                 const SizedBox(height: 12),
+                DropdownButtonFormField(
+                  initialValue: _selectedTicketGroupType,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: "Ticket Type",
+                    hintText: "Select ticket type",
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  items: TicketGroupTypes.values.map((type) {
+                    return DropdownMenuItem<TicketGroupTypes>(
+                      value: type,
+                      child: Text(type.label),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedTicketGroupType = val;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) return "Please Select ticket type";
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
                 TicketVisibilitySelector(
                   isPublic: _isPublic,
                   selectedInstitutions: _selectedInstitutions.toList(),
@@ -299,139 +329,69 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
 
               const SizedBox(height: 24),
 
-              Text(
-                "Added Tickets",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _showTickets = !_showTickets;
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Added Tickets",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 12,
+                          child: Text(
+                            widget.tickets.length.toString(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      _showTickets
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
 
-              if (_tickets.isEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: const Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.confirmation_number_outlined, size: 64),
-                        SizedBox(height: 12),
-                        Text("No tickets added yet"),
-                      ],
+              if (_showTickets) ...[
+                if (widget.tickets.isEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: const Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.confirmation_number_outlined, size: 64),
+                          SizedBox(height: 12),
+                          Text("No tickets added yet"),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ] else
-                Column(
-                  children: _tickets.map((ui) {
-                    final t = ui.ticket;
-                    final isPublic = ui.isPublic;
-                    final institutions = ui.institutions;
-
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Ticket main info
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  t.ticketName,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () => _editTicketDialog(
-                                        _tickets.indexOf(ui),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () =>
-                                          setState(() => _tickets.remove(ui)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Price: ${t.ticketPrice} • Qty: ${t.ticketQuantity}",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: 8),
-
-                            // Visibility info
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Chip(
-                                  label: Text(
-                                    isPublic ? "Everyone" : "Restricted",
-                                  ),
-                                  backgroundColor: isPublic
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.primaryContainer
-                                      : Theme.of(
-                                          context,
-                                        ).colorScheme.secondaryContainer,
-                                  labelStyle: TextStyle(
-                                    color: isPublic
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimaryContainer
-                                        : Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                if (!isPublic && institutions.isNotEmpty)
-                                  Wrap(
-                                    spacing: 8,
-                                    runSpacing: 6,
-                                    children: institutions.map((inst) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.tertiaryContainer,
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          inst.name,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiaryContainer,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                ] else
+                  Column(
+                    children: widget.tickets.map((ticket) {
+                      return AddedTicketsCard(
+                        addedTicket: ticket,
+                        onEditTicket: () =>
+                            _editTicketDialog(widget.tickets.indexOf(ticket)),
+                        onRemoveTicket: () => widget.onRemoveTicket(ticket),
+                      );
+                    }).toList(),
+                  ),
+              ],
 
               const SizedBox(height: 24),
 
@@ -445,7 +405,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     ),
                   ),
 
-                  if (_tickets.isEmpty)
+                  if (widget.tickets.isEmpty)
                     Expanded(
                       child: FilledButton(
                         onPressed: _showFreeTicketQuantityDialog,
@@ -453,7 +413,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       ),
                     ),
 
-                  if (_tickets.isNotEmpty)
+                  if (widget.tickets.isNotEmpty)
                     Expanded(
                       child: FilledButton(
                         onPressed: _submit,

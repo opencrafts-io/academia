@@ -31,6 +31,50 @@ final List<String> availableGenres = [
   'Other',
 ];
 
+enum TicketGroupTypes { individual, groupOfTwo, groupOfFive }
+
+extension TicketGroupTypesX on TicketGroupTypes {
+  // UI Label
+  String get label {
+    switch (this) {
+      case TicketGroupTypes.individual:
+        return "Individual";
+      case TicketGroupTypes.groupOfTwo:
+        return "Group of 2";
+      case TicketGroupTypes.groupOfFive:
+        return "Group of 5";
+    }
+  }
+
+  // Convert TO backend value
+  //placeholder for now, will adjust as needed when integrating with backend
+  String get toBackend {
+    switch (this) {
+      case TicketGroupTypes.individual:
+        return "INDIVIDUAL";
+      case TicketGroupTypes.groupOfTwo:
+        return "GROUP_OF_TWO";
+      case TicketGroupTypes.groupOfFive:
+        return "GROUP_OF_FIVE";
+    }
+  }
+
+  // Convert FROM backend value
+  //placeholder for now, will adjust as needed when integrating with backend
+  static TicketGroupTypes fromBackend(String value) {
+    switch (value) {
+      case "INDIVIDUAL":
+        return TicketGroupTypes.individual;
+      case "GROUP_OF_TWO":
+        return TicketGroupTypes.groupOfTwo;
+      case "GROUP_OF_FIVE":
+        return TicketGroupTypes.groupOfFive;
+      default:
+        throw Exception("Unknown TicketGroupTypes: $value");
+    }
+  }
+}
+
 enum AttendeeStatus { valid, wrongEvent, alreadyScanned, invalid }
 
 extension AttendeeStatusMapper on String {
@@ -48,17 +92,3 @@ extension AttendeeStatusMapper on String {
     }
   }
 }
-
-//mock data
-final List<String> mockUniversityData = [
-  'Daystar University',
-  'University of London',
-  'Kenyatta University',
-  'University of Nairobi',
-  'Strathmore University',
-  'United States International University',
-  'Jomo Kenyatta University of Agriculture and Technology',
-  'Dedan Kimathi University of Technology',
-  'Moi University',
-  'Maseno University',
-];
