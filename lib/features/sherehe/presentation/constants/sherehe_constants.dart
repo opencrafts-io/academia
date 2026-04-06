@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum TicketStubMode {
   purchasingTicket,
   allTicketsPurchased,
@@ -43,6 +45,17 @@ extension TicketGroupTypesX on TicketGroupTypes {
         return "Group of 2";
       case TicketGroupTypes.groupOfFive:
         return "Group of 5";
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TicketGroupTypes.individual:
+        return Icons.person_outline;
+      case TicketGroupTypes.groupOfTwo:
+        return Icons.people_outline;
+      case TicketGroupTypes.groupOfFive:
+        return Icons.groups_2_outlined;
     }
   }
 
