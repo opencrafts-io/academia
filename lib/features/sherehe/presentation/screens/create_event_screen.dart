@@ -528,7 +528,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                 ),
                 TicketSelectionPage(
-                  initialTickets: _tickets,
+                  tickets: _tickets,
+                  onAddTicket: (ticket) {
+                    setState(() {
+                      _tickets.add(ticket);
+                    });
+                  },
+                  onRemoveTicket: (ticket) {
+                    setState(() {
+                      _tickets.remove(ticket);
+                    });
+                  },
                   onContinue: (tickets) {
                     setState(() {
                       _tickets = tickets;
