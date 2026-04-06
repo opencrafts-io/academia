@@ -11,7 +11,6 @@ class ImageUploadPage extends StatelessWidget {
   final VoidCallback onPickPosterImage;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
-  final BuildContext context;
   final ScrollController controller;
 
   const ImageUploadPage({
@@ -24,7 +23,6 @@ class ImageUploadPage extends StatelessWidget {
     required this.onPickPosterImage,
     required this.onPrevious,
     required this.onNext,
-    required this.context,
     required this.controller,
   });
 

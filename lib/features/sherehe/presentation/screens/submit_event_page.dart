@@ -2,33 +2,28 @@ import 'package:academia/features/sherehe/presentation/bloc/create_event/create_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class Stage4ReviewAndSubmit extends StatelessWidget {
   final String userName;
   final VoidCallback onSubmit;
   final VoidCallback onPrevious;
-  final BuildContext context;
 
   const Stage4ReviewAndSubmit({
     super.key,
     required this.userName,
     required this.onSubmit,
     required this.onPrevious,
-    required this.context,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const SizedBox(height: 32),
           Column(
+            spacing: 8.0, 
             children: [
               const Text("Creating event as:"),
-              const SizedBox(height: 8),
               Text(
                 userName,
                 style: Theme.of(
@@ -38,49 +33,52 @@ class Stage4ReviewAndSubmit extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 40),
-
-          // Submit Button
-          Row(
+          Column(
+            spacing: 20.0,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: onPrevious,
-                  child: const Text('Back'),
-                ),
+              // Submit Button
+              Row(
+                spacing: 16.0,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: onPrevious,
+                      child: const Text('Back'),
+                    ),
+                  ),
+                  Expanded(
+                    child: BlocBuilder<CreateEventBloc, CreateEventState>(
+                      builder: (context, state) {
+                        final isSubmitting = state is CreateEventLoading;
+                        return FilledButton.icon(
+                          onPressed: isSubmitting ? null : onSubmit,
+                          icon: isSubmitting
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.check),
+                          label: Text(
+                            isSubmitting ? 'Creating...' : 'Create Event',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: BlocBuilder<CreateEventBloc, CreateEventState>(
-                  builder: (context, state) {
-                    final isSubmitting = state is CreateEventLoading;
-                    return FilledButton.icon(
-                      onPressed: isSubmitting
-                          ? null
-                          : onSubmit,
-                      icon: isSubmitting
-                          ? const SizedBox(
-                              height: 16,
-                              width: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.check),
-                      label: Text(
-                        isSubmitting ? 'Creating...' : 'Create Event',
-                      ),
-                    );
-                  },
+              Center(
+                child: Text(
+                  "Posting events may be subject to changes. Please stay tuned for updates.",
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: Text(
-              "Posting events may be subject to changes. Please stay tuned for updates.",
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
           ),
         ],
       ),

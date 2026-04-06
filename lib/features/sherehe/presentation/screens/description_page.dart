@@ -9,7 +9,6 @@ class EventDescriptionPage extends StatelessWidget {
   final void Function(String genre) onGenreDeleted;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
-  final BuildContext context;
 
   const EventDescriptionPage({
     super.key,
@@ -20,7 +19,6 @@ class EventDescriptionPage extends StatelessWidget {
     required this.onGenreDeleted,
     required this.onPrevious,
     required this.onNext,
-    required this.context,
   });
 
   @override
