@@ -42,6 +42,10 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
     selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
     isPublic = widget.addedTicket.isPublic;
     selectedInstitutions = widget.addedTicket.institutions.toSet();
+
+    nameController.addListener(() => setState(() {}));
+    priceController.addListener(() => setState(() {}));
+    quantityController.addListener(() => setState(() {}));
   }
 
   bool get _canSave {
@@ -65,23 +69,13 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         ticketName: nameController.text.trim(),
         ticketPrice: price,
         ticketQuantity: qty,
-        institutionIds: isPublic
-            ? null
-            : selectedInstitutions.map((e) => e.institutionId).toList(),
       ),
       selectedTicketGroupType: selectedTicketGroupType,
+      institutions: selectedInstitutions.toList(),
+      isPublic: isPublic,
     );
 
     context.pop(updatedTicket);
-
-    // widget.onUpdate(
-    //   widget.addedTicket.copyWith(
-    //     ticket: updatedTicket.ticket,
-    //     isPublic: isPublic,
-    //     institutions: List.from(selectedInstitutions),
-    //     selectedTicketGroupType: selectedTicketGroupType,
-    //   ),
-    // );
   }
 
   @override
@@ -99,6 +93,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 child: Column(
+                  spacing: 20,
                   children: [
                     TextFormField(
                       controller: nameController,
@@ -114,9 +109,6 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                           ? "Please enter ticket name"
                           : null,
                     ),
-
-                    const SizedBox(height: 12),
-
                     TextFormField(
                       controller: priceController,
                       decoration: const InputDecoration(
@@ -136,7 +128,6 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12),
                     TextFormField(
                       controller: quantityController,
                       decoration: const InputDecoration(
@@ -158,7 +149,6 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12),
                     DropdownButtonFormField(
                       initialValue: selectedTicketGroupType,
                       decoration: const InputDecoration(
@@ -184,26 +174,25 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12),
                     TicketVisibilitySelector(
                       isPublic: isPublic,
                       selectedInstitutions: selectedInstitutions.toList(),
-                      onVisibilityChanged: (isPublic) {
+                      onVisibilityChanged: (value) {
                         setState(() {
-                          isPublic = isPublic ?? true;
+                          isPublic = value ?? false;
                           if (isPublic == true) selectedInstitutions.clear();
                         });
                       },
                       onInstitutionsChanged: (institutions) {
                         setState(() {
                           if (institutions != null) {
-                            selectedInstitutions.addAll(institutions);
+                            selectedInstitutions = institutions.toSet();
                           }
                         });
                       },
                     ),
-                    const SizedBox(height: 12),
                     Row(
+                      spacing: 12,
                       children: [
                         Expanded(
                           child: OutlinedButton(
@@ -211,7 +200,6 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                             child: const Text("Cancel"),
                           ),
                         ),
-                        const SizedBox(width: 12),
                         Expanded(
                           child: FilledButton(
                             onPressed: _canSave ? _save : null,
