@@ -69,11 +69,17 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         ticketName: nameController.text.trim(),
         ticketPrice: price,
         ticketQuantity: qty,
+        institutionIds: isPublic
+            ? []
+            : selectedInstitutions.map((e) => e.institutionId).toList(),
       ),
       selectedTicketGroupType: selectedTicketGroupType,
       institutions: selectedInstitutions.toList(),
       isPublic: isPublic,
     );
+    print("is public: $isPublic");
+    print("Updated Ticket: ${updatedTicket.ticket.institutionIds}");
+    print("Updated Ticket: ${updatedTicket.institutions.map((e) => e.institutionId).toList()}");
 
     context.pop(updatedTicket);
   }
