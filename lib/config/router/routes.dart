@@ -266,6 +266,7 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
         TypedGoRoute<ShereheSelectInstitutionsRoute>(
           path: "sherehe-select-institutions",
         ),
+        TypedGoRoute<EditAddedTicketRoute>(path: "edit-added-ticket"),
       ],
     ),
   ],
@@ -281,6 +282,14 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
+  }
+}
+
+class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final addedTicket = state.extra as TicketUI;
+    return EditAddedTicketScreen(addedTicket: addedTicket);
   }
 }
 

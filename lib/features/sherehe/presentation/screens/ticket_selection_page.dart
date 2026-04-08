@@ -1,7 +1,9 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TicketSelectionPage extends StatefulWidget {
   final List<TicketUI> tickets;
@@ -72,7 +74,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           ticket: ticket,
           isPublic: _isPublic,
           institutions: List.from(_selectedInstitutions),
-          selectedTicketGroupType: _selectedTicketGroupType,  
+          selectedTicketGroupType: _selectedTicketGroupType,
         ),
       );
 
@@ -391,8 +393,22 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     children: widget.tickets.map((ticket) {
                       return AddedTicketsCard(
                         addedTicket: ticket,
-                        onEditTicket: () =>
-                            _editTicketDialog(widget.tickets.indexOf(ticket)),
+                        // onEditTicket: () =>
+                        //     _editTicketDialog(widget.tickets.indexOf(ticket)),
+                        onEditTicket: () async {
+                          final updatedTicket = await context.push(
+                            EditAddedTicketRoute().location,
+                            extra: ticket,
+                          );
+
+                          if (updatedTicket != null &&
+                              updatedTicket is TicketUI) {
+                            setState(() {
+                              widget.tickets[widget.tickets.indexOf(ticket)] =
+                                  updatedTicket;
+                            });
+                          }
+                        },
                         onRemoveTicket: () => widget.onRemoveTicket(ticket),
                       );
                     }).toList(),

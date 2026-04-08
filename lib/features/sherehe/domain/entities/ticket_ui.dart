@@ -19,12 +19,14 @@ class TicketUI {
     Ticket? ticket,
     bool? isPublic,
     List<Institution>? institutions,
+    TicketGroupTypes? selectedTicketGroupType,
   }) {
     return TicketUI(
       ticket: ticket ?? this.ticket,
       isPublic: isPublic ?? this.isPublic,
       institutions: institutions ?? this.institutions,
-      selectedTicketGroupType: selectedTicketGroupType ?? selectedTicketGroupType,
+      selectedTicketGroupType:
+          selectedTicketGroupType ?? this.selectedTicketGroupType,
     );
   }
 }

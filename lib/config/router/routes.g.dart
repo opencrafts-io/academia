@@ -431,6 +431,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
           path: 'sherehe-select-institutions',
           factory: $ShereheSelectInstitutionsRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'edit-added-ticket',
+          factory: $EditAddedTicketRoute._fromState,
+        ),
       ],
     ),
   ],
@@ -686,6 +690,28 @@ mixin $ShereheSelectInstitutionsRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/sherehe/create/sherehe-select-institutions');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EditAddedTicketRoute on GoRouteData {
+  static EditAddedTicketRoute _fromState(GoRouterState state) =>
+      EditAddedTicketRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/sherehe/create/edit-added-ticket');
 
   @override
   void go(BuildContext context) => context.go(location);
