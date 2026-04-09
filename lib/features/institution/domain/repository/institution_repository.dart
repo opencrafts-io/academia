@@ -10,6 +10,11 @@ abstract class InstitutionRepository {
     int institutionID,
     String userID,
   );
+  Future<Either<Failure, bool>> removeAccountFromInstitution(
+    int institutionID,
+    String userID,
+  );
+
   Future<Either<Failure, List<Institution>>> getAllUserAccountInstitutions(
     String userID,
   );

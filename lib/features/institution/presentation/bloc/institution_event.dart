@@ -1,6 +1,5 @@
 part of 'institution_bloc.dart';
 
-
 abstract class InstitutionEvent extends Equatable {
   const InstitutionEvent();
 
@@ -20,6 +19,18 @@ class LinkAccountToInstitutionEvent extends InstitutionEvent {
   final String accountID;
   final int institutionID;
   const LinkAccountToInstitutionEvent({
+    required this.accountID,
+    required this.institutionID,
+  });
+
+  @override
+  List<Object?> get props => [accountID, institutionID];
+}
+
+class UnLinkAccountFromInstitutionEvent extends InstitutionEvent {
+  final String accountID;
+  final int institutionID;
+  const UnLinkAccountFromInstitutionEvent({
     required this.accountID,
     required this.institutionID,
   });

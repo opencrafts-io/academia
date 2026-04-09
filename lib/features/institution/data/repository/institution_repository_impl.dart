@@ -28,6 +28,24 @@ class InstitutionRepositoryImpl implements InstitutionRepository {
   }
 
   @override
+  Future<Either<Failure, bool>> removeAccountFromInstitution(
+    int institutionID,
+    String userID,
+  ) async {
+    final result = await institutionRemoteDatasource
+        .removeAccountFromInstitution(userID, institutionID);
+    return result.fold(
+      (error) {
+        return left(error);
+      },
+      (removed) {
+        institutionLocalDatasource.deleteInstitutionDetails(institutionID);
+        return right(true);
+      },
+    );
+  }
+
+  @override
   Future<Either<Failure, List<Institution>>>
   getAllUserAccountCachedInstitutions(String userID) async {
     final result = await institutionLocalDatasource.getCachedInstitutions();
