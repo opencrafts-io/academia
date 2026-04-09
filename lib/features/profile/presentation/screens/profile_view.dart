@@ -284,6 +284,32 @@ class _ProfileViewState extends State<ProfileView> {
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ),
+                            Card.filled(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondaryContainer,
+                              margin: EdgeInsets.all(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(8),
+                              ),
+                              elevation: 0,
+                              clipBehavior: Clip.hardEdge,
+                              child: ListTile(
+                                leading: Icon(Icons.add_link),
+                                title: Text('Link your institution'),
+                                subtitle: Text(
+                                  "Access your institution's features from Academia",
+                                ),
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      content: Text("Feature coming soon"),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                             ProfileInstitutionSection(),
 
                             SizedBox(height: 12),
