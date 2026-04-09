@@ -23,12 +23,40 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
     duration: Duration(seconds: 2),
   );
   Institution? _selectedInstitution;
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _privacyRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsRecognizer = TapGestureRecognizer()..onTap = _launchPolicyUrl;
+    _privacyRecognizer = TapGestureRecognizer()..onTap = _launchPolicyUrl;
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     _confettiController.dispose();
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     super.dispose();
+  }
+
+  Future<void> _launchPolicyUrl() async {
+    try {
+      final url = Uri.parse('https://policy.opencrafts.io');
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to launch URL"),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   @override
@@ -233,25 +261,7 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
                                   color: Theme.of(context).colorScheme.primary,
                                   decoration: TextDecoration.underline,
                                 ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () async {
-                                try {
-                                  final url = Uri.parse(
-                                    'https://policy.opencrafts.io',
-                                  );
-                                  if (await canLaunchUrl(url)) {
-                                    launchUrl(url);
-                                  }
-                                } catch (e) {
-                                  if (!context.mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Failed to lauch url"),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                }
-                              },
+                            recognizer: _termsRecognizer,
                           ),
                           const TextSpan(text: " and "),
                           TextSpan(
@@ -261,25 +271,7 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
                                   color: Theme.of(context).colorScheme.primary,
                                   decoration: TextDecoration.underline,
                                 ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () async {
-                                try {
-                                  final url = Uri.parse(
-                                    'https://policy.opencrafts.io',
-                                  );
-                                  if (await canLaunchUrl(url)) {
-                                    launchUrl(url);
-                                  }
-                                } catch (e) {
-                                  if (!context.mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Failed to lauch url"),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                }
-                              },
+                            recognizer: _privacyRecognizer,
                           ),
                         ],
                       ),
