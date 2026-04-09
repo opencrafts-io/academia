@@ -7,10 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ShereheSelectInstitutionsScreen extends StatefulWidget {
+  final String title;
+  final String subtitle;
   final List<Institution> selectedInstitutions;
 
   const ShereheSelectInstitutionsScreen({
     super.key,
+    required this.title,
+    required this.subtitle,
     required this.selectedInstitutions,
   });
 
@@ -88,14 +92,14 @@ class _ShereheSelectInstitutionsScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Choose who can access this ticket",
+                    widget.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "Search and select one or more institutions. Only users from selected institutions will be able to view and purchase this ticket.",
+                    widget.subtitle,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

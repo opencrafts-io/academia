@@ -295,6 +295,14 @@ class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
 
 class ShereheSelectInstitutionsRoute extends GoRouteData
     with $ShereheSelectInstitutionsRoute {
+  final String title;
+  final String subtitle;
+
+  const ShereheSelectInstitutionsRoute({
+    required this.title,
+    required this.subtitle,
+  });
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final selectedInstitutions = state.extra is List<Institution>
@@ -302,6 +310,8 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
         : <Institution>[];
 
     return ShereheSelectInstitutionsScreen(
+      title: title,
+      subtitle: subtitle,
       selectedInstitutions: selectedInstitutions,
     );
   }

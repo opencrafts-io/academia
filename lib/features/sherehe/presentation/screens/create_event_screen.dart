@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   File? _selectedPosterImage;
   File? _selectedBannerImage;
   File? _selectedCardImage;
+  ScopeTypes? _selectedEventScopeType;
+  Set<Institution> _selectedEventInstitutions = {};
   List<String> _selectedGenres = [];
   List<TicketUI> _tickets = [];
   String? organizerId;
@@ -497,12 +500,27 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               children: [
                 BasicEventDetailsPage(
                   formKey: _stage1FormKey,
+                  selectedEventScopeType: _selectedEventScopeType,
+                  selectedEventInstitutions: _selectedEventInstitutions,
                   nameController: _nameController,
                   startDateTimeController: _startDateTimeController,
                   endDateTimeController: _endDateTimeController,
                   locationController: _locationController,
                   onSelectDateAndTime: (isStart) =>
                       _selectDateAndTime(context: context, isStart: isStart),
+                  onInstitutionsChanged: (institutions) {
+                    setState(() {
+                      _selectedEventInstitutions = institutions ?? {};
+                    });
+                  },
+                  onScopeChanged: (scope) {
+                    setState(() {
+                      _selectedEventScopeType = scope;
+                      if (scope != ScopeTypes.institution) {
+                        _selectedEventInstitutions.clear();
+                      }
+                    });
+                  },
                   onNext: () {
                     if (_stage1FormKey.currentState!.validate()) {
                       _moveToNextPage();

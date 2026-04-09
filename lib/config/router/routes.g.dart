@@ -685,11 +685,19 @@ mixin $CreateEventRoute on GoRouteData {
 
 mixin $ShereheSelectInstitutionsRoute on GoRouteData {
   static ShereheSelectInstitutionsRoute _fromState(GoRouterState state) =>
-      ShereheSelectInstitutionsRoute();
+      ShereheSelectInstitutionsRoute(
+        title: state.uri.queryParameters['title']!,
+        subtitle: state.uri.queryParameters['subtitle']!,
+      );
+
+  ShereheSelectInstitutionsRoute get _self =>
+      this as ShereheSelectInstitutionsRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/sherehe/create/sherehe-select-institutions');
+  String get location => GoRouteData.$location(
+    '/sherehe/create/sherehe-select-institutions',
+    queryParams: {'title': _self.title, 'subtitle': _self.subtitle},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
