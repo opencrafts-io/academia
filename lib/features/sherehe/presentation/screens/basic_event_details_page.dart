@@ -120,6 +120,21 @@ class BasicEventDetailsPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
+            TextFormField(
+              controller: locationController,
+              decoration: buildModernInputDecoration(
+                labelText: 'Location',
+                hintText: 'e.g., Conference Hall A, Online via Zoom',
+              ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a location';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -157,21 +172,6 @@ class BasicEventDetailsPage extends StatelessWidget {
                   onScopeChanged: onScopeChanged,
                 ),
               ],
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: locationController,
-              decoration: buildModernInputDecoration(
-                labelText: 'Location',
-                hintText: 'e.g., Conference Hall A, Online via Zoom',
-              ),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a location';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 40),
             FilledButton.icon(onPressed: onNext, label: const Text('Next')),
