@@ -188,7 +188,7 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
                                           },
                                           title: Text(ins.name),
                                           subtitle: Text(
-                                            ins.domains?.first ?? "",
+                                            ins.domains?.firstOrNull ?? "",
                                           ),
                                           trailing: Text(
                                             ins.alphaTwoCode ?? 'TF',
