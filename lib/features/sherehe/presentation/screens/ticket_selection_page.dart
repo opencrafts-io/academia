@@ -99,25 +99,6 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     }
   }
 
-  Future<void> _editTicketDialog(int index) async {
-    final current = widget.tickets[index];
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) {
-        return TicketEditorSheet(
-          initial: current,
-          onSave: (updated) {
-            setState(() {
-              widget.tickets[index] = updated;
-            });
-          },
-        );
-      },
-    );
-  }
-
   Future<void> _showFreeTicketQuantityDialog() async {
     final freeTicketQuantityDialogFormKey = GlobalKey<FormState>();
     final TextEditingController qtyController = TextEditingController();
