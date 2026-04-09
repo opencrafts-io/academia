@@ -279,7 +279,7 @@ class _ProfileViewState extends State<ProfileView> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Your Institutional Profiles",
+                                "Institution Actions",
                                 textAlign: TextAlign.start,
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
@@ -300,21 +300,10 @@ class _ProfileViewState extends State<ProfileView> {
                                 subtitle: Text(
                                   "Access your institution's features from Academia",
                                 ),
-                                onTap: () {
-                                  LinkInstitutionProfileRoute(
-                                    institutionId: 0,
-                                  ).push(context);
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   SnackBar(
-                                  //     behavior: SnackBarBehavior.floating,
-                                  //     content: Text("Feature coming soon"),
-                                  //   ),
-                                  // );
-                                },
+                                onTap: () =>
+                                    LinkInstitutionProfileRoute().push(context),
                               ),
                             ),
-                            ProfileInstitutionSection(),
-
                             SizedBox(height: 12),
                             Align(
                               alignment: Alignment.centerLeft,

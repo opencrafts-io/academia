@@ -185,11 +185,7 @@ class AuthRoute extends GoRouteData with $AuthRoute {
 
 @TypedGoRoute<ProfileRoute>(
   path: "/profile",
-  routes: [
-    TypedGoRoute<LinkInstitutionProfileRoute>(
-      path: "link-institution/:institutionId",
-    ),
-  ],
+  routes: [TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution")],
 )
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
@@ -221,9 +217,7 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
 
 class LinkInstitutionProfileRoute extends GoRouteData
     with $LinkInstitutionProfileRoute {
-  final int? institutionId;
-
-  LinkInstitutionProfileRoute({this.institutionId});
+  LinkInstitutionProfileRoute();
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {

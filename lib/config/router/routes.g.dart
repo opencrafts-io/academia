@@ -310,7 +310,7 @@ RouteBase get $profileRoute => GoRouteData.$route(
   factory: $ProfileRoute._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'link-institution/:institutionId',
+      path: 'link-institution',
       factory: $LinkInstitutionProfileRoute._fromState,
     ),
   ],
@@ -338,18 +338,10 @@ mixin $ProfileRoute on GoRouteData {
 
 mixin $LinkInstitutionProfileRoute on GoRouteData {
   static LinkInstitutionProfileRoute _fromState(GoRouterState state) =>
-      LinkInstitutionProfileRoute(
-        institutionId: int.tryParse(
-          state.pathParameters['institutionId'] ?? '',
-        )!,
-      );
-
-  LinkInstitutionProfileRoute get _self => this as LinkInstitutionProfileRoute;
+      LinkInstitutionProfileRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/profile/link-institution/${Uri.encodeComponent(_self.institutionId!.toString() ?? '')}',
-  );
+  String get location => GoRouteData.$location('/profile/link-institution');
 
   @override
   void go(BuildContext context) => context.go(location);
