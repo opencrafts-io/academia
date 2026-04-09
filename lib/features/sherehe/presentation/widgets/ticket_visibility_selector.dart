@@ -1,21 +1,22 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
+import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketVisibilitySelector extends StatefulWidget {
-  final bool isPublic;
+  final ScopeTypes? selectedScopeType;
   final List<Institution> selectedInstitutions;
   final bool? isEditingTicket;
   final Function(List<Institution>?)? onInstitutionsChanged;
-  final ValueChanged<bool?> onVisibilityChanged;
+  final ValueChanged<ScopeTypes?> onScopeChanged;
 
   const TicketVisibilitySelector({
     super.key,
-    required this.isPublic,
+    required this.selectedScopeType,
     required this.selectedInstitutions,
     required this.onInstitutionsChanged,
-    required this.onVisibilityChanged,
+    required this.onScopeChanged,
     this.isEditingTicket = false,
   });
 
@@ -25,34 +26,52 @@ class TicketVisibilitySelector extends StatefulWidget {
 }
 
 class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
+  String _getScopeDescription(ScopeTypes? scope) {
+    switch (scope) {
+      case ScopeTypes.public:
+        return "Anyone can view and purchase this ticket.";
+
+      case ScopeTypes.institution:
+        return "Only users from selected institutions can view and purchase.";
+
+      case ScopeTypes.private:
+        return "Only invited users can access this ticket via a shared link.";
+
+      default:
+        return "Choose who can view and purchase this ticket.";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DropdownButtonFormField<bool>(
-          initialValue: widget.isPublic,
-          decoration: const InputDecoration(
+        DropdownButtonFormField(
+          initialValue: widget.selectedScopeType,
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
             isDense: true,
-            labelText: "Ticket Visibility",
+            labelText: "Ticket Scope",
+            hintText: "Select Ticket scope",
+            helperText: _getScopeDescription(widget.selectedScopeType),
+            helperStyle: Theme.of(context).textTheme.labelSmall,
+            helperMaxLines: 2,
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
-          items: const [
-            DropdownMenuItem(value: true, child: Text("Everyone")),
-            DropdownMenuItem(
-              value: false,
-              child: Text("Specific Institutions"),
-            ),
-          ],
+          items: ScopeTypes.values.map((scopeType) {
+            return DropdownMenuItem(
+              value: scopeType,
+              child: Text(scopeType.label),
+            );
+          }).toList(),
           onChanged: (val) {
-            widget.onVisibilityChanged(val);
+            widget.onScopeChanged(val);
           },
         ),
 
-        if (!widget.isPublic) ...[
+        if (widget.selectedScopeType == ScopeTypes.institution) ...[
           const SizedBox(height: 12),
-
           InkWell(
             onTap: () async {
               final result = await context.push(

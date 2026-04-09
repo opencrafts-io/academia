@@ -24,7 +24,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
   late TextEditingController priceController;
   late TextEditingController quantityController;
   late TicketGroupTypes? selectedTicketGroupType;
-  late bool isPublic;
+  late ScopeTypes? selectedScopeType;
   late Set<Institution> selectedInstitutions;
 
   @override
@@ -40,7 +40,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
       text: widget.addedTicket.ticket.ticketQuantity.toString(),
     );
     selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
-    isPublic = widget.addedTicket.isPublic;
+    selectedScopeType = widget.addedTicket.selectedScopeType;
     selectedInstitutions = widget.addedTicket.institutions.toSet();
 
     nameController.addListener(() => setState(() {}));
@@ -56,7 +56,10 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
     if (price == null || price <= 0) return false;
     if (qty == null || qty <= 0) return false;
     if (selectedTicketGroupType == null) return false;
-    if (!isPublic && selectedInstitutions.isEmpty) return false;
+    if (selectedScopeType == ScopeTypes.institution &&
+        selectedInstitutions.isEmpty) {
+      return false;
+    }
 
     return true;
   }
@@ -69,13 +72,13 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         ticketName: nameController.text.trim(),
         ticketPrice: price,
         ticketQuantity: qty,
-        institutionIds: isPublic
+        institutionIds: selectedScopeType == ScopeTypes.institution
             ? []
             : selectedInstitutions.map((e) => e.institutionId).toList(),
       ),
       selectedTicketGroupType: selectedTicketGroupType,
       institutions: selectedInstitutions.toList(),
-      isPublic: isPublic,
+      selectedScopeType: selectedScopeType,
     );
     context.pop(updatedTicket);
   }
@@ -185,12 +188,14 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                       },
                     ),
                     TicketVisibilitySelector(
-                      isPublic: isPublic,
+                      selectedScopeType: selectedScopeType,
                       selectedInstitutions: selectedInstitutions.toList(),
-                      onVisibilityChanged: (value) {
+                      onScopeChanged: (value) {
                         setState(() {
-                          isPublic = value ?? false;
-                          if (isPublic == true) selectedInstitutions.clear();
+                          selectedScopeType = value;
+                          if (selectedScopeType != ScopeTypes.institution) {
+                            selectedInstitutions.clear();
+                          }
                         });
                       },
                       onInstitutionsChanged: (institutions) {

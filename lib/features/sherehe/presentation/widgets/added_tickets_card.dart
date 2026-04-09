@@ -21,7 +21,7 @@ class AddedTicketsCard extends StatefulWidget {
 class _AddedTicketsCardState extends State<AddedTicketsCard> {
   @override
   Widget build(BuildContext context) {
-    final isPublic = widget.addedTicket.isPublic;
+    final selectedScopeType = widget.addedTicket.selectedScopeType;
     final institutions = widget.addedTicket.institutions;
     final selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
 
@@ -124,25 +124,31 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
 
             const SizedBox(height: 12),
 
-            /// Visibility Section
+            /// Ticket Scope Section
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Visibility Chip
-                Chip(
-                  label: Text(isPublic ? "Public Event" : "Restricted"),
-                  backgroundColor: isPublic
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context).colorScheme.secondaryContainer,
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: isPublic
-                        ? Theme.of(context).colorScheme.onPrimaryContainer
-                        : Theme.of(context).colorScheme.onSecondaryContainer,
+                /// Ticket Scope Chip
+                if (selectedScopeType != null)
+                  Chip(
+                    label: Text(selectedScopeType.label),
+                    backgroundColor: selectedScopeType == ScopeTypes.public
+                        ? Theme.of(context).colorScheme.primaryContainer
+                        : selectedScopeType == ScopeTypes.institution
+                        ? Theme.of(context).colorScheme.secondaryContainer
+                        : Theme.of(context).colorScheme.tertiaryContainer,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: selectedScopeType == ScopeTypes.public
+                          ? Theme.of(context).colorScheme.onPrimaryContainer
+                          : selectedScopeType == ScopeTypes.institution
+                          ? Theme.of(context).colorScheme.onSecondaryContainer
+                          : Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
                   ),
-                ),
 
-                if (!isPublic && institutions.isNotEmpty) ...[
+                if (selectedScopeType == ScopeTypes.institution &&
+                    institutions.isNotEmpty) ...[
                   const SizedBox(height: 8),
 
                   /// Institutions

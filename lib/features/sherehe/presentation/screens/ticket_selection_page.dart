@@ -34,9 +34,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   final _ticketPriceController = TextEditingController();
   final _ticketQtyController = TextEditingController();
   TicketGroupTypes? _selectedTicketGroupType;
+  ScopeTypes? _selectedScopeType;
 
-  bool _isPublic = true;
-  final Set<Institution> _selectedInstitutions = {};
+  Set<Institution> _selectedInstitutions = {};
   bool _showTickets = false;
 
   @override
@@ -48,7 +48,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   void _addTicket() {
-    if (!_isPublic && _selectedInstitutions.isEmpty) {
+    if (_selectedScopeType == ScopeTypes.institution &&
+        _selectedInstitutions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -64,7 +65,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: _ticketNameController.text.trim(),
         ticketPrice: int.tryParse(_ticketPriceController.text.trim()) ?? 0,
         ticketQuantity: int.tryParse(_ticketQtyController.text.trim()) ?? 0,
-        institutionIds: _isPublic
+        institutionIds: _selectedScopeType != ScopeTypes.institution
             ? null
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
       );
@@ -72,9 +73,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       widget.onAddTicket(
         TicketUI(
           ticket: ticket,
-          isPublic: _isPublic,
           institutions: List.from(_selectedInstitutions),
           selectedTicketGroupType: _selectedTicketGroupType,
+          selectedScopeType: _selectedScopeType,
         ),
       );
 
@@ -85,8 +86,6 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       _ticketPriceController.clear();
       _ticketQtyController.clear();
       _selectedTicketGroupType = null;
-
-      _isPublic = true;
       _selectedInstitutions.clear();
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -154,9 +153,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       widget.onContinue([
         TicketUI(
           ticket: freeTicket,
-          isPublic: true,
           institutions: [],
           selectedTicketGroupType: null,
+          selectedScopeType: null,
         ),
       ]);
     }
@@ -268,7 +267,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     border: OutlineInputBorder(),
                     isDense: true,
                     labelText: "Ticket Type",
-                    hintText: "Select ticket type",
+                    hintText: "Select Ticket type",
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                   items: TicketGroupTypes.values.map((type) {
@@ -289,18 +288,20 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 ),
                 const SizedBox(height: 12),
                 TicketVisibilitySelector(
-                  isPublic: _isPublic,
+                  selectedScopeType: _selectedScopeType,
                   selectedInstitutions: _selectedInstitutions.toList(),
-                  onVisibilityChanged: (isPublic) {
+                  onScopeChanged: (scope) {
                     setState(() {
-                      _isPublic = isPublic ?? true;
-                      if (_isPublic) _selectedInstitutions.clear();
+                      _selectedScopeType = scope;
+                      if (_selectedScopeType != ScopeTypes.institution) {
+                        _selectedInstitutions.clear();
+                      }
                     });
                   },
                   onInstitutionsChanged: (institutions) {
                     setState(() {
                       if (institutions != null) {
-                        _selectedInstitutions.addAll(institutions);
+                        _selectedInstitutions = institutions.toSet();
                       }
                     });
                   },
