@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
+import '../widgets/linked_institutions_list.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -304,6 +305,17 @@ class _ProfileViewState extends State<ProfileView> {
                                     LinkInstitutionProfileRoute().push(context),
                               ),
                             ),
+                            SizedBox(height: 22),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Linked institutions",
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                            LinkedInstitutionsList(),
+
                             SizedBox(height: 12),
                             Align(
                               alignment: Alignment.centerLeft,
