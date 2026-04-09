@@ -88,6 +88,57 @@ extension TicketGroupTypesX on TicketGroupTypes {
   }
 }
 
+enum ScopeTypes { public, institution, private }
+
+extension ScopeTypesX on ScopeTypes {
+  // UI Label
+  String get label {
+    switch (this) {
+      case ScopeTypes.public:
+        return "Public";
+      case ScopeTypes.institution:
+        return "Institution";
+      case ScopeTypes.private:
+        return "Private";
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case ScopeTypes.public:
+        return Icons.public;
+      case ScopeTypes.institution:
+        return Icons.school;
+      case ScopeTypes.private:
+        return Icons.lock;
+    }
+  }
+
+  String get toBackend {
+    switch (this) {
+      case ScopeTypes.public:
+        return "public";
+      case ScopeTypes.institution:
+        return "institution";
+      case ScopeTypes.private:
+        return "private";
+    }
+  }
+
+  static ScopeTypes fromBackend(String value) {
+    switch (value) {
+      case "public":
+        return ScopeTypes.public;
+      case "institution":
+        return ScopeTypes.institution;
+      case "private":
+        return ScopeTypes.private;
+      default:
+        throw Exception("Unknown ScopeTypes: $value");
+    }
+  }
+}
+
 enum AttendeeStatus { valid, wrongEvent, alreadyScanned, invalid }
 
 extension AttendeeStatusMapper on String {

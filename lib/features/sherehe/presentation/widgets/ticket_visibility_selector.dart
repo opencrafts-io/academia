@@ -25,14 +25,6 @@ class TicketVisibilitySelector extends StatefulWidget {
 }
 
 class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -64,7 +56,11 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
           InkWell(
             onTap: () async {
               final result = await context.push(
-                ShereheSelectInstitutionsRoute().location,
+                ShereheSelectInstitutionsRoute(
+                  title: "Choose who can access this ticket",
+                  subtitle:
+                      "Search and select one or more institutions. Only users from selected institutions will be able to view and purchase this ticket.",
+                ).location,
                 extra: widget.selectedInstitutions,
               );
 

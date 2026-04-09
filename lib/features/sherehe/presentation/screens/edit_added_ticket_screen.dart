@@ -77,11 +77,15 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
       institutions: selectedInstitutions.toList(),
       isPublic: isPublic,
     );
-    print("is public: $isPublic");
-    print("Updated Ticket: ${updatedTicket.ticket.institutionIds}");
-    print("Updated Ticket: ${updatedTicket.institutions.map((e) => e.institutionId).toList()}");
-
     context.pop(updatedTicket);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    priceController.dispose();
+    quantityController.dispose();
+    super.dispose();
   }
 
   @override
