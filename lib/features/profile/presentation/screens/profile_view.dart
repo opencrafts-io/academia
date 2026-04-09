@@ -301,12 +301,15 @@ class _ProfileViewState extends State<ProfileView> {
                                   "Access your institution's features from Academia",
                                 ),
                                 onTap: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      content: Text("Feature coming soon"),
-                                    ),
-                                  );
+                                  LinkInstitutionProfileRoute(
+                                    institutionId: 0,
+                                  ).push(context);
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     behavior: SnackBarBehavior.floating,
+                                  //     content: Text("Feature coming soon"),
+                                  //   ),
+                                  // );
                                 },
                               ),
                             ),
