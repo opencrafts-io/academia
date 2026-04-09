@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 class BasicEventDetailsPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController;
-  final TextEditingController dateTimeController;
+  final TextEditingController startDateTimeController;
+  final TextEditingController endDateTimeController;
   final TextEditingController locationController;
-  final VoidCallback onSelectDateAndTime;
+  final Future<void> Function(bool isStart) onSelectDateAndTime;
   final VoidCallback onNext;
 
   const BasicEventDetailsPage({
     super.key,
     required this.formKey,
     required this.nameController,
-    required this.dateTimeController,
+    required this.startDateTimeController,
+    required this.endDateTimeController,
     required this.locationController,
     required this.onSelectDateAndTime,
     required this.onNext,
@@ -52,21 +54,43 @@ class BasicEventDetailsPage extends StatelessWidget {
             const SizedBox(height: 20),
             TextFormField(
               readOnly: true,
-              controller: dateTimeController,
+              controller: startDateTimeController,
               decoration: buildModernInputDecoration(
                 context: context,
-                labelText: 'Date & Time',
-                hintText: 'Select date and time',
+                labelText: 'Start Date & Time',
+                hintText: 'Select Start date and time',
                 suffixIcon: Icon(
                   Icons.calendar_today_outlined,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              onTap: onSelectDateAndTime,
+              onTap: () => onSelectDateAndTime(true),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please select a date and time';
+                  return 'Please select the start date and time';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              readOnly: true,
+              controller: endDateTimeController,
+              decoration: buildModernInputDecoration(
+                context: context,
+                labelText: 'End Date & Time',
+                hintText: 'Select End date and time',
+                suffixIcon: Icon(
+                  Icons.calendar_today_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              onTap: () => onSelectDateAndTime(false),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select the end date and time';
                 }
                 return null;
               },

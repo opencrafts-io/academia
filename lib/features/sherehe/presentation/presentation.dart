@@ -49,7 +49,6 @@ export 'widgets/event_card_wrapper.dart';
 export 'widgets/event_card.dart';
 export 'widgets/ticket_card_widget.dart';
 export 'widgets/ticket_visibility_selector.dart';
-export 'widgets/ticket_editor_sheet.dart';
 export 'widgets/event_image_helper_text_widget.dart';
 export 'widgets/user_tile.dart';
 export 'widgets/added_tickets_card.dart';
