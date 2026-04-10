@@ -146,13 +146,14 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 12),
+                        pw.SizedBox(height: 10),
                         pw.Text(
                           widget.event.eventName.toUpperCase(),
+                          maxLines: 2,
                           style: pw.TextStyle(
-                            fontSize: 22,
+                            fontSize: 10,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.white,
+                            color: PdfColors.white,                           
                           ),
                         ),
                         pw.SizedBox(height: 20),
@@ -276,7 +277,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           widget.ticketName.toUpperCase(),
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 10,
                             color: primaryBg,
                           ),
                         ),
@@ -679,7 +680,7 @@ class _PdfTicketInfo extends pw.StatelessWidget {
                 style: pw.TextStyle(
                   color: PdfColors.white,
                   fontWeight: pw.FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: 8,
                 ),
               ),
             ],
