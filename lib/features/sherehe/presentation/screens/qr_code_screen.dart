@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -93,7 +94,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     const accentColor = PdfColor.fromInt(0xFF00A3FF);
     const stubBg = PdfColor.fromInt(0xFFF2F2F2);
     const ticketBorder = PdfColor.fromInt(0xFFE0E0E0);
-    final logo = await loadPdfImage("assets/icons/opencrafts.png");
+    final logo = await loadPdfImage(Assets.icons.opencrafts.path);
 
     pdf.addPage(
       pw.Page(
@@ -288,7 +289,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             letterSpacing: 1,
                           ),
                         ),
-                        pw.SizedBox(height: 15),
+                        pw.SizedBox(height: 10),
 
                         pw.Image(
                           logo,
