@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -93,7 +94,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     const accentColor = PdfColor.fromInt(0xFF00A3FF);
     const stubBg = PdfColor.fromInt(0xFFF2F2F2);
     const ticketBorder = PdfColor.fromInt(0xFFE0E0E0);
-    final logo = await loadPdfImage("assets/icons/opencrafts.png");
+    final logo = await loadPdfImage(Assets.icons.opencrafts.path);
 
     pdf.addPage(
       pw.Page(
@@ -145,13 +146,14 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 12),
+                        pw.SizedBox(height: 10),
                         pw.Text(
                           widget.event.eventName.toUpperCase(),
+                          maxLines: 2,
                           style: pw.TextStyle(
-                            fontSize: 22,
+                            fontSize: 10,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.white,
+                            color: PdfColors.white,                           
                           ),
                         ),
                         pw.SizedBox(height: 20),
@@ -275,7 +277,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           widget.ticketName.toUpperCase(),
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 10,
                             color: primaryBg,
                           ),
                         ),
@@ -288,7 +290,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             letterSpacing: 1,
                           ),
                         ),
-                        pw.SizedBox(height: 15),
+                        pw.SizedBox(height: 10),
 
                         pw.Image(
                           logo,
@@ -678,7 +680,7 @@ class _PdfTicketInfo extends pw.StatelessWidget {
                 style: pw.TextStyle(
                   color: PdfColors.white,
                   fontWeight: pw.FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: 8,
                 ),
               ),
             ],
