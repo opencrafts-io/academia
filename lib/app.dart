@@ -35,7 +35,7 @@ class _AcademiaState extends State<Academia> {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString(
         "user_activity",
-        jsonEncode({"last_app_launch_date": DateTime.now()}),
+        jsonEncode({"last_app_launch_date": DateTime.now().toLocal().toString()}),
       );
     });
 
@@ -94,6 +94,8 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => AuthBloc(
+            signOutUsecase: sl(),
+            signInWithProviderUsecase: sl(),
             signInWithAppleUsecase: sl(),
             signInAsReviewUsecase: sl(),
             refreshVerisafeTokenUsecase: sl(),

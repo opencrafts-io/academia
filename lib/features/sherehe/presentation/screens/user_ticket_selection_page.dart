@@ -29,6 +29,14 @@ class UserTicketSelectionPage extends StatefulWidget {
 }
 
 class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserTicketSelectionBloc, UserTicketSelectionState>(
@@ -98,6 +106,7 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
             ..sort((a, b) => b.ticketPrice.compareTo(a.ticketPrice));
 
           return SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -126,7 +135,22 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
                       return GestureDetector(
                         onTap: ticket.ticketQuantity == 0
                             ? null
-                            : () => widget.onTicketSelected(ticket),
+                            : () {
+                                widget.onTicketSelected(ticket);
+
+                                // Wait for UI to rebuild before scrolling
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (!_scrollController.hasClients) return;
+
+                                  _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: const Duration(milliseconds: 400),
+                                    curve: Curves.easeOut,
+                                  );
+                                });
+                              },
                         child: Opacity(
                           opacity: ticket.ticketQuantity == 0 ? 0.5 : 1.0,
                           child: Card(

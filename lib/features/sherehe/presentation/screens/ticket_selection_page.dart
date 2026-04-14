@@ -113,40 +113,44 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   Future<void> _showFreeTicketQuantityDialog() async {
+    final freeTicketQuantityDialogFormKey = GlobalKey<FormState>();
     final TextEditingController qtyController = TextEditingController();
 
     final result = await showDialog<int>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Free Event Quantity"),
-          content: TextField(
-            controller: qtyController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: "Number of free tickets",
+        return Form(
+          key: freeTicketQuantityDialogFormKey,
+          child: AlertDialog(
+            title: const Text("Free Event Quantity"),
+            content: TextFormField(
+              controller: qtyController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Number of free tickets",
+              ),
+              validator: (value) =>
+                  int.tryParse(value ?? "") == null || int.parse(value!) <= 0
+                  ? "Enter a valid quantity"
+                  : null,
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (freeTicketQuantityDialogFormKey.currentState!.validate()) {
+                    final qty = int.tryParse(qtyController.text.trim());
+                    Navigator.pop(context, qty);
+                  }
+                },
+                child: const Text("Confirm"),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            FilledButton(
-              onPressed: () {
-                final qty = int.tryParse(qtyController.text.trim());
-                if (qty == null || qty <= 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Enter a valid quantity")),
-                  );
-                  return;
-                }
-                Navigator.pop(context, qty);
-              },
-              child: const Text("Confirm"),
-            ),
-          ],
         );
       },
     );
@@ -181,7 +185,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

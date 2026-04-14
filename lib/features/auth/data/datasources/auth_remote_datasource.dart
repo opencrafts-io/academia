@@ -1,7 +1,7 @@
 import 'package:academia/config/flavor.dart';
+import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -9,93 +9,93 @@ import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:logger/logger.dart';
 
+/// Represents the raw response from POST /auth/token/exchange
+/// and POST /auth/token/refresh
+class _TokenExchangeResponse {
+  final String accessToken;
+  final String refreshToken;
+  final DateTime accessExpiresAt;
+  final DateTime refreshExpiresAt;
+
+  const _TokenExchangeResponse({
+    required this.accessToken,
+    required this.refreshToken,
+    required this.accessExpiresAt,
+    required this.refreshExpiresAt,
+  });
+
+  factory _TokenExchangeResponse.fromJson(Map<String, dynamic> json) =>
+      _TokenExchangeResponse(
+        accessToken: json['access_token'] as String,
+        refreshToken: json['refresh_token'] as String,
+        accessExpiresAt: DateTime.parse(json['access_expires_at'] as String),
+        refreshExpiresAt: DateTime.parse(json['refresh_expires_at'] as String),
+      );
+}
+
 class AuthRemoteDatasource with DioErrorHandler {
   final FlavorConfig flavor;
-  final Logger _logger = Logger();
-  late String servicePrefix;
   final DioClient dioClient;
+  final Logger _logger = Logger();
+
+  late final String servicePrefix;
+  late final String _authBaseUrl;
 
   AuthRemoteDatasource({required this.flavor, required this.dioClient}) {
     if (flavor.isProduction) {
       servicePrefix = "verisafe";
+      _authBaseUrl = "https://verisafe.opencrafts.io";
     } else if (flavor.isStaging) {
-      servicePrefix = 'qa-verisafe';
+      servicePrefix = "qa-verisafe";
+      _authBaseUrl = "https://qaverisafe.opencrafts.io";
     } else {
       servicePrefix = "dev-verisafe";
+      _authBaseUrl = "http://127.0.0.1:8080";
     }
   }
 
-  // Helper to get the current host URL
-  String? getHostBaseUrl() {
-    if (kIsWeb) {
-      final uri = Uri.base;
-      return uri.origin;
-    }
-    return null;
-  }
+  Future<Either<Failure, TokenData>> signInWithApple() =>
+      signInWithProvider("apple");
 
-  Future<Either<Failure, TokenData>> signInWithApple() async {
+  Future<Either<Failure, TokenData>> signInWithGoogle() =>
+      signInWithProvider("google");
+
+  Future<Either<Failure, TokenData>> signInWithSpotify() =>
+      signInWithProvider("spotify");
+
+  /// Authenticates the user with the given [provider] via OAuth,
+  /// then exchanges the resulting one-time code for a token pair.
+  ///
+  /// On mobile, opens a browser session, waits for the deep-link callback,
+  /// extracts the short-lived auth [code], and immediately exchanges it
+  /// via POST /auth/token/exchange before returning.
+  ///
+  /// [deviceToken] — FCM/APNs push token for the current device.
+  /// [deviceName]  — Human-readable device label stored server-side.
+  Future<Either<Failure, TokenData>> signInWithProvider(
+    String provider, {
+    String deviceToken = "none",
+    String deviceName = "Unknown Device",
+  }) async {
     try {
-      String callback;
-      String platform;
-      String authUrl;
-
-      switch (flavor.flavor) {
-        case Flavor.staging:
-          authUrl = "https://qaverisafe.opencrafts.io/auth/apple";
-          break;
-        case Flavor.production:
-          authUrl = "https://verisafe.opencrafts.io/auth/apple";
-          break;
-        default:
-          authUrl = "http://127.0.0.1:8080/auth/apple";
-      }
-
-      if (kIsWeb) {
-        // Redirect back to your frontend’s domain
-        callback = "${getHostBaseUrl()}/auth.html";
-        platform = "web";
-      } else {
-        // Custom scheme for mobile apps
-        callback = "academia://callback";
-        platform = "mobile";
-      }
-
-      _logger.d(
-        "Authenticating with "
-        "$authUrl"
-        "?platform=$platform&redirect_uri=$callback",
+      final authUri = _buildAuthUri(
+        provider: provider,
+        deviceToken: deviceToken,
+        deviceName: deviceName,
       );
 
-      final result = await FlutterWebAuth2.authenticate(
-        url:
-            "$authUrl"
-            "?platform=$platform&redirect_uri=$callback",
-        callbackUrlScheme: "academia",
-        options: FlutterWebAuth2Options(
-          windowName: "Academia | Authentication",
-          silentAuth: false,
-          timeout: 30000, // Increased to 30 seconds for better user experience
-          useWebview: false,
-        ),
-      );
+      _logger.d("Starting OAuth flow: $authUri");
 
-      final token = Uri.parse(result).queryParameters['token'];
-      final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
+      final callbackResult = await _launchAuthSession(authUri);
+      _logger.d(callbackResult);
 
-      return right(
-        TokenData(
-          id: 1,
-          provider: "verisafe",
-          expiresAt: DateTime.now().add(Duration(days: 7)),
-          createdAt: DateTime.now(),
-          accessToken: token!,
-          refreshToken: refreshToken!,
-          updatedAt: DateTime.now(),
-        ),
-      );
+      final code = _extractCode(callbackResult);
+
+      final tokenResponse = await _exchangeCode(code);
+
+      return right(_toTokenData(tokenResponse));
     } on PlatformException catch (pe) {
-      _logger.e("Platform exception occurred", error: pe);
+      _logger.e("Auth session cancelled or failed", error: pe);
       return left(
         AuthenticationFailure(
           message: "You cancelled the authentication flow",
@@ -103,160 +103,7 @@ class AuthRemoteDatasource with DioErrorHandler {
         ),
       );
     } catch (e) {
-      _logger.e("Failed to authenticate with google", error: e);
-      return left(
-        AuthenticationFailure(
-          message: "Something went wrong while trying to authenticate you",
-          error: e,
-        ),
-      );
-    }
-  }
-
-  Future<Either<Failure, TokenData>> signInWithGoogle() async {
-    try {
-      String callback;
-      String platform;
-      String authUrl;
-
-      switch (flavor.flavor) {
-        case Flavor.staging:
-          authUrl = "https://qaverisafe.opencrafts.io/auth/google";
-          break;
-        case Flavor.production:
-          authUrl = "https://verisafe.opencrafts.io/auth/google";
-          break;
-        default:
-          authUrl = "http://127.0.0.1:8080/auth/google";
-      }
-
-      if (kIsWeb) {
-        // Redirect back to your frontend’s domain
-        callback = "${getHostBaseUrl()}/auth.html";
-        platform = "web";
-      } else {
-        // Custom scheme for mobile apps
-        callback = "academia://callback";
-        platform = "mobile";
-      }
-
-      _logger.d(
-        "Authenticating with "
-        "$authUrl"
-        "?platform=$platform&redirect_uri=$callback",
-      );
-
-      final result = await FlutterWebAuth2.authenticate(
-        url:
-            "$authUrl"
-            "?platform=$platform&redirect_uri=$callback",
-        callbackUrlScheme: "academia",
-        options: FlutterWebAuth2Options(
-          windowName: "Academia | Authentication",
-          silentAuth: false,
-          timeout: 30000, // Increased to 30 seconds for better user experience
-          useWebview: false,
-        ),
-      );
-
-      final token = Uri.parse(result).queryParameters['token'];
-      final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
-      return right(
-        TokenData(
-          id: 1,
-          provider: "verisafe",
-          expiresAt: DateTime.now().add(Duration(days: 7)),
-          createdAt: DateTime.now(),
-          accessToken: token!,
-          refreshToken: refreshToken!,
-          updatedAt: DateTime.now(),
-        ),
-      );
-    } on PlatformException catch (pe) {
-      _logger.e("Platform exception occurred", error: pe);
-      return left(
-        AuthenticationFailure(
-          message: "You cancelled the authentication flow",
-          error: pe,
-        ),
-      );
-    } catch (e) {
-      _logger.e("Failed to authenticate with google", error: e);
-      return left(
-        AuthenticationFailure(
-          message: "Something went wrong while trying to authenticate you",
-          error: e,
-        ),
-      );
-    }
-  }
-
-  Future<Either<Failure, TokenData>> signInWithSpotify() async {
-    try {
-      String callback;
-      String platform;
-      String authUrl;
-
-      switch (flavor.flavor) {
-        case Flavor.staging:
-          authUrl = "https://qaverisafe.opencrafts.io/auth/spotify";
-          break;
-        case Flavor.production:
-          authUrl = "https://verisafe.opencrafts.io/auth/spotify";
-          break;
-        default:
-          authUrl = "http://127.0.0.1:8080/auth/spotify";
-      }
-
-      if (kIsWeb) {
-        callback = "${getHostBaseUrl()}/auth.html";
-        platform = "web";
-      } else {
-        callback = "academia://callback";
-        platform = "mobile";
-      }
-
-      _logger.d(
-        "Authenticating with "
-        "$authUrl"
-        "?platform=$platform&redirect_uri=$callback",
-      );
-
-      final result = await FlutterWebAuth2.authenticate(
-        url: "$authUrl?platform=$platform&redirect_uri=$callback",
-        callbackUrlScheme: "academia",
-        options: FlutterWebAuth2Options(
-          windowName: "Academia | Authentication",
-          silentAuth: false,
-          timeout: 30000, // Increased to 30 seconds for better user experience
-          useWebview: false,
-        ),
-      );
-
-      final token = Uri.parse(result).queryParameters['token'];
-      final refreshToken = Uri.parse(result).queryParameters['refresh_token'];
-
-      return right(
-        TokenData(
-          id: 1,
-          provider: "verisafe",
-          expiresAt: DateTime.now().add(Duration(days: 7)),
-          createdAt: DateTime.now(),
-          accessToken: token!,
-          refreshToken: refreshToken!,
-          updatedAt: DateTime.now(),
-        ),
-      );
-    } on PlatformException catch (pe) {
-      _logger.e("Platform exception occurred", error: pe);
-      return left(
-        AuthenticationFailure(
-          message: "You cancelled the authentication flow",
-          error: pe,
-        ),
-      );
-    } catch (e) {
-      _logger.e("Failed to authenticate with spotify", error: e);
+      _logger.e("Failed to authenticate with $provider", error: e);
       return left(
         AuthenticationFailure(
           message: "Something went wrong while trying to authenticate you",
@@ -272,26 +119,25 @@ class AuthRemoteDatasource with DioErrorHandler {
     try {
       final response = await dioClient.dio.post(
         "/$servicePrefix/auth/token/refresh",
-        data: token.toJson(),
+        data: {"refresh_token": token.refreshToken},
+        options: Options(extra: {'skipAuth': true}),
       );
 
       if (response.statusCode == 200) {
-        return Right(
-          TokenData(
-            id: 1,
-            accessToken: response.data["access_token"],
-            refreshToken: response.data["refresh_token"],
-            provider: "verisafe",
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ),
+        final tokenResponse = _TokenExchangeResponse.fromJson(
+          response.data as Map<String, dynamic>,
         );
+        return right(_toTokenData(tokenResponse));
       }
-      throw ("Wrong status code recieved from server");
+
+      throw (AuthenticationFailure(
+        message: "Unexpected status code: ${response.statusCode}",
+        error: response,
+      ));
     } on DioException catch (de) {
       return handleDioError(de);
     } catch (e) {
-      _logger.e("Failed to refresh verisafe token", error: e);
+      _logger.e("Failed to refresh token", error: e);
       return left(
         AuthenticationFailure(
           message: "Something went wrong while trying to authenticate you",
@@ -300,4 +146,118 @@ class AuthRemoteDatasource with DioErrorHandler {
       );
     }
   }
+
+  Future<Either<Failure, TokenData>> revokeToken(TokenData token) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/auth/token/revoke",
+        data: {"refresh_token": token.refreshToken},
+      );
+
+      if (response.statusCode == 200) {
+        final tokenResponse = _TokenExchangeResponse.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+        return right(_toTokenData(tokenResponse));
+      }
+
+      throw (AuthenticationFailure(
+        message: "Unexpected status code: ${response.statusCode}",
+        error: response,
+      ));
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Failed to revoke token pair", error: e);
+      return left(
+        AuthenticationFailure(
+          message: "Something went wrong while trying to sign you out",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  /// Builds the backend OAuth initiation URL with all required query params.
+  Uri _buildAuthUri({
+    required String provider,
+    required String deviceToken,
+    required String deviceName,
+  }) {
+    final callback = kIsWeb
+        ? "${Uri.base.origin}/auth.html"
+        : "https://academia.opencrafts.io/auth/callback";
+
+    final platform = kIsWeb ? "web" : "mobile";
+
+    return Uri.parse("$_authBaseUrl/auth/$provider").replace(
+      queryParameters: {
+        "platform": platform,
+        "redirect_uri": callback,
+        "deep_link": callback,
+        "device_name": deviceName,
+        "device_token": deviceToken,
+      },
+    );
+  }
+
+  /// Opens the browser auth session and returns the raw callback URL string.
+  Future<String> _launchAuthSession(Uri authUri) =>
+      FlutterWebAuth2.authenticate(
+        url: authUri.toString(),
+        callbackUrlScheme: "https",
+        options: const FlutterWebAuth2Options(
+          windowName: "Academia | Authentication",
+          silentAuth: false,
+          timeout: 30000,
+          useWebview: false,
+          httpsHost: "academia.opencrafts.io",
+          httpsPath: "/auth/callback",
+        ),
+      );
+
+  /// Extracts the one-time auth [code] from the deep-link callback URL.
+  ///
+  /// Throws [AuthenticationFailure] if the code is missing — this indicates
+  /// a backend misconfiguration rather than a user-facing error.
+  String _extractCode(String callbackUrl) {
+    final code = Uri.parse(callbackUrl).queryParameters['code'];
+    if (code == null || code.isEmpty) {
+      throw AuthenticationFailure(
+        message: "Auth callback is missing the code parameter",
+        error: Exception("Missing 'code' in callback: $callbackUrl"),
+      );
+    }
+    return code;
+  }
+
+  /// Exchanges the one-time [code] for a token pair via the backend.
+  /// The code is deleted server-side on first use (60s TTL).
+  Future<_TokenExchangeResponse> _exchangeCode(String code) async {
+    final response = await dioClient.dio.post(
+      "/$servicePrefix/auth/token/exchange",
+      data: {"code": code},
+      options: Options(extra: {'skipAuth': true}),
+    );
+
+    if (response.statusCode != 200) {
+      throw AuthenticationFailure(
+        message: "Code exchange failed (${response.statusCode})",
+        error: Exception(response.data),
+      );
+    }
+
+    return _TokenExchangeResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
+
+  /// Maps a [_TokenExchangeResponse] to the domain [TokenData] model.
+  TokenData _toTokenData(_TokenExchangeResponse r) => TokenData(
+    provider: "verisafe",
+    accessToken: r.accessToken,
+    refreshToken: r.refreshToken,
+    accessExpiresAt: r.accessExpiresAt,
+    refreshExpiresAt: r.refreshExpiresAt,
+  );
 }

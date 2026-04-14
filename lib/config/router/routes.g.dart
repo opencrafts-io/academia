@@ -305,14 +305,43 @@ mixin $AuthRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $profileRoute =>
-    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState);
+RouteBase get $profileRoute => GoRouteData.$route(
+  path: '/profile',
+  factory: $ProfileRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'link-institution',
+      factory: $LinkInstitutionProfileRoute._fromState,
+    ),
+  ],
+);
 
 mixin $ProfileRoute on GoRouteData {
   static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
 
   @override
   String get location => GoRouteData.$location('/profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $LinkInstitutionProfileRoute on GoRouteData {
+  static LinkInstitutionProfileRoute _fromState(GoRouterState state) =>
+      LinkInstitutionProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/link-institution');
 
   @override
   void go(BuildContext context) => context.go(location);

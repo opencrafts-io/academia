@@ -9,6 +9,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:academia/injection_container.dart';
 import '../widgets/essential_category_tile.dart';
 
 class EssentialsPage extends StatefulWidget {
@@ -57,12 +58,43 @@ class _EssentialsPageState extends State<EssentialsPage> {
     ),
   ];
 
-  void _navigateToExamTimetable() {
+  void _navigateToExamTimetable() async {
     final institutionState = context.read<InstitutionBloc>().state;
 
     if (institutionState is InstitutionLoadedState &&
         institutionState.institutions.isNotEmpty) {
-      // TODO: multiple institutuions
+      final primaryInstitution = institutionState.institutions.first;
+
+      context.read<ScrappingCommandBloc>().add(
+        GetScrappingCommandEvent(
+          institutionID: primaryInstitution.institutionId,
+        ),
+      );
+      final resolvedState = await context
+          .read<ScrappingCommandBloc>()
+          .stream
+          .firstWhere((s) => s is! ScrappingCommandLoading);
+
+      final isSupported =
+          resolvedState is ScrappingCommandLoaded &&
+          resolvedState.command != null;
+
+      if (!mounted) return;
+
+      if (isSupported) {
+        final adService = sl<AdService>();
+        adService.showInterstitialAd();
+        if (!mounted) return;
+        ExamTimetableRoute(
+          institutionId: primaryInstitution.institutionId.toString(),
+        ).push(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("This feature is not supported for your school"),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("No institution data found")),
@@ -119,7 +151,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                   child: ListTile(
                     leading: Icon(Icons.settings),
                     title: Text("Settings & Preferences"),
-                    subtitle: Text("Theme"),
+                    subtitle: Text("Make Academia behave how you like"),
                     onTap: () => SettingsPageRoute().push(context),
                     subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),

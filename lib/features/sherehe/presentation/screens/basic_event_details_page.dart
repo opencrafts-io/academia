@@ -8,7 +8,6 @@ class BasicEventDetailsPage extends StatelessWidget {
   final TextEditingController locationController;
   final VoidCallback onSelectDateAndTime;
   final VoidCallback onNext;
-  final BuildContext context;
 
   const BasicEventDetailsPage({
     super.key,
@@ -18,7 +17,6 @@ class BasicEventDetailsPage extends StatelessWidget {
     required this.locationController,
     required this.onSelectDateAndTime,
     required this.onNext,
-    required this.context,
   });
 
   @override

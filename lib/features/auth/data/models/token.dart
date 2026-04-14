@@ -1,29 +1,37 @@
-import 'package:academia/core/data/date_time_converter.dart';
-import 'package:drift/drift.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@DataClassName('TokenData')
-class Token extends Table {
-  @DateTimeConverter()
-  IntColumn get id => integer().autoIncrement()();
+part 'token.freezed.dart';
+part 'token.g.dart';
 
-  @JsonKey("access_token")
-  TextColumn get accessToken => text()();
+@freezed
+abstract class TokenData with _$TokenData {
+  const factory TokenData({
+    @JsonKey(name: "verisafe") required String provider,
+    @JsonKey(name: "access_token") required String accessToken,
+    @JsonKey(name: "refresh_token") required String refreshToken,
+    @JsonKey(
+      name: "access_expires_at",
+      fromJson: _dateFromJson,
+      toJson: _dateToJson,
+    )
+    required DateTime accessExpiresAt,
+    @JsonKey(
+      name: "refresh_expires_at",
+      fromJson: _dateFromJson,
+      toJson: _dateToJson,
+    )
+    required DateTime refreshExpiresAt,
+  }) = _TokenData;
 
-  @JsonKey("refresh_token")
-  TextColumn get refreshToken => text()();
-
-  @JsonKey("provider")
-  TextColumn get provider => text().unique()();
-
-  @JsonKey("expires_at")
-  DateTimeColumn get expiresAt => dateTime().nullable()();
-
-  @JsonKey('created_at')
-  DateTimeColumn get createdAt =>
-      dateTime().withDefault(Constant(DateTime.now()))();
-
-  // For storing time of update timestamp
-  @JsonKey('updated_at')
-  DateTimeColumn get updatedAt =>
-      dateTime().withDefault(Constant(DateTime.now()))();
+  factory TokenData.fromJson(Map<String, dynamic> json) =>
+      _$TokenDataFromJson(json);
 }
+
+DateTime _dateFromJson(String? value) {
+  if (value == null) {
+    throw FormatException('Missing token expiry');
+  }
+  return DateTime.parse(value);
+}
+
+String? _dateToJson(DateTime? value) => value?.toIso8601String();

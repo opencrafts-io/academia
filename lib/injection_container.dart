@@ -35,9 +35,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     sl.registerSingleton<AdService>(adService);
   }
 
-  sl.registerFactory<AuthLocalDatasource>(
-    () => AuthLocalDatasource(localDB: cacheDB),
-  );
+  sl.registerSingleton<AuthLocalDatasource>(AuthLocalDatasource());
 
   sl.registerFactory<DioClient>(
     () => DioClient(
@@ -65,6 +63,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
   );
 
+  sl.registerFactory<SignInWithProviderUsecase>(
+    () => SignInWithProviderUsecase(repository: sl.get<AuthRepositoryImpl>()),
+  );
+
   sl.registerFactory<SignInWithAppleUsecase>(
     () => SignInWithAppleUsecase(sl.get<AuthRepositoryImpl>()),
   );
@@ -82,6 +84,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
   sl.registerFactory<RefreshVerisafeTokenUsecase>(
     () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SignOutUsecase>(
+    () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
   //sherehe
@@ -753,6 +759,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
+  sl.registerFactory<RemoveAccountFromInstitutionUsecase>(
+    () => RemoveAccountFromInstitutionUsecase(
+      repository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
   sl.registerFactory<AddAccountToInstitution>(
     () => AddAccountToInstitution(
       institutionRepository: sl<InstitutionRepositoryImpl>(),
@@ -888,6 +900,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
+      removeAccountFromInstitutionUsecase: sl(),
       addAccountToInstitution: sl(),
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),

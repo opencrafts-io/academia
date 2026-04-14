@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TicketVisibilitySelector extends StatefulWidget {
   final bool isPublic;
   final List<Institution> selectedInstitutions;
+  final bool? isEditingTicket;
 
   final ValueChanged<bool?> onVisibilityChanged;
   final void Function(Institution institution, bool selected)
@@ -20,6 +21,7 @@ class TicketVisibilitySelector extends StatefulWidget {
     required this.selectedInstitutions,
     required this.onVisibilityChanged,
     required this.onInstitutionSelected,
+    this.isEditingTicket = false,
   });
 
   @override
@@ -67,7 +69,9 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: widget.isEditingTicket == true
+            ? const EdgeInsets.symmetric(vertical: 12)
+            : const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
