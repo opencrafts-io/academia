@@ -11,6 +11,7 @@ part 'institution_state.dart';
 class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
   final SearchForInstitutionByNameUsecase searchForInstitutionByNameUsecase;
   final AddAccountToInstitution addAccountToInstitution;
+  final RemoveAccountFromInstitutionUsecase removeAccountFromInstitutionUsecase;
   final GetAllCachedInstitutionsUsecase getAllCachedInstitutionsUsecase;
   final GetAllUserAccountInstitutionsUsecase
   getAllUserAccountInstitutionsUsecase;
@@ -21,11 +22,13 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     required this.getAllUserAccountInstitutionsUsecase,
     required this.getAllCachedInstitutionsUsecase,
     required this.addAccountToInstitution,
+    required this.removeAccountFromInstitutionUsecase,
   }) : super(InstitutionInitialState()) {
     on<SearchInstitutionByNameEvent>(_onSearchInstitutionByName);
     on<LinkAccountToInstitutionEvent>(_onLinkAccountToInstitution);
     on<GetCachedUserInstitutionsEvent>(_onGetCachedUserInstitutions);
     on<RefreshUserInstitutionsEvent>(_onRefreshUserInstitutions);
+    on<UnLinkAccountFromInstitutionEvent>(_onUnLinkAccountFromInstitution);
   }
 
   Future<void> _onSearchInstitutionByName(
@@ -68,6 +71,34 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
       if (sl<FlavorConfig>().isProduction) {
         posthog.capture(
           eventName: "institution_link",
+          properties: {
+            "institution": event.institutionID,
+            "user": event.accountID,
+          },
+        );
+      }
+      emit(InstitutionLinkedState());
+    });
+  }
+
+  Future<void> _onUnLinkAccountFromInstitution(
+    UnLinkAccountFromInstitutionEvent event,
+    Emitter<InstitutionState> emit,
+  ) async {
+    emit(InstitutionLoadingState());
+    final result = await removeAccountFromInstitutionUsecase(
+      RemoveAccountFromInstitutionParams(
+        accountID: event.accountID,
+        institutionID: event.institutionID,
+      ),
+    );
+
+    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
+      link,
+    ) {
+      if (sl<FlavorConfig>().isProduction) {
+        posthog.capture(
+          eventName: "institution_unlink",
           properties: {
             "institution": event.institutionID,
             "user": event.accountID,

@@ -759,6 +759,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
+  sl.registerFactory<RemoveAccountFromInstitutionUsecase>(
+    () => RemoveAccountFromInstitutionUsecase(
+      repository: sl<InstitutionRepositoryImpl>(),
+    ),
+  );
+
   sl.registerFactory<AddAccountToInstitution>(
     () => AddAccountToInstitution(
       institutionRepository: sl<InstitutionRepositoryImpl>(),
@@ -894,6 +900,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerFactory<InstitutionBloc>(
     () => InstitutionBloc(
+      removeAccountFromInstitutionUsecase: sl(),
       addAccountToInstitution: sl(),
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),

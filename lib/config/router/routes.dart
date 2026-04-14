@@ -174,7 +174,10 @@ class AuthRoute extends GoRouteData with $AuthRoute {
   }
 }
 
-@TypedGoRoute<ProfileRoute>(path: "/profile")
+@TypedGoRoute<ProfileRoute>(
+  path: "/profile",
+  routes: [TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution")],
+)
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
   CustomTransitionPage<void> buildPage(
@@ -199,6 +202,24 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
 
             return SlideTransition(position: offsetAnimation, child: child);
           },
+    );
+  }
+}
+
+class LinkInstitutionProfileRoute extends GoRouteData
+    with $LinkInstitutionProfileRoute {
+  LinkInstitutionProfileRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        child: child,
+      ),
+
+      child: Sheet(child: InstitutionLinkingPage()),
     );
   }
 }
@@ -762,8 +783,13 @@ class AddSemesterRoute extends GoRouteData with $AddSemesterRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
+      transitionCurve: Curves.easeInOutCubic,
       viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
+        padding: EdgeInsets.only(
+          top: MediaQuery.viewPaddingOf(context).top,
+          bottom: MediaQuery.viewPaddingOf(context).bottom,
+        ),
+
         child: child,
       ),
       child: Sheet(child: const AddSemesterSheet()),

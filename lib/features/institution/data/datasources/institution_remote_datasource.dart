@@ -85,6 +85,34 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, bool>> removeAccountFromInstitution(
+    String accountID,
+    int institutionID,
+  ) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "/$servicePrefix/institutions/account",
+        data: {"account_id": accountID, "institution_id": institutionID},
+      );
+
+      if (response.statusCode == 200) {
+        return right(true);
+      }
+      throw ("Wrong status code returned from server expected 200 got ${response.statusCode}");
+    } on DioException catch (de) {
+      return handleDioError(de);
+    } catch (e) {
+      return left(
+        NetworkFailure(
+          message:
+              "We could't remove account from specified institution at the moment."
+              "Please try again later",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<InstitutionData>>> getAccountInstitutions(
     String accountID, {
     int page = 0,
