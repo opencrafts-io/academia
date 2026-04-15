@@ -192,7 +192,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            ShereheUtils.formatDate(event.eventDate),
+                            ShereheUtils.formatDate(event.startDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
@@ -215,7 +215,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            ShereheUtils.formatTime(event.eventDate),
+                            ShereheUtils.formatTime(event.startDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,

@@ -108,6 +108,39 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
+  Future<Either<Failure, EventData>> getEventByInvite({
+    required String invite,
+  }) async {
+    try {
+      final response = await dioClient.dio.get("/$servicePrefix/event/$invite");
+
+      if (response.statusCode == 200) {
+        return right(EventData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected server response",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching event by Invite", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error while fetching event by Invite ", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching event",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<EventData>>> getEventByOrganizerId({
     required String organizerId,
   }) async {
@@ -153,13 +186,16 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required String eventDescription,
     String? eventUrl,
     required String eventLocation,
-    required String eventDate,
+    required String eventStartDate,
+    required String eventEndDate,
     required String organizerId,
     required List<String> eventGenre,
     File? eventCardImage,
     File? eventPosterImage,
     File? eventBannerImage,
     required List<TicketData> tickets,
+    required List<String> institutions,
+    required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
     String? accountReference,
@@ -172,7 +208,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'event_description': eventDescription,
         'event_url': eventUrl,
         'event_location': eventLocation,
-        'event_date': eventDate,
+        'start_date': eventStartDate,
+        'end_date': eventEndDate,
         'organizer_id': organizerId,
         'event_genre': eventGenre,
         'tickets': jsonEncode(
@@ -182,6 +219,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
             return json;
           }).toList(),
         ),
+        'institutions': institutions,
+        'scope': scope,
 
         if (eventCardImage != null)
           'event_card_image': await MultipartFile.fromFile(
@@ -366,6 +405,45 @@ class ShereheRemoteDataSource with DioErrorHandler {
     } catch (e) {
       _logger.e(
         "Unknown error when fetching ticket for event $eventId",
+        error: e,
+      );
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching the ticket",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, TicketData>> getTicketByInvite(String invite) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/invite/ticket/$invite",
+      );
+
+      if (response.statusCode == 200) {
+        return right(TicketData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e(
+        "DioException when fetching ticket",
+        error: de,
+      );
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e(
+        "Unknown error when fetching ticket",
         error: e,
       );
       return left(

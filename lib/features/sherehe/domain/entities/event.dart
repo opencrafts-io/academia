@@ -7,7 +7,8 @@ class Event extends Equatable {
   final String eventDescription;
   final String? eventUrl;
   final String eventLocation;
-  final String eventDate;
+  final String startDate;
+  final String endDate;
   final int attendeeCount;
   final String organizerId;
   final String? eventCardImage;
@@ -17,6 +18,8 @@ class Event extends Equatable {
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
+  final String scope;
+  final List<String>? institutions;
   final PaymentInfo? paymentInfo;
 
   const Event({
@@ -25,7 +28,8 @@ class Event extends Equatable {
     required this.eventDescription,
     this.eventUrl,
     required this.eventLocation,
-    required this.eventDate,
+    required this.startDate,
+    required this.endDate,
     required this.attendeeCount,
     required this.organizerId,
     this.eventCardImage,
@@ -35,6 +39,8 @@ class Event extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    required this.scope,
+    this.institutions,
     this.paymentInfo,
   });
 
@@ -44,7 +50,8 @@ class Event extends Equatable {
     String? eventDescription,
     String? eventUrl,
     String? eventLocation,
-    String? eventDate,
+    String? startDate,
+    String? endDate,
     int? attendeeCount,
     String? organizerId,
     String? eventCardImage,
@@ -54,6 +61,8 @@ class Event extends Equatable {
     String? createdAt,
     String? updatedAt,
     String? deletedAt,
+    String? scope,
+    List<String>? institutions,
     PaymentInfo? paymentInfo,
   }) {
     return Event(
@@ -62,7 +71,8 @@ class Event extends Equatable {
       eventDescription: eventDescription ?? this.eventDescription,
       eventUrl: eventUrl ?? this.eventUrl,
       eventLocation: eventLocation ?? this.eventLocation,
-      eventDate: eventDate ?? this.eventDate,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       attendeeCount: attendeeCount ?? this.attendeeCount,
       organizerId: organizerId ?? this.organizerId,
       eventCardImage: eventCardImage ?? this.eventCardImage,
@@ -72,6 +82,8 @@ class Event extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      scope: scope ?? this.scope,
+      institutions: institutions ?? this.institutions,
       paymentInfo: paymentInfo ?? this.paymentInfo,
     );
   }
@@ -83,7 +95,8 @@ class Event extends Equatable {
     eventDescription,
     eventUrl,
     eventLocation,
-    eventDate,
+    startDate,
+    endDate,
     attendeeCount,
     organizerId,
     eventCardImage,
@@ -93,6 +106,8 @@ class Event extends Equatable {
     createdAt,
     updatedAt,
     deletedAt,
+    scope,
+    institutions,
     paymentInfo,
   ];
 

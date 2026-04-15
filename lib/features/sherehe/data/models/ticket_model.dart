@@ -17,15 +17,12 @@ class TicketTable extends Table {
   @JsonKey('ticket_quantity')
   IntColumn get ticketQuantity => integer().nullable()();
 
-  @JsonKey('ticket_visibility')
-  TextColumn get ticketVisibility => text().map(JsonListConverter()).nullable()();
+  @JsonKey('ticket_for')
+  IntColumn get ticketFor => integer()();
 
-  @JsonKey('delete_tag')
-  BoolColumn get deleteTag => boolean().nullable()();
+  @JsonKey('institutions')
+  TextColumn get institutions => text().map(JsonListConverter()).nullable()();
 
-  @JsonKey('created_at')
-  TextColumn get createdAt => text().nullable()();
-
-  @JsonKey('updatedAt')
-  TextColumn get updatedAt => text().nullable()();
+  @JsonKey('scope')
+  TextColumn get scope => text().nullable()();
 }

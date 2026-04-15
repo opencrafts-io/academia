@@ -3638,12 +3638,23 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _eventDateMeta = const VerificationMeta(
-    'eventDate',
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
   );
   @override
-  late final GeneratedColumn<String> eventDate = GeneratedColumn<String>(
-    'event_date',
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+    'end_date',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -3757,6 +3768,24 @@ class $EventTableTable extends EventTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _scopeMeta = const VerificationMeta('scope');
+  @override
+  late final GeneratedColumn<String> scope = GeneratedColumn<String>(
+    'scope',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
+  institutions = GeneratedColumn<String>(
+    'institutions',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<dynamic>?>($EventTableTable.$converterinstitutionsn);
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
   paymentInfo =
@@ -3775,7 +3804,8 @@ class $EventTableTable extends EventTable
     eventName,
     eventDescription,
     eventLocation,
-    eventDate,
+    startDate,
+    endDate,
     attendeeCount,
     organizerId,
     eventCardImage,
@@ -3786,6 +3816,8 @@ class $EventTableTable extends EventTable
     createdAt,
     updatedAt,
     deletedAt,
+    scope,
+    institutions,
     paymentInfo,
   ];
   @override
@@ -3835,13 +3867,21 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_eventLocationMeta);
     }
-    if (data.containsKey('event_date')) {
+    if (data.containsKey('start_date')) {
       context.handle(
-        _eventDateMeta,
-        eventDate.isAcceptableOrUnknown(data['event_date']!, _eventDateMeta),
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
       );
     } else if (isInserting) {
-      context.missing(_eventDateMeta);
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
     }
     if (data.containsKey('attendee_count')) {
       context.handle(
@@ -3920,6 +3960,14 @@ class $EventTableTable extends EventTable
         deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
       );
     }
+    if (data.containsKey('scope')) {
+      context.handle(
+        _scopeMeta,
+        scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scopeMeta);
+    }
     return context;
   }
 
@@ -3945,9 +3993,13 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}event_location'],
       )!,
-      eventDate: attachedDatabase.typeMapping.read(
+      startDate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}event_date'],
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_date'],
       )!,
       attendeeCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -3991,6 +4043,16 @@ class $EventTableTable extends EventTable
         DriftSqlType.string,
         data['${effectivePrefix}deleted_at'],
       ),
+      scope: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scope'],
+      )!,
+      institutions: $EventTableTable.$converterinstitutionsn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}institutions'],
+        ),
+      ),
       paymentInfo: $EventTableTable.$converterpaymentInfon.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -4009,6 +4071,10 @@ class $EventTableTable extends EventTable
       JsonListConverter();
   static TypeConverter<List<dynamic>?, String?> $convertereventGenren =
       NullAwareTypeConverter.wrap($convertereventGenre);
+  static TypeConverter<List<dynamic>, String> $converterinstitutions =
+      JsonListConverter();
+  static TypeConverter<List<dynamic>?, String?> $converterinstitutionsn =
+      NullAwareTypeConverter.wrap($converterinstitutions);
   static TypeConverter<Map<String, dynamic>, String> $converterpaymentInfo =
       JsonConverter();
   static TypeConverter<Map<String, dynamic>?, String?> $converterpaymentInfon =
@@ -4020,7 +4086,8 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String eventName;
   final String eventDescription;
   final String eventLocation;
-  final String eventDate;
+  final String startDate;
+  final String endDate;
   final int attendeeCount;
   final String organizerId;
   final String? eventCardImage;
@@ -4031,13 +4098,16 @@ class EventData extends DataClass implements Insertable<EventData> {
   final String createdAt;
   final String updatedAt;
   final String? deletedAt;
+  final String scope;
+  final List<dynamic>? institutions;
   final Map<String, dynamic>? paymentInfo;
   const EventData({
     required this.id,
     required this.eventName,
     required this.eventDescription,
     required this.eventLocation,
-    required this.eventDate,
+    required this.startDate,
+    required this.endDate,
     required this.attendeeCount,
     required this.organizerId,
     this.eventCardImage,
@@ -4048,6 +4118,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
+    required this.scope,
+    this.institutions,
     this.paymentInfo,
   });
   @override
@@ -4057,7 +4129,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     map['event_name'] = Variable<String>(eventName);
     map['event_description'] = Variable<String>(eventDescription);
     map['event_location'] = Variable<String>(eventLocation);
-    map['event_date'] = Variable<String>(eventDate);
+    map['start_date'] = Variable<String>(startDate);
+    map['end_date'] = Variable<String>(endDate);
     map['attendee_count'] = Variable<int>(attendeeCount);
     map['organizer_id'] = Variable<String>(organizerId);
     if (!nullToAbsent || eventCardImage != null) {
@@ -4082,6 +4155,12 @@ class EventData extends DataClass implements Insertable<EventData> {
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<String>(deletedAt);
     }
+    map['scope'] = Variable<String>(scope);
+    if (!nullToAbsent || institutions != null) {
+      map['institutions'] = Variable<String>(
+        $EventTableTable.$converterinstitutionsn.toSql(institutions),
+      );
+    }
     if (!nullToAbsent || paymentInfo != null) {
       map['payment_info'] = Variable<String>(
         $EventTableTable.$converterpaymentInfon.toSql(paymentInfo),
@@ -4096,7 +4175,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventName: Value(eventName),
       eventDescription: Value(eventDescription),
       eventLocation: Value(eventLocation),
-      eventDate: Value(eventDate),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
       attendeeCount: Value(attendeeCount),
       organizerId: Value(organizerId),
       eventCardImage: eventCardImage == null && nullToAbsent
@@ -4119,6 +4199,10 @@ class EventData extends DataClass implements Insertable<EventData> {
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
+      scope: Value(scope),
+      institutions: institutions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(institutions),
       paymentInfo: paymentInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(paymentInfo),
@@ -4135,7 +4219,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventName: serializer.fromJson<String>(json['event_name']),
       eventDescription: serializer.fromJson<String>(json['event_description']),
       eventLocation: serializer.fromJson<String>(json['event_location']),
-      eventDate: serializer.fromJson<String>(json['event_date']),
+      startDate: serializer.fromJson<String>(json['start_date']),
+      endDate: serializer.fromJson<String>(json['end_date']),
       attendeeCount: serializer.fromJson<int>(json['attendee_count']),
       organizerId: serializer.fromJson<String>(json['organizer_id']),
       eventCardImage: serializer.fromJson<String?>(json['event_card_image']),
@@ -4150,6 +4235,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       createdAt: serializer.fromJson<String>(json['created_at']),
       updatedAt: serializer.fromJson<String>(json['updated_at']),
       deletedAt: serializer.fromJson<String?>(json['deleted_at']),
+      scope: serializer.fromJson<String>(json['scope']),
+      institutions: serializer.fromJson<List<dynamic>?>(json['institutions']),
       paymentInfo: serializer.fromJson<Map<String, dynamic>?>(
         json['payment_info'],
       ),
@@ -4163,7 +4250,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       'event_name': serializer.toJson<String>(eventName),
       'event_description': serializer.toJson<String>(eventDescription),
       'event_location': serializer.toJson<String>(eventLocation),
-      'event_date': serializer.toJson<String>(eventDate),
+      'start_date': serializer.toJson<String>(startDate),
+      'end_date': serializer.toJson<String>(endDate),
       'attendee_count': serializer.toJson<int>(attendeeCount),
       'organizer_id': serializer.toJson<String>(organizerId),
       'event_card_image': serializer.toJson<String?>(eventCardImage),
@@ -4174,6 +4262,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       'created_at': serializer.toJson<String>(createdAt),
       'updated_at': serializer.toJson<String>(updatedAt),
       'deleted_at': serializer.toJson<String?>(deletedAt),
+      'scope': serializer.toJson<String>(scope),
+      'institutions': serializer.toJson<List<dynamic>?>(institutions),
       'payment_info': serializer.toJson<Map<String, dynamic>?>(paymentInfo),
     };
   }
@@ -4183,7 +4273,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? eventName,
     String? eventDescription,
     String? eventLocation,
-    String? eventDate,
+    String? startDate,
+    String? endDate,
     int? attendeeCount,
     String? organizerId,
     Value<String?> eventCardImage = const Value.absent(),
@@ -4194,13 +4285,16 @@ class EventData extends DataClass implements Insertable<EventData> {
     String? createdAt,
     String? updatedAt,
     Value<String?> deletedAt = const Value.absent(),
+    String? scope,
+    Value<List<dynamic>?> institutions = const Value.absent(),
     Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
   }) => EventData(
     id: id ?? this.id,
     eventName: eventName ?? this.eventName,
     eventDescription: eventDescription ?? this.eventDescription,
     eventLocation: eventLocation ?? this.eventLocation,
-    eventDate: eventDate ?? this.eventDate,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
     attendeeCount: attendeeCount ?? this.attendeeCount,
     organizerId: organizerId ?? this.organizerId,
     eventCardImage: eventCardImage.present
@@ -4217,6 +4311,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    scope: scope ?? this.scope,
+    institutions: institutions.present ? institutions.value : this.institutions,
     paymentInfo: paymentInfo.present ? paymentInfo.value : this.paymentInfo,
   );
   EventData copyWithCompanion(EventTableCompanion data) {
@@ -4229,7 +4325,8 @@ class EventData extends DataClass implements Insertable<EventData> {
       eventLocation: data.eventLocation.present
           ? data.eventLocation.value
           : this.eventLocation,
-      eventDate: data.eventDate.present ? data.eventDate.value : this.eventDate,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
       attendeeCount: data.attendeeCount.present
           ? data.attendeeCount.value
           : this.attendeeCount,
@@ -4252,6 +4349,10 @@ class EventData extends DataClass implements Insertable<EventData> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      scope: data.scope.present ? data.scope.value : this.scope,
+      institutions: data.institutions.present
+          ? data.institutions.value
+          : this.institutions,
       paymentInfo: data.paymentInfo.present
           ? data.paymentInfo.value
           : this.paymentInfo,
@@ -4265,7 +4366,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('eventName: $eventName, ')
           ..write('eventDescription: $eventDescription, ')
           ..write('eventLocation: $eventLocation, ')
-          ..write('eventDate: $eventDate, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
           ..write('attendeeCount: $attendeeCount, ')
           ..write('organizerId: $organizerId, ')
           ..write('eventCardImage: $eventCardImage, ')
@@ -4276,6 +4378,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
+          ..write('scope: $scope, ')
+          ..write('institutions: $institutions, ')
           ..write('paymentInfo: $paymentInfo')
           ..write(')'))
         .toString();
@@ -4287,7 +4391,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     eventName,
     eventDescription,
     eventLocation,
-    eventDate,
+    startDate,
+    endDate,
     attendeeCount,
     organizerId,
     eventCardImage,
@@ -4298,6 +4403,8 @@ class EventData extends DataClass implements Insertable<EventData> {
     createdAt,
     updatedAt,
     deletedAt,
+    scope,
+    institutions,
     paymentInfo,
   );
   @override
@@ -4308,7 +4415,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.eventName == this.eventName &&
           other.eventDescription == this.eventDescription &&
           other.eventLocation == this.eventLocation &&
-          other.eventDate == this.eventDate &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
           other.attendeeCount == this.attendeeCount &&
           other.organizerId == this.organizerId &&
           other.eventCardImage == this.eventCardImage &&
@@ -4319,6 +4427,8 @@ class EventData extends DataClass implements Insertable<EventData> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.deletedAt == this.deletedAt &&
+          other.scope == this.scope &&
+          other.institutions == this.institutions &&
           other.paymentInfo == this.paymentInfo);
 }
 
@@ -4327,7 +4437,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> eventName;
   final Value<String> eventDescription;
   final Value<String> eventLocation;
-  final Value<String> eventDate;
+  final Value<String> startDate;
+  final Value<String> endDate;
   final Value<int> attendeeCount;
   final Value<String> organizerId;
   final Value<String?> eventCardImage;
@@ -4338,6 +4449,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
   final Value<String> createdAt;
   final Value<String> updatedAt;
   final Value<String?> deletedAt;
+  final Value<String> scope;
+  final Value<List<dynamic>?> institutions;
   final Value<Map<String, dynamic>?> paymentInfo;
   final Value<int> rowid;
   const EventTableCompanion({
@@ -4345,7 +4458,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.eventName = const Value.absent(),
     this.eventDescription = const Value.absent(),
     this.eventLocation = const Value.absent(),
-    this.eventDate = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
     this.attendeeCount = const Value.absent(),
     this.organizerId = const Value.absent(),
     this.eventCardImage = const Value.absent(),
@@ -4356,6 +4470,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
+    this.scope = const Value.absent(),
+    this.institutions = const Value.absent(),
     this.paymentInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4364,7 +4480,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String eventName,
     required String eventDescription,
     required String eventLocation,
-    required String eventDate,
+    required String startDate,
+    required String endDate,
     required int attendeeCount,
     required String organizerId,
     this.eventCardImage = const Value.absent(),
@@ -4375,23 +4492,28 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     required String createdAt,
     required String updatedAt,
     this.deletedAt = const Value.absent(),
+    required String scope,
+    this.institutions = const Value.absent(),
     this.paymentInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        eventName = Value(eventName),
        eventDescription = Value(eventDescription),
        eventLocation = Value(eventLocation),
-       eventDate = Value(eventDate),
+       startDate = Value(startDate),
+       endDate = Value(endDate),
        attendeeCount = Value(attendeeCount),
        organizerId = Value(organizerId),
        createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
+       updatedAt = Value(updatedAt),
+       scope = Value(scope);
   static Insertable<EventData> custom({
     Expression<String>? id,
     Expression<String>? eventName,
     Expression<String>? eventDescription,
     Expression<String>? eventLocation,
-    Expression<String>? eventDate,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
     Expression<int>? attendeeCount,
     Expression<String>? organizerId,
     Expression<String>? eventCardImage,
@@ -4402,6 +4524,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
     Expression<String>? deletedAt,
+    Expression<String>? scope,
+    Expression<String>? institutions,
     Expression<String>? paymentInfo,
     Expression<int>? rowid,
   }) {
@@ -4410,7 +4534,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (eventName != null) 'event_name': eventName,
       if (eventDescription != null) 'event_description': eventDescription,
       if (eventLocation != null) 'event_location': eventLocation,
-      if (eventDate != null) 'event_date': eventDate,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
       if (attendeeCount != null) 'attendee_count': attendeeCount,
       if (organizerId != null) 'organizer_id': organizerId,
       if (eventCardImage != null) 'event_card_image': eventCardImage,
@@ -4421,6 +4546,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
+      if (scope != null) 'scope': scope,
+      if (institutions != null) 'institutions': institutions,
       if (paymentInfo != null) 'payment_info': paymentInfo,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4431,7 +4558,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? eventName,
     Value<String>? eventDescription,
     Value<String>? eventLocation,
-    Value<String>? eventDate,
+    Value<String>? startDate,
+    Value<String>? endDate,
     Value<int>? attendeeCount,
     Value<String>? organizerId,
     Value<String?>? eventCardImage,
@@ -4442,6 +4570,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     Value<String>? createdAt,
     Value<String>? updatedAt,
     Value<String?>? deletedAt,
+    Value<String>? scope,
+    Value<List<dynamic>?>? institutions,
     Value<Map<String, dynamic>?>? paymentInfo,
     Value<int>? rowid,
   }) {
@@ -4450,7 +4580,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       eventName: eventName ?? this.eventName,
       eventDescription: eventDescription ?? this.eventDescription,
       eventLocation: eventLocation ?? this.eventLocation,
-      eventDate: eventDate ?? this.eventDate,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       attendeeCount: attendeeCount ?? this.attendeeCount,
       organizerId: organizerId ?? this.organizerId,
       eventCardImage: eventCardImage ?? this.eventCardImage,
@@ -4461,6 +4592,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
+      scope: scope ?? this.scope,
+      institutions: institutions ?? this.institutions,
       paymentInfo: paymentInfo ?? this.paymentInfo,
       rowid: rowid ?? this.rowid,
     );
@@ -4481,8 +4614,11 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (eventLocation.present) {
       map['event_location'] = Variable<String>(eventLocation.value);
     }
-    if (eventDate.present) {
-      map['event_date'] = Variable<String>(eventDate.value);
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
     }
     if (attendeeCount.present) {
       map['attendee_count'] = Variable<int>(attendeeCount.value);
@@ -4516,6 +4652,14 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
     if (deletedAt.present) {
       map['deleted_at'] = Variable<String>(deletedAt.value);
     }
+    if (scope.present) {
+      map['scope'] = Variable<String>(scope.value);
+    }
+    if (institutions.present) {
+      map['institutions'] = Variable<String>(
+        $EventTableTable.$converterinstitutionsn.toSql(institutions.value),
+      );
+    }
     if (paymentInfo.present) {
       map['payment_info'] = Variable<String>(
         $EventTableTable.$converterpaymentInfon.toSql(paymentInfo.value),
@@ -4534,7 +4678,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('eventName: $eventName, ')
           ..write('eventDescription: $eventDescription, ')
           ..write('eventLocation: $eventLocation, ')
-          ..write('eventDate: $eventDate, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
           ..write('attendeeCount: $attendeeCount, ')
           ..write('organizerId: $organizerId, ')
           ..write('eventCardImage: $eventCardImage, ')
@@ -4545,6 +4690,8 @@ class EventTableCompanion extends UpdateCompanion<EventData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt, ')
+          ..write('scope: $scope, ')
+          ..write('institutions: $institutions, ')
           ..write('paymentInfo: $paymentInfo, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -5134,49 +5281,30 @@ class $TicketTableTable extends TicketTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _ticketForMeta = const VerificationMeta(
+    'ticketFor',
+  );
+  @override
+  late final GeneratedColumn<int> ticketFor = GeneratedColumn<int>(
+    'ticket_for',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  ticketVisibility =
-      GeneratedColumn<String>(
-        'ticket_visibility',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>(
-        $TicketTableTable.$converterticketVisibilityn,
-      );
-  static const VerificationMeta _deleteTagMeta = const VerificationMeta(
-    'deleteTag',
-  );
-  @override
-  late final GeneratedColumn<bool> deleteTag = GeneratedColumn<bool>(
-    'delete_tag',
-    aliasedName,
-    true,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("delete_tag" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
-    'created_at',
+  institutions = GeneratedColumn<String>(
+    'institutions',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
+  ).withConverter<List<dynamic>?>($TicketTableTable.$converterinstitutionsn);
+  static const VerificationMeta _scopeMeta = const VerificationMeta('scope');
   @override
-  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
-    'updated_at',
+  late final GeneratedColumn<String> scope = GeneratedColumn<String>(
+    'scope',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -5189,10 +5317,9 @@ class $TicketTableTable extends TicketTable
     ticketName,
     ticketPrice,
     ticketQuantity,
-    ticketVisibility,
-    deleteTag,
-    createdAt,
-    updatedAt,
+    ticketFor,
+    institutions,
+    scope,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5243,22 +5370,18 @@ class $TicketTableTable extends TicketTable
         ),
       );
     }
-    if (data.containsKey('delete_tag')) {
+    if (data.containsKey('ticket_for')) {
       context.handle(
-        _deleteTagMeta,
-        deleteTag.isAcceptableOrUnknown(data['delete_tag']!, _deleteTagMeta),
+        _ticketForMeta,
+        ticketFor.isAcceptableOrUnknown(data['ticket_for']!, _ticketForMeta),
       );
+    } else if (isInserting) {
+      context.missing(_ticketForMeta);
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('scope')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+        _scopeMeta,
+        scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
       );
     }
     return context;
@@ -5290,23 +5413,19 @@ class $TicketTableTable extends TicketTable
         DriftSqlType.int,
         data['${effectivePrefix}ticket_quantity'],
       ),
-      ticketVisibility: $TicketTableTable.$converterticketVisibilityn.fromSql(
+      ticketFor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ticket_for'],
+      )!,
+      institutions: $TicketTableTable.$converterinstitutionsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
-          data['${effectivePrefix}ticket_visibility'],
+          data['${effectivePrefix}institutions'],
         ),
       ),
-      deleteTag: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}delete_tag'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
+      scope: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}created_at'],
-      ),
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}updated_at'],
+        data['${effectivePrefix}scope'],
       ),
     );
   }
@@ -5316,10 +5435,10 @@ class $TicketTableTable extends TicketTable
     return $TicketTableTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<List<dynamic>, String> $converterticketVisibility =
+  static TypeConverter<List<dynamic>, String> $converterinstitutions =
       JsonListConverter();
-  static TypeConverter<List<dynamic>?, String?> $converterticketVisibilityn =
-      NullAwareTypeConverter.wrap($converterticketVisibility);
+  static TypeConverter<List<dynamic>?, String?> $converterinstitutionsn =
+      NullAwareTypeConverter.wrap($converterinstitutions);
 }
 
 class TicketData extends DataClass implements Insertable<TicketData> {
@@ -5328,20 +5447,18 @@ class TicketData extends DataClass implements Insertable<TicketData> {
   final String ticketName;
   final int ticketPrice;
   final int? ticketQuantity;
-  final List<dynamic>? ticketVisibility;
-  final bool? deleteTag;
-  final String? createdAt;
-  final String? updatedAt;
+  final int ticketFor;
+  final List<dynamic>? institutions;
+  final String? scope;
   const TicketData({
     this.id,
     this.eventId,
     required this.ticketName,
     required this.ticketPrice,
     this.ticketQuantity,
-    this.ticketVisibility,
-    this.deleteTag,
-    this.createdAt,
-    this.updatedAt,
+    required this.ticketFor,
+    this.institutions,
+    this.scope,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5357,19 +5474,14 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     if (!nullToAbsent || ticketQuantity != null) {
       map['ticket_quantity'] = Variable<int>(ticketQuantity);
     }
-    if (!nullToAbsent || ticketVisibility != null) {
-      map['ticket_visibility'] = Variable<String>(
-        $TicketTableTable.$converterticketVisibilityn.toSql(ticketVisibility),
+    map['ticket_for'] = Variable<int>(ticketFor);
+    if (!nullToAbsent || institutions != null) {
+      map['institutions'] = Variable<String>(
+        $TicketTableTable.$converterinstitutionsn.toSql(institutions),
       );
     }
-    if (!nullToAbsent || deleteTag != null) {
-      map['delete_tag'] = Variable<bool>(deleteTag);
-    }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<String>(createdAt);
-    }
-    if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<String>(updatedAt);
+    if (!nullToAbsent || scope != null) {
+      map['scope'] = Variable<String>(scope);
     }
     return map;
   }
@@ -5385,18 +5497,13 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketQuantity: ticketQuantity == null && nullToAbsent
           ? const Value.absent()
           : Value(ticketQuantity),
-      ticketVisibility: ticketVisibility == null && nullToAbsent
+      ticketFor: Value(ticketFor),
+      institutions: institutions == null && nullToAbsent
           ? const Value.absent()
-          : Value(ticketVisibility),
-      deleteTag: deleteTag == null && nullToAbsent
+          : Value(institutions),
+      scope: scope == null && nullToAbsent
           ? const Value.absent()
-          : Value(deleteTag),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(updatedAt),
+          : Value(scope),
     );
   }
 
@@ -5411,12 +5518,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketName: serializer.fromJson<String>(json['ticket_name']),
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
       ticketQuantity: serializer.fromJson<int?>(json['ticket_quantity']),
-      ticketVisibility: serializer.fromJson<List<dynamic>?>(
-        json['ticket_visibility'],
-      ),
-      deleteTag: serializer.fromJson<bool?>(json['delete_tag']),
-      createdAt: serializer.fromJson<String?>(json['created_at']),
-      updatedAt: serializer.fromJson<String?>(json['updatedAt']),
+      ticketFor: serializer.fromJson<int>(json['ticket_for']),
+      institutions: serializer.fromJson<List<dynamic>?>(json['institutions']),
+      scope: serializer.fromJson<String?>(json['scope']),
     );
   }
   @override
@@ -5428,10 +5532,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       'ticket_name': serializer.toJson<String>(ticketName),
       'ticket_price': serializer.toJson<int>(ticketPrice),
       'ticket_quantity': serializer.toJson<int?>(ticketQuantity),
-      'ticket_visibility': serializer.toJson<List<dynamic>?>(ticketVisibility),
-      'delete_tag': serializer.toJson<bool?>(deleteTag),
-      'created_at': serializer.toJson<String?>(createdAt),
-      'updatedAt': serializer.toJson<String?>(updatedAt),
+      'ticket_for': serializer.toJson<int>(ticketFor),
+      'institutions': serializer.toJson<List<dynamic>?>(institutions),
+      'scope': serializer.toJson<String?>(scope),
     };
   }
 
@@ -5441,10 +5544,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     String? ticketName,
     int? ticketPrice,
     Value<int?> ticketQuantity = const Value.absent(),
-    Value<List<dynamic>?> ticketVisibility = const Value.absent(),
-    Value<bool?> deleteTag = const Value.absent(),
-    Value<String?> createdAt = const Value.absent(),
-    Value<String?> updatedAt = const Value.absent(),
+    int? ticketFor,
+    Value<List<dynamic>?> institutions = const Value.absent(),
+    Value<String?> scope = const Value.absent(),
   }) => TicketData(
     id: id.present ? id.value : this.id,
     eventId: eventId.present ? eventId.value : this.eventId,
@@ -5453,12 +5555,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketQuantity: ticketQuantity.present
         ? ticketQuantity.value
         : this.ticketQuantity,
-    ticketVisibility: ticketVisibility.present
-        ? ticketVisibility.value
-        : this.ticketVisibility,
-    deleteTag: deleteTag.present ? deleteTag.value : this.deleteTag,
-    createdAt: createdAt.present ? createdAt.value : this.createdAt,
-    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    ticketFor: ticketFor ?? this.ticketFor,
+    institutions: institutions.present ? institutions.value : this.institutions,
+    scope: scope.present ? scope.value : this.scope,
   );
   TicketData copyWithCompanion(TicketTableCompanion data) {
     return TicketData(
@@ -5473,12 +5572,11 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketQuantity: data.ticketQuantity.present
           ? data.ticketQuantity.value
           : this.ticketQuantity,
-      ticketVisibility: data.ticketVisibility.present
-          ? data.ticketVisibility.value
-          : this.ticketVisibility,
-      deleteTag: data.deleteTag.present ? data.deleteTag.value : this.deleteTag,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      ticketFor: data.ticketFor.present ? data.ticketFor.value : this.ticketFor,
+      institutions: data.institutions.present
+          ? data.institutions.value
+          : this.institutions,
+      scope: data.scope.present ? data.scope.value : this.scope,
     );
   }
 
@@ -5490,10 +5588,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketQuantity: $ticketQuantity, ')
-          ..write('ticketVisibility: $ticketVisibility, ')
-          ..write('deleteTag: $deleteTag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('ticketFor: $ticketFor, ')
+          ..write('institutions: $institutions, ')
+          ..write('scope: $scope')
           ..write(')'))
         .toString();
   }
@@ -5505,10 +5602,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketName,
     ticketPrice,
     ticketQuantity,
-    ticketVisibility,
-    deleteTag,
-    createdAt,
-    updatedAt,
+    ticketFor,
+    institutions,
+    scope,
   );
   @override
   bool operator ==(Object other) =>
@@ -5519,10 +5615,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           other.ticketName == this.ticketName &&
           other.ticketPrice == this.ticketPrice &&
           other.ticketQuantity == this.ticketQuantity &&
-          other.ticketVisibility == this.ticketVisibility &&
-          other.deleteTag == this.deleteTag &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.ticketFor == this.ticketFor &&
+          other.institutions == this.institutions &&
+          other.scope == this.scope);
 }
 
 class TicketTableCompanion extends UpdateCompanion<TicketData> {
@@ -5531,10 +5626,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   final Value<String> ticketName;
   final Value<int> ticketPrice;
   final Value<int?> ticketQuantity;
-  final Value<List<dynamic>?> ticketVisibility;
-  final Value<bool?> deleteTag;
-  final Value<String?> createdAt;
-  final Value<String?> updatedAt;
+  final Value<int> ticketFor;
+  final Value<List<dynamic>?> institutions;
+  final Value<String?> scope;
   final Value<int> rowid;
   const TicketTableCompanion({
     this.id = const Value.absent(),
@@ -5542,10 +5636,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     this.ticketName = const Value.absent(),
     this.ticketPrice = const Value.absent(),
     this.ticketQuantity = const Value.absent(),
-    this.ticketVisibility = const Value.absent(),
-    this.deleteTag = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.ticketFor = const Value.absent(),
+    this.institutions = const Value.absent(),
+    this.scope = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TicketTableCompanion.insert({
@@ -5554,23 +5647,22 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     required String ticketName,
     required int ticketPrice,
     this.ticketQuantity = const Value.absent(),
-    this.ticketVisibility = const Value.absent(),
-    this.deleteTag = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required int ticketFor,
+    this.institutions = const Value.absent(),
+    this.scope = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : ticketName = Value(ticketName),
-       ticketPrice = Value(ticketPrice);
+       ticketPrice = Value(ticketPrice),
+       ticketFor = Value(ticketFor);
   static Insertable<TicketData> custom({
     Expression<String>? id,
     Expression<String>? eventId,
     Expression<String>? ticketName,
     Expression<int>? ticketPrice,
     Expression<int>? ticketQuantity,
-    Expression<String>? ticketVisibility,
-    Expression<bool>? deleteTag,
-    Expression<String>? createdAt,
-    Expression<String>? updatedAt,
+    Expression<int>? ticketFor,
+    Expression<String>? institutions,
+    Expression<String>? scope,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5579,10 +5671,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       if (ticketName != null) 'ticket_name': ticketName,
       if (ticketPrice != null) 'ticket_price': ticketPrice,
       if (ticketQuantity != null) 'ticket_quantity': ticketQuantity,
-      if (ticketVisibility != null) 'ticket_visibility': ticketVisibility,
-      if (deleteTag != null) 'delete_tag': deleteTag,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (ticketFor != null) 'ticket_for': ticketFor,
+      if (institutions != null) 'institutions': institutions,
+      if (scope != null) 'scope': scope,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5593,10 +5684,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Value<String>? ticketName,
     Value<int>? ticketPrice,
     Value<int?>? ticketQuantity,
-    Value<List<dynamic>?>? ticketVisibility,
-    Value<bool?>? deleteTag,
-    Value<String?>? createdAt,
-    Value<String?>? updatedAt,
+    Value<int>? ticketFor,
+    Value<List<dynamic>?>? institutions,
+    Value<String?>? scope,
     Value<int>? rowid,
   }) {
     return TicketTableCompanion(
@@ -5605,10 +5695,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       ticketName: ticketName ?? this.ticketName,
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketQuantity: ticketQuantity ?? this.ticketQuantity,
-      ticketVisibility: ticketVisibility ?? this.ticketVisibility,
-      deleteTag: deleteTag ?? this.deleteTag,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      ticketFor: ticketFor ?? this.ticketFor,
+      institutions: institutions ?? this.institutions,
+      scope: scope ?? this.scope,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5631,21 +5720,16 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     if (ticketQuantity.present) {
       map['ticket_quantity'] = Variable<int>(ticketQuantity.value);
     }
-    if (ticketVisibility.present) {
-      map['ticket_visibility'] = Variable<String>(
-        $TicketTableTable.$converterticketVisibilityn.toSql(
-          ticketVisibility.value,
-        ),
+    if (ticketFor.present) {
+      map['ticket_for'] = Variable<int>(ticketFor.value);
+    }
+    if (institutions.present) {
+      map['institutions'] = Variable<String>(
+        $TicketTableTable.$converterinstitutionsn.toSql(institutions.value),
       );
     }
-    if (deleteTag.present) {
-      map['delete_tag'] = Variable<bool>(deleteTag.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<String>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<String>(updatedAt.value);
+    if (scope.present) {
+      map['scope'] = Variable<String>(scope.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -5661,10 +5745,9 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketQuantity: $ticketQuantity, ')
-          ..write('ticketVisibility: $ticketVisibility, ')
-          ..write('deleteTag: $deleteTag, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
+          ..write('ticketFor: $ticketFor, ')
+          ..write('institutions: $institutions, ')
+          ..write('scope: $scope, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -24766,7 +24849,8 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String eventName,
       required String eventDescription,
       required String eventLocation,
-      required String eventDate,
+      required String startDate,
+      required String endDate,
       required int attendeeCount,
       required String organizerId,
       Value<String?> eventCardImage,
@@ -24777,6 +24861,8 @@ typedef $$EventTableTableCreateCompanionBuilder =
       required String createdAt,
       required String updatedAt,
       Value<String?> deletedAt,
+      required String scope,
+      Value<List<dynamic>?> institutions,
       Value<Map<String, dynamic>?> paymentInfo,
       Value<int> rowid,
     });
@@ -24786,7 +24872,8 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> eventName,
       Value<String> eventDescription,
       Value<String> eventLocation,
-      Value<String> eventDate,
+      Value<String> startDate,
+      Value<String> endDate,
       Value<int> attendeeCount,
       Value<String> organizerId,
       Value<String?> eventCardImage,
@@ -24797,6 +24884,8 @@ typedef $$EventTableTableUpdateCompanionBuilder =
       Value<String> createdAt,
       Value<String> updatedAt,
       Value<String?> deletedAt,
+      Value<String> scope,
+      Value<List<dynamic>?> institutions,
       Value<Map<String, dynamic>?> paymentInfo,
       Value<int> rowid,
     });
@@ -24830,8 +24919,13 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get eventDate => $composableBuilder(
-    column: $table.eventDate,
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endDate => $composableBuilder(
+    column: $table.endDate,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24886,6 +24980,17 @@ class $$EventTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
+  get institutions => $composableBuilder(
+    column: $table.institutions,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   ColumnWithTypeConverterFilters<
     Map<String, dynamic>?,
     Map<String, dynamic>,
@@ -24926,8 +25031,13 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get eventDate => $composableBuilder(
-    column: $table.eventDate,
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endDate => $composableBuilder(
+    column: $table.endDate,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24981,6 +25091,16 @@ class $$EventTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get institutions => $composableBuilder(
+    column: $table.institutions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get paymentInfo => $composableBuilder(
     column: $table.paymentInfo,
     builder: (column) => ColumnOrderings(column),
@@ -25012,8 +25132,11 @@ class $$EventTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get eventDate =>
-      $composableBuilder(column: $table.eventDate, builder: (column) => column);
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
 
   GeneratedColumn<int> get attendeeCount => $composableBuilder(
     column: $table.attendeeCount,
@@ -25058,6 +25181,15 @@ class $$EventTableTableAnnotationComposer
   GeneratedColumn<String> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
+  GeneratedColumn<String> get scope =>
+      $composableBuilder(column: $table.scope, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get institutions =>
+      $composableBuilder(
+        column: $table.institutions,
+        builder: (column) => column,
+      );
+
   GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
   get paymentInfo => $composableBuilder(
     column: $table.paymentInfo,
@@ -25100,7 +25232,8 @@ class $$EventTableTableTableManager
                 Value<String> eventName = const Value.absent(),
                 Value<String> eventDescription = const Value.absent(),
                 Value<String> eventLocation = const Value.absent(),
-                Value<String> eventDate = const Value.absent(),
+                Value<String> startDate = const Value.absent(),
+                Value<String> endDate = const Value.absent(),
                 Value<int> attendeeCount = const Value.absent(),
                 Value<String> organizerId = const Value.absent(),
                 Value<String?> eventCardImage = const Value.absent(),
@@ -25111,6 +25244,8 @@ class $$EventTableTableTableManager
                 Value<String> createdAt = const Value.absent(),
                 Value<String> updatedAt = const Value.absent(),
                 Value<String?> deletedAt = const Value.absent(),
+                Value<String> scope = const Value.absent(),
+                Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion(
@@ -25118,7 +25253,8 @@ class $$EventTableTableTableManager
                 eventName: eventName,
                 eventDescription: eventDescription,
                 eventLocation: eventLocation,
-                eventDate: eventDate,
+                startDate: startDate,
+                endDate: endDate,
                 attendeeCount: attendeeCount,
                 organizerId: organizerId,
                 eventCardImage: eventCardImage,
@@ -25129,6 +25265,8 @@ class $$EventTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                scope: scope,
+                institutions: institutions,
                 paymentInfo: paymentInfo,
                 rowid: rowid,
               ),
@@ -25138,7 +25276,8 @@ class $$EventTableTableTableManager
                 required String eventName,
                 required String eventDescription,
                 required String eventLocation,
-                required String eventDate,
+                required String startDate,
+                required String endDate,
                 required int attendeeCount,
                 required String organizerId,
                 Value<String?> eventCardImage = const Value.absent(),
@@ -25149,6 +25288,8 @@ class $$EventTableTableTableManager
                 required String createdAt,
                 required String updatedAt,
                 Value<String?> deletedAt = const Value.absent(),
+                required String scope,
+                Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<Map<String, dynamic>?> paymentInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => EventTableCompanion.insert(
@@ -25156,7 +25297,8 @@ class $$EventTableTableTableManager
                 eventName: eventName,
                 eventDescription: eventDescription,
                 eventLocation: eventLocation,
-                eventDate: eventDate,
+                startDate: startDate,
+                endDate: endDate,
                 attendeeCount: attendeeCount,
                 organizerId: organizerId,
                 eventCardImage: eventCardImage,
@@ -25167,6 +25309,8 @@ class $$EventTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 deletedAt: deletedAt,
+                scope: scope,
+                institutions: institutions,
                 paymentInfo: paymentInfo,
                 rowid: rowid,
               ),
@@ -25473,10 +25617,9 @@ typedef $$TicketTableTableCreateCompanionBuilder =
       required String ticketName,
       required int ticketPrice,
       Value<int?> ticketQuantity,
-      Value<List<dynamic>?> ticketVisibility,
-      Value<bool?> deleteTag,
-      Value<String?> createdAt,
-      Value<String?> updatedAt,
+      required int ticketFor,
+      Value<List<dynamic>?> institutions,
+      Value<String?> scope,
       Value<int> rowid,
     });
 typedef $$TicketTableTableUpdateCompanionBuilder =
@@ -25486,10 +25629,9 @@ typedef $$TicketTableTableUpdateCompanionBuilder =
       Value<String> ticketName,
       Value<int> ticketPrice,
       Value<int?> ticketQuantity,
-      Value<List<dynamic>?> ticketVisibility,
-      Value<bool?> deleteTag,
-      Value<String?> createdAt,
-      Value<String?> updatedAt,
+      Value<int> ticketFor,
+      Value<List<dynamic>?> institutions,
+      Value<String?> scope,
       Value<int> rowid,
     });
 
@@ -25527,24 +25669,19 @@ class $$TicketTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get ticketFor => $composableBuilder(
+    column: $table.ticketFor,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnWithTypeConverterFilters<List<dynamic>?, List<dynamic>, String>
-  get ticketVisibility => $composableBuilder(
-    column: $table.ticketVisibility,
+  get institutions => $composableBuilder(
+    column: $table.institutions,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnFilters<String> get scope => $composableBuilder(
+    column: $table.scope,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -25583,23 +25720,18 @@ class $$TicketTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get ticketVisibility => $composableBuilder(
-    column: $table.ticketVisibility,
+  ColumnOrderings<int> get ticketFor => $composableBuilder(
+    column: $table.ticketFor,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get deleteTag => $composableBuilder(
-    column: $table.deleteTag,
+  ColumnOrderings<String> get institutions => $composableBuilder(
+    column: $table.institutions,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnOrderings<String> get scope => $composableBuilder(
+    column: $table.scope,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -25634,20 +25766,17 @@ class $$TicketTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<List<dynamic>?, String>
-  get ticketVisibility => $composableBuilder(
-    column: $table.ticketVisibility,
-    builder: (column) => column,
-  );
+  GeneratedColumn<int> get ticketFor =>
+      $composableBuilder(column: $table.ticketFor, builder: (column) => column);
 
-  GeneratedColumn<bool> get deleteTag =>
-      $composableBuilder(column: $table.deleteTag, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<List<dynamic>?, String> get institutions =>
+      $composableBuilder(
+        column: $table.institutions,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<String> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+  GeneratedColumn<String> get scope =>
+      $composableBuilder(column: $table.scope, builder: (column) => column);
 }
 
 class $$TicketTableTableTableManager
@@ -25686,10 +25815,9 @@ class $$TicketTableTableTableManager
                 Value<String> ticketName = const Value.absent(),
                 Value<int> ticketPrice = const Value.absent(),
                 Value<int?> ticketQuantity = const Value.absent(),
-                Value<List<dynamic>?> ticketVisibility = const Value.absent(),
-                Value<bool?> deleteTag = const Value.absent(),
-                Value<String?> createdAt = const Value.absent(),
-                Value<String?> updatedAt = const Value.absent(),
+                Value<int> ticketFor = const Value.absent(),
+                Value<List<dynamic>?> institutions = const Value.absent(),
+                Value<String?> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketTableCompanion(
                 id: id,
@@ -25697,10 +25825,9 @@ class $$TicketTableTableTableManager
                 ticketName: ticketName,
                 ticketPrice: ticketPrice,
                 ticketQuantity: ticketQuantity,
-                ticketVisibility: ticketVisibility,
-                deleteTag: deleteTag,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                ticketFor: ticketFor,
+                institutions: institutions,
+                scope: scope,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -25710,10 +25837,9 @@ class $$TicketTableTableTableManager
                 required String ticketName,
                 required int ticketPrice,
                 Value<int?> ticketQuantity = const Value.absent(),
-                Value<List<dynamic>?> ticketVisibility = const Value.absent(),
-                Value<bool?> deleteTag = const Value.absent(),
-                Value<String?> createdAt = const Value.absent(),
-                Value<String?> updatedAt = const Value.absent(),
+                required int ticketFor,
+                Value<List<dynamic>?> institutions = const Value.absent(),
+                Value<String?> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketTableCompanion.insert(
                 id: id,
@@ -25721,10 +25847,9 @@ class $$TicketTableTableTableManager
                 ticketName: ticketName,
                 ticketPrice: ticketPrice,
                 ticketQuantity: ticketQuantity,
-                ticketVisibility: ticketVisibility,
-                deleteTag: deleteTag,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                ticketFor: ticketFor,
+                institutions: institutions,
+                scope: scope,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

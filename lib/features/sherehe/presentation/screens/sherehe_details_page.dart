@@ -102,7 +102,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
 
           final eventDate = normalize(
-            DateTime.parse(state.event.eventDate).toLocal(),
+            DateTime.parse(state.event.startDate).toLocal(),
           );
           final today = normalize(DateTime.now());
 
@@ -154,7 +154,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                     'You have been invited from Academia to the following event:\n\n '
                                     '🎉 ${state.event.eventName}\n\n'
                                     '📍 Where: ${state.event.eventLocation}\n'
-                                    '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
+                                    '⏰ When: ${ShereheUtils.formatDate(state.event.startDate)} at ${ShereheUtils.formatTime(state.event.startDate)}\n\n'
                                     '🎟 Get your ticket here:\n$url';
 
                                 if (imageFile != null) {
@@ -429,7 +429,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 const Icon(Icons.calendar_month),
                                 Text(
                                   ShereheUtils.formatDate(
-                                    state.event.eventDate,
+                                    state.event.startDate,
                                   ),
                                 ),
                               ],
@@ -440,7 +440,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 const Icon(Icons.access_time),
                                 Text(
                                   ShereheUtils.formatTime(
-                                    state.event.eventDate,
+                                    state.event.startDate,
                                   ),
                                 ),
                               ],

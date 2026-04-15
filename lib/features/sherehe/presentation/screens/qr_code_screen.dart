@@ -160,11 +160,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         _PdfTicketInfo(
                           label1: 'DATE',
                           value1: ShereheUtils.formatDate(
-                            widget.event.eventDate,
+                            widget.event.startDate,
                           ),
                           label2: 'TIME',
                           value2: ShereheUtils.formatTime(
-                            widget.event.eventDate,
+                            widget.event.startDate,
                           ),
                         ),
                         pw.SizedBox(height: 15),
@@ -423,11 +423,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             _TicketInfoWidget(
                               label1: 'DATE',
                               value1: ShereheUtils.formatDate(
-                                widget.event.eventDate,
+                                widget.event.startDate,
                               ),
                               label2: 'TIME',
                               value2: ShereheUtils.formatTime(
-                                widget.event.eventDate,
+                                widget.event.startDate,
                               ),
                             ),
                             const SizedBox(height: 16),

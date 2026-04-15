@@ -59,16 +59,14 @@ extension TicketGroupTypesX on TicketGroupTypes {
     }
   }
 
-  // Convert TO backend value
-  //placeholder for now, will adjust as needed when integrating with backend
-  String get toBackend {
+  int get toBackend {
     switch (this) {
       case TicketGroupTypes.individual:
-        return "INDIVIDUAL";
+        return 1;
       case TicketGroupTypes.groupOfTwo:
-        return "GROUP_OF_TWO";
+        return 2;
       case TicketGroupTypes.groupOfFive:
-        return "GROUP_OF_FIVE";
+        return 5;
     }
   }
 
