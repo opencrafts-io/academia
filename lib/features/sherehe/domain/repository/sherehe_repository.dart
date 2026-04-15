@@ -22,13 +22,16 @@ abstract class ShereheRepository {
     required String eventDescription,
     String? eventUrl,
     required String eventLocation,
-    required String eventDate,
+    required String eventStartDate,
+    required String eventEndDate,
     required String organizerId,
     required List<String> eventGenre,
     File? eventCardImage,
     File? eventPosterImage,
     File? eventBannerImage,
     required List<Ticket> tickets,
+    required List<String> institutions,
+    required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
     String? accountReference,
@@ -105,7 +108,9 @@ abstract class ShereheRepository {
     required int limit,
   });
 
-  Future<Either<Failure, String>> deleteEventScanner({required String scannerId});
+  Future<Either<Failure, String>> deleteEventScanner({
+    required String scannerId,
+  });
 
   Future<Either<Failure, String>> getEventScannerByUserId({
     required String eventId,

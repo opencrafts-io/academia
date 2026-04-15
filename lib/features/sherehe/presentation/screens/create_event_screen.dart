@@ -398,13 +398,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventName: _nameController.text.trim(),
         eventDescription: _aboutController.text.trim(),
         eventLocation: _locationController.text.trim(),
-        eventDate: _selectedStartDateTime!.toIso8601String(),
+        eventStartDate: _selectedStartDateTime!.toIso8601String(),
+        eventEndDate: _selectedEndDateTime!.toIso8601String(),
         organizerId: organizerId ?? "N/A",
         eventCardImage: _selectedCardImage,
         eventPosterImage: _selectedPosterImage,
         eventBannerImage: _selectedBannerImage,
         eventGenre: _selectedGenres,
         tickets: _tickets.map((ticketUI) => ticketUI.ticket).toList(),
+        institutions: _selectedEventInstitutions
+            .map((e) => e.institutionId.toString())
+            .toList(),
+        scope: _selectedEventScopeType?.toBackend ?? '',
         selectedPaymentType: _selectedPaymentType,
         paybillNumber: _paybillNumberController.text.trim().isEmpty
             ? null

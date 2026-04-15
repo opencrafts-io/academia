@@ -65,9 +65,11 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: _ticketNameController.text.trim(),
         ticketPrice: int.tryParse(_ticketPriceController.text.trim()) ?? 0,
         ticketQuantity: int.tryParse(_ticketQtyController.text.trim()) ?? 0,
+        ticketFor: _selectedTicketGroupType?.toBackend ?? 0,
         institutionIds: _selectedScopeType != ScopeTypes.institution
             ? null
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
+        scope: _selectedScopeType?.toBackend,
       );
 
       widget.onAddTicket(
@@ -147,7 +149,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: "Free Ticket",
         ticketPrice: 0,
         ticketQuantity: result,
+        ticketFor: 1,
         institutionIds: [],
+        scope: ScopeTypes.public.toBackend,
       );
 
       widget.onContinue([
