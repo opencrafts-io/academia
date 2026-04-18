@@ -100,10 +100,10 @@ class EventCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: (event.eventBannerImage != null)
+                child: (event.eventCardImage != null)
                     ? CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: event.eventBannerImage!,
+                        fit: BoxFit.fill,
+                        imageUrl: event.eventCardImage!,
                         width: double.infinity,
                         errorWidget: (context, child, error) {
                           return Container(
@@ -137,9 +137,8 @@ class EventCard extends StatelessWidget {
                       ),
               ),
 
-              // Details section - takes remaining space
               Expanded(
-                flex: 2, // Takes 2/5 of the available height
+                flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -193,7 +192,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            ShereheUtils.formatDate(event.eventDate),
+                            ShereheUtils.formatDate(event.startDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
@@ -216,7 +215,7 @@ class EventCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            ShereheUtils.formatTime(event.eventDate),
+                            ShereheUtils.formatTime(event.startDate),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: sizing.bodyFontSize,
@@ -325,11 +324,6 @@ class EventCard extends StatelessWidget {
                                       ? maxAvatars
                                       : attendees.length,
                                   (index) {
-                                    final isOverflow =
-                                        index == maxAvatars - 1 &&
-                                        attendees.length == maxAvatars &&
-                                        event.attendeeCount > maxAvatars;
-
                                     return Positioned(
                                       left: index * 16.0,
                                       child: CircleAvatar(
@@ -338,11 +332,9 @@ class EventCard extends StatelessWidget {
                                           context,
                                         ).colorScheme.primary,
                                         child: Text(
-                                          isOverflow
-                                              ? '+${event.attendeeCount - (maxAvatars - 1)}'
-                                              : ShereheUtils.getInitials(
-                                                  attendees[index],
-                                                ),
+                                          ShereheUtils.getInitials(
+                                            attendees[index],
+                                          ),
                                           style: TextStyle(
                                             color: Theme.of(
                                               context,
@@ -360,32 +352,33 @@ class EventCard extends StatelessWidget {
                             Expanded(
                               child: Builder(
                                 builder: (context) {
-                                  if (event.attendeeCount == 1) {
+                                  final attendeesLength = attendees.length;
+                                  if (attendeesLength == 1) {
                                     return Text(
                                       "is attending",
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
                                     );
-                                  } else if (event.attendeeCount <=
-                                      maxAvatars - 1) {
+                                  } else if (attendeesLength > 1 &&
+                                      attendeesLength <= maxAvatars - 1) {
                                     return Text(
                                       "are attending",
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
                                     );
-                                  } else {
-                                    final extra =
-                                        event.attendeeCount - (maxAvatars - 1);
+                                  } else if (attendeesLength > maxAvatars - 1) {
                                     return Text(
-                                      "and $extra other${extra > 1 ? 's' : ''} are attending",
+                                      "and others are attending",
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     );
+                                  } else {
+                                    return const SizedBox.shrink();
                                   }
                                 },
                               ),

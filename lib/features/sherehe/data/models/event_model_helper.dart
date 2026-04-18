@@ -8,7 +8,8 @@ extension EventModelHelper on EventData {
     eventName: eventName,
     eventDescription: eventDescription,
     eventLocation: eventLocation,
-    eventDate: eventDate,
+    startDate: startDate,
+    endDate: endDate,
     attendeeCount: attendeeCount,
     organizerId: organizerId,
     eventCardImage: eventCardImage,
@@ -18,6 +19,8 @@ extension EventModelHelper on EventData {
     createdAt: createdAt,
     updatedAt: updatedAt,
     deletedAt: deletedAt,
+    scope: scope,
+    institutions: institutions != null ? List<String>.from(institutions!) : null,
     paymentInfo: paymentInfo != null
         ? PaymentInfoData.fromJson(paymentInfo!).toEntity()
         : null,
@@ -30,7 +33,8 @@ extension EventEntityHelper on Event {
     eventName: eventName,
     eventDescription: eventDescription,
     eventLocation: eventLocation,
-    eventDate: eventDate,
+    startDate: startDate,
+    endDate: endDate,
     attendeeCount: attendeeCount,
     organizerId: organizerId,
     eventCardImage: eventCardImage,
@@ -40,6 +44,8 @@ extension EventEntityHelper on Event {
     createdAt: createdAt,
     updatedAt: updatedAt,
     deletedAt: deletedAt,
+    scope: scope,
+    institutions: institutions,
     paymentInfo: paymentInfo?.toModel().toJson(),
   );
 }

@@ -260,7 +260,15 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
         ),
       ],
     ),
-    TypedGoRoute<CreateEventRoute>(path: "create"),
+    TypedGoRoute<CreateEventRoute>(
+      path: "create",
+      routes: [
+        TypedGoRoute<ShereheSelectInstitutionsRoute>(
+          path: "sherehe-select-institutions",
+        ),
+        TypedGoRoute<EditAddedTicketRoute>(path: "edit-added-ticket"),
+      ],
+    ),
   ],
 )
 class ShereheRoute extends GoRouteData with $ShereheRoute {
@@ -274,6 +282,38 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const CreateEventScreen();
+  }
+}
+
+class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final addedTicket = state.extra as TicketUI;
+    return EditAddedTicketScreen(addedTicket: addedTicket);
+  }
+}
+
+class ShereheSelectInstitutionsRoute extends GoRouteData
+    with $ShereheSelectInstitutionsRoute {
+  final String title;
+  final String subtitle;
+
+  const ShereheSelectInstitutionsRoute({
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final selectedInstitutions = state.extra is List<Institution>
+        ? state.extra as List<Institution>
+        : <Institution>[];
+
+    return ShereheSelectInstitutionsScreen(
+      title: title,
+      subtitle: subtitle,
+      selectedInstitutions: selectedInstitutions,
+    );
   }
 }
 

@@ -423,7 +423,20 @@ RouteBase get $shereheRoute => GoRouteData.$route(
         ),
       ],
     ),
-    GoRouteData.$route(path: 'create', factory: $CreateEventRoute._fromState),
+    GoRouteData.$route(
+      path: 'create',
+      factory: $CreateEventRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'sherehe-select-institutions',
+          factory: $ShereheSelectInstitutionsRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'edit-added-ticket',
+          factory: $EditAddedTicketRoute._fromState,
+        ),
+      ],
+    ),
   ],
 );
 
@@ -655,6 +668,58 @@ mixin $CreateEventRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/sherehe/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ShereheSelectInstitutionsRoute on GoRouteData {
+  static ShereheSelectInstitutionsRoute _fromState(GoRouterState state) =>
+      ShereheSelectInstitutionsRoute(
+        title: state.uri.queryParameters['title']!,
+        subtitle: state.uri.queryParameters['subtitle']!,
+      );
+
+  ShereheSelectInstitutionsRoute get _self =>
+      this as ShereheSelectInstitutionsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/sherehe-select-institutions',
+    queryParams: {'title': _self.title, 'subtitle': _self.subtitle},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EditAddedTicketRoute on GoRouteData {
+  static EditAddedTicketRoute _fromState(GoRouterState state) =>
+      EditAddedTicketRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/sherehe/create/edit-added-ticket');
 
   @override
   void go(BuildContext context) => context.go(location);

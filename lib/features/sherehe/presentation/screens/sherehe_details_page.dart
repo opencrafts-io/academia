@@ -9,6 +9,8 @@ import 'package:academia/constants/constants.dart';
 import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
   final String eventId;
@@ -42,18 +44,34 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
   }
 
   double _getExpandedHeight(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return MediaQuery.of(context).size.height * 0.40;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return MediaQuery.of(context).size.height * 0.4;
-    } else {
-      return 500.0;
-    }
+    final width = MediaQuery.of(context).size.width;
+    return width * (9 / 16); // 16:9 ratio
   }
 
   String _normalizeDescription(String text) {
     // Replace 3+ line breaks with just 2
     return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
+  }
+
+  Future<XFile?> _downloadImage(String url) async {
+    try {
+      final dio = Dio();
+
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/event_share.jpg';
+
+      await dio.download(
+        url,
+        filePath,
+        options: Options(
+          responseType: ResponseType.bytes, // ensures raw bytes
+        ),
+      );
+
+      return XFile(filePath);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -84,7 +102,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
 
           final eventDate = normalize(
-            DateTime.parse(state.event.eventDate).toLocal(),
+            DateTime.parse(state.event.startDate).toLocal(),
           );
           final today = normalize(DateTime.now());
 
@@ -115,7 +133,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                         return PopupMenuButton<String>(
                           icon: const Icon(Icons.more_vert),
-                          onSelected: (value) {
+                          onSelected: (value) async {
                             switch (value) {
                               case 'share':
                                 final url =
@@ -123,17 +141,40 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                                 final box =
                                     context.findRenderObject() as RenderBox?;
-                                Share.share(
-                                  'You have been invited from Academia to the following event:\n\n '
-                                  '🎉 ${state.event.eventName}\n\n'
-                                  '📍 Where: ${state.event.eventLocation}\n'
-                                  '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
-                                  '🎟 Get your ticket here:\n$url',
-                                  sharePositionOrigin: box != null
-                                      ? box.localToGlobal(Offset.zero) &
-                                            box.size
-                                      : null,
-                                );
+
+                                final imageUrl = state.event.eventPosterImage;
+
+                                XFile? imageFile;
+
+                                if (imageUrl != null) {
+                                  imageFile = await _downloadImage(imageUrl);
+                                }
+
+                                final text =
+                                    'You have been invited from Academia to the following event:\n\n '
+                                    '🎉 ${state.event.eventName}\n\n'
+                                    '📍 Where: ${state.event.eventLocation}\n'
+                                    '⏰ When: ${ShereheUtils.formatDate(state.event.startDate)} at ${ShereheUtils.formatTime(state.event.startDate)}\n\n'
+                                    '🎟 Get your ticket here:\n$url';
+
+                                if (imageFile != null) {
+                                  await Share.shareXFiles(
+                                    [imageFile],
+                                    text: text,
+                                    sharePositionOrigin: box != null
+                                        ? box.localToGlobal(Offset.zero) &
+                                              box.size
+                                        : null,
+                                  );
+                                } else {
+                                  await Share.share(
+                                    text,
+                                    sharePositionOrigin: box != null
+                                        ? box.localToGlobal(Offset.zero) &
+                                              box.size
+                                        : null,
+                                  );
+                                }
                                 break;
 
                               case 'scan':
@@ -388,7 +429,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 const Icon(Icons.calendar_month),
                                 Text(
                                   ShereheUtils.formatDate(
-                                    state.event.eventDate,
+                                    state.event.startDate,
                                   ),
                                 ),
                               ],
@@ -399,7 +440,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 const Icon(Icons.access_time),
                                 Text(
                                   ShereheUtils.formatTime(
-                                    state.event.eventDate,
+                                    state.event.startDate,
                                   ),
                                 ),
                               ],
