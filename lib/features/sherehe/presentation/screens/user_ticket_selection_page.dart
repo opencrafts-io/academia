@@ -131,163 +131,24 @@ class _UserTicketSelectionPageState extends State<UserTicketSelectionPage> {
                   // Ticket list - only visible for paid events
                   if (!isFreeEvent) ...[
                     ...sortedTickets.map((ticket) {
-                      final isSelected = widget.selectedTicket == ticket;
-                      return GestureDetector(
-                        onTap: ticket.ticketQuantity == 0
-                            ? null
-                            : () {
-                                widget.onTicketSelected(ticket);
-
-                                // Wait for UI to rebuild before scrolling
-                                WidgetsBinding.instance.addPostFrameCallback((
-                                  _,
-                                ) {
-                                  if (!_scrollController.hasClients) return;
-
-                                  _scrollController.animateTo(
-                                    _scrollController.position.maxScrollExtent,
-                                    duration: const Duration(milliseconds: 400),
-                                    curve: Curves.easeOut,
-                                  );
-                                });
-                              },
-                        child: Opacity(
-                          opacity: ticket.ticketQuantity == 0 ? 0.5 : 1.0,
-                          child: Card(
-                            elevation: isSelected ? 6 : 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: isSelected
-                                  ? BorderSide(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                      width: 2,
-                                    )
-                                  : BorderSide.none,
-                            ),
-                            child: ListTile(
-                              title: Text(ticket.ticketName),
-                              subtitle: Text(
-                                ticket.ticketQuantity == 0
-                                    ? "Sold Out"
-                                    : "KES ${ticket.ticketPrice.toStringAsFixed(0)}",
-                              ),
-                              trailing: Icon(
-                                isSelected
-                                    ? Icons.check_circle
-                                    : Icons.circle_outlined,
-                                color: isSelected
-                                    ? Theme.of(context).colorScheme.primary
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ),
+                      return UserTicketItemCard(
+                        ticket: ticket,
+                        isSelected: widget.selectedTicket == ticket,
+                        onTicketSelected: widget.onTicketSelected,
+                        scrollController: _scrollController,
                       );
                     }),
                   ],
 
                   // Quantity selector appears for both free + paid
                   if (widget.selectedTicket != null)
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
-                      ),
-                      child: Column(
-                        spacing: 12.0,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isFreeEvent
-                                ? "Select Free Ticket Quantity"
-                                : "Select Quantity",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-
-                          // Quantity controls
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                onPressed: widget.quantity > 1
-                                    ? () => widget.onQuantityChanged(
-                                        widget.quantity - 1,
-                                      )
-                                    : null,
-                                icon: const Icon(Icons.remove_circle_outline),
-                              ),
-                              Text(
-                                widget.quantity.toString(),
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineSmall,
-                              ),
-                              IconButton(
-                                onPressed: widget.quantity < maxAllowedQuantity
-                                    ? () => widget.onQuantityChanged(
-                                        widget.quantity + 1,
-                                      )
-                                    : null,
-                                icon: const Icon(Icons.add_circle_outline),
-                              ),
-                            ],
-                          ),
-                          if (widget.quantity == maxAllowedQuantity &&
-                              maxAllowedQuantity > 0)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                widget.quantity == 2 &&
-                                        (widget
-                                                    .selectedTicket!
-                                                    .ticketQuantity ??
-                                                0) >
-                                            2
-                                    ? "Maximum of 2 tickets can be purchased"
-                                    : "Only ${widget.selectedTicket!.ticketQuantity} ${widget.selectedTicket!.ticketQuantity == 1 ? "ticket" : "tickets"} remaining",
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                              ),
-                            ),
-
-                          if (widget.selectedTicket!.ticketQuantity == 0)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                "Sorry this ticket is sold out.",
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                              ),
-                            ),
-
-                          // Continue button
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              onPressed:
-                                  widget.selectedTicket!.ticketQuantity == 0
-                                  ? null
-                                  : widget.onContinue,
-                              child: Text(
-                                isFreeEvent ? "Continue (Free)" : "Continue",
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    TicketQuantitySelector(
+                      isFreeEvent: isFreeEvent,
+                      selectedTicket: widget.selectedTicket!,
+                      quantity: widget.quantity,
+                      maxAllowedQuantity: maxAllowedQuantity,
+                      onQuantityChanged: widget.onQuantityChanged,
+                      onContinue: widget.onContinue,
                     ),
                 ],
               ),

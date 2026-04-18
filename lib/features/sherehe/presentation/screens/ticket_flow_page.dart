@@ -32,7 +32,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
   void initState() {
     super.initState();
     context.read<UserTicketSelectionBloc>().add(
-      FetchTicketsByEventId(eventId: widget.eventId, accountId: widget.userId),
+      FetchTicketsByEventId(eventId: widget.eventId),
     );
     context.read<TicketPaymentBloc>().add(ResetTicketPaymentState());
   }
@@ -192,7 +192,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 SnackBar(
                   content: Text(
                     "Ticket booked successfully 🎉"
-                    "\nFind it under the menu (⋮) in the top right, " 
+                    "\nFind it under the menu (⋮) in the top right, "
                     "then tap 'My Tickets'.",
                   ),
                   duration: const Duration(seconds: 6),
