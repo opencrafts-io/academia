@@ -5288,9 +5288,9 @@ class $TicketTableTable extends TicketTable
   late final GeneratedColumn<int> ticketFor = GeneratedColumn<int>(
     'ticket_for',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   late final GeneratedColumnWithTypeConverter<List<dynamic>?, String>
@@ -5375,8 +5375,6 @@ class $TicketTableTable extends TicketTable
         _ticketForMeta,
         ticketFor.isAcceptableOrUnknown(data['ticket_for']!, _ticketForMeta),
       );
-    } else if (isInserting) {
-      context.missing(_ticketForMeta);
     }
     if (data.containsKey('scope')) {
       context.handle(
@@ -5416,7 +5414,7 @@ class $TicketTableTable extends TicketTable
       ticketFor: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ticket_for'],
-      )!,
+      ),
       institutions: $TicketTableTable.$converterinstitutionsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -5447,7 +5445,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
   final String ticketName;
   final int ticketPrice;
   final int? ticketQuantity;
-  final int ticketFor;
+  final int? ticketFor;
   final List<dynamic>? institutions;
   final String? scope;
   const TicketData({
@@ -5456,7 +5454,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     required this.ticketName,
     required this.ticketPrice,
     this.ticketQuantity,
-    required this.ticketFor,
+    this.ticketFor,
     this.institutions,
     this.scope,
   });
@@ -5474,7 +5472,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     if (!nullToAbsent || ticketQuantity != null) {
       map['ticket_quantity'] = Variable<int>(ticketQuantity);
     }
-    map['ticket_for'] = Variable<int>(ticketFor);
+    if (!nullToAbsent || ticketFor != null) {
+      map['ticket_for'] = Variable<int>(ticketFor);
+    }
     if (!nullToAbsent || institutions != null) {
       map['institutions'] = Variable<String>(
         $TicketTableTable.$converterinstitutionsn.toSql(institutions),
@@ -5497,7 +5497,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketQuantity: ticketQuantity == null && nullToAbsent
           ? const Value.absent()
           : Value(ticketQuantity),
-      ticketFor: Value(ticketFor),
+      ticketFor: ticketFor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ticketFor),
       institutions: institutions == null && nullToAbsent
           ? const Value.absent()
           : Value(institutions),
@@ -5518,7 +5520,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketName: serializer.fromJson<String>(json['ticket_name']),
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
       ticketQuantity: serializer.fromJson<int?>(json['ticket_quantity']),
-      ticketFor: serializer.fromJson<int>(json['ticket_for']),
+      ticketFor: serializer.fromJson<int?>(json['ticket_for']),
       institutions: serializer.fromJson<List<dynamic>?>(json['institutions']),
       scope: serializer.fromJson<String?>(json['scope']),
     );
@@ -5532,7 +5534,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       'ticket_name': serializer.toJson<String>(ticketName),
       'ticket_price': serializer.toJson<int>(ticketPrice),
       'ticket_quantity': serializer.toJson<int?>(ticketQuantity),
-      'ticket_for': serializer.toJson<int>(ticketFor),
+      'ticket_for': serializer.toJson<int?>(ticketFor),
       'institutions': serializer.toJson<List<dynamic>?>(institutions),
       'scope': serializer.toJson<String?>(scope),
     };
@@ -5544,7 +5546,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     String? ticketName,
     int? ticketPrice,
     Value<int?> ticketQuantity = const Value.absent(),
-    int? ticketFor,
+    Value<int?> ticketFor = const Value.absent(),
     Value<List<dynamic>?> institutions = const Value.absent(),
     Value<String?> scope = const Value.absent(),
   }) => TicketData(
@@ -5555,7 +5557,7 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketQuantity: ticketQuantity.present
         ? ticketQuantity.value
         : this.ticketQuantity,
-    ticketFor: ticketFor ?? this.ticketFor,
+    ticketFor: ticketFor.present ? ticketFor.value : this.ticketFor,
     institutions: institutions.present ? institutions.value : this.institutions,
     scope: scope.present ? scope.value : this.scope,
   );
@@ -5626,7 +5628,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   final Value<String> ticketName;
   final Value<int> ticketPrice;
   final Value<int?> ticketQuantity;
-  final Value<int> ticketFor;
+  final Value<int?> ticketFor;
   final Value<List<dynamic>?> institutions;
   final Value<String?> scope;
   final Value<int> rowid;
@@ -5647,13 +5649,12 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     required String ticketName,
     required int ticketPrice,
     this.ticketQuantity = const Value.absent(),
-    required int ticketFor,
+    this.ticketFor = const Value.absent(),
     this.institutions = const Value.absent(),
     this.scope = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : ticketName = Value(ticketName),
-       ticketPrice = Value(ticketPrice),
-       ticketFor = Value(ticketFor);
+       ticketPrice = Value(ticketPrice);
   static Insertable<TicketData> custom({
     Expression<String>? id,
     Expression<String>? eventId,
@@ -5684,7 +5685,7 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Value<String>? ticketName,
     Value<int>? ticketPrice,
     Value<int?>? ticketQuantity,
-    Value<int>? ticketFor,
+    Value<int?>? ticketFor,
     Value<List<dynamic>?>? institutions,
     Value<String?>? scope,
     Value<int>? rowid,
@@ -25617,7 +25618,7 @@ typedef $$TicketTableTableCreateCompanionBuilder =
       required String ticketName,
       required int ticketPrice,
       Value<int?> ticketQuantity,
-      required int ticketFor,
+      Value<int?> ticketFor,
       Value<List<dynamic>?> institutions,
       Value<String?> scope,
       Value<int> rowid,
@@ -25629,7 +25630,7 @@ typedef $$TicketTableTableUpdateCompanionBuilder =
       Value<String> ticketName,
       Value<int> ticketPrice,
       Value<int?> ticketQuantity,
-      Value<int> ticketFor,
+      Value<int?> ticketFor,
       Value<List<dynamic>?> institutions,
       Value<String?> scope,
       Value<int> rowid,
@@ -25815,7 +25816,7 @@ class $$TicketTableTableTableManager
                 Value<String> ticketName = const Value.absent(),
                 Value<int> ticketPrice = const Value.absent(),
                 Value<int?> ticketQuantity = const Value.absent(),
-                Value<int> ticketFor = const Value.absent(),
+                Value<int?> ticketFor = const Value.absent(),
                 Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<String?> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -25837,7 +25838,7 @@ class $$TicketTableTableTableManager
                 required String ticketName,
                 required int ticketPrice,
                 Value<int?> ticketQuantity = const Value.absent(),
-                required int ticketFor,
+                Value<int?> ticketFor = const Value.absent(),
                 Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<String?> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),

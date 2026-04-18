@@ -6,7 +6,7 @@ class Ticket extends Equatable {
   final String ticketName;
   final int ticketPrice;
   final int? ticketQuantity;
-  final int ticketFor;
+  final int? ticketFor;
   final List<int>? institutionIds;
   final String? scope;
 
@@ -16,7 +16,7 @@ class Ticket extends Equatable {
     required this.ticketName,
     required this.ticketPrice,
     this.ticketQuantity,
-    required this.ticketFor,
+    this.ticketFor,
     this.institutionIds,
     this.scope,
   });

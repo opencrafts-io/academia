@@ -22,7 +22,7 @@ class TicketQuantitySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ticket = selectedTicket;
-    final totalPeople = quantity * ticket.ticketFor;
+    final totalPeople = quantity * (ticket.ticketFor ?? 0);
 
     return Container(
       padding: const EdgeInsets.all(16),

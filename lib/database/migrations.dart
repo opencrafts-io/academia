@@ -94,4 +94,9 @@ extension AppDatabaseExtension on AppDataBase {
     await m.database.customStatement("DROP TABLE IF EXISTS 'event_table';");
     await m.createTable(eventTable);
   }
+
+  Future<void> migrate29To30(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
+    await m.createTable(ticketTable);
+  }
 }
