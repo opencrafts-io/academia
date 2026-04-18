@@ -53,5 +53,7 @@ export 'widgets/event_visibility_selector.dart';
 export 'widgets/event_image_helper_text_widget.dart';
 export 'widgets/user_tile.dart';
 export 'widgets/added_tickets_card.dart';
+export 'widgets/user_ticket_item_card.dart';
+export 'widgets/ticket_quantity_selector.dart';
 export 'utils/sherehe_utils.dart';
 export 'constants/sherehe_constants.dart';
