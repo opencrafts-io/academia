@@ -13,10 +13,11 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
-  final String eventId;
+  final String? eventId;
   final Event? event;
+  final String? invite;
 
-  const ShereheDetailsPage({super.key, required this.eventId, this.event});
+  const ShereheDetailsPage({super.key, this.eventId, this.event, this.invite});
 
   @override
   State<ShereheDetailsPage> createState() => _ShereheDetailsPageState();
@@ -35,12 +36,18 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     }
 
     context.read<ShereheDetailsBloc>().add(
-      LoadShereheDetails(eventId: widget.eventId, initialEvent: widget.event),
+      LoadShereheDetails(
+        eventId: widget.eventId ?? '',
+        initialEvent: widget.event,
+        invite: widget.invite,
+      ),
     );
 
-    context.read<GetEventScannerByUserIdBloc>().add(
-      GetEventScannerByUserId(eventId: widget.eventId),
-    );
+    if (widget.eventId != null) {
+      context.read<GetEventScannerByUserIdBloc>().add(
+        GetEventScannerByUserId(eventId: widget.eventId!),
+      );
+    }
   }
 
   double _getExpandedHeight(BuildContext context) {
@@ -99,14 +106,21 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
             ),
           );
         } else if (state is ShereheDetailsLoaded) {
+          // If the page was accessed via an invite link, we also fetch the scanner info to determine if the user can access the scanning feature
+          if (widget.invite != null) {
+            context.read<GetEventScannerByUserIdBloc>().add(
+              GetEventScannerByUserId(eventId: state.event.id),
+            );
+          }
+
           DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
 
-          final eventDate = normalize(
-            DateTime.parse(state.event.startDate).toLocal(),
+          final eventEndDate = normalize(
+            DateTime.parse(state.event.endDate).toLocal(),
           );
           final today = normalize(DateTime.now());
 
-          final isPastEvent = today.isAfter(eventDate);
+          final isPastEvent = today.isAfter(eventEndDate);
           return Scaffold(
             body: CustomScrollView(
               slivers: [
@@ -488,7 +502,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                         : () {
                             TicketFlowRoute(
                               eventId: state.event.id,
-                              userId: userId ?? '',
                             ).push(context);
                           },
                     child: const Text("I'm Going"),

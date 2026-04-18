@@ -7,14 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TicketFlowPage extends StatefulWidget {
-  final String eventId;
-  final String userId;
+  final String? eventId;
+  final String? invite;
 
-  const TicketFlowPage({
-    super.key,
-    required this.eventId,
-    required this.userId,
-  });
+  const TicketFlowPage({super.key, this.eventId, this.invite});
 
   @override
   State<TicketFlowPage> createState() => _TicketFlowPageState();
@@ -32,7 +28,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
   void initState() {
     super.initState();
     context.read<UserTicketSelectionBloc>().add(
-      FetchTicketsByEventId(eventId: widget.eventId),
+      FetchTickets(eventId: widget.eventId, invite: widget.invite),
     );
     context.read<TicketPaymentBloc>().add(ResetTicketPaymentState());
   }
@@ -298,7 +294,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
           onPageChanged: (index) => setState(() => currentPage = index),
           children: [
             UserTicketSelectionPage(
-              eventId: widget.eventId,
+              eventId: widget.eventId ?? '',
               selectedTicket: _selectedTicket,
               quantity: _quantity,
               onTicketSelected: (ticket) {
