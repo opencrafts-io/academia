@@ -4,12 +4,7 @@ abstract class PurchaseTicketResult {
 }
 
 class FreeTicketSuccess extends PurchaseTicketResult {
-  final String attendeeId;
-
-  const FreeTicketSuccess({
-    required String message,
-    required this.attendeeId,
-  }) : super(message);
+  const FreeTicketSuccess({required String message}) : super(message);
 }
 
 class PaidTicketInitiated extends PurchaseTicketResult {

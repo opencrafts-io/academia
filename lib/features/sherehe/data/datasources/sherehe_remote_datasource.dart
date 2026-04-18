@@ -416,7 +416,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, TicketData>> getTicketByInvite({required String invite}) async {
+  Future<Either<Failure, TicketData>> getTicketByInvite({
+    required String invite,
+  }) async {
     try {
       final response = await dioClient.dio.get(
         "/$servicePrefix/invite/ticket/$invite",
@@ -436,16 +438,10 @@ class ShereheRemoteDataSource with DioErrorHandler {
         );
       }
     } on DioException catch (de) {
-      _logger.e(
-        "DioException when fetching ticket",
-        error: de,
-      );
+      _logger.e("DioException when fetching ticket", error: de);
       return handleDioError(de);
     } catch (e) {
-      _logger.e(
-        "Unknown error when fetching ticket",
-        error: e,
-      );
+      _logger.e("Unknown error when fetching ticket", error: e);
       return left(
         ServerFailure(
           message: "An unexpected error occurred while fetching the ticket",
@@ -471,16 +467,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // FREE EVENT
-        if (response.data.containsKey('attendee_id')) {
-          return right(
-            FreeTicketSuccess(
-              message: response.data['message'],
-              attendeeId: response.data['attendee_id'],
-            ),
-          );
-        }
-
         // PAID EVENT
         if (response.data.containsKey('trans_id')) {
           return right(
@@ -489,13 +475,19 @@ class ShereheRemoteDataSource with DioErrorHandler {
               transactionId: response.data['trans_id'],
             ),
           );
+        } else {
+          // FREE EVENT
+          if (response.data.containsKey('message')) {
+            return right(FreeTicketSuccess(message: response.data['message']));
+          } else {
+            return left(
+              ServerFailure(
+                message: "Unknown success response format",
+                error: response,
+              ),
+            );
+          }
         }
-        return left(
-          ServerFailure(
-            message: "Unknown success response format",
-            error: response,
-          ),
-        );
       } else {
         return left(
           ServerFailure(
