@@ -416,7 +416,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, TicketData>> getTicketByInvite(String invite) async {
+  Future<Either<Failure, TicketData>> getTicketByInvite({required String invite}) async {
     try {
       final response = await dioClient.dio.get(
         "/$servicePrefix/invite/ticket/$invite",

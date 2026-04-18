@@ -119,6 +119,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => ConfirmPaymentUseCase(sl()));
   sl.registerLazySingleton(() => GetAllUserPurchasedTicketsUseCase(sl()));
   sl.registerLazySingleton(() => SearchUserAttendedEventsUseCase(sl()));
+  sl.registerLazySingleton(() => GetTicketByInviteUsecase(sl()));
+  sl.registerLazySingleton(() => GetEventByInviteUsecase(sl()));
 
   sl.registerLazySingleton(() => GetUserPurchasedTicketsForEventUseCase(sl()));
 
@@ -139,7 +141,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
-  sl.registerFactory(() => ShereheDetailsBloc(getSpecificEventUseCase: sl()));
+  sl.registerFactory(
+    () => ShereheDetailsBloc(
+      getSpecificEventUseCase: sl(),
+      getEventByInviteUsecase: sl(),
+    ),
+  );
   sl.registerFactory(
     () => GetEventScannerByUserIdBloc(getEventScannerByUserId: sl()),
   );
@@ -149,7 +156,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   sl.registerFactory(() => CreateEventBloc(createEventUseCase: sl()));
-  sl.registerFactory(() => UserTicketSelectionBloc(getTicketsByEventId: sl()));
+  sl.registerFactory(
+    () => UserTicketSelectionBloc(
+      getTicketsByEventId: sl(),
+      getTicketsByInvite: sl(),
+    ),
+  );
   sl.registerFactory(
     () => TicketPaymentBloc(purchaseTicket: sl(), confirmPayment: sl()),
   );

@@ -130,6 +130,17 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, Event>> getEventByInvite({
+    required String invite,
+  }) async {
+    final result = await remoteDataSource.getEventByInvite(invite: invite);
+    return result.fold(
+      (failure) => left(failure),
+      (eventData) => right(eventData.toEntity()),
+    );
+  }
+
+  @override
   Future<Either<Failure, Attendee>> getAttendeeByID(String id) async {
     final result = await remoteDataSource.getAttendeeByID(id);
     return result.fold(
@@ -146,6 +157,17 @@ class ShereheRepositoryImpl implements ShereheRepository {
     return result.fold(
       (failure) => left(failure),
       (tickets) => right(tickets.map((ticket) => ticket.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Ticket>> getTicketByInvite({
+    required String invite,
+  }) async {
+    final result = await remoteDataSource.getTicketByInvite(invite: invite);
+    return result.fold(
+      (failure) => left(failure),
+      (ticketData) => right(ticketData.toEntity()),
     );
   }
 
