@@ -278,6 +278,20 @@ class ShereheRoute extends GoRouteData with $ShereheRoute {
   }
 }
 
+@TypedGoRoute<ShereheDetailsWithTokenRoute>(
+  path: "/sherehe/get-event-with-invite/:invite",
+)
+class ShereheDetailsWithTokenRoute extends GoRouteData
+    with $ShereheDetailsWithTokenRoute {
+  final String invite;
+
+  const ShereheDetailsWithTokenRoute({required this.invite});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ShereheDetailsPage(invite: invite);
+  }
+}
+
 class CreateEventRoute extends GoRouteData with $CreateEventRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -354,13 +368,26 @@ class ShereheDetailsRoute extends GoRouteData with $ShereheDetailsRoute {
 
 class TicketFlowRoute extends GoRouteData with $TicketFlowRoute {
   final String eventId;
-  final String userId;
 
-  const TicketFlowRoute({required this.eventId, required this.userId});
+  const TicketFlowRoute({required this.eventId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return TicketFlowPage(eventId: eventId, userId: userId);
+    return TicketFlowPage(eventId: eventId);
+  }
+}
+
+@TypedGoRoute<TicketFlowWithInviteRoute>(
+  path: "/sherehe/ticket-flow-with-invite/:invite",
+)
+class TicketFlowWithInviteRoute extends GoRouteData with $TicketFlowWithInviteRoute {
+  final String invite;
+
+  const TicketFlowWithInviteRoute({required this.invite});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketFlowPage(invite: invite);
   }
 }
 

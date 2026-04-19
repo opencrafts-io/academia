@@ -475,15 +475,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       body: BlocListener<CreateEventBloc, CreateEventState>(
         listener: (context, state) {
           if (state is CreateEventSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Event created successfully!"),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            context.read<ShereheHomeBloc>().add(FetchAllEvents(page: 1));
             if (context.canPop()) {
-              context.pop(true);
+              context.pop(state.event);
             }
           } else if (state is CreateEventFailure) {
             ScaffoldMessenger.of(context).showSnackBar(

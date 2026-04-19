@@ -89,6 +89,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       _ticketQtyController.clear();
       _selectedTicketGroupType = null;
       _selectedInstitutions.clear();
+      _selectedScopeType = null;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

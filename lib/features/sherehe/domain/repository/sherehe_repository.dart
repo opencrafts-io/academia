@@ -45,9 +45,13 @@ abstract class ShereheRepository {
     required int limit,
   });
 
+  Future<Either<Failure, Event>> getEventByInvite({required String invite});
+
   Future<Either<Failure, Attendee>> getAttendeeByID(String id);
 
   Future<Either<Failure, List<Ticket>>> getTicketByEventId(String eventId);
+
+  Future<Either<Failure, Ticket>> getTicketByInvite({required String invite});
 
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,

@@ -18,7 +18,7 @@ class TicketTable extends Table {
   IntColumn get ticketQuantity => integer().nullable()();
 
   @JsonKey('ticket_for')
-  IntColumn get ticketFor => integer()();
+  IntColumn get ticketFor => integer().nullable()();
 
   @JsonKey('institutions')
   TextColumn get institutions => text().map(JsonListConverter()).nullable()();
