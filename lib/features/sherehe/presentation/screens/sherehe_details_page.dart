@@ -118,6 +118,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
           final eventEndDate = normalize(
             DateTime.parse(state.event.endDate).toLocal(),
           );
+
           final today = normalize(DateTime.now());
 
           final isPastEvent = today.isAfter(eventEndDate);
@@ -339,127 +340,109 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'About Event',
-                              style:
-                                  ResponsiveBreakPoints.isTablet(context) ||
-                                      ResponsiveBreakPoints.isDesktop(context)
-                                  ? Theme.of(
-                                      context,
-                                    ).textTheme.headlineMedium!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    )
-                                  : Theme.of(
-                                      context,
-                                    ).textTheme.headlineSmall!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                            ),
-                            const SizedBox(height: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: state.event.eventGenre!
-                                      .map((e) => e.trim())
-                                      .map(
-                                        (genre) => Chip(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          backgroundColor: Theme.of(
-                                            context,
-                                          ).colorScheme.secondaryContainer,
-                                          label: Text(
-                                            genre,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondaryContainer,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                            Text(
-                              _normalizeDescription(
-                                state.event.eventDescription,
-                              ),
-                              style:
-                                  ResponsiveBreakPoints.isTablet(context) ||
-                                      ResponsiveBreakPoints.isDesktop(context)
-                                  ? Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge!.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                      height: 1.5,
-                                    )
-                                  : Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium!.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                      height: 1.5,
-                                    ),
-                            ),
-                          ],
+                        Text(
+                          'About Event',
+                          style:
+                              ResponsiveBreakPoints.isTablet(context) ||
+                                  ResponsiveBreakPoints.isDesktop(context)
+                              ? Theme.of(context).textTheme.headlineMedium!
+                                    .copyWith(fontWeight: FontWeight.bold)
+                              : Theme.of(context).textTheme.headlineSmall!
+                                    .copyWith(fontWeight: FontWeight.bold),
                         ),
+
+                        const SizedBox(height: 12),
+
+                        if (state.event.eventGenre != null &&
+                            state.event.eventGenre!.isNotEmpty)
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: state.event.eventGenre!
+                                .map((e) => e.trim())
+                                .map(
+                                  (genre) => Chip(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                    label: Text(
+                                      genre,
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(state.event.eventLocation)),
-                          ],
+
+                        Text(
+                          _normalizeDescription(state.event.eventDescription),
+                          style:
+                              ResponsiveBreakPoints.isTablet(context) ||
+                                  ResponsiveBreakPoints.isDesktop(context)
+                              ? Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  height: 1.5,
+                                )
+                              : Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium!.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  height: 1.5,
+                                ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          spacing: 16.0,
-                          children: [
-                            Row(
-                              spacing: 8.0,
+                        const SizedBox(height: 10),
+                        Card(
+                          elevation: 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
                               children: [
-                                const Icon(Icons.calendar_month),
-                                Text(
-                                  ShereheUtils.formatDate(
-                                    state.event.startDate,
-                                  ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        state.event.eventLocation,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Row(
-                              spacing: 8.0,
-                              children: [
-                                const Icon(Icons.access_time),
-                                Text(
-                                  ShereheUtils.formatTime(
-                                    state.event.startDate,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        ShereheDetailsScheduleCard(
+                          startDate: state.event.startDate,
+                          endDate: state.event.endDate,
                         ),
                       ],
                     ),
