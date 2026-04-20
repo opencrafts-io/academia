@@ -1,0 +1,162 @@
+name: 🚀 Staging — Build & Release
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to build from"
+        required: false
+        default: ""
+
+concurrency:
+  group: staging-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  version:
+    name: 🔖 Version Bump
+    uses: ./.github/workflows/version.yml
+    secrets: inherit
+  android:
+    name: 🤖 Android Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.versions.outputs.java-version }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.versions.outputs.flutter-version }}
+          cache: true
+          cache-key: flutter-${{ steps.versions.outputs.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ steps.versions.outputs.ruby-version }}
+          bundler-cache: true
+          working-directory: android
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+
+      - name: Create key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=keystore.jks
+          EOF
+
+      - name: Flutter pub get (cached)
+        run: flutter pub get
+
+      - name: Run Fastlane — Upload Staging
+        working-directory: android
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: bundle exec fastlane upload_staging_release
+
+      - name: Notify Discord — Success
+        if: success()
+        working-directory: android
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: bundle exec fastlane run discord_notifier webhook_url:"$DISCORD_WEBHOOK_URL" title:"Academia Android Staging ✅" message:"APK uploaded to GitHub Releases"
+
+      - name: Notify Discord — Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -d '{"content":"❌ **Academia Android Staging FAILED** on branch `${{ github.ref_name }}` — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  ios:
+    name: 🍎 iOS Staging
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
+      - name: Select Xcode 26
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.versions.outputs.flutter-version }}
+          cache: true
+          cache-key: flutter-${{ steps.versions.outputs.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ steps.versions.outputs.ruby-version }}
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Flutter pub get (cached)
+        run: flutter pub get
+
+      - name: Run Fastlane — Upload Staging
+        working-directory: ios
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: bundle exec fastlane upload_staging_release
+
+      - name: Notify Discord — Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -d '{"content":"✅ **Academia iOS Staging** — IPA uploaded to GitHub Releases from `${{ github.ref_name }}`"}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Notify Discord — Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -d '{"content":"❌ **Academia iOS Staging FAILED** on branch `${{ github.ref_name }}` — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}

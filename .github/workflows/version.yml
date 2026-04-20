@@ -1,0 +1,122 @@
+name: 🔖 Auto Version Bump
+
+on:
+  push:
+    branches: [main, staging]
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    name: Bump Version
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    outputs:
+      new_version: ${{ steps.bump.outputs.new_version }}
+      new_build: ${{ steps.bump.outputs.new_build }}
+      changelog: ${{ steps.bump.outputs.changelog }}
+      tag: ${{ steps.bump.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version bump
+        id: bump
+        run: |
+          # Read current version from pubspec.yaml
+          CURRENT=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          SEMVER="${CURRENT%%+*}"
+          BUILD="${CURRENT##*+}"
+
+          MAJOR=$(echo $SEMVER | cut -d. -f1)
+          MINOR=$(echo $SEMVER | cut -d. -f2)
+          PATCH=$(echo $SEMVER | cut -d. -f3)
+
+          # Find the last version tag (format: v3.2.3+27 or v3.2.3)
+          LAST_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tag found, using initial commit"
+            COMMITS=$(git log --pretty=format:"%s" HEAD)
+          else
+            echo "Last tag: $LAST_TAG"
+            COMMITS=$(git log --pretty=format:"%s" "${LAST_TAG}..HEAD")
+          fi
+
+          echo "Commits since last tag:"
+          echo "$COMMITS"
+
+          # Determine bump type based on conventional commits
+          BUMP="patch"  # default
+
+          if echo "$COMMITS" | grep -qE '^feat(\(.+\))?!:|^fix(\(.+\))?!:|BREAKING CHANGE:'; then
+            BUMP="major"
+          elif echo "$COMMITS" | grep -qE '^feat(\(.+\))?:'; then
+            BUMP="minor"
+          elif echo "$COMMITS" | grep -qE '^fix(\(.+\))?:|^chore(\(.+\))?:|^perf(\(.+\))?:'; then
+            BUMP="patch"
+          fi
+
+          if echo "$COMMITS" | grep -qE '^release [0-9]+\.[0-9]+\.[0-9]+'; then
+            echo "Manual release commit detected — skipping automated bump"
+            echo "new_version=${SEMVER}" >> $GITHUB_OUTPUT
+            echo "new_build=${BUILD}" >> $GITHUB_OUTPUT
+            echo "tag=v${SEMVER}+${BUILD}" >> $GITHUB_OUTPUT
+            echo "changelog=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          case $BUMP in
+            major) MAJOR=$((MAJOR+1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR+1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH+1)) ;;
+          esac
+
+          NEW_SEMVER="${MAJOR}.${MINOR}.${PATCH}"
+          NEW_BUILD=$((BUILD+1))
+          NEW_VERSION="${NEW_SEMVER}+${NEW_BUILD}"
+
+          echo "Bumping: $CURRENT → $NEW_VERSION (type: $BUMP)"
+
+          CHANGELOG=""
+          if [ -n "$LAST_TAG" ]; then
+            FEATURES=$(git log --pretty=format:"- %s" "${LAST_TAG}..HEAD" | grep -E '^- feat' | sed 's/^- feat(\([^)]*\))\?: /- /')
+            FIXES=$(git log --pretty=format:"- %s" "${LAST_TAG}..HEAD" | grep -E '^- fix' | sed 's/^- fix(\([^)]*\))\?: /- /')
+            CHORES=$(git log --pretty=format:"- %s" "${LAST_TAG}..HEAD" | grep -E '^- chore|^- perf|^- refactor' | sed 's/^- chore(\([^)]*\))\?: /- /')
+
+            if [ -n "$FEATURES" ]; then
+              CHANGELOG="${CHANGELOG}### ✨ Features\n${FEATURES}\n\n"
+            fi
+            if [ -n "$FIXES" ]; then
+              CHANGELOG="${CHANGELOG}### 🐛 Fixes\n${FIXES}\n\n"
+            fi
+            if [ -n "$CHORES" ]; then
+              CHANGELOG="${CHANGELOG}### 🔧 Maintenance\n${CHORES}\n"
+            fi
+          fi
+
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" pubspec.yaml
+
+          git add pubspec.yaml
+          git commit -m "chore(release): bump version to ${NEW_SEMVER}+${NEW_BUILD} [skip ci]"
+          git tag -a "v${NEW_SEMVER}+${NEW_BUILD}" -m "Release v${NEW_SEMVER}+${NEW_BUILD}"
+          git push origin HEAD
+          git push origin "v${NEW_SEMVER}+${NEW_BUILD}"
+
+          echo "new_version=${NEW_SEMVER}" >> $GITHUB_OUTPUT
+          echo "new_build=${NEW_BUILD}" >> $GITHUB_OUTPUT
+          echo "tag=v${NEW_SEMVER}+${NEW_BUILD}" >> $GITHUB_OUTPUT
+          {
+            echo 'changelog<<EOF'
+            printf "%b" "$CHANGELOG"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
