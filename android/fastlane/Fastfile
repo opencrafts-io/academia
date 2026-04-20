@@ -1,0 +1,123 @@
+
+def tool_version(tool)
+  root = File.expand_path("../../..", __FILE__)
+  File.read(File.join(root, ".tool-versions"))
+      .scan(/^#{tool} (.+)$/).first&.first&.strip
+end
+
+FLUTTER_VERSION = tool_version("flutter")
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Run Flutter analyze (lint)"
+  lane :lint do
+    Dir.chdir("../../") do
+      sh("flutter analyze --no-pub")
+    end
+  end
+
+  desc "Run SonarQube security scan"
+  lane :sonar_scan do
+    sonar(
+      project_key: "opencrafts-io_academia",
+      project_name: "Academia",
+      project_version: flutter_version_name,
+      sources: "../lib",
+      sonar_runner_args: "-Dsonar.flutter=true",
+      sonar_url: ENV["SONAR_HOST_URL"],
+      auth_token: ENV["SONAR_TOKEN"]
+    )
+  end
+
+  desc "Capture screenshots (staging)"
+  lane :screenshots do
+    screengrab(
+      app_package_name: "io.opencrafts.academia.staging",
+      tests_package_name: "io.opencrafts.academia.staging.test",
+      app_apk_path: "../build/app/outputs/flutter-apk/app-staging-debug.apk",
+      tests_apk_path: "../build/app/outputs/flutter-apk/app-staging-debug-androidTest.apk",
+      locales: ["en-US"],
+      clear_previous_screenshots: true,
+      output_directory: "fastlane/screenshots"
+    )
+  end
+
+  desc "Build staging APK"
+  lane :build_staging do
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build apk --flavor staging --target lib/main_staging.dart --release")
+    end
+  end
+
+  desc "Build production AAB"
+  lane :build_production do
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build appbundle --flavor production --target lib/main_production.dart --release")
+    end
+  end
+
+  desc "Upload staging APK to GitHub Releases"
+  lane :upload_staging_release do
+    build_staging
+
+    version = flutter_version_name
+    build_num = flutter_build_number
+
+    set_github_release(
+      repository_name: "opencrafts-io/academia",
+      api_token: ENV["GITHUB_TOKEN"],
+      name: "Staging v#{version}+#{build_num}",
+      tag_name: "staging-v#{version}+#{build_num}",
+      description: "Staging build — automated release",
+      commitish: ENV["GITHUB_SHA"] || "staging",
+      is_prerelease: true,
+      upload_assets: ["../build/app/outputs/flutter-apk/app-staging-release.apk"]
+    )
+  end
+
+  desc "Publish production AAB to Play Store"
+  lane :deploy_production do
+    lint
+    sonar_scan
+    build_production
+
+    upload_to_play_store(
+      track: "production",
+      aab: "../build/app/outputs/bundle/productionRelease/app-production-release.aab",
+      skip_upload_metadata: false,
+      skip_upload_screenshots: false,
+      skip_upload_images: false
+    )
+  end
+
+  private_lane :notify_discord do |options|
+    payload = {
+      "Platform" => "Android 🤖",
+      "Status" => options[:status],
+      "Version" => options[:version],
+      "Branch" => ENV["GITHUB_REF_NAME"] || "unknown",
+      "Commit" => (ENV["GITHUB_SHA"] || "unknown")[0..7],
+      "Triggered by" => ENV["GITHUB_ACTOR"] || "CI"
+    }
+    discord_notifier(
+      webhook_url: ENV["DISCORD_WEBHOOK_URL"],
+      title: "Academia Android — #{options[:status]}",
+      color: options[:status] == "✅ Success" ? "good" : "danger",
+      payload: payload
+    )
+  end
+
+  def flutter_version_name
+    pubspec = File.read("../../pubspec.yaml")
+    pubspec.match(/^version:\s+(\S+)\+/)[1]
+  end
+
+  def flutter_build_number
+    pubspec = File.read("../../pubspec.yaml")
+    pubspec.match(/^version:\s+\S+\+(\S+)/)[1]
+  end
+end
