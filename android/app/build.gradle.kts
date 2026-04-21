@@ -51,6 +51,12 @@ android {
             storeFile     keystoreProperties['storeFile']     ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword'] ?: System.getenv('ANDROID_STORE_PASSWORD')
         }
+        staging {
+            keyAlias      keystoreProperties['keyAlias']      ?: System.getenv('ANDROID_KEY_ALIAS')
+            keyPassword   keystoreProperties['keyPassword']   ?: System.getenv('ANDROID_KEY_PASSWORD')
+            storeFile     keystoreProperties['storeFile']     ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword'] ?: System.getenv('ANDROID_STORE_PASSWORD')
+        }
     }
     buildTypes {
         release {
