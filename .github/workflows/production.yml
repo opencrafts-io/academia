@@ -5,7 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Never cancel production runs
 concurrency:
   group: production-${{ github.ref }}
   cancel-in-progress: false
@@ -13,7 +12,7 @@ concurrency:
 jobs:
   lint-and-scan:
     name: 🔍 Lint & SonarQube
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 20
 
     steps:
@@ -53,7 +52,7 @@ jobs:
 
   android:
     name: Android — Play Store
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: lint-and-scan
     timeout-minutes: 60
 
@@ -120,7 +119,7 @@ jobs:
 
   ios:
     name: iOS — App Store
-    runs-on: macos-15
+    runs-on: macos-latest
     needs: lint-and-scan
     timeout-minutes: 90
 
