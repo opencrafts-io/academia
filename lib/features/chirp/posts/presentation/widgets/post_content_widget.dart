@@ -1,11 +1,14 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
+// import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:time_since/time_since.dart';
 
 class PostContentWidget extends StatefulWidget {
@@ -67,10 +70,33 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                 color: Theme.of(context).colorScheme.onSurface,
                 onPressed: () {
                   final updatedPost = context.read<PostCubit>().state;
-                  Navigator.pop(context, updatedPost);
+                  if (context.canPop()) {
+                    Navigator.pop(context, updatedPost);
+                  } else {
+                    // Opened via deeplink — no history, go to home
+                    context.go(HomeRoute().location);
+                  }
                 },
               ),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  tooltip: 'Share post',
+                  onPressed: () {
+                    final url =
+                        'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
+                    final box =
+                        context.findRenderObject() as RenderBox?;
+                    Share.share(
+                      'Check out this post on Academia:\n\n'
+                      '📝 ${widget.post.title}\n\n'
+                      '🔗 $url',
+                      sharePositionOrigin: box != null
+                          ? box.localToGlobal(Offset.zero) & box.size
+                          : null,
+                    );
+                  },
+                ),
                 IconButton.filled(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -166,32 +192,93 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                               ),
                             ],
                             const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                FilledButton.icon(
-                                  style: FilledButton.styleFrom(
-                                    padding: const EdgeInsets.all(2),
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.tertiaryContainer,
-                                    foregroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.onTertiaryContainer,
-                                  ),
-                                  icon: const Icon(Icons.chat),
-                                  onPressed: () {},
-                                  label: Text('${widget.post.commentCount}'),
-                                ),
-                                const SizedBox(width: 8),
-                                OutlinedButton.icon(
-                                  iconAlignment: IconAlignment.start,
-                                  onPressed: null,
-                                  label: Text(
-                                    widget.post.viewsCount.toString(),
-                                  ),
-                                  icon: const Icon(Icons.visibility),
-                                ),
-                              ],
+                            BlocConsumer<FeedBloc, FeedState>(
+                              listenWhen: (_, s) => s is PostLikeError,
+                              listener: (context, state) {
+                                if (state is PostLikeError &&
+                                    state.post.id == widget.post.id) {
+                                  context
+                                      .read<PostCubit>()
+                                      .rollbackLike(state.post);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to update like',
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onError,
+                                        ),
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                  );
+                                }
+                              },
+                              builder: (context, _) {
+                                return BlocBuilder<PostCubit, Post>(
+                                  builder: (context, post) {
+                                    return Row(
+                                      children: [
+                                        // Like button
+                                        // _PostLikeButton(
+                                        //   upvotes: post.upvotes,
+                                        //   isLiked: post.isLikedByMe,
+                                        //   onTap: () {
+                                        //     final profileState =
+                                        //         context.read<ProfileBloc>().state;
+                                        //     if (profileState
+                                        //         is! ProfileLoadedState) return;
+                                        //     final cubit =
+                                        //         context.read<PostCubit>();
+                                        //     final previousFeedState =
+                                        //         context.read<FeedBloc>().state;
+                                        //     cubit.toggleLikeOptimistic();
+                                        //     context.read<FeedBloc>().add(
+                                        //       ToggleLikePost(
+                                        //         post: post,
+                                        //         isCurrentlyLiked:
+                                        //             post.isLikedByMe,
+                                        //         voterId:
+                                        //             profileState.profile.id,
+                                        //         previousState: previousFeedState,
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // ),
+                                        // const SizedBox(width: 8),
+                                        FilledButton.icon(
+                                          style: FilledButton.styleFrom(
+                                            padding: const EdgeInsets.all(2),
+                                            backgroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.tertiaryContainer,
+                                            foregroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.onTertiaryContainer,
+                                          ),
+                                          icon: const Icon(Icons.chat),
+                                          onPressed: () {},
+                                          label:
+                                              Text('${post.commentCount}'),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        OutlinedButton.icon(
+                                          iconAlignment: IconAlignment.start,
+                                          onPressed: null,
+                                          label: Text(
+                                            post.viewsCount.toString(),
+                                          ),
+                                          icon: const Icon(Icons.visibility),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ],
                         );
@@ -337,3 +424,64 @@ class _PostContentWidgetState extends State<PostContentWidget> {
     );
   }
 }
+
+// like button.
+// class _PostLikeButton extends StatelessWidget {
+//   final int upvotes;
+//   final bool isLiked;
+//   final VoidCallback onTap;
+
+//   const _PostLikeButton({
+//     required this.upvotes,
+//     required this.isLiked,
+//     required this.onTap,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final color = isLiked
+//         ? Theme.of(context).colorScheme.error
+//         : Theme.of(context).colorScheme.onSurfaceVariant;
+
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: AnimatedContainer(
+//         duration: const Duration(milliseconds: 200),
+//         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+//         decoration: BoxDecoration(
+//           color: isLiked
+//               ? Theme.of(context).colorScheme.errorContainer.withAlpha(180)
+//               : Theme.of(context).colorScheme.surfaceContainerHighest,
+//           borderRadius: BorderRadius.circular(20),
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             AnimatedSwitcher(
+//               duration: const Duration(milliseconds: 200),
+//               transitionBuilder: (child, animation) => ScaleTransition(
+//                 scale: animation,
+//                 child: child,
+//               ),
+//               child: Icon(
+//                 isLiked ? Icons.favorite : Icons.favorite_border,
+//                 key: ValueKey(isLiked),
+//                 size: 20,
+//                 color: color,
+//               ),
+//             ),
+//             const SizedBox(width: 6),
+//             Text(
+//               '$upvotes',
+//               style: Theme.of(context).textTheme.labelLarge?.copyWith(
+//                     color: color,
+//                     fontWeight:
+//                         isLiked ? FontWeight.bold : FontWeight.normal,
+//                   ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

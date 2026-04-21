@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CommentContentWidget extends StatelessWidget {
   final Comment comment;
@@ -50,6 +52,28 @@ class CommentContentWidget extends StatelessWidget {
                 color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(2),
               ),
+            ),
+            // Share — available to everyone
+            ListTile(
+              leading: const Icon(Icons.share_outlined),
+              title: const Text('Share Comment'),
+              onTap: () {
+                Navigator.pop(modalContext);
+                final excerpt = comment.content.length > 100
+                    ? '${comment.content.substring(0, 100)}...'
+                    : comment.content;
+                final url =
+                    'https://academia.opencrafts.io${PostDetailRoute(postId: comment.post).location}?commentId=${comment.id}';
+                final box = context.findRenderObject() as RenderBox?;
+                Share.share(
+                  'Check out this comment on Academia:\n\n'
+                  '"💬 $excerpt"\n\n'
+                  '🔗 $url',
+                  sharePositionOrigin: box != null
+                      ? box.localToGlobal(Offset.zero) & box.size
+                      : null,
+                );
+              },
             ),
             if (!isOwnComment) ...[
               ListTile(
