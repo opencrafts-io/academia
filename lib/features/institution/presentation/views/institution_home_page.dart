@@ -84,14 +84,15 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                   isDismissible: false,
                   enableDrag: false,
                   isScrollControlled: true,
-                  showDragHandle: true,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(28.0),
                     ),
                   ),
                   builder: (context) {
-                    return InstitutionSetupSheetContent();
+                    return InstitutionSetupSheetContent(
+                      institutionID: widget.institutionID,
+                    );
                   },
                 );
               }
@@ -360,11 +361,11 @@ class _CoursesSectionCard extends StatelessWidget {
                 return CourseCard(
                   course: course,
                   onTap: () async {
-                    await ViewCourseRoute(
-                      courseId: course.id!,
-                    ).push(context);
+                    await ViewCourseRoute(courseId: course.id!).push(context);
                     if (context.mounted) {
-                      context.read<CourseCubit>().watchByInstitution(institutionId);
+                      context.read<CourseCubit>().watchByInstitution(
+                        institutionId,
+                      );
                       context.read<TimetableEntryBloc>().add(
                         WatchAllTimetableEntriesEvent(),
                       );
