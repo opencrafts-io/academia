@@ -1,39 +1,33 @@
-name: 🏁 Production — Lint, Scan, Screenshots & Publish
+name: 🏁 Production — Lint, Scan & Publish
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+# Never cancel production runs
 concurrency:
   group: production-${{ github.ref }}
-  cancel-in-progress: false # Never cancel prod runs
+  cancel-in-progress: false
 
 jobs:
   lint-and-scan:
     name: 🔍 Lint & SonarQube
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # SonarQube needs full history
+          fetch-depth: 0 # SonarQube needs full git history
 
       - name: Load tool versions
         id: versions
         uses: ./.github/actions/load-tool-versions
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ steps.versions.outputs.java-version }}
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.versions.outputs.flutter-version }}
-          cache: true
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
 
       - name: Flutter pub get
         run: flutter pub get
@@ -49,49 +43,37 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=opencrafts-io_academia
-            -Dsonar.sources=lib
-            -Dsonar.tests=test
-            -Dsonar.flutter.version=${{ steps.versions.outputs.flutter-version }}
+
+      - name: Notify Discord — Lint/Scan Failure
+        if: failure()
+        run: |
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ Lint/SonarQube FAILED on main\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
 
   android:
-    name: 🤖 Android Production
+    name: Android — Play Store
     runs-on: ubuntu-latest
     needs: lint-and-scan
     timeout-minutes: 60
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Load tool versions
         id: versions
         uses: ./.github/actions/load-tool-versions
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ steps.versions.outputs.java-version }}
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.versions.outputs.flutter-version }}
-          cache: true
-          cache-key: flutter-${{ steps.versions.outputs.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+      - name: Decode Android keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
+            > android/app/keystore.jks
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ steps.versions.outputs.ruby-version }}
-          bundler-cache: true
-          working-directory: android
-
-      - name: Decode Keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
-
-      - name: Create key.properties
+      - name: Write key.properties
         run: |
           cat > android/key.properties <<EOF
           storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
@@ -100,65 +82,74 @@ jobs:
           storeFile=keystore.jks
           EOF
 
+      - name: Write Play Store key
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' \
+            > ${{ runner.temp }}/play-key.json
+
+      - name: Install gems
+        working-directory: android
+        run: bundle install
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: android/vendor/bundle
+          key: gems-android-${{ hashFiles('android/Gemfile.lock') }}
+          restore-keys: gems-android-
+
       - name: Flutter pub get
         run: flutter pub get
 
       - name: Fastlane — Deploy to Play Store
         working-directory: android
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOOGLE_PLAY_JSON_KEY_PATH: ${{ runner.temp }}/play-key.json
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: |
-          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' > ${{ runner.temp }}/play-key.json
-          bundle exec fastlane deploy_production
-
-      - name: Notify Discord — Android Prod Success
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-               -d '{"embeds":[{"title":"✅ Academia Android Production Released","color":3066993,"fields":[{"name":"Branch","value":"main"},{"name":"Commit","value":"${{ github.sha }}"},{"name":"Actor","value":"${{ github.actor }}"}]}]}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GOOGLE_PLAY_JSON_KEY_PATH: ${{ runner.temp }}/play-key.json
+        run: bundle exec fastlane deploy_production
 
       - name: Notify Discord — Android Prod Failure
         if: failure()
         run: |
-          curl -H "Content-Type: application/json" \
-               -d '{"embeds":[{"title":"❌ Academia Android Production FAILED","color":15158332,"fields":[{"name":"Run","value":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}]}]}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ Android Production FAILED\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
 
   ios:
-    name: 🍎 iOS Production
+    name: iOS — App Store
     runs-on: macos-15
     needs: lint-and-scan
     timeout-minutes: 90
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Load tool versions
         id: versions
         uses: ./.github/actions/load-tool-versions
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
 
       - name: Select Xcode 26
         run: |
           sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
           xcodebuild -version
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ steps.versions.outputs.flutter-version }}
-          cache: true
-          cache-key: flutter-${{ steps.versions.outputs.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+      - name: Install gems
+        working-directory: ios
+        run: bundle install
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Cache gems
+        uses: actions/cache@v4
         with:
-          ruby-version: ${{ steps.versions.outputs.ruby-version }}
-          bundler-cache: true
-          working-directory: ios
+          path: ios/vendor/bundle
+          key: gems-ios-${{ hashFiles('ios/Gemfile.lock') }}
+          restore-keys: gems-ios-
 
       - name: Flutter pub get
         run: flutter pub get
@@ -166,6 +157,10 @@ jobs:
       - name: Fastlane — Screenshots + Deploy to App Store
         working-directory: ios
         env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
@@ -174,21 +169,11 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          bundle exec fastlane screenshots
-          bundle exec fastlane deploy_production
-
-      - name: Notify Discord — iOS Prod Success
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-               -d '{"embeds":[{"title":"✅ Academia iOS Production Released","color":3066993,"fields":[{"name":"Branch","value":"main"},{"name":"Commit","value":"${{ github.sha }}"}]}]}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: bundle exec fastlane deploy_production
 
       - name: Notify Discord — iOS Prod Failure
         if: failure()
         run: |
-          curl -H "Content-Type: application/json" \
-               -d '{"embeds":[{"title":"❌ Academia iOS Production FAILED","color":15158332,"fields":[{"name":"Run","value":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}]}]}' \
-               ${{ secrets.DISCORD_WEBHOOK_URL }}
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ iOS Production FAILED\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"

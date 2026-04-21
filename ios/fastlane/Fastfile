@@ -2,7 +2,7 @@
 def tool_version(tool)
   root = File.expand_path("../../..", __FILE__)
   File.read(File.join(root, ".tool-versions"))
-      .scan(/^#{tool} (.+)$/).first&.first&.strip
+      .scan(/^#{tool}\s+(.+)$/).first&.first&.strip
 end
 
 FLUTTER_VERSION = tool_version("flutter")
@@ -12,103 +12,19 @@ default_platform(:ios)
 platform :ios do
 
   before_all do
-    setup_ci if ENV['CI']
-  end
-
-  desc "Sync code signing certs (read-only on CI)"
-  lane :sync_certs do
-    match(
-      type: "appstore",
-      readonly: is_ci,
-      app_identifier: "io.opencrafts.academia"
-    )
-  end
-
-  desc "Capture iOS screenshots"
-  lane :screenshots do
-    capture_ios_screenshots(
-      scheme: "AcademiaStaging",
-      output_directory: "fastlane/screenshots",
-      clear_previous_screenshots: true,
-      languages: ["en-US"],
-      devices: [
-        "iPhone 16 Pro Max",
-        "iPhone 16 Pro",
-        "iPad Pro 13-inch (M4)"
-      ]
-    )
-    frame_screenshots(white: false)
-  end
-
-  desc "Build staging IPA"
-  lane :build_staging do
-    sync_certs
-
-    Dir.chdir("../../") do
-      sh("flutter pub get")
-      sh("flutter build ipa --flavor staging --target lib/main_staging.dart --export-options-plist ios/ExportOptions-staging.plist")
+    # On CI: configure App Store Connect API key from environment
+    if ENV['CI'] && ENV['APP_STORE_CONNECT_API_KEY_ID']
+      app_store_connect_api_key(
+        key_id:                  ENV['APP_STORE_CONNECT_API_KEY_ID'],
+        issuer_id:               ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
+        key_content:             ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
+        is_key_content_base64:   false,
+        duration:                1200,
+        in_house:                false
+      )
     end
   end
 
-  desc "Build production IPA"
-  lane :build_production do
-    sync_certs
-
-    Dir.chdir("../../") do
-      sh("flutter pub get")
-      sh("flutter build ipa --flavor production --target lib/main_production.dart --export-options-plist ios/ExportOptions-production.plist")
-    end
-  end
-
-  desc "Upload staging IPA to GitHub Releases"
-  lane :upload_staging_release do
-    build_staging
-
-    version = flutter_version_name
-    build_num = flutter_build_number
-
-    set_github_release(
-      repository_name: "opencrafts-io/academia",
-      api_token: ENV["GITHUB_TOKEN"],
-      name: "Staging v#{version}+#{build_num}",
-      tag_name: "staging-v#{version}+#{build_num}",
-      description: "Staging build — automated release",
-      commitish: ENV["GITHUB_SHA"] || "staging",
-      is_prerelease: true,
-      upload_assets: ["../build/ios/ipa/Academia.ipa"]
-    )
-  end
-
-  desc "Publish production IPA to App Store"
-  lane :deploy_production do
-    build_production
-
-    upload_to_app_store(
-      ipa: "../build/ios/ipa/Academia.ipa",
-      skip_screenshots: false,
-      skip_metadata: false,
-      submit_for_review: false,
-      automatic_release: false,
-      force: true
-    )
-  end
-
-  private_lane :notify_discord do |options|
-    payload = {
-      "Platform" => "iOS 🍎",
-      "Status" => options[:status],
-      "Version" => options[:version],
-      "Branch" => ENV["GITHUB_REF_NAME"] || "unknown",
-      "Commit" => (ENV["GITHUB_SHA"] || "unknown")[0..7],
-      "Triggered by" => ENV["GITHUB_ACTOR"] || "CI"
-    }
-    discord_notifier(
-      webhook_url: ENV["DISCORD_WEBHOOK_URL"],
-      title: "Academia iOS — #{options[:status]}",
-      color: options[:status] == "✅ Success" ? "good" : "danger",
-      payload: payload
-    )
-  end
 
   def flutter_version_name
     pubspec = File.read("../../pubspec.yaml")
@@ -119,4 +35,114 @@ platform :ios do
     pubspec = File.read("../../pubspec.yaml")
     pubspec.match(/^version:\s+\S+\+(\S+)/)[1]
   end
+
+  private_lane :notify_discord do |options|
+    status  = options[:status]
+    version = options[:version] || "#{flutter_version_name}+#{flutter_build_number}"
+    color   = status.include?("✅") ? 3066993 : 15158332
+    payload = JSON.generate({
+      embeds: [{
+        title:  "Academia iOS — #{status}",
+        color:  color,
+        fields: [
+          { name: "Version",   value: version,                                inline: true },
+          { name: "Branch",    value: ENV["GITHUB_REF_NAME"] || "local",      inline: true },
+          { name: "Commit",    value: (ENV["GITHUB_SHA"] || "unknown")[0..7], inline: true },
+          { name: "Triggered", value: ENV["GITHUB_ACTOR"] || "local",         inline: true }
+        ]
+      }]
+    })
+    sh("curl -s -H 'Content-Type: application/json' -d '#{payload.gsub("'", "\\'")}' '#{ENV["DISCORD_WEBHOOK_URL"]}'")
+  end
+
+
+  desc "Sync code signing certs via Match (read-only on CI)"
+  lane :sync_certs do
+    match(
+      type:           "appstore",
+      readonly:       is_ci,
+      app_identifier: "io.opencrafts.academia"
+    )
+  end
+
+
+  desc "Build staging IPA"
+  lane :build_staging do
+    sync_certs
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build ipa --flavor staging --target lib/main_staging.dart " \
+         "--export-options-plist ios/ExportOptions-staging.plist")
+    end
+  end
+
+  desc "Build production IPA"
+  lane :build_production do
+    sync_certs
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build ipa --flavor production --target lib/main_production.dart " \
+         "--export-options-plist ios/ExportOptions-production.plist")
+    end
+  end
+
+
+  desc "Capture App Store screenshots on simulators"
+  lane :screenshots do
+    capture_ios_screenshots(
+      scheme:                     "AcademiaProduction",
+      output_directory:           "fastlane/screenshots",
+      clear_previous_screenshots: true,
+      languages:                  ["en-US"],
+      devices: [
+        "iPhone 16 Pro Max",
+        "iPhone 16 Pro",
+        "iPad Pro 13-inch (M4)"
+      ]
+    )
+    frame_screenshots(white: false)
+  end
+
+
+  desc "Build staging IPA and upload to GitHub Releases"
+  lane :upload_staging_release do
+    build_staging
+
+    version   = flutter_version_name
+    build_num = flutter_build_number
+    tag       = "ios-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
+
+    set_github_release(
+      repository_name: "opencrafts-io/academia",
+      api_token:       ENV["GITHUB_TOKEN"],
+      name:            "iOS Staging v#{version}+#{build_num}",
+      tag_name:        tag,
+      description:     "Automated staging build\nBranch: `#{ENV["GITHUB_REF_NAME"]}`\nCommit: `#{ENV["GITHUB_SHA"]}`",
+      commitish:       ENV["GITHUB_SHA"] || "staging",
+      is_prerelease:   true,
+      upload_assets:   ["../build/ios/ipa/Academia.ipa"]
+    )
+
+    notify_discord(status: "✅ Staging IPA Released", version: "#{version}+#{build_num}")
+  end
+
+
+  desc "Screenshots + publish production IPA to App Store"
+  lane :deploy_production do
+    screenshots
+    build_production
+
+    upload_to_app_store(
+      ipa:                               "../build/ios/ipa/Academia.ipa",
+      skip_screenshots:                  false,
+      skip_metadata:                     false,
+      submit_for_review:                 false,
+      automatic_release:                 false,
+      force:                             true,
+      precheck_include_in_app_purchases: false
+    )
+
+    notify_discord(status: "✅ Production Submitted to App Store")
+  end
+
 end

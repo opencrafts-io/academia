@@ -1,0 +1,27 @@
+name: Load tool versions
+description: Parses .tool-versions and exposes Flutter, Ruby, Java as step outputs
+
+outputs:
+  flutter-version:
+    description: Flutter version string (e.g. 3.32.0)
+    value: ${{ steps.parse.outputs.flutter }}
+  ruby-version:
+    description: Ruby version string (e.g. 3.3.6)
+    value: ${{ steps.parse.outputs.ruby }}
+  java-version:
+    description: Java major version number (e.g. 17)
+    value: ${{ steps.parse.outputs.java }}
+
+runs:
+  using: composite
+  steps:
+    - id: parse
+      shell: bash
+      run: |
+        flutter=$(grep '^flutter' .tool-versions | awk '{print $2}')
+        ruby=$(grep '^ruby'    .tool-versions | awk '{print $2}')
+        java=$(grep '^java'    .tool-versions | sed 's/.*openjdk-//' | cut -d. -f1)
+        echo "flutter=$flutter" >> $GITHUB_OUTPUT
+        echo "ruby=$ruby"       >> $GITHUB_OUTPUT
+        echo "java=$java"       >> $GITHUB_OUTPUT
+        echo "✅ Loaded: flutter=$flutter  ruby=$ruby  java=$java"
