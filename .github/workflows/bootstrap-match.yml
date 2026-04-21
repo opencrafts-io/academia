@@ -1,7 +1,9 @@
 name: Bootstrap Match (run once, then delete)
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - feature/add-fastlane
 
 jobs:
   bootstrap:
