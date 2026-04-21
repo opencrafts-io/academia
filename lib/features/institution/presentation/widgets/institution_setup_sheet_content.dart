@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:academia/gen/assets.gen.dart';
 
 class InstitutionSetupSheetContent extends StatelessWidget {
-  const InstitutionSetupSheetContent({super.key});
+  const InstitutionSetupSheetContent({super.key, required this.institutionID});
+  final int institutionID;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +27,7 @@ class InstitutionSetupSheetContent extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Icon and Content
-            Icon(
-              Icons.vpn_key_outlined,
-              size: 48,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            Assets.icons.key.image(height: 60),
             const SizedBox(height: 16),
             Text(
               "Setup Required",
@@ -57,7 +55,9 @@ class InstitutionSetupSheetContent extends StatelessWidget {
                   context.pop();
 
                   // Close only when moving to setup
-                  InstitutionKeysViewRoute(institutionID: 5426).push(context);
+                  InstitutionKeysViewRoute(
+                    institutionID: institutionID,
+                  ).push(context);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text("Add Keys Now"),
