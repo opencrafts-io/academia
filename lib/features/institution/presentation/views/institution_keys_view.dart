@@ -7,7 +7,8 @@ import 'package:magnet/magnet.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 class InstitutionKeysView extends StatefulWidget {
-  const InstitutionKeysView({super.key});
+  const InstitutionKeysView({super.key, required this.institutionID});
+  final int institutionID;
 
   @override
   State<InstitutionKeysView> createState() => _InstitutionKeysViewState();
@@ -51,7 +52,10 @@ class _InstitutionKeysViewState extends State<InstitutionKeysView> {
 
                 return (state as ScrappingCommandLoaded).command == null
                     ? InstitutionNotSupportedView()
-                    : ScrappingCommandForm(command: state.command!);
+                    : ScrappingCommandForm(
+                        institutionID: widget.institutionID,
+                        command: state.command!,
+                      );
               },
             ),
           ),
@@ -63,7 +67,12 @@ class _InstitutionKeysViewState extends State<InstitutionKeysView> {
 
 class ScrappingCommandForm extends StatefulWidget {
   final ScrappingCommand command;
-  const ScrappingCommandForm({super.key, required this.command});
+  final int institutionID;
+  const ScrappingCommandForm({
+    super.key,
+    required this.command,
+    required this.institutionID,
+  });
 
   @override
   State<ScrappingCommandForm> createState() => _ScrappingCommandFormState();
@@ -259,7 +268,7 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
       );
 
       final institutionKey = InstitutionKey(
-        institutionId: 5426,
+        institutionId: widget.institutionID,
         commandId: widget.command.commandID!,
         keySets: updatedValues,
         createdAt: DateTime.now(),

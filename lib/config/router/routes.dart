@@ -380,7 +380,8 @@ class TicketFlowRoute extends GoRouteData with $TicketFlowRoute {
 @TypedGoRoute<TicketFlowWithInviteRoute>(
   path: "/sherehe/ticket-flow-with-invite/:invite",
 )
-class TicketFlowWithInviteRoute extends GoRouteData with $TicketFlowWithInviteRoute {
+class TicketFlowWithInviteRoute extends GoRouteData
+    with $TicketFlowWithInviteRoute {
   final String invite;
 
   const TicketFlowWithInviteRoute({required this.invite});
@@ -788,7 +789,7 @@ class InstitutionKeysViewRoute extends GoRouteData
         padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
         child: child,
       ),
-      child: Sheet(child: InstitutionKeysView()),
+      child: Sheet(child: InstitutionKeysView(institutionID: institutionID)),
     );
   }
 }
