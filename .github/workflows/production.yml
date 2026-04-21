@@ -1,4 +1,4 @@
-name: 🏁 Production — Lint, Scan & Publish
+name:  Production — Lint, Scan & Publish
 
 on:
   push:
