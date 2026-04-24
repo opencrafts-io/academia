@@ -25,7 +25,7 @@ extension TicketEntityHelper on Ticket {
     ticketPrice: ticketPrice,
     ticketQuantity: ticketQuantity,
     ticketFor: ticketFor,
-    institutions: institutionIds?.map((e) => e.toString()).toList(),
+    institutions: institutionIds?.map((e) => e).toList(),
     scope: scope,
   );
 }
