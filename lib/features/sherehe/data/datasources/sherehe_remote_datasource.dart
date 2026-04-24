@@ -194,7 +194,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<TicketData> tickets,
-    required List<String> institutions,
+    List<int>? institutions,
     required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
@@ -219,7 +219,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
             return json;
           }).toList(),
         ),
-        'institutions': institutions,
+        if (institutions != null && institutions.isNotEmpty)
+          'institutions': jsonEncode(institutions),
         'scope': scope,
 
         if (eventCardImage != null)

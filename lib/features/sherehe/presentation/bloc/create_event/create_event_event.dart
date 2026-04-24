@@ -20,7 +20,7 @@ class SubmitNewEvent extends CreateEventEvent {
   final File? eventPosterImage;
   final File? eventBannerImage;
   final List<Ticket> tickets;
-  final List<String> institutions;
+  final List<int>? institutions;
   final String scope;
   final PaymentTypes? selectedPaymentType;
   final String? paybillNumber;
@@ -41,7 +41,7 @@ class SubmitNewEvent extends CreateEventEvent {
     this.eventPosterImage,
     this.eventBannerImage,
     required this.tickets,
-    required this.institutions,
+    this.institutions,
     required this.scope,
     this.selectedPaymentType,
     this.paybillNumber,

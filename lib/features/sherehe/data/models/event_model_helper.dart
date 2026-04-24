@@ -20,7 +20,7 @@ extension EventModelHelper on EventData {
     updatedAt: updatedAt,
     deletedAt: deletedAt,
     scope: scope,
-    institutions: institutions != null ? List<String>.from(institutions!) : null,
+    institutions: institutions != null ? List<int>.from(institutions!) : null,
     paymentInfo: paymentInfo != null
         ? PaymentInfoData.fromJson(paymentInfo!).toEntity()
         : null,
