@@ -36,12 +36,16 @@ class _EventVisibilitySelectorState extends State<EventVisibilitySelector> {
             labelText: 'Event Scope',
             hintText: 'Select Event Scope',
           ),
-          items: ScopeTypes.values.map((scopeType) {
-            return DropdownMenuItem<ScopeTypes>(
-              value: scopeType,
-              child: Text(scopeType.label),
-            );
-          }).toList(),
+          // hide private option for now
+          items: ScopeTypes.values
+              .where((scopeType) => scopeType != ScopeTypes.private)
+              .map((scopeType) {
+                return DropdownMenuItem<ScopeTypes>(
+                  value: scopeType,
+                  child: Text(scopeType.label),
+                );
+              })
+              .toList(),
           onChanged: (val) {
             if (val != null) {
               widget.onScopeChanged(val);

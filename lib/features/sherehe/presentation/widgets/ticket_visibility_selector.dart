@@ -59,12 +59,16 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
             helperMaxLines: 2,
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
-          items: ScopeTypes.values.map((scopeType) {
-            return DropdownMenuItem(
-              value: scopeType,
-              child: Text(scopeType.label),
-            );
-          }).toList(),
+          // hide private option for now
+          items: ScopeTypes.values
+              .where((scopeType) => scopeType != ScopeTypes.private)
+              .map((scopeType) {
+                return DropdownMenuItem<ScopeTypes>(
+                  value: scopeType,
+                  child: Text(scopeType.label),
+                );
+              })
+              .toList(),
           onChanged: (val) {
             widget.onScopeChanged(val);
           },
