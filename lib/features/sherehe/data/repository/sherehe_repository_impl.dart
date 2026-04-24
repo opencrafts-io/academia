@@ -71,7 +71,7 @@ class ShereheRepositoryImpl implements ShereheRepository {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<Ticket> tickets,
-    required List<String> institutions,
+    List<int>? institutions,
     required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
