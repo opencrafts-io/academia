@@ -19,7 +19,7 @@ class Event extends Equatable {
   final String updatedAt;
   final String? deletedAt;
   final String scope;
-  final List<String>? institutions;
+  final List<int>? institutions;
   final PaymentInfo? paymentInfo;
 
   const Event({
@@ -62,7 +62,7 @@ class Event extends Equatable {
     String? updatedAt,
     String? deletedAt,
     String? scope,
-    List<String>? institutions,
+    List<int>? institutions,
     PaymentInfo? paymentInfo,
   }) {
     return Event(

@@ -194,7 +194,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     File? eventPosterImage,
     File? eventBannerImage,
     required List<TicketData> tickets,
-    required List<String> institutions,
+    List<int>? institutions,
     required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
@@ -211,7 +211,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'start_date': eventStartDate,
         'end_date': eventEndDate,
         'organizer_id': organizerId,
-        'event_genre': eventGenre,
+        'event_genre': jsonEncode(eventGenre),
         'tickets': jsonEncode(
           tickets.map((ticket) {
             final json = ticket.toJson();
@@ -219,7 +219,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
             return json;
           }).toList(),
         ),
-        'institutions': institutions,
+        if (institutions != null && institutions.isNotEmpty)
+          'institutions': jsonEncode(institutions),
         'scope': scope,
 
         if (eventCardImage != null)

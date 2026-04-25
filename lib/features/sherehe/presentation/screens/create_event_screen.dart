@@ -407,7 +407,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventGenre: _selectedGenres,
         tickets: _tickets.map((ticketUI) => ticketUI.ticket).toList(),
         institutions: _selectedEventInstitutions
-            .map((e) => e.institutionId.toString())
+            .map((e) => e.institutionId)
             .toList(),
         scope: _selectedEventScopeType?.toBackend ?? '',
         selectedPaymentType: _selectedPaymentType,
