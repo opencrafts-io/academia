@@ -211,7 +211,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         'start_date': eventStartDate,
         'end_date': eventEndDate,
         'organizer_id': organizerId,
-        'event_genre': eventGenre,
+        'event_genre': jsonEncode(eventGenre),
         'tickets': jsonEncode(
           tickets.map((ticket) {
             final json = ticket.toJson();
