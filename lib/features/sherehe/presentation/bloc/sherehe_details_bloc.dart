@@ -8,9 +8,12 @@ part 'sherehe_details_state.dart';
 class ShereheDetailsBloc
     extends Bloc<ShereheDetailsEvent, ShereheDetailsState> {
   final GetSpecificEvent getSpecificEventUseCase;
+  final GetEventByInviteUsecase getEventByInviteUsecase;
 
-  ShereheDetailsBloc({required this.getSpecificEventUseCase})
-    : super(ShereheDetailsInitial()) {
+  ShereheDetailsBloc({
+    required this.getSpecificEventUseCase,
+    required this.getEventByInviteUsecase,
+  }) : super(ShereheDetailsInitial()) {
     on<LoadShereheDetails>(_onLoadShereheDetails);
   }
 
@@ -23,10 +26,25 @@ class ShereheDetailsBloc
       return;
     }
 
+    if (event.invite != null) {
+      final result = await getEventByInviteUsecase(invite: event.invite!);
+
+      result.fold(
+        (failure) {
+          emit(ShereheDetailsError(message: failure.message));
+        },
+        (event) {
+          emit(ShereheDetailsLoaded(event: event));
+        },
+      );
+    }
+
+    // if initialEvent and invite are both null, then we try to fetch the event by id
+
     emit(ShereheDetailsLoading());
 
     final result = await getSpecificEventUseCase.execute(
-      eventId: event.eventId,
+      eventId: event.eventId ?? '',
     );
 
     result.fold(

@@ -31,13 +31,12 @@ class PurchaseError extends TicketPaymentState {
 }
 
 class FreeTicketBooked extends TicketPaymentState {
-  final String attendeeId;
   final String message;
 
-  const FreeTicketBooked({required this.attendeeId, required this.message});
+  const FreeTicketBooked({required this.message});
 
   @override
-  List<Object?> get props => [attendeeId, message];
+  List<Object?> get props => [message];
 }
 
 class ConfirmPaymentLoading extends TicketPaymentState {

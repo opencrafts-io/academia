@@ -63,13 +63,16 @@ class ShereheRepositoryImpl implements ShereheRepository {
     required String eventDescription,
     String? eventUrl,
     required String eventLocation,
-    required String eventDate,
+    required String eventStartDate,
+    required String eventEndDate,
     required String organizerId,
     required List<String> eventGenre,
     File? eventCardImage,
     File? eventPosterImage,
     File? eventBannerImage,
     required List<Ticket> tickets,
+    List<int>? institutions,
+    required String scope,
     PaymentTypes? selectedPaymentType,
     String? paybillNumber,
     String? accountReference,
@@ -80,13 +83,16 @@ class ShereheRepositoryImpl implements ShereheRepository {
       eventName: eventName,
       eventDescription: eventDescription,
       eventLocation: eventLocation,
-      eventDate: eventDate,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
       organizerId: organizerId,
       eventGenre: eventGenre,
       eventCardImage: eventCardImage,
       eventPosterImage: eventPosterImage,
       eventBannerImage: eventBannerImage,
       tickets: tickets.map((ticket) => ticket.toModel()).toList(),
+      institutions: institutions,
+      scope: scope,
       selectedPaymentType: selectedPaymentType,
       paybillNumber: paybillNumber,
       accountReference: accountReference,
@@ -124,6 +130,17 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, Event>> getEventByInvite({
+    required String invite,
+  }) async {
+    final result = await remoteDataSource.getEventByInvite(invite: invite);
+    return result.fold(
+      (failure) => left(failure),
+      (eventData) => right(eventData.toEntity()),
+    );
+  }
+
+  @override
   Future<Either<Failure, Attendee>> getAttendeeByID(String id) async {
     final result = await remoteDataSource.getAttendeeByID(id);
     return result.fold(
@@ -140,6 +157,17 @@ class ShereheRepositoryImpl implements ShereheRepository {
     return result.fold(
       (failure) => left(failure),
       (tickets) => right(tickets.map((ticket) => ticket.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Ticket>> getTicketByInvite({
+    required String invite,
+  }) async {
+    final result = await remoteDataSource.getTicketByInvite(invite: invite);
+    return result.fold(
+      (failure) => left(failure),
+      (ticketData) => right(ticketData.toEntity()),
     );
   }
 

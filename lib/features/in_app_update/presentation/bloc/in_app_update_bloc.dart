@@ -16,12 +16,12 @@ class InAppUpdateBloc extends Bloc<InAppUpdateEvent, InAppUpdateState> {
       try {
         await Posthog().reloadFeatureFlags();
 
-        final packageInfo = await PackageInfo.fromPlatform();
-        final currentVersion = Version.parse(packageInfo.version);
-        final Object? rawPayload = await Posthog().getFeatureFlagResult(
+        final result = await Posthog().getFeatureFlagResult(
           'app-upgrade-config',
         );
 
+        if (result == null) return;
+        final rawPayload = result.payload;
         if (rawPayload is! Map) {
           return;
         }
@@ -30,6 +30,9 @@ class InAppUpdateBloc extends Bloc<InAppUpdateEvent, InAppUpdateState> {
 
         final platformKey = Platform.isAndroid ? 'android' : 'ios';
         final config = payload[platformKey] as Map<String, dynamic>?;
+
+        final packageInfo = await PackageInfo.fromPlatform();
+        final currentVersion = Version.parse(packageInfo.version);
 
         if (config != null) {
           final minVersionStr = config['min_version'] as String;

@@ -7,12 +7,12 @@ abstract class UserTicketSelectionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchTicketsByEventId extends UserTicketSelectionEvent {
-  final String eventId;
-  final String accountId;
+class FetchTickets extends UserTicketSelectionEvent {
+  final String? eventId;
+  final String? invite;
 
-  const FetchTicketsByEventId({required this.eventId, required this.accountId});
+  const FetchTickets({this.eventId, this.invite});
 
   @override
-  List<Object?> get props => [eventId];
+  List<Object?> get props => [eventId, invite];
 }

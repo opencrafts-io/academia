@@ -1328,9 +1328,11 @@ packages:
   magnet:
     dependency: "direct main"
     description:
-      path: "packages/magnet"
-      relative: true
-    source: path
+      path: "."
+      ref: "v2.0.0"
+      resolved-ref: "46890cb697a9d1b2e952c4f3493bbbe459e88f78"
+      url: "https://github.com/opencrafts-io/magnet.git"
+    source: git
     version: "0.0.1"
   matcher:
     dependency: transitive

@@ -1,17 +1,23 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TicketSelectionPage extends StatefulWidget {
-  final List<TicketUI> initialTickets;
+  final List<TicketUI> tickets;
+  final Function(TicketUI ticket) onAddTicket;
+  final Function(TicketUI ticket) onRemoveTicket;
   final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
 
   const TicketSelectionPage({
     super.key,
-    required this.initialTickets,
+    required this.tickets,
+    required this.onAddTicket,
+    required this.onRemoveTicket,
     required this.onContinue,
     required this.onSkip,
     required this.onPrevious,
@@ -27,16 +33,11 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   final _ticketNameController = TextEditingController();
   final _ticketPriceController = TextEditingController();
   final _ticketQtyController = TextEditingController();
+  TicketGroupTypes? _selectedTicketGroupType;
+  ScopeTypes? _selectedScopeType;
 
-  late List<TicketUI> _tickets;
-  bool _isPublic = true;
-  final Set<Institution> _selectedInstitutions = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _tickets = List.of(widget.initialTickets);
-  }
+  Set<Institution> _selectedInstitutions = {};
+  bool _showTickets = false;
 
   @override
   void dispose() {
@@ -47,7 +48,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   void _addTicket() {
-    if (!_isPublic && _selectedInstitutions.isEmpty) {
+    if (_selectedScopeType == ScopeTypes.institution &&
+        _selectedInstitutions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -63,25 +65,31 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: _ticketNameController.text.trim(),
         ticketPrice: int.tryParse(_ticketPriceController.text.trim()) ?? 0,
         ticketQuantity: int.tryParse(_ticketQtyController.text.trim()) ?? 0,
-        institutionIds: _isPublic
+        ticketFor: _selectedTicketGroupType?.toBackend ?? 0,
+        institutionIds: _selectedScopeType != ScopeTypes.institution
             ? null
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
+        scope: _selectedScopeType?.toBackend,
+      );
+
+      widget.onAddTicket(
+        TicketUI(
+          ticket: ticket,
+          institutions: List.from(_selectedInstitutions),
+          selectedTicketGroupType: _selectedTicketGroupType,
+          selectedScopeType: _selectedScopeType,
+        ),
       );
 
       setState(() {
-        _tickets.add(
-          TicketUI(
-            ticket: ticket,
-            isPublic: _isPublic,
-            institutions: List.from(_selectedInstitutions),
-          ),
-        );
-        _ticketNameController.clear();
-        _ticketPriceController.clear();
-        _ticketQtyController.clear();
-        _isPublic = true;
-        _selectedInstitutions.clear();
+        _showTickets = true;
       });
+      _ticketNameController.clear();
+      _ticketPriceController.clear();
+      _ticketQtyController.clear();
+      _selectedTicketGroupType = null;
+      _selectedInstitutions.clear();
+      _selectedScopeType = null;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -91,25 +99,6 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ),
       );
     }
-  }
-
-  Future<void> _editTicketDialog(int index) async {
-    final current = _tickets[index];
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) {
-        return TicketEditorSheet(
-          initial: current,
-          onSave: (updated) {
-            setState(() {
-              _tickets[index] = updated;
-            });
-          },
-        );
-      },
-    );
   }
 
   Future<void> _showFreeTicketQuantityDialog() async {
@@ -142,7 +131,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
               ),
               FilledButton(
                 onPressed: () {
-                  if (freeTicketQuantityDialogFormKey.currentState!.validate()) {
+                  if (freeTicketQuantityDialogFormKey.currentState!
+                      .validate()) {
                     final qty = int.tryParse(qtyController.text.trim());
                     Navigator.pop(context, qty);
                   }
@@ -160,23 +150,30 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketName: "Free Ticket",
         ticketPrice: 0,
         ticketQuantity: result,
+        ticketFor: 1,
         institutionIds: [],
+        scope: ScopeTypes.public.toBackend,
       );
 
       widget.onContinue([
-        TicketUI(ticket: freeTicket, isPublic: true, institutions: []),
+        TicketUI(
+          ticket: freeTicket,
+          institutions: [],
+          selectedTicketGroupType: null,
+          selectedScopeType: null,
+        ),
       ]);
     }
   }
 
   void _submit() {
-    if (_tickets.isEmpty) {
+    if (widget.tickets.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please add at least one ticket")),
       );
       return;
     }
-    widget.onContinue(_tickets);
+    widget.onContinue(widget.tickets);
   }
 
   @override
@@ -189,7 +186,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
+              if (widget.tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Text(
@@ -214,80 +211,106 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 ),
                 const SizedBox(height: 16),
 
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextFormField(
-                        controller: _ticketNameController,
-                        decoration: const InputDecoration(
-                          labelText: "Ticket Name",
-                        ),
-                        validator: (v) =>
-                            v == null || v.isEmpty ? "Enter name" : null,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        controller: _ticketPriceController,
-                        decoration: const InputDecoration(labelText: "Price"),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          final num? parsed = num.tryParse(value ?? "");
-                          if (parsed == null) return "Price?";
-                          if (parsed <= 0) return "Invalid";
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        controller: _ticketQtyController,
-                        decoration: const InputDecoration(
-                          labelText: "Quantity",
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          final int? parsed = int.tryParse(value ?? "");
-                          if (parsed == null || parsed <= 0) return "Qty?";
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
+                TextFormField(
+                  controller: _ticketNameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Name',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket name',
+                  ),
+
+                  validator: (v) => v == null || v.isEmpty
+                      ? "Please enter ticket name"
+                      : null,
+                ),
+
+                const SizedBox(height: 12),
+
+                TextFormField(
+                  controller: _ticketPriceController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Price',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket price',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final num? parsed = num.tryParse(value ?? "");
+                    if (parsed == null) return "Please enter Ticket Price";
+                    if (parsed <= 0) return "Please enter a valid Ticket Price";
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _ticketQtyController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Ticket Quantity',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: 'Enter ticket quantity',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final int? parsed = int.tryParse(value ?? "");
+                    if (parsed == null) return "Please enter Ticket Quantity";
+                    if (parsed <= 0) {
+                      return "Ticket Quantity must be at least 1";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField(
+                  initialValue: _selectedTicketGroupType,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: "Ticket Type",
+                    hintText: "Select Ticket type",
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  items: TicketGroupTypes.values.map((type) {
+                    return DropdownMenuItem<TicketGroupTypes>(
+                      value: type,
+                      child: Text(type.label),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedTicketGroupType = val;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) return "Please Select ticket type";
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 TicketVisibilitySelector(
-                  isPublic: _isPublic,
+                  selectedScopeType: _selectedScopeType,
                   selectedInstitutions: _selectedInstitutions.toList(),
-
-                  onVisibilityChanged: (isPublic) {
+                  onScopeChanged: (scope) {
                     setState(() {
-                      _isPublic = isPublic ?? true;
-                      if (_isPublic) _selectedInstitutions.clear();
+                      _selectedScopeType = scope;
+                      if (_selectedScopeType != ScopeTypes.institution) {
+                        _selectedInstitutions.clear();
+                      }
                     });
                   },
-                  onInstitutionSelected: (inst, selected) {
+                  onInstitutionsChanged: (institutions) {
                     setState(() {
-                      if (selected) {
-                        if (!_selectedInstitutions.any(
-                          (e) => e.institutionId == inst.institutionId,
-                        )) {
-                          _selectedInstitutions.add(inst);
-                        }
-                      } else {
-                        _selectedInstitutions.removeWhere(
-                          (e) => e.institutionId == inst.institutionId,
-                        );
+                      if (institutions != null) {
+                        _selectedInstitutions = institutions.toSet();
                       }
                     });
                   },
                 ),
-
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
@@ -301,139 +324,83 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
 
               const SizedBox(height: 24),
 
-              Text(
-                "Added Tickets",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _showTickets = !_showTickets;
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Added Tickets",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 12,
+                          child: Text(
+                            widget.tickets.length.toString(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      _showTickets
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
 
-              if (_tickets.isEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: const Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.confirmation_number_outlined, size: 64),
-                        SizedBox(height: 12),
-                        Text("No tickets added yet"),
-                      ],
+              if (_showTickets) ...[
+                if (widget.tickets.isEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: const Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.confirmation_number_outlined, size: 64),
+                          SizedBox(height: 12),
+                          Text("No tickets added yet"),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ] else
-                Column(
-                  children: _tickets.map((ui) {
-                    final t = ui.ticket;
-                    final isPublic = ui.isPublic;
-                    final institutions = ui.institutions;
+                ] else
+                  Column(
+                    children: widget.tickets.map((ticket) {
+                      return AddedTicketsCard(
+                        addedTicket: ticket,
+                        // onEditTicket: () =>
+                        //     _editTicketDialog(widget.tickets.indexOf(ticket)),
+                        onEditTicket: () async {
+                          final updatedTicket = await context.push(
+                            EditAddedTicketRoute().location,
+                            extra: ticket,
+                          );
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Ticket main info
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  t.ticketName,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () => _editTicketDialog(
-                                        _tickets.indexOf(ui),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () =>
-                                          setState(() => _tickets.remove(ui)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Price: ${t.ticketPrice} • Qty: ${t.ticketQuantity}",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: 8),
-
-                            // Visibility info
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Chip(
-                                  label: Text(
-                                    isPublic ? "Everyone" : "Restricted",
-                                  ),
-                                  backgroundColor: isPublic
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.primaryContainer
-                                      : Theme.of(
-                                          context,
-                                        ).colorScheme.secondaryContainer,
-                                  labelStyle: TextStyle(
-                                    color: isPublic
-                                        ? Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimaryContainer
-                                        : Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                if (!isPublic && institutions.isNotEmpty)
-                                  Wrap(
-                                    spacing: 8,
-                                    runSpacing: 6,
-                                    children: institutions.map((inst) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.tertiaryContainer,
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          inst.name,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiaryContainer,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                          if (updatedTicket != null &&
+                              updatedTicket is TicketUI) {
+                            setState(() {
+                              widget.tickets[widget.tickets.indexOf(ticket)] =
+                                  updatedTicket;
+                            });
+                          }
+                        },
+                        onRemoveTicket: () => widget.onRemoveTicket(ticket),
+                      );
+                    }).toList(),
+                  ),
+              ],
 
               const SizedBox(height: 24),
 
@@ -447,7 +414,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     ),
                   ),
 
-                  if (_tickets.isEmpty)
+                  if (widget.tickets.isEmpty)
                     Expanded(
                       child: FilledButton(
                         onPressed: _showFreeTicketQuantityDialog,
@@ -455,7 +422,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       ),
                     ),
 
-                  if (_tickets.isNotEmpty)
+                  if (widget.tickets.isNotEmpty)
                     Expanded(
                       child: FilledButton(
                         onPressed: _submit,
