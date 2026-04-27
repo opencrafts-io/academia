@@ -203,4 +203,32 @@ class ChirpRepositoryImpl implements ChirpRepository {
       ),
     );
   }
+
+  @override
+  Future<Either<Failure, Post>> toggleLike({
+    required Post post,
+    required bool isCurrentlyLiked,
+    required String voterId,
+  }) async {
+    final result = await remoteDataSource.toggleLike(
+      postId: post.id,
+      isCurrentlyLiked: isCurrentlyLiked,
+      voterId: voterId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (data) {
+        final updatedPost = post.copyWith(
+          upvotes: (data['upvotes'] as int?) ??
+              (isCurrentlyLiked
+                  ? (post.upvotes - 1).clamp(0, double.maxFinite.toInt())
+                  : post.upvotes + 1),
+          isLikedByMe: data['is_liked'] as bool? ?? !isCurrentlyLiked,
+        );
+        // Best-effort local cache update
+        localDataSource.createOrUpdatePost(updatedPost.toData());
+        return right(updatedPost);
+      },
+    );
+  }
 }

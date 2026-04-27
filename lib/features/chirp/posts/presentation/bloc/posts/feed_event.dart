@@ -54,9 +54,18 @@ class MarkPostAsViewed extends FeedEvent {
 }
 
 class ToggleLikePost extends FeedEvent {
-  final String postId;
+  final Post post;
   final bool isCurrentlyLiked;
-  ToggleLikePost({required this.postId, required this.isCurrentlyLiked});
+  final String voterId;
+  /// The state before the optimistic update — used to restore on failure.
+  final FeedState? previousState;
+
+  ToggleLikePost({
+    required this.post,
+    required this.isCurrentlyLiked,
+    required this.voterId,
+    this.previousState,
+  });
 }
 
 class UpdatePostInFeed extends FeedEvent {

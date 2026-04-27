@@ -16,9 +16,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final CreatePostAttachmentUsecase createPostAttachment;
   final DeletePostUsecase deletePost;
   final GetPostsFromCommunityUsecase getPostsFromCommunityUsecase;
+  final LikePostUsecase likePost;
   final Logger _logger = Logger();
-  // final CachePostsUsecase cachePosts;
-  // final LikePostUsecase likePost;
 
   FeedBloc({
     required this.getFeedPosts,
@@ -28,8 +27,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.createPostAttachment,
     required this.deletePost,
     required this.getPostsFromCommunityUsecase,
-    // required this.cachePosts,
-    // required this.likePost,
+    required this.likePost,
   }) : super(FeedInitial()) {
     on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
     on<LoadFeedEvent>(_onLoadFeed);
@@ -37,8 +35,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<GetPostDetailEvent>(_onFetchPostDetail);
     on<MarkPostAsViewed>(_onMarkPostAsViewed);
     on<UpdatePostInFeed>(_onUpdatePostInFeed);
-
-    //   // Helper method to recursively find parent comment and add reply
+    on<ToggleLikePost>(_onToggleLikePost);
     //   List<PostReply>? addReplyToParent(
     //     List<PostReply> replies,
     //     String parentId,
@@ -550,5 +547,36 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
       emit(currentState.copyWith(posts: updatedPosts));
     }
+  }
+
+  Future<void> _onToggleLikePost(
+    ToggleLikePost event,
+    Emitter<FeedState> emit,
+  ) async {
+    final result = await likePost(
+      post: event.post,
+      isCurrentlyLiked: event.isCurrentlyLiked,
+      voterId: event.voterId,
+    );
+
+    result.fold(
+      (failure) {
+        _logger.e('Failed to toggle like: ${failure.message}');
+        // Emit a PostLikeError so caller can roll back optimistic UI
+        emit(PostLikeError(post: event.post, message: failure.message));
+        // Restore previous state so the feed is not stuck
+        if (event.previousState != null) emit(event.previousState!);
+      },
+      (updatedPost) {
+        // Update the post in feed state if it's still visible
+        if (state is FeedLoaded) {
+          final currentState = state as FeedLoaded;
+          final updatedPosts = currentState.posts.map((p) {
+            return p.id == updatedPost.id ? updatedPost : p;
+          }).toList();
+          emit(currentState.copyWith(posts: updatedPosts));
+        }
+      },
+    );
   }
 }

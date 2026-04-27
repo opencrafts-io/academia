@@ -4,12 +4,13 @@ import 'package:equatable/equatable.dart';
 
 class Post extends Equatable {
   final int id;
-  final Community community; 
+  final Community community;
   final String authorId;
   final String title;
   final String content;
   final int upvotes;
   final int downvotes;
+  final bool isLikedByMe;
   final List<Attachments> attachments;
   final int viewsCount;
   final int commentCount;
@@ -25,6 +26,7 @@ class Post extends Equatable {
     required this.content,
     required this.upvotes,
     required this.downvotes,
+    this.isLikedByMe = false,
     this.attachments = const [],
     required this.viewsCount,
     required this.commentCount,
@@ -41,6 +43,7 @@ class Post extends Equatable {
     String? content,
     int? upvotes,
     int? downvotes,
+    bool? isLikedByMe,
     List<Attachments>? attachments,
     int? viewsCount,
     int? commentCount,
@@ -56,6 +59,7 @@ class Post extends Equatable {
       content: content ?? this.content,
       upvotes: upvotes ?? this.upvotes,
       downvotes: downvotes ?? this.downvotes,
+      isLikedByMe: isLikedByMe ?? this.isLikedByMe,
       attachments: attachments ?? this.attachments,
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
@@ -74,6 +78,7 @@ class Post extends Equatable {
     content,
     upvotes,
     downvotes,
+    isLikedByMe,
     attachments,
     viewsCount,
     commentCount,

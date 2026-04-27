@@ -544,9 +544,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
   );
 
-  // sl.registerFactory(
-  //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
+  sl.registerFactory(
+    () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
   sl.registerFactory(
     () => FeedBloc(
       getPostsFromCommunityUsecase: sl<GetPostsFromCommunityUsecase>(),
@@ -556,7 +556,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
-      // likePost: sl.get<LikePostUsecase>(),
+      likePost: sl.get<LikePostUsecase>(),
       // addComment: sl.get<CommentUsecase>(),
       // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),

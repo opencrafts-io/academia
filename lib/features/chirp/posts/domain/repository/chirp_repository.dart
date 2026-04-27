@@ -51,4 +51,12 @@ abstract class ChirpRepository {
     required int page,
     required int pageSize,
   });
+
+  /// Toggles like on a post. Returns the updated [Post] with new upvote count
+  /// and [isLikedByMe] status.
+  Future<Either<Failure, Post>> toggleLike({
+    required Post post,
+    required bool isCurrentlyLiked,
+    required String voterId,
+  });
 }

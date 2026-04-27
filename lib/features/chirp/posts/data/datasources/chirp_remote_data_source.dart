@@ -103,7 +103,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     required String viewerId,
   }) async {
     try {
-      /// Safely ignore check  whether user is connected to the internet 
+      /// Safely ignore check  whether user is connected to the internet
       /// since this isnt important much .. used only for stats
       await dioClient.dio.post(
         '/$servicePrefix/posts/$postId/viewed/',
@@ -395,6 +395,77 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         ServerFailure(
           message:
               "An unexpected error occurred while fetching community posts",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  /// Toggles a like on a post. Pass [isCurrentlyLiked] = true to unlike.
+  /// Returns a map with: {'upvotes': int, 'is_liked': bool}
+  Future<Either<Failure, Map<String, dynamic>>> toggleLike({
+    required int postId,
+    required bool isCurrentlyLiked,
+    required String voterId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final endpoint = isCurrentlyLiked
+          ? '/$servicePrefix/posts/$postId/vote/redact/'
+          : '/$servicePrefix/posts/$postId/vote/';
+
+      final body = {
+        'voter_id': voterId,
+        'post_id': postId,
+        'value': isCurrentlyLiked ? -1 : 1,
+      };
+
+      _logger.i(
+        '[toggleLike] ${isCurrentlyLiked ? "DELETE" : "POST"} $endpoint body=$body',
+      );
+
+      final Response<dynamic> res;
+      if (isCurrentlyLiked) {
+        res = await dioClient.dio.delete(endpoint, data: body);
+      } else {
+        res = await dioClient.dio.post(endpoint, data: body);
+      }
+
+      _logger.i('[toggleLike] status=${res.statusCode} body=${res.data}');
+
+      // 200 (liked), 201 (created like), 204 (unliked)
+      if (res.statusCode == 200 ||
+          res.statusCode == 201 ||
+          res.statusCode == 204) {
+        final data = res.data is Map<String, dynamic>
+            ? res.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        _logger.i('[toggleLike] success — parsed data: $data');
+        return right({
+          'upvotes': data['upvotes'] ?? data['likes_count'],
+          'is_liked': !isCurrentlyLiked,
+        });
+      }
+
+      _logger.e(
+        '[toggleLike] Unexpected status ${res.statusCode} — body: ${res.data}',
+      );
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      _logger.e(
+        '[toggleLike] DioException: ${e.response?.statusCode} ${e.response?.data}',
+      );
+      return handleDioError(e);
+    } catch (e) {
+      _logger.e('[toggleLike] Unexpected error: $e');
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while toggling like",
           error: e,
         ),
       );
