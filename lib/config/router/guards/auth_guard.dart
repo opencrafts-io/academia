@@ -8,9 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AuthGuard implements RouteGuard {
+  const AuthGuard();
   @override
   FutureOr<String?> check(BuildContext context, GoRouterState state) {
-    final authState = context.read()<AuthBloc>().state;
+    final authState = context.read<AuthBloc>().state;
 
     // Define which location represents the "Entry Point"
     final String loginLocation = AuthRoute().location;

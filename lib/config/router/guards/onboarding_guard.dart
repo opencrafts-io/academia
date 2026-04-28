@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class OnboardingGuard implements RouteGuard {
+  const OnboardingGuard();
   @override
   FutureOr<String?> check(BuildContext context, GoRouterState state) {
     final profileState = context.read<ProfileBloc>().state;
