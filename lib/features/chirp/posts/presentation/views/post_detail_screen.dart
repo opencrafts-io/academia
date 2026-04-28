@@ -22,6 +22,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
   Comment? _replyingTo;
   bool isAddingComment = false;
 
+  /// Stores the post fetched via deep-link so we don't re-render
+  Post? _resolvedPost;
+
   @override
   void dispose() {
     _controller.dispose();
@@ -80,9 +83,11 @@ class _PostDetailPageState extends State<PostDetailPage> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context
-            .read<FeedBloc>()
-            .add(GetPostDetailEvent(postId: widget.postId));
+        if (mounted) {
+          context
+              .read<FeedBloc>()
+              .add(GetPostDetailEvent(postId: widget.postId));
+        }
       });
     }
   }
@@ -308,98 +313,107 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // If the post was passed directly (normal feed tap), render immediately
+    // If the post was passed directly (normal feed tap), render immediately.
     if (widget.initialPost != null) {
       return _buildPostContent(widget.initialPost!);
     }
 
-    // Otherwise, wait for FeedBloc to fetch it via deeplink
-    return BlocBuilder<FeedBloc, FeedState>(
-      builder: (context, state) {
-        if (state is PostDetailLoaded) {
-          // Trigger comment load once post is available
+    if (_resolvedPost != null) {
+      return _buildPostContent(_resolvedPost!);
+    }
+
+    return BlocListener<FeedBloc, FeedState>(
+      listener: (_, state) {
+        if (state is PostDetailLoaded && _resolvedPost == null) {
+          final postId = state.post.id;
+          // Store the post so subsequent FeedBloc changes don't wipe the UI.
+          setState(() => _resolvedPost = state.post);
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
-              context
+              this.context
                   .read<CommentBloc>()
-                  .add(GetPostComments(postId: state.post.id));
+                  .add(GetPostComments(postId: postId));
             }
           });
-          return _buildPostContent(state.post);
         }
+      },
+      child: BlocBuilder<FeedBloc, FeedState>(
+        // Only rebuild while we are waiting for the post.
+        buildWhen: (_, state) =>
+            state is PostDetailLoading ||
+            state is PostDetailLoaded ||
+            state is PostDetailError,
+        builder: (context, state) {
+          if (state is PostDetailError) {
+            return PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, _) {
+                if (didPop) return;
+                _handleBack(context);
+              },
+              child: Scaffold(
+                appBar: AppBar(
+                  leading: BackButton(
+                    onPressed: () => _handleBack(context),
+                  ),
+                ),
+                body: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cloud_off_rounded,
+                          size: 64,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Failed to load post',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          state.message,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton.icon(
+                          onPressed: () => context.read<FeedBloc>().add(
+                            GetPostDetailEvent(postId: widget.postId),
+                          ),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Try again'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
 
-        if (state is PostDetailError) {
+          // PostDetailLoading or initial state — show spinner.
           return PopScope(
             canPop: false,
             onPopInvokedWithResult: (didPop, _) {
               if (didPop) return;
               _handleBack(context);
             },
-            child: Scaffold(
-              appBar: AppBar(
-                leading: BackButton(
-                  onPressed: () => _handleBack(context),
-                ),
-              ),
-              body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.cloud_off_rounded,
-                        size: 64,
-                        color:
-                            Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load post',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        state.message,
-                        style:
-                            Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 24),
-                      FilledButton.icon(
-                        onPressed: () => context
-                            .read<FeedBloc>()
-                            .add(
-                              GetPostDetailEvent(postId: widget.postId),
-                            ),
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Try again'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            child: const Scaffold(
+              body: Center(child: SpinningScallopIndicator()),
             ),
           );
-        }
-
-        // PostDetailLoading (or any other transitional state)
-        return PopScope(
-          canPop: false,
-          onPopInvokedWithResult: (didPop, _) {
-            if (didPop) return;
-            _handleBack(context);
-          },
-          child: const Scaffold(
-            body: Center(child: SpinningScallopIndicator()),
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 }
