@@ -574,35 +574,35 @@ class _PostCardState extends State<PostCard> {
                     builder: (context, post) {
                       return Row(
                         children: [
-                          PostLikeButton(
-                            upvotes: post.upvotes,
-                            isLiked: post.isLikedByMe,
-                            onTap: () {
-                              final profileState = context
-                                  .read<ProfileBloc>()
-                                  .state;
-                              if (profileState is! ProfileLoadedState) return;
-                              final cubit = context.read<PostCubit>();
-                              final previousFeedState = context
-                                  .read<FeedBloc>()
-                                  .state;
-                              cubit.toggleLikeOptimistic();
-                              context.read<FeedBloc>().add(
-                                ToggleLikePost(
-                                  post: post,
-                                  isCurrentlyLiked: post.isLikedByMe,
-                                  voterId: profileState.profile.id,
-                                  previousState: previousFeedState,
-                                ),
-                              );
-                            },
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            iconSize: 18,
-                          ),
-                          const SizedBox(width: 8),
+                          // PostLikeButton(
+                          //   upvotes: post.upvotes,
+                          //   isLiked: post.isLikedByMe,
+                          //   onTap: () {
+                          //     final profileState = context
+                          //         .read<ProfileBloc>()
+                          //         .state;
+                          //     if (profileState is! ProfileLoadedState) return;
+                          //     final cubit = context.read<PostCubit>();
+                          //     final previousFeedState = context
+                          //         .read<FeedBloc>()
+                          //         .state;
+                          //     cubit.toggleLikeOptimistic();
+                          //     context.read<FeedBloc>().add(
+                          //       ToggleLikePost(
+                          //         post: post,
+                          //         isCurrentlyLiked: post.isLikedByMe,
+                          //         voterId: profileState.profile.id,
+                          //         previousState: previousFeedState,
+                          //       ),
+                          //     );
+                          //   },
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 10,
+                          //     vertical: 6,
+                          //   ),
+                          //   iconSize: 18,
+                          // ),
+                          // const SizedBox(width: 8),
 
                           FilledButton.icon(
                             style: FilledButton.styleFrom(
@@ -630,77 +630,6 @@ class _PostCardState extends State<PostCard> {
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Shared like button used in both [PostCard] (feed) and [PostContentWidget] (detail).
-class PostLikeButton extends StatelessWidget {
-  final int upvotes;
-  final bool isLiked;
-  final VoidCallback onTap;
-
-  /// Override padding for compact contexts (e.g. the feed card).
-  final EdgeInsetsGeometry? padding;
-
-  /// Override icon size for compact contexts.
-  final double? iconSize;
-
-  const PostLikeButton({
-    super.key,
-    required this.upvotes,
-    required this.isLiked,
-    required this.onTap,
-    this.padding,
-    this.iconSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = isLiked
-        ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.onSurfaceVariant;
-
-    final effectivePadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
-    final effectiveIconSize = iconSize ?? 20;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: effectivePadding,
-        decoration: BoxDecoration(
-          color: isLiked
-              ? Theme.of(context).colorScheme.errorContainer.withAlpha(180)
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) =>
-                  ScaleTransition(scale: animation, child: child),
-              child: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                key: ValueKey(isLiked),
-                size: effectiveIconSize,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '$upvotes',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: color,
-                fontWeight: isLiked ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           ],

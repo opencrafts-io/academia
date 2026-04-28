@@ -1,7 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -223,32 +222,32 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                                   builder: (context, post) {
                                     return Row(
                                       children: [
-                                        PostLikeButton(
-                                          upvotes: post.upvotes,
-                                          isLiked: post.isLikedByMe,
-                                          onTap: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) return;
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            cubit.toggleLikeOptimistic();
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                isCurrentlyLiked:
-                                                    post.isLikedByMe,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
+                                        // PostLikeButton(
+                                        //   upvotes: post.upvotes,
+                                        //   isLiked: post.isLikedByMe,
+                                        //   onTap: () {
+                                        //     final profileState =
+                                        //         context.read<ProfileBloc>().state;
+                                        //     if (profileState
+                                        //         is! ProfileLoadedState) return;
+                                        //     final cubit =
+                                        //         context.read<PostCubit>();
+                                        //     final previousFeedState =
+                                        //         context.read<FeedBloc>().state;
+                                        //     cubit.toggleLikeOptimistic();
+                                        //     context.read<FeedBloc>().add(
+                                        //       ToggleLikePost(
+                                        //         post: post,
+                                        //         isCurrentlyLiked:
+                                        //             post.isLikedByMe,
+                                        //         voterId:
+                                        //             profileState.profile.id,
+                                        //         previousState: previousFeedState,
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // ),
+                                        // const SizedBox(width: 8),
                                         FilledButton.icon(
                                           style: FilledButton.styleFrom(
                                             padding: const EdgeInsets.all(2),
