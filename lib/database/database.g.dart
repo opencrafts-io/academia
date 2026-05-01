@@ -23036,6 +23036,729 @@ class StreakMilestoneCompanion extends UpdateCompanion<StreakMilestoneData> {
   }
 }
 
+class $TodoListsTable extends TodoLists
+    with TableInfo<$TodoListsTable, TodoList> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoListsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta = const VerificationMeta(
+    'localId',
+  );
+  @override
+  late final GeneratedColumn<int> localId = GeneratedColumn<int>(
+    'local_id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Color?, int> color =
+      GeneratedColumn<int>(
+        'color',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<Color?>($TodoListsTable.$convertercolorn);
+  static const VerificationMeta _isDefaultMeta = const VerificationMeta(
+    'isDefault',
+  );
+  @override
+  late final GeneratedColumn<bool> isDefault = GeneratedColumn<bool>(
+    'is_default',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_default" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, String> syncStatus =
+      GeneratedColumn<String>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.pending.name),
+      ).withConverter<SyncStatus>($TodoListsTable.$convertersyncStatus);
+  static const VerificationMeta _taskCountMeta = const VerificationMeta(
+    'taskCount',
+  );
+  @override
+  late final GeneratedColumn<int> taskCount = GeneratedColumn<int>(
+    'task_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastSyncedAtMeta = const VerificationMeta(
+    'lastSyncedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
+    'last_synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isPendingDeletionMeta = const VerificationMeta(
+    'isPendingDeletion',
+  );
+  @override
+  late final GeneratedColumn<bool> isPendingDeletion = GeneratedColumn<bool>(
+    'is_pending_deletion',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pending_deletion" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDirtyMeta = const VerificationMeta(
+    'isDirty',
+  );
+  @override
+  late final GeneratedColumn<bool> isDirty = GeneratedColumn<bool>(
+    'is_dirty',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    localId,
+    id,
+    title,
+    color,
+    isDefault,
+    syncStatus,
+    taskCount,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo_lists';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoList> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(
+        _localIdMeta,
+        localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(
+        _isDefaultMeta,
+        isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
+      );
+    }
+    if (data.containsKey('task_count')) {
+      context.handle(
+        _taskCountMeta,
+        taskCount.isAcceptableOrUnknown(data['task_count']!, _taskCountMeta),
+      );
+    }
+    if (data.containsKey('last_synced_at')) {
+      context.handle(
+        _lastSyncedAtMeta,
+        lastSyncedAt.isAcceptableOrUnknown(
+          data['last_synced_at']!,
+          _lastSyncedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('is_pending_deletion')) {
+      context.handle(
+        _isPendingDeletionMeta,
+        isPendingDeletion.isAcceptableOrUnknown(
+          data['is_pending_deletion']!,
+          _isPendingDeletionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_dirty')) {
+      context.handle(
+        _isDirtyMeta,
+        isDirty.isAcceptableOrUnknown(data['is_dirty']!, _isDirtyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  TodoList map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoList(
+      localId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}local_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      color: $TodoListsTable.$convertercolorn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}color'],
+        ),
+      ),
+      isDefault: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_default'],
+      )!,
+      syncStatus: $TodoListsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+      taskCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}task_count'],
+      )!,
+      lastSyncedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_synced_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      isPendingDeletion: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pending_deletion'],
+      )!,
+      isDirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_dirty'],
+      ),
+    );
+  }
+
+  @override
+  $TodoListsTable createAlias(String alias) {
+    return $TodoListsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Color, int> $convertercolor = const ColorConverter();
+  static TypeConverter<Color?, int?> $convertercolorn =
+      NullAwareTypeConverter.wrap($convertercolor);
+  static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
+      const EnumNameConverter<SyncStatus>(SyncStatus.values);
+}
+
+class TodoList extends DataClass implements Insertable<TodoList> {
+  final int localId;
+  final String? id;
+  final String title;
+  final Color? color;
+  final bool isDefault;
+  final SyncStatus syncStatus;
+  final int taskCount;
+  final DateTime? lastSyncedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final bool isPendingDeletion;
+  final bool? isDirty;
+  const TodoList({
+    required this.localId,
+    this.id,
+    required this.title,
+    this.color,
+    required this.isDefault,
+    required this.syncStatus,
+    required this.taskCount,
+    this.lastSyncedAt,
+    this.createdAt,
+    this.updatedAt,
+    required this.isPendingDeletion,
+    this.isDirty,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<int>(localId);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<int>(
+        $TodoListsTable.$convertercolorn.toSql(color),
+      );
+    }
+    map['is_default'] = Variable<bool>(isDefault);
+    {
+      map['sync_status'] = Variable<String>(
+        $TodoListsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    map['task_count'] = Variable<int>(taskCount);
+    if (!nullToAbsent || lastSyncedAt != null) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
+    if (!nullToAbsent || isDirty != null) {
+      map['is_dirty'] = Variable<bool>(isDirty);
+    }
+    return map;
+  }
+
+  TodoListsCompanion toCompanion(bool nullToAbsent) {
+    return TodoListsCompanion(
+      localId: Value(localId),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      title: Value(title),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      isDefault: Value(isDefault),
+      syncStatus: Value(syncStatus),
+      taskCount: Value(taskCount),
+      lastSyncedAt: lastSyncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncedAt),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      isPendingDeletion: Value(isPendingDeletion),
+      isDirty: isDirty == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDirty),
+    );
+  }
+
+  factory TodoList.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoList(
+      localId: serializer.fromJson<int>(json['localId']),
+      id: serializer.fromJson<String?>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      color: serializer.fromJson<Color?>(json['color']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      syncStatus: $TodoListsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<String>(json['syncStatus']),
+      ),
+      taskCount: serializer.fromJson<int>(json['taskCount']),
+      lastSyncedAt: serializer.fromJson<DateTime?>(json['lastSyncedAt']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
+      isDirty: serializer.fromJson<bool?>(json['isDirty']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
+      'id': serializer.toJson<String?>(id),
+      'title': serializer.toJson<String>(title),
+      'color': serializer.toJson<Color?>(color),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'syncStatus': serializer.toJson<String>(
+        $TodoListsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+      'taskCount': serializer.toJson<int>(taskCount),
+      'lastSyncedAt': serializer.toJson<DateTime?>(lastSyncedAt),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
+      'isDirty': serializer.toJson<bool?>(isDirty),
+    };
+  }
+
+  TodoList copyWith({
+    int? localId,
+    Value<String?> id = const Value.absent(),
+    String? title,
+    Value<Color?> color = const Value.absent(),
+    bool? isDefault,
+    SyncStatus? syncStatus,
+    int? taskCount,
+    Value<DateTime?> lastSyncedAt = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+    bool? isPendingDeletion,
+    Value<bool?> isDirty = const Value.absent(),
+  }) => TodoList(
+    localId: localId ?? this.localId,
+    id: id.present ? id.value : this.id,
+    title: title ?? this.title,
+    color: color.present ? color.value : this.color,
+    isDefault: isDefault ?? this.isDefault,
+    syncStatus: syncStatus ?? this.syncStatus,
+    taskCount: taskCount ?? this.taskCount,
+    lastSyncedAt: lastSyncedAt.present ? lastSyncedAt.value : this.lastSyncedAt,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+    isDirty: isDirty.present ? isDirty.value : this.isDirty,
+  );
+  TodoList copyWithCompanion(TodoListsCompanion data) {
+    return TodoList(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      color: data.color.present ? data.color.value : this.color,
+      isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      taskCount: data.taskCount.present ? data.taskCount.value : this.taskCount,
+      lastSyncedAt: data.lastSyncedAt.present
+          ? data.lastSyncedAt.value
+          : this.lastSyncedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      isPendingDeletion: data.isPendingDeletion.present
+          ? data.isPendingDeletion.value
+          : this.isPendingDeletion,
+      isDirty: data.isDirty.present ? data.isDirty.value : this.isDirty,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoList(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('color: $color, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('taskCount: $taskCount, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    localId,
+    id,
+    title,
+    color,
+    isDefault,
+    syncStatus,
+    taskCount,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoList &&
+          other.localId == this.localId &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.color == this.color &&
+          other.isDefault == this.isDefault &&
+          other.syncStatus == this.syncStatus &&
+          other.taskCount == this.taskCount &&
+          other.lastSyncedAt == this.lastSyncedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.isPendingDeletion == this.isPendingDeletion &&
+          other.isDirty == this.isDirty);
+}
+
+class TodoListsCompanion extends UpdateCompanion<TodoList> {
+  final Value<int> localId;
+  final Value<String?> id;
+  final Value<String> title;
+  final Value<Color?> color;
+  final Value<bool> isDefault;
+  final Value<SyncStatus> syncStatus;
+  final Value<int> taskCount;
+  final Value<DateTime?> lastSyncedAt;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<bool> isPendingDeletion;
+  final Value<bool?> isDirty;
+  const TodoListsCompanion({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.taskCount = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  });
+  TodoListsCompanion.insert({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    required String title,
+    this.color = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.taskCount = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  }) : title = Value(title);
+  static Insertable<TodoList> custom({
+    Expression<int>? localId,
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<int>? color,
+    Expression<bool>? isDefault,
+    Expression<String>? syncStatus,
+    Expression<int>? taskCount,
+    Expression<DateTime>? lastSyncedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? isPendingDeletion,
+    Expression<bool>? isDirty,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (color != null) 'color': color,
+      if (isDefault != null) 'is_default': isDefault,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (taskCount != null) 'task_count': taskCount,
+      if (lastSyncedAt != null) 'last_synced_at': lastSyncedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (isPendingDeletion != null) 'is_pending_deletion': isPendingDeletion,
+      if (isDirty != null) 'is_dirty': isDirty,
+    });
+  }
+
+  TodoListsCompanion copyWith({
+    Value<int>? localId,
+    Value<String?>? id,
+    Value<String>? title,
+    Value<Color?>? color,
+    Value<bool>? isDefault,
+    Value<SyncStatus>? syncStatus,
+    Value<int>? taskCount,
+    Value<DateTime?>? lastSyncedAt,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<bool>? isPendingDeletion,
+    Value<bool?>? isDirty,
+  }) {
+    return TodoListsCompanion(
+      localId: localId ?? this.localId,
+      id: id ?? this.id,
+      title: title ?? this.title,
+      color: color ?? this.color,
+      isDefault: isDefault ?? this.isDefault,
+      syncStatus: syncStatus ?? this.syncStatus,
+      taskCount: taskCount ?? this.taskCount,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+      isDirty: isDirty ?? this.isDirty,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<int>(localId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<int>(
+        $TodoListsTable.$convertercolorn.toSql(color.value),
+      );
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(
+        $TodoListsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    if (taskCount.present) {
+      map['task_count'] = Variable<int>(taskCount.value);
+    }
+    if (lastSyncedAt.present) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (isPendingDeletion.present) {
+      map['is_pending_deletion'] = Variable<bool>(isPendingDeletion.value);
+    }
+    if (isDirty.present) {
+      map['is_dirty'] = Variable<bool>(isDirty.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoListsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('color: $color, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('taskCount: $taskCount, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
@@ -23091,6 +23814,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $StreakMilestoneTable streakMilestone = $StreakMilestoneTable(
     this,
   );
+  late final $TodoListsTable todoLists = $TodoListsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -23130,6 +23854,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     leaderboardRank,
     streakActivity,
     streakMilestone,
+    todoLists,
   ];
 }
 
@@ -36689,6 +37414,336 @@ typedef $$StreakMilestoneTableProcessedTableManager =
       StreakMilestoneData,
       PrefetchHooks Function({bool activityID})
     >;
+typedef $$TodoListsTableCreateCompanionBuilder =
+    TodoListsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      required String title,
+      Value<Color?> color,
+      Value<bool> isDefault,
+      Value<SyncStatus> syncStatus,
+      Value<int> taskCount,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool?> isDirty,
+    });
+typedef $$TodoListsTableUpdateCompanionBuilder =
+    TodoListsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      Value<String> title,
+      Value<Color?> color,
+      Value<bool> isDefault,
+      Value<SyncStatus> syncStatus,
+      Value<int> taskCount,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool?> isDirty,
+    });
+
+class $$TodoListsTableFilterComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Color?, Color, int> get color =>
+      $composableBuilder(
+        column: $table.color,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, String>
+  get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get taskCount => $composableBuilder(
+    column: $table.taskCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TodoListsTableOrderingComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get taskCount => $composableBuilder(
+    column: $table.taskCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TodoListsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Color?, int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDefault =>
+      $composableBuilder(column: $table.isDefault, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SyncStatus, String> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<int> get taskCount =>
+      $composableBuilder(column: $table.taskCount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDirty =>
+      $composableBuilder(column: $table.isDirty, builder: (column) => column);
+}
+
+class $$TodoListsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoListsTable,
+          TodoList,
+          $$TodoListsTableFilterComposer,
+          $$TodoListsTableOrderingComposer,
+          $$TodoListsTableAnnotationComposer,
+          $$TodoListsTableCreateCompanionBuilder,
+          $$TodoListsTableUpdateCompanionBuilder,
+          (TodoList, BaseReferences<_$AppDataBase, $TodoListsTable, TodoList>),
+          TodoList,
+          PrefetchHooks Function()
+        > {
+  $$TodoListsTableTableManager(_$AppDataBase db, $TodoListsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoListsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoListsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoListsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<Color?> color = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<int> taskCount = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool?> isDirty = const Value.absent(),
+              }) => TodoListsCompanion(
+                localId: localId,
+                id: id,
+                title: title,
+                color: color,
+                isDefault: isDefault,
+                syncStatus: syncStatus,
+                taskCount: taskCount,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                required String title,
+                Value<Color?> color = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<int> taskCount = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool?> isDirty = const Value.absent(),
+              }) => TodoListsCompanion.insert(
+                localId: localId,
+                id: id,
+                title: title,
+                color: color,
+                isDefault: isDefault,
+                syncStatus: syncStatus,
+                taskCount: taskCount,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TodoListsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoListsTable,
+      TodoList,
+      $$TodoListsTableFilterComposer,
+      $$TodoListsTableOrderingComposer,
+      $$TodoListsTableAnnotationComposer,
+      $$TodoListsTableCreateCompanionBuilder,
+      $$TodoListsTableUpdateCompanionBuilder,
+      (TodoList, BaseReferences<_$AppDataBase, $TodoListsTable, TodoList>),
+      TodoList,
+      PrefetchHooks Function()
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
@@ -36770,4 +37825,6 @@ class $AppDataBaseManager {
       $$StreakActivityTableTableManager(_db, _db.streakActivity);
   $$StreakMilestoneTableTableManager get streakMilestone =>
       $$StreakMilestoneTableTableManager(_db, _db.streakMilestone);
+  $$TodoListsTableTableManager get todoLists =>
+      $$TodoListsTableTableManager(_db, _db.todoLists);
 }

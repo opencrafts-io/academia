@@ -103,4 +103,8 @@ extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate30To31(Migrator m) async {
     await m.database.customStatement("DROP TABLE IF EXISTS 'todo';");
   }
+
+  Future<void> migrate31To32(Migrator m) async {
+    m.createTable(todoLists);
+  }
 }

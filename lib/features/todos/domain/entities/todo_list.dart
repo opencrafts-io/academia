@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
 import 'package:academia/features/features.dart';
 
@@ -7,7 +5,7 @@ class TodoList extends Equatable {
   final int localId;
   final String? id;
   final String title;
-  final Color? color;
+  final int? color;
   final bool isDefault;
   final SyncStatus syncStatus;
   final int taskCount;

@@ -23,9 +23,10 @@ import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
+import 'package:academia/features/todos/data/models/todo_lists.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
-import 'package:flutter/material.dart' show Color;
+import 'dart:ui' show Color;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
@@ -107,6 +108,9 @@ part 'database.g.dart';
     // ---------------------- STREAKS -----------------------------
     StreakActivity,
     StreakMilestone,
+
+    // ----------------------- TODOS -------------------------------
+    TodoLists,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -117,7 +121,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 31;
+  int get schemaVersion => 32;
 
   @override
   MigrationStrategy get migration {
@@ -179,6 +183,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 30:
               await migrate30To31(m);
+              break;
+            case 31:
+              await migrate31To32(m);
               break;
           }
         }
