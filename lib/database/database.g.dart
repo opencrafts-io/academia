@@ -23080,15 +23080,15 @@ class $TodoListsTable extends TodoLists
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumnWithTypeConverter<Color?, int> color =
-      GeneratedColumn<int>(
-        'color',
-        aliasedName,
-        true,
-        type: DriftSqlType.int,
-        requiredDuringInsert: false,
-      ).withConverter<Color?>($TodoListsTable.$convertercolorn);
+  late final GeneratedColumn<int> color = GeneratedColumn<int>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isDefaultMeta = const VerificationMeta(
     'isDefault',
   );
@@ -23181,7 +23181,7 @@ class $TodoListsTable extends TodoLists
   late final GeneratedColumn<bool> isDirty = GeneratedColumn<bool>(
     'is_dirty',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
@@ -23232,6 +23232,12 @@ class $TodoListsTable extends TodoLists
       );
     } else if (isInserting) {
       context.missing(_titleMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
     }
     if (data.containsKey('is_default')) {
       context.handle(
@@ -23302,11 +23308,9 @@ class $TodoListsTable extends TodoLists
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
-      color: $TodoListsTable.$convertercolorn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}color'],
-        ),
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color'],
       ),
       isDefault: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -23341,7 +23345,7 @@ class $TodoListsTable extends TodoLists
       isDirty: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_dirty'],
-      ),
+      )!,
     );
   }
 
@@ -23350,9 +23354,6 @@ class $TodoListsTable extends TodoLists
     return $TodoListsTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<Color, int> $convertercolor = const ColorConverter();
-  static TypeConverter<Color?, int?> $convertercolorn =
-      NullAwareTypeConverter.wrap($convertercolor);
   static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
       const EnumNameConverter<SyncStatus>(SyncStatus.values);
 }
@@ -23361,7 +23362,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
   final int localId;
   final String? id;
   final String title;
-  final Color? color;
+  final int? color;
   final bool isDefault;
   final SyncStatus syncStatus;
   final int taskCount;
@@ -23369,7 +23370,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool isPendingDeletion;
-  final bool? isDirty;
+  final bool isDirty;
   const TodoList({
     required this.localId,
     this.id,
@@ -23382,7 +23383,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
     this.createdAt,
     this.updatedAt,
     required this.isPendingDeletion,
-    this.isDirty,
+    required this.isDirty,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -23393,9 +23394,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
     }
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || color != null) {
-      map['color'] = Variable<int>(
-        $TodoListsTable.$convertercolorn.toSql(color),
-      );
+      map['color'] = Variable<int>(color);
     }
     map['is_default'] = Variable<bool>(isDefault);
     {
@@ -23414,9 +23413,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
       map['updated_at'] = Variable<DateTime>(updatedAt);
     }
     map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
-    if (!nullToAbsent || isDirty != null) {
-      map['is_dirty'] = Variable<bool>(isDirty);
-    }
+    map['is_dirty'] = Variable<bool>(isDirty);
     return map;
   }
 
@@ -23441,9 +23438,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
           ? const Value.absent()
           : Value(updatedAt),
       isPendingDeletion: Value(isPendingDeletion),
-      isDirty: isDirty == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isDirty),
+      isDirty: Value(isDirty),
     );
   }
 
@@ -23456,7 +23451,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
       localId: serializer.fromJson<int>(json['localId']),
       id: serializer.fromJson<String?>(json['id']),
       title: serializer.fromJson<String>(json['title']),
-      color: serializer.fromJson<Color?>(json['color']),
+      color: serializer.fromJson<int?>(json['color']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
       syncStatus: $TodoListsTable.$convertersyncStatus.fromJson(
         serializer.fromJson<String>(json['syncStatus']),
@@ -23466,7 +23461,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
-      isDirty: serializer.fromJson<bool?>(json['isDirty']),
+      isDirty: serializer.fromJson<bool>(json['isDirty']),
     );
   }
   @override
@@ -23476,7 +23471,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
       'localId': serializer.toJson<int>(localId),
       'id': serializer.toJson<String?>(id),
       'title': serializer.toJson<String>(title),
-      'color': serializer.toJson<Color?>(color),
+      'color': serializer.toJson<int?>(color),
       'isDefault': serializer.toJson<bool>(isDefault),
       'syncStatus': serializer.toJson<String>(
         $TodoListsTable.$convertersyncStatus.toJson(syncStatus),
@@ -23486,7 +23481,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
-      'isDirty': serializer.toJson<bool?>(isDirty),
+      'isDirty': serializer.toJson<bool>(isDirty),
     };
   }
 
@@ -23494,7 +23489,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
     int? localId,
     Value<String?> id = const Value.absent(),
     String? title,
-    Value<Color?> color = const Value.absent(),
+    Value<int?> color = const Value.absent(),
     bool? isDefault,
     SyncStatus? syncStatus,
     int? taskCount,
@@ -23502,7 +23497,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
     bool? isPendingDeletion,
-    Value<bool?> isDirty = const Value.absent(),
+    bool? isDirty,
   }) => TodoList(
     localId: localId ?? this.localId,
     id: id.present ? id.value : this.id,
@@ -23515,7 +23510,7 @@ class TodoList extends DataClass implements Insertable<TodoList> {
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
-    isDirty: isDirty.present ? isDirty.value : this.isDirty,
+    isDirty: isDirty ?? this.isDirty,
   );
   TodoList copyWithCompanion(TodoListsCompanion data) {
     return TodoList(
@@ -23596,7 +23591,7 @@ class TodoListsCompanion extends UpdateCompanion<TodoList> {
   final Value<int> localId;
   final Value<String?> id;
   final Value<String> title;
-  final Value<Color?> color;
+  final Value<int?> color;
   final Value<bool> isDefault;
   final Value<SyncStatus> syncStatus;
   final Value<int> taskCount;
@@ -23604,7 +23599,7 @@ class TodoListsCompanion extends UpdateCompanion<TodoList> {
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<bool> isPendingDeletion;
-  final Value<bool?> isDirty;
+  final Value<bool> isDirty;
   const TodoListsCompanion({
     this.localId = const Value.absent(),
     this.id = const Value.absent(),
@@ -23667,7 +23662,7 @@ class TodoListsCompanion extends UpdateCompanion<TodoList> {
     Value<int>? localId,
     Value<String?>? id,
     Value<String>? title,
-    Value<Color?>? color,
+    Value<int?>? color,
     Value<bool>? isDefault,
     Value<SyncStatus>? syncStatus,
     Value<int>? taskCount,
@@ -23675,7 +23670,7 @@ class TodoListsCompanion extends UpdateCompanion<TodoList> {
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
     Value<bool>? isPendingDeletion,
-    Value<bool?>? isDirty,
+    Value<bool>? isDirty,
   }) {
     return TodoListsCompanion(
       localId: localId ?? this.localId,
@@ -23706,9 +23701,7 @@ class TodoListsCompanion extends UpdateCompanion<TodoList> {
       map['title'] = Variable<String>(title.value);
     }
     if (color.present) {
-      map['color'] = Variable<int>(
-        $TodoListsTable.$convertercolorn.toSql(color.value),
-      );
+      map['color'] = Variable<int>(color.value);
     }
     if (isDefault.present) {
       map['is_default'] = Variable<bool>(isDefault.value);
@@ -37419,7 +37412,7 @@ typedef $$TodoListsTableCreateCompanionBuilder =
       Value<int> localId,
       Value<String?> id,
       required String title,
-      Value<Color?> color,
+      Value<int?> color,
       Value<bool> isDefault,
       Value<SyncStatus> syncStatus,
       Value<int> taskCount,
@@ -37427,14 +37420,14 @@ typedef $$TodoListsTableCreateCompanionBuilder =
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
       Value<bool> isPendingDeletion,
-      Value<bool?> isDirty,
+      Value<bool> isDirty,
     });
 typedef $$TodoListsTableUpdateCompanionBuilder =
     TodoListsCompanion Function({
       Value<int> localId,
       Value<String?> id,
       Value<String> title,
-      Value<Color?> color,
+      Value<int?> color,
       Value<bool> isDefault,
       Value<SyncStatus> syncStatus,
       Value<int> taskCount,
@@ -37442,7 +37435,7 @@ typedef $$TodoListsTableUpdateCompanionBuilder =
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
       Value<bool> isPendingDeletion,
-      Value<bool?> isDirty,
+      Value<bool> isDirty,
     });
 
 class $$TodoListsTableFilterComposer
@@ -37469,11 +37462,10 @@ class $$TodoListsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<Color?, Color, int> get color =>
-      $composableBuilder(
-        column: $table.color,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
+  ColumnFilters<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get isDefault => $composableBuilder(
     column: $table.isDefault,
@@ -37605,7 +37597,7 @@ class $$TodoListsTableAnnotationComposer
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Color?, int> get color =>
+  GeneratedColumn<int> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
 
   GeneratedColumn<bool> get isDefault =>
@@ -37671,7 +37663,7 @@ class $$TodoListsTableTableManager
                 Value<int> localId = const Value.absent(),
                 Value<String?> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
-                Value<Color?> color = const Value.absent(),
+                Value<int?> color = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<int> taskCount = const Value.absent(),
@@ -37679,7 +37671,7 @@ class $$TodoListsTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isPendingDeletion = const Value.absent(),
-                Value<bool?> isDirty = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
               }) => TodoListsCompanion(
                 localId: localId,
                 id: id,
@@ -37699,7 +37691,7 @@ class $$TodoListsTableTableManager
                 Value<int> localId = const Value.absent(),
                 Value<String?> id = const Value.absent(),
                 required String title,
-                Value<Color?> color = const Value.absent(),
+                Value<int?> color = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<int> taskCount = const Value.absent(),
@@ -37707,7 +37699,7 @@ class $$TodoListsTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isPendingDeletion = const Value.absent(),
-                Value<bool?> isDirty = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
               }) => TodoListsCompanion.insert(
                 localId: localId,
                 id: id,

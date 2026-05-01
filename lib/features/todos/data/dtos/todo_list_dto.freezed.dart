@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TodoListDto {
 
- String get id; String get title; String? get color;@JsonKey(name: 'is_default') bool get isDefault;@JsonKey(name: 'sync_status') String get syncStatus;@JsonKey(name: 'sync_status_display') String? get syncStatusDisplay;@JsonKey(name: 'last_synced_at') String? get lastSyncedAt;@JsonKey(name: 'task_count') int get taskCount;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;
+ String? get id; String get title; String? get color;@JsonKey(name: 'is_default') bool get isDefault;@JsonKey(name: 'sync_status') String get syncStatus;@JsonKey(name: 'sync_status_display') String? get syncStatusDisplay;@JsonKey(name: 'last_synced_at') String? get lastSyncedAt;@JsonKey(name: 'task_count') int get taskCount;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;
 /// Create a copy of TodoListDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TodoListDtoCopyWith<$Res>  {
   factory $TodoListDtoCopyWith(TodoListDto value, $Res Function(TodoListDto) _then) = _$TodoListDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? color,@JsonKey(name: 'is_default') bool isDefault,@JsonKey(name: 'sync_status') String syncStatus,@JsonKey(name: 'sync_status_display') String? syncStatusDisplay,@JsonKey(name: 'last_synced_at') String? lastSyncedAt,@JsonKey(name: 'task_count') int taskCount,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
+ String? id, String title, String? color,@JsonKey(name: 'is_default') bool isDefault,@JsonKey(name: 'sync_status') String syncStatus,@JsonKey(name: 'sync_status_display') String? syncStatusDisplay,@JsonKey(name: 'last_synced_at') String? lastSyncedAt,@JsonKey(name: 'task_count') int taskCount,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
 });
 
 
@@ -65,10 +65,10 @@ class _$TodoListDtoCopyWithImpl<$Res>
 
 /// Create a copy of TodoListDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? taskCount = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? taskCount = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
 as String?,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
 as bool,syncStatus: null == syncStatus ? _self.syncStatus : syncStatus // ignore: cast_nullable_to_non_nullable
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TodoListDto() when $default != null:
 return $default(_that.id,_that.title,_that.color,_that.isDefault,_that.syncStatus,_that.syncStatusDisplay,_that.lastSyncedAt,_that.taskCount,_that.createdAt,_that.updatedAt);case _:
@@ -183,7 +183,7 @@ return $default(_that.id,_that.title,_that.color,_that.isDefault,_that.syncStatu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TodoListDto():
 return $default(_that.id,_that.title,_that.color,_that.isDefault,_that.syncStatus,_that.syncStatusDisplay,_that.lastSyncedAt,_that.taskCount,_that.createdAt,_that.updatedAt);case _:
@@ -203,7 +203,7 @@ return $default(_that.id,_that.title,_that.color,_that.isDefault,_that.syncStatu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String? color, @JsonKey(name: 'is_default')  bool isDefault, @JsonKey(name: 'sync_status')  String syncStatus, @JsonKey(name: 'sync_status_display')  String? syncStatusDisplay, @JsonKey(name: 'last_synced_at')  String? lastSyncedAt, @JsonKey(name: 'task_count')  int taskCount, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TodoListDto() when $default != null:
 return $default(_that.id,_that.title,_that.color,_that.isDefault,_that.syncStatus,_that.syncStatusDisplay,_that.lastSyncedAt,_that.taskCount,_that.createdAt,_that.updatedAt);case _:
@@ -221,7 +221,7 @@ class _TodoListDto implements TodoListDto {
   const _TodoListDto({required this.id, required this.title, required this.color, @JsonKey(name: 'is_default') required this.isDefault, @JsonKey(name: 'sync_status') required this.syncStatus, @JsonKey(name: 'sync_status_display') required this.syncStatusDisplay, @JsonKey(name: 'last_synced_at') required this.lastSyncedAt, @JsonKey(name: 'task_count') required this.taskCount, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _TodoListDto.fromJson(Map<String, dynamic> json) => _$TodoListDtoFromJson(json);
 
-@override final  String id;
+@override final  String? id;
 @override final  String title;
 @override final  String? color;
 @override@JsonKey(name: 'is_default') final  bool isDefault;
@@ -265,7 +265,7 @@ abstract mixin class _$TodoListDtoCopyWith<$Res> implements $TodoListDtoCopyWith
   factory _$TodoListDtoCopyWith(_TodoListDto value, $Res Function(_TodoListDto) _then) = __$TodoListDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? color,@JsonKey(name: 'is_default') bool isDefault,@JsonKey(name: 'sync_status') String syncStatus,@JsonKey(name: 'sync_status_display') String? syncStatusDisplay,@JsonKey(name: 'last_synced_at') String? lastSyncedAt,@JsonKey(name: 'task_count') int taskCount,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
+ String? id, String title, String? color,@JsonKey(name: 'is_default') bool isDefault,@JsonKey(name: 'sync_status') String syncStatus,@JsonKey(name: 'sync_status_display') String? syncStatusDisplay,@JsonKey(name: 'last_synced_at') String? lastSyncedAt,@JsonKey(name: 'task_count') int taskCount,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
 });
 
 
@@ -282,10 +282,10 @@ class __$TodoListDtoCopyWithImpl<$Res>
 
 /// Create a copy of TodoListDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? taskCount = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? taskCount = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_TodoListDto(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
 as String?,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
 as bool,syncStatus: null == syncStatus ? _self.syncStatus : syncStatus // ignore: cast_nullable_to_non_nullable

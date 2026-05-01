@@ -24,6 +24,7 @@ import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/todos/data/models/todo_lists.dart';
+import 'package:academia/features/todos/domain/enums/sync_status.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
 import 'dart:ui' show Color;

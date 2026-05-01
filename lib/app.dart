@@ -35,7 +35,9 @@ class _AcademiaState extends State<Academia> {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString(
         "user_activity",
-        jsonEncode({"last_app_launch_date": DateTime.now().toLocal().toString()}),
+        jsonEncode({
+          "last_app_launch_date": DateTime.now().toLocal().toString(),
+        }),
       );
     });
 

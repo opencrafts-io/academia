@@ -7,7 +7,7 @@ part of 'todo_list_dto.dart';
 // **************************************************************************
 
 _TodoListDto _$TodoListDtoFromJson(Map<String, dynamic> json) => _TodoListDto(
-  id: json['id'] as String,
+  id: json['id'] as String?,
   title: json['title'] as String,
   color: json['color'] as String?,
   isDefault: json['is_default'] as bool,

@@ -9,9 +9,12 @@ class TodoListLocalDatasource {
 
   Future<Either<Failure, TodoList>> createTodo(TodoList todo) async {
     try {
+      final companion = todo
+          .toCompanion(true)
+          .copyWith(localId: const Value.absent(), isDirty: const Value(true));
       final todoList = await cacheDB
           .into(cacheDB.todoLists)
-          .insertReturning(todo, mode: InsertMode.insert);
+          .insertReturning(companion, mode: InsertMode.insert);
       return right(todoList);
     } catch (e) {
       return left(

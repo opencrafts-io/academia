@@ -1,14 +1,12 @@
-import 'package:academia/core/data/color_converter.dart';
+import 'package:academia/features/todos/domain/enums/sync_status.dart';
 import 'package:drift/drift.dart';
-
-enum SyncStatus { pending, synced, failed }
 
 class TodoLists extends Table {
   IntColumn get localId => integer().autoIncrement()();
   TextColumn get id => text().unique().nullable()();
 
   TextColumn get title => text().withLength(min: 1, max: 255)();
-  IntColumn get color => integer().nullable().map(const ColorConverter())();
+  IntColumn get color => integer().nullable()();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
 
   TextColumn get syncStatus =>
@@ -23,6 +21,5 @@ class TodoLists extends Table {
   BoolColumn get isPendingDeletion =>
       boolean().withDefault(const Constant(false))();
 
-  BoolColumn get isDirty =>
-      boolean().nullable().withDefault(const Constant(true))();
+  BoolColumn get isDirty => boolean().withDefault(const Constant(true))();
 }

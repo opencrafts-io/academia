@@ -6,7 +6,7 @@ part 'todo_list_dto.g.dart';
 @freezed
 abstract class TodoListDto with _$TodoListDto {
   const factory TodoListDto({
-    required String id,
+    required String? id,
     required String title,
     required String? color,
     @JsonKey(name: 'is_default') required bool isDefault,

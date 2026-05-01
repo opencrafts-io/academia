@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:academia/features/features.dart';
 
-class TodoList extends Equatable {
+class TodoListEntity extends Equatable {
   final int localId;
   final String? id;
   final String title;
@@ -14,7 +14,7 @@ class TodoList extends Equatable {
   final DateTime? updatedAt;
   final bool isPendingDeletion;
 
-  const TodoList({
+  const TodoListEntity({
     required this.localId,
     this.id,
     required this.title,

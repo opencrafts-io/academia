@@ -4860,11 +4860,7 @@
             "customConstraints": null,
             "default_dart": null,
             "default_client_dart": null,
-            "dsl_features": [],
-            "type_converter": {
-              "dart_expr": "const ColorConverter()",
-              "dart_type_name": "Color"
-            }
+            "dsl_features": []
           },
           {
             "name": "is_default",
@@ -4952,7 +4948,7 @@
             "name": "is_dirty",
             "getter_name": "isDirty",
             "moor_type": "bool",
-            "nullable": true,
+            "nullable": false,
             "customConstraints": null,
             "defaultConstraints": "CHECK (\"is_dirty\" IN (0, 1))",
             "dialectAwareDefaultConstraints": {
