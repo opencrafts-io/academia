@@ -11,3 +11,4 @@ export 'create_todo_list.dart';
 export 'get_todo_lists.dart';
 export 'update_todo_list.dart';
 export 'delete_todo_list.dart';
+export 'sync_todo_lists.dart';
