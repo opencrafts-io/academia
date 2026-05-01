@@ -3,3 +3,5 @@ export 'datasource/todo_local_datasource.dart';
 export 'datasource/todo_remote_datasource.dart';
 export 'models/todo_helper.dart';
 export 'mappers/todo_list_mapper.dart';
+export 'dtos/todo_list_dto.dart';
+export 'dtos/paginated_todo_list_dto.dart';
