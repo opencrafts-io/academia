@@ -103,9 +103,7 @@ class TodoListLocalDatasource {
 
   Future<Either<Failure, TodoList>> updateTodoList(TodoList todoList) async {
     try {
-      final companion = todoList
-          .toCompanion(true)
-          .copyWith(isDirty: const Value(true));
+      final companion = todoList.toCompanion(true);
 
       final rowsAffected = await (cacheDB.update(
         cacheDB.todoLists,

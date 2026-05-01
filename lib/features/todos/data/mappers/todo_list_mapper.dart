@@ -16,6 +16,22 @@ extension TodoListMapper on TodoList {
     updatedAt: updatedAt,
     lastSyncedAt: lastSyncedAt,
   );
+
+  TodoListDto toDto() {
+    final dtoColor = color == null ? null : "#${color!.toRadixString(16)}";
+    return TodoListDto(
+      id: id,
+      title: title,
+      color: dtoColor,
+      isDefault: isDefault,
+      syncStatus: syncStatus.name,
+      syncStatusDisplay: null,
+      lastSyncedAt: lastSyncedAt?.toIso8601String(),
+      taskCount: taskCount,
+      createdAt: createdAt?.toIso8601String(),
+      updatedAt: updatedAt?.toIso8601String(),
+    );
+  }
 }
 
 extension TodoEntityMapper on TodoListEntity {
