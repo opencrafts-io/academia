@@ -236,19 +236,33 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Todos
+  sl.registerFactory<TodoListLocalDatasource>(
+    () => TodoListLocalDatasource(cacheDB: sl()),
+  );
+  sl.registerFactory<TodoListRemoteDatasource>(
+    () => TodoListRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
   sl.registerFactory<TodoLocalDatasource>(
     () => TodoLocalDatasource(localDB: cacheDB),
   );
   sl.registerFactory<TodoRemoteDatasource>(
     () => TodoRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
-
+  sl.registerFactory<TodoListRepository>(
+    () => TodoListRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
+  );
   sl.registerFactory<TodoRepository>(
     () => TodoRepositoryImpl(
       todoRemoteDatasource: sl.get<TodoRemoteDatasource>(),
       todoLocalDatasource: sl.get<TodoLocalDatasource>(),
     ),
   );
+
+  sl.registerFactory<GetTodoLists>(() => GetTodoLists(sl()));
+  sl.registerFactory<CreateTodoList>(() => CreateTodoList(sl()));
+  sl.registerFactory<UpdateTodoList>(() => UpdateTodoList(sl()));
+  sl.registerFactory<DeleteTodoList>(() => DeleteTodoList(sl()));
+  sl.registerFactory<SyncTodoLists>(() => SyncTodoLists(sl()));
 
   sl.registerFactory<GetCachedTodosUsecase>(
     () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
@@ -274,6 +288,16 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<SyncTodosWithGoogleTasksUsecase>(
     () => SyncTodosWithGoogleTasksUsecase(
       todoRepository: sl.get<TodoRepository>(),
+    ),
+  );
+
+  sl.registerLazySingleton<TodoListCubit>(
+    () => TodoListCubit(
+      getTodoListsUseCase: sl(),
+      createTodoListUseCase: sl(),
+      updateTodoListUseCase: sl(),
+      deleteTodoListUseCase: sl(),
+      syncTodoListsUseCase: sl(),
     ),
   );
 

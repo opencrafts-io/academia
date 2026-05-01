@@ -149,6 +149,7 @@ class _AcademiaState extends State<Academia> {
                 .get<RequestAccountRecoveryUsecase>(),
           )..add(GetCachedProfileEvent()),
         ),
+        BlocProvider(create: (context) => sl<TodoListCubit>()),
         BlocProvider(
           create: (context) => sl<TodoBloc>()
             ..add(FetchCachedTodosEvent())
