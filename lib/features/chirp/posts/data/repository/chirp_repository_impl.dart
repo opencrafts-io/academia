@@ -231,4 +231,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, bool>> checkIsLiked({required int postId}) {
+    return remoteDataSource.checkIsLiked(postId: postId);
+  }
 }

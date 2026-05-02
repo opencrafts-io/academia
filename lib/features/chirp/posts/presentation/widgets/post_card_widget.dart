@@ -574,35 +574,30 @@ class _PostCardState extends State<PostCard> {
                     builder: (context, post) {
                       return Row(
                         children: [
-                          // PostLikeButton(
-                          //   upvotes: post.upvotes,
-                          //   isLiked: post.isLikedByMe,
-                          //   onTap: () {
-                          //     final profileState = context
-                          //         .read<ProfileBloc>()
-                          //         .state;
-                          //     if (profileState is! ProfileLoadedState) return;
-                          //     final cubit = context.read<PostCubit>();
-                          //     final previousFeedState = context
-                          //         .read<FeedBloc>()
-                          //         .state;
-                          //     cubit.toggleLikeOptimistic();
-                          //     context.read<FeedBloc>().add(
-                          //       ToggleLikePost(
-                          //         post: post,
-                          //         isCurrentlyLiked: post.isLikedByMe,
-                          //         voterId: profileState.profile.id,
-                          //         previousState: previousFeedState,
-                          //       ),
-                          //     );
-                          //   },
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 10,
-                          //     vertical: 6,
-                          //   ),
-                          //   iconSize: 18,
-                          // ),
-                          // const SizedBox(width: 8),
+                          PostLikeButton(
+                            upvotes: post.upvotes,
+                            isLiked: post.isLikedByMe,
+                            onTap: () {
+                              final profileState = context
+                                  .read<ProfileBloc>()
+                                  .state;
+                              if (profileState is! ProfileLoadedState) return;
+                              final cubit = context.read<PostCubit>();
+                              final previousFeedState = context
+                                  .read<FeedBloc>()
+                                  .state;
+                              cubit.toggleLikeOptimistic();
+                              context.read<FeedBloc>().add(
+                                ToggleLikePost(
+                                  post: post,
+                                  isCurrentlyLiked: post.isLikedByMe,
+                                  voterId: profileState.profile.id,
+                                  previousState: previousFeedState,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
 
                           FilledButton.icon(
                             style: FilledButton.styleFrom(

@@ -21,11 +21,11 @@ class PostLikeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = isLiked
         ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.onSurfaceVariant;
+        : Theme.of(context).colorScheme.outline;
 
     final effectivePadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
-    final effectiveIconSize = iconSize ?? 20;
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 8);
+    final effectiveIconSize = iconSize ?? 22;
 
     return GestureDetector(
       onTap: onTap,
@@ -33,9 +33,8 @@ class PostLikeButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: effectivePadding,
         decoration: BoxDecoration(
-          color: isLiked
-              ? Theme.of(context).colorScheme.errorContainer.withAlpha(180)
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: Colors.transparent,
+          border: Border.all(color: color, width: .5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -55,7 +54,7 @@ class PostLikeButton extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               '$upvotes',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: color,
                 fontWeight: isLiked ? FontWeight.bold : FontWeight.normal,
               ),

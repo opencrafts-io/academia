@@ -76,3 +76,5 @@ class UpdatePostInFeed extends FeedEvent {
   @override
   List<Object> get props => [updatedPost];
 }
+
+class CheckFeedLikeStatuses extends FeedEvent {}

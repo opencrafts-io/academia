@@ -17,6 +17,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final DeletePostUsecase deletePost;
   final GetPostsFromCommunityUsecase getPostsFromCommunityUsecase;
   final LikePostUsecase likePost;
+  final CheckPostLikedUsecase checkPostLiked;
   final Logger _logger = Logger();
 
   FeedBloc({
@@ -28,6 +29,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.deletePost,
     required this.getPostsFromCommunityUsecase,
     required this.likePost,
+    required this.checkPostLiked,
   }) : super(FeedInitial()) {
     on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
     on<LoadFeedEvent>(_onLoadFeed);
@@ -36,151 +38,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<MarkPostAsViewed>(_onMarkPostAsViewed);
     on<UpdatePostInFeed>(_onUpdatePostInFeed);
     on<ToggleLikePost>(_onToggleLikePost);
-    //   List<PostReply>? addReplyToParent(
-    //     List<PostReply> replies,
-    //     String parentId,
-    //     PostReply newReply,
-    //   ) {
-    //     final updatedReplies = <PostReply>[];
-    //     bool found = false;
-
-    //     for (final reply in replies) {
-    //       if (reply.id == parentId) {
-    //         final updatedChildReplies = [...reply.replies, newReply];
-    //         final updatedParent = reply.copyWith(replies: updatedChildReplies);
-    //         updatedReplies.add(updatedParent);
-    //         found = true;
-    //       } else {
-    //         final updatedNestedReplies = addReplyToParent(
-    //           reply.replies,
-    //           parentId,
-    //           newReply,
-    //         );
-
-    //         if (updatedNestedReplies != null) {
-    //           final updatedReply = reply.copyWith(replies: updatedNestedReplies);
-    //           updatedReplies.add(updatedReply);
-    //           found = true;
-    //         } else {
-    //           updatedReplies.add(reply);
-    //         }
-    //       }
-    //     }
-
-    //     return found ? updatedReplies : null;
-    //   }
-
-    //   on<AddComment>((event, emit) async {
-    //     if (state is! FeedLoaded) return;
-    //     final currentState = state as FeedLoaded;
-
-    //     emit(CommentAdding());
-
-    //     final res = await addComment(
-    //       postId: event.postId,
-    //       content: event.content,
-    //       userName: event.userName,
-    //       parentId: event.parentId,
-    //       userId: event.userId,
-    //     );
-
-    //     res.fold((failure) => emit(CommentError(failure.message)), (newComment) {
-    //       final postIndex = currentState.posts.indexWhere(
-    //         (p) => p.id == event.postId,
-    //       );
-    //       if (postIndex == -1) {
-    //         emit(CommentError("Post not found"));
-    //         return;
-    //       }
-
-    //       final postToUpdate = currentState.posts[postIndex];
-    //       Post updatedPost;
-
-    //       if (event.parentId == null) {
-    //         // Top-level comment - add to post's replies
-    //         final updatedReplies = [...postToUpdate.replies, newComment];
-    //         updatedPost = postToUpdate.copyWith(
-    //           replies: updatedReplies,
-    //           commentCount: postToUpdate.commentCount + 1,
-    //         );
-    //       } else {
-    //         // Nested reply - find parent comment and add to its replies
-    //         final updatedReplies = addReplyToParent(
-    //           postToUpdate.replies,
-    //           event.parentId!,
-    //           newComment,
-    //         );
-
-    //         if (updatedReplies != null) {
-    //           updatedPost = postToUpdate.copyWith(
-    //             replies: updatedReplies,
-    //             commentCount: postToUpdate.commentCount + 1,
-    //           );
-    //         } else {
-    //           emit(CommentError("Parent comment not found"));
-    //           return;
-    //         }
-    //       }
-
-    //       final updatedPosts = List.of(currentState.posts);
-    //       updatedPosts[postIndex] = updatedPost;
-
-    //       emit(CommentAdded(comment: newComment));
-    //       emit(FeedLoaded(posts: updatedPosts));
-    //     });
-    //   });
-
-    //   on<ToggleLikePost>((event, emit) async {
-    //     if (state is! FeedLoaded) return;
-
-    //     final currentState = state as FeedLoaded;
-
-    //     final res = await likePost(event.postId, event.isCurrentlyLiked);
-
-    //     res.fold(
-    //       (failure) {
-    //         emit(currentState);
-    //       },
-    //       (response) {
-    //         final updatedPosts = currentState.posts.map((p) {
-    //           if (p.id == event.postId) {
-    //             return p.copyWith(
-    //               isLiked: response['is_liked'],
-    //               likeCount: response['like_count'],
-    //             );
-    //           }
-    //           return p;
-    //         }).toList();
-    //         emit(FeedLoaded(posts: updatedPosts));
-    //       },
-    //     );
-    //   });
-
-    //   on<GetPostRepliesEvent>((event, emit) async {
-    //     final currentState = state as FeedLoaded;
-    //     final posts = currentState.posts;
-    //     final postIndex = posts.indexWhere((p) => p.id == event.postId);
-    //     emit(RepliesLoading(post: posts[postIndex]));
-
-    //     if (postIndex == -1) return;
-
-    //     final result = await cachePostReplies(event.postId);
-
-    //     result.fold(
-    //       (failure) {
-    //         emit(RepliesError(failure.message));
-    //       },
-    //       (replies) async {
-    //         final postToUpdate = posts[postIndex];
-    //         final updatedPost = postToUpdate.copyWith(replies: replies);
-
-    //         final newPosts = List<Post>.from(posts);
-    //         newPosts[postIndex] = updatedPost;
-
-    //         emit(FeedLoaded(posts: newPosts));
-    //       },
-    //     );
-    //   });
+    on<CheckFeedLikeStatuses>(_onCheckFeedLikeStatuses);
   }
 
   Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) async {
@@ -261,6 +119,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               hasMore: paginatedData.hasMore,
             ),
           );
+          // Refresh like statuses after the initial page loads
+          if (!isClosed) add(CheckFeedLikeStatuses());
         }
       },
     );
@@ -348,6 +208,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               hasMore: paginatedData.hasMore,
             ),
           );
+          // Refresh like statuses after the initial page loads.
+          if (!isClosed) add(CheckFeedLikeStatuses());
         }
       },
     );
@@ -512,13 +374,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
 
       if (existingPost.id != 0) {
-        // Emit PostDetailLoaded directly - no API call
         emit(PostDetailLoaded(post: existingPost));
         return;
       }
     }
 
-    //  Step 2: Fallback — fetch from API if not found locally
     emit(PostDetailLoading());
     final result = await getPostDetail(postId: event.postId);
 
@@ -562,13 +422,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     result.fold(
       (failure) {
         _logger.e('Failed to toggle like: ${failure.message}');
-        // Emit a PostLikeError so caller can roll back optimistic UI
         emit(PostLikeError(post: event.post, message: failure.message));
-        // Restore previous state so the feed is not stuck
         if (event.previousState != null) emit(event.previousState!);
       },
       (updatedPost) {
-        // Update the post in feed state if it's still visible
         if (state is FeedLoaded) {
           final currentState = state as FeedLoaded;
           final updatedPosts = currentState.posts.map((p) {
@@ -578,5 +435,30 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
       },
     );
+  }
+
+  Future<void> _onCheckFeedLikeStatuses(
+    CheckFeedLikeStatuses event,
+    Emitter<FeedState> emit,
+  ) async {
+    if (state is! FeedLoaded) return;
+    final currentState = state as FeedLoaded;
+
+    final updatedPosts = <Post>[];
+    for (final post in currentState.posts) {
+      final result = await checkPostLiked(postId: post.id);
+      result.fold(
+        (failure) {
+          updatedPosts.add(post);
+        },
+        (isLiked) {
+          updatedPosts.add(post.copyWith(isLikedByMe: isLiked));
+        },
+      );
+    }
+
+    if (!isClosed) {
+      emit(currentState.copyWith(posts: updatedPosts));
+    }
   }
 }

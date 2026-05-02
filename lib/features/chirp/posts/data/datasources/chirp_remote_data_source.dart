@@ -401,8 +401,45 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  /// Toggles a like on a post. Pass [isCurrentlyLiked] = true to unlike.
-  /// Returns a map with: {'upvotes': int, 'is_liked': bool}
+  /// Checks whether the current authenticated user has liked [postId].
+  Future<Either<Failure, bool>> checkIsLiked({
+    required int postId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/$postId/vote/',
+        queryParameters: {'post_id': postId},
+      );
+
+      if (res.statusCode == 200) {
+        return right(true);
+      }
+
+      return left(
+        NetworkFailure(message: 'Unexpected response', error: res.data),
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return right(false);
+      }
+      _logger.e('[checkIsLiked] DioException: ${e.response?.statusCode}');
+      return handleDioError(e);
+    } catch (e) {
+      _logger.e('[checkIsLiked] Unexpected error: $e');
+      return left(
+        ServerFailure(
+          message: 'An unexpected error occurred while checking like status',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  /// Toggles a like on a post
   Future<Either<Failure, Map<String, dynamic>>> toggleLike({
     required int postId,
     required bool isCurrentlyLiked,
@@ -423,10 +460,6 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         'value': isCurrentlyLiked ? -1 : 1,
       };
 
-      _logger.i(
-        '[toggleLike] ${isCurrentlyLiked ? "DELETE" : "POST"} $endpoint body=$body',
-      );
-
       final Response<dynamic> res;
       if (isCurrentlyLiked) {
         res = await dioClient.dio.delete(endpoint, data: body);
@@ -434,25 +467,18 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         res = await dioClient.dio.post(endpoint, data: body);
       }
 
-      _logger.i('[toggleLike] status=${res.statusCode} body=${res.data}');
-
-      // 200 (liked), 201 (created like), 204 (unliked)
       if (res.statusCode == 200 ||
           res.statusCode == 201 ||
           res.statusCode == 204) {
         final data = res.data is Map<String, dynamic>
             ? res.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _logger.i('[toggleLike] success — parsed data: $data');
         return right({
           'upvotes': data['upvotes'] ?? data['likes_count'],
           'is_liked': !isCurrentlyLiked,
         });
       }
 
-      _logger.e(
-        '[toggleLike] Unexpected status ${res.statusCode} — body: ${res.data}',
-      );
       return left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
