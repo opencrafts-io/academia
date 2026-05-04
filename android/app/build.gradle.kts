@@ -11,10 +11,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-def keystorePropertiesFile = rootProject.file("key.properties")
-def keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 android {
     namespace = "io.opencrafts.academia"
@@ -45,13 +45,13 @@ android {
     }
 
     signingConfigs {
-    create("release") {
+         create("release") {
         keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
         keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
         storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
         storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
     }
-    create("staging") {
+         create("staging") {
         keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
         keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
         storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
