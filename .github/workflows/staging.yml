@@ -72,7 +72,9 @@ jobs:
 
       - name: Install gems
         working-directory: android
-        run: bundle install --path vendor/bundle
+        run: |
+          bundle config set path 'vendor/bundle'
+          bundle install
         env:
           BUNDLE_FROZEN: "true"
 
@@ -164,7 +166,9 @@ jobs:
 
       - name: Install gems
         working-directory: ios
-        run: bundle install --path vendor/bundle
+        run: |
+          bundle config set path 'vendor/bundle'
+          bundle install
 
       - name: Flutter pub get
         run: flutter pub get
