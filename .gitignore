@@ -12,7 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 
-*.lock
+pubspec.lock
 devtools_*.yaml
 C*md
 
