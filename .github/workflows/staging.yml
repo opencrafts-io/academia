@@ -120,7 +120,7 @@ jobs:
     runs-on: blacksmith-6vcpu-macos-latest
     timeout-minutes: 60
     env:
-      BUNDLE_PATH: ios/vendor/bundle
+      BUNDLE_PATH: vendor/bundle
 
     steps:
       - name: Checkout
