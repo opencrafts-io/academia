@@ -1,4 +1,4 @@
-name: Bootstrap Match (run once, then delete)
+name: Bootstrap Match
 
 on:
   push:
@@ -11,22 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: ${{ steps.versions.outputs.ruby-version }}
           bundler-cache: true
           working-directory: ios
 
-      - name: Run Match init
+      - name: Bootstrap Match certificates
         working-directory: ios
         env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bundle exec fastlane match adhoc --verbose
-          bundle exec fastlane match appstore --verbose
+          bundle exec fastlane sync_certs
