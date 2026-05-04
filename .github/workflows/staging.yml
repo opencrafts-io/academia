@@ -19,6 +19,8 @@ jobs:
     name: Android — Staging APK
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 45
+    env:
+      BUNDLE_PATH: android/vendor/bundle
 
     steps:
       - name: Checkout
@@ -29,7 +31,7 @@ jobs:
       - name: Install tools via mise
         uses: jdx/mise-action@v2
         with:
-          cache: true # caches mise tool installs between runs
+          cache: true
 
       - name: Cache pub dependencies
         uses: actions/cache@v4
@@ -53,8 +55,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: android/vendor/bundle
-          key: gems-android-${{ hashFiles('android/Gemfile.lock') }}
-          restore-keys: gems-android-
+          key: ${{ runner.os }}-gems-android-v2-${{ hashFiles('android/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-android-v2-
 
       - name: Decode Android keystore
         run: |
@@ -72,11 +75,7 @@ jobs:
 
       - name: Install gems
         working-directory: android
-        run: |
-          bundle config set path 'vendor/bundle'
-          bundle install
-        env:
-          BUNDLE_FROZEN: "true"
+        run: bundle install
 
       - name: Flutter pub get
         run: flutter pub get
@@ -96,7 +95,6 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          # Fetch last 20 lines of the workflow log via API as failure reason
           REASON=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
@@ -108,11 +106,11 @@ jobs:
               \"title\": \"❌ Android Staging FAILED\",
               \"color\": 15158332,
               \"fields\": [
-                {\"name\": \"Branch\",       \"value\": \"${{ github.ref_name }}\"},
-                {\"name\": \"Commit\",        \"value\": \"${{ github.sha }}\"},
-                {\"name\": \"Failed jobs\",   \"value\": \"${REASON:-unknown}\"},
-                {\"name\": \"Actor\",         \"value\": \"${{ github.actor }}\"},
-                {\"name\": \"Run\",           \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+                {\"name\": \"Branch\",      \"value\": \"${{ github.ref_name }}\"},
+                {\"name\": \"Commit\",       \"value\": \"${{ github.sha }}\"},
+                {\"name\": \"Failed jobs\",  \"value\": \"${REASON:-unknown}\"},
+                {\"name\": \"Actor\",        \"value\": \"${{ github.actor }}\"},
+                {\"name\": \"Run\",          \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
               ]
             }]}" \
             "$DISCORD_WEBHOOK_URL"
@@ -121,6 +119,8 @@ jobs:
     name: iOS — Staging IPA
     runs-on: blacksmith-6vcpu-macos-latest
     timeout-minutes: 60
+    env:
+      BUNDLE_PATH: ios/vendor/bundle
 
     steps:
       - name: Checkout
@@ -161,14 +161,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ios/vendor/bundle
-          key: ${{ runner.os }}-gems-ios-${{ hashFiles('ios/Gemfile.lock') }}
-          restore-keys: gems-ios-
+          key: ${{ runner.os }}-gems-ios-v2-${{ hashFiles('ios/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-ios-v2-
 
       - name: Install gems
         working-directory: ios
-        run: |
-          bundle config set path 'vendor/bundle'
-          bundle install
+        run: bundle install
 
       - name: Flutter pub get
         run: flutter pub get
