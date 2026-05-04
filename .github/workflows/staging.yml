@@ -28,7 +28,7 @@ jobs:
 
       - name: Load tool versions
         id: versions
-        uses: ./.github/actions/load-tool-versions
+        uses: ./.github/actions/load-tool-verions
 
       - name: Install tools via mise
         uses: jdx/mise-action@v2
@@ -93,7 +93,7 @@ jobs:
 
       - name: Load tool versions
         id: versions
-        uses: ./.github/actions/load-tool-versions
+        uses: ./.github/actions/load-tool-verions
 
       - name: Install tools via mise
         uses: jdx/mise-action@v2
