@@ -161,7 +161,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ios/vendor/bundle
-          key: gems-ios-${{ hashFiles('ios/Gemfile.lock') }}
+          key: ${{ runner.os }}-gems-ios-${{ hashFiles('ios/Gemfile.lock') }}
           restore-keys: gems-ios-
 
       - name: Install gems
