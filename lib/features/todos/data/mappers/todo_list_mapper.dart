@@ -18,7 +18,9 @@ extension TodoListMapper on TodoList {
   );
 
   TodoListDto toDto() {
-    final dtoColor = color == null ? null : "#${color!.toRadixString(16)}";
+    final dtoColor = color == null
+        ? null
+        : "#${color!.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}";
     return TodoListDto(
       id: id,
       title: title,
@@ -110,7 +112,10 @@ extension TodoListDtoToData on TodoListDto {
       id: id,
       title: title,
       color: color != null
-          ? int.tryParse(color!.replaceFirst('#', ''), radix: 16)
+          ? int.tryParse(
+              color!.replaceFirst('#', '')..padLeft(8, 'F'),
+              radix: 16,
+            )
           : null,
       isDefault: isDefault,
       syncStatus: SyncStatus.values.firstWhere(

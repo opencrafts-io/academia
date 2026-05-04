@@ -24,7 +24,7 @@ abstract class TodoListRepository {
   /// Deletes a todo list.
   /// In a sync-enabled app, this often marks the item as 'pending deletion'
   /// locally before removing it from the server.
-  Future<Either<Failure, Unit>> deleteTodoList(String id);
+  Future<Either<Failure, Unit>> deleteTodoList(int todoListLocalId);
 
   /// Specific helper to retrieve the user's default list.
   Future<Either<Failure, TodoListEntity>> getDefaultTodoList();

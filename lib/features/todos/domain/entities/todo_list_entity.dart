@@ -1,44 +1,21 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:academia/features/features.dart';
 
-class TodoListEntity extends Equatable {
-  final int localId;
-  final String? id;
-  final String title;
-  final int? color;
-  final bool isDefault;
-  final SyncStatus syncStatus;
-  final int taskCount;
-  final DateTime? lastSyncedAt;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final bool isPendingDeletion;
+part 'todo_list_entity.freezed.dart';
 
-  const TodoListEntity({
-    required this.localId,
-    this.id,
-    required this.title,
-    this.color,
-    required this.isDefault,
-    required this.syncStatus,
-    required this.taskCount,
-    this.lastSyncedAt,
-    this.createdAt,
-    this.updatedAt,
-    required this.isPendingDeletion,
-  });
-  @override
-  List<Object?> get props => [
-    localId,
-    id,
-    title,
-    color,
-    isDefault,
-    syncStatus,
-    taskCount,
-    lastSyncedAt,
-    createdAt,
-    updatedAt,
-    isPendingDeletion,
-  ];
+@freezed
+abstract class TodoListEntity with _$TodoListEntity {
+  const factory TodoListEntity({
+    required int localId,
+    String? id,
+    required String title,
+    int? color,
+    required bool isDefault,
+    required SyncStatus syncStatus,
+    required int taskCount,
+    DateTime? lastSyncedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    required bool isPendingDeletion,
+  }) = _TodoListEntity;
 }

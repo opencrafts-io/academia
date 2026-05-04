@@ -1,7 +1,5 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/todos/data/datasource/todo_list_local_datasource.dart';
-import 'package:academia/features/todos/data/datasource/todo_list_remote_datasource.dart';
 import 'package:dartz/dartz.dart';
 
 class TodoListRepositoryImpl implements TodoListRepository {
@@ -35,7 +33,8 @@ class TodoListRepositoryImpl implements TodoListRepository {
           );
 
           existing.fold(
-            (_) => null, // Ignore errors for individual item checks
+            (failure) => null,
+            // Ignore errors for individual item checks
             (localModel) async {
               final dataModel = dto.toDataModel(
                 localId: localModel?.localId ?? 0,
@@ -52,10 +51,14 @@ class TodoListRepositoryImpl implements TodoListRepository {
           );
         }
 
-        return Right(
-          TodoPage(
-            items: paginatedDto.results.map((e) => e.toEntity()).toList(),
-            nextUrl: paginatedDto.next,
+        final localResult = await localDataSource.getTodoLists();
+        return localResult.fold(
+          (l) => Left(l),
+          (r) => Right(
+            TodoPage(
+              items: r.map((e) => e.toDomain()).toList(),
+              nextUrl: paginatedDto.next,
+            ),
           ),
         );
       },
@@ -122,8 +125,8 @@ class TodoListRepositoryImpl implements TodoListRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteTodoList(String id) async {
-    final localItem = await localDataSource.getTodoListByExternalID(id);
+  Future<Either<Failure, Unit>> deleteTodoList(int todoListLocalId) async {
+    final localItem = await localDataSource.getTodoByID(todoListLocalId);
 
     return localItem.fold((failure) => Left(failure), (item) async {
       if (item == null) return const Right(unit);
@@ -132,7 +135,7 @@ class TodoListRepositoryImpl implements TodoListRepository {
       await localDataSource.softDeleteTodoList(item);
 
       // 2. Try remote delete
-      final remoteResult = await remoteDataSource.deleteTodoList(id);
+      final remoteResult = await remoteDataSource.deleteTodoList(item.id ?? '');
 
       return remoteResult.fold(
         (failure) =>

@@ -922,14 +922,100 @@ mixin $QrCodeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $todosRoute =>
-    GoRouteData.$route(path: '/todos', factory: $TodosRoute._fromState);
+RouteBase get $todosRoute => GoRouteData.$route(
+  path: '/todos',
+  factory: $TodosRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'create-tasklist',
+      factory: $CreateTodoListRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'tasklist',
+      factory: $ViewTaskListsRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: ':taskListId',
+          factory: $ViewTaskListRoute._fromState,
+        ),
+      ],
+    ),
+  ],
+);
 
 mixin $TodosRoute on GoRouteData {
   static TodosRoute _fromState(GoRouterState state) => TodosRoute();
 
   @override
   String get location => GoRouteData.$location('/todos');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $CreateTodoListRoute on GoRouteData {
+  static CreateTodoListRoute _fromState(GoRouterState state) =>
+      CreateTodoListRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos/create-tasklist');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ViewTaskListsRoute on GoRouteData {
+  static ViewTaskListsRoute _fromState(GoRouterState state) =>
+      ViewTaskListsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos/tasklist');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ViewTaskListRoute on GoRouteData {
+  static ViewTaskListRoute _fromState(GoRouterState state) => ViewTaskListRoute(
+    taskListId: int.parse(state.pathParameters['taskListId']!),
+  );
+
+  ViewTaskListRoute get _self => this as ViewTaskListRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/tasklist/${Uri.encodeComponent(_self.taskListId.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -516,12 +516,59 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
 @TypedGoRoute<TodosRoute>(
   path: "/todos",
-  // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
+  routes: [
+    TypedGoRoute<CreateTodoListRoute>(path: "create-tasklist"),
+    TypedGoRoute<ViewTaskListsRoute>(
+      path: "tasklist",
+      routes: [TypedGoRoute<ViewTaskListRoute>(path: ":taskListId")],
+    ),
+  ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TodoHomeScreen();
+  }
+}
+
+class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: Sheet(child: CreateTodoListScreen()),
+    );
+  }
+}
+
+class ViewTaskListRoute extends GoRouteData with $ViewTaskListRoute {
+  final int taskListId;
+  ViewTaskListRoute({required this.taskListId});
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: Sheet(child: ViewTodoListScreen(todoListId: taskListId)),
+    );
+  }
+}
+
+class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: Sheet(child: CreateTodoListScreen()),
+    );
   }
 }
 

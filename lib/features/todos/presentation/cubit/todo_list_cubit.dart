@@ -2,8 +2,6 @@ import 'package:academia/core/usecase/usecase.dart';
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import './todo_list_state.dart';
-
 class TodoListCubit extends Cubit<TodoListState> {
   final GetTodoLists getTodoListsUseCase;
   final CreateTodoList createTodoListUseCase;
@@ -62,22 +60,29 @@ class TodoListCubit extends Cubit<TodoListState> {
     );
   }
 
-  Future<void> createTodo(TodoListEntity todo) async {
-    final currentState = state.mapOrNull<TodoListSuccess>();
-    if (currentState == null) return;
+  Future<void> createTodoList(TodoListEntity todoList) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
 
-    // Eagerly add to UI
-    final updatedList = [todo, ...currentState.todoLists];
-    emit(currentState.copyWith(todoLists: updatedList));
+    final todoLists = [todoList, ...currentState.todoLists];
+    emit(currentState.copyWith(todoLists: todoLists));
 
-    final result = await createTodoListUseCase(todo);
+    final result = await createTodoListUseCase(todoList);
 
-    // On success,replace the "temp" item with the server-verified one (with real ID)
-    result.fold((f) => null, (newTodo) {
-      final syncedList = updatedList
-          .map((e) => e.localId == todo.localId ? newTodo : e)
-          .toList();
-      emit(currentState.copyWith(todoLists: syncedList));
+    result.fold((failure) => null, (newTodoList) {
+      final latestState = state.mapOrNull(success: (s) => s);
+      if (latestState == null) return;
+
+      final syncedList = latestState.todoLists.map((existingItem) {
+        if (existingItem.title == todoList.title &&
+            existingItem.syncStatus == SyncStatus.pending) {
+          return newTodoList;
+        }
+        return existingItem;
+      }).toList();
+
+      emit(latestState.copyWith(todoLists: syncedList));
     });
   }
 
@@ -88,5 +93,53 @@ class TodoListCubit extends Cubit<TodoListState> {
     await syncTodoListsUseCase(NoParams());
 
     await loadTodoLists();
+  }
+
+  Future<void> updateTodoList(TodoListEntity todoList) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
+
+    final updatedLists = currentState.todoLists.map((existing) {
+      return existing.localId == todoList.localId ? todoList : existing;
+    }).toList();
+
+    emit(currentState.copyWith(todoLists: updatedLists));
+
+    final result = await updateTodoListUseCase(todoList);
+    result.fold(
+      (error) {
+        emit(currentState);
+      },
+      (updated) {
+        final latestState = state.mapOrNull(success: (s) => s);
+        if (latestState == null) return;
+        final syncedLists = latestState.todoLists.map((existing) {
+          return existing.localId == updated.localId ? updated : existing;
+        }).toList();
+        emit(latestState.copyWith(todoLists: syncedLists));
+      },
+    );
+  }
+
+  //
+  Future<void> deleteTodoList(int todoListId) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
+
+    final lists = currentState.todoLists.toList();
+    final deletedList = lists.firstWhere((list) => list.localId == todoListId);
+    lists.removeWhere((list) => list.localId == todoListId);
+
+    emit(currentState.copyWith(todoLists: lists));
+
+    try {
+      await deleteTodoListUseCase(todoListId);
+    } catch (e) {
+      lists.add(deletedList);
+      emit(currentState.copyWith(todoLists: lists));
+      print("Delete failed: $e");
+    }
   }
 }
