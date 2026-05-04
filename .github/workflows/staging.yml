@@ -2,7 +2,7 @@ name: Staging — Build & Release
 
 on:
   push:
-    branches: [staging]
+    branches: [feature/add-fastlane]
   workflow_dispatch:
     inputs:
       branch:
