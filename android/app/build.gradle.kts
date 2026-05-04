@@ -12,7 +12,7 @@ plugins {
 }
 
 def keystorePropertiesFile = rootProject.file("key.properties")
-def keystoreProperties = new Properties()
+def keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
@@ -45,19 +45,19 @@ android {
     }
 
     signingConfigs {
-        release {
-            keyAlias      keystoreProperties['keyAlias']      ?: System.getenv('ANDROID_KEY_ALIAS')
-            keyPassword   keystoreProperties['keyPassword']   ?: System.getenv('ANDROID_KEY_PASSWORD')
-            storeFile     keystoreProperties['storeFile']     ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword'] ?: System.getenv('ANDROID_STORE_PASSWORD')
-        }
-        staging {
-            keyAlias      keystoreProperties['keyAlias']      ?: System.getenv('ANDROID_KEY_ALIAS')
-            keyPassword   keystoreProperties['keyPassword']   ?: System.getenv('ANDROID_KEY_PASSWORD')
-            storeFile     keystoreProperties['storeFile']     ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword'] ?: System.getenv('ANDROID_STORE_PASSWORD')
-        }
+    create("release") {
+        keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
+        keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
+        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
     }
+    create("staging") {
+        keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
+        keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
+        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
+    }
+}
     buildTypes {
         release {
             isMinifyEnabled = true
