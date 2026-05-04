@@ -2,7 +2,9 @@
 name: Bootstrap Match
 
 on:
-  workflow_dispatch: # run manually, once
+  push:
+    branches:
+      - feature/add-fastlane
 
 jobs:
   bootstrap:
