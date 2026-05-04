@@ -1,4 +1,5 @@
-# ios/fastlane/Fastfile
+
+require 'json'
 
 def tool_version(tool)
   root = File.expand_path("../../..", __FILE__)
@@ -91,7 +92,7 @@ platform :ios do
       api_token:       ENV["GITHUB_TOKEN"],
       name:            "iOS Staging v#{version}+#{build_num}",
       tag_name:        tag,
-      description:     "Automated staging build\nBranch: `#{ENV["GITHUB_REF_NAME"]}`\nCommit: `#{ENV["GITHUB_SHA"]}`",
+      description:     "Automated staging build\nBranch: #{ENV["GITHUB_REF_NAME"]}\nCommit: #{ENV["GITHUB_SHA"]}",
       commitish:       ENV["GITHUB_SHA"] || "staging",
       is_prerelease:   true,
       upload_assets:   ["../build/ios/ipa/Academia.ipa"]
@@ -120,10 +121,24 @@ platform :ios do
 
   private_lane :notify_discord do |options|
     version = options[:version] || "#{flutter_version_name}+#{flutter_build_number}"
-    curl_cmd = %Q(curl -s -H "Content-Type: application/json" \
-      -d '{"embeds":[{"title":"Academia iOS — #{options[:status]}","color":3066993,"fields":[{"name":"Version","value":"#{version}"},{"name":"Branch","value":"#{ENV["GITHUB_REF_NAME"]}"},{"name":"Commit","value":"#{(ENV["GITHUB_SHA"] || "").[0,7]}"}]}]}' \
-      "#{ENV["DISCORD_WEBHOOK_URL"]}")
-    sh(curl_cmd)
+    sha     = (ENV["GITHUB_SHA"] || "unknown")[0, 7]
+    branch  = ENV["GITHUB_REF_NAME"] || "unknown"
+    status  = options[:status]
+    webhook = ENV["DISCORD_WEBHOOK_URL"]
+
+    payload = JSON.generate({
+      embeds: [{
+        title:  "Academia iOS — #{status}",
+        color:  3066993,
+        fields: [
+          { name: "Version", value: version },
+          { name: "Branch",  value: branch  },
+          { name: "Commit",  value: sha     }
+        ]
+      }]
+    })
+
+    sh("curl -s -X POST -H 'Content-Type: application/json' -d '#{payload}' '#{webhook}'")
   end
 
 end
