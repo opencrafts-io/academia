@@ -1,9 +1,8 @@
+# .github/workflows/bootstrap-match.yml
 name: Bootstrap Match
 
 on:
-  push:
-    branches:
-      - feature/add-fastlane
+  workflow_dispatch: # run manually, once
 
 jobs:
   bootstrap:
@@ -13,7 +12,7 @@ jobs:
 
       - name: Load tool versions
         id: versions
-        uses: ./.github/actions/load-tool-verions
+        uses: ./.github/actions/load-tool-versions
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -21,15 +20,13 @@ jobs:
           bundler-cache: true
           working-directory: ios
 
-      - name: Bootstrap Match certificates
+      - name: Generate and store certs (write mode)
         working-directory: ios
         env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bundle exec fastlane sync_certs
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        run: bundle exec fastlane bootstrap_match

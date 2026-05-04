@@ -1,3 +1,4 @@
+# ios/fastlane/Fastfile
 
 require 'json'
 
@@ -40,6 +41,16 @@ platform :ios do
       type:           "appstore",
       readonly:       is_ci,
       app_identifier: "io.opencrafts.academia"
+    )
+  end
+
+  desc "One-time: generate certs and store in Match repo (write mode)"
+  lane :bootstrap_match do
+    match(
+      type:           "appstore",
+      readonly:       false,
+      app_identifier: "io.opencrafts.academia",
+      force:          false
     )
   end
 
