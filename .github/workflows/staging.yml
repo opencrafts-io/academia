@@ -10,6 +10,9 @@ on:
         required: false
         default: ""
 
+permissions:
+  contents: write
+
 concurrency:
   group: staging-${{ github.ref }}
   cancel-in-progress: true
@@ -53,9 +56,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/android/vendor/bundle
-          key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('ios/Gemfile.lock') }}
+          key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('android/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gems-ios-v3-
+            ${{ runner.os }}-gems-android-v1
 
       - name: Decode Android keystore
         run: |
@@ -84,7 +87,7 @@ jobs:
       - name: Fastlane — Upload Staging Release
         working-directory: android
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -135,7 +138,7 @@ jobs:
         run: |
           # List available Xcode versions and pick latest stable
           ls /Applications/ | grep Xcode
-          XCODE=$(ls /Applications/ | grep -E '^Xcode_1[0-9]\.' | sort -V | tail -1)
+          XCODE=$(ls /Applications/ | grep -E '^Xcode_[0-9]\.' | sort -V | tail -1)
           if [ -z "$XCODE" ]; then
             XCODE=$(ls /Applications/ | grep -E '^Xcode\.app$')
             sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
@@ -197,7 +200,7 @@ jobs:
       - name: Fastlane — Upload Staging Release
         working-directory: ios
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_ACTOR: ${{ github.actor }}
