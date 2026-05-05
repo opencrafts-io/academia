@@ -134,8 +134,9 @@ platform :ios do
     build_num = flutter_build_number
     tag       = "ios-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
 
-    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
-    raise "IPA not found in build/ios/ipa/" unless ipa_path
+    repo_root = File.expand_path("../../", __dir__)
+    ipa_path  = Dir["#{repo_root}/build/ios/ipa/*.ipa"].first
+    raise "IPA not found in #{repo_root}/build/ios/ipa/" unless ipa_path
 
     set_github_release(
       repository_name: "opencrafts-io/academia",
