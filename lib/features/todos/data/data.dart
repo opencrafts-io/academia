@@ -6,6 +6,12 @@ export 'datasource/todo_remote_datasource.dart';
 export 'datasource/todo_list_local_datasource.dart';
 export 'datasource/todo_list_remote_datasource.dart';
 
+export 'datasource/todo_tag_local_datasource.dart';
+export 'datasource/todo_tag_remote_datasource.dart';
+
+export 'datasource/todo_item_local_datasource.dart';
+export 'datasource/todo_item_remote_datasource.dart';
+
 export 'repository/todo_list_repository_impl.dart';
 
 // mappers

@@ -3,6 +3,7 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/todos/data/dtos/paginated_todo_tag_dto.dart';
+import 'package:academia/features/todos/data/dtos/todo_tag_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
