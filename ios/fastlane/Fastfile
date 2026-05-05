@@ -66,12 +66,31 @@ platform :ios do
   desc "Build staging IPA"
   lane :build_staging do
     sync_certs
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "ios/Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["Runner"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia"
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "ios/Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["OneSignalNotificationServiceExtension"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia.OneSignalNotificationServiceExtension"
+    )
+
     Dir.chdir("../../") do
       sh("flutter pub get")
       sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
          "--export-options-plist ios/ExportOptions-staging.plist")
     end
-  end
+  end  # ← build_staging ends here
 
   desc "Build production IPA"
   lane :build_production do
