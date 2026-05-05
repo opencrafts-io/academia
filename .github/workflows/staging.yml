@@ -19,6 +19,8 @@ jobs:
     name: Android — Staging APK
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 45
+    env:
+      BUNDLE_PATH: ${{ github.workspace }}/android/vendor/bundle
 
     steps:
       - name: Checkout
@@ -52,7 +54,7 @@ jobs:
       - name: Cache gems
         uses: actions/cache@v4
         with:
-          path: android/vendor/bundle
+          path: ${{ github.workspace }}/android/vendor/bundle
           key: ${{ runner.os }}-gems-android-v2-${{ hashFiles('android/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-android-v2-
@@ -116,7 +118,8 @@ jobs:
     name: iOS — Staging IPA
     runs-on: blacksmith-6vcpu-macos-latest
     timeout-minutes: 60
-
+    env:
+      BUNDLE_PATH: ${{ github.workspace }}/ios/vendor/bundle
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -155,7 +158,7 @@ jobs:
       - name: Cache gems
         uses: actions/cache@v4
         with:
-          path: ios/vendor/bundle
+          path: ${{ github.workspace }}/ios/vendor/bundle
           key: ${{ runner.os }}-gems-ios-v2-${{ hashFiles('ios/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-ios-v2-
