@@ -87,42 +87,45 @@ jobs:
       - name: Fastlane — Upload Staging Release
         working-directory: android
         env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_ACTOR: ${{ github.actor }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: bundle exec fastlane upload_staging_release
 
-      - name: Notify Discord — Failure
-        if: failure()
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          REASON=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
-            | jq -r '[.jobs[] | select(.conclusion=="failure") | .name] | join(", ")')
-          curl -s -X POST -H "Content-Type: application/json" \
-            -d "{\"embeds\":[{
-              \"title\": \"❌ Android Staging FAILED\",
-              \"color\": 15158332,
-              \"fields\": [
-                {\"name\": \"Branch\",      \"value\": \"${{ github.ref_name }}\"},
-                {\"name\": \"Commit\",       \"value\": \"${{ github.sha }}\"},
-                {\"name\": \"Failed jobs\",  \"value\": \"${REASON:-unknown}\"},
-                {\"name\": \"Actor\",        \"value\": \"${{ github.actor }}\"},
-                {\"name\": \"Run\",          \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
-              ]
-            }]}" \
-            "$DISCORD_WEBHOOK_URL"
+      # - name: Notify Discord — Failure
+      #   if: failure()
+      #   env:
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #   run: |
+      #     REASON=$(curl -s \
+      #       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      #       -H "Accept: application/vnd.github+json" \
+      #       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+      #       | jq -r '[.jobs[] | select(.conclusion=="failure") | .name] | join(", ")')
+      #     curl -s -X POST -H "Content-Type: application/json" \
+      #       -d "{\"embeds\":[{
+      #         \"title\": \"❌ Android Staging FAILED\",
+      #         \"color\": 15158332,
+      #         \"fields\": [
+      #           {\"name\": \"Branch\",      \"value\": \"${{ github.ref_name }}\"},
+      #           {\"name\": \"Commit\",       \"value\": \"${{ github.sha }}\"},
+      #           {\"name\": \"Failed jobs\",  \"value\": \"${REASON:-unknown}\"},
+      #           {\"name\": \"Actor\",        \"value\": \"${{ github.actor }}\"},
+      #           {\"name\": \"Run\",          \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+      #         ]
+      #       }]}" \
+      #       "$DISCORD_WEBHOOK_URL"
 
   ios:
     name: iOS — Staging IPA
     runs-on: blacksmith-6vcpu-macos-latest
+    permissions: 
+      contents: write
     timeout-minutes: 60
-
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -184,15 +187,6 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Debug Ruby-Version
-        working-directory: ios
-        run: |
-          which ruby
-          ruby --version
-          which bundle
-          bundle --version
-          bundle env
-
       - name: Install CocoaPods
         working-directory: ios
         run: bundle exec pod install --repo-update
@@ -200,8 +194,8 @@ jobs:
       - name: Fastlane — Upload Staging Release
         working-directory: ios
         env:
-          GITHUB_API_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}
+          GITHUB_API_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -215,33 +209,33 @@ jobs:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: bundle exec fastlane upload_staging_release
 
-      # - name: Notify Discord — Failure
-      #   if: failure()
-      #   env:
-      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      #   run: |
-      #     REASON=$(curl -s \
-      #       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-      #       -H "Accept: application/vnd.github+json" \
-      #       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
-      #       | python3 -c "
-      #     import sys, json
-      #     jobs = json.load(sys.stdin).get('jobs', [])
-      #     failed = [j['name'] for j in jobs if j.get('conclusion') == 'failure']
-      #     steps = [s['name'] for j in jobs if j.get('conclusion') == 'failure'
-      #              for s in j.get('steps', []) if s.get('conclusion') == 'failure']
-      #     print('Jobs: ' + ', '.join(failed) + ' | Steps: ' + ', '.join(steps))
-      #     ")
-      #     curl -s -X POST -H "Content-Type: application/json" \
-      #       -d "{\"embeds\":[{
-      #         \"title\": \"❌ iOS Staging FAILED\",
-      #         \"color\": 15158332,
-      #         \"fields\": [
-      #           {\"name\": \"Branch\",        \"value\": \"${{ github.ref_name }}\"},
-      #           {\"name\": \"Commit\",         \"value\": \"${{ github.sha }}\"},
-      #           {\"name\": \"Failure reason\", \"value\": \"${REASON:-unknown}\"},
-      #           {\"name\": \"Actor\",          \"value\": \"${{ github.actor }}\"},
-      #           {\"name\": \"Run\",            \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
-      #         ]
-      #       }]}" \
-      #       "$DISCORD_WEBHOOK_URL"
+      - name: Notify Discord — Failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          REASON=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+            | python3 -c "
+          import sys, json
+          jobs = json.load(sys.stdin).get('jobs', [])
+          failed = [j['name'] for j in jobs if j.get('conclusion') == 'failure']
+          steps = [s['name'] for j in jobs if j.get('conclusion') == 'failure'
+                   for s in j.get('steps', []) if s.get('conclusion') == 'failure']
+          print('Jobs: ' + ', '.join(failed) + ' | Steps: ' + ', '.join(steps))
+          ")
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{
+              \"title\": \"❌ iOS Staging FAILED\",
+              \"color\": 15158332,
+              \"fields\": [
+                {\"name\": \"Branch\",        \"value\": \"${{ github.ref_name }}\"},
+                {\"name\": \"Commit\",         \"value\": \"${{ github.sha }}\"},
+                {\"name\": \"Failure reason\", \"value\": \"${REASON:-unknown}\"},
+                {\"name\": \"Actor\",          \"value\": \"${{ github.actor }}\"},
+                {\"name\": \"Run\",            \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+              ]
+            }]}" \
+            "$DISCORD_WEBHOOK_URL"
