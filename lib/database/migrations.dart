@@ -107,4 +107,10 @@ extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate31To32(Migrator m) async {
     m.createTable(todoLists);
   }
+
+  Future<void> migrate32To33(Migrator m) async {
+    await m.createTable(todoTagItems);
+    await m.createTable(todoItems);
+    await m.createTable(todoItemTags);
+  }
 }
