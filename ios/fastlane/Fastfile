@@ -139,7 +139,7 @@ platform :ios do
 
     set_github_release(
       repository_name: "opencrafts-io/academia",
-      api_token:       ENV["GITHUB_TOKEN"],
+      api_token:       ENV["GITHUB_API_TOKEN"],
       name:            "iOS Staging v#{version}+#{build_num}",
       tag_name:        tag,
       description:     "Automated staging build\nBranch: #{ENV['GITHUB_REF_NAME']}\nCommit: #{ENV['GITHUB_SHA']}",
