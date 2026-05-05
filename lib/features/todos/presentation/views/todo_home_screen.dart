@@ -53,6 +53,12 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                     snap: true,
                     title: Text("Tasks"),
                     bottom: TodoListTabBar(
+                      isLoading: state.maybeWhen(
+                        loading: () => true,
+                        success: (_, __, isPaginating, isSyncing) =>
+                            isPaginating || isSyncing,
+                        orElse: () => false,
+                      ),
                       lists: lists,
                       onAddPressed: () {
                         CreateTodoListRoute().push(context);
@@ -71,135 +77,6 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
                         icon: const UserAvatar(scallopDepth: 2),
                       ),
                     ],
-                  ),
-
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    sliver: MultiSliver(
-                      children: [
-                        ExpansionTile(
-                          expansionAnimationStyle: AnimationStyle(
-                            curve: Curves.bounceInOut,
-                          ),
-                          title: Text("Pending To-Dos"),
-                          leading: Icon(Icons.pending_outlined),
-                          tilePadding: EdgeInsets.zero,
-                          maintainState: true,
-                          initiallyExpanded: true,
-                          children: [
-                            BlocBuilder<TodoBloc, TodoState>(
-                              buildWhen: (stateA, stateB) =>
-                                  stateB is TodoLoadedState,
-                              builder: (context, state) {
-                                if (state is TodoLoadedState) {
-                                  return StreamBuilder(
-                                    stream: state.todosStream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState !=
-                                          ConnectionState.active) {
-                                        return Center(
-                                          child:
-                                              CircularProgressIndicator.adaptive(),
-                                        );
-                                      }
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
-                                        final activeTodos = snapshot.data!
-                                            .where(
-                                              (todo) =>
-                                                  todo.status == "needsAction",
-                                            )
-                                            .toList();
-                                        return ListView.separated(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          addAutomaticKeepAlives: true,
-                                          itemCount: activeTodos.length,
-                                          itemBuilder: (context, index) {
-                                            return TodoCard(
-                                              todo: activeTodos[index],
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              Divider(),
-                                        );
-                                      }
-                                      return Text(
-                                        snapshot.connectionState.toString(),
-                                      );
-                                    },
-                                  );
-                                }
-                                return Center(child: Text("Whoops"));
-                              },
-                            ),
-                          ],
-                        ),
-                        ExpansionTile(
-                          title: Text("Completed"),
-                          tilePadding: EdgeInsets.zero,
-                          leading: Icon(Icons.check_box),
-                          children: [
-                            BlocBuilder<TodoBloc, TodoState>(
-                              buildWhen: (stateA, stateB) =>
-                                  stateB is TodoLoadedState,
-                              builder: (context, state) {
-                                if (state is TodoLoadedState) {
-                                  return StreamBuilder(
-                                    stream: state.todosStream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState !=
-                                          ConnectionState.active) {
-                                        return Center(
-                                          child:
-                                              CircularProgressIndicator.adaptive(),
-                                        );
-                                      }
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
-                                        final activeTodos = snapshot.data!
-                                            .where(
-                                              (todo) =>
-                                                  todo.status != "needsAction",
-                                            )
-                                            .toList();
-                                        return ListView.separated(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          addAutomaticKeepAlives: true,
-                                          itemCount: activeTodos.length,
-                                          itemBuilder: (context, index) {
-                                            return TodoCard(
-                                              todo: activeTodos[index],
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              Divider(),
-                                        );
-                                      }
-                                      return Text(
-                                        snapshot.connectionState.toString(),
-                                      );
-                                    },
-                                  );
-                                }
-                                return Center(
-                                  child: Text(
-                                    "You have no To-Dos at the moment",
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 32),
-                      ],
-                    ),
                   ),
                 ],
               ),
