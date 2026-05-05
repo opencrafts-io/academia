@@ -3,12 +3,6 @@
 require 'json'
 require 'tempfile'
 
-def tool_version(tool)
-  root = File.expand_path("../../..", __FILE__)
-  File.read(File.join(root, ".tool-versions"))
-      .scan(/^#{tool}\s+(.+)$/).first&.first&.strip
-end
-
 def flutter_version_name
   pubspec = File.read("../../pubspec.yaml")
   pubspec.match(/^version:\s+(\S+)\+/)[1]
@@ -24,7 +18,16 @@ default_platform(:ios)
 platform :ios do
 
   before_all do
-    if ENV['CI']
+    if is_ci
+      create_keychain(
+        name:               "build.keychain",
+        password:           ENV["KEYCHAIN_PASSWORD"],
+        default_keychain:   true,
+        unlock:             true,
+        timeout:            3600,
+        add_to_search_list: true
+      )
+
       app_store_connect_api_key(
         key_id:                ENV['APP_STORE_CONNECT_API_KEY_ID'],
         issuer_id:             ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
@@ -41,6 +44,8 @@ platform :ios do
     match(
       type:                    "appstore",
       readonly:                is_ci,
+      keychain_name:           is_ci ? "build.keychain" : nil,
+      keychain_password:       is_ci ? ENV["KEYCHAIN_PASSWORD"] : nil,
       app_identifier:          [
         "io.opencrafts.academia",
         "io.opencrafts.academia.OneSignalNotificationServiceExtension"
@@ -121,22 +126,6 @@ platform :ios do
     end
   end
 
-  desc "Capture App Store screenshots on simulators"
-  lane :screenshots do
-    capture_ios_screenshots(
-      scheme:                     "prod",
-      output_directory:           "fastlane/screenshots",
-      clear_previous_screenshots: true,
-      languages:                  ["en-US"],
-      devices:                    [
-        "iPhone 16 Pro Max",
-        "iPhone 16 Pro",
-        "iPad Pro 13-inch (M4)"
-      ]
-    )
-    frame_screenshots(white: false)
-  end
-
   desc "Build staging IPA and upload to GitHub Releases"
   lane :upload_staging_release do
     build_staging
@@ -164,7 +153,6 @@ platform :ios do
 
   desc "Screenshots + publish production IPA to App Store"
   lane :deploy_production do
-    screenshots
     build_production
 
     ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
@@ -172,7 +160,7 @@ platform :ios do
 
     upload_to_app_store(
       ipa:                               ipa_path,
-      skip_screenshots:                  false,
+      skip_screenshots:                  true,
       skip_metadata:                     false,
       submit_for_review:                 false,
       automatic_release:                 false,
