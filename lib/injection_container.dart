@@ -7,6 +7,8 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
+import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
+import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -242,20 +244,31 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<TodoListRemoteDatasource>(
     () => TodoListRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
-  sl.registerFactory<TodoLocalDatasource>(
-    () => TodoLocalDatasource(localDB: cacheDB),
+  sl.registerFactory<TodoTagRemoteDatasource>(
+    () => TodoTagRemoteDatasource(dioClient: sl(), flavor: flavor),
   );
-  sl.registerFactory<TodoRemoteDatasource>(
-    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
+  sl.registerFactory<TodoTagLocalDatasource>(
+    () => TodoTagLocalDatasource(cacheDB: sl()),
+  );
+  sl.registerFactory<TodoItemRemoteDatasource>(
+    () => TodoItemRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<TodoItemLocalDatasource>(
+    () => TodoItemLocalDatasource(cacheDB: sl()),
   );
   sl.registerFactory<TodoListRepository>(
     () => TodoListRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
   );
-  sl.registerFactory<TodoRepository>(
-    () => TodoRepositoryImpl(
-      todoRemoteDatasource: sl.get<TodoRemoteDatasource>(),
-      todoLocalDatasource: sl.get<TodoLocalDatasource>(),
+  sl.registerFactory<TodoItemRepository>(
+    () => TodoItemRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+      tagLocalDataSource: sl(),
     ),
+  );
+
+  sl.registerFactory<TodoTagRepository>(
+    () => TodoTagRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
   );
 
   sl.registerFactory<GetTodoLists>(() => GetTodoLists(sl()));
@@ -265,34 +278,25 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<SyncTodoLists>(() => SyncTodoLists(sl()));
   sl.registerFactory(() => GetDefaultTodoListUsecase(sl()));
 
-  sl.registerFactory<GetCachedTodosUsecase>(
-    () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
+  // TodoTag usecases
+  sl.registerFactory<GetTodoTags>(() => GetTodoTags(sl()));
+  sl.registerFactory<CreateTodoTag>(() => CreateTodoTag(sl()));
+  sl.registerFactory<UpdateTodoTag>(() => UpdateTodoTag(sl()));
+  sl.registerFactory<DeleteTodoTag>(() => DeleteTodoTag(sl()));
+  sl.registerFactory<SyncTodoTags>(() => SyncTodoTags(sl()));
 
-  sl.registerFactory<RefreshTodosUsecase>(
-    () => RefreshTodosUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<CreateTodoUsecase>(
-    () => CreateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<UpdateTodoUsecase>(
-    () => UpdateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<CompleteTodoUsecase>(
-    () => CompleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
+  // TodoItem usecases
+  sl.registerFactory<GetTodoItems>(() => GetTodoItems(sl()));
+  sl.registerFactory<GetTodoItemById>(() => GetTodoItemById(sl()));
+  sl.registerFactory<CreateTodoItem>(() => CreateTodoItem(sl()));
+  sl.registerFactory<UpdateTodoItem>(() => UpdateTodoItem(sl()));
+  sl.registerFactory<DeleteTodoItem>(() => DeleteTodoItem(sl()));
+  sl.registerFactory<CompleteTodoItem>(() => CompleteTodoItem(sl()));
+  sl.registerFactory<ReopenTodoItem>(() => ReopenTodoItem(sl()));
+  sl.registerFactory<MoveTodoItem>(() => MoveTodoItem(sl()));
+  sl.registerFactory<SyncTodoItems>(() => SyncTodoItems(sl()));
 
-  sl.registerFactory<DeleteTodoUsecase>(
-    () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-
-  sl.registerFactory<SyncTodosWithGoogleTasksUsecase>(
-    () => SyncTodosWithGoogleTasksUsecase(
-      todoRepository: sl.get<TodoRepository>(),
-    ),
-  );
-
-  sl.registerLazySingleton<TodoListCubit>(
+  sl.registerFactory<TodoListCubit>(
     () => TodoListCubit(
       getTodoListsUseCase: sl(),
       createTodoListUseCase: sl(),
@@ -303,15 +307,27 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerFactory<TodoBloc>(
-    () => TodoBloc(
-      syncTodosWithGoogleTasksUsecase: sl(),
-      getCachedTodosUsecase: sl(),
-      refreshTodosUsecase: sl(),
-      createTodoUsecase: sl(),
-      updateTodoUsecase: sl(),
-      deleteTodoUsecase: sl(),
-      completeTodoUsecase: sl(),
+  sl.registerFactory<TodoTagCubit>(
+    () => TodoTagCubit(
+      getTagsUseCase: sl(),
+      createTagUseCase: sl(),
+      updateTagUseCase: sl(),
+      deleteTagUseCase: sl(),
+      syncTagsUseCase: sl(),
+    ),
+  );
+
+  sl.registerFactory<TodoItemCubit>(
+    () => TodoItemCubit(
+      getItemsUseCase: sl(),
+      getItemByIdUseCase: sl(),
+      createItemUseCase: sl(),
+      updateItemUseCase: sl(),
+      deleteItemUseCase: sl(),
+      completeItemUseCase: sl(),
+      reopenItemUseCase: sl(),
+      moveItemUseCase: sl(),
+      syncItemsUseCase: sl(),
     ),
   );
 
