@@ -1,4 +1,4 @@
-# ios/fastlane/Fastfile
+i# ios/fastlane/Fastfile
 
 require 'json'
 require 'tempfile'
@@ -69,7 +69,7 @@ platform :ios do
 
     update_code_signing_settings(
       use_automatic_signing: false,
-      path:                  "ios/Runner.xcodeproj",
+      path:                  "Runner.xcodeproj",
       team_id:               "484L529PU2",
       targets:               ["Runner"],
       code_sign_identity:    "Apple Distribution",
@@ -78,7 +78,7 @@ platform :ios do
 
     update_code_signing_settings(
       use_automatic_signing: false,
-      path:                  "ios/Runner.xcodeproj",
+      path:                  "Runner.xcodeproj",
       team_id:               "484L529PU2",
       targets:               ["OneSignalNotificationServiceExtension"],
       code_sign_identity:    "Apple Distribution",
@@ -90,11 +90,30 @@ platform :ios do
       sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
          "--export-options-plist ios/ExportOptions-staging.plist")
     end
-  end  # ← build_staging ends here
+  end
 
   desc "Build production IPA"
   lane :build_production do
     sync_certs
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["Runner"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia"
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["OneSignalNotificationServiceExtension"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia.OneSignalNotificationServiceExtension"
+    )
+
     Dir.chdir("../../") do
       sh("flutter pub get")
       sh("flutter build ipa --flavor prod --target lib/main_production.dart " \
