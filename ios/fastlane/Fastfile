@@ -1,4 +1,4 @@
-i# ios/fastlane/Fastfile
+# ios/fastlane/Fastfile
 
 require 'json'
 require 'tempfile'
@@ -128,7 +128,7 @@ platform :ios do
       output_directory:           "fastlane/screenshots",
       clear_previous_screenshots: true,
       languages:                  ["en-US"],
-      devices: [
+      devices:                    [
         "iPhone 16 Pro Max",
         "iPhone 16 Pro",
         "iPad Pro 13-inch (M4)"
@@ -145,7 +145,7 @@ platform :ios do
     build_num = flutter_build_number
     tag       = "ios-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
 
-    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
     raise "IPA not found in build/ios/ipa/" unless ipa_path
 
     set_github_release(
@@ -153,13 +153,13 @@ platform :ios do
       api_token:       ENV["GITHUB_TOKEN"],
       name:            "iOS Staging v#{version}+#{build_num}",
       tag_name:        tag,
-      description:     "Automated staging build\nBranch: #{ENV["GITHUB_REF_NAME"]}\nCommit: #{ENV["GITHUB_SHA"]}",
+      description:     "Automated staging build\nBranch: #{ENV['GITHUB_REF_NAME']}\nCommit: #{ENV['GITHUB_SHA']}",
       commitish:       ENV["GITHUB_SHA"] || "staging",
       is_prerelease:   true,
       upload_assets:   [ipa_path]
     )
 
-    notify_discord(status: "✅ Staging IPA Released", version: "#{version}+#{build_num}")
+    notify_discord(status: "Staging IPA Released", version: "#{version}+#{build_num}")
   end
 
   desc "Screenshots + publish production IPA to App Store"
@@ -167,7 +167,7 @@ platform :ios do
     screenshots
     build_production
 
-    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
     raise "IPA not found in build/ios/ipa/" unless ipa_path
 
     upload_to_app_store(
@@ -180,7 +180,7 @@ platform :ios do
       precheck_include_in_app_purchases: false
     )
 
-    notify_discord(status: "✅ Production Submitted to App Store")
+    notify_discord(status: "Production Submitted to App Store")
   end
 
   private_lane :notify_discord do |options|
@@ -192,7 +192,7 @@ platform :ios do
 
     payload = JSON.generate({
       embeds: [{
-        title:  "Academia iOS — #{status}",
+        title:  "Academia iOS - #{status}",
         color:  3066993,
         fields: [
           { name: "Version", value: version },
