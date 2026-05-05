@@ -12,3 +12,4 @@ export 'get_todo_lists.dart';
 export 'update_todo_list.dart';
 export 'delete_todo_list.dart';
 export 'sync_todo_lists.dart';
+export 'get_default_todo_list_usecase.dart';

@@ -263,6 +263,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<UpdateTodoList>(() => UpdateTodoList(sl()));
   sl.registerFactory<DeleteTodoList>(() => DeleteTodoList(sl()));
   sl.registerFactory<SyncTodoLists>(() => SyncTodoLists(sl()));
+  sl.registerFactory(() => GetDefaultTodoListUsecase(sl()));
 
   sl.registerFactory<GetCachedTodosUsecase>(
     () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
@@ -298,6 +299,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       updateTodoListUseCase: sl(),
       deleteTodoListUseCase: sl(),
       syncTodoListsUseCase: sl(),
+      getDefaultTodoListUsecase: sl(),
     ),
   );
 

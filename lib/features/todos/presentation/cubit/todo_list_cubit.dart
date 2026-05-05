@@ -8,6 +8,7 @@ class TodoListCubit extends Cubit<TodoListState> {
   final UpdateTodoList updateTodoListUseCase;
   final DeleteTodoList deleteTodoListUseCase;
   final SyncTodoLists syncTodoListsUseCase;
+  final GetDefaultTodoListUsecase getDefaultTodoListUsecase;
 
   TodoListCubit({
     required this.getTodoListsUseCase,
@@ -15,7 +16,14 @@ class TodoListCubit extends Cubit<TodoListState> {
     required this.updateTodoListUseCase,
     required this.deleteTodoListUseCase,
     required this.syncTodoListsUseCase,
-  }) : super(const TodoListState.initial());
+    required this.getDefaultTodoListUsecase,
+  }) : super(const TodoListState.initial()) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await Future.wait([getDefaultTodoList(), loadTodoLists()]);
+  }
 
   /// Initial fetch
   Future<void> loadTodoLists() async {
@@ -28,6 +36,22 @@ class TodoListCubit extends Cubit<TodoListState> {
         TodoListState.success(todoLists: page.items, nextUrl: page.nextUrl),
       ),
     );
+  }
+
+  /// Returns the default todo list from the current state if already loaded,
+  /// otherwise fetches it from the repository.
+  Future<TodoListEntity?> getDefaultTodoList() async {
+    // Check in-memory state first to avoid a round-trip
+    final currentState = state.mapOrNull(success: (s) => s);
+    if (currentState != null) {
+      final cached = currentState.todoLists
+          .where((list) => list.isDefault)
+          .firstOrNull;
+      if (cached != null) return cached;
+    }
+
+    final result = await getDefaultTodoListUsecase(NoParams());
+    return result.fold((_) => null, (list) => list);
   }
 
   /// Load next page (Endless Scroll)
