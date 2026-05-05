@@ -131,9 +131,17 @@ jobs:
         with:
           cache: true
 
-      - name: Select Xcode 26
+      - name: Select Xcode version
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
+          # List available Xcode versions and pick latest stable
+          ls /Applications/ | grep Xcode
+          XCODE=$(ls /Applications/ | grep -E '^Xcode_1[0-9]\.' | sort -V | tail -1)
+          if [ -z "$XCODE" ]; then
+            XCODE=$(ls /Applications/ | grep -E '^Xcode\.app$')
+            sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          else
+            sudo xcode-select -s /Applications/${XCODE}/Contents/Developer
+          fi
           xcodebuild -version
 
       - name: Cache pub dependencies
@@ -202,33 +210,33 @@ jobs:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
         run: bundle exec fastlane upload_staging_release
 
-      - name: Notify Discord — Failure
-        if: failure()
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          REASON=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
-            | python3 -c "
-          import sys, json
-          jobs = json.load(sys.stdin).get('jobs', [])
-          failed = [j['name'] for j in jobs if j.get('conclusion') == 'failure']
-          steps = [s['name'] for j in jobs if j.get('conclusion') == 'failure'
-                   for s in j.get('steps', []) if s.get('conclusion') == 'failure']
-          print('Jobs: ' + ', '.join(failed) + ' | Steps: ' + ', '.join(steps))
-          ")
-          curl -s -X POST -H "Content-Type: application/json" \
-            -d "{\"embeds\":[{
-              \"title\": \"❌ iOS Staging FAILED\",
-              \"color\": 15158332,
-              \"fields\": [
-                {\"name\": \"Branch\",        \"value\": \"${{ github.ref_name }}\"},
-                {\"name\": \"Commit\",         \"value\": \"${{ github.sha }}\"},
-                {\"name\": \"Failure reason\", \"value\": \"${REASON:-unknown}\"},
-                {\"name\": \"Actor\",          \"value\": \"${{ github.actor }}\"},
-                {\"name\": \"Run\",            \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
-              ]
-            }]}" \
-            "$DISCORD_WEBHOOK_URL"
+      # - name: Notify Discord — Failure
+      #   if: failure()
+      #   env:
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #   run: |
+      #     REASON=$(curl -s \
+      #       -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      #       -H "Accept: application/vnd.github+json" \
+      #       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+      #       | python3 -c "
+      #     import sys, json
+      #     jobs = json.load(sys.stdin).get('jobs', [])
+      #     failed = [j['name'] for j in jobs if j.get('conclusion') == 'failure']
+      #     steps = [s['name'] for j in jobs if j.get('conclusion') == 'failure'
+      #              for s in j.get('steps', []) if s.get('conclusion') == 'failure']
+      #     print('Jobs: ' + ', '.join(failed) + ' | Steps: ' + ', '.join(steps))
+      #     ")
+      #     curl -s -X POST -H "Content-Type: application/json" \
+      #       -d "{\"embeds\":[{
+      #         \"title\": \"❌ iOS Staging FAILED\",
+      #         \"color\": 15158332,
+      #         \"fields\": [
+      #           {\"name\": \"Branch\",        \"value\": \"${{ github.ref_name }}\"},
+      #           {\"name\": \"Commit\",         \"value\": \"${{ github.sha }}\"},
+      #           {\"name\": \"Failure reason\", \"value\": \"${REASON:-unknown}\"},
+      #           {\"name\": \"Actor\",          \"value\": \"${{ github.actor }}\"},
+      #           {\"name\": \"Run\",            \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+      #         ]
+      #       }]}" \
+      #       "$DISCORD_WEBHOOK_URL"
