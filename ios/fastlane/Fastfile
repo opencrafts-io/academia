@@ -1,6 +1,7 @@
 # ios/fastlane/Fastfile
 
 require 'json'
+require 'tempfile'
 
 def tool_version(tool)
   root = File.expand_path("../../..", __FILE__)
@@ -38,19 +39,21 @@ platform :ios do
   desc "Sync code signing certs via Match (read-only on CI)"
   lane :sync_certs do
     match(
-      type:           "appstore",
-      readonly:       is_ci,
-      app_identifier: "io.opencrafts.academia"
+      type:                    "appstore",
+      readonly:                is_ci,
+      app_identifier:          "io.opencrafts.academia",
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
   end
 
   desc "One-time: generate certs and store in Match repo (write mode)"
   lane :bootstrap_match do
     match(
-      type:           "appstore",
-      readonly:       false,
-      app_identifier: "io.opencrafts.academia",
-      force:          false
+      type:                    "appstore",
+      readonly:                false,
+      app_identifier:          "io.opencrafts.academia",
+      force:                   false,
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
   end
 
@@ -98,6 +101,9 @@ platform :ios do
     build_num = flutter_build_number
     tag       = "ios-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
 
+    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    raise "IPA not found in build/ios/ipa/" unless ipa_path
+
     set_github_release(
       repository_name: "opencrafts-io/academia",
       api_token:       ENV["GITHUB_TOKEN"],
@@ -106,7 +112,7 @@ platform :ios do
       description:     "Automated staging build\nBranch: #{ENV["GITHUB_REF_NAME"]}\nCommit: #{ENV["GITHUB_SHA"]}",
       commitish:       ENV["GITHUB_SHA"] || "staging",
       is_prerelease:   true,
-      upload_assets:   ["../build/ios/ipa/Academia.ipa"]
+      upload_assets:   [ipa_path]
     )
 
     notify_discord(status: "✅ Staging IPA Released", version: "#{version}+#{build_num}")
@@ -117,8 +123,11 @@ platform :ios do
     screenshots
     build_production
 
+    ipa_path = Dir["../build/ios/ipa/*.ipa"].first
+    raise "IPA not found in build/ios/ipa/" unless ipa_path
+
     upload_to_app_store(
-      ipa:                               "../build/ios/ipa/Academia.ipa",
+      ipa:                               ipa_path,
       skip_screenshots:                  false,
       skip_metadata:                     false,
       submit_for_review:                 false,
@@ -149,7 +158,11 @@ platform :ios do
       }]
     })
 
-    sh("curl -s -X POST -H 'Content-Type: application/json' -d '#{payload}' '#{webhook}'")
+    Tempfile.create(["discord_payload", ".json"]) do |f|
+      f.write(payload)
+      f.flush
+      sh("curl -s -X POST -H 'Content-Type: application/json' -d @#{f.path} '#{webhook}'")
+    end
   end
 
 end
