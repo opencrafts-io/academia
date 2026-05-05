@@ -170,6 +170,16 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+
+      - name: Debug Ruby-Version
+        working-directory: ios
+        run: |
+          which ruby
+          ruby --version
+          which bundle
+          bundle --version
+          bundle env
+
       - name: Install CocoaPods
         working-directory: ios
         run: bundle exec pod install --repo-update
