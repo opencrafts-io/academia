@@ -62,7 +62,7 @@ platform :ios do
     sync_certs
     Dir.chdir("../../") do
       sh("flutter pub get")
-      sh("flutter build ipa --flavor staging --target lib/main_staging.dart " \
+      sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
          "--export-options-plist ios/ExportOptions-staging.plist")
     end
   end
@@ -72,7 +72,7 @@ platform :ios do
     sync_certs
     Dir.chdir("../../") do
       sh("flutter pub get")
-      sh("flutter build ipa --flavor production --target lib/main_production.dart " \
+      sh("flutter build ipa --flavor prod --target lib/main_production.dart " \
          "--export-options-plist ios/ExportOptions-production.plist")
     end
   end
@@ -80,7 +80,7 @@ platform :ios do
   desc "Capture App Store screenshots on simulators"
   lane :screenshots do
     capture_ios_screenshots(
-      scheme:                     "AcademiaProduction",
+      scheme:                     "prod",
       output_directory:           "fastlane/screenshots",
       clear_previous_screenshots: true,
       languages:                  ["en-US"],
