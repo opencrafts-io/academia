@@ -19,7 +19,7 @@ jobs:
     name: Android — Staging APK
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 45
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,7 +119,7 @@ jobs:
     name: iOS — Staging IPA
     runs-on: blacksmith-6vcpu-macos-latest
     timeout-minutes: 60
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -143,6 +143,17 @@ jobs:
             sudo xcode-select -s /Applications/${XCODE}/Contents/Developer
           fi
           xcodebuild -version
+
+      - name: Bootstrap match(one-time)
+        working-directory: ios
+        env:
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+        run: bundle exec fastlane bootstrap_match
 
       - name: Cache pub dependencies
         uses: actions/cache@v4
@@ -170,7 +181,7 @@ jobs:
           key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('ios/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-ios-v3-
-          
+
       - name: Install gems
         working-directory: ios
         run: |

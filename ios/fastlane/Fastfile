@@ -41,7 +41,10 @@ platform :ios do
     match(
       type:                    "appstore",
       readonly:                is_ci,
-      app_identifier:          "io.opencrafts.academia",
+      app_identifier:          [
+        "io.opencrafts.academia",
+        "io.opencrafts.academia.OneSignalNotificationServiceExtension"
+      ],
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
   end
@@ -51,7 +54,10 @@ platform :ios do
     match(
       type:                    "appstore",
       readonly:                false,
-      app_identifier:          "io.opencrafts.academia",
+      app_identifier:          [
+        "io.opencrafts.academia",
+        "io.opencrafts.academia.OneSignalNotificationServiceExtension"
+      ],
       force:                   false,
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
