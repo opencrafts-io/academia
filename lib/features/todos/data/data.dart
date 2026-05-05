@@ -11,6 +11,8 @@ export 'repository/todo_list_repository_impl.dart';
 // mappers
 export 'mappers/todo_list_mapper.dart';
 export 'models/todo_helper.dart';
+export 'mappers/todo_tag_mapper.dart';
+export 'mappers/todo_item_mapper.dart';
 
 // dtos
 export 'dtos/todo_list_dto.dart';
