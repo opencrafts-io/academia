@@ -11,12 +11,11 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
-
 android {
     namespace = "io.opencrafts.academia"
     compileSdk = 36
@@ -46,21 +45,19 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
-        }
-        create("staging") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
-        }
-
+         create("release") {
+        keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
+        keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
+        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
     }
-
+         create("staging") {
+        keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
+        keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
+        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
+    }
+}
     buildTypes {
         release {
             isMinifyEnabled = true

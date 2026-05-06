@@ -1,0 +1,201 @@
+# ios/fastlane/Fastfile
+
+require 'json'
+require 'tempfile'
+
+def flutter_version_name
+  pubspec = File.read("../../pubspec.yaml")
+  pubspec.match(/^version:\s+(\S+)\+/)[1]
+end
+
+def flutter_build_number
+  pubspec = File.read("../../pubspec.yaml")
+  pubspec.match(/^version:\s+\S+\+(\S+)/)[1]
+end
+
+default_platform(:ios)
+
+platform :ios do
+
+  before_all do
+    if is_ci
+      create_keychain(
+        name:               "build.keychain",
+        password:           ENV["KEYCHAIN_PASSWORD"],
+        default_keychain:   true,
+        unlock:             true,
+        timeout:            3600,
+        add_to_search_list: true
+      )
+
+      app_store_connect_api_key(
+        key_id:                ENV['APP_STORE_CONNECT_API_KEY_ID'],
+        issuer_id:             ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
+        key_content:           ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
+        is_key_content_base64: false,
+        duration:              1200,
+        in_house:              false
+      )
+    end
+  end
+
+  desc "Sync code signing certs via Match (read-only on CI)"
+  lane :sync_certs do
+    match(
+      type:                    "appstore",
+      readonly:                is_ci,
+      keychain_name:           is_ci ? "build.keychain" : nil,
+      keychain_password:       is_ci ? ENV["KEYCHAIN_PASSWORD"] : nil,
+      app_identifier:          [
+        "io.opencrafts.academia",
+        "io.opencrafts.academia.OneSignalNotificationServiceExtension"
+      ],
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
+    )
+  end
+
+  desc "One-time: generate certs and store in Match repo (write mode)"
+  lane :bootstrap_match do
+    match(
+      type:                    "appstore",
+      readonly:                false,
+      app_identifier:          [
+        "io.opencrafts.academia",
+        "io.opencrafts.academia.OneSignalNotificationServiceExtension"
+      ],
+      force:                   false,
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
+    )
+  end
+
+  desc "Build staging IPA"
+  lane :build_staging do
+    sync_certs
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["Runner"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia"
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["OneSignalNotificationServiceExtension"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia.OneSignalNotificationServiceExtension"
+    )
+
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
+         "--export-options-plist ios/ExportOptions-staging.plist")
+    end
+  end
+
+  desc "Build production IPA"
+  lane :build_production do
+    sync_certs
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["Runner"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia"
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path:                  "Runner.xcodeproj",
+      team_id:               "484L529PU2",
+      targets:               ["OneSignalNotificationServiceExtension"],
+      code_sign_identity:    "Apple Distribution",
+      profile_name:          "match AppStore io.opencrafts.academia.OneSignalNotificationServiceExtension"
+    )
+
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build ipa --flavor prod --target lib/main_production.dart " \
+         "--export-options-plist ios/ExportOptions-production.plist")
+    end
+  end
+
+  desc "Build staging IPA and upload to GitHub Releases"
+  lane :upload_staging_release do
+    build_staging
+
+    version   = flutter_version_name
+    build_num = flutter_build_number
+    tag       = "ios-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
+
+    repo_root = File.expand_path("../../", __dir__)
+    ipa_path  = Dir["#{repo_root}/build/ios/ipa/*.ipa"].first
+    raise "IPA not found in #{repo_root}/build/ios/ipa/" unless ipa_path
+
+    set_github_release(
+      repository_name: "opencrafts-io/academia",
+      api_token:       ENV["GITHUB_API_TOKEN"],
+      name:            "iOS Staging v#{version}+#{build_num}",
+      tag_name:        tag,
+      description:     "Automated staging build\nBranch: #{ENV['GITHUB_REF_NAME']}\nCommit: #{ENV['GITHUB_SHA']}",
+      commitish:       ENV["GITHUB_SHA"] || "staging",
+      is_prerelease:   true,
+      upload_assets:   [ipa_path]
+    )
+
+    notify_discord(status: "Staging IPA Released", version: "#{version}+#{build_num}")
+  end
+
+  desc "Screenshots + publish production IPA to App Store"
+  lane :deploy_production do
+    build_production
+
+    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
+    raise "IPA not found in build/ios/ipa/" unless ipa_path
+
+    upload_to_app_store(
+      ipa:                               ipa_path,
+      skip_screenshots:                  true,
+      skip_metadata:                     false,
+      submit_for_review:                 false,
+      automatic_release:                 false,
+      force:                             true,
+      precheck_include_in_app_purchases: false
+    )
+
+    notify_discord(status: "Production Submitted to App Store")
+  end
+
+  private_lane :notify_discord do |options|
+    version = options[:version] || "#{flutter_version_name}+#{flutter_build_number}"
+    sha     = (ENV["GITHUB_SHA"] || "unknown")[0, 7]
+    branch  = ENV["GITHUB_REF_NAME"] || "unknown"
+    status  = options[:status]
+    webhook = ENV["DISCORD_WEBHOOK_URL"]
+
+    payload = JSON.generate({
+      embeds: [{
+        title:  "Academia iOS - #{status}",
+        color:  3066993,
+        fields: [
+          { name: "Version", value: version },
+          { name: "Branch",  value: branch  },
+          { name: "Commit",  value: sha     }
+        ]
+      }]
+    })
+
+    Tempfile.create(["discord_payload", ".json"]) do |f|
+      f.write(payload)
+      f.flush
+      sh("curl -s -X POST -H 'Content-Type: application/json' -d @#{f.path} '#{webhook}'")
+    end
+  end
+
+end

@@ -12,7 +12,6 @@
 .swiftpm/
 migrate_working_dir/
 
-*.lock
 devtools_*.yaml
 C*md
 
@@ -51,3 +50,12 @@ app.*.map.json
 TODO.md
 sentry.properties
 sentry-wizard
+
+# Fastlane generated output
+**/fastlane/report.xml
+**/fastlane/screenshots/
+**/fastlane/test_output/
+**/fastlane/Preview.html
+
+# mise — tool installs are local, not committed
+.mise.local.toml

@@ -1,0 +1,178 @@
+name:  Production — Lint, Scan & Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint-and-scan:
+    name: 🔍 Lint & SonarQube
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # SonarQube needs full git history
+
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Dart format check
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Flutter analyze
+        run: flutter analyze --no-pub --fatal-infos
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Notify Discord — Lint/Scan Failure
+        if: failure()
+        run: |
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ Lint/SonarQube FAILED on main\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
+  android:
+    name: Android — Play Store
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    needs: lint-and-scan
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+
+      - name: Decode Android keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
+            > android/app/keystore.jks
+
+      - name: Write key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=keystore.jks
+          EOF
+
+      - name: Write Play Store key
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' \
+            > ${{ runner.temp }}/play-key.json
+
+      - name: Install gems
+        working-directory: android
+        run: bundle install
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: android/vendor/bundle
+          key: gems-android-${{ hashFiles('android/Gemfile.lock') }}
+          restore-keys: gems-android-
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Fastlane — Deploy to Play Store
+        working-directory: android
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GOOGLE_PLAY_JSON_KEY_PATH: ${{ runner.temp }}/play-key.json
+        run: bundle exec fastlane deploy_production
+
+      - name: Notify Discord — Android Prod Failure
+        if: failure()
+        run: |
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ Android Production FAILED\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
+  ios:
+    name: iOS — App Store
+    runs-on: macos-latest
+    needs: lint-and-scan
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Load tool versions
+        id: versions
+        uses: ./.github/actions/load-tool-versions
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+
+      - name: Select Xcode 26
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Install gems
+        working-directory: ios
+        run: bundle install
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: ios/vendor/bundle
+          key: gems-ios-${{ hashFiles('ios/Gemfile.lock') }}
+          restore-keys: gems-ios-
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Fastlane — Screenshots + Deploy to App Store
+        working-directory: ios
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: bundle exec fastlane deploy_production
+
+      - name: Notify Discord — iOS Prod Failure
+        if: failure()
+        run: |
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{\"title\":\"❌ iOS Production FAILED\",\"color\":15158332,\"fields\":[{\"name\":\"Run\",\"value\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}]}]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
