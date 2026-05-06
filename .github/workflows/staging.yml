@@ -71,7 +71,7 @@ jobs:
             echo "storePassword=$(echo "${{ secrets.ANDROID_STORE_PASSWORD }}" | tr -d '[:space:]')"
             echo "keyPassword=$(echo "${{ secrets.ANDROID_KEY_PASSWORD }}" | tr -d '[:space:]')"
             echo "keyAlias=$(echo "${{ secrets.ANDROID_KEY_ALIAS }}" | tr -d '[:space:]')"
-            echo "storeFile=keystore.jks"
+            echo "storeFile=app/keystore.jks"
           } > android/key.properties
 
       - name: Install gems
