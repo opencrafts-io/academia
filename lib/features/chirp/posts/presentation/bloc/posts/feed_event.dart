@@ -54,9 +54,17 @@ class MarkPostAsViewed extends FeedEvent {
 }
 
 class ToggleLikePost extends FeedEvent {
-  final String postId;
-  final bool isCurrentlyLiked;
-  ToggleLikePost({required this.postId, required this.isCurrentlyLiked});
+  final Post post;
+  final int voteValue;
+  final String voterId;
+  final FeedState? previousState;
+
+  ToggleLikePost({
+    required this.post,
+    required this.voteValue,
+    required this.voterId,
+    this.previousState,
+  });
 }
 
 class UpdatePostInFeed extends FeedEvent {
@@ -67,3 +75,5 @@ class UpdatePostInFeed extends FeedEvent {
   @override
   List<Object> get props => [updatedPost];
 }
+
+class CheckFeedLikeStatuses extends FeedEvent {}

@@ -200,6 +200,9 @@ class _AcademiaState extends State<Academia> {
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 AppRouter.router.refresh();
+                if (state is AuthAuthenticated) {
+                  context.read<FeedBloc>().add(CheckFeedLikeStatuses());
+                }
               },
             ),
             BlocListener<NotificationBloc, NotificationState>(
