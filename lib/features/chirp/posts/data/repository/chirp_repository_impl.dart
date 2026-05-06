@@ -207,23 +207,23 @@ class ChirpRepositoryImpl implements ChirpRepository {
   @override
   Future<Either<Failure, Post>> toggleLike({
     required Post post,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   }) async {
     final result = await remoteDataSource.toggleLike(
       postId: post.id,
-      isCurrentlyLiked: isCurrentlyLiked,
+      voteValue: voteValue,
       voterId: voterId,
     );
     return result.fold(
       (failure) => left(failure),
       (data) {
+        final newVote = (data['my_vote'] as int?) ?? voteValue;
+        final oldVote = post.myVote;
+        final int upvotesDelta = newVote - oldVote;
         final updatedPost = post.copyWith(
-          upvotes: (data['upvotes'] as int?) ??
-              (isCurrentlyLiked
-                  ? (post.upvotes - 1).clamp(0, double.maxFinite.toInt())
-                  : post.upvotes + 1),
-          isLikedByMe: data['is_liked'] as bool? ?? !isCurrentlyLiked,
+          upvotes: (data['upvotes'] as int?) ?? (post.upvotes + upvotesDelta),
+          myVote: newVote,
         );
         // Best-effort local cache update
         localDataSource.createOrUpdatePost(updatedPost.toData());
@@ -233,7 +233,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> checkIsLiked({required int postId}) {
+  Future<Either<Failure, int>> checkIsLiked({required int postId}) {
     return remoteDataSource.checkIsLiked(postId: postId);
   }
 }

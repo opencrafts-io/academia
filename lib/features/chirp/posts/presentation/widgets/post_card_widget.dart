@@ -574,10 +574,11 @@ class _PostCardState extends State<PostCard> {
                     builder: (context, post) {
                       return Row(
                         children: [
-                          PostLikeButton(
+                          PostVoteButton(
                             upvotes: post.upvotes,
-                            isLiked: post.isLikedByMe,
-                            onTap: () {
+                            downvotes: post.downvotes,
+                            myVote: post.myVote,
+                            onUpvote: () {
                               final profileState = context
                                   .read<ProfileBloc>()
                                   .state;
@@ -586,11 +587,34 @@ class _PostCardState extends State<PostCard> {
                               final previousFeedState = context
                                   .read<FeedBloc>()
                                   .state;
-                              cubit.toggleLikeOptimistic();
+                              // Toggle: upvote again retracts
+                              final newVote = post.myVote == 1 ? 0 : 1;
+                              cubit.applyVoteOptimistic(newVote);
                               context.read<FeedBloc>().add(
                                 ToggleLikePost(
                                   post: post,
-                                  isCurrentlyLiked: post.isLikedByMe,
+                                  voteValue: newVote,
+                                  voterId: profileState.profile.id,
+                                  previousState: previousFeedState,
+                                ),
+                              );
+                            },
+                            onDownvote: () {
+                              final profileState = context
+                                  .read<ProfileBloc>()
+                                  .state;
+                              if (profileState is! ProfileLoadedState) return;
+                              final cubit = context.read<PostCubit>();
+                              final previousFeedState = context
+                                  .read<FeedBloc>()
+                                  .state;
+                              // Toggle: downvote again retracts
+                              final newVote = post.myVote == -1 ? 0 : -1;
+                              cubit.applyVoteOptimistic(newVote);
+                              context.read<FeedBloc>().add(
+                                ToggleLikePost(
+                                  post: post,
+                                  voteValue: newVote,
                                   voterId: profileState.profile.id,
                                   previousState: previousFeedState,
                                 ),

@@ -401,8 +401,8 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  /// Checks whether the current authenticated user has liked [postId].
-  Future<Either<Failure, bool>> checkIsLiked({
+  // Checks the current authenticated user's vote on post
+  Future<Either<Failure, int>> checkIsLiked({
     required int postId,
   }) async {
     try {
@@ -416,7 +416,8 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
 
       if (res.statusCode == 200) {
-        return right(true);
+        final value = res.data['value'];
+        return right((value as num?)?.toInt() ?? 0);
       }
 
       return left(
@@ -424,25 +425,24 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        return right(false);
+        // Not voted
+        return right(0);
       }
-      _logger.e('[checkIsLiked] DioException: ${e.response?.statusCode}');
       return handleDioError(e);
     } catch (e) {
-      _logger.e('[checkIsLiked] Unexpected error: $e');
       return left(
         ServerFailure(
-          message: 'An unexpected error occurred while checking like status',
+          message: 'An unexpected error occurred while checking vote status',
           error: e,
         ),
       );
     }
   }
 
-  /// Toggles a like on a post
+  // Submits a vote on a post.
   Future<Either<Failure, Map<String, dynamic>>> toggleLike({
     required int postId,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   }) async {
     try {
@@ -450,18 +450,19 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         return handleNoConnection();
       }
 
-      final endpoint = isCurrentlyLiked
+      final bool isRetract = voteValue == 0;
+      final endpoint = isRetract
           ? '/$servicePrefix/posts/$postId/vote/redact/'
           : '/$servicePrefix/posts/$postId/vote/';
 
       final body = {
         'voter_id': voterId,
         'post_id': postId,
-        'value': isCurrentlyLiked ? -1 : 1,
+        'value': isRetract ? -1 : voteValue,
       };
 
       final Response<dynamic> res;
-      if (isCurrentlyLiked) {
+      if (isRetract) {
         res = await dioClient.dio.delete(endpoint, data: body);
       } else {
         res = await dioClient.dio.post(endpoint, data: body);
@@ -475,7 +476,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
             : <String, dynamic>{};
         return right({
           'upvotes': data['upvotes'] ?? data['likes_count'],
-          'is_liked': !isCurrentlyLiked,
+          'my_vote': isRetract ? 0 : voteValue,
         });
       }
 
@@ -483,15 +484,11 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
     } on DioException catch (e) {
-      _logger.e(
-        '[toggleLike] DioException: ${e.response?.statusCode} ${e.response?.data}',
-      );
       return handleDioError(e);
     } catch (e) {
-      _logger.e('[toggleLike] Unexpected error: $e');
       return left(
         ServerFailure(
-          message: "An unexpected error occurred while toggling like",
+          message: "An unexpected error occurred while casting vote",
           error: e,
         ),
       );

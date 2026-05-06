@@ -1,67 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
-class PostLikeButton extends StatelessWidget {
+class PostVoteButton extends StatelessWidget {
   final int upvotes;
-  final bool isLiked;
-  final VoidCallback onTap;
+  final int downvotes;
+  final int myVote;
+  final VoidCallback onUpvote;
+  final VoidCallback onDownvote;
 
-  final EdgeInsetsGeometry? padding;
-  final double? iconSize;
-
-  const PostLikeButton({
+  const PostVoteButton({
     super.key,
     required this.upvotes,
-    required this.isLiked,
-    required this.onTap,
-    this.padding,
-    this.iconSize,
+    required this.downvotes,
+    required this.myVote,
+    required this.onUpvote,
+    required this.onDownvote,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = isLiked
-        ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.outline;
-
-    final effectivePadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 14, vertical: 8);
-    final effectiveIconSize = iconSize ?? 22;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: effectivePadding,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          border: Border.all(color: color, width: .5),
-          borderRadius: BorderRadius.circular(20),
+    return SegmentedButton<int>(
+      segments: [
+        ButtonSegment<int>(
+          value: 1,
+          icon: Icon(Symbols.shift_rounded),
+          label: Text('${upvotes - downvotes}'),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) =>
-                  ScaleTransition(scale: animation, child: child),
-              child: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                key: ValueKey(isLiked),
-                size: effectiveIconSize,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '$upvotes',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: color,
-                fontWeight: isLiked ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
+        ButtonSegment<int>(
+          value: -1,
+          icon: RotatedBox(quarterTurns: 2, child: Icon(Symbols.shift_rounded)),
         ),
-      ),
+      ],
+      emptySelectionAllowed: true,
+      selected: myVote == 0 ? const <int>{} : <int>{myVote},
+      showSelectedIcon: false,
+      onSelectionChanged: (Set<int> newSelection) {
+        if (newSelection.isEmpty) {
+          if (myVote == 1) {
+            onUpvote();
+          } else if (myVote == -1) {
+            onDownvote();
+          }
+        } else {
+          final selected = newSelection.first;
+          if (selected == 1) {
+            onUpvote();
+          } else if (selected == -1) {
+            onDownvote();
+          }
+        }
+      },
     );
+    
   }
 }

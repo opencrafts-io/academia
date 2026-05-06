@@ -54,9 +54,9 @@ abstract class ChirpRepository {
 
   Future<Either<Failure, Post>> toggleLike({
     required Post post,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   });
 
-  Future<Either<Failure, bool>> checkIsLiked({required int postId});
+  Future<Either<Failure, int>> checkIsLiked({required int postId});
 }

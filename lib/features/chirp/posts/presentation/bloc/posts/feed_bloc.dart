@@ -415,13 +415,13 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   ) async {
     final result = await likePost(
       post: event.post,
-      isCurrentlyLiked: event.isCurrentlyLiked,
+      voteValue: event.voteValue,
       voterId: event.voterId,
     );
 
     result.fold(
       (failure) {
-        _logger.e('Failed to toggle like: ${failure.message}');
+        _logger.e('Failed to cast vote: ${failure.message}');
         emit(PostLikeError(post: event.post, message: failure.message));
         if (event.previousState != null) emit(event.previousState!);
       },
@@ -451,8 +451,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         (failure) {
           updatedPosts.add(post);
         },
-        (isLiked) {
-          updatedPosts.add(post.copyWith(isLikedByMe: isLiked));
+        (voteValue) {
+          updatedPosts.add(post.copyWith(myVote: voteValue));
         },
       );
     }

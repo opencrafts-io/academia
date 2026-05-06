@@ -7,7 +7,7 @@ class CheckPostLikedUsecase {
 
   CheckPostLikedUsecase({required this.chirpRepository});
 
-  Future<Either<Failure, bool>> call({required int postId}) {
+  Future<Either<Failure, int>> call({required int postId}) {
     return chirpRepository.checkIsLiked(postId: postId);
   }
 }
