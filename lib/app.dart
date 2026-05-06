@@ -151,7 +151,6 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<TodoListCubit>()),
         BlocProvider(create: (context) => sl<TodoTagCubit>()),
-        BlocProvider(create: (context) => sl<TodoItemCubit>()),
         BlocProvider(
           create: (context) => sl<TodoBloc>()
             ..add(FetchCachedTodosEvent())
