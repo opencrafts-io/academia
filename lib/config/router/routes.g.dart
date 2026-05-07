@@ -940,6 +940,10 @@ RouteBase get $todosRoute => GoRouteData.$route(
         ),
       ],
     ),
+    GoRouteData.$route(
+      path: 'create-todo-item',
+      factory: $CreateTodoItemRoute._fromState,
+    ),
   ],
 );
 
@@ -1016,6 +1020,27 @@ mixin $ViewTaskListRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/todos/tasklist/${Uri.encodeComponent(_self.taskListId.toString())}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $CreateTodoItemRoute on GoRouteData {
+  static CreateTodoItemRoute _fromState(GoRouterState state) =>
+      CreateTodoItemRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos/create-todo-item');
 
   @override
   void go(BuildContext context) => context.go(location);

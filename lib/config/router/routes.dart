@@ -522,6 +522,8 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
       path: "tasklist",
       routes: [TypedGoRoute<ViewTaskListRoute>(path: ":taskListId")],
     ),
+
+    TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -565,9 +567,49 @@ class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
     return ModalSheetPage(
       fullscreenDialog: true,
       swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: child,
+      ),
+      child: Sheet(child: CreateTodoListScreen()),
+    );
+  }
+}
+
+class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.easeIn,
       viewportBuilder: (context, child) =>
           SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: Sheet(child: CreateTodoListScreen()),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: BlocProvider(
+            create: (_) => sl<TodoItemCubit>(),
+            child: CreateTodoItemScreen(),
+          ),
+        ),
+      ),
     );
   }
 }

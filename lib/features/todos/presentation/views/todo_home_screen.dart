@@ -17,27 +17,12 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   TabController? _tabController;
-  List<TodoListEntity> _previousLists = [];
 
   @override
   void dispose() {
     _searchController.dispose();
     _tabController?.dispose();
     super.dispose();
-  }
-
-  void _syncTabController(List<TodoListEntity> lists) {
-    final newLength = lists.length + 1; // +1 for "All" tab
-    if (_tabController?.length == newLength) return;
-
-    final previousIndex = _tabController?.index ?? 0;
-    _tabController?.dispose();
-    _tabController = TabController(
-      length: newLength,
-      vsync: this,
-      initialIndex: previousIndex.clamp(0, newLength - 1),
-    );
-    _previousLists = lists;
   }
 
   @override
@@ -71,11 +56,11 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                     pinned: true,
                     floating: true,
                     snap: true,
-                    title: Text("Tasks"),
+                    title: const Text("Tasks"),
                     bottom: TodoListTabBar(
                       isLoading: state.maybeWhen(
                         loading: () => true,
-                        success: (_, __, isPaginating, isSyncing) =>
+                        success: (_, _, isPaginating, isSyncing) =>
                             isPaginating || isSyncing,
                         orElse: () => false,
                       ),
@@ -98,23 +83,20 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                       ),
                     ],
                   ),
-
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverFillRemaining(
-                      child: TabBarView(
-                        physics: BouncingScrollPhysics(
-                          decelerationRate: ScrollDecelerationRate.fast,
-                        ),
-                        children: [
-                          _TodoItemsTab(taskListLocalId: null),
-                          // One tab per list
-                          ...lists.map(
-                            (list) =>
-                                _TodoItemsTab(taskListLocalId: list.localId),
-                          ),
-                        ],
+                  SliverFillRemaining(
+                    child: TabBarView(
+                      physics: const BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.fast,
                       ),
+                      children: [
+                        // One tab per list
+                        ...lists.map(
+                          (list) =>
+                              _TodoItemsTab(taskListLocalId: list.localId),
+                        ),
+
+                        _TodoItemsTab(taskListLocalId: null),
+                      ],
                     ),
                   ),
                 ],
@@ -123,22 +105,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
           ),
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
-            onPressed: () {
-              showModalBottomSheet(
-                showDragHandle: true,
-                enableDrag: true,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.9,
-                ),
-                isScrollControlled: true,
-                context: context,
-                sheetAnimationStyle: AnimationStyle(
-                  curve: Curves.elasticInOut,
-                  reverseCurve: Curves.elasticOut,
-                ),
-                builder: (context) => CreateTodoBottomSheet(),
-              );
-            },
+            onPressed: () => CreateTodoItemRoute().push(context),
           ),
         );
       },
@@ -146,10 +113,6 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
   }
 }
 
-/// A self-contained tab that owns its own [TodoItemCubit] scoped
-/// to a specific task list (or all lists if [taskListLocalId] is null).
-/// Using [AutomaticKeepAliveClientMixin] preserves scroll position and
-/// cubit state when the user switches between tabs.
 class _TodoItemsTab extends StatefulWidget {
   final int? taskListLocalId;
 
@@ -163,119 +126,148 @@ class _TodoItemsTabState extends State<_TodoItemsTab>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required by AutomaticKeepAliveClientMixin
+    super.build(context);
 
     return BlocProvider(
       // Each tab gets its own cubit instance scoped to its list
-      create: (_) => TodoItemCubit(
-        getItemsUseCase: sl(),
-        getItemByIdUseCase: sl(),
-        createItemUseCase: sl(),
-        updateItemUseCase: sl(),
-        deleteItemUseCase: sl(),
-        completeItemUseCase: sl(),
-        reopenItemUseCase: sl(),
-        moveItemUseCase: sl(),
-        syncItemsUseCase: sl(),
-        taskListLocalId: widget.taskListLocalId,
-      ),
+      create: (_) => sl<TodoItemCubit>(param1: widget.taskListLocalId),
       child: BlocBuilder<TodoItemCubit, TodoItemState>(
         builder: (context, state) {
           return state.when(
-            initial: () => Column(children: []),
-            loading: (items) {
-              if (items.isEmpty) {
-                return _buildEmpty();
-              }
-
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return TodoCard(
-                    item: item,
-                    onComplete: () => context
-                        .read<TodoItemCubit>()
-                        .completeItem(item.localId),
-                    onReopen: () =>
-                        context.read<TodoItemCubit>().reopenItem(item.localId),
-                    onDelete: () =>
-                        context.read<TodoItemCubit>().deleteItem(item.localId),
-                  );
-                },
-              );
-            },
-            success: (items, nextUrl, isPaginating, isSyncing) {
-              if (items.isEmpty) {
-                return _buildEmpty();
-              }
-
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return TodoCard(
-                    item: item,
-                    onComplete: () => context
-                        .read<TodoItemCubit>()
-                        .completeItem(item.localId),
-                    onReopen: () =>
-                        context.read<TodoItemCubit>().reopenItem(item.localId),
-                    onDelete: () =>
-                        context.read<TodoItemCubit>().deleteItem(item.localId),
-                  );
-                },
-              );
-            },
-            failure: (failure, items) {
-              if (items.isEmpty) {
-                return _buildEmpty();
-              }
-
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return TodoCard(
-                    item: item,
-                    onComplete: () => context
-                        .read<TodoItemCubit>()
-                        .completeItem(item.localId),
-                    onReopen: () =>
-                        context.read<TodoItemCubit>().reopenItem(item.localId),
-                    onDelete: () =>
-                        context.read<TodoItemCubit>().deleteItem(item.localId),
-                  );
-                },
-              );
-            },
+            initial: () => const _EmptyState(),
+            loading: (items) => items.isEmpty
+                ? const _EmptyState()
+                : _TodoItemsList(items: items),
+            success: (items, nextUrl, isPaginating, isSyncing) => items.isEmpty
+                ? const _EmptyState()
+                : _TodoItemsList(items: items),
+            failure: (failure, items) => items.isEmpty
+                ? const _EmptyState()
+                : _TodoItemsList(items: items),
           );
         },
       ),
     );
   }
+}
 
-  Widget _buildEmpty() {
+class _TodoItemsList extends StatefulWidget {
+  final List<TodoItemEntity> items;
+  const _TodoItemsList({required this.items});
+
+  @override
+  State<_TodoItemsList> createState() => _TodoItemsListState();
+}
+
+class _TodoItemsListState extends State<_TodoItemsList> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final position = _scrollController.position;
+    final nearBottom = position.pixels >= position.maxScrollExtent - 200;
+
+    if (nearBottom) {
+      context.read<TodoItemCubit>().loadMore();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: widget.items.length + 1,
+      itemBuilder: (context, index) {
+        if (index == widget.items.length) {
+          return BlocBuilder<TodoItemCubit, TodoItemState>(
+            builder: (context, state) {
+              final isPaginating = state.maybeWhen(
+                success: (_, _, isPaginating, _) => isPaginating,
+                orElse: () => false,
+              );
+              final hasMore = state.maybeWhen(
+                success: (_, nextUrl, _, _) => nextUrl != null,
+                orElse: () => false,
+              );
+
+              if (isPaginating) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Center(child: CircularProgressIndicator.adaptive()),
+                );
+              }
+
+              if (!hasMore) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: Text(
+                      "You're all caught up",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
+          );
+        }
+
+        final item = widget.items[index];
+        return TodoCard(
+          item: item,
+          onComplete: () =>
+              context.read<TodoItemCubit>().completeItem(item.localId),
+          onReopen: () =>
+              context.read<TodoItemCubit>().reopenItem(item.localId),
+          onDelete: () =>
+              context.read<TodoItemCubit>().deleteItem(item.localId),
+        );
+      },
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Assets.icons.computer.image(height: 180, width: 180),
-          SizedBox(height: 16),
-          Text("No tasks yet", style: Theme.of(context).textTheme.titleLarge),
-          SizedBox(height: 8),
-          Text(
-            "Add your to-dos and keep track of them across Academia "
-            "and Google Workspace",
-            textAlign: TextAlign.center,
-          ),
-        ],
+      child: Padding(
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Assets.icons.computer.image(height: 180, width: 180),
+            const SizedBox(height: 16),
+            Text("No tasks yet", style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            const Text(
+              "Add your to-dos and keep track of them across Academia "
+              "and Google Workspace",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

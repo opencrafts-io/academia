@@ -317,8 +317,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerFactory<TodoItemCubit>(
-    () => TodoItemCubit(
+  sl.registerFactoryParam<TodoItemCubit, int?, dynamic>(
+    (taskListLocalID, _) => TodoItemCubit(
       getItemsUseCase: sl(),
       getItemByIdUseCase: sl(),
       createItemUseCase: sl(),
@@ -328,6 +328,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       reopenItemUseCase: sl(),
       moveItemUseCase: sl(),
       syncItemsUseCase: sl(),
+      taskListLocalId: taskListLocalID,
     ),
   );
 
