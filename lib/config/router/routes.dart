@@ -524,6 +524,7 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
     ),
 
     TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
+    TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -607,6 +608,46 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
           child: BlocProvider(
             create: (_) => sl<TodoItemCubit>(),
             child: CreateTodoItemScreen(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateTodoItemRoute extends GoRouteData with $UpdateTodoItemRoute {
+  final int todoLocalID;
+
+  const UpdateTodoItemRoute({required this.todoLocalID});
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.easeIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: BlocProvider(
+            create: (_) => sl<TodoItemCubit>(),
+            child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
           ),
         ),
       ),

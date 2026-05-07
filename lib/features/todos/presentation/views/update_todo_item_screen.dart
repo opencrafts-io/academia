@@ -354,7 +354,9 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                                     _selectedList?.title ?? "Select a list",
                                     style: theme.textTheme.labelLarge?.copyWith(
                                       color: _selectedList?.color != null
-                                          ? Color(_selectedList!.color!)
+                                          ? Color(
+                                              _selectedList!.color!,
+                                            ).withAlpha(255)
                                           : scheme.onSurfaceVariant,
                                       fontWeight: FontWeight.w600,
                                     ),

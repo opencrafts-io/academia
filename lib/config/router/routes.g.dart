@@ -944,6 +944,10 @@ RouteBase get $todosRoute => GoRouteData.$route(
       path: 'create-todo-item',
       factory: $CreateTodoItemRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: 'todo-item/:todoLocalID',
+      factory: $UpdateTodoItemRoute._fromState,
+    ),
   ],
 );
 
@@ -1041,6 +1045,33 @@ mixin $CreateTodoItemRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/todos/create-todo-item');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $UpdateTodoItemRoute on GoRouteData {
+  static UpdateTodoItemRoute _fromState(GoRouterState state) =>
+      UpdateTodoItemRoute(
+        todoLocalID: int.parse(state.pathParameters['todoLocalID']!),
+      );
+
+  UpdateTodoItemRoute get _self => this as UpdateTodoItemRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/todo-item/${Uri.encodeComponent(_self.todoLocalID.toString())}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
