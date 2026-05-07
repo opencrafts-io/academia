@@ -31,15 +31,20 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
 
   void _initFromItem(TodoItemEntity item, List<TodoListEntity> lists) {
     if (_isInitialized) return;
-    _titleController.text = item.title;
-    _notesController.text = item.notes ?? '';
-    _dueDate = item.due;
-    _priority = item.priority;
-    _selectedTags = List.from(item.tags);
-    _selectedList = lists
-        .where((l) => l.localId == item.taskListLocalId)
-        .firstOrNull;
-    _isInitialized = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        _titleController.text = item.title;
+        _notesController.text = item.notes ?? '';
+        _dueDate = item.due;
+        _priority = item.priority;
+        _selectedTags = List.from(item.tags);
+        _selectedList = lists
+            .where((l) => l.localId == item.taskListLocalId)
+            .firstOrNull;
+        _isInitialized = true;
+      });
+    });
   }
 
   bool get _hasChanges {
@@ -72,7 +77,18 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
       return;
     }
 
-    context.read<TodoItemCubit>().updateItem(
+    final cubit = context.read<TodoItemCubit>();
+
+    // If list changed, call move separately
+    if (_selectedList != null &&
+        _selectedList!.localId != original.taskListLocalId) {
+      cubit.moveItem(
+        localId: original.localId,
+        targetListLocalId: _selectedList!.localId,
+      );
+    }
+
+    cubit.updateItem(
       original.copyWith(
         title: _titleController.text.trim(),
         notes: _notesController.text.trim().isEmpty
@@ -80,7 +96,6 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
             : _notesController.text.trim(),
         due: _dueDate,
         priority: _priority,
-        taskListLocalId: _selectedList?.localId ?? original.taskListLocalId,
         tags: _selectedTags,
         isDirty: true,
         syncStatus: SyncStatus.pending,
