@@ -128,13 +128,35 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
 
   Future<void> _pickDueDate() async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
+
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _dueDate ?? now,
       firstDate: now,
       lastDate: now.add(const Duration(days: 365 * 5)),
     );
-    if (picked != null) setState(() => _dueDate = picked);
+
+    if (pickedDate == null) return;
+
+    if (!mounted) return;
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _dueDate != null
+          ? TimeOfDay.fromDateTime(_dueDate!)
+          : TimeOfDay.now(),
+    );
+
+    if (pickedTime == null) return;
+
+    setState(() {
+      _dueDate = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+    });
   }
 
   void _showListPicker() {
@@ -308,7 +330,13 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
             if (item == null) {
               return SheetContentScaffold(
                 topBar: AppBar(title: const Text("Edit task")),
-                body: const Center(child: CircularProgressIndicator.adaptive()),
+                body: const SizedBox(
+                  height: 300,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [CircularProgressIndicator.adaptive()],
+                  ),
+                ),
               );
             }
 
