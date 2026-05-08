@@ -1,5 +1,4 @@
 import 'package:academia/features/todos/todos.dart';
-import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import 'package:flutter/material.dart';
 
 class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
@@ -38,7 +37,7 @@ class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
                 onLongPress: () => onLongPressList(list),
                 child: Badge(
                   offset: Offset(10, 0),
-                  backgroundColor: color,
+                  backgroundColor: color.withAlpha(255),
                   isLabelVisible: list.taskCount > 0,
                   label: Text("${list.taskCount}"),
                   child: Tab(child: Text(list.title)),

@@ -10,59 +10,44 @@ class TodoListRepositoryImpl implements TodoListRepository {
     required this.localDataSource,
     required this.remoteDataSource,
   });
-
   @override
   Future<Either<Failure, TodoPage>> getTodoLists({String? url}) async {
-    // 1. Fetch from remote
+    final localResult = await localDataSource.getTodoLists();
+
+    _syncRemoteToLocal(url);
+
+    return localResult.fold(
+      (failure) => Left(failure),
+      (localModels) =>
+          Right(TodoPage(items: localModels.map((e) => e.toDomain()).toList())),
+    );
+  }
+
+  Future<void> _syncRemoteToLocal(String? url) async {
     final remoteResult = await remoteDataSource.getTodoLists(url: url);
 
-    return remoteResult.fold(
-      (failure) async {
-        // Fallback to local if remote fails
-        final localResult = await localDataSource.getTodoLists();
-        return localResult.fold(
-          (l) => Left(l),
-          (r) => Right(TodoPage(items: r.map((e) => e.toDomain()).toList())),
-        );
-      },
-      (paginatedDto) async {
-        // 2. Eagerly update local cache with fresh server data
-        for (var dto in paginatedDto.results) {
+    await remoteResult.fold((failure) async => null, (paginatedDto) async {
+      await Future.wait(
+        paginatedDto.results.map((dto) async {
           final existing = await localDataSource.getTodoListByExternalID(
             dto.id!,
           );
 
-          existing.fold(
-            (failure) => null,
-            // Ignore errors for individual item checks
-            (localModel) async {
-              final dataModel = dto.toDataModel(
-                localId: localModel?.localId ?? 0,
-                isDirty: false, // Server data is clean
-              );
+          await existing.fold((failure) async => null, (localModel) async {
+            final dataModel = dto.toDataModel(
+              localId: localModel?.localId ?? 0,
+              isDirty: false,
+            );
 
-              if (localModel == null) {
-                await localDataSource.createTodo(dataModel);
-              } else {
-                // Using a 'clean' update here would be ideal, but for now we update
-                await localDataSource.updateTodoList(dataModel);
-              }
-            },
-          );
-        }
-
-        final localResult = await localDataSource.getTodoLists();
-        return localResult.fold(
-          (l) => Left(l),
-          (r) => Right(
-            TodoPage(
-              items: r.map((e) => e.toDomain()).toList(),
-              nextUrl: paginatedDto.next,
-            ),
-          ),
-        );
-      },
-    );
+            if (localModel == null) {
+              await localDataSource.createTodo(dataModel);
+            } else {
+              await localDataSource.updateTodoList(dataModel);
+            }
+          });
+        }),
+      );
+    });
   }
 
   @override

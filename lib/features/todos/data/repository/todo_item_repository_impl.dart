@@ -1,6 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/features.dart';
+import 'package:academia/features/todos/data/dtos/paginated_todo_item_dto.dart';
 import 'package:dartz/dartz.dart';
 
 class TodoItemRepositoryImpl implements TodoItemRepository {
@@ -38,87 +39,97 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     String? taskListId,
     int? taskListLocalId,
   }) async {
-    final remoteResult = await remoteDataSource.getTodoItems(
-      url: url,
-      taskListId: taskListId,
+    // Fire both local and remote simultaneously
+    final results = await Future.wait([
+      localDataSource.getTodoItems(
+        taskListLocalId: taskListLocalId,
+        isPendingDeletion: false,
+      ),
+      remoteDataSource.getTodoItems(url: url, taskListId: taskListId),
+    ]);
+
+    final localResult = results[0] as Either<Failure, List<TodoItem>>;
+    final remoteResult = results[1] as Either<Failure, PaginatedTodoItemDto>;
+
+    // Resolve local items immediately — don't wait for remote
+    final localEntities = await localResult.fold(
+      (_) => Future.value(<TodoItemEntity>[]),
+      (items) => Future.wait(
+        items.map((item) async {
+          final tags = await _resolveTags(item.localId);
+          return item.toDomain(tags: tags);
+        }),
+      ),
     );
 
-    return remoteResult.fold(
-      (failure) async {
-        // Fallback to local cache, optionally filtered by list
-        final localResult = await localDataSource.getTodoItems(
-          taskListLocalId: taskListLocalId,
-          isPendingDeletion: false,
-        );
-        return localResult.fold((l) => Left(l), (items) async {
-          final entities = await Future.wait(
-            items.map((item) async {
-              final tags = await _resolveTags(item.localId);
-              return item.toDomain(tags: tags);
-            }),
+    // If remote failed, return whatever local has
+    if (remoteResult.isLeft()) {
+      return localResult.fold(
+        (failure) => Left(failure),
+        (_) => Right(TodoItemPage(items: localEntities)),
+      );
+    }
+
+    final paginatedDto = remoteResult.getOrElse(() => throw Exception());
+
+    // Upsert remote data into local cache in parallel
+    await Future.wait(
+      paginatedDto.results.where((dto) => dto.id != null).map((dto) async {
+        final existing = await localDataSource.getTodoItemByExternalID(dto.id!);
+
+        await existing.fold((_) => Future.value(), (localModel) async {
+          int resolvedListLocalId = localModel?.taskListLocalId ?? 0;
+          if (resolvedListLocalId == 0 && dto.taskList != null) {
+            resolvedListLocalId = await _resolveTaskListLocalId(dto.taskList);
+          }
+
+          final dataModel = dto.toDataModel(
+            localId: localModel?.localId ?? 0,
+            taskListLocalId: resolvedListLocalId,
+            isDirty: false,
           );
-          return Right(TodoItemPage(items: entities));
-        });
-      },
-      (paginatedDto) async {
-        // Eagerly upsert remote data into local cache
-        for (final dto in paginatedDto.results) {
-          if (dto.id == null) continue;
 
-          final existing = await localDataSource.getTodoItemByExternalID(
-            dto.id!,
-          );
-
-          existing.fold((_) => null, (localModel) async {
-            // Resolve remote task_list UUID to local ID
-            int resolvedListLocalId = localModel?.taskListLocalId ?? 0;
-            if (resolvedListLocalId == 0 && dto.taskList != null) {
-              resolvedListLocalId = await _resolveTaskListLocalId(dto.taskList);
-            }
-
-            final dataModel = dto.toDataModel(
-              localId: localModel?.localId ?? 0,
-              taskListLocalId: resolvedListLocalId,
-              isDirty: false,
-            );
-
-            if (localModel == null) {
-              final created = await localDataSource.createTodoItem(dataModel);
-              // Sync junction table tags
-              created.fold((_) => null, (createdItem) async {
-                final tagLocalIds = await _resolveTagUuidsToLocalIds(dto.tags);
-                await localDataSource.syncTagsForTodoItem(
-                  todoLocalId: createdItem.localId,
-                  tagLocalIds: tagLocalIds,
-                );
-              });
-            } else {
-              await localDataSource.updateTodoItem(dataModel);
+          if (localModel == null) {
+            final created = await localDataSource.createTodoItem(dataModel);
+            await created.fold((_) => Future.value(), (createdItem) async {
               final tagLocalIds = await _resolveTagUuidsToLocalIds(dto.tags);
               await localDataSource.syncTagsForTodoItem(
-                todoLocalId: localModel.localId,
+                todoLocalId: createdItem.localId,
                 tagLocalIds: tagLocalIds,
               );
-            }
-          });
-        }
-
-        final localResult = await localDataSource.getTodoItems(
-          taskListLocalId: taskListLocalId,
-          isPendingDeletion: false,
-        );
-
-        return localResult.fold((l) => Left(l), (items) async {
-          final entities = await Future.wait(
-            items.map((item) async {
-              final tags = await _resolveTags(item.localId);
-              return item.toDomain(tags: tags);
-            }),
-          );
-          return Right(
-            TodoItemPage(items: entities, nextUrl: paginatedDto.next),
-          );
+            });
+          } else {
+            await Future.wait([
+              localDataSource.updateTodoItem(dataModel),
+              _resolveTagUuidsToLocalIds(dto.tags).then(
+                (tagLocalIds) => localDataSource.syncTagsForTodoItem(
+                  todoLocalId: localModel.localId,
+                  tagLocalIds: tagLocalIds,
+                ),
+              ),
+            ]);
+          }
         });
+      }),
+    );
+
+    // Re-read local after upsert to get fresh merged result
+    final freshLocal = await localDataSource.getTodoItems(
+      taskListLocalId: taskListLocalId,
+      isPendingDeletion: false,
+    );
+
+    return freshLocal.fold(
+      (_) =>
+          Right(TodoItemPage(items: localEntities)), // fallback to pre-upsert
+      (items) async {
+        final entities = await Future.wait(
+          items.map((item) async {
+            final tags = await _resolveTags(item.localId);
+            return item.toDomain(tags: tags);
+          }),
+        );
+        return Right(TodoItemPage(items: entities, nextUrl: paginatedDto.next));
       },
     );
   }

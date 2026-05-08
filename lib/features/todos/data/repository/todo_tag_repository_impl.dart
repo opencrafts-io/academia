@@ -28,33 +28,29 @@ class TodoTagRepositoryImpl implements TodoTagRepository {
       },
       (paginatedDto) async {
         // Eagerly upsert remote data into local cache
-        for (final dto in paginatedDto.results) {
-          if (dto.id == null) continue;
+        Future.wait(
+          paginatedDto.results.map((dto) async {
+            if (dto.id == null) return;
 
-          final existing = await localDataSource.getTagByExternalID(dto.id!);
-          existing.fold((_) => null, (localModel) async {
-            final dataModel = dto.toDataModel(
-              localId: localModel?.localId ?? 0,
-              isDirty: false,
-            );
-            if (localModel == null) {
-              await localDataSource.createTag(dataModel);
-            } else {
-              await localDataSource.updateTag(dataModel);
-            }
-          });
-        }
-
-        final localResult = await localDataSource.getTags(
-          isPendingDeletion: false,
+            final existing = await localDataSource.getTagByExternalID(dto.id!);
+            existing.fold((_) => null, (localModel) async {
+              final dataModel = dto.toDataModel(
+                localId: localModel?.localId ?? 0,
+                isDirty: false,
+              );
+              if (localModel == null) {
+                await localDataSource.createTag(dataModel);
+              } else {
+                await localDataSource.updateTag(dataModel);
+              }
+            });
+          }),
         );
-        return localResult.fold(
-          (l) => Left(l),
-          (r) => Right(
-            TodoTagPage(
-              items: r.map((e) => e.toDomain()).toList(),
-              nextUrl: paginatedDto.next,
-            ),
+
+        return Right(
+          TodoTagPage(
+            items: paginatedDto.results.map((e) => e.toEntity()).toList(),
+            nextUrl: paginatedDto.next,
           ),
         );
       },

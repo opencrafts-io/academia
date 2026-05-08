@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import '../widgets/todo_card.dart';
 
 class TodoHomeScreen extends StatefulWidget {
@@ -138,7 +139,14 @@ class _TodoItemsTabState extends State<_TodoItemsTab>
           return state.when(
             initial: () => const _EmptyState(),
             loading: (items) => items.isEmpty
-                ? const _EmptyState()
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 8,
+                    children: [
+                      LoadingIndicatorM3E(),
+                      Text("Your to-dos are just a sec away.."),
+                    ],
+                  )
                 : _TodoItemsList(items: items),
             success: (items, nextUrl, isPaginating, isSyncing) => items.isEmpty
                 ? const _EmptyState()
