@@ -242,9 +242,8 @@ class _TodoItemsListState extends State<_TodoItemsList> {
         final item = widget.items[index];
         return TodoCard(
           item: item,
-          onTap: () => UpdateTodoItemRoute(
-            todoLocalID: item.taskListLocalId,
-          ).push(context),
+          onTap: () =>
+              UpdateTodoItemRoute(todoLocalID: item.localId).push(context),
           onComplete: () =>
               context.read<TodoItemCubit>().completeItem(item.localId),
           onReopen: () =>
