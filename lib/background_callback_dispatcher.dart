@@ -32,9 +32,18 @@ void backgroundCallbackDispatcher() {
         courseRepository: di.sl<CourseRepository>(),
       );
 
+      final todoItemSync = TodoItemSyncBackgroundTask(
+        todoItemRepository: di.sl(),
+      );
+      final todoListSync = TodoListSyncBackgroundTask(
+        todoListRepository: di.sl(),
+      );
+
       final Map<String, BackgroundTask> taskRegistry = {
         courseAlert.taskName: courseAlert,
         dailyLogin.taskName: dailyLogin,
+        todoItemSync.taskName: todoItemSync,
+        todoListSync.taskName: todoListSync,
       };
 
       final taskToExecute = taskRegistry[task];
@@ -73,6 +82,35 @@ Future<void> registerDefaultBackgroundTasks() async {
     constraints: Constraints(
       requiresBatteryNotLow: false,
       networkType: NetworkType.notRequired,
+    ),
+  );
+
+  await Workmanager().registerPeriodicTask(
+    'io.opencrafts.academia.todoitem.sync',
+    'io.opencrafts.academia.todoitem.sync',
+    initialDelay: const Duration(seconds: 0),
+    backoffPolicy: BackoffPolicy.exponential,
+    backoffPolicyDelay: const Duration(minutes: 15),
+    frequency: const Duration(hours: 1),
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+    constraints: Constraints(
+      requiresBatteryNotLow: true,
+      networkType: NetworkType.connected,
+    ),
+  );
+
+  // Register TodoList sync task - runs every 2 hours
+  await Workmanager().registerPeriodicTask(
+    'io.opencrafts.academia.todolist.sync',
+    'io.opencrafts.academia.todolist.sync',
+    initialDelay: const Duration(seconds: 0),
+    backoffPolicy: BackoffPolicy.exponential,
+    backoffPolicyDelay: const Duration(minutes: 15),
+    frequency: const Duration(hours: 2),
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+    constraints: Constraints(
+      requiresBatteryNotLow: true,
+      networkType: NetworkType.connected,
     ),
   );
 }

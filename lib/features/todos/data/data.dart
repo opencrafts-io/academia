@@ -23,3 +23,7 @@ export 'mappers/todo_item_mapper.dart';
 // dtos
 export 'dtos/todo_list_dto.dart';
 export 'dtos/paginated_todo_list_dto.dart';
+
+// background tasks
+export 'background/todo_item_sync_background_task.dart';
+export 'background/todo_list_sync_background_task.dart';
