@@ -9,9 +9,9 @@ class TodoListLocalDatasource {
 
   Future<Either<Failure, TodoList>> createTodo(TodoList todo) async {
     try {
-      final companion = todo
-          .toCompanion(true)
-          .copyWith(localId: const Value.absent(), isDirty: const Value(true));
+      final companion = todo.toCompanion(true).copyWith(
+            localId: const Value.absent(),
+          );
       final todoList = await cacheDB
           .into(cacheDB.todoLists)
           .insertReturning(companion, mode: InsertMode.insert);

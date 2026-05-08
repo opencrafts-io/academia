@@ -8,11 +8,13 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   final TodoItemLocalDatasource localDataSource;
   final TodoItemRemoteDatasource remoteDataSource;
   final TodoTagLocalDatasource tagLocalDataSource;
+  final TodoListLocalDatasource listLocalDataSource;
 
   TodoItemRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.tagLocalDataSource,
+    required this.listLocalDataSource,
   });
 
   /// Resolves tags for a [TodoItem] from local DB via the junction table.
@@ -25,12 +27,34 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   }
 
   /// Resolves a remote task list UUID to a local ID.
-  /// Returns 0 if not found — caller should handle this.
+  /// Creates a "ghost" placeholder if not found.
   Future<int> _resolveTaskListLocalId(String? remoteId) async {
     if (remoteId == null) return 0;
-    // This lookup lives in the TodoList datasource — injected indirectly
-    // by querying the tag local source pattern. Wire this via your DI layer.
-    return 0;
+
+    final existing = await listLocalDataSource.getTodoListByExternalID(
+      remoteId,
+    );
+
+    return await existing.fold((_) => 0, (list) async {
+      if (list != null) return list.localId;
+
+      // Create a Ghost list placeholder
+      final ghost = TodoList(
+        localId: 0,
+        id: remoteId,
+        title: "Loading list...",
+        isDirty: false, // Don't sync stubs back to server
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        isPendingDeletion: false,
+        isDefault: false,
+        taskCount: 0,
+        syncStatus: SyncStatus.pending,
+      );
+
+      final created = await listLocalDataSource.createTodo(ghost);
+      return created.fold((_) => 0, (l) => l.localId);
+    });
   }
 
   @override
@@ -39,7 +63,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     String? taskListId,
     int? taskListLocalId,
   }) async {
-    // Fire both local and remote simultaneously
     final results = await Future.wait([
       localDataSource.getTodoItems(
         taskListLocalId: taskListLocalId,
@@ -51,7 +74,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     final localResult = results[0] as Either<Failure, List<TodoItem>>;
     final remoteResult = results[1] as Either<Failure, PaginatedTodoItemDto>;
 
-    // Resolve local items immediately — don't wait for remote
     final localEntities = await localResult.fold(
       (_) => Future.value(<TodoItemEntity>[]),
       (items) => Future.wait(
@@ -62,7 +84,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       ),
     );
 
-    // If remote failed, return whatever local has
     if (remoteResult.isLeft()) {
       return localResult.fold(
         (failure) => Left(failure),
@@ -72,14 +93,13 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
 
     final paginatedDto = remoteResult.getOrElse(() => throw Exception());
 
-    // Upsert remote data into local cache in parallel
     await Future.wait(
       paginatedDto.results.where((dto) => dto.id != null).map((dto) async {
         final existing = await localDataSource.getTodoItemByExternalID(dto.id!);
 
         await existing.fold((_) => Future.value(), (localModel) async {
           int resolvedListLocalId = localModel?.taskListLocalId ?? 0;
-          if (resolvedListLocalId == 0 && dto.taskList != null) {
+          if (resolvedListLocalId == 0 || dto.taskList != null) {
             resolvedListLocalId = await _resolveTaskListLocalId(dto.taskList);
           }
 
@@ -113,25 +133,22 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       }),
     );
 
-    // Re-read local after upsert to get fresh merged result
     final freshLocal = await localDataSource.getTodoItems(
       taskListLocalId: taskListLocalId,
       isPendingDeletion: false,
     );
 
-    return freshLocal.fold(
-      (_) =>
-          Right(TodoItemPage(items: localEntities)), // fallback to pre-upsert
-      (items) async {
-        final entities = await Future.wait(
-          items.map((item) async {
-            final tags = await _resolveTags(item.localId);
-            return item.toDomain(tags: tags);
-          }),
-        );
-        return Right(TodoItemPage(items: entities, nextUrl: paginatedDto.next));
-      },
-    );
+    return freshLocal.fold((_) => Right(TodoItemPage(items: localEntities)), (
+      items,
+    ) async {
+      final entities = await Future.wait(
+        items.map((item) async {
+          final tags = await _resolveTags(item.localId);
+          return item.toDomain(tags: tags);
+        }),
+      );
+      return Right(TodoItemPage(items: entities, nextUrl: paginatedDto.next));
+    });
   }
 
   @override
@@ -147,7 +164,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       final remoteResult = await remoteDataSource.getTodoItemById(id);
       return remoteResult.fold(
         (failure) {
-          // Return stale local if remote fails
           if (localItem != null) {
             return Right(localItem.toDomain());
           }
@@ -183,26 +199,23 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   Future<Either<Failure, TodoItemEntity>> createTodoItem(
     TodoItemEntity entity,
   ) async {
-    // 1. Local-first
     final localResult = await localDataSource.createTodoItem(
       entity.toDataModel(),
     );
 
     return localResult.fold((failure) => Left(failure), (createdLocal) async {
-      // Sync tags to junction table
       final tagLocalIds = entity.tags.map((t) => t.localId).toList();
       await localDataSource.syncTagsForTodoItem(
         todoLocalId: createdLocal.localId,
         tagLocalIds: tagLocalIds,
       );
 
-      // 2. Sync to remote
       final remoteResult = await remoteDataSource.createTodoItem(
         createdLocal.toDto(),
       );
 
       return remoteResult.fold(
-        (_) => Right(createdLocal.toDomain(tags: entity.tags)), // Offline
+        (_) => Right(createdLocal.toDomain(tags: entity.tags)),
         (dto) async {
           final resolvedListLocalId = await _resolveTaskListLocalId(
             dto.taskList,
@@ -225,20 +238,17 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   Future<Either<Failure, TodoItemEntity>> updateTodoItem(
     TodoItemEntity entity,
   ) async {
-    // 1. Local-first
     final localResult = await localDataSource.updateTodoItem(
       entity.toDataModel(),
     );
 
     return localResult.fold((failure) => Left(failure), (updatedLocal) async {
-      // Sync tags
       final tagLocalIds = entity.tags.map((t) => t.localId).toList();
       await localDataSource.syncTagsForTodoItem(
         todoLocalId: updatedLocal.localId,
         tagLocalIds: tagLocalIds,
       );
 
-      // 2. Sync to remote
       final remoteResult = await remoteDataSource.updateTodoItem(
         updatedLocal.toDto(),
       );
@@ -265,25 +275,19 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     return localItem.fold((failure) => Left(failure), (item) async {
       if (item == null) return const Right(unit);
 
-      // 1. Soft delete locally
       await localDataSource.softDeleteTodoItem(item);
 
       if (item.id == null) {
-        // Never synced — hard delete immediately
         await localDataSource.hardDeleteTodoItem(item.localId);
         return const Right(unit);
       }
 
-      // 2. Try remote delete
       final remoteResult = await remoteDataSource.deleteTodoItem(item.id!);
 
-      return remoteResult.fold(
-        (_) => const Right(unit), // Offline — sync will retry
-        (_) async {
-          await localDataSource.hardDeleteTodoItem(item.localId);
-          return const Right(unit);
-        },
-      );
+      return remoteResult.fold((_) => const Right(unit), (_) async {
+        await localDataSource.hardDeleteTodoItem(item.localId);
+        return const Right(unit);
+      });
     });
   }
 
@@ -301,8 +305,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         );
       }
 
-      // 1. Update status locally
-      final updated = item.toCompanion(true);
       final updatedItem = await localDataSource.updateTodoItem(
         TodoItem(
           localId: item.localId,
@@ -329,7 +331,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       return updatedItem.fold((failure) => Left(failure), (local) async {
         if (local.id == null) return Right(local.toDomain());
 
-        // 2. Sync to remote
         final remoteResult = await remoteDataSource.completeTodoItem(
           local.id!,
           local.toDto(),
@@ -363,7 +364,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         );
       }
 
-      // 1. Update status locally
       final updatedItem = await localDataSource.updateTodoItem(
         TodoItem(
           localId: item.localId,
@@ -426,7 +426,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         );
       }
 
-      // 1. Update list locally
       final updatedItem = await localDataSource.updateTodoItem(
         TodoItem(
           localId: item.localId,
@@ -451,12 +450,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       );
 
       return updatedItem.fold((failure) => Left(failure), (local) async {
-        // Need the remote task list UUID for the API call
-        // This should be resolved via your DI / TodoList datasource
         if (local.id == null) return Right(local.toDomain());
-
-        // Skipping remote move here — syncTodoItems() will handle it
-        // via the update path since isDirty=true and taskListLocalId changed.
         final tags = await _resolveTags(local.localId);
         return Right(local.toDomain(tags: tags));
       });
@@ -469,14 +463,12 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
 
     return dirtyResult.fold((l) => Left(l), (dirtyItems) async {
       for (final item in dirtyItems) {
-        // Case 1: Pending deletion
         if (item.isPendingDeletion) {
           if (item.id != null) await remoteDataSource.deleteTodoItem(item.id!);
           await localDataSource.hardDeleteTodoItem(item.localId);
           continue;
         }
 
-        // Case 2: New or dirty
         final isNew = item.id == null || item.id!.isEmpty;
         final remoteOp = isNew
             ? await remoteDataSource.createTodoItem(item.toDto())
@@ -497,12 +489,28 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   }
 
   /// Resolves a list of remote tag UUIDs to their local IDs.
+  /// Creates ghost tags if they don't exist.
   Future<List<int>> _resolveTagUuidsToLocalIds(List<String> uuids) async {
     final localIds = <int>[];
     for (final uuid in uuids) {
       final result = await tagLocalDataSource.getTagByExternalID(uuid);
-      result.fold((_) => null, (tag) {
-        if (tag != null) localIds.add(tag.localId);
+      await result.fold((_) async => null, (tag) async {
+        if (tag != null) {
+          localIds.add(tag.localId);
+        } else {
+          // Create ghost tag
+          final ghost = TodoTagItem(
+            localId: 0,
+            id: uuid,
+            name: "Loading tag...",
+            isDirty: false,
+            createdAt: DateTime.now(),
+            isPendingDeletion: false,
+            syncStatus: SyncStatus.pending,
+          );
+          final created = await tagLocalDataSource.createTag(ghost);
+          created.fold((_) => null, (t) => localIds.add(t.localId));
+        }
       });
     }
     return localIds;

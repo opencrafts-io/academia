@@ -261,6 +261,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
   sl.registerFactory<TodoItemRepository>(
     () => TodoItemRepositoryImpl(
+      listLocalDataSource: sl(),
       localDataSource: sl(),
       remoteDataSource: sl(),
       tagLocalDataSource: sl(),

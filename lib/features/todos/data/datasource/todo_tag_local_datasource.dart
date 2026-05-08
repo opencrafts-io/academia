@@ -9,9 +9,9 @@ class TodoTagLocalDatasource {
 
   Future<Either<Failure, TodoTagItem>> createTag(TodoTagItem tag) async {
     try {
-      final companion = tag
-          .toCompanion(true)
-          .copyWith(localId: const Value.absent(), isDirty: const Value(true));
+      final companion = tag.toCompanion(true).copyWith(
+            localId: const Value.absent(),
+          );
       final result = await cacheDB
           .into(cacheDB.todoTagItems)
           .insertReturning(companion, mode: InsertMode.insert);
