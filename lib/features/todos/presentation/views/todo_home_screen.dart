@@ -106,7 +106,12 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
           ),
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
-            onPressed: () => CreateTodoItemRoute().push(context),
+            onPressed: () async {
+              final result = await CreateTodoItemRoute().push(context);
+              if (result == true && context.mounted) {
+                context.read<TodoListCubit>().loadTodoLists();
+              }
+            },
           ),
         );
       },

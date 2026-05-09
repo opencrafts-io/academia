@@ -215,7 +215,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       );
 
       return remoteResult.fold(
-        (_) => Right(createdLocal.toDomain(tags: entity.tags)),
+        (failure) => Right(createdLocal.toDomain(tags: entity.tags)),
         (dto) async {
           final resolvedListLocalId = await _resolveTaskListLocalId(
             dto.taskList,
@@ -233,6 +233,45 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       );
     });
   }
+
+  // @override
+  // Future<Either<Failure, TodoItemEntity>> createTodoItem(
+  //   TodoItemEntity entity,
+  // ) async {
+  //   final localResult = await localDataSource.createTodoItem(
+  //     entity.toDataModel(),
+  //   );
+  //
+  //   return localResult.fold((failure) => Left(failure), (createdLocal) async {
+  //     final tagLocalIds = entity.tags.map((t) => t.localId).toList();
+  //     await localDataSource.syncTagsForTodoItem(
+  //       todoLocalId: createdLocal.localId,
+  //       tagLocalIds: tagLocalIds,
+  //     );
+  //
+  //     final remoteResult = await remoteDataSource.createTodoItem(
+  //       createdLocal.toDto(),
+  //     );
+  //
+  //     return remoteResult.fold(
+  //       (_) => Right(createdLocal.toDomain(tags: entity.tags)),
+  //       (dto) async {
+  //         final resolvedListLocalId = await _resolveTaskListLocalId(
+  //           dto.taskList,
+  //         );
+  //         final synced = dto.toDataModel(
+  //           localId: createdLocal.localId,
+  //           taskListLocalId: resolvedListLocalId != 0
+  //               ? resolvedListLocalId
+  //               : entity.taskListLocalId,
+  //           isDirty: false,
+  //         );
+  //         await localDataSource.updateTodoItem(synced);
+  //         return Right(synced.toDomain(tags: entity.tags));
+  //       },
+  //     );
+  //   });
+  // }
 
   @override
   Future<Either<Failure, TodoItemEntity>> updateTodoItem(

@@ -71,7 +71,9 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
     );
 
     context.read<TodoItemCubit>().createItem(entity);
-    Navigator.of(context).pop();
+    if (context.mounted) {
+      Navigator.of(context).pop(true);
+    }
   }
 
   Future<void> _pickDueDate() async {

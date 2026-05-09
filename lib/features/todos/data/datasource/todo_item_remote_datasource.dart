@@ -91,7 +91,7 @@ class TodoItemRemoteDatasource with ConnectivityChecker, DioErrorHandler {
       );
 
       // API returns 200 for creation per the schema
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return Right(TodoItemDto.fromJson(response.data));
       }
 
@@ -99,7 +99,7 @@ class TodoItemRemoteDatasource with ConnectivityChecker, DioErrorHandler {
         ServerFailure(
           message: "Failed to create task on the server.",
           error: Exception(
-            "Expected status code 200, but got ${response.statusCode}",
+            "Expected status code 201, but got ${response.statusCode}",
           ),
         ),
       );
