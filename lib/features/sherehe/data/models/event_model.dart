@@ -15,8 +15,11 @@ class EventTable extends Table {
   @JsonKey('event_location')
   TextColumn get eventLocation => text()();
 
-  @JsonKey('event_date')
-  TextColumn get eventDate => text()();
+  @JsonKey('start_date')
+  TextColumn get startDate => text()();
+
+  @JsonKey('end_date')
+  TextColumn get endDate => text()();
 
   @JsonKey('attendee_count')
   IntColumn get attendeeCount => integer()();
@@ -47,6 +50,12 @@ class EventTable extends Table {
 
   @JsonKey('deleted_at')
   TextColumn get deletedAt => text().nullable()();
+
+  @JsonKey('scope')
+  TextColumn get scope => text()();
+
+  @JsonKey('institutions')
+  TextColumn get institutions => text().map(JsonListConverter()).nullable()();
 
   @JsonKey('payment_info')
   TextColumn get paymentInfo => text().map(JsonConverter()).nullable()();

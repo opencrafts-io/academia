@@ -188,17 +188,19 @@ class _SearchEmptyPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AnimatedEmoji(AnimatedEmojis.hugFace, size: 120),
-        const SizedBox(height: 12),
-        Text(
-          'Find groups that share your interests',
-          style: Theme.of(context).textTheme.headlineSmall,
-          textAlign: TextAlign.center,
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedEmoji(AnimatedEmojis.hugFace, size: 120),
+          const SizedBox(height: 12),
+          Text(
+            'Find groups that share your interests',
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

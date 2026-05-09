@@ -9,12 +9,15 @@ import 'package:academia/constants/constants.dart';
 import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
-  final String eventId;
+  final String? eventId;
   final Event? event;
+  final String? invite;
 
-  const ShereheDetailsPage({super.key, required this.eventId, this.event});
+  const ShereheDetailsPage({super.key, this.eventId, this.event, this.invite});
 
   @override
   State<ShereheDetailsPage> createState() => _ShereheDetailsPageState();
@@ -33,27 +36,49 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     }
 
     context.read<ShereheDetailsBloc>().add(
-      LoadShereheDetails(eventId: widget.eventId, initialEvent: widget.event),
+      LoadShereheDetails(
+        eventId: widget.eventId ?? '',
+        initialEvent: widget.event,
+        invite: widget.invite,
+      ),
     );
 
-    context.read<GetEventScannerByUserIdBloc>().add(
-      GetEventScannerByUserId(eventId: widget.eventId),
-    );
+    if (widget.eventId != null) {
+      context.read<GetEventScannerByUserIdBloc>().add(
+        GetEventScannerByUserId(eventId: widget.eventId!),
+      );
+    }
   }
 
   double _getExpandedHeight(BuildContext context) {
-    if (ResponsiveBreakPoints.isMobile(context)) {
-      return MediaQuery.of(context).size.height * 0.40;
-    } else if (ResponsiveBreakPoints.isTablet(context)) {
-      return MediaQuery.of(context).size.height * 0.4;
-    } else {
-      return 500.0;
-    }
+    final width = MediaQuery.of(context).size.width;
+    return width * (9 / 16); // 16:9 ratio
   }
 
   String _normalizeDescription(String text) {
     // Replace 3+ line breaks with just 2
     return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
+  }
+
+  Future<XFile?> _downloadImage(String url) async {
+    try {
+      final dio = Dio();
+
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/event_share.jpg';
+
+      await dio.download(
+        url,
+        filePath,
+        options: Options(
+          responseType: ResponseType.bytes, // ensures raw bytes
+        ),
+      );
+
+      return XFile(filePath);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -81,14 +106,22 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
             ),
           );
         } else if (state is ShereheDetailsLoaded) {
+          // If the page was accessed via an invite link, we also fetch the scanner info to determine if the user can access the scanning feature
+          if (widget.invite != null) {
+            context.read<GetEventScannerByUserIdBloc>().add(
+              GetEventScannerByUserId(eventId: state.event.id),
+            );
+          }
+
           DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
 
-          final eventDate = normalize(
-            DateTime.parse(state.event.eventDate).toLocal(),
+          final eventEndDate = normalize(
+            DateTime.parse(state.event.endDate).toLocal(),
           );
+
           final today = normalize(DateTime.now());
 
-          final isPastEvent = today.isAfter(eventDate);
+          final isPastEvent = today.isAfter(eventEndDate);
           return Scaffold(
             body: CustomScrollView(
               slivers: [
@@ -115,7 +148,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                         return PopupMenuButton<String>(
                           icon: const Icon(Icons.more_vert),
-                          onSelected: (value) {
+                          onSelected: (value) async {
                             switch (value) {
                               case 'share':
                                 final url =
@@ -123,17 +156,40 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                                 final box =
                                     context.findRenderObject() as RenderBox?;
-                                Share.share(
-                                  'You have been invited from Academia to the following event:\n\n '
-                                  '🎉 ${state.event.eventName}\n\n'
-                                  '📍 Where: ${state.event.eventLocation}\n'
-                                  '⏰ When: ${ShereheUtils.formatDate(state.event.eventDate)} at ${ShereheUtils.formatTime(state.event.eventDate)}\n\n'
-                                  '🎟 Get your ticket here:\n$url',
-                                  sharePositionOrigin: box != null
-                                      ? box.localToGlobal(Offset.zero) &
-                                            box.size
-                                      : null,
-                                );
+
+                                final imageUrl = state.event.eventPosterImage;
+
+                                XFile? imageFile;
+
+                                if (imageUrl != null) {
+                                  imageFile = await _downloadImage(imageUrl);
+                                }
+
+                                final text =
+                                    'You have been invited from Academia to the following event:\n\n '
+                                    '🎉 ${state.event.eventName}\n\n'
+                                    '📍 Where: ${state.event.eventLocation}\n'
+                                    '⏰ When: ${ShereheUtils.formatDate(state.event.startDate)} at ${ShereheUtils.formatTime(state.event.startDate)}\n\n'
+                                    '🎟 Get your ticket here:\n$url';
+
+                                if (imageFile != null) {
+                                  await Share.shareXFiles(
+                                    [imageFile],
+                                    text: text,
+                                    sharePositionOrigin: box != null
+                                        ? box.localToGlobal(Offset.zero) &
+                                              box.size
+                                        : null,
+                                  );
+                                } else {
+                                  await Share.share(
+                                    text,
+                                    sharePositionOrigin: box != null
+                                        ? box.localToGlobal(Offset.zero) &
+                                              box.size
+                                        : null,
+                                  );
+                                }
                                 break;
 
                               case 'scan':
@@ -284,127 +340,109 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'About Event',
-                              style:
-                                  ResponsiveBreakPoints.isTablet(context) ||
-                                      ResponsiveBreakPoints.isDesktop(context)
-                                  ? Theme.of(
-                                      context,
-                                    ).textTheme.headlineMedium!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    )
-                                  : Theme.of(
-                                      context,
-                                    ).textTheme.headlineSmall!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                            ),
-                            const SizedBox(height: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: state.event.eventGenre!
-                                      .map((e) => e.trim())
-                                      .map(
-                                        (genre) => Chip(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          backgroundColor: Theme.of(
-                                            context,
-                                          ).colorScheme.secondaryContainer,
-                                          label: Text(
-                                            genre,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSecondaryContainer,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                            Text(
-                              _normalizeDescription(
-                                state.event.eventDescription,
-                              ),
-                              style:
-                                  ResponsiveBreakPoints.isTablet(context) ||
-                                      ResponsiveBreakPoints.isDesktop(context)
-                                  ? Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge!.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                      height: 1.5,
-                                    )
-                                  : Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium!.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                      height: 1.5,
-                                    ),
-                            ),
-                          ],
+                        Text(
+                          'About Event',
+                          style:
+                              ResponsiveBreakPoints.isTablet(context) ||
+                                  ResponsiveBreakPoints.isDesktop(context)
+                              ? Theme.of(context).textTheme.headlineMedium!
+                                    .copyWith(fontWeight: FontWeight.bold)
+                              : Theme.of(context).textTheme.headlineSmall!
+                                    .copyWith(fontWeight: FontWeight.bold),
                         ),
+
+                        const SizedBox(height: 12),
+
+                        if (state.event.eventGenre != null &&
+                            state.event.eventGenre!.isNotEmpty)
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: state.event.eventGenre!
+                                .map((e) => e.trim())
+                                .map(
+                                  (genre) => Chip(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondaryContainer,
+                                    label: Text(
+                                      genre,
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(state.event.eventLocation)),
-                          ],
+
+                        Text(
+                          _normalizeDescription(state.event.eventDescription),
+                          style:
+                              ResponsiveBreakPoints.isTablet(context) ||
+                                  ResponsiveBreakPoints.isDesktop(context)
+                              ? Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  height: 1.5,
+                                )
+                              : Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium!.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  height: 1.5,
+                                ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          spacing: 16.0,
-                          children: [
-                            Row(
-                              spacing: 8.0,
+                        const SizedBox(height: 10),
+                        Card(
+                          elevation: 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
                               children: [
-                                const Icon(Icons.calendar_month),
-                                Text(
-                                  ShereheUtils.formatDate(
-                                    state.event.eventDate,
-                                  ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        state.event.eventLocation,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Row(
-                              spacing: 8.0,
-                              children: [
-                                const Icon(Icons.access_time),
-                                Text(
-                                  ShereheUtils.formatTime(
-                                    state.event.eventDate,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        ShereheDetailsScheduleCard(
+                          startDate: state.event.startDate,
+                          endDate: state.event.endDate,
                         ),
                       ],
                     ),
@@ -447,7 +485,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                         : () {
                             TicketFlowRoute(
                               eventId: state.event.id,
-                              userId: userId ?? '',
                             ).push(context);
                           },
                     child: const Text("I'm Going"),

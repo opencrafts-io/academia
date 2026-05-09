@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final _stage2FormKey = GlobalKey<FormState>();
   final _stage5FormKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _dateTimeController = TextEditingController();
+  final _startDateTimeController = TextEditingController();
+  final _endDateTimeController = TextEditingController();
   final _locationController = TextEditingController();
   final _aboutController = TextEditingController();
   final _paybillNumberController = TextEditingController();
@@ -36,10 +38,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final _tillNumberController = TextEditingController();
   final _sendMoneyPhoneController = TextEditingController();
   PaymentTypes? _selectedPaymentType;
-  DateTime? _selectedDateTime;
+  DateTime? _selectedStartDateTime;
+  DateTime? _selectedEndDateTime;
   File? _selectedPosterImage;
   File? _selectedBannerImage;
   File? _selectedCardImage;
+  ScopeTypes? _selectedEventScopeType;
+  Set<Institution> _selectedEventInstitutions = {};
   List<String> _selectedGenres = [];
   List<TicketUI> _tickets = [];
   String? organizerId;
@@ -65,7 +70,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _dateTimeController.dispose();
+    _startDateTimeController.dispose();
+    _endDateTimeController.dispose();
     _aboutController.dispose();
     _locationController.dispose();
     _paybillNumberController.dispose();
@@ -75,10 +81,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.dispose();
   }
 
-  Future<void> _selectDateAndTime(BuildContext context) async {
+  Future<void> _selectDateAndTime({
+    required BuildContext context,
+    required bool isStart,
+  }) async {
+    final currentDateTime = isStart
+        ? (_selectedStartDateTime ?? DateTime.now())
+        : (_selectedEndDateTime ?? _selectedStartDateTime ?? DateTime.now());
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: _selectedDateTime ?? DateTime.now(),
+      initialDate: currentDateTime,
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
@@ -86,22 +98,47 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     if (pickedDate != null) {
       final pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(
-          _selectedDateTime ?? DateTime.now(),
-        ),
+        initialTime: TimeOfDay.fromDateTime(currentDateTime),
       );
       if (pickedTime != null) {
+        final selectedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
         setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-          _dateTimeController.text = DateFormat.yMMMMEEEEd().add_jm().format(
-            _selectedDateTime!,
-          );
+          if (isStart) {
+            _selectedStartDateTime = selectedDateTime;
+            _startDateTimeController.text = DateFormat.yMMMMEEEEd()
+                .add_jm()
+                .format(selectedDateTime);
+            //reset end date time if it is before start date time
+            if (_selectedEndDateTime != null &&
+                _selectedEndDateTime!.isBefore(selectedDateTime)) {
+              _selectedEndDateTime = null;
+              _endDateTimeController.clear();
+            }
+          } else {
+            //prevent invalid end date time
+            if (_selectedStartDateTime != null &&
+                selectedDateTime.isBefore(_selectedStartDateTime!)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "End date and time cannot be before start date and time",
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            _selectedEndDateTime = selectedDateTime;
+            _endDateTimeController.text = DateFormat.yMMMMEEEEd()
+                .add_jm()
+                .format(selectedDateTime);
+          }
         });
       }
     }
@@ -349,12 +386,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   void _submitForm() {
-    if (_selectedDateTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a date and time")),
-      );
-      return;
-    }
     if (_selectedGenres.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select at least one genre")),
@@ -367,13 +398,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventName: _nameController.text.trim(),
         eventDescription: _aboutController.text.trim(),
         eventLocation: _locationController.text.trim(),
-        eventDate: _selectedDateTime!.toIso8601String(),
+        eventStartDate: _selectedStartDateTime!.toIso8601String(),
+        eventEndDate: _selectedEndDateTime!.toIso8601String(),
         organizerId: organizerId ?? "N/A",
         eventCardImage: _selectedCardImage,
         eventPosterImage: _selectedPosterImage,
         eventBannerImage: _selectedBannerImage,
         eventGenre: _selectedGenres,
         tickets: _tickets.map((ticketUI) => ticketUI.ticket).toList(),
+        institutions: _selectedEventInstitutions
+            .map((e) => e.institutionId)
+            .toList(),
+        scope: _selectedEventScopeType?.toBackend ?? '',
         selectedPaymentType: _selectedPaymentType,
         paybillNumber: _paybillNumberController.text.trim().isEmpty
             ? null
@@ -439,15 +475,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       body: BlocListener<CreateEventBloc, CreateEventState>(
         listener: (context, state) {
           if (state is CreateEventSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Event created successfully!"),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            context.read<ShereheHomeBloc>().add(FetchAllEvents(page: 1));
             if (context.canPop()) {
-              context.pop(true);
+              context.pop(state.event);
             }
           } else if (state is CreateEventFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -469,21 +498,29 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               children: [
                 BasicEventDetailsPage(
                   formKey: _stage1FormKey,
+                  selectedEventScopeType: _selectedEventScopeType,
+                  selectedEventInstitutions: _selectedEventInstitutions,
                   nameController: _nameController,
-                  dateTimeController: _dateTimeController,
+                  startDateTimeController: _startDateTimeController,
+                  endDateTimeController: _endDateTimeController,
                   locationController: _locationController,
-                  onSelectDateAndTime: () => _selectDateAndTime(context),
+                  onSelectDateAndTime: (isStart) =>
+                      _selectDateAndTime(context: context, isStart: isStart),
+                  onInstitutionsChanged: (institutions) {
+                    setState(() {
+                      _selectedEventInstitutions = institutions ?? {};
+                    });
+                  },
+                  onScopeChanged: (scope) {
+                    setState(() {
+                      _selectedEventScopeType = scope;
+                      if (scope != ScopeTypes.institution) {
+                        _selectedEventInstitutions.clear();
+                      }
+                    });
+                  },
                   onNext: () {
                     if (_stage1FormKey.currentState!.validate()) {
-                      if (_selectedDateTime == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please select a date and time"),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        return;
-                      }
                       _moveToNextPage();
                     }
                   },
@@ -528,7 +565,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                 ),
                 TicketSelectionPage(
-                  initialTickets: _tickets,
+                  tickets: _tickets,
+                  onAddTicket: (ticket) {
+                    setState(() {
+                      _tickets.add(ticket);
+                    });
+                  },
+                  onRemoveTicket: (ticket) {
+                    setState(() {
+                      _tickets.remove(ticket);
+                    });
+                  },
                   onContinue: (tickets) {
                     setState(() {
                       _tickets = tickets;

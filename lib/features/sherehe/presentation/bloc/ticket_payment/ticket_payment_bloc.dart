@@ -33,21 +33,12 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
 
     result.fold(
       (failure) {
-        emit(
-          PurchaseError(
-            message: failure.message,
-          ),
-        );
+        emit(PurchaseError(message: failure.message));
       },
       (success) {
         // FREE EVENT FLOW
         if (success is FreeTicketSuccess) {
-          emit(
-            FreeTicketBooked(
-              attendeeId: success.attendeeId,
-              message: success.message,
-            ),
-          );
+          emit(FreeTicketBooked(message: success.message));
         }
 
         // PAID EVENT FLOW

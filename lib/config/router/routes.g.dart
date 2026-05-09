@@ -16,6 +16,8 @@ List<RouteBase> get $appRoutes => [
   $profileRoute,
   $completeProfileRoute,
   $shereheRoute,
+  $shereheDetailsWithTokenRoute,
+  $ticketFlowWithInviteRoute,
   $purchasedTicketsRoute,
   $organizedEventsRoute,
   $ticketReceiptRoute,
@@ -423,7 +425,20 @@ RouteBase get $shereheRoute => GoRouteData.$route(
         ),
       ],
     ),
-    GoRouteData.$route(path: 'create', factory: $CreateEventRoute._fromState),
+    GoRouteData.$route(
+      path: 'create',
+      factory: $CreateEventRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'sherehe-select-institutions',
+          factory: $ShereheSelectInstitutionsRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'edit-added-ticket',
+          factory: $EditAddedTicketRoute._fromState,
+        ),
+      ],
+    ),
   ],
 );
 
@@ -473,17 +488,14 @@ mixin $ShereheDetailsRoute on GoRouteData {
 }
 
 mixin $TicketFlowRoute on GoRouteData {
-  static TicketFlowRoute _fromState(GoRouterState state) => TicketFlowRoute(
-    eventId: state.pathParameters['eventId']!,
-    userId: state.uri.queryParameters['user-id']!,
-  );
+  static TicketFlowRoute _fromState(GoRouterState state) =>
+      TicketFlowRoute(eventId: state.pathParameters['eventId']!);
 
   TicketFlowRoute get _self => this as TicketFlowRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/ticket-flow',
-    queryParams: {'user-id': _self.userId},
   );
 
   @override
@@ -655,6 +667,119 @@ mixin $CreateEventRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/sherehe/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ShereheSelectInstitutionsRoute on GoRouteData {
+  static ShereheSelectInstitutionsRoute _fromState(GoRouterState state) =>
+      ShereheSelectInstitutionsRoute(
+        title: state.uri.queryParameters['title']!,
+        subtitle: state.uri.queryParameters['subtitle']!,
+      );
+
+  ShereheSelectInstitutionsRoute get _self =>
+      this as ShereheSelectInstitutionsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/sherehe-select-institutions',
+    queryParams: {'title': _self.title, 'subtitle': _self.subtitle},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EditAddedTicketRoute on GoRouteData {
+  static EditAddedTicketRoute _fromState(GoRouterState state) =>
+      EditAddedTicketRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/sherehe/create/edit-added-ticket');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $shereheDetailsWithTokenRoute => GoRouteData.$route(
+  path: '/sherehe/get-event-with-invite/:invite',
+  factory: $ShereheDetailsWithTokenRoute._fromState,
+);
+
+mixin $ShereheDetailsWithTokenRoute on GoRouteData {
+  static ShereheDetailsWithTokenRoute _fromState(GoRouterState state) =>
+      ShereheDetailsWithTokenRoute(invite: state.pathParameters['invite']!);
+
+  ShereheDetailsWithTokenRoute get _self =>
+      this as ShereheDetailsWithTokenRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event-with-invite/${Uri.encodeComponent(_self.invite)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $ticketFlowWithInviteRoute => GoRouteData.$route(
+  path: '/sherehe/ticket-flow-with-invite/:invite',
+  factory: $TicketFlowWithInviteRoute._fromState,
+);
+
+mixin $TicketFlowWithInviteRoute on GoRouteData {
+  static TicketFlowWithInviteRoute _fromState(GoRouterState state) =>
+      TicketFlowWithInviteRoute(invite: state.pathParameters['invite']!);
+
+  TicketFlowWithInviteRoute get _self => this as TicketFlowWithInviteRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/ticket-flow-with-invite/${Uri.encodeComponent(_self.invite)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
