@@ -153,7 +153,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           style: pw.TextStyle(
                             fontSize: 10,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.white,                           
+                            color: PdfColors.white,
                           ),
                         ),
                         pw.SizedBox(height: 20),
@@ -265,7 +265,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ),
                           ),
                           child: pw.BarcodeWidget(
-                            data: 'attendee:${widget.attendeeId}',
+                            data: 'academia@opencrafts:${widget.attendeeId}',
                             barcode: pw.Barcode.qrCode(),
                             width: 100,
                             height: 100,
@@ -524,15 +524,12 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PrettyQrView.data(
-                                data: 'attendee:${widget.attendeeId}',
-                                decoration: const PrettyQrDecoration(
+                                data: 'academia@opencrafts:${widget.attendeeId}',
+                                decoration: PrettyQrDecoration(
                                   image: PrettyQrDecorationImage(
                                     image: AssetImage(
-                                      "assets/icons/opencrafts.png",
+                                      Assets.icons.opencrafts.path,
                                     ),
-                                  ),
-                                  shape: PrettyQrSmoothSymbol(
-                                    color: Colors.black,
                                   ),
                                   quietZone: PrettyQrQuietZone.standard,
                                 ),

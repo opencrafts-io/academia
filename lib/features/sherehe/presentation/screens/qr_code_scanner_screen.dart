@@ -22,12 +22,12 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     final qrValue = capture.barcodes.first.rawValue;
     if (qrValue == null) return;
 
-    if (!qrValue.startsWith('attendee:')) {
+    if (!qrValue.startsWith('academia@opencrafts:')) {
       _showInvalidFormat();
       return;
     }
 
-    final attendeeId = qrValue.replaceFirst('attendee:', '');
+    final attendeeId = qrValue.replaceFirst('academia@opencrafts:', '');
 
     setState(() => _isScanning = false);
 
@@ -270,14 +270,34 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
         appBar: AppBar(title: const Text("Scan Ticket"), centerTitle: true),
         body: Stack(
           children: [
-            MobileScanner(controller: _controller, onDetect: _onDetect),
-
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _ScannerOverlayPainter(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final scanWindow = Rect.fromCenter(
+                  center: Offset(
+                    constraints.maxWidth / 2,
+                    constraints.maxHeight / 2,
+                  ),
+                  width: constraints.maxWidth * .7,
+                  height: constraints.maxWidth * .7,
+                );
+                return Stack(
+                  children: [
+                    MobileScanner(
+                      controller: _controller,
+                      scanWindow: scanWindow,
+                      onDetect: _onDetect,
+                    ),
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _ScannerOverlayPainter(
+                          color: Theme.of(context).colorScheme.primary,
+                          scanWindow: scanWindow,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
 
             Positioned(
@@ -301,24 +321,21 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
 
 class _ScannerOverlayPainter extends CustomPainter {
   final Color color;
+  final Rect? scanWindow;
 
-  _ScannerOverlayPainter({required this.color});
+  _ScannerOverlayPainter({required this.color, required this.scanWindow});
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (scanWindow == null) return;
+
     final paint = Paint()
       ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
-    final rect = Rect.fromCenter(
-      center: size.center(Offset.zero),
-      width: size.width * .7,
-      height: size.width * .7,
-    );
-
     canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(16)),
+      RRect.fromRectAndRadius(scanWindow!, const Radius.circular(16)),
       paint,
     );
   }
