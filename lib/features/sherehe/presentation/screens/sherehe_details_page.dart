@@ -411,8 +411,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(8),
                             child: Column(
+                              spacing: 10.0,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
@@ -420,18 +422,32 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                       Icons.location_on,
                                       color: Theme.of(
                                         context,
-                                      ).colorScheme.primary,
+                                      ).colorScheme.onPrimaryContainer,
                                     ),
-                                    const SizedBox(width: 12),
+                                    const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                        state.event.eventLocation,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyMedium,
+                                        'Location',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ),
                                   ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: Text(
+                                    state.event.eventLocation,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                  ),
                                 ),
                               ],
                             ),
