@@ -19,19 +19,17 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   void _onDetect(BarcodeCapture capture) {
     if (!_isScanning) return;
 
-    final qrValue = capture.barcodes.first.rawValue;
-    if (qrValue == null) return;
+    setState(() => _isScanning = false);
 
-    if (!qrValue.startsWith('academia@opencrafts:')) {
+    _controller.stop();
+
+    final qrValue = capture.barcodes.first.rawValue;
+    if (qrValue == null || !qrValue.startsWith('academia@opencrafts:')) {
       _showInvalidFormat();
       return;
     }
 
     final attendeeId = qrValue.replaceFirst('academia@opencrafts:', '');
-
-    setState(() => _isScanning = false);
-
-    _controller.stop();
 
     context.read<ValidateAttendeeBloc>().add(
       ValidateAttendee(eventId: widget.eventId, attendeeId: attendeeId),
@@ -237,8 +235,6 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   }
 
   void _showInvalidFormat() {
-    setState(() => _isScanning = false);
-
     _showResultDialog(
       valid: false,
       title: "Invalid QR Code",
