@@ -5,7 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-
 concurrency:
   group: production-${{ github.ref }}
   cancel-in-progress: false
@@ -18,17 +17,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Install tools via mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
         with:
           cache: true
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -77,10 +76,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install tools via mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
         with:
           cache: true
 
@@ -96,7 +95,7 @@ jobs:
           xcodebuild -version
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -105,7 +104,7 @@ jobs:
           restore-keys: pub-
 
       - name: Cache CocoaPods
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ios/Pods
@@ -115,7 +114,7 @@ jobs:
           restore-keys: pods-
 
       - name: Cache gems
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/ios/vendor/bundle
           key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('ios/Gemfile.lock') }}
@@ -194,15 +193,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install tools via mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
         with:
           cache: true
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -211,7 +210,7 @@ jobs:
           restore-keys: pub-
 
       - name: Cache Gradle
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.gradle/caches
@@ -220,7 +219,7 @@ jobs:
           restore-keys: gradle-
 
       - name: Cache gems
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/android/vendor/bundle
           key: ${{ runner.os }}-gems-android-v1-${{ hashFiles('android/Gemfile.lock') }}
@@ -292,3 +291,4 @@ jobs:
               ]
             }]}" \
             "$DISCORD_WEBHOOK_URL"
+
