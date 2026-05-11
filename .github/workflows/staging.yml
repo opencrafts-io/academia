@@ -63,17 +63,16 @@ jobs:
       - name: Decode Android keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
-            > android/app/keystore.jks
+            > android/app/debug.keystore
 
       - name: Write key.properties
         run: |
-          {
-            echo "storePassword=$(echo "${{ secrets.ANDROID_STORE_PASSWORD }}" | tr -d '[:space:]')"
-            echo "keyPassword=$(echo "${{ secrets.ANDROID_KEY_PASSWORD }}" | tr -d '[:space:]')"
-            echo "keyAlias=$(echo "${{ secrets.ANDROID_KEY_ALIAS }}" | tr -d '[:space:]')"
-            echo "storeFile=app/keystore.jks"
-          } > android/key.properties
-
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=app/debug.keystore
+          EOF
       - name: Install gems
         working-directory: android
         run: |
@@ -122,10 +121,10 @@ jobs:
   ios:
     name: iOS — Staging IPA
     runs-on: blacksmith-6vcpu-macos-latest
-    permissions: 
+    permissions:
       contents: write
     timeout-minutes: 60
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
