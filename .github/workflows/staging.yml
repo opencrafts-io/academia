@@ -10,9 +10,6 @@ on:
         required: false
         default: ""
 
-permissions:
-  contents: write
-
 concurrency:
   group: staging-${{ github.ref }}
   cancel-in-progress: true
@@ -21,6 +18,8 @@ jobs:
   android:
     name: Android — Staging APK
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    permissions:
+      contents: write
     timeout-minutes: 45
 
     steps:
@@ -108,7 +107,7 @@ jobs:
             | jq -r '[.jobs[] | select(.conclusion=="failure") | .name] | join(", ")')
           curl -s -X POST -H "Content-Type: application/json" \
             -d "{\"embeds\":[{
-              \"title\": \"❌ Android Staging FAILED\",
+              \"title\": \" Android Staging FAILED\",
               \"color\": 15158332,
               \"fields\": [
                 {\"name\": \"Branch\",      \"value\": \"${{ github.ref_name }}\"},
@@ -229,7 +228,7 @@ jobs:
           ")
           curl -s -X POST -H "Content-Type: application/json" \
             -d "{\"embeds\":[{
-              \"title\": \"❌ iOS Staging FAILED\",
+              \"title\": \" iOS Staging FAILED\",
               \"color\": 15158332,
               \"fields\": [
                 {\"name\": \"Branch\",        \"value\": \"${{ github.ref_name }}\"},
