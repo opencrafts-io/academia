@@ -92,8 +92,8 @@ platform :ios do
 
     Dir.chdir("../../") do
       sh("flutter pub get")
-      sh("flutter build ios --flavor prod --target lib/main_staging.dart --release --no-codesign")
-      sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
+      sh("flutter build ios --flavor staging --target lib/main_staging.dart --release --no-codesign")
+      sh("flutter build ipa --flavor staging --target lib/main_staging.dart " \
          "--export-options-plist ios/ExportOptions-staging.plist")
     end
   end
@@ -158,7 +158,8 @@ platform :ios do
   lane :deploy_production do
     build_production
 
-    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
+    repo_root = File.expand_path("../..", __dir__)
+    ipa_path = Dir["#{repo_root}/build/ios/ipa/*.ipa"].first
     raise "IPA not found in build/ios/ipa/" unless ipa_path
 
     upload_to_app_store(

@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/android/vendor/bundle
-          key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('android/Gemfile.lock') }}
+          key: ${{ runner.os }}-gems-android-v1-${{ hashFiles('android/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-android-v1
 
