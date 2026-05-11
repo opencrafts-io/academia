@@ -62,6 +62,7 @@ jobs:
 
       - name: Decode Android keystore
         run: |
+          mkdir -p ${{ github.workspace }}/android/app/keystore
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
             > ${{ github.workspace }}/android/app/keystore/release.keystore
 
