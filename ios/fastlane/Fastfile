@@ -92,6 +92,7 @@ platform :ios do
 
     Dir.chdir("../../") do
       sh("flutter pub get")
+      sh("flutter build ios --flavor prod --target lib/main_staging.dart --release --no-codesign")
       sh("flutter build ipa --flavor prod --target lib/main_staging.dart " \
          "--export-options-plist ios/ExportOptions-staging.plist")
     end
@@ -121,6 +122,7 @@ platform :ios do
 
     Dir.chdir("../../") do
       sh("flutter pub get")
+      sh("flutter build ios --flavor prod --target lib/main_staging.dart --release --no-codesign")
       sh("flutter build ipa --flavor prod --target lib/main_production.dart " \
          "--export-options-plist ios/ExportOptions-production.plist")
     end
