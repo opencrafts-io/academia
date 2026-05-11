@@ -48,13 +48,13 @@ android {
          create("release") {
         keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
         keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
-        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storeFile = (keystoreProperties["storeFile"]?.toString() ?: System.getenv("ANDROID_KEYSTORE_PATH"))?.let { file(it) }
         storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
     }
          create("staging") {
         keyAlias     = keystoreProperties["keyAlias"]?.toString()     ?: System.getenv("ANDROID_KEY_ALIAS")
         keyPassword  = keystoreProperties["keyPassword"]?.toString()  ?: System.getenv("ANDROID_KEY_PASSWORD")
-        storeFile    = keystoreProperties["storeFile"]?.let { file(it.toString()) }
+        storeFile = (keystoreProperties["storeFile"]?.toString() ?: System.getenv("ANDROID_KEYSTORE_PATH"))?.let { file(it) }
         storePassword = keystoreProperties["storePassword"]?.toString() ?: System.getenv("ANDROID_STORE_PASSWORD")
     }
 }

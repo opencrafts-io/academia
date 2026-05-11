@@ -63,7 +63,7 @@ jobs:
       - name: Decode Android keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
-            > android/app/debug.keystore
+            > ${{ github.workspace }}/android/app/keystore/release.keystore
 
       - name: Write key.properties
         run: |
@@ -86,6 +86,7 @@ jobs:
       - name: Fastlane — Upload Staging Release
         working-directory: android
         env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/keystore/release.keystore
           GITHUB_API_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
