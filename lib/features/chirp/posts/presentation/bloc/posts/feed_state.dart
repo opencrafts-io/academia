@@ -114,3 +114,15 @@ class PostCreateError extends FeedState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted when a like/unlike API call fails.
+/// The [post] is the original pre-toggle version for UI rollback.
+class PostLikeError extends FeedState {
+  final Post post;
+  final String message;
+
+  PostLikeError({required this.post, required this.message});
+
+  @override
+  List<Object?> get props => [post, message];
+}

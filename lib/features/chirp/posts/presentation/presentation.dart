@@ -4,6 +4,7 @@ export 'widgets/comment_replies_list_widget.dart';
 export 'widgets/comment_content_widget.dart';
 export 'widgets/post_content_widget.dart';
 export 'widgets/comment_list_widget.dart';
+export 'widgets/post_like_widget.dart';
 export 'views/post_detail_screen.dart';
 export 'views/add_post_screen.dart';
 export 'views/feed_screen.dart';
