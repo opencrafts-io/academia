@@ -9,12 +9,14 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   final TodoItemRemoteDatasource remoteDataSource;
   final TodoTagLocalDatasource tagLocalDataSource;
   final TodoListLocalDatasource listLocalDataSource;
+  final TodoNotificationService todoNotificationService;
 
   TodoItemRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.tagLocalDataSource,
     required this.listLocalDataSource,
+    required this.todoNotificationService,
   });
 
   /// Resolves tags for a [TodoItem] from local DB via the junction table.
@@ -210,6 +212,12 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         tagLocalIds: tagLocalIds,
       );
 
+      if (entity.due != null) {
+        todoNotificationService.scheduleReminder(
+          createdLocal.toDomain(tags: entity.tags),
+        );
+      }
+
       final remoteResult = await remoteDataSource.createTodoItem(
         createdLocal.toDto(),
       );
@@ -234,45 +242,6 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     });
   }
 
-  // @override
-  // Future<Either<Failure, TodoItemEntity>> createTodoItem(
-  //   TodoItemEntity entity,
-  // ) async {
-  //   final localResult = await localDataSource.createTodoItem(
-  //     entity.toDataModel(),
-  //   );
-  //
-  //   return localResult.fold((failure) => Left(failure), (createdLocal) async {
-  //     final tagLocalIds = entity.tags.map((t) => t.localId).toList();
-  //     await localDataSource.syncTagsForTodoItem(
-  //       todoLocalId: createdLocal.localId,
-  //       tagLocalIds: tagLocalIds,
-  //     );
-  //
-  //     final remoteResult = await remoteDataSource.createTodoItem(
-  //       createdLocal.toDto(),
-  //     );
-  //
-  //     return remoteResult.fold(
-  //       (_) => Right(createdLocal.toDomain(tags: entity.tags)),
-  //       (dto) async {
-  //         final resolvedListLocalId = await _resolveTaskListLocalId(
-  //           dto.taskList,
-  //         );
-  //         final synced = dto.toDataModel(
-  //           localId: createdLocal.localId,
-  //           taskListLocalId: resolvedListLocalId != 0
-  //               ? resolvedListLocalId
-  //               : entity.taskListLocalId,
-  //           isDirty: false,
-  //         );
-  //         await localDataSource.updateTodoItem(synced);
-  //         return Right(synced.toDomain(tags: entity.tags));
-  //       },
-  //     );
-  //   });
-  // }
-
   @override
   Future<Either<Failure, TodoItemEntity>> updateTodoItem(
     TodoItemEntity entity,
@@ -287,6 +256,14 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         todoLocalId: updatedLocal.localId,
         tagLocalIds: tagLocalIds,
       );
+
+      if (entity.due != null) {
+        todoNotificationService.rescheduleReminder(
+          updatedLocal.toDomain(tags: entity.tags),
+        );
+      } else {
+        todoNotificationService.cancelReminder(entity.localId);
+      }
 
       final remoteResult = await remoteDataSource.updateTodoItem(
         updatedLocal.toDto(),
@@ -315,9 +292,11 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       if (item == null) return const Right(unit);
 
       await localDataSource.softDeleteTodoItem(item);
+      todoNotificationService.cancelReminder(item.localId);
 
       if (item.id == null) {
         await localDataSource.hardDeleteTodoItem(item.localId);
+        todoNotificationService.notifyDeleted(item.toDomain());
         return const Right(unit);
       }
 
@@ -325,6 +304,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
 
       return remoteResult.fold((_) => const Right(unit), (_) async {
         await localDataSource.hardDeleteTodoItem(item.localId);
+        todoNotificationService.notifyDeleted(item.toDomain());
         return const Right(unit);
       });
     });
@@ -368,6 +348,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       );
 
       return updatedItem.fold((failure) => Left(failure), (local) async {
+        todoNotificationService.cancelReminder(local.localId);
         if (local.id == null) return Right(local.toDomain());
 
         final remoteResult = await remoteDataSource.completeTodoItem(
@@ -427,6 +408,9 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       );
 
       return updatedItem.fold((failure) => Left(failure), (local) async {
+        if (local.due != null) {
+          todoNotificationService.scheduleReminder(local.toDomain());
+        }
         if (local.id == null) return Right(local.toDomain());
 
         final remoteResult = await remoteDataSource.reopenTodoItem(
@@ -503,6 +487,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     return dirtyResult.fold((l) => Left(l), (dirtyItems) async {
       for (final item in dirtyItems) {
         if (item.isPendingDeletion) {
+          todoNotificationService.cancelReminder(item.localId);
           if (item.id != null) await remoteDataSource.deleteTodoItem(item.id!);
           await localDataSource.hardDeleteTodoItem(item.localId);
           continue;

@@ -238,6 +238,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Todos
+  sl.registerLazySingleton<TodoNotificationService>(
+    () => TodoNotificationServiceImpl(),
+  );
   sl.registerFactory<TodoListLocalDatasource>(
     () => TodoListLocalDatasource(cacheDB: sl()),
   );
@@ -265,6 +268,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       localDataSource: sl(),
       remoteDataSource: sl(),
       tagLocalDataSource: sl(),
+      todoNotificationService: sl(),
     ),
   );
 

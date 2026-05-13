@@ -12,3 +12,4 @@ export 'enums/sync_status.dart';
 export 'enums/todo_status.dart';
 export 'enums/todo_priority.dart';
 export 'repository/todo_list_repository.dart';
+export 'services/todo_notification_service.dart';
