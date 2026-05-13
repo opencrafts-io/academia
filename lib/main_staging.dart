@@ -54,7 +54,11 @@ void main(List<String> args) async {
       );
     },
     (error, stacktrace) {
-      Logger().e('Caught an uncaught exception', error: error);
+      Logger().e(
+        'Caught an uncaught exception',
+        error: error,
+        stackTrace: stacktrace,
+      );
     },
   );
 }
