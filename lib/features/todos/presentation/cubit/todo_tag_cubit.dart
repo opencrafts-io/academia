@@ -1,8 +1,7 @@
-import 'package:academia/core/usecase/usecase.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/todos/todos.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TodoTagCubit extends Cubit<TodoTagState> {
+class TodoTagCubit extends SafeCubit<TodoTagState> {
   final GetTodoTags getTagsUseCase;
   final CreateTodoTag createTagUseCase;
   final UpdateTodoTag updateTagUseCase;
@@ -43,8 +42,9 @@ class TodoTagCubit extends Cubit<TodoTagState> {
     final currentState = state.mapOrNull(success: (s) => s);
     if (currentState == null ||
         currentState.nextUrl == null ||
-        currentState.isPaginating)
+        currentState.isPaginating) {
       return;
+    }
 
     emit(currentState.copyWith(isPaginating: true));
 

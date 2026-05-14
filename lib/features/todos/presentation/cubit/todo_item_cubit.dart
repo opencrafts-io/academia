@@ -1,8 +1,7 @@
-import 'package:academia/core/usecase/usecase.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/features/todos/todos.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TodoItemCubit extends Cubit<TodoItemState> {
+class TodoItemCubit extends SafeCubit<TodoItemState> {
   final GetTodoItems getItemsUseCase;
   final GetTodoItemById getItemByIdUseCase;
   final CreateTodoItem createItemUseCase;
