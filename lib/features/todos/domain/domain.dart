@@ -4,7 +4,6 @@ export 'entities/todo_tag_entity.dart';
 export 'entities/todo_item_entity.dart';
 export 'entities/todo_tag_page.dart';
 export 'entities/todo_item_page.dart';
-export 'repository/todo_repository.dart';
 export 'repository/todo_tag_repository.dart';
 export 'repository/todo_item_repository.dart';
 export 'usecases/usecases.dart';

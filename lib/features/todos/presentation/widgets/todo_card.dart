@@ -1,7 +1,5 @@
-import 'package:academia/features/todos/presentation/cubit/todo_item_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:academia/features/todos/domain/domain.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TodoCard extends StatelessWidget {

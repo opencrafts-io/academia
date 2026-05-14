@@ -22,7 +22,6 @@ import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
-import 'package:academia/features/todos/data/models/todo.dart';
 import 'package:academia/features/todos/data/models/todo_lists.dart';
 import 'package:academia/features/todos/data/models/todo_items.dart';
 import 'package:academia/features/todos/data/models/todo_tag_items.dart';
@@ -52,7 +51,6 @@ part 'database.g.dart';
     PostTable,
     CommentTable,
 
-    Todo,
     EventTable,
     AttendeeTable,
     TicketTable,

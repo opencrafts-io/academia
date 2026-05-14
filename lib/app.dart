@@ -151,12 +151,6 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<TodoListCubit>()),
         BlocProvider(create: (context) => sl<TodoTagCubit>()),
-        BlocProvider(
-          create: (context) => sl<TodoBloc>()
-            ..add(FetchCachedTodosEvent())
-            ..add(SyncTodosWithGoogleCalendar()),
-        ),
-
         BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
