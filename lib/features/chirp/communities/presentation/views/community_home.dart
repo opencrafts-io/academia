@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class CommunityHome extends StatefulWidget {
@@ -126,12 +127,31 @@ class _CommunityHomeState extends State<CommunityHome>
                       communityID: widget.communityId,
                       userID: currentUserID,
                     ),
-                child: Scaffold(
+                child: PopScope(
+                  canPop: false,
+                  onPopInvokedWithResult: (didPop, _) {
+                    if (didPop) return;
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go(HomeRoute().location);
+                    }
+                  },
+                  child: Scaffold(
                   body: NestedScrollView(
                     headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverAppBar.medium(
                         centerTitle: false,
                         titleSpacing: 0,
+                        leading: BackButton(
+                          onPressed: () {
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.go(HomeRoute().location);
+                            }
+                          },
+                        ),
                         title: GestureDetector(
                           onTap: () {
                             showModalBottomSheet(
@@ -455,6 +475,7 @@ class _CommunityHomeState extends State<CommunityHome>
                     ),
                   ),
                 ),
+                ), // PopScope
               ),
             );
           }
@@ -800,6 +821,27 @@ class _CommunityActionSection extends StatelessWidget {
                                 );
                               }
                             }
+                          },
+                        ),
+
+                        // Share Community
+                        ListTile(
+                          leading: const Icon(Icons.share_outlined),
+                          title: const Text("Share Community"),
+                          onTap: () {
+                            Navigator.pop(modalContext);
+                            final url =
+                                'https://academia.opencrafts.io${CommunitiesRoute(communityId: communityID).location}';
+                            final box =
+                                context.findRenderObject() as RenderBox?;
+                            Share.share(
+                              'Check out this community on Academia:\n\n'
+                              '👥 $communityName\n\n'
+                              '🔗 $url',
+                              sharePositionOrigin: box != null
+                                  ? box.localToGlobal(Offset.zero) & box.size
+                                  : null,
+                            );
                           },
                         ),
 
