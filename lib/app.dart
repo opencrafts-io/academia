@@ -35,7 +35,9 @@ class _AcademiaState extends State<Academia> {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString(
         "user_activity",
-        jsonEncode({"last_app_launch_date": DateTime.now().toLocal().toString()}),
+        jsonEncode({
+          "last_app_launch_date": DateTime.now().toLocal().toString(),
+        }),
       );
     });
 
@@ -93,16 +95,7 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
-          create: (context) => AuthBloc(
-            signOutUsecase: sl(),
-            signInWithProviderUsecase: sl(),
-            signInWithAppleUsecase: sl(),
-            signInAsReviewUsecase: sl(),
-            refreshVerisafeTokenUsecase: sl(),
-            signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
-            getPreviousAuthState: sl.get<GetPreviousAuthState>(),
-            signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
-          )..add(AuthCheckStatusEvent()),
+          create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
         BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
@@ -135,17 +128,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<ReportBloc>()),
         BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
-          create: (context) => ProfileBloc(
-            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
-            refreshCurrentUserProfileUsecase: sl
-                .get<RefreshCurrentUserProfileUsecase>(),
-            updateUserProfile: sl.get<UpdateUserProfile>(),
-            updateUserPhone: sl.get<UpdateUserPhone>(),
-            requestAccountDeletionUsecase: sl
-                .get<RequestAccountDeletionUsecase>(),
-            requestAccountRecoveryUsecase: sl
-                .get<RequestAccountRecoveryUsecase>(),
-          )..add(GetCachedProfileEvent()),
+          create: (context) => sl<ProfileBloc>()..add(GetCachedProfileEvent()),
         ),
         BlocProvider(
           create: (context) => sl<TodoBloc>()
