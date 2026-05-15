@@ -141,18 +141,9 @@ class PostDetailRoute extends GoRouteData with $PostDetailRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final post = state.extra as Post;
+    final post = state.extra is Post ? state.extra as Post : null;
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => PostCubit(post)),
-        BlocProvider(
-          create: (context) =>
-              sl.get<ChirpUserCubit>()..getChirpUserByID(post.authorId),
-        ),
-      ],
-      child: PostDetailPage(post: post),
-    );
+    return PostDetailPage(postId: postId, initialPost: post);
   }
 }
 

@@ -90,6 +90,19 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
+  sl.registerSingleton<AuthBloc>(
+    AuthBloc(
+      signOutUsecase: sl(),
+      signInWithProviderUsecase: sl(),
+      signInWithAppleUsecase: sl(),
+      signInAsReviewUsecase: sl(),
+      refreshVerisafeTokenUsecase: sl(),
+      signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
+      getPreviousAuthState: sl.get<GetPreviousAuthState>(),
+      signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+    ),
+  );
+
   //sherehe
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
@@ -232,6 +245,18 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<RequestAccountRecoveryUsecase>(
     () => RequestAccountRecoveryUsecase(
       profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerSingleton<ProfileBloc>(
+    ProfileBloc(
+      getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
+      refreshCurrentUserProfileUsecase: sl
+          .get<RefreshCurrentUserProfileUsecase>(),
+      updateUserProfile: sl.get<UpdateUserProfile>(),
+      updateUserPhone: sl.get<UpdateUserPhone>(),
+      requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
+      requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
     ),
   );
 
@@ -544,9 +569,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => DeletePostCommentUsecase(repository: sl.get<ChirpRepository>()),
   );
 
-  // sl.registerFactory(
-  //   () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
-  // );
+  sl.registerFactory(
+    () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => CheckPostLikedUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
   sl.registerFactory(
     () => FeedBloc(
       getPostsFromCommunityUsecase: sl<GetPostsFromCommunityUsecase>(),
@@ -556,9 +584,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       markPostAsViewed: sl.get<MarkPostAsViewedUsecase>(),
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
-      // likePost: sl.get<LikePostUsecase>(),
-      // addComment: sl.get<CommentUsecase>(),
-      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
+      likePost: sl.get<LikePostUsecase>(),
+      checkPostLiked: sl.get<CheckPostLikedUsecase>(),
     ),
   );
   sl.registerFactory(

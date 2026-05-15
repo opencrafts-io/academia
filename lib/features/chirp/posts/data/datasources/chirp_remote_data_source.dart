@@ -103,7 +103,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     required String viewerId,
   }) async {
     try {
-      /// Safely ignore check  whether user is connected to the internet 
+      /// Safely ignore check  whether user is connected to the internet
       /// since this isnt important much .. used only for stats
       await dioClient.dio.post(
         '/$servicePrefix/posts/$postId/viewed/',
@@ -395,6 +395,100 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         ServerFailure(
           message:
               "An unexpected error occurred while fetching community posts",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Checks the current authenticated user's vote on post
+  Future<Either<Failure, int>> checkIsLiked({
+    required int postId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/$postId/vote/',
+        queryParameters: {'post_id': postId},
+      );
+
+      if (res.statusCode == 200) {
+        final value = res.data['value'];
+        return right((value as num?)?.toInt() ?? 0);
+      }
+
+      return left(
+        NetworkFailure(message: 'Unexpected response', error: res.data),
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        // Not voted
+        return right(0);
+      }
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: 'An unexpected error occurred while checking vote status',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Submits a vote on a post.
+  Future<Either<Failure, Map<String, dynamic>>> toggleLike({
+    required int postId,
+    required int voteValue,
+    required String voterId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final bool isRetract = voteValue == 0;
+      final endpoint = isRetract
+          ? '/$servicePrefix/posts/$postId/vote/redact/'
+          : '/$servicePrefix/posts/$postId/vote/';
+
+      final body = {
+        'voter_id': voterId,
+        'post_id': postId,
+        'value': isRetract ? -1 : voteValue,
+      };
+
+      final Response<dynamic> res;
+      if (isRetract) {
+        res = await dioClient.dio.delete(endpoint, data: body);
+      } else {
+        res = await dioClient.dio.post(endpoint, data: body);
+      }
+
+      if (res.statusCode == 200 ||
+          res.statusCode == 201 ||
+          res.statusCode == 204) {
+        final data = res.data is Map<String, dynamic>
+            ? res.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        return right({
+          'upvotes': data['upvotes'] ?? data['likes_count'],
+          'my_vote': isRetract ? 0 : voteValue,
+        });
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while casting vote",
           error: e,
         ),
       );
