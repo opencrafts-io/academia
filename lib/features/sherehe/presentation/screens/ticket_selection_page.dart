@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketSelectionPage extends StatefulWidget {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
   final List<TicketUI> tickets;
   final Function(TicketUI ticket) onAddTicket;
   final Function(TicketUI ticket) onRemoveTicket;
@@ -16,6 +18,8 @@ class TicketSelectionPage extends StatefulWidget {
   const TicketSelectionPage({
     super.key,
     required this.tickets,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
     required this.onAddTicket,
     required this.onRemoveTicket,
     required this.onContinue,
@@ -39,6 +43,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   Set<Institution> _selectedInstitutions = {};
   bool _showTickets = false;
 
+  DateTimeRange? _selectedTicketDateRange;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _resetDateRange();
+  }
+
   @override
   void dispose() {
     _ticketNameController.dispose();
@@ -47,7 +60,21 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     super.dispose();
   }
 
-  void _addTicket() {
+  void _resetDateRange() {
+    _selectedTicketDateRange = DateTimeRange(
+      start: widget.eventStartDateTime,
+      end: DateTime(
+        widget.eventStartDateTime.year,
+        widget.eventStartDateTime.month,
+        widget.eventStartDateTime.day,
+        23,
+        59,
+        59,
+      ),
+    );
+  }
+
+  void _addTicket(bool isMultiDayEvent) {
     if (_selectedScopeType == ScopeTypes.institution &&
         _selectedInstitutions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,6 +82,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           content: Text(
             "Select at least one institution for restricted tickets",
           ),
+        ),
+      );
+      return;
+    }
+
+    if (_selectedTicketDateRange == null && isMultiDayEvent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Select valid date range for the ticket"),
         ),
       );
       return;
@@ -70,6 +106,12 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
             ? null
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
         scope: _selectedScopeType?.toBackend,
+        startDate:
+            _selectedTicketDateRange?.start.toIso8601String() ??
+            widget.eventStartDateTime.toIso8601String(),
+        endDate:
+            _selectedTicketDateRange?.end.toIso8601String() ??
+            widget.eventEndDateTime.toIso8601String(),
       );
 
       widget.onAddTicket(
@@ -78,6 +120,12 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           institutions: List.from(_selectedInstitutions),
           selectedTicketGroupType: _selectedTicketGroupType,
           selectedScopeType: _selectedScopeType,
+          selectedTicketDateRange:
+              _selectedTicketDateRange ??
+              DateTimeRange(
+                start: widget.eventStartDateTime,
+                end: widget.eventEndDateTime,
+              ),
         ),
       );
 
@@ -90,6 +138,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
       _selectedTicketGroupType = null;
       _selectedInstitutions.clear();
       _selectedScopeType = null;
+      _resetDateRange();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -153,6 +202,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketFor: 1,
         institutionIds: [],
         scope: ScopeTypes.public.toBackend,
+        startDate: widget.eventStartDateTime.toIso8601String(),
+        endDate: widget.eventEndDateTime.toIso8601String(),
       );
 
       widget.onContinue([
@@ -161,6 +212,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
           institutions: [],
           selectedTicketGroupType: null,
           selectedScopeType: null,
+          selectedTicketDateRange: null,
         ),
       ]);
     }
@@ -176,8 +228,49 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     widget.onContinue(widget.tickets);
   }
 
+  Future<void> _pickTicketDateRange() async {
+    final range = await showDateRangePicker(
+      context: context,
+      firstDate: widget.eventStartDateTime,
+      lastDate: widget.eventEndDateTime,
+      initialDateRange: _selectedTicketDateRange,
+    );
+
+    if (range != null) {
+      setState(() {
+        _selectedTicketDateRange = DateTimeRange(
+          start: DateTime(
+            range.start.year,
+            range.start.month,
+            range.start.day,
+            widget.eventStartDateTime.hour,
+            widget.eventStartDateTime.minute,
+            widget.eventStartDateTime.second,
+          ),
+          end: DateTime(
+            range.end.year,
+            range.end.month,
+            range.end.day,
+            23,
+            59,
+            59,
+          ),
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isMultiDay =
+        widget.eventEndDateTime.difference(widget.eventStartDateTime) >
+        const Duration(hours: 24);
+    final rangeDifference = _selectedTicketDateRange == null
+        ? 0
+        : _selectedTicketDateRange!.end
+                  .difference(_selectedTicketDateRange!.start)
+                  .inDays +
+              1;
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -209,7 +302,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
                 TextFormField(
                   controller: _ticketNameController,
@@ -226,7 +319,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       : null,
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
 
                 TextFormField(
                   controller: _ticketPriceController,
@@ -245,7 +338,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _ticketQtyController,
                   decoration: const InputDecoration(
@@ -265,7 +358,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 DropdownButtonFormField(
                   initialValue: _selectedTicketGroupType,
                   decoration: const InputDecoration(
@@ -291,7 +384,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 TicketVisibilitySelector(
                   selectedScopeType: _selectedScopeType,
                   selectedInstitutions: _selectedInstitutions.toList(),
@@ -311,12 +404,33 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     });
                   },
                 ),
-                const SizedBox(height: 12),
+                if (isMultiDay) ...[
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: _pickTicketDateRange,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Ticket Validity",
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        helperText: "Select the days when the ticket is valid",
+                        helperStyle: Theme.of(context).textTheme.labelSmall,
+                      ),
+                      child: Text(
+                        _selectedTicketDateRange == null
+                            ? "Select valid days"
+                            : "${ShereheUtils.formatDateRange(_selectedTicketDateRange!.start)} → "
+                                  "${ShereheUtils.formatDateRange(_selectedTicketDateRange!.end)} ($rangeDifference Pass)",
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
                     icon: const Icon(Icons.add),
-                    onPressed: _addTicket,
+                    onPressed: () => _addTicket(isMultiDay),
                     label: const Text("Add Ticket"),
                   ),
                 ),
@@ -380,8 +494,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     children: widget.tickets.map((ticket) {
                       return AddedTicketsCard(
                         addedTicket: ticket,
-                        // onEditTicket: () =>
-                        //     _editTicketDialog(widget.tickets.indexOf(ticket)),
+                        isMultiDayEvent: isMultiDay,
                         onEditTicket: () async {
                           final updatedTicket = await context.push(
                             EditAddedTicketRoute().location,

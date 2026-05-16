@@ -170,4 +170,27 @@ class ShereheUtils {
     final visible = name.substring(0, 2);
     return '$visible****@$domain';
   }
+
+  static String formatDateRange(DateTime date) {
+    return "${date.day} ${ShereheUtils.monthName(date.month)} ${date.year}";
+  }
+
+  static String monthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    return months[month - 1];
+  }
 }

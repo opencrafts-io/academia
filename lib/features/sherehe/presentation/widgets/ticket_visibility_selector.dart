@@ -72,6 +72,10 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
           onChanged: (val) {
             widget.onScopeChanged(val);
           },
+          validator: (value) {
+            if (value == null) return "Please Select ticket scope";
+            return null;
+          },
         ),
 
         if (widget.selectedScopeType == ScopeTypes.institution) ...[

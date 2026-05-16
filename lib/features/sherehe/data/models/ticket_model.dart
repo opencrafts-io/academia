@@ -25,4 +25,10 @@ class TicketTable extends Table {
 
   @JsonKey('scope')
   TextColumn get scope => text().nullable()();
+
+  @JsonKey('start_date')
+  TextColumn get startDate => text().nullable()();
+
+  @JsonKey('end_date')
+  TextColumn get endDate => text().nullable()();
 }

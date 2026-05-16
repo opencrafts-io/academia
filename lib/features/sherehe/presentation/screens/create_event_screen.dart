@@ -565,6 +565,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                 ),
                 TicketSelectionPage(
+                  eventStartDateTime: _selectedStartDateTime ?? DateTime.now(),
+                  eventEndDateTime: _selectedEndDateTime ?? DateTime.now(),
                   tickets: _tickets,
                   onAddTicket: (ticket) {
                     setState(() {

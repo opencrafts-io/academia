@@ -14,6 +14,8 @@ extension TicketModelHelper on TicketData {
         .whereType<int>()
         .toList(),
     scope: scope,
+    startDate: startDate,
+    endDate: endDate,
   );
 }
 
@@ -27,5 +29,7 @@ extension TicketEntityHelper on Ticket {
     ticketFor: ticketFor,
     institutions: institutionIds?.map((e) => e).toList(),
     scope: scope,
+    startDate: startDate,
+    endDate: endDate,
   );
 }

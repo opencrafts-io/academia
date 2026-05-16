@@ -6,12 +6,14 @@ class AddedTicketsCard extends StatefulWidget {
   final TicketUI addedTicket;
   final VoidCallback onEditTicket;
   final VoidCallback onRemoveTicket;
+  final bool isMultiDayEvent;
 
   const AddedTicketsCard({
     super.key,
     required this.addedTicket,
     required this.onEditTicket,
     required this.onRemoveTicket,
+    this.isMultiDayEvent = false,
   });
 
   @override
@@ -24,6 +26,13 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
     final selectedScopeType = widget.addedTicket.selectedScopeType;
     final institutions = widget.addedTicket.institutions;
     final selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
+    final selectedTicketDateRange = widget.addedTicket.selectedTicketDateRange;
+    final rangeDifference = selectedTicketDateRange == null
+        ? 0
+        : selectedTicketDateRange.end
+                  .difference(selectedTicketDateRange.start)
+                  .inDays +
+              1;
 
     return Card(
       elevation: 0,
@@ -128,24 +137,47 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Ticket Scope Chip
-                if (selectedScopeType != null)
-                  Chip(
-                    label: Text(selectedScopeType.label),
-                    backgroundColor: selectedScopeType == ScopeTypes.public
-                        ? Theme.of(context).colorScheme.primaryContainer
-                        : selectedScopeType == ScopeTypes.institution
-                        ? Theme.of(context).colorScheme.secondaryContainer
-                        : Theme.of(context).colorScheme.tertiaryContainer,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: selectedScopeType == ScopeTypes.public
-                          ? Theme.of(context).colorScheme.onPrimaryContainer
-                          : selectedScopeType == ScopeTypes.institution
-                          ? Theme.of(context).colorScheme.onSecondaryContainer
-                          : Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 5.0,
+                  children: [
+                    /// Ticket Scope Chip
+                    if (selectedScopeType != null)
+                      Chip(
+                        label: Text(selectedScopeType.label),
+                        backgroundColor: selectedScopeType == ScopeTypes.public
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : selectedScopeType == ScopeTypes.institution
+                            ? Theme.of(context).colorScheme.secondaryContainer
+                            : Theme.of(context).colorScheme.tertiaryContainer,
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: selectedScopeType == ScopeTypes.public
+                              ? Theme.of(context).colorScheme.onPrimaryContainer
+                              : selectedScopeType == ScopeTypes.institution
+                              ? Theme.of(
+                                  context,
+                                ).colorScheme.onSecondaryContainer
+                              : Theme.of(
+                                  context,
+                                ).colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    if (widget.isMultiDayEvent)
+                      Chip(
+                        label: Text("$rangeDifference Day Pass"),
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.tertiaryContainer,
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                  ],
+                ),
 
                 if (selectedScopeType == ScopeTypes.institution &&
                     institutions.isNotEmpty) ...[
