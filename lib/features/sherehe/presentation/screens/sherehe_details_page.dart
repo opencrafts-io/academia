@@ -128,10 +128,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                 SliverAppBar(
                   expandedHeight: _getExpandedHeight(context),
                   pinned: true,
-                  leading: IconButton(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(Icons.arrow_back),
-                  ),
                   actions: [
                     BlocBuilder<
                       GetEventScannerByUserIdBloc,

@@ -92,6 +92,19 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
+  sl.registerSingleton<AuthBloc>(
+    AuthBloc(
+      signOutUsecase: sl(),
+      signInWithProviderUsecase: sl(),
+      signInWithAppleUsecase: sl(),
+      signInAsReviewUsecase: sl(),
+      refreshVerisafeTokenUsecase: sl(),
+      signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
+      getPreviousAuthState: sl.get<GetPreviousAuthState>(),
+      signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+    ),
+  );
+
   //sherehe
   sl.registerLazySingleton<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
@@ -234,6 +247,18 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<RequestAccountRecoveryUsecase>(
     () => RequestAccountRecoveryUsecase(
       profileRepository: sl.get<ProfileRepositoryImpl>(),
+    ),
+  );
+
+  sl.registerSingleton<ProfileBloc>(
+    ProfileBloc(
+      getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
+      refreshCurrentUserProfileUsecase: sl
+          .get<RefreshCurrentUserProfileUsecase>(),
+      updateUserProfile: sl.get<UpdateUserProfile>(),
+      updateUserPhone: sl.get<UpdateUserPhone>(),
+      requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
+      requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
     ),
   );
 
