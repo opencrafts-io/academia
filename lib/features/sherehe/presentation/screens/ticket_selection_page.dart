@@ -44,6 +44,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   bool _showTickets = false;
 
   DateTimeRange? _selectedTicketDateRange;
+  bool get isMultiDayEvent =>
+      widget.eventEndDateTime.difference(widget.eventStartDateTime) >
+      const Duration(hours: 24);
 
   @override
   void initState() {
@@ -61,6 +64,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
   }
 
   void _resetDateRange() {
+    if (!isMultiDayEvent) return;
     _selectedTicketDateRange = DateTimeRange(
       start: widget.eventStartDateTime,
       end: DateTime(
@@ -74,7 +78,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     );
   }
 
-  void _addTicket(bool isMultiDayEvent) {
+  void _addTicket() {
     if (_selectedScopeType == ScopeTypes.institution &&
         _selectedInstitutions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -262,9 +266,6 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isMultiDay =
-        widget.eventEndDateTime.difference(widget.eventStartDateTime) >
-        const Duration(hours: 24);
     final rangeDifference = _selectedTicketDateRange == null
         ? 0
         : _selectedTicketDateRange!.end
@@ -404,7 +405,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     });
                   },
                 ),
-                if (isMultiDay) ...[
+                if (isMultiDayEvent) ...[
                   const SizedBox(height: 8),
                   InkWell(
                     onTap: _pickTicketDateRange,
@@ -430,7 +431,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   width: double.infinity,
                   child: FilledButton.icon(
                     icon: const Icon(Icons.add),
-                    onPressed: () => _addTicket(isMultiDay),
+                    onPressed: () => _addTicket(),
                     label: const Text("Add Ticket"),
                   ),
                 ),
@@ -494,7 +495,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                     children: widget.tickets.map((ticket) {
                       return AddedTicketsCard(
                         addedTicket: ticket,
-                        isMultiDayEvent: isMultiDay,
+                        isMultiDayEvent: isMultiDayEvent,
                         onEditTicket: () async {
                           final updatedTicket = await context.push(
                             EditAddedTicketRoute().location,
