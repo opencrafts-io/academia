@@ -107,11 +107,11 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
             : _selectedInstitutions.map((e) => e.institutionId).toList(),
         scope: _selectedScopeType?.toBackend,
         startDate:
-            _selectedTicketDateRange?.start.toIso8601String() ??
-            widget.eventStartDateTime.toIso8601String(),
+            _selectedTicketDateRange?.start.toUtc().toIso8601String() ??
+            widget.eventStartDateTime.toUtc().toIso8601String(),
         endDate:
-            _selectedTicketDateRange?.end.toIso8601String() ??
-            widget.eventEndDateTime.toIso8601String(),
+            _selectedTicketDateRange?.end.toUtc().toIso8601String() ??
+            widget.eventEndDateTime.toUtc().toIso8601String(),
       );
 
       widget.onAddTicket(
@@ -202,8 +202,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketFor: 1,
         institutionIds: [],
         scope: ScopeTypes.public.toBackend,
-        startDate: widget.eventStartDateTime.toIso8601String(),
-        endDate: widget.eventEndDateTime.toIso8601String(),
+        startDate: widget.eventStartDateTime.toUtc().toIso8601String(),
+        endDate: widget.eventEndDateTime.toUtc().toIso8601String(),
       );
 
       widget.onContinue([
