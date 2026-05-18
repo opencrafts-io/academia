@@ -7,6 +7,7 @@ class AddedTicketsCard extends StatefulWidget {
   final VoidCallback onEditTicket;
   final VoidCallback onRemoveTicket;
   final bool isMultiDayEvent;
+  final bool isFreeEvent;
 
   const AddedTicketsCard({
     super.key,
@@ -14,6 +15,7 @@ class AddedTicketsCard extends StatefulWidget {
     required this.onEditTicket,
     required this.onRemoveTicket,
     this.isMultiDayEvent = false,
+    required this.isFreeEvent,
   });
 
   @override
@@ -108,11 +110,12 @@ class _AddedTicketsCardState extends State<AddedTicketsCard> {
                 /// Actions
                 Row(
                   children: [
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(Icons.edit_outlined),
-                      onPressed: widget.onEditTicket,
-                    ),
+                    if (!widget.isFreeEvent)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(Icons.edit_outlined),
+                        onPressed: widget.onEditTicket,
+                      ),
                     IconButton(
                       visualDensity: VisualDensity.compact,
                       icon: const Icon(Icons.delete_outline),

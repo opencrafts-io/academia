@@ -258,6 +258,7 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
           path: "sherehe-select-institutions",
         ),
         TypedGoRoute<EditAddedTicketRoute>(path: "edit-added-ticket"),
+        TypedGoRoute<AddTicketRoute>(path: "add-ticket"),
       ],
     ),
   ],
@@ -305,6 +306,26 @@ class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
     final addedTicket = state.extra as TicketUI;
     return EditAddedTicketScreen(
       addedTicket: addedTicket,
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
+  }
+}
+
+class AddTicketRoute extends GoRouteData with $AddTicketRoute {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isMultiDayEvent;
+
+  const AddTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddTicketScreen(
       isMultiDayEvent: isMultiDayEvent,
       eventStartDateTime: eventStartDateTime,
       eventEndDateTime: eventEndDateTime,

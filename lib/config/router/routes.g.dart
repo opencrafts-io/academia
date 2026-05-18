@@ -437,6 +437,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
           path: 'edit-added-ticket',
           factory: $EditAddedTicketRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'add-ticket',
+          factory: $AddTicketRoute._fromState,
+        ),
       ],
     ),
   ],
@@ -735,6 +739,50 @@ mixin $EditAddedTicketRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/create/edit-added-ticket',
+    queryParams: {
+      if (_self.isMultiDayEvent != false)
+        'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AddTicketRoute on GoRouteData {
+  static AddTicketRoute _fromState(GoRouterState state) => AddTicketRoute(
+    isMultiDayEvent:
+        _$convertMapValue(
+          'is-multi-day-event',
+          state.uri.queryParameters,
+          _$boolConverter,
+        ) ??
+        false,
+    eventStartDateTime: DateTime.parse(
+      state.uri.queryParameters['event-start-date-time']!,
+    ),
+    eventEndDateTime: DateTime.parse(
+      state.uri.queryParameters['event-end-date-time']!,
+    ),
+  );
+
+  AddTicketRoute get _self => this as AddTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/add-ticket',
     queryParams: {
       if (_self.isMultiDayEvent != false)
         'is-multi-day-event': _self.isMultiDayEvent.toString(),
