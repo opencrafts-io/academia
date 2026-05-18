@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,7 +18,7 @@ abstract class RouteGuard {
   /// * [state]: The current [GoRouterState], containing the location and parameters.
   ///
   /// Returns:
-  /// * `FutureOr<String?>`: A String representing the redirect path (e.g., '/login').
+  /// * String: A String representing the redirect path (e.g., '/login').
   /// * Returns `null` if the guard passes and the user is allowed to proceed.
   ///
   /// Example:
@@ -27,5 +26,5 @@ abstract class RouteGuard {
   /// if (notLoggedIn) return '/login';
   /// return null;
   /// ```
-  FutureOr<String?> check(BuildContext context, GoRouterState state);
+  String? check(BuildContext context, GoRouterState state);
 }
