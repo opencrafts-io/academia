@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:academia/config/config.dart';
 import 'package:academia/config/router/route_guard.dart';
 import 'package:academia/features/features.dart';
@@ -10,7 +8,7 @@ import 'package:go_router/go_router.dart';
 class AuthGuard implements RouteGuard {
   const AuthGuard();
   @override
-  FutureOr<String?> check(BuildContext context, GoRouterState state) {
+  String? check(BuildContext context, GoRouterState state) {
     final authState = context.read<AuthBloc>().state;
 
     // Define which location represents the "Entry Point"
