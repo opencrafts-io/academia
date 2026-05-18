@@ -195,6 +195,7 @@ class _ViewTodoListScreenState extends State<ViewTodoListScreen> {
             textCapitalization: TextCapitalization.sentences,
             validator: (input) =>
                 (input?.length ?? 0) < 3 ? "Title too short" : null,
+            maxLength: 100,
             decoration: InputDecoration(
               hintText: "Homework",
               hintStyle: TextStyle(color: taskListColor?.withAlpha(128)),

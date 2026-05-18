@@ -430,6 +430,7 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                               }
                               return null;
                             },
+                            maxLength: 100,
                             onChanged: (_) => setState(() {}),
                             decoration: InputDecoration(
                               hintText: "Task title",

@@ -328,6 +328,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: -1.0,
                   ),
+                  maxLength: 100,
                   cursorHeight: 32,
                   autofocus: true,
                   textCapitalization: TextCapitalization.sentences,

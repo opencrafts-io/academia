@@ -66,8 +66,12 @@ class _CreateTodoListScreenState extends State<CreateTodoListScreen> {
                   if ((input?.length ?? 0) < 3) {
                     return "Please try a longer title";
                   }
+                  if ((input?.length ?? 0) > 100) {
+                    return "Please try a shorter title";
+                  }
                   return null;
                 },
+                maxLength: 100,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   hintText: "Homework",

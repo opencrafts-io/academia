@@ -40,7 +40,17 @@ class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
                   backgroundColor: color.withAlpha(255),
                   isLabelVisible: list.taskCount > 0,
                   label: Text("${list.taskCount}"),
-                  child: Tab(child: Text(list.title)),
+                  child: Tab(
+                    child: SizedBox(
+                      width: 80,
+                      child: Text(
+                        list.title,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
                 ),
               );
             }),
