@@ -133,6 +133,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ),
               );
               return;
+            } else if (_selectedStartDateTime != null &&
+                selectedDateTime.isAtSameMomentAs(_selectedStartDateTime!)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "End date and time cannot be the same as start date and time",
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
             }
             _selectedEndDateTime = selectedDateTime;
             _endDateTimeController.text = DateFormat.yMMMMEEEEd()
@@ -571,6 +582,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   onAddTicket: (ticket) {
                     setState(() {
                       _tickets.add(ticket);
+                    });
+                  },
+                  onUpdateTicket: (oldTicket, updatedTicket) {
+                    setState(() {
+                      _tickets[_tickets.indexOf(oldTicket)] = updatedTicket;
                     });
                   },
                   onRemoveTicket: (ticket) {

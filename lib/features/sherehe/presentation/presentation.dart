@@ -56,5 +56,6 @@ export 'widgets/added_tickets_card.dart';
 export 'widgets/user_ticket_item_card.dart';
 export 'widgets/ticket_quantity_selector.dart';
 export 'widgets/sherehe_details_schedule_card.dart';
+export 'widgets/ticket_date_range_widget.dart';
 export 'utils/sherehe_utils.dart';
 export 'constants/sherehe_constants.dart';

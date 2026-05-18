@@ -11,6 +11,7 @@ class TicketSelectionPage extends StatefulWidget {
   final List<TicketUI> tickets;
   final Function(TicketUI ticket) onAddTicket;
   final Function(TicketUI ticket) onRemoveTicket;
+  final Function(TicketUI oldTicket, TicketUI updatedTicket) onUpdateTicket;
   final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
@@ -22,6 +23,7 @@ class TicketSelectionPage extends StatefulWidget {
     required this.eventEndDateTime,
     required this.onAddTicket,
     required this.onRemoveTicket,
+    required this.onUpdateTicket,
     required this.onContinue,
     required this.onSkip,
     required this.onPrevious,
@@ -232,46 +234,8 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     widget.onContinue(widget.tickets);
   }
 
-  Future<void> _pickTicketDateRange() async {
-    final range = await showDateRangePicker(
-      context: context,
-      firstDate: widget.eventStartDateTime,
-      lastDate: widget.eventEndDateTime,
-      initialDateRange: _selectedTicketDateRange,
-    );
-
-    if (range != null) {
-      setState(() {
-        _selectedTicketDateRange = DateTimeRange(
-          start: DateTime(
-            range.start.year,
-            range.start.month,
-            range.start.day,
-            widget.eventStartDateTime.hour,
-            widget.eventStartDateTime.minute,
-            widget.eventStartDateTime.second,
-          ),
-          end: DateTime(
-            range.end.year,
-            range.end.month,
-            range.end.day,
-            23,
-            59,
-            59,
-          ),
-        );
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final rangeDifference = _selectedTicketDateRange == null
-        ? 0
-        : _selectedTicketDateRange!.end
-                  .difference(_selectedTicketDateRange!.start)
-                  .inDays +
-              1;
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -407,23 +371,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                 ),
                 if (isMultiDayEvent) ...[
                   const SizedBox(height: 8),
-                  InkWell(
-                    onTap: _pickTicketDateRange,
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Ticket Validity",
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        helperText: "Select the days when the ticket is valid",
-                        helperStyle: Theme.of(context).textTheme.labelSmall,
-                      ),
-                      child: Text(
-                        _selectedTicketDateRange == null
-                            ? "Select valid days"
-                            : "${ShereheUtils.formatDateRange(_selectedTicketDateRange!.start)} → "
-                                  "${ShereheUtils.formatDateRange(_selectedTicketDateRange!.end)} ($rangeDifference Pass)",
-                      ),
-                    ),
+                  TicketDateRangeWidget(
+                    selectedTicketDateRange: _selectedTicketDateRange,
+                    eventStartDateTime: widget.eventStartDateTime,
+                    eventEndDateTime: widget.eventEndDateTime,
+                    onDateRangeChanged: (dateRange) {
+                      setState(() {
+                        _selectedTicketDateRange = dateRange;
+                      });
+                    },
                   ),
                 ],
                 const SizedBox(height: 8),
@@ -498,16 +454,17 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                         isMultiDayEvent: isMultiDayEvent,
                         onEditTicket: () async {
                           final updatedTicket = await context.push(
-                            EditAddedTicketRoute().location,
+                            EditAddedTicketRoute(
+                              isMultiDayEvent: isMultiDayEvent,
+                              eventStartDateTime: widget.eventStartDateTime,
+                              eventEndDateTime: widget.eventEndDateTime,
+                            ).location,
                             extra: ticket,
                           );
 
                           if (updatedTicket != null &&
                               updatedTicket is TicketUI) {
-                            setState(() {
-                              widget.tickets[widget.tickets.indexOf(ticket)] =
-                                  updatedTicket;
-                            });
+                            widget.onUpdateTicket(ticket, updatedTicket);
                           }
                         },
                         onRemoveTicket: () => widget.onRemoveTicket(ticket),

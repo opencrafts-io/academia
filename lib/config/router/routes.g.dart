@@ -714,11 +714,34 @@ mixin $ShereheSelectInstitutionsRoute on GoRouteData {
 
 mixin $EditAddedTicketRoute on GoRouteData {
   static EditAddedTicketRoute _fromState(GoRouterState state) =>
-      EditAddedTicketRoute();
+      EditAddedTicketRoute(
+        isMultiDayEvent:
+            _$convertMapValue(
+              'is-multi-day-event',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        eventStartDateTime: DateTime.parse(
+          state.uri.queryParameters['event-start-date-time']!,
+        ),
+        eventEndDateTime: DateTime.parse(
+          state.uri.queryParameters['event-end-date-time']!,
+        ),
+      );
+
+  EditAddedTicketRoute get _self => this as EditAddedTicketRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/sherehe/create/edit-added-ticket');
+  String get location => GoRouteData.$location(
+    '/sherehe/create/edit-added-ticket',
+    queryParams: {
+      if (_self.isMultiDayEvent != false)
+        'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -732,6 +755,26 @@ mixin $EditAddedTicketRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 RouteBase get $shereheDetailsWithTokenRoute => GoRouteData.$route(

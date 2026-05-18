@@ -291,10 +291,24 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
 }
 
 class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
+  final bool isMultiDayEvent;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+
+  const EditAddedTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final addedTicket = state.extra as TicketUI;
-    return EditAddedTicketScreen(addedTicket: addedTicket);
+    return EditAddedTicketScreen(
+      addedTicket: addedTicket,
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
   }
 }
 
