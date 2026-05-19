@@ -201,6 +201,18 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   Future<Either<Failure, TodoItemEntity>> createTodoItem(
     TodoItemEntity entity,
   ) async {
+    final taskListRes = await listLocalDataSource.getTodoByID(
+      entity.taskListLocalId,
+    );
+    if (taskListRes.isLeft()) {
+      return Left(
+        NoDataFoundFailure(
+          message: "Invalid tasklist!",
+          error: (taskListRes as Left),
+        ),
+      );
+    }
+
     final localResult = await localDataSource.createTodoItem(
       entity.toDataModel(),
     );
@@ -219,7 +231,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       }
 
       final remoteResult = await remoteDataSource.createTodoItem(
-        createdLocal.toDto(),
+        createdLocal.toDto().copyWith(taskList: (taskListRes as Right).value),
       );
 
       return remoteResult.fold(
