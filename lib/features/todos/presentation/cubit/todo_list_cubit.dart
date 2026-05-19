@@ -21,7 +21,24 @@ class TodoListCubit extends SafeCubit<TodoListState> {
   }
 
   Future<void> _init() async {
-    await Future.wait([getDefaultTodoList(), loadTodoLists()]);
+    emit(TodoListState.loading());
+    await loadTodoLists();
+    final defaultList = await getDefaultTodoList();
+    if (defaultList != null) {
+      final currentState = state.mapOrNull(success: (s) => s);
+      if (currentState != null) {
+        final updated = currentState.todoLists
+            .where((l) => l.id != defaultList.id)
+            .toList();
+        updated.add(defaultList);
+        emit(
+          TodoListState.success(
+            todoLists: updated,
+            nextUrl: currentState.nextUrl,
+          ),
+        );
+      }
+    }
   }
 
   /// Initial fetch
