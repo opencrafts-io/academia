@@ -31,15 +31,19 @@ class QrCodeScreen extends StatefulWidget {
 }
 
 class _QrCodeScreenState extends State<QrCodeScreen> {
+  DateTime get eventStart => DateTime.parse(widget.event.startDate);
+  DateTime get eventEnd => DateTime.parse(widget.event.endDate);
+  bool get isMultiDayEvent =>
+      eventEnd.difference(eventStart) > const Duration(hours: 24);
   bool _isGenerating = false;
 
-  Future<void> _downloadTicket() async {
+  Future<void> _downloadTicket({required bool isMultiEvent}) async {
     if (_isGenerating) return;
 
     setState(() => _isGenerating = true);
 
     try {
-      final pdfFile = await _generateTicketPdf();
+      final pdfFile = await _generateTicketPdf(isMultiEvent: isMultiEvent);
 
       if (!mounted) return;
       // Share the PDF
@@ -71,23 +75,13 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     }
   }
 
-  // Future<Directory> _getDownloadDirectory() async {
-  //   if (Platform.isAndroid) {
-  //     final dir = Directory('/storage/emulated/0/Download');
-  //     if (await dir.exists()) return dir;
-  //   }
-
-  //   // iOS or fallback
-  //   return await getApplicationDocumentsDirectory();
-  // }
-
   //function to load image from assets and convert to MemoryImage for PDF
   Future<pw.MemoryImage> loadPdfImage(String assetPath) async {
     final bytes = await rootBundle.load(assetPath);
     return pw.MemoryImage(bytes.buffer.asUint8List());
   }
 
-  Future<File> _generateTicketPdf() async {
+  Future<File> _generateTicketPdf({required bool isMultiEvent}) async {
     final pdf = pw.Document();
 
     const primaryBg = PdfColor.fromInt(0xFF1A1A1A);
@@ -157,23 +151,40 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                           ),
                         ),
                         pw.SizedBox(height: 20),
-                        _PdfTicketInfo(
-                          label1: 'DATE',
-                          value1: ShereheUtils.formatDate(
-                            widget.event.startDate,
+                        if (!isMultiEvent) ...[
+                          _PdfTicketInfo(
+                            label1: 'DATE',
+                            value1: ShereheUtils.formatDate(
+                              widget.event.startDate,
+                            ),
+                            label2: 'TIME',
+                            value2: ShereheUtils.formatTime(
+                              widget.event.startDate,
+                            ),
                           ),
-                          label2: 'TIME',
-                          value2: ShereheUtils.formatTime(
-                            widget.event.startDate,
+                          pw.SizedBox(height: 15),
+                          _PdfTicketInfo(
+                            label1: 'LOCATION',
+                            value1: widget.event.eventLocation,
+                            label2: 'TICKET QUANTITY',
+                            value2: '${widget.quantity}',
                           ),
-                        ),
-                        pw.SizedBox(height: 15),
-                        _PdfTicketInfo(
-                          label1: 'LOCATION',
-                          value1: widget.event.eventLocation,
-                          label2: 'TICKET QUANTITY',
-                          value2: '${widget.quantity}',
-                        ),
+                        ] else ...[
+                          _PdfTicketInfo(
+                            label1: 'ACCESS',
+                            value1: '2 Day Pass',
+                            label2: 'DATES',
+                            value2:
+                                '${ShereheUtils.formatShortMonthDay(widget.event.startDate)} - ${ShereheUtils.formatShortMonthDay(widget.event.endDate)}',
+                          ),
+                          pw.SizedBox(height: 15),
+                          _PdfTicketInfo(
+                            label1: 'LOCATION',
+                            value1: widget.event.eventLocation,
+                            label2: 'TICKET QUANTITY',
+                            value2: '${widget.quantity}',
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -344,7 +355,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.download_outlined),
-            onPressed: _isGenerating ? null : _downloadTicket,
+            onPressed: _isGenerating
+                ? null
+                : () => _downloadTicket(isMultiEvent: isMultiDayEvent),
           ),
         ],
       ),
@@ -420,16 +433,26 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                   ),
                             ),
                             const SizedBox(height: 24),
-                            _TicketInfoWidget(
-                              label1: 'DATE',
-                              value1: ShereheUtils.formatDate(
-                                widget.event.startDate,
+                            if (!isMultiDayEvent) ...[
+                              _TicketInfoWidget(
+                                label1: 'DATE',
+                                value1: ShereheUtils.formatDate(
+                                  widget.event.startDate,
+                                ),
+                                label2: 'TIME',
+                                value2: ShereheUtils.formatTime(
+                                  widget.event.startDate,
+                                ),
                               ),
-                              label2: 'TIME',
-                              value2: ShereheUtils.formatTime(
-                                widget.event.startDate,
+                            ] else ...[
+                              _TicketInfoWidget(
+                                label1: 'ACCESS',
+                                value1: '2 Day Pass',
+                                label2: 'DATES',
+                                value2:
+                                    '${ShereheUtils.formatShortMonthDay(widget.event.startDate)} - ${ShereheUtils.formatShortMonthDay(widget.event.endDate)}',
                               ),
-                            ),
+                            ],
                             const SizedBox(height: 16),
                             _TicketInfoWidget(
                               label1: 'LOCATION',
@@ -524,7 +547,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PrettyQrView.data(
-                                data: 'academia@opencrafts:${widget.attendeeId}',
+                                data:
+                                    'academia@opencrafts:${widget.attendeeId}',
                                 decoration: PrettyQrDecoration(
                                   image: PrettyQrDecorationImage(
                                     image: AssetImage(

@@ -38,6 +38,15 @@ class ShereheUtils {
     }
   }
 
+  static String formatShortMonthDay(String isoString) {
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat('MMM d').format(dateTime);
+    } catch (_) {
+      return isoString;
+    }
+  }
+
   static int getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) return 1;
     if (ResponsiveBreakPoints.isTablet(context)) return 2;
