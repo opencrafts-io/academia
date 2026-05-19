@@ -182,6 +182,7 @@ class _ViewTodoListScreenState extends State<ViewTodoListScreen> {
     return Form(
       key: _formKey,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(

@@ -529,11 +529,31 @@ class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
-      fullscreenDialog: true,
+      fullscreenDialog: false,
       swipeDismissible: true,
+      transitionCurve: Curves.bounceIn,
       viewportBuilder: (context, child) =>
           SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: Sheet(child: CreateTodoListScreen()),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: CreateTodoListScreen(),
+        ),
+      ),
     );
   }
 }
@@ -548,7 +568,27 @@ class ViewTaskListRoute extends GoRouteData with $ViewTaskListRoute {
       swipeDismissible: true,
       viewportBuilder: (context, child) =>
           SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: Sheet(child: ViewTodoListScreen(todoListId: taskListId)),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: ViewTodoListScreen(todoListId: taskListId),
+        ),
+      ),
     );
   }
 }
@@ -565,7 +605,27 @@ class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
         ),
         child: child,
       ),
-      child: Sheet(child: CreateTodoListScreen()),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: CreateTodoListScreen(),
+        ),
+      ),
     );
   }
 }

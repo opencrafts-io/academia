@@ -19,6 +19,7 @@ class _CreateTodoListScreenState extends State<CreateTodoListScreen> {
   @override
   Widget build(BuildContext context) {
     return SheetContentScaffold(
+      extendBodyBehindBottomBar: false,
       topBar: AppBar(
         title: Text("Create new list"),
         actions: [
@@ -48,6 +49,7 @@ class _CreateTodoListScreenState extends State<CreateTodoListScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
