@@ -57,7 +57,11 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                     pinned: true,
                     floating: true,
                     snap: true,
-                    title: const Text("Tasks"),
+                    title: Text(
+                      "Tasks",
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                     bottom: TodoListTabBar(
                       isLoading: state.maybeWhen(
                         loading: () => true,
