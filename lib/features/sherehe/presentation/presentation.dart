@@ -60,3 +60,4 @@ export 'widgets/sherehe_details_schedule_card.dart';
 export 'widgets/ticket_date_range_widget.dart';
 export 'utils/sherehe_utils.dart';
 export 'constants/sherehe_constants.dart';
+export 'pdfs/attendee_pdf.dart';
