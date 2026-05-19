@@ -230,25 +230,32 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                           });
                         },
                       ),
-                    Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
-                          ),
-                        ),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: _canSave ? _save : null,
-                            child: const Text("Save"),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                spacing: 12,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: _canSave ? _save : null,
+                      child: const Text("Save"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

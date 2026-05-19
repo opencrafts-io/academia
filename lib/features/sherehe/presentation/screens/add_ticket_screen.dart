@@ -52,6 +52,22 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
     );
   }
 
+  void _setDateRange(DateTimeRange? newRange) {
+    if (newRange == null) return;
+
+    final start = newRange.start.isBefore(widget.eventStartDateTime)
+        ? widget.eventStartDateTime
+        : newRange.start;
+
+    final end = newRange.end.isAfter(widget.eventEndDateTime)
+        ? widget.eventEndDateTime
+        : newRange.end;
+
+    setState(() {
+      _selectedTicketDateRange = DateTimeRange(start: start, end: end);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,113 +189,108 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                         selectedTicketDateRange: _selectedTicketDateRange,
                         eventStartDateTime: widget.eventStartDateTime,
                         eventEndDateTime: widget.eventEndDateTime,
-                        onDateRangeChanged: (dateRange) {
-                          setState(() {
-                            _selectedTicketDateRange = dateRange;
-                          });
-                        },
+                        onDateRangeChanged: _setDateRange,
                       ),
-                    Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => context.pop(),
-                            child: const Text("Cancel"),
-                          ),
-                        ),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () {
-                              if (_selectedScopeType ==
-                                      ScopeTypes.institution &&
-                                  _selectedInstitutions.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Select at least one institution for restricted tickets",
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              if (_selectedTicketDateRange == null &&
-                                  widget.isMultiDayEvent) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Please Select valid date range for the ticket",
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              if (_formKey.currentState!.validate()) {
-                                final addedTicket = TicketUI(
-                                  ticket: Ticket(
-                                    ticketName: _ticketNameController.text
-                                        .trim(),
-                                    ticketPrice:
-                                        int.tryParse(
-                                          _ticketPriceController.text.trim(),
-                                        ) ??
-                                        0,
-                                    ticketQuantity:
-                                        int.tryParse(
-                                          _ticketQtyController.text.trim(),
-                                        ) ??
-                                        0,
-                                    ticketFor:
-                                        _selectedTicketGroupType?.toBackend ??
-                                        0,
-                                    institutionIds:
-                                        _selectedScopeType !=
-                                            ScopeTypes.institution
-                                        ? null
-                                        : _selectedInstitutions
-                                              .map((e) => e.institutionId)
-                                              .toList(),
-                                    scope: _selectedScopeType?.toBackend,
-                                    startDate:
-                                        _selectedTicketDateRange?.start
-                                            .toUtc()
-                                            .toIso8601String() ??
-                                        widget.eventStartDateTime
-                                            .toUtc()
-                                            .toIso8601String(),
-                                    endDate:
-                                        _selectedTicketDateRange?.end
-                                            .toUtc()
-                                            .toIso8601String() ??
-                                        widget.eventEndDateTime
-                                            .toUtc()
-                                            .toIso8601String(),
-                                  ),
-                                  institutions: List.from(
-                                    _selectedInstitutions,
-                                  ),
-                                  selectedTicketGroupType:
-                                      _selectedTicketGroupType,
-                                  selectedScopeType: _selectedScopeType,
-                                  selectedTicketDateRange:
-                                      _selectedTicketDateRange ??
-                                      DateTimeRange(
-                                        start: widget.eventStartDateTime,
-                                        end: widget.eventEndDateTime,
-                                      ),
-                                );
-                                context.pop(addedTicket);
-                              }
-                            },
-                            child: const Text("Save"),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => context.pop(),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        if (_selectedScopeType == ScopeTypes.institution &&
+                            _selectedInstitutions.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Select at least one institution for restricted tickets",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+              
+                        if (_selectedTicketDateRange == null &&
+                            widget.isMultiDayEvent) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Please Select valid date range for the ticket",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+              
+                        if (_formKey.currentState!.validate()) {
+                          final addedTicket = TicketUI(
+                            ticket: Ticket(
+                              ticketName: _ticketNameController.text.trim(),
+                              ticketPrice:
+                                  int.tryParse(
+                                    _ticketPriceController.text.trim(),
+                                  ) ??
+                                  0,
+                              ticketQuantity:
+                                  int.tryParse(
+                                    _ticketQtyController.text.trim(),
+                                  ) ??
+                                  0,
+                              ticketFor: _selectedTicketGroupType?.toBackend ?? 0,
+                              institutionIds:
+                                  _selectedScopeType != ScopeTypes.institution
+                                  ? null
+                                  : _selectedInstitutions
+                                        .map((e) => e.institutionId)
+                                        .toList(),
+                              scope: _selectedScopeType?.toBackend,
+                              startDate:
+                                  _selectedTicketDateRange?.start
+                                      .toUtc()
+                                      .toIso8601String() ??
+                                  widget.eventStartDateTime
+                                      .toUtc()
+                                      .toIso8601String(),
+                              endDate:
+                                  _selectedTicketDateRange?.end
+                                      .toUtc()
+                                      .toIso8601String() ??
+                                  widget.eventEndDateTime
+                                      .toUtc()
+                                      .toIso8601String(),
+                            ),
+                            institutions: List.from(_selectedInstitutions),
+                            selectedTicketGroupType: _selectedTicketGroupType,
+                            selectedScopeType: _selectedScopeType,
+                            selectedTicketDateRange:
+                                _selectedTicketDateRange ??
+                                DateTimeRange(
+                                  start: widget.eventStartDateTime,
+                                  end: widget.eventEndDateTime,
+                                ),
+                          );
+                          context.pop(addedTicket);
+                        }
+                      },
+                      child: const Text("Save"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
