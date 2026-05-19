@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:academia/config/config.dart';
 import 'package:academia/config/router/route_guard.dart';
 import 'package:academia/features/features.dart';
@@ -10,7 +8,7 @@ import 'package:go_router/go_router.dart';
 class OnboardingGuard implements RouteGuard {
   const OnboardingGuard();
   @override
-  FutureOr<String?> check(BuildContext context, GoRouterState state) {
+  String? check(BuildContext context, GoRouterState state) {
     final profileState = context.read<ProfileBloc>().state;
 
     if (profileState is ProfileLoadedState) {

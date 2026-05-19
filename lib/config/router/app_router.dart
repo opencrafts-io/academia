@@ -26,9 +26,9 @@ class AppRouter {
       DioRequestInspector.navigatorObserver,
     ],
     navigatorKey: globalNavigatorKey,
-    redirect: (context, state) async {
+    redirect: (context, state) {
       for (final guard in _guards) {
-        final String? redirectPath = await guard.check(context, state);
+        final String? redirectPath = guard.check(context, state);
 
         if (redirectPath != null) {
           return redirectPath;
