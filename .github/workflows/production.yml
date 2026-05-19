@@ -1,0 +1,294 @@
+name: Production — Build & Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint-and-scan:
+    name: Lint & SonarQube
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: pub-
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Dart format check
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Flutter analyze
+        run: flutter analyze --no-pub --fatal-infos
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Notify Discord — Lint/Scan Failure
+        if: failure()
+        run: |
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{
+              \"title\": \"❌ Lint/SonarQube FAILED on main\",
+              \"color\": 15158332,
+              \"fields\": [
+                {\"name\": \"Branch\", \"value\": \"${{ github.ref_name }}\"},
+                {\"name\": \"Commit\", \"value\": \"${{ github.sha }}\"},
+                {\"name\": \"Actor\",  \"value\": \"${{ github.actor }}\"},
+                {\"name\": \"Run\",    \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+              ]
+            }]}" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
+  ios:
+    name: iOS — App Store
+    runs-on: blacksmith-6vcpu-macos-latest
+    needs: lint-and-scan
+    permissions:
+      contents: write
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Select Xcode version
+        run: |
+          ls /Applications/ | grep Xcode
+          XCODE=$(ls /Applications/ | grep -E '^Xcode_[0-9]\.' | sort -V | tail -1)
+          if [ -z "$XCODE" ]; then
+            sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          else
+            sudo xcode-select -s /Applications/${XCODE}/Contents/Developer
+          fi
+          xcodebuild -version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: pub-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v5
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: pods-
+
+      - name: Cache gems
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/ios/vendor/bundle
+          key: ${{ runner.os }}-gems-ios-v3-${{ hashFiles('ios/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-ios-v3-
+
+      - name: Install gems
+        working-directory: ios
+        run: |
+          rm -f .bundle/config
+          bundle config set --local path "${{ github.workspace }}/ios/vendor/bundle"
+          bundle install
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Install CocoaPods
+        working-directory: ios
+        run: bundle exec pod install --repo-update
+
+      - name: Fastlane — Deploy to App Store
+        working-directory: ios
+        env:
+          GITHUB_API_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: bundle exec fastlane deploy_production
+
+      - name: Notify Discord — iOS Prod Failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          REASON=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GH_KEY_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+            | python3 -c "
+          import sys, json
+          jobs = json.load(sys.stdin).get('jobs', [])
+          failed = [j['name'] for j in jobs if j.get('conclusion') == 'failure']
+          steps = [s['name'] for j in jobs if j.get('conclusion') == 'failure'
+                   for s in j.get('steps', []) if s.get('conclusion') == 'failure']
+          print('Jobs: ' + ', '.join(failed) + ' | Steps: ' + ', '.join(steps))
+          ")
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{
+              \"title\": \" iOS Production FAILED\",
+              \"color\": 15158332,
+              \"fields\": [
+                {\"name\": \"Branch\",          \"value\": \"${{ github.ref_name }}\"},
+                {\"name\": \"Commit\",           \"value\": \"${{ github.sha }}\"},
+                {\"name\": \"Failure reason\",   \"value\": \"${REASON:-unknown}\"},
+                {\"name\": \"Actor\",            \"value\": \"${{ github.actor }}\"},
+                {\"name\": \"Run\",              \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+              ]
+            }]}" \
+            "$DISCORD_WEBHOOK_URL"
+
+  android:
+    name: Android — Play Store
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    needs: ios
+    permissions:
+      contents: write
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: pub-
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle', 'android/app/build.gradle.kts') }}
+          restore-keys: gradle-
+
+      - name: Cache gems
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/android/vendor/bundle
+          key: ${{ runner.os }}-gems-android-v1-${{ hashFiles('android/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-android-v1-
+
+      - name: Decode Android keystore
+        run: |
+          mkdir -p ${{ github.workspace }}/android/app/keystore
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode \
+            > ${{ github.workspace }}/android/app/keystore/release.keystore
+
+      - name: Write key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=keystore/release.keystore
+          EOF
+
+      - name: Write Play Store key
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' \
+            > ${{ runner.temp }}/play-key.json
+
+      - name: Install gems
+        working-directory: android
+        run: |
+          rm -f .bundle/config
+          bundle config set --local path "${{ github.workspace }}/android/vendor/bundle"
+          bundle install
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Fastlane — Deploy to Play Store
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/keystore/release.keystore
+          GITHUB_API_TOKEN: ${{ secrets.GH_KEY_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GOOGLE_PLAY_JSON_KEY_PATH: ${{ runner.temp }}/play-key.json
+        run: bundle exec fastlane deploy_production
+
+      - name: Notify Discord — Android Prod Failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          REASON=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GH_KEY_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+            | jq -r '[.jobs[] | select(.conclusion=="failure") | .name] | join(", ")')
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"embeds\":[{
+              \"title\": \" Android Production FAILED\",
+              \"color\": 15158332,
+              \"fields\": [
+                {\"name\": \"Branch\",      \"value\": \"${{ github.ref_name }}\"},
+                {\"name\": \"Commit\",       \"value\": \"${{ github.sha }}\"},
+                {\"name\": \"Failed jobs\",  \"value\": \"${REASON:-unknown}\"},
+                {\"name\": \"Actor\",        \"value\": \"${{ github.actor }}\"},
+                {\"name\": \"Run\",          \"value\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}
+              ]
+            }]}" \
+            "$DISCORD_WEBHOOK_URL"
+

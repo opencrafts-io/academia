@@ -1,0 +1,101 @@
+
+def tool_version(tool)
+  root = File.expand_path("../../..", __FILE__)
+  File.read(File.join(root, ".tool-versions"))
+      .scan(/^#{tool}\s+(.+)$/).first&.first&.strip
+end
+
+FLUTTER_VERSION = tool_version("flutter")
+
+default_platform(:android)
+
+platform :android do
+
+
+  def flutter_version_name
+    pubspec = File.read("../../pubspec.yaml")
+    pubspec.match(/^version:\s+(\S+)\+/)[1]
+  end
+
+  def flutter_build_number
+    pubspec = File.read("../../pubspec.yaml")
+    pubspec.match(/^version:\s+\S+\+(\S+)/)[1]
+  end
+
+  private_lane :notify_discord do |options|
+    status  = options[:status]
+    version = options[:version] || "#{flutter_version_name}+#{flutter_build_number}"
+    color   = status.include?("✅") ? 3066993 : 15158332
+    payload = JSON.generate({
+      embeds: [{
+        title:  "Academia Android — #{status}",
+        color:  color,
+        fields: [
+          { name: "Version",    value: version,                              inline: true },
+          { name: "Branch",     value: ENV["GITHUB_REF_NAME"] || "local",   inline: true },
+          { name: "Commit",     value: (ENV["GITHUB_SHA"] || "unknown")[0..7], inline: true },
+          { name: "Triggered",  value: ENV["GITHUB_ACTOR"] || "local",      inline: true }
+        ]
+      }]
+    })
+    sh("curl -s -H 'Content-Type: application/json' -d '#{payload.gsub("'", "\\'")}' '#{ENV["DISCORD_WEBHOOK_URL"]}'")
+  end
+
+
+  desc "Build staging APK (release, staging flavor)"
+  lane :build_staging do
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build apk --flavor staging --target lib/main_staging.dart --release")
+    end
+  end
+
+  desc "Build production App Bundle (release, production flavor)"
+  lane :build_production do
+    Dir.chdir("../../") do
+      sh("flutter pub get")
+      sh("flutter build appbundle --flavor production --target lib/main_production.dart --release")
+    end
+  end
+
+
+  desc "Build staging APK and upload to GitHub Releases"
+  lane :upload_staging_release do
+    build_staging
+
+    version   = flutter_version_name
+    build_num = flutter_build_number
+    tag       = "android-staging-v#{version}+#{build_num}-#{Time.now.strftime('%Y%m%d%H%M')}"
+
+    set_github_release(
+      repository_name: "opencrafts-io/academia",
+      api_token:       ENV["GITHUB_TOKEN"],
+      name:            "Android Staging v#{version}+#{build_num}",
+      tag_name:        tag,
+      description:     "Automated staging build\nBranch: `#{ENV["GITHUB_REF_NAME"]}`\nCommit: `#{ENV["GITHUB_SHA"]}`",
+      commitish:       ENV["GITHUB_SHA"] || "staging",
+      is_prerelease:   true,
+      upload_assets:   ["../build/app/outputs/flutter-apk/app-staging-release.apk"]
+    )
+
+    notify_discord(status: "✅ Staging APK Released", version: "#{version}+#{build_num}")
+  end
+
+
+  desc "Build production AAB and publish to Play Store"
+  lane :deploy_production do
+    build_production
+
+    upload_to_play_store(
+      track:                   "production",
+      aab:                     "../build/app/outputs/bundle/productionRelease/app-production-release.aab",
+      skip_upload_metadata:    false,
+      skip_upload_screenshots: false,
+      skip_upload_images:      false,
+      release_status:          "completed"
+    )
+
+    notify_discord(status: "✅ Production Published to Play Store")
+  end
+
+end
