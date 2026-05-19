@@ -117,7 +117,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 .format(selectedDateTime);
             //reset end date time if it is before start date time
             if (_selectedEndDateTime != null &&
-                _selectedEndDateTime!.isBefore(selectedDateTime)) {
+                    (_selectedEndDateTime!.isBefore(selectedDateTime)) ||
+                _selectedEndDateTime!.isAtSameMomentAs(selectedDateTime)) {
               _selectedEndDateTime = null;
               _endDateTimeController.clear();
             }
@@ -125,6 +126,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             //prevent invalid end date time
             if (_selectedStartDateTime != null &&
                 selectedDateTime.isBefore(_selectedStartDateTime!)) {
+              _selectedEndDateTime = null;
+              _endDateTimeController.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
@@ -136,6 +139,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               return;
             } else if (_selectedStartDateTime != null &&
                 selectedDateTime.isAtSameMomentAs(_selectedStartDateTime!)) {
+              _selectedEndDateTime = null;
+              _endDateTimeController.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
