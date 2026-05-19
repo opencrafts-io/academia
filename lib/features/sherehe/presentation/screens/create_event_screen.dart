@@ -67,20 +67,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _startDateTimeController.dispose();
-    _endDateTimeController.dispose();
-    _aboutController.dispose();
-    _locationController.dispose();
-    _paybillNumberController.dispose();
-    _accountReferenceController.dispose();
-    _tillNumberController.dispose();
-    _sendMoneyPhoneController.dispose();
-    super.dispose();
-  }
-
   Future<void> _selectDateAndTime({
     required BuildContext context,
     required bool isStart,
@@ -708,7 +694,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       }
                     },
                   ),
-                Stage4ReviewAndSubmit(
+                SubmitEventPage(
                   onSubmit: _submitForm,
                   onPrevious: _moveToPreviousPage,
                   userName: organizerName ?? "Guest",
@@ -719,5 +705,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _startDateTimeController.dispose();
+    _endDateTimeController.dispose();
+    _aboutController.dispose();
+    _locationController.dispose();
+    _paybillNumberController.dispose();
+    _accountReferenceController.dispose();
+    _tillNumberController.dispose();
+    _sendMoneyPhoneController.dispose();
+    super.dispose();
   }
 }
