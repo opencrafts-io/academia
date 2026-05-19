@@ -40,7 +40,6 @@ dependencies:
   go_router: ^17.1.0
   logger: ^2.6.0
   dynamic_color: ^1.7.0
-  icons_plus: ^5.0.0
   flutter_web_auth_2: ^5.0.1
   desktop_webview_window: ^0.2.3
   dartz: ^0.10.1
@@ -87,7 +86,10 @@ dependencies:
   json_annotation: ^4.9.0
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
-  image_editor_plus: ^1.0.8
+  image_editor_plus:
+    git:
+      url: https://github.com/IamMuuo/image_editor_plus.git
+      ref: main
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
@@ -114,7 +116,7 @@ dependencies:
   device_info_plus: ^12.3.0
   flutter_secure_storage: ^10.0.0
   flutter_animate: ^4.5.2
-
+  font_awesome_flutter: ^11.0.0
 
 dev_dependencies:
   flutter_test:
