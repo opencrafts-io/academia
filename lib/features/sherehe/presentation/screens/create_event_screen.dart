@@ -111,6 +111,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         setState(() {
           if (isStart) {
             _selectedStartDateTime = selectedDateTime;
+            _syncTicketsWithEventDates();
             _startDateTimeController.text = DateFormat.yMMMMEEEEd()
                 .add_jm()
                 .format(selectedDateTime);
@@ -146,6 +147,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               return;
             }
             _selectedEndDateTime = selectedDateTime;
+            _syncTicketsWithEventDates();
             _endDateTimeController.text = DateFormat.yMMMMEEEEd()
                 .add_jm()
                 .format(selectedDateTime);
@@ -342,6 +344,70 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         );
       }
     }
+  }
+
+  /*
+  This is to adjust ticket dates if they are out of sync with event dates after the user changes event start or end date time. 
+  This is to prevent invalid ticket date ranges and ensure tickets are always within event date range 
+  */
+  void _syncTicketsWithEventDates() {
+    if (_selectedStartDateTime == null || _selectedEndDateTime == null) {
+      return;
+    }
+
+    if (_tickets.isEmpty) return;
+
+    final eventStart = _selectedStartDateTime!;
+    final eventEnd = _selectedEndDateTime!;
+
+    setState(() {
+      _tickets = _tickets.map((ticketUI) {
+        final ticket = ticketUI.ticket;
+
+        DateTime ticketStart = DateTime.parse(
+          ticket.startDate ?? eventStart.toUtc().toIso8601String(),
+        );
+        DateTime ticketEnd = DateTime.parse(
+          ticket.endDate ?? eventEnd.toUtc().toIso8601String(),
+        );
+
+        // Clamp start
+        if (ticketStart.isBefore(eventStart)) {
+          ticketStart = eventStart;
+        }
+
+        // Clamp end
+        if (ticketEnd.isAfter(eventEnd)) {
+          ticketEnd = eventEnd;
+        }
+
+        // Prevent invalid ranges
+        if (ticketEnd.isBefore(ticketStart) ||
+            ticketEnd.isAtSameMomentAs(ticketStart)) {
+          ticketEnd = eventEnd;
+        }
+
+        return ticketUI.copyWith(
+          ticket: ticket.copyWith(
+            startDate: ticketStart.toUtc().toIso8601String(),
+            endDate: ticketEnd.toUtc().toIso8601String(),
+          ),
+          selectedTicketDateRange: DateTimeRange(
+            start: ticketStart,
+            end: ticketEnd,
+          ),
+        );
+      }).toList();
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Ticket validity dates were adjusted to match the event dates.",
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   void _showGenreSelectionDialog() {
