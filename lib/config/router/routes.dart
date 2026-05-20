@@ -656,10 +656,7 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
             ),
           ),
           physics: BouncingSheetPhysics(),
-          child: BlocProvider(
-            create: (_) => sl<TodoItemCubit>(),
-            child: CreateTodoItemScreen(),
-          ),
+          child: CreateTodoItemScreen(),
         ),
       ),
     );
@@ -696,10 +693,7 @@ class UpdateTodoItemRoute extends GoRouteData with $UpdateTodoItemRoute {
             ),
           ),
           physics: BouncingSheetPhysics(),
-          child: BlocProvider(
-            create: (_) => sl<TodoItemCubit>(),
-            child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
-          ),
+          child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
         ),
       ),
     );

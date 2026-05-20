@@ -2,7 +2,6 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/injection_container.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import '../widgets/todo_card.dart';
@@ -125,7 +124,6 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
 
 class _TodoItemsTab extends StatefulWidget {
   final int? taskListLocalId;
-
   const _TodoItemsTab({this.taskListLocalId});
 
   @override
@@ -136,36 +134,53 @@ class _TodoItemsTabState extends State<_TodoItemsTab>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  List<TodoItemEntity> _filter(List<TodoItemEntity> items) {
+    if (widget.taskListLocalId == null) return items;
+    return items
+        .where((i) => i.taskListLocalId == widget.taskListLocalId)
+        .toList();
+  }
+
+  bool _sliceChanged(TodoItemState prev, TodoItemState curr) {
+    final a = _filter(prev.currentItems);
+    final b = _filter(curr.currentItems);
+    if (a.length != b.length) return true;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    return BlocProvider(
-      // Each tab gets its own cubit instance scoped to its list
-      create: (_) => sl<TodoItemCubit>(param1: widget.taskListLocalId),
-      child: BlocBuilder<TodoItemCubit, TodoItemState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const _EmptyState(),
-            loading: (items) => items.isEmpty
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      LoadingIndicatorM3E(),
-                      Text("Your to-dos are just a sec away.."),
-                    ],
-                  )
-                : _TodoItemsList(items: items),
-            success: (items, nextUrl, isPaginating, isSyncing) => items.isEmpty
-                ? const _EmptyState()
-                : _TodoItemsList(items: items),
-            failure: (failure, items) => items.isEmpty
-                ? const _EmptyState()
-                : _TodoItemsList(items: items),
-          );
-        },
-      ),
+    return BlocBuilder<TodoItemCubit, TodoItemState>(
+      buildWhen: _sliceChanged,
+      builder: (context, state) {
+        final items = _filter(state.currentItems);
+
+        return state.when(
+          initial: () => const _EmptyState(),
+          loading: (_) => items.isEmpty
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    LoadingIndicatorM3E(),
+                    Text("Your to-dos are just a sec away.."),
+                  ],
+                )
+              : _TodoItemsList(items: items),
+          success: (_, _, _, _) => items.isEmpty
+              ? const _EmptyState()
+              : _TodoItemsList(items: items),
+          failure: (_, _) => items.isEmpty
+              ? const _EmptyState()
+              : _TodoItemsList(items: items),
+        );
+      },
     );
   }
 }
