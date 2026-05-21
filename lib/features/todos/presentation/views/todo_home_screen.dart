@@ -1,9 +1,17 @@
+import 'dart:io' show Platform;
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/features/permissions/permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:vibration/vibration.dart';
+import 'package:go_router/go_router.dart';
+
 import '../widgets/todo_card.dart';
 
 class TodoHomeScreen extends StatefulWidget {
@@ -25,6 +33,19 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    final permissions = [AppPermission.notification];
+
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        permissions.add(AppPermission.preciseAlarm);
+      }
+    }
+    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+  }
+
   Future<void> _showHelpDialog() {
     return showDialog(
       context: context,
@@ -43,6 +64,84 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildNotificationRequestButton() {
+    return BlocBuilder<PermissionCubit, PermissionState>(
+      builder: (context, state) {
+        if (state is PermissionPermanentlyDenied || state is PermissionDenied) {
+          return IconButton(
+                onPressed: () async {
+                  if (await Vibration.hasVibrator()) {
+                    Vibration.vibrate(duration: 128);
+                  }
+
+                  if (!context.mounted) return;
+
+                  // Check both permissions
+                  await context.read<PermissionCubit>().checkPermission(
+                    AppPermission.notification,
+                  );
+
+                  if (!context.mounted) return;
+
+                  if (context.read<PermissionCubit>().state
+                      is PermissionPermanentlyDenied) {
+                    return showAdaptiveDialog(
+                      context: context,
+                      builder: (context) => AlertDialog.adaptive(
+                        title: const Text("Allow permission"),
+                        content: const Text(
+                          "You've previously denied permissions "
+                          "to send you notifications. You may miss important updates "
+                          "please re-enable them on the app's phone settings page.",
+                        ),
+                        actions: [
+                          FilledButton.icon(
+                            onPressed: () {
+                              openAppSettings();
+                              context.pop();
+                            },
+                            label: const Text("Enable"),
+                            icon: const Icon(Icons.notifications),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  // Request Notification permission
+                  await context.read<PermissionCubit>().requestPermission(
+                    AppPermission.notification,
+                  );
+
+                  // Also request Precise Alarm permission for timing accuracy
+                  if (Platform.isAndroid) {
+                    if (context.mounted) {
+                      await context.read<PermissionCubit>().requestPermission(
+                        AppPermission.preciseAlarm,
+                      );
+                    }
+                  }
+                },
+                icon: Icon(
+                  Icons.notification_important_outlined,
+                  color: Colors.redAccent,
+                ),
+              )
+              .animate(onPlay: (controller) => controller.repeat())
+              .shake(duration: const Duration(milliseconds: 500))
+              .then();
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 
@@ -100,6 +199,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                       },
                     ),
                     actions: [
+                      _buildNotificationRequestButton(),
                       IconButton(
                         onPressed: _showHelpDialog,
                         icon: Icon(Icons.lightbulb_outline),
